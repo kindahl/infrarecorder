@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<meta name="GENERATOR" content="Microsoft&reg; HTML Help Workshop 4.1">
+<!-- Sitemap 1.0 -->
+</HEAD><BODY>
+<UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Acknowledgments">
+		<param name="Name" value="Acknowledgments">
+		<param name="Local" value="infra_recorder\acknowledgments.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Boot Images">
+		<param name="Name" value="Add Boot Image">
+		<param name="Local" value="how_to_use\working_with_projects\add_boot_image.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Burn Image">
+		<param name="Name" value="Burn Image">
+		<param name="Local" value="how_to_use\burn_image.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Burn Options">
+		<param name="Name" value="Burn Options">
+		<param name="Local" value="how_to_use\burn_options.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Configuration">
+		<param name="Name" value="Configuration">
+		<param name="Local" value="how_to_use\configuration.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Copy Audio Disc">
+		<param name="Name" value="Copy Audio Disc">
+		<param name="Local" value="how_to_use\copy_audio_disc.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Copy Data Disc">
+		<param name="Name" value="Copy Data Disc">
+		<param name="Local" value="how_to_use\copy_data_disc.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Copyright">
+		<param name="Name" value="Copyright">
+		<param name="Local" value="infra_recorder\copyright.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Device Configuration">
+		<param name="Name" value="Device Configuration">
+		<param name="Local" value="how_to_use\device_configuration.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Disc Information">
+		<param name="Name" value="Disc Information">
+		<param name="Local" value="how_to_use\disc_information.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Erase Disc">
+		<param name="Name" value="Erase Disc">
+		<param name="Local" value="how_to_use\erase_disc.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Feature Overview">
+		<param name="Name" value="Feature Overview">
+		<param name="Local" value="infra_recorder\feature_overview.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Fixate Disc">
+		<param name="Name" value="Fixate Disc">
+		<param name="Local" value="how_to_use\fixate_disc.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Getting Started">
+		<param name="Name" value="Getting Started">
+		<param name="Local" value="how_to_use\working_with_projects\getting_started.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Installation">
+		<param name="Name" value="Installation">
+		<param name="Local" value="infra_recorder\installation.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Introduction">
+		<param name="Name" value="Introduction">
+		<param name="Local" value="infra_recorder\introduction.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="License Agreement">
+		<param name="Name" value="License Agreement">
+		<param name="Local" value="infra_recorder\license_agreement.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Manage Tracks">
+		<param name="Name" value="Manage Tracks">
+		<param name="Local" value="how_to_use\manage_tracks.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Multi-Session Discs">
+		<param name="Name" value="Multi-Session Disc">
+		<param name="Local" value="how_to_use\working_with_projects\multisession_disc.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Project Settings">
+		<param name="Name" value="Project Settings">
+		<param name="Local" value="how_to_use\working_with_projects\project_settings.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Quick Start">
+		<param name="Name" value="Quick Start">
+		<param name="Local" value="infra_recorder\quick_start.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Read Options">
+		<param name="Name" value="Read Options">
+		<param name="Local" value="how_to_use\read_options.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="System Requirements">
+		<param name="Name" value="System Requirements">
+		<param name="Local" value="infra_recorder\system_requirements.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="What's New">
+		<param name="Name" value="What's New">
+		<param name="Local" value="infra_recorder\whats_new.html">
+		</OBJECT>
+</UL>
+</BODY></HTML>

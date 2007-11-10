@@ -1,0 +1,1307 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "atlres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""atlres.h""\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MAINFRAME MENU 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        POPUP "&New Project"
+        BEGIN
+            MENUITEM "Data &CD",                    ID_NEWPROJECT_DATACD
+            MENUITEM "Data &DVD",                   ID_NEWPROJECT_DATADVD
+            MENUITEM SEPARATOR
+            MENUITEM "&Audio CD",                   ID_NEWPROJECT_AUDIO
+            MENUITEM "Mi&xed-Mode CD",              ID_NEWPROJECT_MIXED
+            MENUITEM SEPARATOR
+            MENUITEM "DVD-&Video Disc...",          ID_NEWPROJECT_DVDVIDEO
+        END
+        MENUITEM "&Open Project...\tCtrl+O",    ID_FILE_OPEN
+        MENUITEM "&Save Project\tCtrl+S",       ID_FILE_SAVE
+        MENUITEM "Save Project &As...",         ID_FILE_SAVE_AS
+        MENUITEM SEPARATOR
+        MENUITEM "Project &Properties...",      ID_FILE_PROJECTPROPERTIES
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       ID_APP_EXIT
+    END
+    POPUP "&Edit"
+    BEGIN
+        MENUITEM "&New Folder",                 ID_EDIT_NEWFOLDER
+        MENUITEM "Rena&me\tF2",                 ID_EDIT_RENAME
+        MENUITEM "&Remove\tDel",                ID_EDIT_REMOVE
+        POPUP "&Add"
+        BEGIN
+            MENUITEM "&Selected",                   ID_ADD_SELECTED
+            MENUITEM "&All",                        ID_ADD_ALL
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "Select &All\tCtrl+A",         ID_EDIT_SELECTALL
+        MENUITEM "&Invert Selection",           ID_EDIT_INVERTSELECTION
+    END
+    POPUP "&Actions"
+    BEGIN
+        POPUP "Burn &Compilation"
+        BEGIN
+            MENUITEM "to a Compact &Disc...",       ID_BURNCOMPILATION_COMPACTDISC
+            MENUITEM "to a Disc &Image...",         ID_BURNCOMPILATION_DISCIMAGE
+        END
+        MENUITEM "Burn &Image...",              ID_ACTIONS_BURNIMAGE
+        POPUP "C&opy Disc"
+        BEGIN
+            MENUITEM "to a Compact &Disc...",       ID_COPYDISC_COMPACTDISC
+            MENUITEM "to a Disc &Image...",         ID_COPYDISC_DISCIMAGE
+        END
+        MENUITEM "&Manage Tracks...",           ID_ACTIONS_MANAGETRACKS
+        MENUITEM SEPARATOR
+        MENUITEM "E&rase/Format Disc...",       ID_ACTIONS_ERASERE
+        MENUITEM "&Fixate Disc...",             ID_ACTIONS_FIXATEDISC
+        MENUITEM SEPARATOR
+        POPUP "Disc &Information"
+        BEGIN
+            MENUITEM "(no drives found)",           ID_DISCINFORMATION_, GRAYED
+        END
+        MENUITEM "Import &Session...",          ID_ACTIONS_IMPORTSESSION
+        MENUITEM SEPARATOR
+        POPUP "&Eject Disc"
+        BEGIN
+            MENUITEM "(no drives found)",           ID_EJECTDISC_, GRAYED
+        END
+    END
+    POPUP "&View"
+    BEGIN
+        POPUP "&Toolbars"
+        BEGIN
+            MENUITEM "&Standard Buttons",           ID_VIEW_STANDARDTOOLBAR
+            MENUITEM SEPARATOR
+            MENUITEM "&Customize...",               ID_VIEW_TBCUSTOMIZE
+        END
+        MENUITEM "&Status Bar",                 ID_VIEW_STATUS_BAR
+        MENUITEM SEPARATOR
+        MENUITEM "Program &Log...",             ID_VIEW_PROGRAMLOG
+        MENUITEM SEPARATOR
+        MENUITEM "Lar&ge Icons",                32792
+        MENUITEM "S&mall Icons",                32793
+        MENUITEM "&List",                       32794
+        MENUITEM "&Details",                    32795
+    END
+    POPUP "&Options"
+    BEGIN
+        MENUITEM "&Configuration...",           ID_OPTIONS_CONFIGURATION
+        MENUITEM "&Devices...",                 ID_OPTIONS_DEVICES
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&Help Topics",                ID_HELP_HELPTOPICS
+        MENUITEM SEPARATOR
+        MENUITEM "&About InfraRecorder...",     ID_APP_ABOUT
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON                    "Resources\\InfraRecorder.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOGEX 0, 0, 265, 191
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "About"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,208,170,50,14
+    CONTROL         "",IDC_WHITESTATIC,"Static",SS_WHITERECT,0,0,265,162
+    CONTROL         237,IDC_LOGOSTATIC,"Static",SS_BITMAP | SS_REALSIZEIMAGE,0,0,269,40
+    LTEXT           "Copyright © 2006-2007 Christian Kindahl\n\nInfraRecorder comes with absolutely no warranty. This is free software, and you are welcome to redistribute it under certain conditions; please see License.txt for more information.",IDC_INFOSTATIC,7,43,251,43
+    CONTROL         "",IDC_BEVELSTATIC2,"Static",SS_ETCHEDHORZ | WS_GROUP,0,162,266,1,WS_EX_STATICEDGE
+    RTEXT           "",IDC_VERSIONSTATIC,147,4,111,27
+    LTEXT           "Installed codecs (double-click to view copyright note):",IDC_CODECSSTATIC,7,91,170,8
+    CONTROL         "",IDC_CODECLIST,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,102,251,53
+    PUSHBUTTON      "Website",IDC_WEBSITEBUTTON,7,170,50,14
+END
+
+IDD_PROPPAGE_DEVICEGENERAL DIALOGEX 0, 0, 227, 209
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "General"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    ICON            "",IDC_ICONSTATIC,7,7,20,20
+    CONTROL         "",IDC_BEVELSTATIC,"Static",SS_ETCHEDHORZ | WS_GROUP,7,31,212,1,WS_EX_STATICEDGE
+    LTEXT           "Static",IDC_NAMESTATIC,56,13,163,8
+    LTEXT           "Type:",IDC_TYPELABELSTATIC,7,39,46,8
+    LTEXT           "Location:",IDC_LOCATIONLABELSTATIC,7,54,46,8
+    LTEXT           "Static",IDC_TYPESTATIC,56,39,163,8
+    LTEXT           "Static",IDC_LOCATIONSTATIC,56,54,163,8
+    LTEXT           "Buffer size:",IDC_BUFFERLABELSTATIC,7,70,45,8
+    LTEXT           "Static",IDC_BUFFERSTATIC,56,70,163,8
+    CONTROL         "",IDC_BEVELSTATIC2,"Static",SS_ETCHEDHORZ | WS_GROUP,7,86,212,1,WS_EX_STATICEDGE
+    LTEXT           "Maximum read speed:",IDC_MAXREADLABELSTATIC,7,93,212,8
+    LTEXT           "Static",IDC_MAXREADSTATIC,12,103,205,8
+    LTEXT           "Maximum write speed:",IDC_MAXWRITELABELSTATIC,7,118,212,8
+    LTEXT           "Static",IDC_MAXWRITESTATIC,12,128,115,8
+    CONTROL         "",IDC_BEVELSTATIC3,"Static",SS_ETCHEDHORZ | WS_GROUP,7,144,211,1,WS_EX_STATICEDGE
+    LTEXT           "Read:",IDC_READSTATIC,7,151,45,8
+    CONTROL         "CD-R",IDC_READCDRCHECK,"Button",BS_3STATE | WS_TABSTOP,56,150,33,10
+    CONTROL         "DVD-RAM",IDC_READDVDRAMCHECK,"Button",BS_3STATE | WS_TABSTOP,56,163,47,10
+    CONTROL         "CD-RW",IDC_READCDRWCHECK,"Button",BS_3STATE | WS_TABSTOP,113,150,39,10
+    CONTROL         "DVD-ROM",IDC_READDVDROMCHECK,"Button",BS_3STATE | WS_TABSTOP,113,163,47,10
+    CONTROL         "DVD-R",IDC_READDVDRCHECK,"Button",BS_3STATE | WS_TABSTOP,170,150,37,10
+    LTEXT           "Write:",IDC_WRITESTATIC,7,179,45,8
+    CONTROL         "CD-R",IDC_WRITECDRCHECK,"Button",BS_3STATE | WS_TABSTOP,56,179,33,10
+    CONTROL         "CD-RW",IDC_WRITECDRWCHECK,"Button",BS_3STATE | WS_TABSTOP,113,179,39,10
+    CONTROL         "DVD-R",IDC_WRITEDVDRCHECK,"Button",BS_3STATE | WS_TABSTOP,170,179,37,10
+    CONTROL         "DVD-RAM",IDC_WRITEDVDRAMCHECK,"Button",BS_3STATE | WS_TABSTOP,56,192,47,10
+    CONTROL         "",IDC_WRITESPEEDSPIN,"msctls_updown32",UDS_ARROWKEYS,129,127,10,11
+END
+
+IDD_PROPPAGE_DEVICEADVANCED DIALOGEX 0, 0, 227, 209
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Advanced"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    LTEXT           "Advanced information:",IDC_INFOSTATIC,7,7,90,8
+    CONTROL         "",IDC_ADVLIST,"SysListView32",LVS_REPORT | LVS_ALIGNLEFT | LVS_NOCOLUMNHEADER | WS_BORDER | WS_TABSTOP,7,18,213,184
+END
+
+IDD_PROPPAGE_BURNIMAGEGENERAL DIALOGEX 0, 0, 227, 179
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "General"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    ICON            "",IDC_ICONSTATIC,7,7,20,20
+    CONTROL         "",IDC_BEVELSTATIC,"Static",SS_ETCHEDHORZ | WS_GROUP,7,31,213,1,WS_EX_STATICEDGE
+    COMBOBOX        IDC_RECORDERCOMBO,57,11,145,127,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Write speed:",IDC_WRITESPEEDSTATIC,7,72,49,8
+    COMBOBOX        IDC_WRITESPEEDCOMBO,57,70,117,102,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Write method:",IDC_WRITEMETHODSTATIC,7,88,49,8
+    COMBOBOX        IDC_WRITEMETHODCOMBO,57,86,117,86,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "",IDC_BEVELSTATIC2,"Static",SS_ETCHEDHORZ | WS_GROUP,8,104,212,1,WS_EX_STATICEDGE
+    CONTROL         "Eject the disc after writing",IDC_EJECTCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,111,213,10
+    CONTROL         "Simulation",IDC_SIMULATECHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,124,213,10
+    CONTROL         "Buffer underrun protection",IDC_BUPCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,137,213,10
+    CONTROL         "Pad data tracks",IDC_PADCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,149,213,10
+    CONTROL         "Fixate the disc after writing",IDC_FIXATECHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,162,213,10
+    CONTROL         "On the fly",IDC_ONFLYCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,37,213,10
+    CONTROL         "",IDC_BEVELSTATIC3,"Static",SS_ETCHEDHORZ | WS_GROUP,7,64,213,1,WS_EX_STATICEDGE
+    CONTROL         "Verify the disc after writing",IDC_VERIFYCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,50,213,10
+    PUSHBUTTON      "",IDC_REFRESHBUTTON,206,11,14,13,BS_ICON
+END
+
+IDD_PROPPAGE_BURNIMAGEADVANCED DIALOGEX 0, 0, 227, 134
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Advanced"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    CONTROL         "Allow overburning",IDC_OVERBURNCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,7,213,10
+    CONTROL         "Swap audio byte order",IDC_SWABCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,19,213,10
+    CONTROL         "Ignore medium size",IDC_IGNORESIZECHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,32,213,10
+    CONTROL         "Set the SCSI IMMED flag",IDC_IMMEDCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,45,213,10
+    CONTROL         "Yamaha Audio Master Q. R.",IDC_AUDIOMASTERCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,58,213,10
+    CONTROL         "Forcespeed mode",IDC_FORCESPEEDCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,71,213,10
+    CONTROL         "Plextor VariRec write mode",IDC_VARIRECCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,83,213,10
+    CONTROL         "",IDC_VARIRECSLIDER,"msctls_trackbar32",TBS_AUTOTICKS | TBS_TOOLTIPS | WS_TABSTOP,7,96,100,20
+    EDITTEXT        IDC_VARIRECEDIT,109,97,24,13,ES_AUTOHSCROLL | ES_READONLY
+END
+
+IDD_PROPPAGE_PROJECTPROPGENERAL DIALOGEX 0, 0, 226, 154
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "General"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    ICON            "",IDC_ICONSTATIC,7,7,20,20
+    CONTROL         "",IDC_BEVELSTATIC,"Static",SS_ETCHEDHORZ | WS_GROUP,7,31,212,1,WS_EX_STATICEDGE
+    LTEXT           "Type:",IDC_TYPELABELSTATIC,7,38,49,8
+    EDITTEXT        IDC_NAMEEDIT,57,11,162,13,ES_AUTOHSCROLL
+    LTEXT           "Size:",IDC_SIZELABELSTATIC,7,53,47,8
+    LTEXT           "Contains:",IDC_CONTAINSLABELSTATIC,7,68,48,8
+    LTEXT           "Static",IDC_TYPESTATIC,57,38,162,8
+    LTEXT           "Static",IDC_SIZESTATIC,57,53,162,8
+    LTEXT           "Static",IDC_CONTAINSSTATIC,57,68,162,8
+END
+
+IDD_PROPPAGE_PROJECTPROPISO DIALOGEX 0, 0, 226, 154
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "ISO"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    LTEXT           "Level:",IDC_LEVELSTATIC,7,9,50,8
+    COMBOBOX        IDC_LEVELCOMBO,57,7,162,140,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Character set:",IDC_CHARSETSTATIC,7,25,48,8
+    COMBOBOX        IDC_CHARSETCOMBO,57,23,162,124,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "",IDC_BEVELSTATIC,"Static",SS_ETCHEDHORZ | WS_GROUP,7,57,212,1,WS_EX_STATICEDGE
+    CONTROL         "Use Joliet file name extension",IDC_JOLIETCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,64,212,10
+    CONTROL         "Allow more than 64 characters for Joliet names",IDC_JOLIETLONGNAMESCHECK,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,19,77,200,10
+    LTEXT           "Format:",IDC_FORMATSTATIC,7,41,49,8
+    COMBOBOX        IDC_FORMATCOMBO,57,39,162,108,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Include UDF support in the generated filesystem",IDC_UDFCHECK,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,103,212,10
+    CONTROL         "Use Rock Ridge extensions",IDC_ROCKRIDGECHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,90,212,10
+    CONTROL         "Omit version numbers from ISO9660 file names",IDC_OMITVNCHECK,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,116,212,10
+END
+
+IDD_PROPPAGE_PROJECTPROPFIELDS DIALOGEX 0, 0, 226, 154
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Fields"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    EDITTEXT        IDC_PUBLISHEREDIT,57,7,162,13,ES_AUTOHSCROLL
+    LTEXT           "Publisher:",IDC_PUBLISHERSTATIC,7,8,49,8
+    EDITTEXT        IDC_PREPAREREDIT,57,23,162,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_SYSTEMEDIT,57,39,162,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_VOLUMEEDIT,57,55,162,13,ES_AUTOHSCROLL
+    LTEXT           "System:",IDC_SYSTEMSTATIC,7,40,47,8
+    LTEXT           "Preparer:",IDC_PREPARERSTATIC,7,24,47,8
+    LTEXT           "Volume set:",IDC_VOLUMESTATIC,7,56,48,8
+    CONTROL         "",IDC_BEVELSTATIC,"Static",SS_ETCHEDHORZ | WS_GROUP,7,72,212,1,WS_EX_STATICEDGE
+    LTEXT           "Copyright file:",IDC_COPYRIGHTSTATIC,7,80,49,8
+    EDITTEXT        IDC_COPYRIGHTEDIT,57,78,162,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_ABSTRACTEDIT,57,94,162,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_BIBLIOGRAPHICEDIT,57,110,162,13,ES_AUTOHSCROLL
+    LTEXT           "Abstract file:",IDC_ABSTRACTSTATIC,7,96,49,8
+    LTEXT           "Bibliographic...",IDC_BIBLIOGRAPHICSTATIC,7,112,49,8
+END
+
+IDD_PROPPAGE_PROJECTPROPAUDIO DIALOGEX 0, 0, 226, 154
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Audio"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    LTEXT           "Album title:",IDC_ALBUMSTATIC,7,9,49,8
+    EDITTEXT        IDC_ALBUMEDIT,57,7,161,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_ARTISTEDIT,57,23,161,13,ES_AUTOHSCROLL
+    LTEXT           "Artist:",IDC_ARTISTSTATIC,7,25,49,8
+    CONTROL         "",IDC_BEVELSTATIC,"Static",SS_ETCHEDHORZ | WS_GROUP,7,40,212,1,WS_EX_STATICEDGE
+    CONTROL         "",IDC_TRACKLIST,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,46,211,90
+    LTEXT           "Double-click on a track to edit its settings.",IDC_INFOSTATIC,7,139,211,8
+END
+
+IDD_PROPPAGE_CONFIGGENERAL DIALOGEX 0, 0, 247, 188
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "General"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    CONTROL         "Check if autorun is enabled on each startup",IDC_AUTORUNCHECK,
+                    "Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,7,7,233,10
+    CONTROL         "Remember the last active folder",IDC_REMEMBERSHELLCHECK,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,77,219,10
+    GROUPBOX        "Explorer folder",IDC_SHELLFOLDERGROUPSTATIC,7,31,233,60
+    LTEXT           "Enter the folder that you want to be the default folder in the explorer view part of the program.",IDC_SHELLFOLDERINFOSTATIC,14,41,218,18
+    EDITTEXT        IDC_SHELLFOLDEREDIT,14,60,201,13,ES_AUTOHSCROLL
+    PUSHBUTTON      "...",IDC_SHELLFOLDERBROWSEBUTTON,220,60,14,13
+    CONTROL         "Associate InfraRecorder with .irp (InfraRecorder Project) files",IDC_ASSOCIATECHECK,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,19,233,10
+    GROUPBOX        "Temporary folder",IDC_TEMPFOLDERGROUPSTATIC,7,94,233,49
+    LTEXT           "The folder specified below will be used when data has to be temporarily stored on your harddrive.",IDC_TEMPFOLDERINFOSTATIC,14,104,218,18
+    EDITTEXT        IDC_TEMPFOLDEREDIT,14,124,201,13,ES_AUTOHSCROLL
+    PUSHBUTTON      "...",IDC_TEMPFOLDERBROWSEBUTTON,220,124,14,13
+END
+
+IDD_PROPPAGE_CONFIGADVANCED DIALOGEX 0, 0, 247, 188
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Advanced"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    CONTROL         "Enable program log (not recomended for regular use)",IDC_LOGCHECK,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,7,233,10
+    GROUPBOX        "FIFO buffer size",IDC_FIFOGROUPSTATIC,7,30,233,57
+    LTEXT           "This option allows you to change the amount of memory that will be used as a RAM buffer. This is the secondary buffer in addition to your recorder's physical buffer.",IDC_FIFOINFOSTATIC,14,40,219,27
+    EDITTEXT        IDC_FIFOEDIT,14,68,41,13,ES_AUTOHSCROLL,WS_EX_RIGHT
+    LTEXT           "MiB",IDC_FIFOMBSTATIC,59,70,12,8
+    CONTROL         "Enable smoke effect (requires Windows Vista Aero)",IDC_SMOKECHECK,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,19,233,10
+END
+
+IDD_PROPPAGE_CONFIGLANGUAGE DIALOGEX 0, 0, 247, 188
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Language"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    LTEXT           "Language:",IDC_LANGUAGESTATIC,7,7,233,8
+    COMBOBOX        IDC_LANGUAGECOMBO,7,18,131,163,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Please note that InfraRecorder needs to be restarted for new language settings to take affect.",IDC_LANGUAGEINFOSTATIC,7,39,233,24
+END
+
+IDD_PROPPAGE_CONFIGSHELLEXT DIALOGEX 0, 0, 247, 188
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Shell Extension"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    CONTROL         "Enable InfraRecorder shell extension",IDC_SHELLEXTCHECK,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,7,233,10
+    CONTROL         "Display context menu items in a submenu",IDC_SHELLEXTSUBMENUCHECK,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,19,233,10
+    LTEXT           "Register the shell extension with the following file extensions:",IDC_SHELLEXTTEXTSTATIC,7,48,202,8
+    CONTROL         "Display menu item icons",IDC_SHELLEXTICONCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,32,233,10
+    CONTROL         "",IDC_SHELLEXTLIST,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,59,233,75
+END
+
+IDD_PROPPAGE_COPYDISCGENERAL DIALOGEX 0, 0, 227, 210
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "General"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    COMBOBOX        IDC_SOURCECOMBO,57,7,163,184,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Source:",IDC_SOURCESTATIC,7,9,49,8
+    COMBOBOX        IDC_TARGETCOMBO,57,23,145,168,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Target:",IDC_TARGETSTATIC,7,24,49,8
+    CONTROL         "",IDC_BEVELSTATIC,"Static",SS_ETCHEDHORZ | WS_GROUP,7,40,213,1,WS_EX_STATICEDGE
+    LTEXT           "Write speed:",IDC_WRITESPEEDSTATIC,7,102,49,8
+    COMBOBOX        IDC_WRITESPEEDCOMBO,57,100,117,103,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Write method:",IDC_WRITEMETHODSTATIC,7,118,49,8
+    COMBOBOX        IDC_WRITEMETHODCOMBO,57,116,117,87,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "",IDC_BEVELSTATIC4,"Static",SS_ETCHEDHORZ | WS_GROUP,8,134,211,1,WS_EX_STATICEDGE
+    CONTROL         "Eject the disc after writing",IDC_EJECTCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,141,213,10
+    CONTROL         "Simulation",IDC_SIMULATECHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,154,213,10
+    CONTROL         "Buffer underrun protection",IDC_BUPCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,167,213,10
+    CONTROL         "Pad data tracks",IDC_PADCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,180,213,10
+    CONTROL         "Fixate the disc after writing",IDC_FIXATECHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,193,213,10
+    CONTROL         "On the fly",IDC_ONFLYCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,47,213,10
+    CONTROL         "",IDC_BEVELSTATIC5,"Static",SS_ETCHEDHORZ | WS_GROUP,7,94,211,1,WS_EX_STATICEDGE
+    LTEXT           "Copying on the fly is risky. Please make sure that your source device can read at least as fast as you will write.",IDC_ONFLYSTATIC,19,59,201,17
+    CONTROL         "Clone disc (recommended)",IDC_CLONECHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,79,213,10
+    PUSHBUTTON      "",IDC_REFRESHBUTTON,206,23,14,13,BS_ICON
+END
+
+IDD_PROPPAGE_DISCGENERAL DIALOGEX 0, 0, 227, 214
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "General"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    ICON            "",IDC_ICONSTATIC,7,7,20,20
+    LTEXT           "Static",IDC_NAMESTATIC,57,13,163,8
+    CONTROL         "",IDC_BEVELSTATIC,"Static",SS_ETCHEDHORZ | WS_GROUP,7,31,212,1,WS_EX_STATICEDGE
+    LTEXT           "Disc type:",IDC_TYPELABELSTATIC,7,39,49,8
+    LTEXT           "Static",IDC_TYPESTATIC,57,39,163,8
+    LTEXT           "Book type:",IDC_BOOKLABELSTATIC,7,54,49,8
+    LTEXT           "Static",IDC_BOOKSTATIC,57,54,163,8
+    LTEXT           "Region:",IDC_REGIONLABELSTATIC,7,70,48,8
+    LTEXT           "Static",IDC_REGIONSTATIC,57,70,163,8
+    CONTROL         "",IDC_BEVELSTATIC2,"Static",SS_ETCHEDHORZ | WS_GROUP,7,86,212,1,WS_EX_STATICEDGE
+    LTEXT           "Layers:",IDC_LAYERLABELSTATIC,7,94,47,8
+    LTEXT           "Static",IDC_LAYERSTATIC,57,94,163,8
+    LTEXT           "Static",IDC_TRACKSTATIC,57,110,163,8
+    LTEXT           "Tracks:",IDC_TRACKLABELSTATIC,7,110,49,8
+    LTEXT           "Static",IDC_SESSIONSTATIC,57,126,163,8
+    LTEXT           "Sessions:",IDC_SESSIONLABELSTATIC,7,126,48,8
+    CONTROL         "",IDC_BEVELSTATIC4,"Static",SS_ETCHEDHORZ | WS_GROUP,7,142,212,1,WS_EX_STATICEDGE
+    LTEXT           "Static",IDC_STATUSSTATIC,57,150,163,17
+    LTEXT           "Status:",IDC_STATUSLABELSTATIC,7,150,49,8
+    CONTROL         "",IDC_BEVELSTATIC5,"Static",SS_ETCHEDHORZ | WS_GROUP,7,174,211,1,WS_EX_STATICEDGE
+    LTEXT           "Used space:",IDC_USEDSPACELABELSTATIC,7,182,50,8
+    LTEXT           "Static",IDC_USEDSPACESTATIC,57,182,163,8
+    LTEXT           "Static",IDC_FREESPACESTATIC,57,198,163,8
+    LTEXT           "Free space:",IDC_FREESPACELABELSTATIC,7,198,49,8
+END
+
+IDD_PROPPAGE_READOPTIONS DIALOGEX 0, 0, 227, 158
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Read"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    CONTROL         "Ignore read errors",IDC_NOREADERRCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,7,213,10
+    CONTROL         "Read all sub-channel data and the full TOC",IDC_READSUBCHANNELCHECK,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,19,213,10
+    CONTROL         "",IDC_BEVELSTATIC,"Static",SS_ETCHEDHORZ | WS_GROUP,7,32,212,1,WS_EX_STATICEDGE
+    LTEXT           "Read speed:",IDC_READSPEEDSTATIC,7,40,50,8
+    COMBOBOX        IDC_READSPEEDCOMBO,57,38,117,113,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+END
+
+IDD_PROPPAGE_COPYIMAGEGENERAL DIALOGEX 0, 0, 227, 139
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "General"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    LTEXT           "Source:",IDC_SOURCESTATIC,7,9,49,8
+    PUSHBUTTON      "...",IDC_BROWSEBUTTON,206,23,14,13
+    COMBOBOX        IDC_SOURCECOMBO,57,7,145,90,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Image file:",IDC_IMAGESTATIC,7,24,45,8
+    EDITTEXT        IDC_IMAGEEDIT,57,23,145,13,ES_AUTOHSCROLL | ES_READONLY
+    PUSHBUTTON      "",IDC_REFRESHBUTTON,206,7,14,13,BS_ICON
+END
+
+IDD_PROPPAGE_PROJECTPROPBOOT DIALOGEX 0, 0, 226, 153
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Boot"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    LTEXT           "Boot images:",IDC_BOOTSTATIC,7,7,131,8
+    CONTROL         "",IDC_LIST,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,18,212,91
+    EDITTEXT        IDC_BOOTCATALOGEDIT,57,112,162,13,ES_AUTOHSCROLL
+    LTEXT           "Boot catalog:",IDC_BOOTCATALOGSTATIC,7,113,49,8
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 258
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 184
+    END
+
+    IDD_PROPPAGE_DEVICEGENERAL, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 219
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 202
+    END
+
+    IDD_PROPPAGE_DEVICEADVANCED, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 220
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 202
+    END
+
+    IDD_PROPPAGE_BURNIMAGEGENERAL, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 220
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 172
+    END
+
+    IDD_PROPPAGE_BURNIMAGEADVANCED, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 220
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 127
+    END
+
+    IDD_PROPPAGE_PROJECTPROPGENERAL, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 219
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 147
+    END
+
+    IDD_PROPPAGE_PROJECTPROPISO, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 219
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 147
+    END
+
+    IDD_PROPPAGE_PROJECTPROPFIELDS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 219
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 147
+    END
+
+    IDD_PROPPAGE_PROJECTPROPAUDIO, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 218
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 147
+    END
+
+    IDD_PROPPAGE_CONFIGGENERAL, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 240
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 181
+    END
+
+    IDD_PROPPAGE_CONFIGADVANCED, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 240
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 181
+    END
+
+    IDD_PROPPAGE_CONFIGLANGUAGE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 240
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 181
+    END
+
+    IDD_PROPPAGE_CONFIGSHELLEXT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 240
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 181
+    END
+
+    IDD_PROPPAGE_COPYDISCGENERAL, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 220
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 203
+    END
+
+    IDD_PROPPAGE_DISCGENERAL, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 220
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 207
+    END
+
+    IDD_PROPPAGE_READOPTIONS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 220
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 151
+    END
+
+    IDD_PROPPAGE_COPYIMAGEGENERAL, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 220
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 132
+    END
+
+    IDD_PROPPAGE_PROJECTPROPBOOT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 219
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 146
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDR_MAINFRAME ACCELERATORS 
+BEGIN
+    VK_DELETE,      ID_EDIT_REMOVE,         VIRTKEY, NOINVERT
+    VK_F2,          ID_EDIT_RENAME,         VIRTKEY, NOINVERT
+    "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL, NOINVERT
+    "P",            ID_FILE_PRINT,          VIRTKEY, CONTROL, NOINVERT
+    "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL, NOINVERT
+    VK_F6,          ID_NEXT_PANE,           VIRTKEY, NOINVERT
+    VK_F6,          ID_PREV_PANE,           VIRTKEY, SHIFT, NOINVERT
+    "V",            ID_SHELL_PASTE,         VIRTKEY, CONTROL, NOINVERT
+    "A",            ID_EDIT_SELECTALL,      VIRTKEY, CONTROL, NOINVERT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 0,44,0,0
+ PRODUCTVERSION 0,44,0,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x2L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "FileDescription", "InfraRecorder"
+            VALUE "FileVersion", "0.44.0.0"
+            VALUE "InternalName", "InfraRecorder"
+            VALUE "LegalCopyright", "Copyright © 2006-2007 Christian Kindahl"
+            VALUE "OriginalFilename", "InfraRecorder.exe"
+            VALUE "ProductName", "InfraRecorder"
+            VALUE "ProductVersion", "0.44.0.0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDR_MAINFRAME           "InfraRecorder"
+    ID_VIEW_UPLEVEL         "Go up one level."
+    ID_TRACK_READ           "Save the selected track(s) to your hard drive."
+    ID_TRACK_VERIFY         "Scan the selected track(s) for errors."
+    ID_TRACK_ERASE          "Erase the selected track(s) from the disc."
+    ID_SHELLEXT_ADD         "Add a new file extension to the list."
+    ID_SHELLEXT_REMOVE      "Remove the selected file extension from the list."
+    ID_BOOT_ADD             "Add a new boot image to the project."
+    ID_BOOT_REMOVE          "Remove the selected boot image from the project."
+    ID_BOOT_EDIT            "Edit the selected boot image."
+END
+
+STRINGTABLE 
+BEGIN
+    ID_FILE_OPEN            "Open an existing project."
+    ID_FILE_CLOSE           "Close the active document\nClose"
+    ID_FILE_SAVE            "Save the active project."
+    ID_FILE_SAVE_AS         "Save the active project with a new name."
+    ID_FILE_PAGE_SETUP      "Change the printing options\nPage Setup"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_APP_ABOUT            "Display program information, version number and copyright."
+    ID_APP_EXIT             "Quit the application."
+END
+
+STRINGTABLE 
+BEGIN
+    ID_NEXT_PANE            "Switch to the next window pane\nNext Pane"
+    ID_PREV_PANE            "Switch back to the previous window pane\nPrevious Pane"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_VIEW_TOOLBAR         "Show or hide the toolbar.\nToggle ToolBar"
+    ID_VIEW_STATUS_BAR      "Show or hide the status bar.\nToggle StatusBar"
+END
+
+STRINGTABLE 
+BEGIN
+    ATL_IDS_SCSIZE          "Change the window size"
+    ATL_IDS_SCMOVE          "Change the window position"
+    ATL_IDS_SCMINIMIZE      "Reduce the window to an icon"
+    ATL_IDS_SCMAXIMIZE      "Enlarge the window to full size"
+    ATL_IDS_SCNEXTWINDOW    "Switch to the next document window"
+    ATL_IDS_SCPREVWINDOW    "Switch to the previous document window"
+    ATL_IDS_SCCLOSE         "Close the active window and prompts to save the documents"
+END
+
+STRINGTABLE 
+BEGIN
+    ATL_IDS_SCRESTORE       "Restore the window to normal size"
+    ATL_IDS_SCTASKLIST      "Activate Task List"
+    ATL_IDS_MDICHILD        "Activate this window"
+END
+
+STRINGTABLE 
+BEGIN
+    ATL_IDS_IDLEMESSAGE     "Ready"
+END
+
+STRINGTABLE 
+BEGIN
+    ATL_IDS_MRU_FILE        "Open this document"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_ACTIONS_ERASERE      "Erase or format a disc."
+    ID_VIEW_PROGRAMLOG      "View the program log."
+    ID_ACTIONS_BURNIMAGE    "Write the contents of a disc-image to a CD."
+    ID_OPTIONS_CONFIGURATION "Configure InfraRecorder."
+    ID_OPTIONS_DEVICES      "View device properties and edit the device configuration."
+END
+
+STRINGTABLE 
+BEGIN
+    ID_NEWPROJECT_DATACD    "Create a new data CD project."
+    ID_NEWPROJECT_AUDIO     "Create a new audio CD project."
+    ID_NEWPROJECT_MIXED     "Create a new mixed-mode CD project."
+    ID_EDIT_NEWFOLDER       "Add a new folder to the project."
+    ID_EDIT_RENAME          "Rename the selected item."
+    ID_EDIT_REMOVE          "Remove the selected item(s) from the project."
+END
+
+STRINGTABLE 
+BEGIN
+    ID_FILE_PROJECTPROPERTIES "Display and change project settings."
+    ID_BURNCOMPILATION_DISCIMAGE 
+                            "Burn the current compilation to a disc image."
+    ID_BURNCOMPILATION_COMPACTDISC 
+                            "Burn the current compilation to a physical compact disc."
+    ID_ACTIONS_FIXATEDISC   "Fixate a disc that has not already been fixated."
+    ID_ACTIONS_MANAGETRACKS "View disc track layout, save tracks and verify tracks."
+    ID_COPYDISC_COMPACTDISC "Copy the contents of a CD directly to another CD."
+    ID_COPYDISC_DISCIMAGE   "Copy the contents of a CD to a disc image."
+END
+
+STRINGTABLE 
+BEGIN
+    ID_ADD_SELECTED         "Add the selected object(s) to the project."
+    ID_ADD_ALL              "Add all object(s) to the project."
+    ID_ACTIONS_DISCINFORMATION "Display disc information."
+    ID_ACTIONS_IMPORTSESSION 
+                            "Import an existing session to your current project."
+    ID_HELP_HELPTOPICS      "Display help topics."
+    ID_NEWPROJECT_DVDVIDEO  "Create a new DVD-Video disc project."
+    ID_NEWPROJECT_DATADVD   "Create a new data DVD project."
+END
+
+STRINGTABLE 
+BEGIN
+    ID_EDIT_SELECTALL       "Select all items in the window."
+    ID_EDIT_INVERTSELECTION "Reverse which items are selected and which are not."
+END
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Swedish resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_SVE)
+#ifdef _WIN32
+LANGUAGE LANG_SWEDISH, SUBLANG_DEFAULT
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_PROJLISTSELMENU MENU 
+BEGIN
+    POPUP "Popup Menu"
+    BEGIN
+        MENUITEM "&Rename",                     ID_EDIT_RENAME
+        MENUITEM "&Remove",                     ID_EDIT_REMOVE
+    END
+END
+
+IDR_PROJLISTNOSELMENU MENU 
+BEGIN
+    POPUP "Popup Menu"
+    BEGIN
+        POPUP "&View"
+        BEGIN
+            MENUITEM "Lar&ge Icons",                32792
+            MENUITEM "S&mall Icons",                32793
+            MENUITEM "&List",                       32794
+            MENUITEM "&Details",                    32795
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "&New Folder",                 ID_EDIT_NEWFOLDER
+    END
+END
+
+IDR_DIAGNOSTICSMENU MENU 
+BEGIN
+    POPUP ""
+    BEGIN
+        MENUITEM "&Device Scan",                ID_DIAGNOSTICS_DEVICESCAN
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_MIXEDICON           ICON                    "Resources\\Mixed.ico"
+IDI_AUDIOICON           ICON                    "Resources\\Audio.ico"
+IDI_DATAICON            ICON                    "Resources\\Data.ico"
+IDI_DVDVIDEOICON        ICON                    "Resources\\DVDVideo.ico"
+IDI_PROJECTICON         ICON                    "Resources\\Project.ico"
+IDI_REFRESHICON         ICON                    "Resources\\Refresh.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_PROGRESSDLG DIALOGEX 0, 0, 337, 143
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,225,122,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,280,122,50,14
+    CONTROL         "",IDC_TOTALPROGRESS,"msctls_progress32",WS_BORDER,7,18,323,9
+    LTEXT           "",IDC_TOTALSTATIC,7,7,323,8
+    CONTROL         "",IDC_MESSAGELIST,"SysListView32",LVS_REPORT | LVS_SHAREIMAGELISTS | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,48,323,50
+    LTEXT           "",IDC_STATUSSTATIC,7,36,323,8
+    CONTROL         "",IDC_BEVELSTATIC,"Static",SS_ETCHEDHORZ | WS_GROUP,7,103,323,1,WS_EX_STATICEDGE
+    LTEXT           "",IDC_DEVICESTATIC,7,107,323,8
+    LTEXT           "Write-buffer:",IDC_BUFFERSTATIC,13,117,44,8
+    CONTROL         "",IDC_BUFFERPROGRESS,"msctls_progress32",WS_BORDER,59,117,86,9
+    PUSHBUTTON      "Reload",IDC_RELOADBUTTON,170,122,50,14,NOT WS_VISIBLE
+END
+
+IDD_SIMPLEPROGRESSDLG DIALOGEX 0, 0, 337, 108
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,225,87,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,280,87,50,14
+    CONTROL         "",IDC_MESSAGELIST,"SysListView32",LVS_REPORT | LVS_SHAREIMAGELISTS | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,18,323,50
+    LTEXT           "",IDC_STATUSSTATIC,7,7,323,8
+    CONTROL         "",IDC_BEVELSTATIC,"Static",SS_ETCHEDHORZ | WS_GROUP,7,73,322,1,WS_EX_STATICEDGE
+    LTEXT           "",IDC_DEVICESTATIC,7,78,323,8
+    PUSHBUTTON      "Reload",IDC_RELOADBUTTON,170,87,50,14,NOT WS_VISIBLE
+END
+
+IDD_ERASEDLG DIALOGEX 0, 0, 250, 115
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Erase/Format Disc"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,193,7,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,193,24,50,14
+    LTEXT           "Recorder:",IDC_RECORDERSTATIC,7,7,177,8
+    COMBOBOX        IDC_RECORDERCOMBO,7,18,161,90,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Erase method:",IDC_METHODSTATIC,7,39,123,8
+    COMBOBOX        IDC_METHODCOMBO,7,50,124,58,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Ignore illegal TOC (force erase)",IDC_FORCECHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,72,236,10
+    CONTROL         "Eject the disc after erasing",IDC_EJECTCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,85,236,10
+    CONTROL         "Simulation",IDC_SIMULATECHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,98,236,10
+    PUSHBUTTON      "Help",IDC_HELPBUTTON,193,41,50,14
+    PUSHBUTTON      "",IDC_REFRESHBUTTON,172,18,14,13,BS_ICON
+    COMBOBOX        IDC_SPEEDCOMBO,135,50,51,58,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Speed:",IDC_SPEEDSTATIC,135,39,51,8
+END
+
+IDD_LOGDLG DIALOGEX 0, 0, 320, 147
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+CAPTION "Program Log"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,263,7,50,14
+    PUSHBUTTON      "Save &As...",ID_SAVEASBUTTON,263,126,50,14
+    EDITTEXT        IDC_LOGEDIT,7,7,249,133,ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_READONLY | WS_VSCROLL
+    PUSHBUTTON      "&Diagnostics",IDC_DIAGNOSTICSBUTTON,263,24,50,14
+    PUSHBUTTON      "&Files",IDC_FILESBUTTON,263,41,50,14
+END
+
+IDD_DEVICESDLG DIALOGEX 0, 0, 290, 119
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Devices"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,233,7,50,14
+    CONTROL         "",IDC_DEVICELIST,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,18,219,80
+    LTEXT           "Double-click on a device to view its detailed information.",IDC_INFOSTATIC,7,7,219,8
+    PUSHBUTTON      "Rescan",IDC_RESCANBUTTON,233,84,50,14
+    CONTROL         "Silently validate the configuration at each startup",IDC_AUTOSCANCHECK,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,102,276,10
+    PUSHBUTTON      "Help",IDC_HELPBUTTON,233,24,50,14
+END
+
+IDD_WAITDLG DIALOGEX 0, 0, 145, 51
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CTEXT           "",IDC_INFOSTATIC,7,7,131,37,SS_CENTERIMAGE
+END
+
+IDD_EDITTRACKDLG DIALOGEX 0, 0, 240, 70
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,183,7,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,183,24,50,14
+    LTEXT           "Track title:",IDC_TITLESTATIC,7,7,169,8
+    LTEXT           "Artist name:",IDC_ARTISTSTATIC,7,39,169,8
+    EDITTEXT        IDC_TITLEEDIT,7,18,169,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_ARTISTEDIT,7,50,169,13,ES_AUTOHSCROLL
+END
+
+IDD_FIXATEDLG DIALOGEX 0, 0, 250, 70
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Fixate Disc"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,193,7,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,193,24,50,14
+    LTEXT           "Recorder:",IDC_RECORDERSTATIC,7,7,179,8
+    COMBOBOX        IDC_RECORDERCOMBO,7,18,179,45,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Eject the disc after fixating",IDC_EJECTCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,40,178,10
+    CONTROL         "Simulation",IDC_SIMULATECHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,53,178,10
+    PUSHBUTTON      "Help",IDC_HELPBUTTON,193,41,50,14
+END
+
+IDD_TRACKSDLG DIALOGEX 0, 0, 251, 169
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Tracks"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,194,7,50,14
+    LTEXT           "Device:",IDC_DRIVESTATIC,7,7,179,8
+    CONTROL         "",IDC_BEVELSTATIC,"Static",SS_ETCHEDHORZ | WS_GROUP,8,37,179,1,WS_EX_STATICEDGE
+    CONTROL         "",IDC_TRACKLIST,"SysListView32",LVS_REPORT | LVS_SHAREIMAGELISTS | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,44,179,103
+    PUSHBUTTON      "Help",IDC_HELPBUTTON,194,24,50,14
+    COMBOBOX        IDC_DEVICECOMBO,7,18,179,144,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+END
+
+IDD_NEWFILEEXTDLG DIALOGEX 0, 0, 240, 70
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "New File Extension"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,183,7,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,183,24,50,14
+    LTEXT           "Description:",IDC_DESCSTATIC,7,7,170,8
+    EDITTEXT        IDC_DESCEDIT,7,18,169,13,ES_AUTOHSCROLL
+    LTEXT           "File extensions (separated by a comma):",IDC_EXTSTATIC,7,39,169,8
+    EDITTEXT        IDC_EXTEDIT,7,50,170,13,ES_AUTOHSCROLL
+END
+
+IDD_INFODLG DIALOGEX 0, 0, 281, 60
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,224,7,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,224,24,50,14
+    ICON            "",IDC_ICONSTATIC,7,7,20,20
+    LTEXT           "",IDC_INFOSTATIC,33,7,185,34
+    CONTROL         "Do not display this message again",IDC_DISPLAYMSGCHECK,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,33,43,186,10
+END
+
+IDD_IMPORTSESSIONDLG DIALOGEX 0, 0, 250, 58
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Import Session"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,193,7,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,193,24,50,14
+    LTEXT           "Device:",IDC_DRIVESTATIC,7,7,179,8
+    COMBOBOX        IDC_DEVICECOMBO,7,18,179,45,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "",IDC_BEVELSTATIC,"Static",SS_ETCHEDHORZ | WS_GROUP,8,37,179,1,WS_EX_STATICEDGE
+    LTEXT           "Static",IDC_USEDSPACESTATIC,73,43,170,8
+    LTEXT           "Used space:",IDC_USEDSPACELABELSTATIC,7,43,64,8
+END
+
+IDD_SAVETRACKSDLG DIALOGEX 0, 0, 240, 70
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Save Tracks"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,183,7,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,183,24,50,14
+    LTEXT           "Target folder:",IDC_TARGETSTATIC,7,7,46,8
+    EDITTEXT        IDC_TARGETEDIT,7,18,150,13,ES_AUTOHSCROLL
+    LTEXT           "Audio track output format:",IDC_AUDIOFORMATSTATIC,7,39,86,8
+    COMBOBOX        IDC_AUDIOFORMATCOMBO,7,50,109,85,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "...",IDC_BROWSEBUTTON,162,18,14,13
+    PUSHBUTTON      "Settings...",IDC_AUDIOFORMATBUTTON,121,50,55,13
+END
+
+IDD_ADDBOOTIMAGEDLG DIALOGEX 0, 0, 240, 148
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Add Boot Image"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,183,7,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,183,24,50,14
+    LTEXT           "Local path:",IDC_NAMESTATIC,7,7,169,8
+    EDITTEXT        IDC_NAMEEDIT,7,18,168,13,ES_AUTOHSCROLL
+    LTEXT           "Emulation type:",IDC_EMULATIONSTATIC,7,39,168,8
+    COMBOBOX        IDC_EMULATIONCOMBO,7,50,91,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    GROUPBOX        "Advanced options",IDC_OPTIONSSTATIC,7,71,169,70
+    CONTROL         "Don't make image bootable",IDC_NOBOOTCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,82,158,10
+    CONTROL         "Write boot-info-table to the image",IDC_BOOTINFOTABLECHECK,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,95,159,10
+    EDITTEXT        IDC_BOOTSEGMENTEDIT,90,106,80,13,ES_AUTOHSCROLL,WS_EX_RIGHT
+    LTEXT           "Boot load segment:",IDC_BOOTSEGMENTSTATIC,14,107,75,8
+    EDITTEXT        IDC_BOOTSIZEEDIT,90,122,80,13,ES_AUTOHSCROLL,WS_EX_RIGHT
+    LTEXT           "Boot load size:",IDC_BOOTSIZESTATIC,14,123,74,8
+    PUSHBUTTON      "Help",IDC_HELPBUTTON,183,41,50,14
+END
+
+IDD_DRIVELETTERDLG DIALOGEX 0, 0, 234, 54
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,177,7,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,177,24,50,14
+    LTEXT           "InfraRecorder could not automatically detect the drive letter of one of your drives. Please specify the correct drive letter below:",IDC_INFOSTATIC,7,7,166,26
+    COMBOBOX        IDC_DRIVECOMBO,7,35,101,80,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+END
+
+IDD_CONFIRMFILEREPLACEDLG DIALOGEX 0, 0, 286, 122
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Confirm File Replace"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "No",IDC_NOBUTTON,145,101,50,14
+    PUSHBUTTON      "No to All",IDC_NOALLBUTTON,199,101,50,14
+    PUSHBUTTON      "Yes",IDC_YESBUTTON,37,101,50,14
+    PUSHBUTTON      "Yes to All",IDC_YESALLBUTTON,91,101,50,14
+    ICON            "",IDC_ICONSTATIC,7,7,21,20
+    LTEXT           "The target folder already contains a file named:",IDC_INFOSTATIC,33,7,246,22
+    LTEXT           "Would you like to replace the existing file",IDC_REPLACEINFOSTATIC,33,29,246,8
+    ICON            "",IDC_OLDICONSTATIC,36,40,21,20
+    LTEXT           "",IDC_OLDSIZESTATIC,62,41,217,8
+    LTEXT           "",IDC_OLDDATESTATIC,62,51,217,8
+    LTEXT           "with this one?",IDC_REPLACEINFO2STATIC,33,63,228,8
+    ICON            "",IDC_NEWICONSTATIC,36,74,21,20
+    LTEXT           "",IDC_NEWSIZESTATIC,62,75,217,8
+    LTEXT           "",IDC_NEWDATESTATIC,62,85,217,8
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_PROGRESSDLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 330
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 136
+    END
+
+    IDD_SIMPLEPROGRESSDLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 330
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 101
+    END
+
+    IDD_ERASEDLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 243
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 108
+    END
+
+    IDD_LOGDLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 313
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 140
+    END
+
+    IDD_DEVICESDLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 283
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 112
+    END
+
+    IDD_WAITDLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 138
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 44
+    END
+
+    IDD_EDITTRACKDLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 233
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 63
+    END
+
+    IDD_FIXATEDLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 243
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 63
+    END
+
+    IDD_TRACKSDLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 244
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 162
+    END
+
+    IDD_NEWFILEEXTDLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 233
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 63
+    END
+
+    IDD_INFODLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 274
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 53
+    END
+
+    IDD_IMPORTSESSIONDLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 243
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 51
+    END
+
+    IDD_SAVETRACKSDLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 233
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 63
+    END
+
+    IDD_ADDBOOTIMAGEDLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 233
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 141
+    END
+
+    IDD_DRIVELETTERDLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 227
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 47
+    END
+
+    IDD_CONFIRMFILEREPLACEDLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 279
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 115
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_SPLASHBITMAP        BITMAP                  "Resources\\Splash.bmp"
+IDB_MINITOOLBARBITMAP   BITMAP                  "Resources\\MiniToolBar.bmp"
+IDB_MINITOOLBARBITMAP_  BITMAP                  "Resources\\MiniToolBar_.bmp"
+IDB_TRACKTOOLBARBITMAP  BITMAP                  "Resources\\TrackToolBar.bmp"
+IDB_TRACKTOOLBARBITMAP_ BITMAP                  "Resources\\TrackToolBar_.bmp"
+IDB_MAINSMALLBITMAP     BITMAP                  "Resources\\MainSmall.bmp"
+IDB_MAINSMALLBITMAP_    BITMAP                  "Resources\\MainSmall_.bmp"
+IDB_MAINLARGEBITMAP     BITMAP                  "Resources\\MainLarge.bmp"
+IDB_MAINLARGEBITMAP_    BITMAP                  "Resources\\MainLarge_.bmp"
+IDB_SPLASHBITMAP_       BITMAP                  "Resources\\Splash_.bmp"
+IDB_LOGOBORDERBITMAP    BITMAP                  "Resources\\LogoBorder.bmp"
+#endif    // Swedish resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

@@ -1,0 +1,22 @@
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "irSndFile", "irSndFile.vcproj", "{533889C9-1598-4823-BFA9-7C97FD35D6DF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+		ReleaseA|Win32 = ReleaseA|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{533889C9-1598-4823-BFA9-7C97FD35D6DF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{533889C9-1598-4823-BFA9-7C97FD35D6DF}.Debug|Win32.Build.0 = Debug|Win32
+		{533889C9-1598-4823-BFA9-7C97FD35D6DF}.Release|Win32.ActiveCfg = Release|Win32
+		{533889C9-1598-4823-BFA9-7C97FD35D6DF}.Release|Win32.Build.0 = Release|Win32
+		{533889C9-1598-4823-BFA9-7C97FD35D6DF}.ReleaseA|Win32.ActiveCfg = ReleaseA|Win32
+		{533889C9-1598-4823-BFA9-7C97FD35D6DF}.ReleaseA|Win32.Build.0 = ReleaseA|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

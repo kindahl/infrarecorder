@@ -1,0 +1,147 @@
+<html>
+<head>
+<title>Getting Started</title>
+<link rel="stylesheet" media="screen" type="text/css" href="../../style.css">
+<script type="text/javascript" language="JavaScript" src="../../stylescript.js"></script>
+</head>
+<body scroll="no">
+<div id="header">
+	<div id="location">How to Use?, Working with Projects</div>
+	<div id="topic">Getting Started</div>
+</div>
+<div id="content">
+	<p>This topic will help you get started with your first custom CD project.
+	   InfraRecorder currently supports three kinds of projects.</p>
+	<p><em>Data Disc</em>
+	   projects are used for creating discs that contains files and folders (using
+	   the ISO9660 filesystem) that can be used on almost any computer. Data discs
+	   does not hold as much data per sector as audio discs due to the fact that
+	   data discs also stores addition error-check/correction data. As a result of
+	   this, data discs can be recorded in higher speed without necessary loose
+	   any quality/data. Data discs can be created in multiple steps, allowing
+	   data to be added to existing CDs. See <a href="multisession_disc.html">this</a>
+	   topic for more information on the subject.</p>
+	<p><em>Audio Disc</em> projects are used for creating audio discs that will
+	   play in any CD-player (and computer). Audio projects should normally be
+	   recorded at lower write speeds than data projects because audio discs does
+	   not contain any error-checking/correction data.</p>
+	<p><em>Mixed-Mode CD</em> projects are used for creating discs that contains
+	   one first data track which shares the features of a <em>Data Disc</em>
+	   project followed by a number of audio tracks. A <em>Mixed-Mode CD</em> will
+	   play in any CD-player, but the first (data) track will sound like noise.
+	   The audio tracks will play as normal.</p>
+	<dl>
+		<dt>To create a new project, use the menu:</dt>
+		<dd><strong>File <img src="../../images/arrow.png"> New Project
+		    <img src="../../images/arrow.png"></strong> &lt;select the type of
+		    project that you want to create&gt;</dd>
+		<dt>To open an existing project, use the menu:</dt>
+		<dd><strong>File <img src="../../images/arrow.png"> Open Project...</strong>
+		    </dd>
+		<dt>or the toolbar button:</dt>
+		<dd><img src="../../images/button_open.bmp"></dd>
+	</dl>
+	<p>InfraRecorder projects can be recorded directly to a physical compact disc
+	   or to a disc image. A disc image is a file stored on your computer that
+	   contains all the file data that you have added to your project (with
+	   exception for audio tracks in <em>Mixed-Mode</em> and <em>Audio</em>
+	   projects). A disc image can be recorded at a later time. See
+	   <a href="../burn_image.html">this</a> topic for more information.</p>
+	<dl>
+		<dt>To record your project to a compact disc, you can use the menu:</dt>
+		<dd><strong>Actions <img src="../../images/arrow.png"> Burn Compilation
+		    <img src="../../images/arrow.png"> to a Compact Disc...</strong>
+		    </dd>
+		<dt>or the toolbar button:</dt>
+		<dd><img src="../../images/button_recordcd.bmp"></dd>
+	</dl>
+	<p>A detailed description of the recording options can be in
+	   <a href="../burn_options.html">this</a> topic.</p>
+	<h1>Environment</h1>
+	<h2>General</h2>
+	<dl>
+		<dt>The <em>Explorer View</em> toolbar is used for navigating the explorer
+		    view and for adding files that are selected in the explorer list view to
+		    your project.</dt>
+		<dd><img src="../../images/toolbar_explorerview.png"></dd>
+	</dl>
+	<dl>
+		<dt>The <em>Disc Layout</em> toolbar is used for project navigation and
+		    management.</dt>
+		<dd><img src="../../images/toolbar_disclayout.png"></dd>
+	</dl>
+	<h2>File Management</h2>
+	<dl>
+		<dt>The <em>Edit</em> menu is used for project file management:
+		<dd><img src="../../images/menu_edit.png"></dd>
+		<dt>The options available from the edit menu (above) are also avaiable for
+		    faster access by right-clicking in the project view. For example if your
+		    right-click on a folder this menu will appear:
+		<dd><img src="../../images/menu_projectlistview.png"></dd>
+	</dl>
+	<dl>
+		<dt>If you add more data to your project than what the selected media can
+		    contain, the space meter at the bottom of the view will turn red:
+		<dd><img src="../../images/spacemeter_full.png"></dd>
+	</dl>
+	<dl>
+		<dt>The space meter will turn orange if the amount of data added to the
+		    project exceeds the offical size of the media but will probably fit on
+		    the media if recorded with <a href="../burn_options.html#advanced">overburn</a>
+		    enabled:
+		<dd><img src="../../images/spacemeter_warn.png"></dd>
+	</dl>
+	<p>You can change the space meter size to match the actual size of the blank
+	   disc that you will record your project on. To do so, right click on the
+	   space meter and select the apropriate media size.</p>
+	<hr>
+	<h1>File Management</h1>
+	<h2>Add Files</h2>
+	<p>There are many different ways to add files to your project. You can use
+	   drag and drop from the <em>Explorer View</em> and from Windows Exlporer.
+	   You can also navigate the <em>Explore View</em> and select the files you
+	   want to include in your project.</p>
+	<dl>
+		<dt>When you have selected the files you want, you can use the menu:</dt>
+		<dd><strong>Edit <img src="../../images/arrow.png"> Add
+		    <img src="../../images/arrow.png"> Selected</strong></dd>
+		<dt>or the toolbar button in the <em>Explorer View</em> toolbar:</dt>
+		<dd><img src="../../images/button_addselected.bmp"></dd>
+	</dl>
+	<p>You can also use the <em>Explorer View</em> to nagivate to a folder and
+	   quickly add all files and folder in that folder to your project.
+	<dl>
+		<dt>To add all files and folder in the active <em>Explorer View</em> folder,
+		    use the menu:</dt>
+		<dd><strong>Edit <img src="../../images/arrow.png"> Add
+		    <img src="../../images/arrow.png"> All</strong></dd>
+		<dt>or the toolbar button in the <em>Explorer View</em> toolbar:</dt>
+		<dd><img src="../../images/button_addall.bmp"></dd>
+	</dl>
+	<h2>Remove Files</h2>
+	<p>There are several ways of removing files and folders from your project. One
+	   way is to press the delete key on your keyboard. You can also use the menu
+	   or the toolbar button.</p>
+	<dl>
+		<dt>To remove files using the menu, do the following:</dt>
+		<dd><strong>Edit <img src="../../images/arrow.png"> Remove</strong></dd>
+		<dt>you can also use the toolbar button in the <em>Disc Layout</em> toolbar:
+		    </dt>
+		<dd><img src="../../images/button_remove.bmp"></dd>
+	</dl>
+	<h2>Other Operations</h2>
+	<dl>
+		<dt>To rename a file or folder, use the menu:</dt>
+		<dd><strong>Edit <img src="../../images/arrow.png"> Rename</strong></dd>
+		<dt>or the toolbar button in the <em>Disc Layout</em> toolbar:</dt>
+		<dd><img src="../../images/button_rename.bmp"></dd>
+	</dl>
+	<dl>
+		<dt>To add a new empty folder to your project, use the menu:</dt>
+		<dd><strong>Edit <img src="../../images/arrow.png"> New Folder</strong></dd>
+		<dt>or the toolbar button in the <em>Disc Layout</em> toolbar:</dt>
+		<dd><img src="../../images/button_newfolder.bmp"></dd>
+	</dl>
+</div>
+</body>
+</html>

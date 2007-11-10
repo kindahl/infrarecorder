@@ -1,0 +1,124 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_PROPPAGE_CONFIGGENERAL DIALOGEX 0, 0, 214, 145
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "General"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    CONTROL         "Constant bitrate mode",IDC_BITRATERADIO,"Button",
+                    BS_AUTORADIOBUTTON,7,41,200,10
+    CONTROL         "Quality mode (recommended)",IDC_QUALITYRADIO,"Button",
+                    BS_AUTORADIOBUTTON,7,7,200,10
+    LTEXT           "Quality:",IDC_QUALITYSTATIC,19,17,26,8
+    CONTROL         "",IDC_QUALITYSLIDER,"msctls_trackbar32",TBS_TOOLTIPS | 
+                    WS_TABSTOP,52,17,155,12
+    LTEXT           "High",IDC_QUALITYHIGHSTATIC,195,30,15,8
+    LTEXT           "Low",IDC_QUALITYLOWSTATIC,52,30,14,8
+    CONTROL         "",IDC_MINBITRATESPIN,"msctls_updown32",UDS_ARROWKEYS,
+                    101,78,11,13
+    EDITTEXT        IDC_MINBITRATEEDIT,61,78,40,13,ES_RIGHT | ES_AUTOHSCROLL
+    CONTROL         "Variable bitrate mode",IDC_VARBITRATERADIO,"Button",
+                    BS_AUTORADIOBUTTON,7,68,200,10
+    CONTROL         "Average bitrate mode",IDC_AVBITRATERADIO,"Button",
+                    BS_AUTORADIOBUTTON,7,112,200,10
+    LTEXT           "Min bitrate:",IDC_MINBITRATESTATIC,19,80,38,8
+    LTEXT           "Bitrate:",IDC_BITRATESTATIC,19,53,25,8
+    CONTROL         "",IDC_BITRATESPIN,"msctls_updown32",UDS_ARROWKEYS,101,
+                    51,11,13
+    EDITTEXT        IDC_BITRATEEDIT,61,51,40,13,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Max bitrate:",IDC_MAXBITRATESTATIC,19,96,40,8
+    CONTROL         "",IDC_MAXBITRATESPIN,"msctls_updown32",UDS_ARROWKEYS,
+                    101,94,11,13
+    EDITTEXT        IDC_MAXBITRATEEDIT,61,94,40,13,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Bitrate:",IDC_AVBITRATESTATIC,19,124,25,8
+    CONTROL         "",IDC_AVBITRATESPIN,"msctls_updown32",UDS_ARROWKEYS,101,
+                    122,11,13
+    EDITTEXT        IDC_AVBITRATEEDIT,61,122,40,13,ES_RIGHT | ES_AUTOHSCROLL
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_PROPPAGE_CONFIGGENERAL, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 207
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 136
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

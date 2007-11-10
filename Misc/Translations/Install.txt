@@ -1,0 +1,3 @@
+To install the translation, place the .irl file (and the .chm file for
+translations that include a translated manual) in the InfraRecorder\Languages
+directory. For example: C:\Program Files\InfraRecorder\Languages.

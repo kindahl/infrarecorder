@@ -1,0 +1,98 @@
+<html>
+<head>
+<title>Project Settings</title>
+<link rel="stylesheet" media="screen" type="text/css" href="../../style.css">
+<script type="text/javascript" language="JavaScript" src="../../stylescript.js"></script>
+</head>
+<body scroll="no">
+<div id="header">
+	<div id="location">How to Use?, Working with Projects</div>
+	<div id="topic">Project Settings</div>
+</div>
+<div id="content">
+	<dl>
+		<dt>This topic covers the project settings that are accessible from the menu:
+		    </dt>
+		<dd><strong>File <img src="../../images/arrow.png"> Project Properties...
+		    </strong></dd>
+	</dl>
+	<h1>General Settings</h1>
+	<p>The only general setting that you are able to change is the disc label. The
+	   default suggested label is based on the date and time of when the project
+	   was created. Please note that the label applies to the same restrictions as
+	   general file names in the project (see the <em>ISO Settings</em> section).
+	   </p>
+	<h1>ISO Settings</h1>
+	<h2>Level</h2>
+	<p>This option sets the ISO conformance level which basicly are different
+	   levels of file name restrictions. There are three levels supported in
+	   InfraRecorder:</p>
+	<ol>
+		<li><span>Level 1 uses file names in the 8.3 format (eight characters with a
+		    three-character extension), upper case letters, numbers and underscore.
+		    The maximum directory depth is eight.</span></li>
+		<li><span>Level 2 allows file names to be up to 31 characters long.</span>
+		    </li>
+		<li><span>Level 3 allows files to be fragmented (mainly to allow packet
+		    writing, or incremental CD recording).</span></li>
+		<li><span>Level 4 does not really exist, but when selected the ISO-9660:1999
+		    (which is ISO-9660 version 2) standard is used. This standard allows
+		    file names to be up to 207 characters long and the directory structure
+		    may be more than eight levels deep.</span></li>
+	</ol>
+	<h2>Character Set</h2>
+	<p>Defines the character set used in the local file names included in the
+	   project. InfraRecorder tries to automatically detect the character set
+	   used on your system.</p>
+	<h2>Format</h2>
+	<p>This option specifies the format that should be used when writing your
+	   project data to a disc. <em>Mode 1</em> is normally used when creating
+	   regular non multi-session discs while <em>Mode 2</em> should be used when
+	   creating multi-session discs. <em>Mode 1</em> allows 2048 bytes of data per
+	   sector, <em>Mode 2</em> allows 2336 bytes of data per sector (A CD-ROM
+	   sector is 2352 bytes large).</p>
+	<h2>Other Options</h2>
+	<p>The <em>Use Joliet file name extension</em> adds Joliet directory records
+	   to the disc in addition to regular ISO9660 file names. The joliet extension
+	   is commonly used on Windows systems and allows unicode file names with a
+	   maximum length of 64 characters.</p>
+	<p>If you want to use even longer file names you can enable the <em>Allow more
+	   than 64 characters for Joliet names</em> option. This is not fully
+	   compatible with the Joliet specification but seems to work. The maximum
+	   character length is extended to 103 characters.</p>
+	<p>Enable the <em>Use Rock Ridge extensions</em> option to generate SUSP and RR
+	   records using the Rock Ridge protocol to further describe the files on the
+	   iso9660 file system.</p>
+	<p>The <em>Include UDF support in the generated file system</em> option is
+	   self explanatory. UDF support is currently in alpha status, and for this
+	   reason it's not possible to generate UDF only filesystems.</p>
+	<p>The <em>Omit version number from ISO9660 file names</em> option is self
+	   explanatory.</p>
+	<h1>Fields</h1>
+	<p>This secion contains options to specify information about the people behind
+	   the CD-project. The <em>Publisher</em>, <em>Preparer</em>, <em>System</em>
+	  and <em>Volume set</em> fields should be edited directly, the other fields
+	  often contains file names due to the limited character length of 36
+	  characters.</p>
+	<h1>Audio Settings</h1>
+	<p>This secion allows you to create CD-Text information. CD-Text is a format
+	   supported by some (many?) CD-players that allows track and artist
+	   information to be displayed when the CD is playing. These options are
+	   available in audio and mixed-mode projects.</p>
+	<h1>Boot Settings</h2>
+	<dl>
+		<dt>This section is only available on data projects and allows you to specify
+		    up to 63 boot images that will be used to create an "El Torito" bootable
+		    disc. To add a new boot image to the project, click the <em>Add boot
+		    image</em> button:</dt>
+		<dd><img src="../../images/button_add.bmp"></dd>
+	</dl>
+	<h2>Boot Catalog</h2>
+	<p>This option specifies the path and filename of the boot catalog to be used
+	   when making an "El Torito" bootable disc. The path name should be relative
+	   to the root on the disc. The file will be inserted into the output tree and
+	   not created in the source filesystem. Please make sure that the specified file
+	   name does not conflict with an existing file.</p>
+</div>
+</body>
+</html>

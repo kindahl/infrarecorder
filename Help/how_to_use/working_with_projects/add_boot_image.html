@@ -1,0 +1,45 @@
+<html>
+<head>
+<title>Add Boot Image</title>
+<link rel="stylesheet" media="screen" type="text/css" href="../../style.css">
+<script type="text/javascript" language="JavaScript" src="../../stylescript.js"></script>
+</head>
+<body scroll="no">
+<div id="header">
+	<div id="location">How to Use?, Working with Projects</div>
+	<div id="topic">Add Boot Image</div>
+</div>
+<div id="content">
+	<p>There are several options that you may need to configure when adding a boot
+	   image to your project.</p>
+	<h2>Local Path</h2>
+	<p>In this field you should specify the local path of the selected boot image.
+	   The path is relative to the root folder of the disc. For example: /boot/
+	   will create a folder called boot in the root that contains the file that
+	   you have selected.</p>
+	<h2>Emulation Type</h2>
+	<p>This option lets your specify the type of emulation that should be used on
+	   the "El Torino" boot disc. If the emulation type is set to <em>Floppy</em>,
+	   the boot image must be exactly the size of a 1200, 1440 or 2880 KiB floppy.
+	   If the emulation type is set to <em>Harddisk</em>, the boot image must
+	   begin with a master boot record that contains a single partition. Using no
+	   emulation will cause the system to load and execute the image without
+	   performing any disc emulation.</p>
+	<h2>Advanced Options</h2>
+	<p>The <em>Don't make image bootable</em> option allows you to prevent the 
+	   disc from beeing marked as bootable. The system will provide an emulated
+	   drive for the image, but will boot off a standard boot device.</p>
+	<p>Enabling the <em>Write boot-info-table to the image</em> option will cause
+	   the boot image to be patched at offset 8 with a 54-byte table containing
+	   information about the disc layout. If this option is enabled the local
+	   boot image that you have specified will be patched, so make sure that you
+	   have a backup of this file if it can't be easily regenerated.</p>
+	<p>The <em>Boot load segment</em> option allows you to specify the load
+	   segment address (in hexadecimal) for no-emulation "El Torito" discs.</p>
+	<p>The <em>Boot load size</em> option allows you to specify the number
+	   (in hexadecimal) of virtual (512-byte) sectors to load in no-emulation mode.
+	   It's usually recommended to load the entire boot file. Some BIOSes may have
+	   problems if this size is not a multiple of 4.</p>
+</div>
+</body>
+</html>

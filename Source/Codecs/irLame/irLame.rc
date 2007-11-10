@@ -1,0 +1,129 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_PROPPAGE_CONFIGGENERAL DIALOGEX 0, 0, 214, 156
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "General"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    LTEXT           "Preset:",IDC_PRESETSTATIC,7,9,24,8
+    COMBOBOX        IDC_PRESETCOMBO,60,7,147,65,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    CONTROL         "",IDC_BEVELSTATIC,"Static",SS_ETCHEDHORZ | WS_GROUP,7,
+                    25,200,1,WS_EX_STATICEDGE
+    LTEXT           "Encode quality:",IDC_ENCODEQUALITYSTATIC,7,33,50,8
+    COMBOBOX        IDC_ENCODEQUALITYCOMBO,60,31,69,30,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Mono encoding",IDC_MONOCHECK,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,134,32,73,10
+    CONTROL         "",IDC_BEVELSTATIC2,"Static",SS_ETCHEDHORZ | WS_GROUP,7,
+                    48,199,1,WS_EX_STATICEDGE
+    CONTROL         "Bitrate mode",IDC_BITRATERADIO,"Button",
+                    BS_AUTORADIOBUTTON,7,53,200,10
+    LTEXT           "Bitrate:",IDC_BITRATESTATIC,19,63,35,8
+    CONTROL         "",IDC_BITRATESLIDER,"msctls_trackbar32",TBS_TOOLTIPS | 
+                    WS_TABSTOP,52,63,155,12
+    LTEXT           "320",IDC_BITRATE320STATIC,195,76,13,8
+    LTEXT           "128",IDC_BITRATE128STATIC,107,76,13,8
+    LTEXT           "192",IDC_BITRATE192STATIC,136,76,13,8
+    LTEXT           "64",IDC_BITRATE64STATIC,80,76,9,8
+    LTEXT           "8",IDC_BITRATE8STATIC,56,76,8,8
+    CONTROL         "Restrict encoder to constant bitrate",IDC_BITRATECHECK,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,56,86,151,10
+    CONTROL         "Quality mode",IDC_QUALITYRADIO,"Button",
+                    BS_AUTORADIOBUTTON,7,100,200,10
+    LTEXT           "Quality:",IDC_QUALITYSTATIC,19,110,26,8
+    CONTROL         "",IDC_QUALITYSLIDER,"msctls_trackbar32",TBS_AUTOTICKS | 
+                    TBS_TOOLTIPS | WS_TABSTOP,52,110,155,12
+    LTEXT           "High",IDC_QUALITYHIGHSTATIC,52,123,15,8
+    LTEXT           "Low",IDC_QUALITYLOWSTATIC,195,123,14,8
+    LTEXT           "VBR mode:",IDC_VBRMODESTATIC,19,136,36,8
+    COMBOBOX        IDC_VBRMODECOMBO,60,135,69,30,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_PROPPAGE_CONFIGGENERAL, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 207
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 147
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

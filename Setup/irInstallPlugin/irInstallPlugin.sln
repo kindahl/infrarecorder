@@ -1,0 +1,22 @@
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "irInstallPlugin", "irInstallPlugin.vcproj", "{BC845F0A-9F4D-4A2F-8366-30B816498DBD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release (non-unicode)|Win32 = Release (non-unicode)|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BC845F0A-9F4D-4A2F-8366-30B816498DBD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BC845F0A-9F4D-4A2F-8366-30B816498DBD}.Debug|Win32.Build.0 = Debug|Win32
+		{BC845F0A-9F4D-4A2F-8366-30B816498DBD}.Release (non-unicode)|Win32.ActiveCfg = Release (non-unicode)|Win32
+		{BC845F0A-9F4D-4A2F-8366-30B816498DBD}.Release (non-unicode)|Win32.Build.0 = Release (non-unicode)|Win32
+		{BC845F0A-9F4D-4A2F-8366-30B816498DBD}.Release|Win32.ActiveCfg = Release|Win32
+		{BC845F0A-9F4D-4A2F-8366-30B816498DBD}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

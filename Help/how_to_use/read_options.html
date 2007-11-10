@@ -1,0 +1,38 @@
+<html>
+<head>
+<title>Read Options</title>
+<link rel="stylesheet" media="screen" type="text/css" href="../style.css">
+<script type="text/javascript" language="JavaScript" src="../stylescript.js"></script>
+</head>
+<body scroll="no">
+<div id="header">
+	<div id="location">How to Use?</div>
+	<div id="topic">Read Options</div>
+</div>
+<div id="content">
+	<p>This topic covers the read options that appear on various places
+	   in InfraRecorder, for example when you want to copy a disc either
+	   to a disc image or to another disc.</p>
+	<p>Altough these options are accessable in many different contexts as
+	   mentioned above, they are always presented in a similar way:</p>
+	<p><img src="../images/screenshot_read.png"></p>
+	<h1>Read Settings</h1>
+	<h2>Ignore read errors</h2>
+	<p>Enabling this option will cause the high level error checking not to abort
+	   when errors are found in the data stream. The drive will also be switched
+	   into a mode where it ignores read errors in data sectors that are a result
+	   of uncorrectable ECC/EDC errors before reading.</p>
+	<h2>Read all sub-channel data and the full TOC</h2>
+	<p>When this option is enabled the disc will be read with all sub-channel
+	   data and a full TOC. The full TOC data will be put into a file with
+	   similar name to the specified image name but with the suffix
+	   <strong>.toc</strong>.</p>
+	<h2>Read speed</h2>
+	<p>Select the speed to use when reading the disc. Selecting the <em>
+	   Maximum</em> option will automatically select the highest speed that the
+	   drive is capable of. Only MMC compliant drives will benefit from this
+	   option. The speed of non MMC drives is not changed.</p>
+	<p>Using a lower speed may increase the readability of a disc.</p>
+</div>
+</body>
+</html>

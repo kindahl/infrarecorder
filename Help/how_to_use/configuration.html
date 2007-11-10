@@ -1,0 +1,85 @@
+<html>
+<head>
+<title>Configuration</title>
+<link rel="stylesheet" media="screen" type="text/css" href="../style.css">
+<script type="text/javascript" language="JavaScript" src="../stylescript.js"></script>
+</head>
+<body scroll="no">
+<div id="header">
+	<div id="location">How to Use?</div>
+	<div id="topic">Configuration</div>
+</div>
+<div id="content">
+	<dl>
+		<dt>To access the InfraRecorder configuration, use the menu:</dt>
+		<dd><strong>Options <img src="../images/arrow.png"> Configuration...</strong>
+		    </dd>
+	</dl>
+	<h1>General Settings</h1>
+	<p>The <em>Check if autorun is enabled on each startup</em> option specifies
+	   whether you want InfraRecorder to check if autorun enabled on each startup
+	   or not. It is recommended that autorun is turned of because leaving autorun
+	   enabled causes Windows to poll the CD drive while recording, which might
+	   damage your CD.</p>
+	<p>If you want InfraRecorder to remember the last active folder in the
+	   <em>Explorer View</em> you should check the <em>Remember the last active
+	   folder</em> option. You can also specify a folder on your own that will be
+	   the default every time InfraRecorder starts.</p>
+	<p>The <em>Temporary folder</em> option lets you specify which folder that
+	   should be used when temporarily storing files on your harddrive, for
+	   example disc images. If your harddrive/partition (which stores the
+	   temporary folder) is almost full it can be a good idea to use a temporary
+	   folder on another drive.</p>
+	<h1>Advanced Settings</H1>
+	<p>If you want to enable the log feature of InfraRecorder, enable the<em>
+	   Enable program log</em> option. This can be usefull when trying to locate a
+	   possible bug/error in InfraRecorder. It's not recommended that you enable
+	   log support if you do not intend to log a special event because InfraRecorder
+	   requires more memory and CPU-time when the log support is enabled.</p>
+	<p>The <em>Enable smoke effect</em> option enables or disables the smoke effect
+	   displayed during writing processes. The smoke effect requires Windows Vista
+	   Aero to be enabled. If Aero is not enabled this option will have no effect.</p>
+	<p>The <em>FIFO buffer size</em> option lets you specify the size of the RAM
+	   buffer that is used in addition to your recorders physical buffer. Icreasing
+	   the buffer size may result in a more stable recording process. As a rule of
+	   thumb, the FIFO size should be at least equal to the size of the pysical
+	   buffer of the CD/DVD-Recorder and no more than half of the physical amount
+	   of RAM available in the machine. If you often record discs on-the-fly, this
+	   buffer should be large (for example 128 MiB) to prevent buffer underruns.
+	<h1>Language Settings</h1>
+	<p>A list of available languages are displayed in the combo box. To change
+	   language, simply select the language you want in the combo box, click the
+	   OK-button and restart InfraRecorder. If your language is not available,
+	   check the InfraRecorder website to see if a translation in your language
+	   exists.</p>
+	<h1>Shell Extension</h1>
+	<dl>
+		<dt>The shell extension (when enabled) adds additional menu entries to the
+	   	    shell context menu:</dt>
+		<dd><img src="../images/screenshot_shellextension.png"></dd>
+	</dl>
+	<p>It adds the options to record disc images and InfraRecorder projects
+	   just by right-clicking on them.</p>
+	<p>The shell extension can be customized to display the items in a submenu.
+	   To display the context menu items in a submenu enable the <em>Display
+	   context menu items in a submenu</em> option.</p>
+	<p>It can also be customized to not display icons on the menu items by
+	   disabling the <em>Display menu item icons</em> option.</p>
+	<h2>Register the Shell Extension</h2>
+	<p>The shell extension does not work automatically with disc images and
+	   InfraRecorder projects. When enabling the <em>Enalbe InfraRecorder shell
+	   extension</em>, InfraRecorder tells Windows Explorer that it offer other
+	   applications to use it's extended features.</p>
+	<p>To make Windows Explorer use the additional features supplied by the
+	   InfraRecorder shell extension, the shell extension must be registered with
+	   the file types that should be able to use the extra features.</p>
+	<dl>
+		<dt>There are a set of predefined file extensions available in the list. To
+		    associate the InfraRecorder shell extension with a file type, just check
+		    the item in the list view. You can add any additional file types to the 
+		    list by pressing the <em>Add file extension</em> button:</dt>
+		<dd><img src="../images/button_add.bmp"></dd>
+	</dl>
+</div>
+</body>
+</html>

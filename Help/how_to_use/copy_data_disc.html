@@ -1,0 +1,74 @@
+<html>
+<head>
+<title>Copy Data Disc</title>
+<link rel="stylesheet" media="screen" type="text/css" href="../style.css">
+<script type="text/javascript" language="JavaScript" src="../stylescript.js"></script>
+</head>
+<body scroll="no">
+<div id="header">
+	<div id="location">How to Use?</div>
+	<div id="topic">Copy Data Disc</div>
+</div>
+<div id="content">
+	<p>Please note that this page contains information on how to copy a data disc.
+	   If you want to copy an audio disc (which is an entirely different process)
+	   please see <a href="copy_audio_disc.html">this</a> topic.</p>
+	<p>When you want to copy a data disc you have two main options which is if you
+	   want to copy the disc directly to another drive (for example from a
+	   CD-reader to a CD-recorder) or to a disc image on your hard drive.</p>
+	<h1>Copy to a Compact Disc</h2>
+	<dl>
+		<dt>To copy a disc directly to another drive, use the menu:</dt>
+		<dd><strong>Actions <img src="../images/arrow.png"> Copy Disc <img src="../images/arrow.png"> to a Compact Disc...</strong></dd>
+		<dt>or the toolbar button:</dt>
+		<dd><img src="../images/button_copy.bmp"></dd>
+	</dl>
+	<h2>Source</h2>
+	<p>Select the source drive which contains the compact disc that you want to
+	   make a copy of.</p>
+	<h2>Target</h2>
+	<p>Select the target drive which contains the empty compact disc that you want
+	   to write the copy to. Please note that the target drive can not be the same
+	   as the source drive.</p>
+	<h2>On The Fly</h2>
+	<p>Writing <em>on the fly</em> means that the data will be read from the
+	   source drive and then directly written to the target (recorder) without any
+	   buffering on your hard drive (only a relatively small memory buffer is
+	   used). If your source drive would fail to read some sectors on the source
+	   disc it might not be able to supply the target (recorder) with data fast
+	   enough, resulting in write errors on the target disc. However most new
+	   recorder offer some kind of buffer underrun protection technology that
+	   should protect the targe disc if this event occurs.</p>
+	<p>When the <em>On the fly</em> option is disabled a temporary disc image will
+	   first be created on your hard drive. The disc image will then be written to
+	   the target drive. Using this option requires more free disc space on your
+	   hard drive but is recommended in most cases.</p>
+	<h2>Clone Disc</h2>
+	<p>When this option is enabled all sub-channel data and the full TOC on the
+	   source disc will also be copied to the target disc. This option must be
+	   enabled when copying a mixed-mode disc, otherwise only the data track will
+	   be copied. It's recommended that your record the target disc using the
+	   raw96r write method. If that method is not supported by your recorder,
+	   please try the raw16 write method.</p>
+	<h2>Read Options</h2>
+	<p>The read options are described in <a href="read_options.html">this</a> topic.</p>
+	<h2>Other Options</h2>
+	<p>The other options are described in <a href="burn_options.html">this</a> topic.</p>
+	<hr>
+	<h1>Copy to a Disc Image</h1>
+	<dl>
+		<dt>To copy a disc to a disc image on the hard drive, use the menu:</dt>
+		<dd><strong>Actions <img src="../images/arrow.png"> Copy Disc <img src="../images/arrow.png"> to a Disc Image...</strong></dd>
+	</dl>
+	<h2>Source</h2>
+	<p>Select the source drive which contains the compact disc that you want to
+	   make a copy of.</p>
+	<h2>Image File</h2>
+	<p>Select the location and name of the disc image. Please note that you will
+	   approximateley need the same amount of size avaiable on your hard drive as
+	   the compact disc contains.</p>
+	<h2>Read Options</h2>
+	<p>The read options are described in <a href="read_options.html">this</a> topic.</p>
+</div>
+</body>
+</html>

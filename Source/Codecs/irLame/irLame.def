@@ -1,0 +1,13 @@
+LIBRARY	"irLame.irc"
+EXPORTS
+	irc_capabilities
+	irc_string
+	irc_set_callback
+	irc_decode_init
+	irc_decode_process
+	irc_decode_exit
+	irc_encode_init
+	irc_encode_process
+	irc_encode_flush
+	irc_encode_exit
+	irc_encode_config
