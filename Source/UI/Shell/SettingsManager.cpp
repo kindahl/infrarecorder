@@ -53,7 +53,7 @@ bool CSettingsManager::GetConfigPath(TCHAR *szConfigPath)
 		SHGFP_TYPE_CURRENT,szConfigPath)))
 		return false;
 #else	// Win 9x.
-	if (!SUCCEEDED(SHGetSpecialFolderPath(m_hWnd,szConfigPath,CSIDL_APPDATA,true)))
+	if (!SUCCEEDED(SHGetSpecialFolderPath(HWND_DESKTOP,szConfigPath,CSIDL_APPDATA,true)))
 		return false;
 #endif
 	IncludeTrailingBackslash(szConfigPath);
