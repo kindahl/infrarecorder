@@ -654,9 +654,6 @@ bool CCore2::UpdateModePage5(CCore2Device *pDevice,bool bTestWrite,eWriteMode Wr
 		ucBuffer[8 + 3] &= ~0x0F;	// Track mode.
 		ucBuffer[8 + 4] &= ~0x0F;	// Data block.
 
-		g_LogDlg.AddLine(_T("Foo: 0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X"),
-			ucBuffer[0],ucBuffer[1],ucBuffer[2],ucBuffer[3],ucBuffer[4],ucBuffer[5],ucBuffer[6],ucBuffer[7]);
-
 		switch (WriteMode)
 		{
 			case WRITEMODE_PACKET:
