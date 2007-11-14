@@ -17,6 +17,7 @@
  */
 
 #include "stdafx.h"
+#include "StringTable.h"
 
 TCHAR *g_szStringTable[] = {
 	_T("Warning"),

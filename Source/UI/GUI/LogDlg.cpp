@@ -23,7 +23,6 @@
 #include "LangUtil.h"
 #include "Settings.h"
 #include "Diagnostics.h"
-#include "Version.h"
 #include "WinVer.h"
 
 CLogDlg g_LogDlg;
@@ -247,9 +246,43 @@ LRESULT CLogDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandl
 		// Initialize the log file.
 		InitializeLogFile();
 
-		// Initialize the log data.
-		AddString(_T("InfraRecorder version "));
-		AddString(_T(CK_FILEVERSIONSTR));
+		// Print version information.
+		TCHAR szFileName[MAX_PATH];
+		GetModuleFileName(NULL,szFileName,MAX_PATH - 1);
+
+		unsigned long ulDummy;
+		unsigned long ulDataSize = GetFileVersionInfoSize(szFileName,&ulDummy);
+
+		if (ulDataSize != 0)
+		{
+			unsigned char *pBlock = new unsigned char[ulDataSize];
+
+			struct LANGANDCODEPAGE
+			{
+				unsigned short usLanguage;
+				unsigned short usCodePage;
+			} *pTranslate;
+
+			if (GetFileVersionInfo(szFileName,NULL,ulDataSize,pBlock) > 0)
+			{
+				// Get language information (only one language should be present).
+				VerQueryValue(pBlock,_T("\\VarFileInfo\\Translation"),
+					(LPVOID *)&pTranslate,(unsigned int *)&ulDummy);
+
+				// Calculate the FileVersion sub block path.
+				TCHAR szStrBuffer[128];
+				lsprintf(szStrBuffer,_T("\\StringFileInfo\\%04x%04x\\FileVersion"),
+					pTranslate[0].usLanguage,pTranslate[0].usCodePage);
+
+				unsigned char *pBuffer;
+				VerQueryValue(pBlock,szStrBuffer,(LPVOID *)&pBuffer,(unsigned int *)&ulDataSize);
+
+				AddString(_T("InfraRecorder version %s"),(TCHAR *)pBuffer);
+			}
+
+			delete [] pBlock;
+		}
+
 #ifdef _M_IA64
 		AddLine(_T(" (IA64)"));
 #elif defined _M_X64
