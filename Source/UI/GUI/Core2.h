@@ -87,6 +87,8 @@ public:
 		bool &bSupportFeature);
 	bool GetMediaWriteSpeeds(CCore2Device *pDevice,std::vector<unsigned int> &Speeds);
 	bool GetMaxReadSpeed(CCore2Device *pDevice,unsigned short &usSpeed);
+	bool GetMaxSpeeds(CCore2Device *pDevice,unsigned short &usReadSpeed,
+		unsigned short &usWriteSpeed);
 	bool GetMediaWriteModes(CCore2Device *pDevice,unsigned char &ucWriteModes);
 
 	bool SetDiscSpeeds(CCore2Device *pDevice,unsigned short usReadSpeed,

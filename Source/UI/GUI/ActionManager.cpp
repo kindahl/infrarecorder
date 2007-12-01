@@ -344,8 +344,14 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 		{
 			// We need to reload the drive media.
 			g_ProgressDlg.SetStatus(lngGetString(PROGRESS_RELOADMEDIA));
-			g_Core.EjectDisc(pDeviceInfo,true);
-			g_Core.LoadDisc(pDeviceInfo,true);
+			//g_Core.EjectDisc(pDeviceInfo,true);
+			//g_Core.LoadDisc(pDeviceInfo,true);
+			CCore2Device Device;
+			Device.Open(&pDeviceInfo->Address);
+
+			g_Core2.StartStopUnit(&Device,CCore2::LOADMEDIA_EJECT,false);
+			if (!g_Core2.StartStopUnit(&Device,CCore2::LOADMEDIA_LOAD,false))
+				lngMessageBox(g_ProgressDlg,INFO_RELOAD,GENERAL_INFORMATION,MB_OK | MB_ICONINFORMATION);
 
 			// Set the device information.
 			TCHAR szDeviceName[128];

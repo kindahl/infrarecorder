@@ -5,7 +5,7 @@
 <?define ProductName="InfraRecorder"?>
 <?define VerMajor="0"?>
 <?define VerMinor="44"?>
-<?define VerRev="00"?>
+<?define VerRev="01"?>
 <?define VerBuild="00"?>
 
 <!--Main Definitions-->

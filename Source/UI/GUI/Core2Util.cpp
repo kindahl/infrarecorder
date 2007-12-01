@@ -150,6 +150,29 @@ bool GetDispSpeeds(unsigned long ulMaxDispSpeed,std::vector<unsigned int> &Speed
 }
 
 /**
+	Generates a vector of speeds in the same fasion as GetDispSpeeds except for
+	that the speeds are in default kB/s format.
+	@param usProfile the profile to use for generating the speeds.
+	@param ulMaxSpeed the maximum speed in kB/s.
+	@param Speeds the result vector that be updated with the speeds.
+	@return true if successfull and false otherwise.
+*/
+bool GetSpeeds(unsigned short usProfile,unsigned long ulMaxSpeed,
+			   std::vector<unsigned int> &Speeds)
+{
+	float fDispSpeed = GetDispSpeed(usProfile,ulMaxSpeed);
+	float fFactor = (float)ulMaxSpeed/fDispSpeed;
+
+	GetDispSpeeds((unsigned long)fDispSpeed,Speeds);
+
+	std::vector<unsigned int>::iterator itSpeed;
+	for (itSpeed = Speeds.begin(); itSpeed != Speeds.end(); itSpeed++)
+		*itSpeed = (unsigned int)((*itSpeed) * fFactor);
+
+	return true;
+}
+
+/**
 	Parses the specified sense buffer and returns a value representing the
 	specific error.
 	@param pSenseBuf a pointer to the sense buffer, it should be atleast 24

@@ -471,7 +471,7 @@ bool CCore2::GetMediaWriteSpeeds(CCore2Device *pDevice,
 	ucCdb[10] = 0x03;		// Write speed descriptors.
 	ucCdb[11] = 0x00;
 
-	if (!pDevice->Transport(ucCdb,12,ucBuffer,sizeof(ucBuffer)))
+	/*if (!pDevice->Transport(ucCdb,12,ucBuffer,sizeof(ucBuffer)))
 		return false;
 
 	unsigned int uiDataLength = ucBuffer[0];
@@ -504,6 +504,58 @@ bool CCore2::GetMediaWriteSpeeds(CCore2Device *pDevice,
 		uiLastSpeed = uiSpeed;
 	}
 
+	return true;*/
+
+	if (pDevice->Transport(ucCdb,12,ucBuffer,sizeof(ucBuffer)))
+	{
+		unsigned int uiDataLength = ucBuffer[0];
+		uiDataLength <<= 8;
+		uiDataLength |= ucBuffer[1];
+		uiDataLength <<= 8;
+		uiDataLength |= ucBuffer[2];
+		uiDataLength <<= 8;
+		uiDataLength |= ucBuffer[3];
+
+		unsigned char ucOffset = 12;
+		unsigned int uiLastSpeed = 0;
+
+		for (unsigned int i = 8; i < uiDataLength + 4; i += 16)
+		{
+			unsigned int uiSpeed = ucBuffer[i + ucOffset];
+			uiSpeed <<= 8;
+			uiSpeed |= ucBuffer[i + ucOffset + 1];
+			uiSpeed <<= 8;
+			uiSpeed |= ucBuffer[i + ucOffset + 2];
+			uiSpeed <<= 8;
+			uiSpeed |= ucBuffer[i + ucOffset + 3];
+
+			// Since we're only interessed in the speed information we only want to add
+			// each speed once.
+			if (uiLastSpeed == uiSpeed)
+				continue;
+
+			Speeds.push_back(uiSpeed);
+			uiLastSpeed = uiSpeed;
+		}
+
+		return true;
+	}
+
+	// Fall back on this (obsolete) method if unable to fetch the speeds using the
+	// method above.
+	unsigned short usReadSpeed,usWriteSpeed;
+	if (GetMaxSpeeds(pDevice,usReadSpeed,usWriteSpeed))
+	{
+		unsigned short usProfile;
+		if (GetProfile(pDevice,usProfile))
+			GetSpeeds(usProfile,usWriteSpeed,Speeds);
+		else
+			Speeds.push_back(usWriteSpeed);
+
+		return true;
+	}
+
+	// The latest fallback  by returning true is to allow the maximum speed only.
 	return true;
 }
 
@@ -521,7 +573,7 @@ bool CCore2::GetMaxReadSpeed(CCore2Device *pDevice,unsigned short &usSpeed)
 
 	// Read the current code page information.
 	ucCdb[0] = SCSI_MODE_SENSE10;
-	ucCdb[2] = 0x2A;						// Defined in MMC-2 standard.
+	ucCdb[2] = 0x2A;						// Defined in MMC-2 standard (5.5.10).
 	ucCdb[7] = sizeof(ucBuffer) >> 8;		// Allocation length (MSB).
 	ucCdb[8] = sizeof(ucBuffer) & 0xFF;		// Allocation length (LSB).
 	ucCdb[9] = 0x00;
@@ -533,6 +585,37 @@ bool CCore2::GetMaxReadSpeed(CCore2Device *pDevice,unsigned short &usSpeed)
 		return false;
 
 	usSpeed = ((unsigned short)ucBuffer[8 + 8] << 8) | ucBuffer[8 + 9];
+	return true;
+}
+
+bool CCore2::GetMaxSpeeds(CCore2Device *pDevice,unsigned short &usReadSpeed,
+						  unsigned short &usWriteSpeed)
+{
+	if (pDevice == NULL)
+		return false;
+
+	// Initialize buffers.
+	unsigned char ucBuffer[192];
+	memset(ucBuffer,0,sizeof(ucBuffer));
+
+	unsigned char ucCdb[16];
+	memset(ucCdb,0,sizeof(ucCdb));
+
+	// Read the current code page information.
+	ucCdb[0] = SCSI_MODE_SENSE10;
+	ucCdb[2] = 0x2A;						// Defined in MMC-2 standard (5.5.10).
+	ucCdb[7] = sizeof(ucBuffer) >> 8;		// Allocation length (MSB).
+	ucCdb[8] = sizeof(ucBuffer) & 0xFF;		// Allocation length (LSB).
+	ucCdb[9] = 0x00;
+
+	if (!pDevice->Transport(ucCdb,10,ucBuffer,sizeof(ucBuffer)))
+		return false;
+
+	if ((ucBuffer[8] & 0x3F) != 0x2A)
+		return false;
+
+	usReadSpeed = ((unsigned short)ucBuffer[8 + 8] << 8) | ucBuffer[8 + 9];
+	usWriteSpeed = ((unsigned short)ucBuffer[8 + 18] << 8) | ucBuffer[8 + 19];
 	return true;
 }
 

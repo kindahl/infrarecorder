@@ -92,7 +92,7 @@ TCHAR *g_szStringTable[] = {
 	_T("New Folder"),
 	_T("%I64d minutes"),
 	_T(" (automatically detected)"),
-	_T("Please select the folder where you want to track(s) to be saved:"),
+	_T("Please select the folder where you want the track(s) to be saved:"),
 	_T("Please select a folder:"),
 
 	// Projects.
@@ -379,5 +379,8 @@ TCHAR *g_szStringTable[] = {
 	_T("(please insert a blank disc)"),
 	_T("Please insert the blank disc which should be recorded."),
 	_T("Please insert the source disc that should be copied."),
-	_T("Please note that disabling the fixation step does not create a multi-session disc. Please see the help documentation for more information.")
+	_T("Please note that disabling the fixation step does not create a multi-session disc. Please see the help documentation for more information."),
+
+	// Added version 0.45.
+	_T("Unable to automatically reload the media. Please try to reload it manually, and then press OK.")
 };
