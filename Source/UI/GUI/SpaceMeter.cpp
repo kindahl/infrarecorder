@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2007 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,6 +30,7 @@ CSpaceMeter::CSpaceMeter()
 	m_iMeterSegmentSpacing = 0;
 
 	m_hProgressTheme = NULL;
+	m_iHorIndent = SPACEMETER_BARINDENT_THEMED;
 
 	// By default we use the size display mode.
 	m_iDisplayMode = SPACEMETER_DMSIZE;
@@ -128,9 +129,9 @@ void CSpaceMeter::DrawBar(HDC hDC,RECT *pClientRect)
 	int iBottom = pClientRect->bottom - SPACEMETER_BARINDENT_BOTTOM;
 
 	RECT rcBar = {
-		pClientRect->left + SPACEMETER_BARINDENT_LEFT,
+		pClientRect->left + m_iHorIndent,
 		iBottom - SPACEMETER_BAR_HEIGHT,
-		pClientRect->right - SPACEMETER_BARINDENT_RIGHT,
+		pClientRect->right - m_iHorIndent,
 		iBottom
 	};
 
@@ -177,7 +178,7 @@ void CSpaceMeter::DrawBar(HDC hDC,RECT *pClientRect)
 
 		// Next we draw the allocated space.
 		rcBar.left -= m_iMeterPosition;
-		rcBar.right = m_iMeterPosition + SPACEMETER_BARINDENT_LEFT + 1;
+		rcBar.right = m_iMeterPosition + m_iHorIndent + 1;
 
 		switch (m_iDrawState)
 		{
@@ -200,7 +201,7 @@ void CSpaceMeter::DrawBar(HDC hDC,RECT *pClientRect)
 
 		// Draw the allocated space.
 		//rcBar.left++;
-		rcBar.right = m_iMeterPosition + SPACEMETER_BARINDENT_LEFT + 1;
+		rcBar.right = m_iMeterPosition + m_iHorIndent + 1;
 
 		switch (m_iDrawState)
 		{
@@ -224,9 +225,9 @@ void CSpaceMeter::DrawFullBar(HDC hDC,RECT *pClientRect)
 	int iBottom = pClientRect->bottom - SPACEMETER_BARINDENT_BOTTOM;
 
 	RECT rcBar = {
-		pClientRect->left + SPACEMETER_BARINDENT_LEFT,
+		pClientRect->left + m_iHorIndent,
 		iBottom - SPACEMETER_BAR_HEIGHT,
-		pClientRect->right - SPACEMETER_BARINDENT_RIGHT,
+		pClientRect->right - m_iHorIndent,
 		iBottom
 	};
 
@@ -283,7 +284,7 @@ void CSpaceMeter::DrawMeter(HDC hDC,RECT *pClientRect,RECT *pBarRect)
 
 void CSpaceMeter::UpdateMeter(int iClientWidth)
 {
-	int iMeterWidth = iClientWidth - SPACEMETER_BARINDENT_LEFT - SPACEMETER_BARINDENT_RIGHT - 2;
+	int iMeterWidth = iClientWidth - m_iHorIndent - m_iHorIndent - 2;
 	m_iMeterSegmentSpacing = iMeterWidth / SPACEMETER_METER_COUNT;
 
 	unsigned __int64 uiAllocatedSize = min(m_uiAllocatedSize,m_uiMeterSize);
@@ -535,6 +536,15 @@ void CSpaceMeter::Initialize()
 	{
 		m_hProgressTheme = g_VisualStyles.OpenThemeData(m_hWnd,L"PROGRESS");
 	}
+}
+
+LRESULT CSpaceMeter::OnCreate(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
+{
+	// If the application is themed, we use a different horizontal indentation.
+	if (!g_VisualStyles.IsThemeActive())
+		m_iHorIndent = SPACEMETER_BARINDENT_NORMAL;
+
+	return 0;
 }
 
 LRESULT CSpaceMeter::OnSize(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)

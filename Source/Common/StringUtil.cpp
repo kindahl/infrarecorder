@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2007 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -149,7 +149,7 @@ int LastDelimiterA(const char *szString,char cDelimiter)
 
 	for (int i = iLength - 1; i >= 0; i--)
 	{
-		if (/*tolower(*/szString[i]/*)*/ == cDelimiter)
+		if (szString[i] == cDelimiter)
 			return i;
 	}
 
@@ -358,34 +358,30 @@ char *SkipInteger(char *szString)
 	return szString;
 }
 
-void CharToTChar(const char *szSource,TCHAR *szTarget)
+/*
+	Converts an ANSI string into UTF-16 (BE). iTargetSize should be the size
+	of szTarget counted in wchar_ts.
+*/
+void AnsiToUnicode(wchar_t *szTarget,const char *szSource,int iTargetSize)
 {
-#ifdef UNICODE
-	// FIXME: Crazy, an unnecessary heap allocation?
-	// UPDATE: Corrected.
-	//wchar_t *szWide = new wchar_t[strlen(szSource) + 1];
-	MultiByteToWideChar(::AreFileApisANSI() ? CP_ACP : CP_OEMCP,MB_PRECOMPOSED,
-		szSource,(int)strlen(szSource) + 1,/*szWide*/szTarget,(int)strlen(szSource) + 1);
+	int iConverted = MultiByteToWideChar(::AreFileApisANSI() ? CP_ACP : CP_OEMCP,MB_PRECOMPOSED,
+		szSource,(int)strlen(szSource) + 1,szTarget,iTargetSize);
 
-	/*lstrcpy(szTarget,szWide);
-	delete [] szWide;*/
-#else
-	lstrcpy(szTarget,szSource);
-#endif
+	if (iConverted == iTargetSize)
+		szTarget[iTargetSize - 1] = '\0';
 }
 
-void TCharToChar(const TCHAR *szSource,char *szTarget)
+/*
+	Converts a UTF-16 (BE) string into ANSI. iTargetSize should be the size
+	of szTarget counted in bytes.
+*/
+void UnicodeToAnsi(char *szTarget,const wchar_t *szSource,int iTargetSize)
 {
-#ifdef UNICODE
-	//char *szMultiByte = new char[lstrlen(szSource) + 1];
-	WideCharToMultiByte(::AreFileApisANSI() ? CP_ACP : CP_OEMCP,0,
-		szSource,(int)lstrlen(szSource) + 1,/*szMultiByte*/szTarget,(int)lstrlen(szSource) + 1,NULL,NULL);
+	int iConverted = WideCharToMultiByte(::AreFileApisANSI() ? CP_ACP : CP_OEMCP,0,
+		szSource,(int)lstrlen(szSource) + 1,szTarget,iTargetSize,NULL,NULL);
 
-	/*strcpy(szTarget,szMultiByte);
-	delete [] szMultiByte;*/
-#else
-	lstrcpy(szTarget,szSource);
-#endif
+	if (iConverted == iTargetSize)
+		szTarget[iTargetSize - 1] = '\0';
 }
 
 void GetCygwinFileName(const TCHAR *szFileName,TCHAR *szCygwinFileName)

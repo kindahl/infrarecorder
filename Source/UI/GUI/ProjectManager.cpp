@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2007 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1933,7 +1933,7 @@ bool CProjectManager::DecodeAudioTrack(const TCHAR *szFullPath,const TCHAR *szFu
 		lstrcpy(szNameBuffer,szFullPath);
 		ExtractFileName(szNameBuffer);
 
-		pProgress->AddLogEntry(LOGTYPE_ERROR,lngGetString(ERROR_NODECODER),szNameBuffer);
+		pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,lngGetString(ERROR_NODECODER),szNameBuffer);
 		return false;
 	}
 
@@ -1954,7 +1954,7 @@ bool CProjectManager::DecodeAudioTrack(const TCHAR *szFullPath,const TCHAR *szFu
 
 	if (pEncoder == NULL)
 	{
-		pProgress->AddLogEntry(LOGTYPE_ERROR,lngGetString(ERROR_WAVECODEC));
+		pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,lngGetString(ERROR_WAVECODEC));
 
 		pDecoder->irc_decode_exit();
 		return false;
@@ -1963,7 +1963,7 @@ bool CProjectManager::DecodeAudioTrack(const TCHAR *szFullPath,const TCHAR *szFu
 	// Initialize the encoder.
 	if (!pEncoder->irc_encode_init(szFullTempPath,iNumChannels,iSampleRate,iBitRate))
 	{
-		pProgress->AddLogEntry(LOGTYPE_ERROR,lngGetString(ERROR_CODECINIT),
+		pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,lngGetString(ERROR_CODECINIT),
 			pEncoder->irc_string(IRC_STR_ENCODER),
 			iNumChannels,iSampleRate,iBitRate,uiDuration);
 
@@ -1990,7 +1990,7 @@ bool CProjectManager::DecodeAudioTrack(const TCHAR *szFullPath,const TCHAR *szFu
 
 		if (pEncoder->irc_encode_process(pBuffer,iBytesRead) < 0)
 		{
-			pProgress->AddLogEntry(LOGTYPE_ERROR,lngGetString(ERROR_ENCODEDATA));
+			pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,lngGetString(ERROR_ENCODEDATA));
 			break;
 		}
 
@@ -2014,7 +2014,7 @@ bool CProjectManager::DecodeAudioTrack(const TCHAR *szFullPath,const TCHAR *szFu
 	lstrcpy(szNameBuffer,szFullPath);
 	ExtractFileName(szNameBuffer);
 
-	pProgress->AddLogEntry(LOGTYPE_INFORMATION,
+	pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,
 		lngGetString(SUCCESS_DECODETRACK),szNameBuffer);
 
 	return true;
@@ -2155,9 +2155,15 @@ bool CProjectManager::VerifyLocalFiles(CProjectNode *pNode,std::vector<CProjectN
 		if (ulTestCRC != ulGoodCRC)
 		{
 			if (ulTestCRC == 0)
-				pProgress->AddLogEntry(LOGTYPE_ERROR,lngGetString(FAILURE_VERIFYNOFILE),szFileNameBuffer + 3);
+			{
+				pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,
+					lngGetString(FAILURE_VERIFYNOFILE),szFileNameBuffer + 3);
+			}
 			else
-				pProgress->AddLogEntry(LOGTYPE_ERROR,lngGetString(FAILURE_VERIFYREADERROR),szFileNameBuffer,ulTestCRC,ulGoodCRC);
+			{
+				pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,
+					lngGetString(FAILURE_VERIFYREADERROR),szFileNameBuffer,ulTestCRC,ulGoodCRC);
+			}
 
 			uiFailCount++;
 		}
@@ -2192,7 +2198,7 @@ bool CProjectManager::VerifyCompilation(CAdvancedProgress *pProgress,const TCHAR
 			break;
 	}
 
-	pProgress->AddLogEntry(LOGTYPE_INFORMATION,lngGetString(PROGRESS_BEGINVERIFY));
+	pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,lngGetString(PROGRESS_BEGINVERIFY));
 
 	// It's important the the first two characters contain <drive letter>:.
 	TCHAR szFileNameBuffer[MAX_PATH];
@@ -2218,9 +2224,15 @@ bool CProjectManager::VerifyCompilation(CAdvancedProgress *pProgress,const TCHAR
 	
 	// Display the final message.
 	if (uiFailCount == 0)
-		pProgress->AddLogEntry(LOGTYPE_INFORMATION,lngGetString(SUCCESS_VERIFY));
+	{
+		pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,
+			lngGetString(SUCCESS_VERIFY));
+	}
 	else
-		pProgress->AddLogEntry(LOGTYPE_INFORMATION,lngGetString(FAILURE_VERIFY),uiFailCount);
+	{
+		pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,
+			lngGetString(FAILURE_VERIFY),uiFailCount);
+	}
 
 	return true;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2007 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,6 @@ class CMultiSessionImport : public CConsolePipe
 private:
 	int m_iMode;
 	TCHAR m_szCurDir[MAX_PATH];
-	//TCHAR m_szRootLetter[4];
 
 	// Used when retreiving multi-session info.
 	unsigned __int64 m_uiLastSession;

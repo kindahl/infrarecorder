@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2007 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -127,7 +127,11 @@ void CDeviceManager::ScanBusOutput(const char *szBuffer)
 
 		// Convert the information to UTF-16 if necessary.
 		TCHAR szInfo[CONSOLEPIPE_MAX_LINE_SIZE];
-		CharToTChar(szMultiInfo,szInfo);
+#ifdef UNICODE
+		AnsiToUnicode(szInfo,szMultiInfo,sizeof(szInfo) / sizeof(wchar_t));
+#else
+		strcpy(szInfo,szMultiInfo);
+#endif
 
 		// Split the info line (sizes taken from scsireg.h).
 		TCHAR szType[68];	// Largest string: "Removable vendor specific 4294967295 unknown device type 0xFFFFFFFF"
@@ -524,7 +528,11 @@ void CDeviceManager::VerifyBusOutput(const char *szBuffer)
 
 		// Convert the information to UTF-16 if necessary.
 		TCHAR szInfo[CONSOLEPIPE_MAX_LINE_SIZE];
-		CharToTChar(szMultiInfo,szInfo);
+#ifdef UNICODE
+		AnsiToUnicode(szInfo,szMultiInfo,sizeof(szInfo) / sizeof(wchar_t));
+#else
+		strcpy(szInfo,szMultiInfo);
+#endif
 
 		TCHAR szVendor[9];
 		TCHAR szIdentification[17];
@@ -964,10 +972,10 @@ bool CDeviceManager::SaveConfiguration()
 #ifdef UNICODE
 						TCHAR szBuffer[CONSOLEPIPE_MAX_LINE_SIZE];
 
-						CharToTChar(pDeviceInfoEx->szWriteFlags,szBuffer);
+						AnsiToUnicode(szBuffer,pDeviceInfoEx->szWriteFlags,sizeof(szBuffer) / sizeof(wchar_t));
 						XML.AddElement(_T("Flags"),szBuffer);
 
-						CharToTChar(pDeviceInfoEx->szWriteModes,szBuffer);
+						AnsiToUnicode(szBuffer,pDeviceInfoEx->szWriteModes,sizeof(szBuffer) / sizeof(wchar_t));
 						XML.AddElement(_T("Modes"),szBuffer);
 #else
 						XML.AddElement(_T("Flags"),pDeviceInfoEx->szWriteFlags);
@@ -1203,10 +1211,10 @@ bool CDeviceManager::LoadConfiguration()
 			TCHAR szBuffer[CONSOLEPIPE_MAX_LINE_SIZE];
 			
 			XML.GetSafeElementData(_T("Flags"),szBuffer,CONSOLEPIPE_MAX_LINE_SIZE);
-			TCharToChar(szBuffer,pDeviceInfoEx->szWriteFlags);
+			UnicodeToAnsi(pDeviceInfoEx->szWriteFlags,szBuffer,sizeof(pDeviceInfoEx->szWriteFlags));
 
 			XML.GetSafeElementData(_T("Modes"),szBuffer,CONSOLEPIPE_MAX_LINE_SIZE);
-			TCharToChar(szBuffer,pDeviceInfoEx->szWriteModes);
+			UnicodeToAnsi(pDeviceInfoEx->szWriteModes,szBuffer,sizeof(pDeviceInfoEx->szWriteModes));
 #else
 			XML.GetSafeElementData(_T("Flags"),pDeviceInfoEx->szWriteFlags,CONSOLEPIPE_MAX_LINE_SIZE);
 			XML.GetSafeElementData(_T("Modes"),pDeviceInfoEx->szWriteModes,CONSOLEPIPE_MAX_LINE_SIZE);

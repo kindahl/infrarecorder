@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2007 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,7 +43,7 @@ void CDiagnostics::FlushOutput(const char *szBuffer)
 
 #ifdef UNICODE
 		TCHAR szWideBuffer[CONSOLEPIPE_MAX_LINE_SIZE];
-		CharToTChar(szBuffer,szWideBuffer);
+		AnsiToUnicode(szWideBuffer,szBuffer,sizeof(szWideBuffer) / sizeof(wchar_t));
 		g_LogDlg.AddLine(szWideBuffer);
 #else
 		g_LogDlg.AddLine(szBuffer);

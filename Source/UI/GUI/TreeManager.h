@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2007 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@
 #include <vector>
 #include "../../Common/XMLProcessor.h"
 #include "../../Common/StringContainer.h"
+#include "../../Core/ckFileSystem/FileSet.h"
 
 #define PROJECTITEM_FLAG_ISFOLDER					1
 #define PROJECTITEM_FLAG_ISLOCKED					2
@@ -183,6 +184,8 @@ private:
 	void CopyMkisofsPathEntry(TCHAR *szTarget,const TCHAR *szSource);
 	void SaveLocalPathList(CStringContainerA *pContainer,CProjectNode *pNode,
 		std::vector<CProjectNode *> &FolderStack,int iPathStripLen = 0);
+	void GetLocalPathList(ckFileSystem::CFileSet &Files,CProjectNode *pNode,
+		std::vector<CProjectNode *> &FolderStack,int iPathStripLen);
 
 	void GetLocalNodeContents(CProjectNode *pNode,std::vector<CProjectNode *> &FolderStack,
 		unsigned __int64 &uiFileCount,unsigned __int64 &uiNodeCount);
@@ -242,6 +245,8 @@ public:
 
 	// For use with cdrtools.
 	void SavePathList(const TCHAR *szFileName,CProjectNode *pRootNode,int iPathStripLen = 0);
+
+	void GetPathList(ckFileSystem::CFileSet &Files,CProjectNode *pRootNode,int iPathStripLen = 0);
 };
 
 extern CTreeManager g_TreeManager;

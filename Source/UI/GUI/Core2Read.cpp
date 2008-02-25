@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2007 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -287,7 +287,7 @@ bool CCore2Read::ReadData(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 		g_LogDlg.AddLine(_T("  Warning: Unable to check device support for feature 0x%.4X."),FEATURE_CD_READ);
 	if (!bSupportFeature)
 	{
-		pProgress->AddLogEntry(LOGTYPE_ERROR,lngGetString(FAILURE_NOMEDIA));
+		pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,lngGetString(FAILURE_NOMEDIA));
 
 		g_LogDlg.AddLine(_T("  Error: The selected device does not support this kind of operation."));
 		return false;
@@ -338,7 +338,7 @@ bool CCore2Read::ReadData(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 		{
 			g_LogDlg.AddLine(_T("  Warning: Failed to read sector range %u-%u"),
 				l,l + ulReadCount);
-			pProgress->AddLogEntry(LOGTYPE_WARNING,lngGetString(FAILURE_READSOURCEDISC),l);
+			pProgress->AddLogEntry(CAdvancedProgress::LT_WARNING,lngGetString(FAILURE_READSOURCEDISC),l);
 
 			// Read the sectors in the failed sector range one by one.
 			for (unsigned int j = 0; j < ulReadCount; j++)
@@ -357,13 +357,13 @@ bool CCore2Read::ReadData(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 					// Check if we're allowed to ignore this error.
 					if (!bIgnoreErr)
 					{
-						pProgress->AddLogEntry(LOGTYPE_ERROR,lngGetString(ERROR_SECTOR),l + j);	
+						pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,lngGetString(ERROR_SECTOR),l + j);	
 
 						delete [] pReadBuffer;
 						return false;
 					}
 
-					pProgress->AddLogEntry(LOGTYPE_WARNING,lngGetString(ERROR_SECTOR),l + j);	
+					pProgress->AddLogEntry(CAdvancedProgress::LT_WARNING,lngGetString(ERROR_SECTOR),l + j);	
 				}
 			}
 		}

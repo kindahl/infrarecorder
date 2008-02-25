@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2007 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,7 +35,9 @@
 #include "LangUtil.h"
 #include "ProjectManager.h"
 #include "../../Common/FileManager.h"
+#include "../../Core/ckFileSystem/DiscImageWriter.h"
 #include "SCSI.h"
+#include "LogDlg.h"
 
 CActionManager g_ActionManager;
 
@@ -97,7 +99,7 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 			{
 				case RESULT_INTERNALERROR:
 					g_ProgressDlg.SetStatus(lngGetString(PROGRESS_CANCELED));
-					g_ProgressDlg.AddLogEntry(LOGTYPE_WARNING,lngGetString(PROGRESS_CANCELED));
+					g_ProgressDlg.AddLogEntry(CProgressDlg::LT_WARNING,lngGetString(PROGRESS_CANCELED));
 					g_ProgressDlg.NotifyComplteted();
 
 					lngMessageBox(HWND_DESKTOP,FAILURE_CDRTOOLS,GENERAL_ERROR,MB_OK | MB_ICONERROR);
@@ -170,7 +172,7 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 
 				if (!g_Core.EstimateImageSize(szPathList,&g_ProgressDlg,uiDataSize))
 				{
-					g_ProgressDlg.AddLogEntry(LOGTYPE_ERROR,lngGetString(ERROR_ESTIMAGESIZE));
+					g_ProgressDlg.AddLogEntry(CProgressDlg::LT_ERROR,lngGetString(ERROR_ESTIMAGESIZE));
 
 					fs_deletefile(szPathList);
 					iResult = RESULT_EXTERNALERROR;
@@ -235,7 +237,7 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 
 				if (!g_Core.EstimateImageSize(szPathList,&g_ProgressDlg,uiDataSize))
 				{
-					g_ProgressDlg.AddLogEntry(LOGTYPE_ERROR,lngGetString(ERROR_ESTIMAGESIZE));
+					g_ProgressDlg.AddLogEntry(CProgressDlg::LT_ERROR,lngGetString(ERROR_ESTIMAGESIZE));
 
 					fs_deletefile(szPathList);
 					iResult = RESULT_EXTERNALERROR;
@@ -331,7 +333,7 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 	if (!iResult)
 	{
 		g_ProgressDlg.SetStatus(lngGetString(PROGRESS_CANCELED));
-		g_ProgressDlg.AddLogEntry(LOGTYPE_WARNING,lngGetString(PROGRESS_CANCELED));
+		g_ProgressDlg.AddLogEntry(CProgressDlg::LT_WARNING,lngGetString(PROGRESS_CANCELED));
 		g_ProgressDlg.NotifyComplteted();
 
 		lngMessageBox(HWND_DESKTOP,FAILURE_CDRTOOLS,GENERAL_ERROR,MB_OK | MB_ICONERROR);
@@ -418,7 +420,7 @@ DWORD WINAPI CActionManager::CreateImageThread(LPVOID lpThreadParameter)
 	{
 		case RESULT_INTERNALERROR:
 			g_ProgressDlg.SetStatus(lngGetString(PROGRESS_CANCELED));
-			g_ProgressDlg.AddLogEntry(LOGTYPE_WARNING,lngGetString(PROGRESS_CANCELED));
+			g_ProgressDlg.AddLogEntry(CProgressDlg::LT_WARNING,lngGetString(PROGRESS_CANCELED));
 			g_ProgressDlg.NotifyComplteted();
 
 			lngMessageBox(HWND_DESKTOP,FAILURE_CDRTOOLS,GENERAL_ERROR,MB_OK | MB_ICONERROR);
@@ -433,6 +435,73 @@ DWORD WINAPI CActionManager::CreateImageThread(LPVOID lpThreadParameter)
 			delete [] szFileName;
 			return 0;
 	};
+
+	delete [] szFileName;
+	return 0;
+}
+
+/*
+	FIXME: Clean up when done.
+	Yeah, this is a dirty test method for the new file system routines.
+*/
+DWORD WINAPI CActionManager::CreateImageThread42(LPVOID lpThreadParameter)
+{
+	TCHAR *szFileName = (TCHAR *)lpThreadParameter;
+
+	ckFileSystem::CFileSet Files;
+	
+	switch (g_ProjectManager.GetProjectType())
+	{
+		case PROJECTTYPE_DATA:
+		case PROJECTTYPE_DVDVIDEO:
+			g_TreeManager.GetPathList(Files,g_TreeManager.GetRootNode());
+			break;
+
+		case PROJECTTYPE_MIXED:
+			g_TreeManager.GetPathList(Files,g_ProjectManager.GetMixDataRootNode(),
+				lstrlen(g_ProjectManager.GetMixDataRootNode()->pItemData->GetFileName()) + 1);
+			break;
+
+		default:
+			delete [] szFileName;
+			return 0;
+	};
+
+	// Set the status information.
+	g_ProgressDlg.SetWindowText(lngGetString(STITLE_CREATEIMAGE));
+	g_ProgressDlg.SetDevice(lngGetString(PROGRESS_IMAGEDEVICE));
+	g_ProgressDlg.SetStatus(lngGetString(PROGRESS_INIT));
+
+	ckFileSystem::CDiscImageWriter DiscImageWriter(&g_LogDlg);
+	DiscImageWriter.SetVolumeLabel(_T("080101_2159"));
+	DiscImageWriter.SetTextFields(_T("System."),_T("Volume set."),_T("Publisher."),_T("Preparer."));
+	DiscImageWriter.SetFileFields(_T("Copyright."),_T("Abstract."),_T("Bibliographic."));
+
+	//DiscImageWriter.SetInterchangeLevel(CIso9660::LEVEL_2);
+	DiscImageWriter.SetInterchangeLevel(ckFileSystem::CIso9660::ISO9660_1999);
+
+	/*DiscImageWriter.AddBootImageNoEmu(_T("C:\\Users\\Christian Kindahl\\Desktop\\isolinux.bin"),true,0,4);
+	DiscImageWriter.AddBootImageNoEmu(_T("C:\\Users\\Christian Kindahl\\Desktop\\isolinux.bin"),false,0x42,0x42);
+	DiscImageWriter.AddBootImageNoEmu(_T("C:\\Users\\Christian Kindahl\\Desktop\\isolinux.bin"),true,0x84,0x42);*/
+
+	g_ProgressDlg.AddLogEntry(CProgressDlg::LT_INFORMATION,lngGetString(PROGRESS_BEGINDISCIMAGE));
+
+	int iResult = DiscImageWriter.Create(szFileName,Files,g_ProgressDlg);
+
+	g_ProgressDlg.SetProgress(100);
+	g_ProgressDlg.NotifyComplteted();
+
+	switch (iResult)
+	{
+		case RESULT_OK:
+			g_ProgressDlg.SetStatus(lngGetString(PROGRESS_DONE));
+			g_ProgressDlg.AddLogEntry(CProgressDlg::LT_INFORMATION,lngGetString(SUCCESS_CREATEIMAGE));
+			break;
+
+		case RESULT_FAIL:
+			g_ProgressDlg.SetStatus(lngGetString(PROGRESS_FAILED));
+			break;
+	}
 
 	delete [] szFileName;
 	return 0;
@@ -523,7 +592,7 @@ INT_PTR CActionManager::CreateImage(HWND hWndParent,bool bAppMode)
 
 		// Create the new thread.
 		unsigned long ulThreadID = 0;
-		HANDLE hThread = ::CreateThread(NULL,0,CreateImageThread,szFileName,0,&ulThreadID);
+		HANDLE hThread = ::CreateThread(NULL,0,/*CreateImageThread42*/CreateImageThread,szFileName,0,&ulThreadID);
 		::CloseHandle(hThread);
 
 		// Run the message loop if we're in application mode.
@@ -541,7 +610,7 @@ INT_PTR CActionManager::CreateImage(HWND hWndParent,bool bAppMode)
 INT_PTR CActionManager::BurnImage(HWND hWndParent,bool bAppMode)
 {
 	WTL::CFileDialog FileDialog(true,0,0,OFN_FILEMUSTEXIST | OFN_EXPLORER,
-		_T("Disc Images (*.iso, *.cue)\0*.iso;*.cue\0Raw Images (*.bin, *.raw)\0*.bin;*.raw\0All Files (*.*)\0*.*\0\0"),hWndParent);
+		_T("Disc Images (*.iso, *.cue, *.img)\0*.iso;*.cue;*.img\0Raw Images (*.bin, *.raw)\0*.bin;*.raw\0All Files (*.*)\0*.*\0\0"),hWndParent);
 	INT_PTR iResult = FileDialog.DoModal();
 
 	if (iResult == IDOK)
@@ -615,7 +684,7 @@ INT_PTR CActionManager::BurnImageEx(HWND hWndParent,bool bAppMode,const TCHAR *s
 		if (!g_Core.BurnImage(pDeviceInfo,pDeviceCap,pDeviceInfoEx,&g_ProgressDlg,szFilePath,bImageHasTOC))
 		{
 			g_ProgressDlg.SetStatus(lngGetString(PROGRESS_CANCELED));
-			g_ProgressDlg.AddLogEntry(LOGTYPE_WARNING,lngGetString(PROGRESS_CANCELED));
+			g_ProgressDlg.AddLogEntry(CProgressDlg::LT_WARNING,lngGetString(PROGRESS_CANCELED));
 			g_ProgressDlg.NotifyComplteted();
 
 			lngMessageBox(HWND_DESKTOP,FAILURE_CDRTOOLS,GENERAL_ERROR,MB_OK | MB_ICONERROR);
@@ -654,7 +723,7 @@ DWORD WINAPI CActionManager::CopyDiscOnFlyThread(LPVOID lpThreadParameter)
 	if (!g_Core.CopyDisc(pSourceDeviceInfo,pTargetDeviceInfo,pTargetDeviceCap,pTargetDeviceInfoEx,&g_ProgressDlg))
 	{
 		g_ProgressDlg.SetStatus(lngGetString(PROGRESS_CANCELED));
-		g_ProgressDlg.AddLogEntry(LOGTYPE_WARNING,lngGetString(PROGRESS_CANCELED));
+		g_ProgressDlg.AddLogEntry(CProgressDlg::LT_WARNING,lngGetString(PROGRESS_CANCELED));
 		g_ProgressDlg.NotifyComplteted();
 
 		lngMessageBox(HWND_DESKTOP,FAILURE_CDRTOOLS,GENERAL_ERROR,MB_OK | MB_ICONERROR);
@@ -686,7 +755,7 @@ DWORD WINAPI CActionManager::CopyDiscThread(LPVOID lpThreadParameter)
 	{
 		case RESULT_INTERNALERROR:
 			g_ProgressDlg.SetStatus(lngGetString(PROGRESS_CANCELED));
-			g_ProgressDlg.AddLogEntry(LOGTYPE_WARNING,lngGetString(PROGRESS_CANCELED));
+			g_ProgressDlg.AddLogEntry(CProgressDlg::LT_WARNING,lngGetString(PROGRESS_CANCELED));
 			g_ProgressDlg.NotifyComplteted();
 
 			lngMessageBox(HWND_DESKTOP,FAILURE_CDRTOOLS,GENERAL_ERROR,MB_OK | MB_ICONERROR);
@@ -721,7 +790,7 @@ DWORD WINAPI CActionManager::CopyDiscThread(LPVOID lpThreadParameter)
 		if (!Device.Open(&pDeviceInfo->Address))
 		{
 			g_ProgressDlg.SetStatus(lngGetString(ERROR_OPENDEVICE));
-			g_ProgressDlg.AddLogEntry(LOGTYPE_WARNING,lngGetString(ERROR_OPENDEVICE));
+			g_ProgressDlg.AddLogEntry(CProgressDlg::LT_WARNING,lngGetString(ERROR_OPENDEVICE));
 			g_ProgressDlg.NotifyComplteted();
 			return 0;
 		}
@@ -734,7 +803,7 @@ DWORD WINAPI CActionManager::CopyDiscThread(LPVOID lpThreadParameter)
 			MB_OKCANCEL | MB_ICONINFORMATION) == IDCANCEL)
 		{
 			g_ProgressDlg.SetStatus(lngGetString(PROGRESS_CANCELED));
-			g_ProgressDlg.AddLogEntry(LOGTYPE_WARNING,lngGetString(PROGRESS_CANCELED));
+			g_ProgressDlg.AddLogEntry(CProgressDlg::LT_WARNING,lngGetString(PROGRESS_CANCELED));
 			g_ProgressDlg.NotifyComplteted();
 
 			// Remove any temporary files.
@@ -766,7 +835,7 @@ DWORD WINAPI CActionManager::CopyDiscThread(LPVOID lpThreadParameter)
 		g_CopyDiscSettings.m_bClone))
 	{
 		g_ProgressDlg.SetStatus(lngGetString(PROGRESS_CANCELED));
-		g_ProgressDlg.AddLogEntry(LOGTYPE_WARNING,lngGetString(PROGRESS_CANCELED));
+		g_ProgressDlg.AddLogEntry(CProgressDlg::LT_WARNING,lngGetString(PROGRESS_CANCELED));
 		g_ProgressDlg.NotifyComplteted();
 
 		lngMessageBox(HWND_DESKTOP,FAILURE_CDRTOOLS,GENERAL_ERROR,MB_OK | MB_ICONERROR);
@@ -935,7 +1004,7 @@ INT_PTR CActionManager::CopyImage(HWND hWndParent,bool bAppMode)
 		if (!g_Core.ReadDisc(pDeviceInfo,&g_ProgressDlg,CopyImageDlg.GetFileName()))
 		{
 			g_ProgressDlg.SetStatus(lngGetString(PROGRESS_CANCELED));
-			g_ProgressDlg.AddLogEntry(LOGTYPE_WARNING,lngGetString(PROGRESS_CANCELED));
+			g_ProgressDlg.AddLogEntry(CProgressDlg::LT_WARNING,lngGetString(PROGRESS_CANCELED));
 			g_ProgressDlg.NotifyComplteted();
 
 			lngMessageBox(HWND_DESKTOP,FAILURE_CDRTOOLS,GENERAL_ERROR,MB_OK | MB_ICONERROR);
@@ -1064,7 +1133,7 @@ INT_PTR CActionManager::Fixate(HWND hWndParent,bool bAppMode)
 			g_FixateSettings.m_bSimulate))
 		{
 			g_SimpleProgressDlg.SetStatus(lngGetString(PROGRESS_CANCELED));
-			g_SimpleProgressDlg.AddLogEntry(LOGTYPE_WARNING,lngGetString(PROGRESS_CANCELED));
+			g_SimpleProgressDlg.AddLogEntry(CSimpleProgressDlg::LT_WARNING,lngGetString(PROGRESS_CANCELED));
 			g_SimpleProgressDlg.NotifyComplteted();
 
 			lngMessageBox(HWND_DESKTOP,FAILURE_CDRTOOLS,GENERAL_ERROR,MB_OK | MB_ICONERROR);

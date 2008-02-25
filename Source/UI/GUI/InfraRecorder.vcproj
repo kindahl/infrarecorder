@@ -1174,6 +1174,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MiniHtmlCtrl.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\MultiSessionImport.cpp"
 				>
 			</File>
@@ -1663,6 +1667,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MiniHtmlCtrl.h"
+				>
+			</File>
+			<File
 				RelativePath=".\MultiSessionImport.h"
 				>
 			</File>
@@ -1811,10 +1819,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Version.h"
-				>
-			</File>
-			<File
 				RelativePath=".\VisualStyles.h"
 				>
 			</File>
@@ -1885,6 +1889,10 @@
 			</File>
 			<File
 				RelativePath=".\Resources\Mixed.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\PaneClose.bmp"
 				>
 			</File>
 			<File
@@ -1984,6 +1992,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\Common\Log.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\Common\Progress.cpp"
 				>
 			</File>
@@ -2044,6 +2056,176 @@
 				</File>
 				<File
 					RelativePath="..\..\Common\Windows\Win32FileManager.h"
+					>
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="Core"
+			>
+			<Filter
+				Name="ckFileSystem"
+				>
+				<File
+					RelativePath="..\..\Core\ckFileSystem\Const.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Core\ckFileSystem\DiscImageWriter.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Core\ckFileSystem\DiscImageWriter.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Core\ckFileSystem\ElTorito.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Core\ckFileSystem\ElTorito.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Core\ckFileSystem\FileSet.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Core\ckFileSystem\FileTree.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Core\ckFileSystem\FileTree.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Core\ckFileSystem\Iso9660.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Core\ckFileSystem\Iso9660.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Core\ckFileSystem\Joliet.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Core\ckFileSystem\Joliet.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Core\ckFileSystem\SectorStream.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Core\ckFileSystem\SectorStream.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Core\ckFileSystem\StringTable.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)\$(InputName)1.obj"
+							XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|x64"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)\$(InputName)1.obj"
+							XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)\$(InputName)1.obj"
+							XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)\$(InputName)1.obj"
+							XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="ReleaseA|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)\$(InputName)1.obj"
+							XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="ReleaseA|x64"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)\$(InputName)1.obj"
+							XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="ReleaseP|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)\$(InputName)1.obj"
+							XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="ReleaseP|x64"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)\$(InputName)1.obj"
+							XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="DebugA|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)\$(InputName)1.obj"
+							XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="DebugA|x64"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)\$(InputName)1.obj"
+							XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\Core\ckFileSystem\StringTable.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Core\ckFileSystem\Udf.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Core\ckFileSystem\Udf.h"
 					>
 				</File>
 			</Filter>

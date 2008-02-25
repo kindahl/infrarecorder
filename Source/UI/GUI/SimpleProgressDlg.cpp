@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2007 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -94,7 +94,7 @@ void CSimpleProgressDlg::AttachHost(HWND hWndHost)
 	m_hWndHost = hWndHost;
 }
 
-void CSimpleProgressDlg::AddLogEntry(int iType,const TCHAR *szMessage,...)
+void CSimpleProgressDlg::AddLogEntry(eLogType Type,const TCHAR *szMessage,...)
 {
 	int iItemIndex = m_ListView.GetItemCount();
 
@@ -106,7 +106,25 @@ void CSimpleProgressDlg::AddLogEntry(int iType,const TCHAR *szMessage,...)
 	lsprintf(szTime,_T("%.2d:%.2d:%.2d"),st.wHour,st.wMinute,st.wSecond);
 	szTime[8] = '\0';
 
-	m_ListView.AddItem(iItemIndex,0,szTime,iType);
+	// Convert the log type to an index.
+	int iImageIndex = 0;
+	switch (Type)
+	{
+		case LT_INFORMATION:
+			iImageIndex = 0;
+			break;
+		case LT_WARNING:
+			iImageIndex = 1;
+			break;
+		case LT_ERROR:
+			iImageIndex = 2;
+			break;
+		case LT_WINLOGO:
+			iImageIndex = 3;
+			break;
+	}
+
+	m_ListView.AddItem(iItemIndex,0,szTime,iImageIndex);
 
 	// Parse the variable argument list.
 	va_list args;
@@ -165,7 +183,7 @@ void CSimpleProgressDlg::NotifyComplteted()
 	if (m_bCanceled)
 	{
 		SetStatus(lngGetString(PROGRESS_CANCELED));
-		AddLogEntry(LOGTYPE_WARNING,lngGetString(PROGRESS_CANCELED));
+		AddLogEntry(LT_WARNING,lngGetString(PROGRESS_CANCELED));
 	}
 
 	SMOKE_STOP

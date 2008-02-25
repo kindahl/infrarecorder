@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2007 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -422,7 +422,11 @@ bool CCDText::WriteFileEx(const TCHAR *szFileName,const TCHAR *szAlbumName,
 	// Track title information.
 	if (szAlbumName[0] != '\0')
 	{
-		TCharToChar(szAlbumName,szBuffer);
+#ifdef UNICODE
+		UnicodeToAnsi(szBuffer,szAlbumName,sizeof(szBuffer));
+#else
+		strcpy(szBuffer,szAlbumName);
+#endif
 
 		uiCharPos = WriteText(hFile,PTI_NAMETITLE,0,szBuffer,uiCharPos);
 		m_uiPrevPID2 = 0;
@@ -430,7 +434,11 @@ bool CCDText::WriteFileEx(const TCHAR *szFileName,const TCHAR *szAlbumName,
 
 	for (unsigned int i = 0; i < Tracks.size(); i++)
 	{
-		TCharToChar(Tracks[i]->szTrackTitle,szBuffer);
+#ifdef UNICODE
+		UnicodeToAnsi(szBuffer,Tracks[i]->szTrackTitle,sizeof(szBuffer));
+#else
+		strcpy(szBuffer,Tracks[i]->szTrackTitle);
+#endif
 
 		uiCharPos = WriteText(hFile,PTI_NAMETITLE,(unsigned char)i + 1,szBuffer,uiCharPos);
 		m_uiPrevPID2 = i + 1;
@@ -442,7 +450,11 @@ bool CCDText::WriteFileEx(const TCHAR *szFileName,const TCHAR *szAlbumName,
 	// Track artist information.
 	if (szArtistName[0] != '\0')
 	{
-		TCharToChar(szArtistName,szBuffer);
+#ifdef UNICODE
+		UnicodeToAnsi(szBuffer,szArtistName,sizeof(szBuffer));
+#else
+		strcpy(szBuffer,szArtistName);
+#endif
 
 		uiCharPos = WriteText(hFile,PTI_NAMEPERFORMER,0,szBuffer,uiCharPos);
 		m_uiPrevPID2 = 0;
@@ -450,7 +462,11 @@ bool CCDText::WriteFileEx(const TCHAR *szFileName,const TCHAR *szAlbumName,
 
 	for (unsigned int i = 0; i < Tracks.size(); i++)
 	{
-		TCharToChar(Tracks[i]->szTrackArtist,szBuffer);
+#ifdef UNICODE
+		UnicodeToAnsi(szBuffer,Tracks[i]->szTrackArtist,sizeof(szBuffer));
+#else
+		strcpy(szBuffer,Tracks[i]->szTrackArtist);
+#endif
 
 		uiCharPos = WriteText(hFile,PTI_NAMEPERFORMER,(unsigned char)i + 1,szBuffer,uiCharPos);
 		m_uiPrevPID2 = i + 1;

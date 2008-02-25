@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2007 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,8 +21,8 @@
 #include "VisualStyles.h"
 
 #define SPACEMETER_BAR_HEIGHT				10
-#define SPACEMETER_BARINDENT_LEFT			4
-#define SPACEMETER_BARINDENT_RIGHT			4
+#define SPACEMETER_BARINDENT_NORMAL			2
+#define SPACEMETER_BARINDENT_THEMED			4
 #define SPACEMETER_BARINDENT_BOTTOM			16
 
 #define SPACEMETER_METER_SPACING			2
@@ -105,10 +105,10 @@ private:
 	// Used for drawing a Vista meter.
 	HTHEME m_hProgressTheme;
 
-	// Display mode.
-	int m_iDisplayMode;
+	// Horizontal indentation in pixels.
+	int m_iHorIndent;
 
-	// Draw state.
+	int m_iDisplayMode;
 	int m_iDrawState;
 
 	// The following values can be changed from the outside using public functions.
@@ -151,7 +151,8 @@ public:
 	void Initialize();
 
 	BEGIN_MSG_MAP(CSpaceMeter)
-		MESSAGE_HANDLER(WM_SIZE,OnSize);
+		MESSAGE_HANDLER(WM_CREATE,OnCreate)
+		MESSAGE_HANDLER(WM_SIZE,OnSize)
 		MESSAGE_HANDLER(WM_PAINT,OnPaint)
 		MESSAGE_HANDLER(WM_ERASEBKGND,OnEraseBkgnd)
 		MESSAGE_HANDLER(WM_RBUTTONDOWN,OnRButtonDown)
@@ -162,6 +163,7 @@ public:
 		COMMAND_RANGE_HANDLER_EX(SPACEMETER_POPUPMENU_IDBASE,SPACEMETER_POPUPMENU_IDBASE + SPACEMETER_POPUPMENU_COUNT - 1,OnPopupMenuClick)
     END_MSG_MAP()
 
+	LRESULT OnCreate(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 	LRESULT OnSize(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 	LRESULT OnPaint(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 	LRESULT OnEraseBkgnd(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);

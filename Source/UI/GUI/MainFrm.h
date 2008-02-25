@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2007 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@
 #include "CustomHeaderCtrl.h"
 #include "ToolBarManager.h"
 #include "CustomToolBarCtrl.h"
+#include "MiniHtmlCtrl.h"
 
 // HACK: Enable doublebuffering on XP systems.
 #if (_WIN32_WINNT < 0x501)
@@ -94,7 +95,8 @@ private:
 	CCommandBarCtrl m_CmdBar;
 	CCustomToolBarCtrl m_ToolBar;
 	CHorSplitterWindow m_SpaceMeterView;
-	CMainView m_MainView;
+	CHorSplitterWindow m_MainView;
+	CMainView m_QuickHelpView;
 
 	CSplitterWindow m_ExplorerView;
 	CSplitterWindow m_ProjectView;
@@ -106,6 +108,9 @@ private:
 	CCustomContainer m_ShellListViewContainer;
 	CLabelContainer m_ShellTreeViewContainer;
 	CCustomHeaderCtrl m_ProjectListViewHeader;
+
+	CLabelContainer m_QuickHelpContainer;
+	CMiniHtmlCtrl m_QuickHelpCtrl;
 
 	HIMAGELIST m_hProjectTreeImageList;
 
@@ -148,6 +153,8 @@ private:
 
 	bool SaveProjectAs();
 	bool SaveProjectPrompt();
+
+	void ShowQuickHelp(bool bShow);
 
 	// Shell related.
 	bool OpenSpecialFolder(int iFolder);
@@ -241,6 +248,7 @@ public:
 		MESSAGE_HANDLER(WM_CLOSE,OnClose)
 		MESSAGE_HANDLER(WM_SHELLCHANGE,OnShellChange)
 		MESSAGE_HANDLER(WM_GETISHELLBROWSER,OnGetIShellBrowser)
+		MESSAGE_HANDLER(WM_LABELCONTAINER_CLOSE,OnQuickHelpClose)
 
 		// Shell list view.
 		MESSAGE_HANDLER(WM_SLVC_BROWSEOBJECT,OnSLVBrowseObject)
@@ -356,6 +364,7 @@ public:
 	LRESULT OnClose(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 	LRESULT OnShellChange(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 	LRESULT OnGetIShellBrowser(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+	LRESULT OnQuickHelpClose(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 
 	// Shell list view.
 	LRESULT OnSLVBrowseObject(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);

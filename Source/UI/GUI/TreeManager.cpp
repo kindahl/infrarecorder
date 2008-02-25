@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2007 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1317,10 +1317,6 @@ void CTreeManager::SaveLocalNodeFileData(CXMLProcessor *pXML,CProjectNode *pNode
 
 		lsprintf(szEntryName,_T("File%d"),uiFileCount++);
 		pXML->AddElement(szEntryName,_T(""),true);
-			// FIXME: Remove these commented lines.
-			//pXML->AddElementAttr(_T("folder"),true);
-			//pXML->AddElementAttr(_T("bootimage"),false);
-			//pXML->AddElementAttr(_T("locked"),(pItemData->ucFlags & PROJECTITEM_FLAG_ISLOCKED) > 0);
 			pXML->AddElementAttr(_T("flags"),(int)pItemData->ucFlags);
 
 			lstrcpy(szInternalName,pItemData->GetFilePath() + uiRootLength);
@@ -1662,7 +1658,7 @@ void CTreeManager::SaveLocalPathList(CStringContainerA *pContainer,CProjectNode 
 		lstrcat(szWideBuffer,pItemData->szFullPath);
 
 #ifdef UNICODE
-		TCharToChar(szWideBuffer,szBuffer);
+		UnicodeToAnsi(szBuffer,szWideBuffer,sizeof(szBuffer));
 		pContainer->m_szStrings.push_back(szBuffer);
 #else
 		pContainer->m_szStrings.push_back(szWideBuffer);
@@ -1694,7 +1690,7 @@ void CTreeManager::SaveLocalPathList(CStringContainerA *pContainer,CProjectNode 
 		lstrcat(szWideBuffer,szEmptyFolder);
 
 #ifdef UNICODE
-		TCharToChar(szWideBuffer,szBuffer);
+		UnicodeToAnsi(szBuffer,szWideBuffer,sizeof(szBuffer));
 		pContainer->m_szStrings.push_back(szBuffer);
 #else
 		pContainer->m_szStrings.push_back(szWideBuffer);
@@ -1752,7 +1748,7 @@ void CTreeManager::SavePathList(const TCHAR *szFileName,CProjectNode *pRootNode,
 				lstrcat(szWideBuffer,szFullPath);
 
 #ifdef UNICODE
-				TCharToChar(szWideBuffer,szBuffer);
+				UnicodeToAnsi(szBuffer,szWideBuffer,sizeof(szBuffer));
 				PathList.m_szStrings.push_back(szBuffer);
 #else
 				PathList.m_szStrings.push_back(szWideBuffer);
@@ -1766,4 +1762,101 @@ void CTreeManager::SavePathList(const TCHAR *szFileName,CProjectNode *pRootNode,
 	}
 
 	PathList.SaveToFile(szFileName,false);
+}
+
+void CTreeManager::GetLocalPathList(ckFileSystem::CFileSet &Files,CProjectNode *pNode,
+									std::vector<CProjectNode *> &FolderStack,int iPathStripLen)
+{
+	TCHAR szInternalFilePath[MAX_PATH];
+	bool bHasChildren = false;
+
+	std::list <CProjectNode *>::iterator itNodeObject;
+	for (itNodeObject = pNode->m_Children.begin(); itNodeObject != pNode->m_Children.end(); itNodeObject++)
+	{
+		CItemData *pItemData = (*itNodeObject)->pItemData;
+
+		// Skip imported folders.
+		if (pItemData->ucFlags & PROJECTITEM_FLAG_ISIMPORTED)
+			continue;
+
+		bHasChildren = true;
+
+		FolderStack.push_back(*itNodeObject);
+
+		// Force slash delimiters (no backslash delimiters allowed).
+		TCHAR *szFilePathBuffer = pItemData->BeginEditFilePath();
+			ForceSlashDelimiters(szFilePathBuffer + iPathStripLen);
+		pItemData->EndEditFilePath();
+
+		ForceSlashDelimiters(pItemData->szFullPath);
+
+		lstrcpy(szInternalFilePath,pItemData->GetFilePath() + iPathStripLen);
+		lstrcat(szInternalFilePath,pItemData->GetFileName());
+
+		Files.insert(ckFileSystem::CFileDescriptor(szInternalFilePath,pItemData->szFullPath,
+			0,ckFileSystem::CFileDescriptor::FLAG_DIRECTORY));
+	}
+
+	std::list <CItemData *>::iterator itFileObject;
+	for (itFileObject = pNode->m_Files.begin(); itFileObject != pNode->m_Files.end(); itFileObject++)
+	{
+		CItemData *pItemData = (*itFileObject);
+
+		// Skip imported files.
+		if (pItemData->ucFlags & PROJECTITEM_FLAG_ISIMPORTED)
+			continue;
+
+		bHasChildren = true;
+
+		// Force slash delimiters (no backslash delimiters allowed).
+		TCHAR *szFilePathBuffer = pItemData->BeginEditFilePath();
+			ForceSlashDelimiters(szFilePathBuffer + iPathStripLen);
+		pItemData->EndEditFilePath();
+
+		ForceSlashDelimiters(pItemData->szFullPath);
+
+		lstrcpy(szInternalFilePath,pItemData->GetFilePath() + iPathStripLen);
+		lstrcat(szInternalFilePath,pItemData->GetFileName());
+
+		Files.insert(ckFileSystem::CFileDescriptor(szInternalFilePath,pItemData->szFullPath,pItemData->uiSize));
+	}
+
+	// If the folder does not have children, add it manually.
+	if (!bHasChildren)
+	{
+		// Force slash delimiters (no backslash delimiters allowed).
+		TCHAR *szFilePathBuffer = pNode->pItemData->BeginEditFilePath();
+			ForceSlashDelimiters(szFilePathBuffer + iPathStripLen);
+		pNode->pItemData->EndEditFilePath();
+
+		ForceSlashDelimiters(pNode->pItemData->szFullPath);
+
+		lstrcpy(szInternalFilePath,pNode->pItemData->GetFilePath() + iPathStripLen);
+		lstrcat(szInternalFilePath,pNode->pItemData->GetFileName());
+
+		// Copy the file name of a temporary empty directory.
+		TCHAR szEmptyFolder[MAX_PATH];
+		lstrcpy(szEmptyFolder,g_TempManager.GetEmtpyDirectory());
+		ForceSlashDelimiters(szEmptyFolder);
+
+		Files.insert(ckFileSystem::CFileDescriptor(szInternalFilePath,szEmptyFolder,
+			0,ckFileSystem::CFileDescriptor::FLAG_DIRECTORY));
+	}
+}
+
+void CTreeManager::GetPathList(ckFileSystem::CFileSet &Files,CProjectNode *pRootNode,int iPathStripLen)
+{
+	CProjectNode *pCurNode = pRootNode;
+
+	// Save the information.
+	std::vector<CProjectNode *> FolderStack;
+	GetLocalPathList(Files,pCurNode,FolderStack,iPathStripLen);
+
+	while (FolderStack.size() > 0)
+	{ 
+		pCurNode = FolderStack[FolderStack.size() - 1];
+		FolderStack.pop_back();
+
+		GetLocalPathList(Files,pCurNode,FolderStack,iPathStripLen);
+	}
 }

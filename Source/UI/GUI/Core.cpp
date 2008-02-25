@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2007 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -125,7 +125,7 @@ bool CCore::SafeLaunch(tstring &CommandLine,bool bWaitForProcess)
 			TCHAR szBatchPath[MAX_PATH];
 #ifdef UNICODE
 			char *szCommandLine = new char[CommandLine.length() + 1];
-			TCharToChar(CommandLine.c_str(),szCommandLine);
+			UnicodeToAnsi(szCommandLine,CommandLine.c_str(),(int)CommandLine.length() + 1);
 
 			// Create the batch file.
 			CreateBatchFile(NULL,szCommandLine,szBatchPath);
@@ -218,15 +218,15 @@ void CCore::ErrorOutputCDRECORD(const char *szBuffer)
 	if (m_pProgress != NULL)
 	{
 		if (!strncmp(szBuffer,CDRTOOLS_NOMEDIA,CDRTOOLS_NOMEDIA_LENGTH))
-			m_pProgress->AddLogEntry(LOGTYPE_ERROR,lngGetString(FAILURE_NOMEDIA));
+			m_pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,lngGetString(FAILURE_NOMEDIA));
 		else if (!strncmp(szBuffer,CDRTOOLS_BLANKERROR,CDRTOOLS_BLANKERROR_LENGTH))
-			m_pProgress->AddLogEntry(LOGTYPE_ERROR,lngGetString(FAILURE_ERASE));
+			m_pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,lngGetString(FAILURE_ERASE));
 		else if (!strncmp(szBuffer,CDRTOOLS_BLANKUNSUP,CDRTOOLS_BLANKUNSUP_LENGTH))
-			m_pProgress->AddLogEntry(LOGTYPE_INFORMATION,lngGetString(INFO_UNSUPERASEMODE));
+			m_pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,lngGetString(INFO_UNSUPERASEMODE));
 		else if (!strncmp(szBuffer,CDRTOOLS_BLANKRETRY,CDRTOOLS_BLANKRETRY_LENGTH))
-			m_pProgress->AddLogEntry(LOGTYPE_INFORMATION,lngGetString(INFO_ERASERETRY));
+			m_pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,lngGetString(INFO_ERASERETRY));
 		else if (!strncmp(szBuffer,CDRTOOLS_NODISC,CDRTOOLS_NODISC_LENGTH))
-			m_pProgress->AddLogEntry(LOGTYPE_ERROR,lngGetString(FAILURE_NOMEDIA));
+			m_pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,lngGetString(FAILURE_NOMEDIA));
 		else if (!strncmp(szBuffer,CDRTOOLS_BADAUDIOCODING,CDRTOOLS_BADAUDIOCODING_LENGTH))
 		{
 			TCHAR szMessage[MAX_PATH + 128];
@@ -234,13 +234,13 @@ void CCore::ErrorOutputCDRECORD(const char *szBuffer)
 
 #ifdef UNICODE
 			TCHAR szFileName[MAX_PATH + 3];
-			CharToTChar(szBuffer + CDRTOOLS_BADAUDIOCODING_LENGTH + 10,szFileName);
+			AnsiToUnicode(szFileName,szBuffer + CDRTOOLS_BADAUDIOCODING_LENGTH + 10,sizeof(szFileName) / sizeof(wchar_t));
 			lstrcat(szMessage,szFileName);
 #else
 			lstrcat(szMessage,szBuffer + CDRTOOLS_BADAUDIOCODING_LENGTH + 10);
 #endif
 
-			m_pProgress->AddLogEntry(LOGTYPE_ERROR,szMessage);
+			m_pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,szMessage);
 		}
 		else if (!strncmp(szBuffer,CDRTOOLS_UNSUPPORTED,CDRTOOLS_UNSUPPORTED_LENGTH))
 		{
@@ -251,47 +251,47 @@ void CCore::ErrorOutputCDRECORD(const char *szBuffer)
 				int iSectorSize = 0;
 				sscanf(pBuffer,"sector size %ld for %*[^\0]",&iSectorSize);
 
-				m_pProgress->AddLogEntry(LOGTYPE_ERROR,lngGetString(FAILURE_BADSECTORSIZE),iSectorSize);
+				m_pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,lngGetString(FAILURE_BADSECTORSIZE),iSectorSize);
 			}
 		}
 		else if (!strncmp(szBuffer,CDRTOOLS_WRITEERROR,CDRTOOLS_WRITEERROR_LENGTH))
 		{
-			m_pProgress->AddLogEntry(LOGTYPE_ERROR,lngGetString(FAILURE_WRITE));
+			m_pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,lngGetString(FAILURE_WRITE));
 		}
 #ifndef CORE_DVD_SUPPORT
 		else if (!strncmp(szBuffer,CDRTOOLS_FOUNDDVDMEDIA,CDRTOOLS_FOUNDDVDMEDIA_LENGTH))
 		{
-			m_pProgress->AddLogEntry(LOGTYPE_WARNING,lngGetString(FAILURE_DVDSUPPORT));
+			m_pProgress->AddLogEntry(CAdvancedProgress::LT_WARNING,lngGetString(FAILURE_DVDSUPPORT));
 		}
 #endif
 		else if (!strncmp(szBuffer,CDRTOOLS_OPENSESSION,CDRTOOLS_OPENSESSION_LENGTH))
 		{
-			m_pProgress->AddLogEntry(LOGTYPE_ERROR,lngGetString(FAILURE_OPENSESSION));
+			m_pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,lngGetString(FAILURE_OPENSESSION));
 		}
 		else if (!strncmp(szBuffer,CDRTOOLS_WARNINGCAP,CDRTOOLS_WARNINGCAP_LENGTH))	// "WARNING:" Prefix.
 		{
 			char *pBuffer = (char *)szBuffer + CDRTOOLS_WARNINGCAP_LENGTH + 1;
 
 			if (!strncmp(pBuffer,CDRTOOLS_DISCSPACEWARNING,CDRTOOLS_DISCSPACEWARNING_LENGTH))
-				m_pProgress->AddLogEntry(LOGTYPE_WARNING,lngGetString(WARNING_DISCSIZE));
+				m_pProgress->AddLogEntry(CAdvancedProgress::LT_WARNING,lngGetString(WARNING_DISCSIZE));
 		}
 		else if (!strncmp(szBuffer,CDRTOOLS_ERRORLEADIN,CDRTOOLS_ERRORLEADIN_LENGTH))
 		{
-			m_pProgress->AddLogEntry(LOGTYPE_ERROR,lngGetString(FAILURE_WRITELEADIN));
+			m_pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,lngGetString(FAILURE_WRITELEADIN));
 
 			// When called from BurnTracks/BurnCompilation we need to flag the operation as failed.
 			m_bOperationRes = false;
 		}
 		else if (!strncmp(szBuffer,CDRTOOLS_ERRORINITDRIVE,CDRTOOLS_ERRORINITDRIVE_LENGTH))
 		{
-			m_pProgress->AddLogEntry(LOGTYPE_ERROR,lngGetString(FAILURE_INITDRIVE));
+			m_pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,lngGetString(FAILURE_INITDRIVE));
 
 			// When called from BurnTracks/BurnCompilation we need to flag the operation as failed.
 			m_bOperationRes = false;
 		}
 		else if (!strncmp(szBuffer,CDRTOOLS_DVDRWDUMMY,CDRTOOLS_DVDRWDUMMY_LENGTH))
 		{
-			m_pProgress->AddLogEntry(LOGTYPE_ERROR,lngGetString(FAILURE_DVDRWDUMMY));
+			m_pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,lngGetString(FAILURE_DVDRWDUMMY));
 
 			// When called from BurnTracks/BurnCompilation we need to flag the operation as failed.
 			m_bOperationRes = false;
@@ -315,10 +315,10 @@ void CCore::ErrorOutputCDRECORD(const char *szBuffer)
 		{
 	#ifdef UNICODE
 			TCHAR szWideBuffer[CONSOLEPIPE_MAX_LINE_SIZE];
-			CharToTChar(szBuffer,szWideBuffer);
-			m_pProgress->AddLogEntry(LOGTYPE_WINLOGO,szWideBuffer);
+			AnsiToUnicode(szWideBuffer,szBuffer,sizeof(szWideBuffer) / sizeof(wchar_t));
+			m_pProgress->AddLogEntry(CAdvancedProgress::LT_WINLOGO,szWideBuffer);
 	#else
-			m_pProgress->AddLogEntry(LOGTYPE_WINLOGO,szBuffer);
+			m_pProgress->AddLogEntry(CAdvancedProgress::LT_WINLOGO,szBuffer);
 	#endif
 		}
 #endif
@@ -336,13 +336,13 @@ void CCore::ErrorOutputMKISOFS(const char *szBuffer)
 
 #ifdef UNICODE
 			TCHAR szFileName[MAX_PATH + 3];
-			CharToTChar(szBuffer + CDRTOOLS_FILENOTFOUND_LENGTH + 15,szFileName);
+			AnsiToUnicode(szFileName,szBuffer + CDRTOOLS_FILENOTFOUND_LENGTH + 15,sizeof(szFileName) / sizeof(wchar_t));
 			lstrcat(szMessage,szFileName);
 #else
 			lstrcat(szMessage,szBuffer + CDRTOOLS_FILENOTFOUND_LENGTH + 15);
 #endif
 
-			m_pProgress->AddLogEntry(LOGTYPE_ERROR,szMessage);
+			m_pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,szMessage);
 		}
 		else if (!strncmp(szBuffer,CDRTOOLS_DEPPDIR,CDRTOOLS_DEEPDIR_LENGTH))
 		{
@@ -353,12 +353,12 @@ void CCore::ErrorOutputMKISOFS(const char *szBuffer)
 			sscanf(szBuffer,"Directories too deep for '%[^']' (%d) max is %d.",szFileName,&iDepth,&iMaxDepth);
 #ifdef UNICODE
 			TCHAR szWideFileName[MAX_PATH];
-			CharToTChar(szFileName,szWideFileName);
+			AnsiToUnicode(szWideFileName,szFileName,sizeof(szWideFileName) / sizeof(wchar_t));
 
-			m_pProgress->AddLogEntry(LOGTYPE_ERROR,lngGetString(FAILURE_DEEPDIR),
+			m_pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,lngGetString(FAILURE_DEEPDIR),
 				szWideFileName,iDepth,iMaxDepth);
 #else
-			m_pProgress->AddLogEntry(LOGTYPE_ERROR,lngGetString(FAILURE_DEEPDIR),
+			m_pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,lngGetString(FAILURE_DEEPDIR),
 				szFileName,iDepth,iMaxDepth);
 #endif
 		}
@@ -367,10 +367,10 @@ void CCore::ErrorOutputMKISOFS(const char *szBuffer)
 		{
 #ifdef UNICODE
 			TCHAR szWideBuffer[CONSOLEPIPE_MAX_LINE_SIZE];
-			CharToTChar(szBuffer,szWideBuffer);
-			m_pProgress->AddLogEntry(LOGTYPE_WINLOGO,szWideBuffer);
+			AnsiToUnicode(szWideBuffer,szBuffer,sizeof(szWideBuffer) / sizeof(wchar_t));
+			m_pProgress->AddLogEntry(CAdvancedProgress::LT_WINLOGO,szWideBuffer);
 #else
-			m_pProgress->AddLogEntry(LOGTYPE_WINLOGO,szBuffer);
+			m_pProgress->AddLogEntry(CAdvancedProgress::LT_WINLOGO,szBuffer);
 #endif
 		}
 #endif
@@ -389,24 +389,24 @@ void CCore::ErrorOutputREADCD(const char *szBuffer)
 			{
 				unsigned long ulSector = atoi(pBuffer + CDRTOOLS_SECTORERROR_LENGTH + 1);
 	
-				m_pProgress->AddLogEntry(LOGTYPE_WARNING,lngGetString(ERROR_SECTOR),ulSector);
+				m_pProgress->AddLogEntry(CAdvancedProgress::LT_WARNING,lngGetString(ERROR_SECTOR),ulSector);
 			}
 		}
 		else if (!strncmp(szBuffer,CDRTOOLS_RETRYSECTOR,CDRTOOLS_RETRYSECTOR_LENGTH))
 		{
 			unsigned long ulSector = atoi(szBuffer + CDRTOOLS_RETRYSECTOR_LENGTH + 1);
 
-			m_pProgress->AddLogEntry(LOGTYPE_ERROR,lngGetString(FAILURE_READSOURCEDISC),ulSector);
+			m_pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,lngGetString(FAILURE_READSOURCEDISC),ulSector);
 		}
 #ifdef CORE_PRINT_UNSUPERRORMESSAGES
 		else
 		{
 #ifdef UNICODE
 			TCHAR szWideBuffer[CONSOLEPIPE_MAX_LINE_SIZE];
-			CharToTChar(szBuffer,szWideBuffer);
-			m_pProgress->AddLogEntry(LOGTYPE_WINLOGO,szWideBuffer);
+			AnsiToUnicode(szWideBuffer,szBuffer,sizeof(szWideBuffer) / sizeof(wchar_t));
+			m_pProgress->AddLogEntry(CAdvancedProgress::LT_WINLOGO,szWideBuffer);
 #else
-			m_pProgress->AddLogEntry(LOGTYPE_WINLOGO,szBuffer);
+			m_pProgress->AddLogEntry(CAdvancedProgress::LT_WINLOGO,szBuffer);
 #endif
 		}
 #endif
@@ -425,7 +425,7 @@ void CCore::EraseOutput(const char *szBuffer)
 		char *pBuffer = (char *)szBuffer + 42;
 
 		if (!strncmp(pBuffer,CDRTOOLS_BLANK,CDRTOOLS_BLANK_LENGTH))
-			m_pProgress->AddLogEntry(LOGTYPE_ERROR,lngGetString(FAILURE_UNSUPRW));
+			m_pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,lngGetString(FAILURE_UNSUPRW));
 	}
 	else if (CheckGraceTime(szBuffer))
 	{
@@ -433,11 +433,11 @@ void CCore::EraseOutput(const char *szBuffer)
 	}
 	else if (!strncmp(szBuffer,CDRTOOLS_BLANKTIME,CDRTOOLS_BLANKTIME_LENGTH))
 	{
-		m_pProgress->AddLogEntry(LOGTYPE_INFORMATION,lngGetString(SUCCESS_ERASE));
+		m_pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,lngGetString(SUCCESS_ERASE));
 	}
 	else if (!strncmp(szBuffer,CDRTOOLS_RELOADDRIVE,CDRTOOLS_RELOADDRIVE_LENGTH))
 	{
-		m_pProgress->AddLogEntry(LOGTYPE_WARNING,lngGetString(FAILURE_LOADDRIVE));
+		m_pProgress->AddLogEntry(CAdvancedProgress::LT_WARNING,lngGetString(FAILURE_LOADDRIVE));
 		m_pProgress->SetStatus(lngGetString(ERROR_RELOADDRIVE));
 
 		// Enable the reload button.
@@ -453,11 +453,11 @@ void CCore::FixateOutput(const char *szBuffer)
 	}
 	else if (!strncmp(szBuffer,CDRTOOLS_FIXATETIME,CDRTOOLS_FIXATETIME_LENGTH))
 	{
-		m_pProgress->AddLogEntry(LOGTYPE_INFORMATION,lngGetString(SUCCESS_FIXATE));
+		m_pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,lngGetString(SUCCESS_FIXATE));
 	}
 	else if (!strncmp(szBuffer,CDRTOOLS_RELOADDRIVE,CDRTOOLS_RELOADDRIVE_LENGTH))
 	{
-		m_pProgress->AddLogEntry(LOGTYPE_WARNING,lngGetString(FAILURE_LOADDRIVE));
+		m_pProgress->AddLogEntry(CAdvancedProgress::LT_WARNING,lngGetString(FAILURE_LOADDRIVE));
 		m_pProgress->SetStatus(lngGetString(ERROR_RELOADDRIVE));
 
 		// Enable the reload button.
@@ -491,7 +491,7 @@ void CCore::BurnImageOutput(const char *szBuffer)
 	{
 		// Only display the error message if no error occured.
 		if (m_bOperationRes)
-			m_pProgress->AddLogEntry(LOGTYPE_INFORMATION,lngGetString(SUCCESS_WRITE));
+			m_pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,lngGetString(SUCCESS_WRITE));
 	}
 	else if (!strncmp(szBuffer,CDRTOOLS_FIXATE,CDRTOOLS_FIXATE_LENGTH))
 	{
@@ -499,15 +499,15 @@ void CCore::BurnImageOutput(const char *szBuffer)
 	}
 	else if (!strncmp(szBuffer,CDRTOOLS_FIXATETIME,CDRTOOLS_FIXATETIME_LENGTH))
 	{
-		m_pProgress->AddLogEntry(LOGTYPE_INFORMATION,lngGetString(SUCCESS_FIXATE));
+		m_pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,lngGetString(SUCCESS_FIXATE));
 	}
 	else if (!strncmp(szBuffer,CDRTOOLS_WARNINGCAP,CDRTOOLS_WARNINGCAP_LENGTH))
 	{
-		m_pProgress->AddLogEntry(LOGTYPE_WARNING,lngGetString(WARNING_FIXATE));
+		m_pProgress->AddLogEntry(CAdvancedProgress::LT_WARNING,lngGetString(WARNING_FIXATE));
 	}
 	else if (!strncmp(szBuffer,CDRTOOLS_RELOADDRIVE,CDRTOOLS_RELOADDRIVE_LENGTH))
 	{
-		m_pProgress->AddLogEntry(LOGTYPE_WARNING,lngGetString(FAILURE_LOADDRIVE));
+		m_pProgress->AddLogEntry(CAdvancedProgress::LT_WARNING,lngGetString(FAILURE_LOADDRIVE));
 		m_pProgress->SetStatus(lngGetString(ERROR_RELOADDRIVE));
 
 		// Enable the reload button.
@@ -528,7 +528,7 @@ void CCore::CreateImageOutput(const char *szBuffer)
 		// Update the status.
 #ifdef UNICODE
 		TCHAR szWideTime[64];
-		CharToTChar(szTime,szWideTime);
+		AnsiToUnicode(szWideTime,szTime,sizeof(szWideTime) / sizeof(wchar_t));
 
 		TCHAR szStatus[128];
 		lsnprintf_s(szStatus,128,lngGetString(STATUS_WRITEIMAGE),szWideTime);
@@ -541,7 +541,7 @@ void CCore::CreateImageOutput(const char *szBuffer)
 	}
 	else if (!strncmp(szBuffer,CDRTOOLS_TOTALTTSIZE,CDRTOOLS_TOTALTTSIZE_LENGTH))
 	{
-		m_pProgress->AddLogEntry(LOGTYPE_INFORMATION,lngGetString(SUCCESS_CREATEIMAGE));
+		m_pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,lngGetString(SUCCESS_CREATEIMAGE));
 		m_bOperationRes = true;		// Success.
 	}
 	// This is a special case. mkisofs likes to print a boot image error on a weird place.
@@ -563,7 +563,7 @@ void CCore::ReadDataTrackOutput(const char *szBuffer)
 {
 	if (!strncmp(szBuffer,CDRTOOLS_END,CDRTOOLS_END_LENGTH))
 	{
-		m_pProgress->AddLogEntry(LOGTYPE_INFORMATION,lngGetString(PROGRESS_BEGINREADTRACK),m_TrackSize[1]);
+		m_pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,lngGetString(PROGRESS_BEGINREADTRACK),m_TrackSize[1]);
 		m_pProgress->SetStatus(lngGetString(STATUS_READTRACK));
 	}
 	else if (!strncmp(szBuffer,CDRTOOLS_ADDRESS,CDRTOOLS_ADDRESS_LENGTH))
@@ -576,7 +576,7 @@ void CCore::ReadDataTrackOutput(const char *szBuffer)
 	}
 	else if (!strncmp(szBuffer,CDRTOOLS_TOTALTIME,CDRTOOLS_TOTALTIME_LENGTH))
 	{
-		m_pProgress->AddLogEntry(LOGTYPE_INFORMATION,lngGetString(SUCCESS_READTRACK),m_TrackSize[1]);
+		m_pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,lngGetString(SUCCESS_READTRACK),m_TrackSize[1]);
 		m_bOperationRes = true;			// Success.
 	}
 }
@@ -585,7 +585,7 @@ void CCore::ReadAudioTrackOutput(const char *szBuffer)
 {
 	if (!strncmp(szBuffer,CDRTOOLS_PERCENTDONE,CDRTOOLS_PERCENTDONE_LENGTH))
 	{
-		m_pProgress->AddLogEntry(LOGTYPE_INFORMATION,lngGetString(PROGRESS_BEGINREADTRACK),m_uiTotalSize);
+		m_pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,lngGetString(PROGRESS_BEGINREADTRACK),m_uiTotalSize);
 		m_pProgress->SetStatus(lngGetString(STATUS_READTRACK));
 
 		m_iStatusMode = SMODE_AUDIOPROGRESS;
@@ -596,7 +596,7 @@ void CCore::ScanTrackOutput(const char *szBuffer)
 {
 	if (!strncmp(szBuffer,CDRTOOLS_END,CDRTOOLS_END_LENGTH))
 	{
-		m_pProgress->AddLogEntry(LOGTYPE_INFORMATION,lngGetString(PROGRESS_BEGINSCANTRACK),m_TrackSize[1]);
+		m_pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,lngGetString(PROGRESS_BEGINSCANTRACK),m_TrackSize[1]);
 		m_pProgress->SetStatus(lngGetString(STATUS_SCANTRACK));
 	}
 	else if (!strncmp(szBuffer,CDRTOOLS_ADDRESS,CDRTOOLS_ADDRESS_LENGTH))
@@ -609,7 +609,7 @@ void CCore::ScanTrackOutput(const char *szBuffer)
 	}
 	else if (!strncmp(szBuffer,CDRTOOLS_TOTALTIME,CDRTOOLS_TOTALTIME_LENGTH))
 	{
-		m_pProgress->AddLogEntry(LOGTYPE_INFORMATION,lngGetString(SUCCESS_SCANTRACK),m_TrackSize[1]);
+		m_pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,lngGetString(SUCCESS_SCANTRACK),m_TrackSize[1]);
 		m_bOperationRes = true;			// Success.
 	}
 	else if (!strncmp(szBuffer,CDRTOOLS_C2ERRORS,CDRTOOLS_C2ERRORS_LENGTH))
@@ -623,7 +623,7 @@ void CCore::ScanTrackOutput(const char *szBuffer)
 
 			if (sscanf(pBuffer + 7,"%ld bytes in %d sectors on disk",&ulBytes,&ulSectors) == 2)
 			{
-				m_pProgress->AddLogEntry(ulSectors > 0 ? LOGTYPE_WARNING : LOGTYPE_INFORMATION,
+				m_pProgress->AddLogEntry(ulSectors > 0 ? CAdvancedProgress::LT_WARNING : CAdvancedProgress::LT_INFORMATION,
 					lngGetString(STATUS_C2TOTAL),ulBytes,ulBytes);
 			}
 		}
@@ -631,7 +631,7 @@ void CCore::ScanTrackOutput(const char *szBuffer)
 		{
 			float fRate = (float)atof(pBuffer + 6);
 
-			m_pProgress->AddLogEntry(fRate > 0 ? LOGTYPE_WARNING : LOGTYPE_INFORMATION,
+			m_pProgress->AddLogEntry(fRate > 0 ? CAdvancedProgress::LT_WARNING : CAdvancedProgress::LT_INFORMATION,
 				lngGetString(STATUS_C2RATE),fRate);
 		}
 	}
@@ -641,7 +641,7 @@ void CCore::ReadDiscOutput(const char *szBuffer)
 {
 	if (!strncmp(szBuffer,CDRTOOLS_END,CDRTOOLS_END_LENGTH))
 	{
-		m_pProgress->AddLogEntry(LOGTYPE_INFORMATION,lngGetString(PROGRESS_BEGINREADDISC));
+		m_pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,lngGetString(PROGRESS_BEGINREADDISC));
 		m_pProgress->SetStatus(lngGetString(STATUS_READDISC));
 
 		// Update the total number of sectors to process.
@@ -661,7 +661,7 @@ void CCore::ReadDiscOutput(const char *szBuffer)
 	}
 	else if (!strncmp(szBuffer,CDRTOOLS_TOTALTIME,CDRTOOLS_TOTALTIME_LENGTH))
 	{
-		m_pProgress->AddLogEntry(LOGTYPE_INFORMATION,lngGetString(SUCCESS_READDISC));
+		m_pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,lngGetString(SUCCESS_READDISC));
 
 		m_bOperationRes = true;			// Success.
 	}
@@ -673,7 +673,7 @@ void CCore::EstimateSizeOutput(const char *szBuffer)
 	{
 		sscanf(szBuffer,"Total extents scheduled to be written = %I64d",&m_uiEstimatedSize);
 
-		m_pProgress->AddLogEntry(LOGTYPE_INFORMATION,lngGetString(SUCCESS_ESTIMAGESIZE),m_uiEstimatedSize);
+		m_pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,lngGetString(SUCCESS_ESTIMAGESIZE),m_uiEstimatedSize);
 
 		m_bOperationRes = true;
 	}
@@ -687,7 +687,7 @@ void CCore::FlushOutput(const char *szBuffer)
 		g_LogDlg.AddString(_T("   > "));
 #ifdef UNICODE
 		TCHAR szWideBuffer[CONSOLEPIPE_MAX_LINE_SIZE];
-		CharToTChar(szBuffer,szWideBuffer);
+		AnsiToUnicode(szWideBuffer,szBuffer,sizeof(szWideBuffer) / sizeof(wchar_t));
 		g_LogDlg.AddLine(szWideBuffer);
 #else
 		g_LogDlg.AddLine(szBuffer);
@@ -773,20 +773,20 @@ void CCore::FlushOutput(const char *szBuffer)
 			switch (m_iMode)
 			{
 				case MODE_ERASE:
-					m_pProgress->AddLogEntry(LOGTYPE_INFORMATION,lngGetString(PROGRESS_BEGINERASE),
+					m_pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,lngGetString(PROGRESS_BEGINERASE),
 						m_bDummyMode ? lngGetString(WRITEMODE_SIMULATION) : lngGetString(WRITEMODE_REAL));
 					m_pProgress->SetStatus(lngGetString(STATUS_ERASE));
 					break;
 
 				case MODE_FIXATE:
-					m_pProgress->AddLogEntry(LOGTYPE_INFORMATION,lngGetString(PROGRESS_BEGINFIXATE),
+					m_pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,lngGetString(PROGRESS_BEGINFIXATE),
 						m_bDummyMode ? lngGetString(WRITEMODE_SIMULATION) : lngGetString(WRITEMODE_REAL));
 					m_pProgress->SetStatus(lngGetString(STATUS_FIXATE));
 					break;
 
 				case MODE_BURNIMAGE:
 				case MODE_BURNIMAGEEX:
-					m_pProgress->AddLogEntry(LOGTYPE_INFORMATION,lngGetString(PROGRESS_BEGINWRITE),
+					m_pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,lngGetString(PROGRESS_BEGINWRITE),
 						m_bDummyMode ? lngGetString(WRITEMODE_SIMULATION) : lngGetString(WRITEMODE_REAL));
 					m_pProgress->SetStatus(lngGetString(STATUS_WRITEDATA));
 					break;
@@ -810,7 +810,7 @@ void CCore::FlushOutput(const char *szBuffer)
 		m_iStatusMode = SMODE_PROGRESS;
 
 		// Notify the status window that we're starting to write a new track.
-		m_pProgress->AddLogEntry(LOGTYPE_INFORMATION,lngGetString(PROGRESS_BEGINTRACK),
+		m_pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,lngGetString(PROGRESS_BEGINTRACK),
 			m_uiCurrentTrack + 1);
 
 		return;
@@ -919,7 +919,7 @@ void CCore::FlushOutput(const char *szBuffer)
 		{
 			m_iStatusMode = SMODE_DEFAULT;
 
-			m_pProgress->AddLogEntry(LOGTYPE_INFORMATION,lngGetString(SUCCESS_READTRACK),m_uiTotalSize);
+			m_pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,lngGetString(SUCCESS_READTRACK),m_uiTotalSize);
 			m_bOperationRes = true;		// Success.
 		}
 	}
@@ -1748,7 +1748,7 @@ bool CCore::CreateImage(const TCHAR *szFileName,const TCHAR *szPathList,
 	// Publiser.
 	strcpy(szLargeBuffer,"PUBL=");
 #ifdef UNICODE
-	TCharToChar(g_ProjectSettings.m_szPublisher,szLargeBuffer + 5);
+	UnicodeToAnsi(szLargeBuffer + 5,g_ProjectSettings.m_szPublisher,sizeof(szLargeBuffer) - 5);
 #else
 	lstrcat(szLargeBuffer,g_ProjectSettings.m_szPublisher);
 #endif
@@ -1757,19 +1757,19 @@ bool CCore::CreateImage(const TCHAR *szFileName,const TCHAR *szPathList,
 	// Preparer.
 	strcpy(szLargeBuffer,"PREP=");
 #ifdef UNICODE
-	TCharToChar(g_ProjectSettings.m_szPreparer,szLargeBuffer + 5);
+	UnicodeToAnsi(szLargeBuffer + 5,g_ProjectSettings.m_szPreparer,sizeof(szLargeBuffer) - 5);
 #else
 	lstrcat(szLargeBuffer,g_ProjectSettings.m_szPreparer);
 #endif
 	StringContainer.m_szStrings.push_back(szLargeBuffer);
 
 	// Application (*).
-	StringContainer.m_szStrings.push_back("APPI=InfraRecorder (C) 2006-2007 Christian Kindahl");
+	StringContainer.m_szStrings.push_back("APPI=InfraRecorder (C) 2006-2008 Christian Kindahl");
 
 	// System.
 	strcpy(szLargeBuffer,"SYSI=");
 #ifdef UNICODE
-	TCharToChar(g_ProjectSettings.m_szSystem,szLargeBuffer + 5);
+	UnicodeToAnsi(szLargeBuffer + 5,g_ProjectSettings.m_szSystem,sizeof(szLargeBuffer) - 5);
 #else
 	lstrcat(szLargeBuffer,g_ProjectSettings.m_szSystem);
 #endif
@@ -1778,7 +1778,7 @@ bool CCore::CreateImage(const TCHAR *szFileName,const TCHAR *szPathList,
 	// Volume set.
 	strcpy(szLargeBuffer,"VOLS=");
 #ifdef UNICODE
-	TCharToChar(g_ProjectSettings.m_szVolumeSet,szLargeBuffer + 5);
+	UnicodeToAnsi(szLargeBuffer + 5,g_ProjectSettings.m_szVolumeSet,sizeof(szLargeBuffer) - 5);
 #else
 	lstrcat(szLargeBuffer,g_ProjectSettings.m_szVolumeSet);
 #endif
@@ -1787,7 +1787,7 @@ bool CCore::CreateImage(const TCHAR *szFileName,const TCHAR *szPathList,
 	// Copyright.
 	strcpy(szLargeBuffer,"COPY=");
 #ifdef UNICODE
-	TCharToChar(g_ProjectSettings.m_szCopyright,szLargeBuffer + 5);
+	UnicodeToAnsi(szLargeBuffer + 5,g_ProjectSettings.m_szCopyright,sizeof(szLargeBuffer) - 5);
 #else
 	lstrcat(szLargeBuffer,g_ProjectSettings.m_szCopyright);
 #endif
@@ -1796,7 +1796,7 @@ bool CCore::CreateImage(const TCHAR *szFileName,const TCHAR *szPathList,
 	// Abstract.
 	strcpy(szLargeBuffer,"ABST=");
 #ifdef UNICODE
-	TCharToChar(g_ProjectSettings.m_szAbstract,szLargeBuffer + 5);
+	UnicodeToAnsi(szLargeBuffer + 5,g_ProjectSettings.m_szAbstract,sizeof(szLargeBuffer) - 5);
 #else
 	lstrcat(szLargeBuffer,g_ProjectSettings.m_szAbstract);
 #endif
@@ -1805,7 +1805,7 @@ bool CCore::CreateImage(const TCHAR *szFileName,const TCHAR *szPathList,
 	// Bibliographic.
 	strcpy(szLargeBuffer,"BIBL=");
 #ifdef UNICODE
-	TCharToChar(g_ProjectSettings.m_szBibliographic,szLargeBuffer + 5);
+	UnicodeToAnsi(szLargeBuffer + 5,g_ProjectSettings.m_szBibliographic,sizeof(szLargeBuffer) - 5);
 #else
 	lstrcat(szLargeBuffer,g_ProjectSettings.m_szBibliographic);
 #endif
@@ -2015,7 +2015,7 @@ bool CCore::CreateImage(const TCHAR *szFileName,const TCHAR *szPathList,
 	{
 		CommandLine += _T("\" -print-size");
 
-		m_pProgress->AddLogEntry(LOGTYPE_INFORMATION,lngGetString(PROGRESS_BEGINESTIMAGESIZE));
+		m_pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,lngGetString(PROGRESS_BEGINESTIMAGESIZE));
 	}
 	else
 	{
@@ -2023,7 +2023,7 @@ bool CCore::CreateImage(const TCHAR *szFileName,const TCHAR *szPathList,
 		CommandLine += szFileName;
 		CommandLine += _T("\"");
 
-		m_pProgress->AddLogEntry(LOGTYPE_INFORMATION,lngGetString(PROGRESS_BEGINDISCIMAGE));
+		m_pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,lngGetString(PROGRESS_BEGINDISCIMAGE));
 	}
 
 	return SafeLaunch(CommandLine,bWaitForProcess);
@@ -2478,7 +2478,7 @@ bool CCore::CopyDisc(tDeviceInfo *pSourceDeviceInfo,tDeviceInfo *pTargetDeviceIn
 
 #ifdef UNICODE
 	char szFolderPath[MAX_PATH];
-	TCharToChar(g_GlobalSettings.m_szCDRToolsPath,szFolderPath);
+	UnicodeToAnsi(szFolderPath,g_GlobalSettings.m_szCDRToolsPath,sizeof(szFolderPath));
 
 	strcat(szChangeDir,szFolderPath);
 #else
@@ -2660,7 +2660,7 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 
 #ifdef UNICODE
 	char szMultiBuffer[MAX_PATH];
-	TCharToChar(g_ProjectSettings.m_szLabel,szMultiBuffer);
+	UnicodeToAnsi(szMultiBuffer,g_ProjectSettings.m_szLabel,sizeof(szMultiBuffer));
 	CommandLine += szMultiBuffer;
 #else
 	CommandLine += g_ProjectSettings.m_szLabel;
@@ -2675,7 +2675,7 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	// Publiser.
 	strcpy(szLargeBuffer,"PUBL=");
 #ifdef UNICODE
-	TCharToChar(g_ProjectSettings.m_szPublisher,szLargeBuffer + 5);
+	UnicodeToAnsi(szLargeBuffer + 5,g_ProjectSettings.m_szPublisher,sizeof(szLargeBuffer) - 5);
 #else
 	lstrcat(szLargeBuffer,g_ProjectSettings.m_szPublisher);
 #endif
@@ -2684,19 +2684,19 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	// Preparer.
 	strcpy(szLargeBuffer,"PREP=");
 #ifdef UNICODE
-	TCharToChar(g_ProjectSettings.m_szPreparer,szLargeBuffer + 5);
+	UnicodeToAnsi(szLargeBuffer + 5,g_ProjectSettings.m_szPreparer,sizeof(szLargeBuffer) - 5);
 #else
 	lstrcat(szLargeBuffer,g_ProjectSettings.m_szPreparer);
 #endif
 	StringContainer.m_szStrings.push_back(szLargeBuffer);
 
 	// Application (*).
-	StringContainer.m_szStrings.push_back("APPI=InfraRecorder (C) 2006-2007 Christian Kindahl");
+	StringContainer.m_szStrings.push_back("APPI=InfraRecorder (C) 2006-2008 Christian Kindahl");
 
 	// System.
 	strcpy(szLargeBuffer,"SYSI=");
 #ifdef UNICODE
-	TCharToChar(g_ProjectSettings.m_szSystem,szLargeBuffer + 5);
+	UnicodeToAnsi(szLargeBuffer + 5,g_ProjectSettings.m_szSystem,sizeof(szLargeBuffer) - 5);
 #else
 	lstrcat(szLargeBuffer,g_ProjectSettings.m_szSystem);
 #endif
@@ -2705,7 +2705,7 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	// Volume set.
 	strcpy(szLargeBuffer,"VOLS=");
 #ifdef UNICODE
-	TCharToChar(g_ProjectSettings.m_szVolumeSet,szLargeBuffer + 5);
+	UnicodeToAnsi(szLargeBuffer + 5,g_ProjectSettings.m_szVolumeSet,sizeof(szLargeBuffer) - 5);
 #else
 	lstrcat(szLargeBuffer,g_ProjectSettings.m_szVolumeSet);
 #endif
@@ -2714,7 +2714,7 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	// Copyright.
 	strcpy(szLargeBuffer,"COPY=");
 #ifdef UNICODE
-	TCharToChar(g_ProjectSettings.m_szCopyright,szLargeBuffer + 5);
+	UnicodeToAnsi(szLargeBuffer + 5,g_ProjectSettings.m_szCopyright,sizeof(szLargeBuffer) - 5);
 #else
 	lstrcat(szLargeBuffer,g_ProjectSettings.m_szCopyright);
 #endif
@@ -2723,7 +2723,7 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	// Abstract.
 	strcpy(szLargeBuffer,"ABST=");
 #ifdef UNICODE
-	TCharToChar(g_ProjectSettings.m_szAbstract,szLargeBuffer + 5);
+	UnicodeToAnsi(szLargeBuffer + 5,g_ProjectSettings.m_szAbstract,sizeof(szLargeBuffer) - 5);
 #else
 	lstrcat(szLargeBuffer,g_ProjectSettings.m_szAbstract);
 #endif
@@ -2732,7 +2732,7 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	// Bibliographic.
 	strcpy(szLargeBuffer,"BIBL=");
 #ifdef UNICODE
-	TCharToChar(g_ProjectSettings.m_szBibliographic,szLargeBuffer + 5);
+	UnicodeToAnsi(szLargeBuffer + 5,g_ProjectSettings.m_szBibliographic,sizeof(szLargeBuffer) - 5);
 #else
 	lstrcat(szLargeBuffer,g_ProjectSettings.m_szBibliographic);
 #endif
@@ -2759,7 +2759,7 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 		{
 			CommandLine += " -publisher \"";
 #ifdef UNICODE
-			TCharToChar(g_ProjectSettings.m_szPublisher,szMultiBuffer);
+			UnicodeToAnsi(szMultiBuffer,g_ProjectSettings.m_szPublisher,sizeof(szMultiBuffer));
 			CommandLine += szMultiBuffer;
 #else
 			CommandLine += g_ProjectSettings.m_szPublisher;
@@ -2772,7 +2772,7 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 		{
 			CommandLine += " -p \"";
 #ifdef UNICODE
-			TCharToChar(g_ProjectSettings.m_szPreparer,szMultiBuffer);
+			UnicodeToAnsi(szMultiBuffer,g_ProjectSettings.m_szPreparer,sizeof(szMultiBuffer));
 			CommandLine += szMultiBuffer;
 #else
 			CommandLine += g_ProjectSettings.m_szPreparer;
@@ -2788,7 +2788,7 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 		{
 			CommandLine += " -sysid \"";
 #ifdef UNICODE
-			TCharToChar(g_ProjectSettings.m_szSystem,szMultiBuffer);
+			UnicodeToAnsi(szMultiBuffer,g_ProjectSettings.m_szSystem,sizeof(szMultiBuffer));
 			CommandLine += szMultiBuffer;
 #else
 			CommandLine += g_ProjectSettings.m_szSystem;
@@ -2801,7 +2801,7 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 		{
 			CommandLine += " -volset \"";
 #ifdef UNICODE
-			TCharToChar(g_ProjectSettings.m_szVolumeSet,szMultiBuffer);
+			UnicodeToAnsi(szMultiBuffer,g_ProjectSettings.m_szVolumeSet,sizeof(szMultiBuffer));
 			CommandLine += szMultiBuffer;
 #else
 			CommandLine += g_ProjectSettings.m_szVolumeSet;
@@ -2814,7 +2814,7 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 		{
 			CommandLine += " -copyright \"";
 #ifdef UNICODE
-			TCharToChar(g_ProjectSettings.m_szCopyright,szMultiBuffer);
+			UnicodeToAnsi(szMultiBuffer,g_ProjectSettings.m_szCopyright,sizeof(szMultiBuffer));
 			CommandLine += szMultiBuffer;
 #else
 			CommandLine += g_ProjectSettings.m_szCopyright;
@@ -2827,7 +2827,7 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 		{
 			CommandLine += " -abstract \"";
 #ifdef UNICODE
-			TCharToChar(g_ProjectSettings.m_szAbstract,szMultiBuffer);
+			UnicodeToAnsi(szMultiBuffer,g_ProjectSettings.m_szAbstract,sizeof(szMultiBuffer));
 			CommandLine += szMultiBuffer;
 #else
 			CommandLine += g_ProjectSettings.m_szAbstract;
@@ -2840,7 +2840,7 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 		{
 			CommandLine += " -biblio \"";
 #ifdef UNICODE
-			TCharToChar(g_ProjectSettings.m_szBibliographic,szMultiBuffer);
+			UnicodeToAnsi(szMultiBuffer,g_ProjectSettings.m_szBibliographic,sizeof(szMultiBuffer));
 			CommandLine += szMultiBuffer;
 #else
 			CommandLine += g_ProjectSettings.m_szBibliographic;
@@ -2857,7 +2857,7 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	// ISO character set.
 	CommandLine += " -input-charset ";
 #ifdef UNICODE
-	TCharToChar(g_szCharacterSets[g_ProjectSettings.m_iISOCharSet],szMultiBuffer);
+	UnicodeToAnsi(szMultiBuffer,g_szCharacterSets[g_ProjectSettings.m_iISOCharSet],sizeof(szMultiBuffer));
 	CommandLine += szMultiBuffer;
 #else
 	CommandLine += g_szCharacterSets[g_ProjectSettings.m_iISOCharSet];
@@ -2916,7 +2916,7 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 		ForceSlashDelimiters(szImageFullPath);
 
 #ifdef UNICODE
-		TCharToChar(szImageFullPath,szMultiBuffer);
+		UnicodeToAnsi(szMultiBuffer,szImageFullPath,sizeof(szMultiBuffer));
 		CommandLine += szMultiBuffer;
 #else
 		CommandLine += szImageFullPath;
@@ -2960,7 +2960,7 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	{
 		CommandLine += " -c ";
 #ifdef UNICODE
-		TCharToChar(g_ProjectSettings.m_szBootCatalog,szMultiBuffer);
+		UnicodeToAnsi(szMultiBuffer,g_ProjectSettings.m_szBootCatalog,sizeof(szMultiBuffer));
 		CommandLine += szMultiBuffer;
 #else
 		CommandLine += g_ProjectSettings.m_szBootCatalog;
@@ -2987,7 +2987,7 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	// Path list.
 	CommandLine += " -graft-points -path-list \"";
 #ifdef UNICODE
-	TCharToChar(szPathList,szMultiBuffer);
+	UnicodeToAnsi(szMultiBuffer,szPathList,sizeof(szMultiBuffer));
 	CommandLine += szMultiBuffer;
 #else
 	CommandLine += szPathList;
@@ -3164,7 +3164,7 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 
 		CommandLine += " \"";
 #ifdef UNICODE
-		TCharToChar(szCygwinFileName,szMultiBuffer);
+		UnicodeToAnsi(szMultiBuffer,szCygwinFileName,sizeof(szMultiBuffer));
 		CommandLine += szMultiBuffer;
 #else
 		CommandLine += szCygwinFileName;
@@ -3177,7 +3177,7 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	{
 		CommandLine += " textfile=\"";
 #ifdef UNICODE
-		TCharToChar(szCygwinFileName,szMultiBuffer);
+		UnicodeToAnsi(szMultiBuffer,szCygwinFileName,sizeof(szMultiBuffer));
 		CommandLine += szMultiBuffer;
 #else
 		CommandLine += szAudioText;
@@ -3191,7 +3191,7 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 
 #ifdef UNICODE
 	char szFolderPath[MAX_PATH];
-	TCharToChar(g_GlobalSettings.m_szCDRToolsPath,szFolderPath);
+	UnicodeToAnsi(szFolderPath,g_GlobalSettings.m_szCDRToolsPath,sizeof(szFolderPath));
 
 	strcat(szChangeDir,szFolderPath);
 #else

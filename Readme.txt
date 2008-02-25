@@ -1,5 +1,5 @@
 InfraRecorder
-Copyright (C) 2006-2007 Christian Kindahl, christian dot kindahl at gmail dot com
+Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
 
 This program is licensed under GPL (version 2), please see the file License.txt.
 You will need WTL to compile InfraRecorder, it can be found at http://wtl.sourceforge.net.

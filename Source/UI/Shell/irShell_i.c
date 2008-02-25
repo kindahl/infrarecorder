@@ -6,7 +6,7 @@
 
 
  /* File created by MIDL compiler version 6.00.0366 */
-/* at Sat Oct 06 22:45:15 2007
+/* at Tue Jan 01 13:12:49 2008
  */
 /* Compiler settings for .\irShell.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)

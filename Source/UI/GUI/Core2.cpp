@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2007 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,7 +39,8 @@ CCore2::~CCore2()
 {
 }
 
-bool CCore2::HandleEvents(CCore2Device *pDevice,CAdvancedProgress *pProgress,unsigned char &ucHandledEvents)
+bool CCore2::HandleEvents(CCore2Device *pDevice,CAdvancedProgress *pProgress,
+						  unsigned char &ucHandledEvents)
 {
 	ucHandledEvents = 0;
 
@@ -96,7 +97,7 @@ bool CCore2::HandleEvents(CCore2Device *pDevice,CAdvancedProgress *pProgress,uns
 
 					if (!StartStopUnit(pDevice,LOADMEDIA_START,false))
 					{
-						pProgress->AddLogEntry(LOGTYPE_ERROR,lngGetString(FAILURE_NOMEDIA));
+						pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,lngGetString(FAILURE_NOMEDIA));
 						return false;
 					}
 
@@ -506,7 +507,8 @@ bool CCore2::GetMediaWriteSpeeds(CCore2Device *pDevice,
 
 	return true;*/
 
-	if (pDevice->Transport(ucCdb,12,ucBuffer,sizeof(ucBuffer)))
+	//if (pDevice->Transport(ucCdb,12,ucBuffer,sizeof(ucBuffer)))
+	if (false)
 	{
 		unsigned int uiDataLength = ucBuffer[0];
 		uiDataLength <<= 8;
@@ -611,11 +613,16 @@ bool CCore2::GetMaxSpeeds(CCore2Device *pDevice,unsigned short &usReadSpeed,
 	if (!pDevice->Transport(ucCdb,10,ucBuffer,sizeof(ucBuffer)))
 		return false;
 
-	if ((ucBuffer[8] & 0x3F) != 0x2A)
-		return false;
-
 	usReadSpeed = ((unsigned short)ucBuffer[8 + 8] << 8) | ucBuffer[8 + 9];
 	usWriteSpeed = ((unsigned short)ucBuffer[8 + 18] << 8) | ucBuffer[8 + 19];
+
+	if ((ucBuffer[8] & 0x3F) != 0x2A)
+	{
+		g_LogDlg.AddLine(_T("  Warning: Received wrong code page 0x%.2X (expected 0x2A)."),ucBuffer[8]);
+		g_LogDlg.AddLine(_T("  Debug: Read speed is %d, write speed is %d."),usReadSpeed,usWriteSpeed);
+		return false;
+	}
+
 	return true;
 }
 
@@ -847,7 +854,7 @@ bool CCore2::EraseDisc(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 	/*if (!StartStopUnit(pDevice,LOADMEDIA_LOAD,false))
 	{
 		g_LogDlg.AddLine(_T("  Error: Unable to load and start the media."));
-		pProgress->AddLogEntry(LOGTYPE_ERROR,lngGetString(FAILURE_NOMEDIA));
+		pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,lngGetString(FAILURE_NOMEDIA));
 		return false;
 	}*/
 
@@ -988,7 +995,7 @@ bool CCore2::ReadDataTrack(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 	unsigned long ulFrame = ulTrackSize + 150 - ulMin * 60 * 75 - ulSec * 75;
 	g_LogDlg.AddLine(_T("  Track length: %02d:%02d:%02d"),ulMin,ulSec,ulFrame);
 
-	pProgress->AddLogEntry(LOGTYPE_INFORMATION,lngGetString(PROGRESS_BEGINREADTRACK),ucTrackNumber);
+	pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,lngGetString(PROGRESS_BEGINREADTRACK),ucTrackNumber);
 	pProgress->SetStatus(lngGetString(STATUS_READTRACK));
 
 #ifdef DEBUG
@@ -1012,7 +1019,7 @@ bool CCore2::ReadDataTrack(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 	// Start reading the selected sectors from the disc.
 	bool bResult = Read.ReadData(pDevice,pProgress,&ReadFunc,ulTrackAddr,ulTrackSize,bIgnoreErr);
 	if (bResult)
-		pProgress->AddLogEntry(LOGTYPE_INFORMATION,lngGetString(SUCCESS_READTRACK),ucTrackNumber);
+		pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,lngGetString(SUCCESS_READTRACK),ucTrackNumber);
 
 	return bResult;
 }

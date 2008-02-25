@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2007 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,8 +45,8 @@ void TrimRight(TCHAR *szString);
 
 char *SkipInteger(char *szString);
 
-void CharToTChar(const char *szSource,TCHAR *szTarget);
-void TCharToChar(const TCHAR *szSource,char *szTarget);
+void AnsiToUnicode(wchar_t *szTarget,const char *szSource,int iTargetSize);
+void UnicodeToAnsi(char *szTarget,const wchar_t *szSource,int iTargetSize);
 
 void GetCygwinFileName(const TCHAR *szFileName,TCHAR *szCygwinFileName);
 

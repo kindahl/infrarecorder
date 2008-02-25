@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2007 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -382,5 +382,8 @@ TCHAR *g_szStringTable[] = {
 	_T("Please note that disabling the fixation step does not create a multi-session disc. Please see the help documentation for more information."),
 
 	// Added version 0.45.
-	_T("Unable to automatically reload the media. Please try to reload it manually, and then press OK.")
+	_T("Unable to automatically reload the media. Please try to reload it manually, and then press OK."),
+
+	// Not yet added to translations.
+	_T("Operation failed.")
 };

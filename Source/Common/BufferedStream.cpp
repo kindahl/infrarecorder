@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2007 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -87,8 +87,7 @@ bool CBufferedInStream::EOS()
 /*
 	COutBufferedStream
 */
-// UPDATE: I am not sure if this code works as it should.
-/*CBufferedOutStream::CBufferedOutStream(COutStream *pOutStream,unsigned long ulBufferSize)
+CBufferedOutStream::CBufferedOutStream(COutStream *pOutStream,unsigned long ulBufferSize)
 {
 	m_pOutStream = pOutStream;
 
@@ -141,4 +140,4 @@ int CBufferedOutStream::Flush()
 	m_ulBufferPos = 0;
 
 	return iResult;
-}*/
+}

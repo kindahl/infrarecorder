@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2007 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -56,10 +56,17 @@ bool CLanguageSettings::Load(CXMLProcessor *pXML)
 
 	pXML->GetSafeElementData(_T("LanguageFile"),m_szLanguageFile,MAX_PATH - 1);
 
-	if (fs_fileexists(m_szLanguageFile))
+	// Calculate full path.
+	TCHAR szFullPath[MAX_PATH];
+	::GetModuleFileName(NULL,szFullPath,MAX_PATH - 1);
+	ExtractFilePath(szFullPath);
+	lstrcat(szFullPath,_T("Languages\\"));
+	lstrcat(szFullPath,m_szLanguageFile);
+
+	if (fs_fileexists(szFullPath))
 	{
 		m_pLNGProcessor = new CLNGProcessor();
-		m_pLNGProcessor->Load(m_szLanguageFile);
+		m_pLNGProcessor->Load(szFullPath);
 	}
 
 	pXML->LeaveElement();
@@ -191,6 +198,7 @@ bool CDynamicSettings::Save(CXMLProcessor *pXML)
 			pXML->AddElementAttr(_T("icon"),m_iToolBarIcon);
 		pXML->LeaveElement();
 		pXML->AddElement(_T("StatusBar"),m_bViewStatusBar);
+		pXML->AddElement(_T("QuickHelp"),m_bViewQuickHelp);
 
 		pXML->AddElement(_T("WindowLeft"),m_rcWindow.left);
 		pXML->AddElement(_T("WindowRight"),m_rcWindow.right);
@@ -232,6 +240,7 @@ bool CDynamicSettings::Load(CXMLProcessor *pXML)
 	}
 
 	pXML->GetSafeElementData(_T("StatusBar"),&m_bViewStatusBar);
+	pXML->GetSafeElementData(_T("QuickHelp"),&m_bViewQuickHelp);
 
 	pXML->GetSafeElementData(_T("WindowLeft"),&m_rcWindow.left);
 	pXML->GetSafeElementData(_T("WindowRight"),&m_rcWindow.right);

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2007 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@ bool CInFileStream::Open(const TCHAR *szFileName)
 
 	m_hFile = fs_open(szFileName,TEXT("rb"));
 
-	return (m_hFile != NULL);
+	return (m_hFile != INVALID_HANDLE_VALUE);
 }
 
 bool CInFileStream::EOS()
@@ -107,7 +107,7 @@ bool COutFileStream::Open(const TCHAR *szFileName)
 
 	m_hFile = fs_open(szFileName,TEXT("wb"));
 
-	return (m_hFile != NULL);
+	return (m_hFile != INVALID_HANDLE_VALUE);
 }
 
 bool COutFileStream::Close()

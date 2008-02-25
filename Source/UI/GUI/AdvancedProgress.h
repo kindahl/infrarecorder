@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2007 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,14 +19,9 @@
 #pragma once
 #include "../../Common/Progress.h"
 
-#define LOGTYPE_INFORMATION				0
-#define LOGTYPE_WARNING					1
-#define LOGTYPE_ERROR					2
-#define LOGTYPE_WINLOGO					3
-
 #define PROGRESS_STRINGBUFFER_SIZE		256
 
-class CAdvancedProgress : public CProgress
+class CAdvancedProgress : public CProgressEx
 {
 protected:
 	// Should be used by inheritors when parsing the variable argument list passed
@@ -34,9 +29,6 @@ protected:
 	TCHAR m_szStringBuffer[PROGRESS_STRINGBUFFER_SIZE];
 
 public:
-	virtual void AddLogEntry(int iType,const TCHAR *szMessage,...) = 0;
-	virtual void SetStatus(const TCHAR *szStatus,...) = 0;
-
 	// Called when the operation is complteted.
 	virtual void NotifyComplteted() = 0;
 

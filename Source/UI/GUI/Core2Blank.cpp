@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2007 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -87,7 +87,7 @@ bool CCore2Blank::Blank(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 	ucCdb[ 1] = 0x10 | ucBlankType;		// Immed and blank type.
 	ucCdb[11] = 0x00;
 
-	pProgress->AddLogEntry(LOGTYPE_INFORMATION,lngGetString(PROGRESS_BEGINERASE),bSimulate ? 
+	pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,lngGetString(PROGRESS_BEGINERASE),bSimulate ? 
 		lngGetString(WRITEMODE_SIMULATION) : lngGetString(WRITEMODE_REAL));
 	pProgress->SetStatus(lngGetString(STATUS_ERASE));
 
@@ -96,13 +96,13 @@ bool CCore2Blank::Blank(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 
 	if (!pDevice->Transport(ucCdb,12,NULL,0))
 	{
-		pProgress->AddLogEntry(LOGTYPE_ERROR,lngGetString(FAILURE_ERASE));
+		pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,lngGetString(FAILURE_ERASE));
 		return false;
 	}
 
 	if (!g_Core2.WaitForUnit(pDevice,pProgress))
 		return false;
 
-	pProgress->AddLogEntry(LOGTYPE_INFORMATION,lngGetString(SUCCESS_ERASE));
+	pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,lngGetString(SUCCESS_ERASE));
 	return true;
 }

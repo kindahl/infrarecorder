@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2007 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -248,13 +248,13 @@ bool CCore2Format::FormatUnit(CCore2Device *pDevice,CAdvancedProgress *pProgress
 	ucBuffer[uiFmtDescOffset + 2] = 0x00;
 	ucBuffer[uiFmtDescOffset + 3] = 0x08;
 
-	pProgress->AddLogEntry(LOGTYPE_INFORMATION,lngGetString(PROGRESS_BEGINFORMAT),
+	pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,lngGetString(PROGRESS_BEGINFORMAT),
 		lngGetString(WRITEMODE_REAL));
 	pProgress->SetStatus(lngGetString(STATUS_FORMAT));
 
 	if (!pDevice->Transport(ucCdb,6,ucBuffer + uiFmtDescOffset,12,CCore2Device::DATAMODE_WRITE))
 	{
-		pProgress->AddLogEntry(LOGTYPE_ERROR,lngGetString(FAILURE_FORMAT));
+		pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,lngGetString(FAILURE_FORMAT));
 		return false;
 	}
 
@@ -278,12 +278,12 @@ bool CCore2Format::FormatUnit(CCore2Device *pDevice,CAdvancedProgress *pProgress
 		pProgress->SetStatus(lngGetString(STATUS_CLOSETRACK));
 
 		if (!g_Core2.CloseTrackSession(pDevice,0x00,0x00,true))
-			pProgress->AddLogEntry(LOGTYPE_ERROR,lngGetString(FAILURE_STOPBKGNDFORMAT));
+			pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,lngGetString(FAILURE_STOPBKGNDFORMAT));
 
 		if (!g_Core2.WaitForUnit(pDevice,pProgress))
 			return false;
 	}
 
-	pProgress->AddLogEntry(LOGTYPE_INFORMATION,lngGetString(SUCCESS_FORMAT));
+	pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,lngGetString(SUCCESS_FORMAT));
 	return true;
 }

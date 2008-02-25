@@ -121,6 +121,7 @@
 
           <Directory Id="Languages" Name="Languages">
             <Component Id="Lang" Guid="$(var.CompLang)" DiskId="1" Win64="$(var.Is64)">
+              <File Id="Arabic.irl" Name="Arabic.irl" Source="../Binary64/Languages/Arabic.irl"/>
               <File Id="Basque.irl" Name="Basque.irl" Source="../Binary64/Languages/Basque.irl"/>
               <File Id="Bosnian.irl" Name="Bosnian.irl" Source="../Binary64/Languages/Bosnian.irl"/>
               <File Id="Bulgarian.irl" Name="Bulgarian.irl" Source="../Binary64/Languages/Bulgarian.irl"/>
@@ -156,6 +157,7 @@
               <File Id="Spanish.irl" Name="Spanish.irl" Source="../Binary64/Languages/Spanish.irl"/>
               <File Id="Swedish.irl" Name="Swedish.irl" Source="../Binary64/Languages/Swedish.irl"/>
               <File Id="Turkish.irl" Name="Turkish.irl" Source="../Binary64/Languages/Turkish.irl"/>
+              <File Id="Turkish.chm" Name="Turkish.chm" Source="../Binary64/Languages/Turkish.chm"/>
               <File Id="Ukrainian.irl" Name="Ukrainian.irl" Source="../Binary64/Languages/Ukrainian.irl"/>
               <File Id="Ukrainian.chm" Name="Ukrainian.chm" Source="../Binary64/Languages/Ukrainian.chm"/>
             </Component>

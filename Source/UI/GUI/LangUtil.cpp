@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2007 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 #include "LangUtil.h"
 #include "Settings.h"
 #include "StringTable.h"
+#include "../../Core/ckFileSystem/StringTable.h"
 
 const TCHAR *g_szHelpFile = _T("InfraRecorder.chm");
 
@@ -62,4 +63,23 @@ const TCHAR *lngGetManual()
 int lngMessageBox(HWND hWnd,unsigned int uiTextID,unsigned int uiCaptionID,unsigned int uiType)
 {
 	return MessageBox(hWnd,lngGetString(uiTextID),lngGetString(uiCaptionID),uiType);
+}
+
+void lngTranslateTables()
+{
+	// Try to load translated string.
+	if (g_LanguageSettings.m_pLNGProcessor != NULL)
+	{	
+		// Make sure that there is a strings translation section.
+		if (g_LanguageSettings.m_pLNGProcessor->EnterSection(_T("filesystem")))
+		{
+			TCHAR *szStrValue;
+			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckFileSystem::WARNING_FSDIRLEVEL,szStrValue))
+				ckFileSystem::g_StringTable.SetString(ckFileSystem::WARNING_FSDIRLEVEL,szStrValue);
+			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckFileSystem::WARNING_SKIPFILE,szStrValue))
+				ckFileSystem::g_StringTable.SetString(ckFileSystem::WARNING_SKIPFILE,szStrValue);
+			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckFileSystem::ERROR_PATHTABLESIZE,szStrValue))
+				ckFileSystem::g_StringTable.SetString(ckFileSystem::ERROR_PATHTABLESIZE,szStrValue);
+		}
+	}
 }

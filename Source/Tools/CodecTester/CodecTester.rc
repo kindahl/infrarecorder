@@ -63,21 +63,17 @@ BEGIN
     DEFPUSHBUTTON   "Start",IDOK,271,18,50,14
     PUSHBUTTON      "Exit",IDCANCEL,271,35,50,14
     PUSHBUTTON      "About...",ID_APP_ABOUT,271,169,50,14
-    LTEXT           "Installed codecs (double-click to view copyright note):",
-                    IDC_INSTALLEDSTATIC,7,7,170,8
-    CONTROL         "",IDC_LIST,"SysListView32",LVS_REPORT | LVS_SINGLESEL | 
-                    LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,18,257,102
+    LTEXT           "Installed codecs (double-click to view copyright note):",IDC_INSTALLEDSTATIC,7,7,170,8
+    CONTROL         "",IDC_LIST,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,18,257,102
     GROUPBOX        "Parameters",IDC_OPTIONSSTATIC,7,123,257,59
-    CONTROL         "",IDC_PROGRESS,"msctls_progress32",NOT WS_VISIBLE | 
-                    WS_BORDER,7,124,258,10
+    CONTROL         "",IDC_PROGRESS,"msctls_progress32",NOT WS_VISIBLE | WS_BORDER,7,124,258,10
     LTEXT           "Source file:",IDC_INPUTSTATIC,12,134,36,8
     EDITTEXT        IDC_INPUTEDIT,61,132,177,13,ES_AUTOHSCROLL
     PUSHBUTTON      "...",IDC_INPUTBUTTON,243,132,15,13
     LTEXT           "Target folder:",IDC_OUTPUTSTATIC,12,150,43,8
     EDITTEXT        IDC_OUTPUTEDIT,61,148,177,13,ES_AUTOHSCROLL
     LTEXT           "Target format:",IDC_FORMATSTATIC,12,166,45,8
-    COMBOBOX        IDC_FORMATCOMBO,62,164,98,49,CBS_DROPDOWNLIST | 
-                    WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_FORMATCOMBO,62,164,98,49,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
     PUSHBUTTON      "...",IDC_OUTPUTBUTTON,243,148,15,13
     PUSHBUTTON      "Help...",IDC_HELPBUTTON,271,152,50,14
     PUSHBUTTON      "Configure...",IDC_ENCODERCONFIGBUTTON,164,164,43,13
@@ -152,7 +148,7 @@ BEGIN
             VALUE "FileDescription", "CodecTester"
             VALUE "FileVersion", "0.4.0.3"
             VALUE "InternalName", "CodecTester"
-            VALUE "LegalCopyright", "Copyright © 2006-2007 Christian Kindahl"
+            VALUE "LegalCopyright", "Copyright © 2006-2008 Christian Kindahl"
             VALUE "OriginalFilename", "CodecTester.exe"
             VALUE "ProductName", "CodecTester"
             VALUE "ProductVersion", "0.4.0.3"
@@ -257,8 +253,39 @@ END
 /////////////////////////////////////////////////////////////////////////////
 
 
+/////////////////////////////////////////////////////////////////////////////
+// Swedish resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_SVE)
+#ifdef _WIN32
+LANGUAGE LANG_SWEDISH, SUBLANG_DEFAULT
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+#endif    // Swedish resources
+/////////////////////////////////////////////////////////////////////////////
+
+
 
 #ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
 
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED

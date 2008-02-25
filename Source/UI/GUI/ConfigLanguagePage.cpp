@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2007 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -73,16 +73,9 @@ bool CConfigLanguagePage::OnApply()
 	int iLangIndex = m_LangCombo.GetCurSel();
 
 	if (iLangIndex == 0)
-	{
 		g_LanguageSettings.m_szLanguageFile[0] = '\0';
-	}
 	else
-	{
-		::GetModuleFileName(NULL,g_LanguageSettings.m_szLanguageFile,MAX_PATH - 1);
-		ExtractFilePath(g_LanguageSettings.m_szLanguageFile);
-		lstrcat(g_LanguageSettings.m_szLanguageFile,_T("Languages\\"));
-		lstrcat(g_LanguageSettings.m_szLanguageFile,m_LangFileList[iLangIndex - 1].szFileName);
-	}
+		lstrcpy(g_LanguageSettings.m_szLanguageFile,m_LangFileList[iLangIndex - 1].szFileName);
 
 	return true;
 }
@@ -143,10 +136,7 @@ void CConfigLanguagePage::FillLangCombo()
 			ChangeFileExt(szFilePath,_T(""));
 			m_LangCombo.AddString(szFilePath);
 
-			lstrcpy(szFilePath,szFolderPath);
-			lstrcat(szFilePath,FileData.cFileName);
-
-			if (!lstrcmp(szFilePath,g_LanguageSettings.m_szLanguageFile))
+			if (!lstrcmp(FileData.cFileName,g_LanguageSettings.m_szLanguageFile))
 				m_LangCombo.SetCurSel(m_LangCombo.GetCount() - 1);
 		}
 		while (FindNextFile(hFile,&FileData));

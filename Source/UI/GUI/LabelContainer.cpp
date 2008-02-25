@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2007 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,8 +22,10 @@
 #include "CtrlMessages.h"
 #include "WinVer.h"
 #include "VisualStyles.h"
+#include "resource.h"
+#include "CtrlMessages.h"
 
-CLabelContainer::CLabelContainer()
+CLabelContainer::CLabelContainer(bool bClosable)
 {
 	m_iHeaderHeight = 0;
 
@@ -32,11 +34,34 @@ CLabelContainer::CLabelContainer()
 
 	m_hWndCustomDraw = NULL;
 	m_iControlID = -1;
+
+	// Button releated.
+	m_hCloseImageList = NULL;
+	m_hWndCloseHost = NULL;
+	if (bClosable)
+		InitializeImageList();
+
+	m_iButtonState = PANE_BUTTON_NORMAL;
+	m_bButtonDown = false;
 }
 
 CLabelContainer::~CLabelContainer()
 {
-	::DeleteObject(m_hBorderBrush);
+	if (m_hBorderBrush != NULL)
+		::DeleteObject(m_hBorderBrush);
+
+	// Destroy the image list.
+	if (m_hCloseImageList != NULL)
+		ImageList_Destroy(m_hCloseImageList);
+}
+
+void CLabelContainer::InitializeImageList()
+{
+	HBITMAP hBitmap = LoadBitmap(_Module.GetResourceInstance(),MAKEINTRESOURCE(IDB_PANECLOSEBITMAP));
+	m_hCloseImageList = ImageList_Create(16,16,ILC_COLOR32 | ILC_MASK,0,4);
+	ImageList_AddMasked(m_hCloseImageList,hBitmap,RGB(255,0,255));
+
+	DeleteObject(hBitmap);
 }
 
 void CLabelContainer::SetCustomDrawHandler(HWND hWndCustomDraw,int iID)
@@ -50,6 +75,11 @@ void CLabelContainer::SetClient(HWND hWndClient)
 	m_ClientWindow = hWndClient;
 
 	UpdateLayout();
+}
+
+void CLabelContainer::SetCloseHost(HWND hWndCloseHost)
+{
+	m_hWndCloseHost = hWndCloseHost;
 }
 
 void CLabelContainer::UpdateLayout()
@@ -104,6 +134,7 @@ LRESULT CLabelContainer::OnPaint(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHa
 
 		DrawBackground(hDC,&rcHeader);
 		DrawText(hDC,&rcHeader);
+		DrawButton(hDC,&rcHeader);
 
 		ReleaseDC(hDC);
 	}
@@ -113,8 +144,107 @@ LRESULT CLabelContainer::OnPaint(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHa
 
 		DrawBackground(dc.m_hDC,&rcHeader);
 		DrawText(dc.m_hDC,&rcHeader);
+		DrawButton(dc.m_hDC,&rcHeader);
 
 		ReleaseDC(dc);
+	}
+
+	return 0;
+}
+
+LRESULT CLabelContainer::OnMouseMove(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
+{
+	// Only deal with this event if the panel is closable.
+	if (m_hCloseImageList == NULL)
+		return 0;
+
+	POINT ptMouse = { GET_X_LPARAM(lParam),GET_Y_LPARAM(lParam) };
+
+	RECT rcButton,rcClient;
+	GetClientRect(&rcClient);
+
+	rcButton.top = rcClient.top + LABELCONTAINER_BUTTON_TOPSPACING;
+	rcButton.right = rcClient.right - LABELCONTAINER_BUTTON_RIGHTSPACING;
+	rcButton.bottom = rcButton.top + 16;
+	rcButton.left = rcButton.right - 16;
+
+	int iNewState;
+	if (::PtInRect(&rcButton,ptMouse))
+	{
+		SetCapture();
+		if (m_iButtonState != PANE_BUTTON_DOWN)
+			iNewState = PANE_BUTTON_HOVER;
+		else
+			iNewState = PANE_BUTTON_DOWN;
+	}
+	else
+	{
+		ReleaseCapture();
+		iNewState = PANE_BUTTON_NORMAL;
+	}
+
+	if (iNewState != m_iButtonState)
+	{
+		m_iButtonState = iNewState;
+		InvalidateRect(&rcButton);
+	}
+
+	return 0;
+}
+
+LRESULT CLabelContainer::OnMouseDown(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
+{
+	// Only deal with this event if the panel is closable.
+	if (m_hCloseImageList == NULL)
+		return 0;
+
+	POINT ptMouse = { GET_X_LPARAM(lParam),GET_Y_LPARAM(lParam) };
+
+	RECT rcButton,rcClient;
+	GetClientRect(&rcClient);
+
+	rcButton.top = rcClient.top + LABELCONTAINER_BUTTON_TOPSPACING;
+	rcButton.right = rcClient.right - LABELCONTAINER_BUTTON_RIGHTSPACING;
+	rcButton.bottom = rcButton.top + 16;
+	rcButton.left = rcButton.right - 16;
+
+	if (::PtInRect(&rcButton,ptMouse))
+	{
+		m_iButtonState = PANE_BUTTON_DOWN;
+		InvalidateRect(&rcButton);
+	}
+
+	return 0;
+}
+
+LRESULT CLabelContainer::OnMouseUp(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
+{
+	// Only deal with this event if the panel is closable.
+	if (m_hCloseImageList == NULL)
+		return 0;
+
+	POINT ptMouse = { GET_X_LPARAM(lParam),GET_Y_LPARAM(lParam) };
+
+	RECT rcButton,rcClient;
+	GetClientRect(&rcClient);
+
+	rcButton.top = rcClient.top + LABELCONTAINER_BUTTON_TOPSPACING;
+	rcButton.right = rcClient.right - LABELCONTAINER_BUTTON_RIGHTSPACING;
+	rcButton.bottom = rcButton.top + 16;
+	rcButton.left = rcButton.right - 16;
+
+	if (::PtInRect(&rcButton,ptMouse))
+	{
+		if (m_iButtonState == PANE_BUTTON_DOWN && m_hWndCloseHost != NULL)
+			::PostMessage(m_hWndCloseHost,WM_LABELCONTAINER_CLOSE,0,0);
+
+		m_iButtonState = PANE_BUTTON_HOVER;
+		InvalidateRect(&rcButton);
+	}
+	else
+	{
+		m_iButtonState = PANE_BUTTON_NORMAL;
+		InvalidateRect(&rcButton);
 	}
 
 	return 0;
@@ -131,46 +261,46 @@ LRESULT CLabelContainer::OnCustomDraw(int idCtrl,LPNMHDR pnmh,BOOL &bHandled)
 
 void CLabelContainer::DrawText(CDCHandle dc,RECT *pHeaderRect)
 {
+	HFONT hOldFont = NULL;
+
 	if (g_WinVer.m_ulMajorVersion == MAJOR_WINVISTA &&
 		g_WinVer.m_ulMinorVersion == MINOR_WINVISTA &&
 		g_VisualStyles.IsThemeActive())
 	{
-		HFONT hOldFont = (HFONT)SelectObject(dc,AtlGetDefaultGuiFont());
+		hOldFont = (HFONT)SelectObject(dc,AtlGetDefaultGuiFont());
 
 		::SetBkMode(dc,TRANSPARENT);
 		::SetTextColor(dc,RGB(139,139,139));
+	}
+	else if (true)
+	{
+		HFONT hFont = AtlCreateBoldFont(AtlGetDefaultGuiFont());
+		hOldFont = (HFONT)SelectObject(dc,hFont);
+		//hOldFont = (HFONT)SelectObject(dc,AtlGetDefaultGuiFont());
 
-		RECT rcText;
-		rcText.left = pHeaderRect->left + 3;
-		rcText.right = pHeaderRect->right;
-		rcText.top = pHeaderRect->top + LABELCONTAINER_BORDER_HEIGHT + 1;
-		rcText.bottom = pHeaderRect->bottom;
-
-		::DrawText(dc,m_szLabelText,lstrlen(m_szLabelText),&rcText,
-			DT_LEFT | DT_END_ELLIPSIS | DT_SINGLELINE);
-
-		SelectObject(dc,hOldFont);
+		::SetBkMode(dc,TRANSPARENT);
+		::SetTextColor(dc,::GetSysColor(/*COLOR_WINDOW*/COLOR_BTNFACE));
 	}
 	else
 	{
 		HFONT hFont = AtlCreateBoldFont(AtlGetDefaultGuiFont());
-		HFONT hOldFont = (HFONT)SelectObject(dc,hFont);
+		hOldFont = (HFONT)SelectObject(dc,hFont);
 
 		::SetBkMode(dc,TRANSPARENT);
 		::SetTextColor(dc,LABELCONTAINER_COLOR_BORDER);
-
-		RECT rcText;
-		rcText.left = pHeaderRect->left + 3;
-		rcText.right = pHeaderRect->right;
-		rcText.top = pHeaderRect->top + LABELCONTAINER_BORDER_HEIGHT + 1;
-		rcText.bottom = pHeaderRect->bottom;
-
-		::DrawText(dc,m_szLabelText,lstrlen(m_szLabelText),&rcText,
-			DT_LEFT | DT_END_ELLIPSIS | DT_SINGLELINE);
-
-		SelectObject(dc,hOldFont);
-		DeleteObject(hFont);
 	}
+
+	RECT rcText;
+	rcText.left = pHeaderRect->left + 3;
+	rcText.right = pHeaderRect->right;
+	rcText.top = pHeaderRect->top + LABELCONTAINER_BORDER_HEIGHT + 1;
+	rcText.bottom = pHeaderRect->bottom;
+
+	::DrawText(dc,m_szLabelText,lstrlen(m_szLabelText),&rcText,
+		DT_LEFT | DT_END_ELLIPSIS | DT_SINGLELINE);
+
+	if (hOldFont != NULL)
+		SelectObject(dc,hOldFont);
 }
 
 void CLabelContainer::DrawBackground(CDCHandle dc,RECT *pHeaderRect)
@@ -192,6 +322,13 @@ void CLabelContainer::DrawBackground(CDCHandle dc,RECT *pHeaderRect)
 		rcMisc.top = pHeaderRect->top;
 		rcMisc.bottom = pHeaderRect->bottom - LABELCONTAINER_BOTTOMBORDER_HEIGHT;
 		DrawHorGradientRect(dc.m_hDC,&rcMisc,LABELCONTAINER_COLOR_BACKGROUNDVISTA,GetSysColor(COLOR_BTNFACE));
+	}
+	else if (true)
+	{
+		// Gradient background.
+		rcMisc.top = pHeaderRect->top;
+		rcMisc.bottom = pHeaderRect->bottom - LABELCONTAINER_BOTTOMBORDER_HEIGHT;
+		DrawHorGradientRect(dc.m_hDC,&rcMisc,LABELCONTAINER_COLOR_BACKGROUNDALT,GetSysColor(COLOR_BTNFACE));
 	}
 	else
 	{
@@ -216,6 +353,16 @@ void CLabelContainer::DrawBackground(CDCHandle dc,RECT *pHeaderRect)
 		rcMisc.bottom = pHeaderRect->bottom - LABELCONTAINER_BOTTOMBORDER_HEIGHT;
 		rcMisc.right = pHeaderRect->left + LABELCONTAINER_BORDER_HEIGHT;
 		FillRect(dc,&rcMisc,m_hBorderBrush);
+	}
+}
+
+void CLabelContainer::DrawButton(CDCHandle dc,RECT *pHeaderRect)
+{
+	if (m_hCloseImageList != NULL)
+	{
+		ImageList_Draw(m_hCloseImageList,m_iButtonState,dc,
+			pHeaderRect->right - 16 - LABELCONTAINER_BUTTON_RIGHTSPACING,
+			LABELCONTAINER_BUTTON_TOPSPACING,ILD_TRANSPARENT);
 	}
 }
 

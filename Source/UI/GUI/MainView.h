@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2007 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 #define MAINVIEW_NORMALBORDER_SIZE				2
 #define MAINVIEW_THEMEDBORDER_SIZE				4
 
-class CMainView : public CSplitterWindowImpl<CMainView,false>
+class CMainView : public CSplitterWindowImpl<CMainView,/*false*/true>
 {
 private:
 	unsigned int m_uiBorderSize;
@@ -30,7 +30,7 @@ public:
 	CMainView();
 	~CMainView();
 
-	typedef CSplitterWindowImpl<CMainView,false> _baseClass;
+	typedef CSplitterWindowImpl<CMainView,/*false*/true> _baseClass;
 
 	BEGIN_MSG_MAP(CMainView)
 		MESSAGE_HANDLER(WM_CREATE,OnCreate)

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2007 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -259,7 +259,6 @@ bool CBurnImageGeneralPage::InitRecorderMedia()
 		return false;
 	}
 
-	//Device.Close();
 	return true;
 }
 
@@ -276,8 +275,6 @@ void CBurnImageGeneralPage::SuggestWriteMethod()
 		// write modes are supported a warning message is displayed.
 		int uiStrID = -1;
 
-		/*CCore2Device Device;
-		if (Device.Open(&pDeviceInfo->Address))*/
 		if (m_CurDevice.IsOpen())
 		{
 			unsigned char ucWriteModes = 0;
@@ -310,6 +307,30 @@ void CBurnImageGeneralPage::SuggestWriteMethod()
 				// No good raw writing mode found.
 				MessageBox(lngGetString(WARNING_CLONEWRITEMETHOD),lngGetString(GENERAL_WARNING),
 					MB_OK | MB_ICONWARNING);
+			}
+		}
+	}
+	else if (g_ProjectSettings.m_bMultiSession)
+	{
+		// Suggest the TAO write mode for multi-session discs if available.
+		unsigned char ucWriteModes = 0;
+		g_Core2.GetMediaWriteModes(&m_CurDevice,ucWriteModes);
+		if (ucWriteModes & CCore2::WRITEMODE_TAO)
+		{
+			const TCHAR *szStr = lngGetString(WRITEMODE_TAO);
+			TCHAR szItemText[128];
+
+			for (int i = 0; i < m_WriteMethodCombo.GetCount(); i++)
+			{
+				if (m_WriteMethodCombo.GetLBTextLen(i) >= (sizeof(szItemText) / sizeof(TCHAR)))
+					continue;
+
+				m_WriteMethodCombo.GetLBText(i,szItemText);
+				if (!lstrcmp(szItemText,szStr))
+				{
+					m_WriteMethodCombo.SetCurSel(i);
+					break;
+				}
 			}
 		}
 	}

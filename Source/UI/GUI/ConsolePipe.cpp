@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2007 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -176,6 +176,8 @@ bool CConsolePipe::Launch(TCHAR *szCommandLine,bool bWaitForProcess)
 	{
 		::CloseHandle(m_hStdIn);
 		::CloseHandle(m_hStdOut);
+		m_hStdIn = NULL; // RSS:080105
+		m_hStdOut = NULL;
 		return false;
 	}
 

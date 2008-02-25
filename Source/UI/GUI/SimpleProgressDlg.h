@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2007 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,7 +51,7 @@ public:
 	void AttachConsolePipe(CConsolePipe *pConsolePipe);
 	void AttachHost(HWND hWndHost);
 
-	void AddLogEntry(int iType,const TCHAR *szMessage,...);
+	void AddLogEntry(eLogType Type,const TCHAR *szMessage,...);
 	void SetStatus(const TCHAR *szStatus,...);
 	void SetDevice(const TCHAR *szDevice);
 

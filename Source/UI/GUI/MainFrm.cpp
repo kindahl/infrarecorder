@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2007 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,6 +31,13 @@
 #include "../../Common/StringUtil.h"
 #include "../../Common/FileManager.h"
 #include "../../Common/CRC32.h"
+// FIXME: Remove after testing {
+#include "../../Core/ckFileSystem/DiscImageWriter.h"
+#include "../../Core/ckFileSystem/Iso9660.h"
+#include "../../Core/ckFileSystem/FileTree.h"
+#include "../../Core/ckFileSystem/Joliet.h"
+#include "ProgressDlg.h"
+// FIXME: }
 #include "TreeManager.h"
 #include "WinVer.h"
 #include "ProjectPropDlg.h"
@@ -48,7 +55,7 @@
 
 CMainFrame g_MainFrame;
 
-CMainFrame::CMainFrame()
+CMainFrame::CMainFrame() : m_QuickHelpContainer(true)
 {
 	m_iDefaultProjType = PROJECTTYPE_DATA;
 	m_bDefaultProjDataDVD = false;		// CD project by default.
@@ -207,20 +214,43 @@ void CMainFrame::InitializeMainView()
 	m_SpaceMeter.Initialize();
 
 	// Main view.
-	m_MainView.Create(m_SpaceMeterView,rcDefault,NULL,WS_CHILD | WS_VISIBLE |
+	/*m_MainView*/m_QuickHelpView.Create(m_SpaceMeterView,rcDefault,NULL,WS_CHILD | WS_VISIBLE |
 		WS_CLIPSIBLINGS | WS_CLIPCHILDREN,WS_EX_CONTROLPARENT);
-	m_MainView.m_cxySplitBar = 4;	// Force the splitter size 2, Vista uses a larger size by default.
+	/*m_MainView*/m_QuickHelpView.m_cxySplitBar = 4;	// Force the splitter size 2, Vista uses a larger size by default.
 
 	UpdateLayout();
 
 	m_SpaceMeterView.SetSplitterPane(SPLIT_PANE_BOTTOM,m_SpaceMeter);
-	m_SpaceMeterView.SetSplitterPane(SPLIT_PANE_TOP,m_MainView);
+	m_SpaceMeterView.SetSplitterPane(SPLIT_PANE_TOP,/*m_MainView*/m_QuickHelpView);
 
 	// Update the splitter origins.
 	RECT rcClient;
 	::GetClientRect(m_hWndClient,&rcClient);
 	
 	m_SpaceMeterView.SetSplitterPos(rcClient.bottom - rcClient.top - MAINFRAME_SPACEMETER_HEIGHT);
+	//m_MainView.SetSplitterPos((rcClient.bottom - rcClient.top - MAINFRAME_SPACEMETER_HEIGHT)/2);
+
+	// Quick help pane.
+	m_QuickHelpContainer.Create(m_QuickHelpView,rcDefault,NULL,
+		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN,WS_EX_CONTROLPARENT,(unsigned int)0,NULL);
+	//m_QuickHelpContainer.SetHeaderHeight(m_ProjectListViewContainer.GetHeaderHeight());
+	m_QuickHelpContainer.SetHeaderHeight(22);
+	m_QuickHelpContainer.SetLabelText(_T("Quick Help"));
+	m_QuickHelpContainer.SetCloseHost(m_hWnd);
+
+	m_QuickHelpCtrl.Create(m_QuickHelpContainer,rcDefault,NULL,WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN,WS_EX_CONTROLPARENT | WS_EX_CLIENTEDGE);
+	m_QuickHelpContainer.SetClient(m_QuickHelpCtrl);
+
+	// Main view.
+	m_MainView.Create(m_QuickHelpView,rcDefault,
+		NULL,WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN,WS_EX_CONTROLPARENT);
+	m_MainView.m_cxySplitBar = 4;	// Force the splitter size 2, Vista uses a larger size by default.
+
+	UpdateLayout();
+
+	// Show or hide the quick help.
+	ShowQuickHelp(g_DynamicSettings.m_bViewQuickHelp);
+
 	m_MainView.SetSplitterPos((rcClient.bottom - rcClient.top - MAINFRAME_SPACEMETER_HEIGHT)/2);
 }
 
@@ -939,6 +969,27 @@ bool CMainFrame::SaveProjectPrompt()
 	return true;
 }
 
+void CMainFrame::ShowQuickHelp(bool bShow)
+{
+	g_DynamicSettings.m_bViewQuickHelp = bShow;
+
+	if (bShow)
+	{
+		RECT rcClient;
+		GetClientRect(&rcClient);
+
+		m_QuickHelpView.SetSplitterPane(SPLIT_PANE_LEFT,m_MainView);
+		m_QuickHelpView.SetSplitterPane(SPLIT_PANE_RIGHT,m_QuickHelpContainer);
+		m_QuickHelpView.SetSplitterExtendedStyle(SPLIT_RIGHTALIGNED);
+		m_QuickHelpView.SetSplitterPos(rcClient.right - rcClient.left - 160);
+	}
+	else
+	{
+		m_QuickHelpView.SetSplitterPane(SPLIT_PANE_LEFT,m_MainView);
+		m_QuickHelpView.SetSinglePaneMode(SPLIT_PANE_LEFT);
+	}
+}
+
 LRESULT CMainFrame::OnCreate(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
 	// Main small image list (menus and small toolbar buttons).
@@ -1198,6 +1249,14 @@ LRESULT CMainFrame::OnGetIShellBrowser(UINT uMsg,WPARAM wParam,LPARAM lParam,BOO
 	// function call will fail on Windows 98 systems for all other directories than the desktop.
 	bHandled = TRUE;
 	return (LRESULT)m_pShellListView;
+}
+
+LRESULT CMainFrame::OnQuickHelpClose(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
+{
+	ShowQuickHelp(false);
+
+	bHandled = false;
+	return 0;
 }
 
 LRESULT CMainFrame::OnSLVBrowseObject(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
@@ -1969,18 +2028,25 @@ LRESULT CMainFrame::OnPTVSelChanged(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled)
 
 LRESULT CMainFrame::OnPTVBeginLabelEdit(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled)
 {
+	LPNMTVDISPINFO lpDispInfo = (LPNMTVDISPINFO)pNMH;
+	CProjectNode *pNode = (CProjectNode *)lpDispInfo->item.lParam;
+
 	// We want to prevent the root and virtual audio root node from beeing
 	// renamed if we are dealing with a mixed project.
 	if (g_ProjectManager.GetProjectType() == PROJECTTYPE_MIXED)
 	{
-		LPNMTVDISPINFO lpDispInfo = (LPNMTVDISPINFO)pNMH;
-		CProjectNode *pNode = (CProjectNode *)lpDispInfo->item.lParam;
-
 		if (pNode == g_ProjectManager.GetMixAudioRootNode())
 		{
 			bHandled = true;
 			return TRUE;
 		}
+	}
+
+	// We can't rename locked items.
+	if (pNode->pItemData->ucFlags & PROJECTITEM_FLAG_ISLOCKED)
+	{
+		bHandled = true;
+		return TRUE;
 	}
 
 	// Disable all accelerators.
@@ -1992,12 +2058,24 @@ LRESULT CMainFrame::OnPTVBeginLabelEdit(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled)
 
 LRESULT CMainFrame::OnPTVEndLabelEdit(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled)
 {
+	bHandled = true;
+
 	// Enable the accelerators.
 	m_bEnableAccel = true;
 
+	// Check for an empty name.
 	LPNMTVDISPINFO lpDispInfo = (LPNMTVDISPINFO)pNMH;
-	CProjectNode *pNode = (CProjectNode *)lpDispInfo->item.lParam;
+	if (lpDispInfo->item.pszText == NULL || lpDispInfo->item.pszText[0] == '\0')
+		return TRUE;
 
+	// Make sure that file name does not contain illegal characters.
+	if (FirstDelimiter(lpDispInfo->item.pszText,'\\') != -1 ||
+		FirstDelimiter(lpDispInfo->item.pszText,'/') != -1)
+	{
+		return TRUE;
+	}
+
+	CProjectNode *pNode = (CProjectNode *)lpDispInfo->item.lParam;
 	if (pNode != g_TreeManager.GetRootNode())
 	{
 		// Update the file name.
@@ -2030,8 +2108,6 @@ LRESULT CMainFrame::OnPTVEndLabelEdit(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled)
 	}
 
 	g_ProjectManager.SetModified(true);
-
-	bHandled = true;
 	return TRUE;
 }
 
@@ -2183,6 +2259,16 @@ LRESULT CMainFrame::OnPLVGetDispInfo(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled)
 
 LRESULT CMainFrame::OnPLVBeginLabelEdit(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled)
 {
+	NMLVDISPINFO *pDispInfo = (NMLVDISPINFO *)pNMH;
+	CItemData *pItemData = (CItemData *)pDispInfo->item.lParam;
+
+	// We can't rename locked items.
+	if (pItemData->ucFlags & PROJECTITEM_FLAG_ISLOCKED)
+	{
+		bHandled = true;
+		return TRUE;
+	}
+
 	// Disable all accelerators.
 	m_bEnableAccel = false;
 
@@ -2201,6 +2287,13 @@ LRESULT CMainFrame::OnPLVEndLabelEdit(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled)
 	NMLVDISPINFO *pDispInfo = (NMLVDISPINFO *)pNMH;
 	if (pDispInfo->item.pszText == NULL || pDispInfo->item.pszText[0] == '\0')
 		return TRUE;
+
+	// Make sure that file name does not contain illegal characters.
+	if (FirstDelimiter(pDispInfo->item.pszText,'\\') != -1 ||
+		FirstDelimiter(pDispInfo->item.pszText,'/') != -1)
+	{
+		return TRUE;
+	}
 
 	// Check for an existing file or folder with the same name.
 	if (g_TreeManager.GetChildItem(g_TreeManager.GetCurrentNode(),pDispInfo->item.pszText) != NULL)
@@ -2858,6 +2951,9 @@ LRESULT CMainFrame::OnAppAbout(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHan
 {
 	CAboutDlg AboutDlg;
 	AboutDlg.DoModal();
+
+	// FIXME: Clean up when done.
+	//g_ActionManager.CreateImage(m_hWnd,false);
 
 	return 0;
 }

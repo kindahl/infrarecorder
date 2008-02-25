@@ -68,6 +68,8 @@
 #define IDD_CONFIRMFILEREPLACEDLG       248
 #define IDB_MAINLARGEBITMAP             249
 #define IDB_MAINLARGEBITMAP_            250
+#define IDB_BITMAP1                     251
+#define IDB_PANECLOSEBITMAP             251
 #define IDC_TOTALPROGRESS               1000
 #define IDC_TOTALSTATIC                 1001
 #define IDC_MESSAGELIST                 1004
@@ -351,7 +353,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        251
+#define _APS_NEXT_RESOURCE_VALUE        252
 #define _APS_NEXT_COMMAND_VALUE         32840
 #define _APS_NEXT_CONTROL_VALUE         1210
 #define _APS_NEXT_SYMED_VALUE           101

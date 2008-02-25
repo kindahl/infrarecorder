@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2007 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
 #pragma once
 #include "resource.h"
 #include "DropDownButton.h"
+#include "../../Common/Log.h"
 
 #define BOM_UTF8					0xEFBBBF
 #define BOM_UTF32BE					0x0000FEFF
@@ -29,7 +30,7 @@
 #define LOG_WRITEBUFFER_SIZE		1024
 #define LOG_LINEBUFFER_SIZE			512
 
-class CLogDlg : public CDialogImpl<CLogDlg>,public CDialogResize<CLogDlg>
+class CLogDlg : public CDialogImpl<CLogDlg>,public CDialogResize<CLogDlg>,public CLog
 {
 private:
 	CEdit m_LogEdit;

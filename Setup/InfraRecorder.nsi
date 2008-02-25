@@ -176,6 +176,7 @@ FunctionEnd
 ;--------------------------------
 ;Languages
 
+  !insertmacro MUI_LANGUAGE "Arabic"
   !insertmacro MUI_LANGUAGE "Basque"
   !insertmacro MUI_LANGUAGE "Bosnian"
   !insertmacro MUI_LANGUAGE "Bulgarian"
@@ -280,6 +281,18 @@ FunctionEnd
 
 ;--------------------------------
 ;Language Strings
+
+  ;Language strings (Arabic)
+  LangString NAME_SecCore ${LANG_ARABIC} "ÇáÑÆíÓíÉ InfrarecorderãáÝÇÊ (ãÍÊÇÌÉ)"
+  LangString NAME_SecStartShortcut ${LANG_ARABIC} "ÇíÞæäÇÊ ÇÎÊÕÇÑ ÞÇÆãÉ ÇáÈÏÇíÉ"
+  LangString NAME_SecDeskShortcut ${LANG_ARABIC} "ÇíÞæäÇÊ ÇÎÊÕÇÑ ÓØÍ ÇáãßÊÈ"
+  LangString NAME_SecQuickShortcut ${LANG_ARABIC} "ÇíÞæäÇÊ ÇÎÊÕÇÑ ÇáÊÔÛíá ÇáÓÑíÚ"
+  LangString NAME_SecLang ${LANG_ARABIC} "ãáÝÇÊ ÇááÛÇÊ"
+  LangString DESC_SecCore ${LANG_ARABIC} "ãáÝÇÊ ÇááÈ ááÈÑäÇãÌ"
+  LangString DESC_SecStartShortcut ${LANG_ARABIC} "ÇÖÇÝÉ ÇíÞæäÇÊ áÞÇÆãÉ ÇáÈÏÇíÉ ááæÕæá ÇáÓåá"
+  LangString DESC_SecDeskShortcut ${LANG_ARABIC} "ÊÖíÝ ÇíÞæäÇÊ Çáì ÓØÍ ÇáãßÊÈ"
+  LangString DESC_SecQuickShortcut ${LANG_ARABIC} "ÊÖíÝ ÇíÞæäÇÊ Çáì ãÓØÑ ÇáÈÏÁ ÇáÓÑíÚ"
+  LangString DESC_SecLang ${LANG_ARABIC} "ãáÝÇÊ ÇááÛÇÊ ÇáÊí ÊÓÊÚãá áÏÚã áÛÇÊ ãÎÊáÝÉ ááÈÑäÇãÌ"
 
   ;Language strings (Basque)
   LangString NAME_SecCore ${LANG_BASQUE} "InfraRecorder Core Artxiboak (beharrezkoak)"
@@ -666,16 +679,16 @@ FunctionEnd
   LangString DESC_SecLang ${LANG_TRADCHINESE} "Åý InfraRecorder ¤ä´©¤£¦P°ê®aªº»y¨¥"
 
   ;Language strings (Turkish)
-  LangString NAME_SecCore ${LANG_TURKISH} "InfraRecorder yapýlandýrma dosyalarý (gereklidir)"
-  LangString NAME_SecStartShortcut ${LANG_TURKISH} "Baþlat menüsü kýsa yollarý"
-  LangString NAME_SecDeskShortcut ${LANG_TURKISH} "Masaüstü kýsa yolu"
-  LangString NAME_SecQuickShortcut ${LANG_TURKISH} "Hýzlý Baþlat kýsayolu"
-  LangString NAME_SecLang ${LANG_TURKISH} "Dil dosyalarý"
-  LangString DESC_SecCore ${LANG_TURKISH} "Yapýlandýrma dosyalarý InfraRecorder kullanýmý için gereklidir"
-  LangString DESC_SecStartShortcut ${LANG_TURKISH} "Kolay eriþim için Baþlat menüsü'ne simge ekle."
-  LangString DESC_SecDeskShortcut ${LANG_TURKISH} "Masaüstü'ne simge ekle."
-  LangString DESC_SecQuickShortcut ${LANG_TURKISH} "Hýzlý Baþlat çubuðuna simge ekle."
-  LangString DESC_SecLang ${LANG_TURKISH} "InfraRecorder'ýn farklý dilleri desteklemesi için dil dosyalarýný kullan."
+  LangString NAME_SecCore ${LANG_TURKISH} "InfraRecorder Ana Dosyalarý (Gerekli)"
+  LangString NAME_SecStartShortcut ${LANG_TURKISH} "Baþlat Menüsü Kýsayollarý"
+  LangString NAME_SecDeskShortcut ${LANG_TURKISH} "Masaüstü Kýsayolu"
+  LangString NAME_SecQuickShortcut ${LANG_TURKISH} "Hýzlý Baþlat Kýsayolu"
+  LangString NAME_SecLang ${LANG_TURKISH} "Dil Dosyalarý"
+  LangString DESC_SecCore ${LANG_TURKISH} "InfraRecorder'ý kullanabilmek için gereken ana dosyalar."
+  LangString DESC_SecStartShortcut ${LANG_TURKISH} "Baþlat Menüsüne programa hýzlý eriþebilmek için simgeleri ekler."
+  LangString DESC_SecDeskShortcut ${LANG_TURKISH} "Masaüstüne simge ekler."
+  LangString DESC_SecQuickShortcut ${LANG_TURKISH} "Hýzlý Baþlata simge ekler"
+  LangString DESC_SecLang ${LANG_TURKISH} "InfraRecorder'ý farklý dillerde kullanabilmek için dil dosyalarý."
 
   ;Language strings (Ukrainian)
   LangString NAME_SecCore ${LANG_UKRAINIAN} "Îñíîâí³ ôàéëè InfraRecorder (íåîáõ³äíî)"
@@ -779,6 +792,7 @@ Section $(NAME_SecLang) SecLang
 
   SetOutPath "$INSTDIR\Languages"
 !ifdef UNICODE
+  File "..\Binary32\Languages\Arabic.irl"
   File "..\Binary32\Languages\Basque.irl"
   File "..\Binary32\Languages\Bosnian.irl"
   File "..\Binary32\Languages\Bulgarian.irl"
@@ -816,7 +830,9 @@ Section $(NAME_SecLang) SecLang
   File "..\Binary32\Languages\German.chm"
   File "..\Binary32\Languages\Russian.chm"
   File "..\Binary32\Languages\Ukrainian.chm"
+  File "..\Binary32\Languages\Turkish.chm"
 !else
+  File "..\BinaryA\Languages\Arabic.irl"
   File "..\BinaryA\Languages\Basque.irl"
   File "..\BinaryA\Languages\Bosnian.irl"
   File "..\BinaryA\Languages\Bulgarian.irl"
@@ -854,12 +870,16 @@ Section $(NAME_SecLang) SecLang
   File "..\BinaryA\Languages\German.chm"
   File "..\BinaryA\Languages\Russian.chm"
   File "..\BinaryA\Languages\Ukrainian.chm"
+  File "..\BinaryA\Languages\Turkish.chm"
 !endif
 
   ; Check if a language has been specified by the commandline.
   ; http://www.microsoft.com/globaldev/reference/oslocversion.mspx
   ; http://www.microsoft.com/globaldev/reference/lcid-all.mspx
   ${Switch} $1
+    ${case} "arabic"	; 1025
+      StrCpy $LANGUAGE ${LANG_ARABIC}
+      ${break}
     ${case} "basque"	; 1069
       StrCpy $LANGUAGE ${LANG_BASQUE}
       ${break}
@@ -964,111 +984,114 @@ Section $(NAME_SecLang) SecLang
       ${Break}
   ${EndSwitch}
 
-  ; Calculate the full path to the translation file.
+  ; Calculate file name of the translation file.
   ; http://www.microsoft.com/globaldev/reference/oslocversion.mspx
   ; http://www.microsoft.com/globaldev/reference/lcid-all.mspx
   ${Switch} $LANGUAGE
+    ${Case} ${LANG_ARABIC}	; 1025
+      StrCpy $0 "Arabic.irl"
+      ${Break}
     ${Case} ${LANG_BASQUE}	; 1069
-      StrCpy $0 "$INSTDIR\Languages\Basque.irl"
+      StrCpy $0 "Basque.irl"
       ${Break}
     ${Case} ${LANG_BOSNIAN}	; 5146
-      StrCpy $0 "$INSTDIR\Languages\Bosnian.irl"
+      StrCpy $0 "Bosnian.irl"
       ${Break}
     ${Case} ${LANG_BULGARIAN}	; 1026
-      StrCpy $0 "$INSTDIR\Languages\Bulgarian.irl"
+      StrCpy $0 "Bulgarian.irl"
       ${Break}
     ${Case} ${LANG_CATALAN}	; 1027
-      StrCpy $0 "$INSTDIR\Languages\Catalan.irl"
+      StrCpy $0 "Catalan.irl"
       ${Break}
     ${Case} ${LANG_CROATIAN}	; 1050
-      StrCpy $0 "$INSTDIR\Languages\Croatian.irl"
+      StrCpy $0 "Croatian.irl"
       ${Break}
     ${Case} ${LANG_CZECH}	; 1029
-      StrCpy $0 "$INSTDIR\Languages\Czech.irl"
+      StrCpy $0 "Czech.irl"
       ${Break}
     ${Case} ${LANG_DANISH}	; 1030
-      StrCpy $0 "$INSTDIR\Languages\Danish.irl"
+      StrCpy $0 "Danish.irl"
       ${Break}
     ${Case} ${LANG_DUTCH}	; 1043
-      StrCpy $0 "$INSTDIR\Languages\Dutch.irl"
+      StrCpy $0 "Dutch.irl"
       ${Break}
     ${Case} ${LANG_ENGLISH}	; 1033
       StrCpy $0 ""
       ${Break}
     ${Case} ${LANG_FINNISH}	; 1035
-      StrCpy $0 "$INSTDIR\Languages\Finnish.irl"
+      StrCpy $0 "Finnish.irl"
       ${Break}
     ${Case} ${LANG_FRENCH}	; 1036
-      StrCpy $0 "$INSTDIR\Languages\French.irl"
+      StrCpy $0 "French.irl"
       ${Break}
     ${Case} ${LANG_GERMAN}	; 1031
-      StrCpy $0 "$INSTDIR\Languages\German.irl"
+      StrCpy $0 "German.irl"
       ${Break}
     ${Case} ${LANG_HEBREW}	; 1037
-      StrCpy $0 "$INSTDIR\Languages\Hebrew.irl"
+      StrCpy $0 "Hebrew.irl"
       ${Break}
     ${Case} ${LANG_HUNGARIAN}	; 1038
-      StrCpy $0 "$INSTDIR\Languages\Hungarian.irl"
+      StrCpy $0 "Hungarian.irl"
       ${Break}
     ${Case} ${LANG_ITALIAN}	; 1040
-      StrCpy $0 "$INSTDIR\Languages\Italian.irl"
+      StrCpy $0 "Italian.irl"
       ${Break}
     ${Case} ${LANG_JAPANESE}	; 1041
-      StrCpy $0 "$INSTDIR\Languages\Japanese.irl"
+      StrCpy $0 "Japanese.irl"
       ${Break}
     ${Case} ${LANG_KOREAN}	; 1042
-      StrCpy $0 "$INSTDIR\Languages\Korean.irl"
+      StrCpy $0 "Korean.irl"
       ${Break}
     ${Case} ${LANG_LITHUANIAN}	; 1063
-      StrCpy $0 "$INSTDIR\Languages\Lithuanian.irl"
+      StrCpy $0 "Lithuanian.irl"
       ${Break}
     ${Case} ${LANG_NORWEGIAN}	; 1044
-      StrCpy $0 "$INSTDIR\Languages\Norwegian.irl"
+      StrCpy $0 "Norwegian.irl"
       ${Break}
     ${Case} ${LANG_POLISH}	; 1045
-      StrCpy $0 "$INSTDIR\Languages\Polish.irl"
+      StrCpy $0 "Polish.irl"
       ${Break}
     ${Case} ${LANG_PORTUGUESE}	; 2070
-      StrCpy $0 "$INSTDIR\Languages\Portuguese.irl"
+      StrCpy $0 "Portuguese.irl"
       ${Break}
     ${Case} ${LANG_PORTUGUESEBR}	; 1046
-      StrCpy $0 "$INSTDIR\Languages\Portuguese (Brazilian).irl"
+      StrCpy $0 "Portuguese (Brazilian).irl"
       ${Break}
     ${Case} ${LANG_ROMANIAN}	; 1048
-      StrCpy $0 "$INSTDIR\Languages\Romanian.irl"
+      StrCpy $0 "Romanian.irl"
       ${Break}
     ${Case} ${LANG_RUSSIAN}	; 1049
-      StrCpy $0 "$INSTDIR\Languages\Russian.irl"
+      StrCpy $0 "Russian.irl"
       ${Break}
     ${Case} ${LANG_SERBIAN}	; 3098
-      StrCpy $0 "$INSTDIR\Languages\Serbian (Cyrillic).irl"
+      StrCpy $0 "Serbian (Cyrillic).irl"
       ${Break}
     ${Case} ${LANG_SERBIANLATIN} ; 2074
-      StrCpy $0 "$INSTDIR\Languages\Serbian (Latin).irl"
+      StrCpy $0 "Serbian (Latin).irl"
       ${Break}
     ${Case} ${LANG_SLOVAK}	; 1051
-      StrCpy $0 "$INSTDIR\Languages\Slovak.irl"
+      StrCpy $0 "Slovak.irl"
       ${Break}
     ${Case} ${LANG_SLOVENIAN}	; 1060
-      StrCpy $0 "$INSTDIR\Languages\Slovenian.irl"
+      StrCpy $0 "Slovenian.irl"
       ${Break}
     ${Case} ${LANG_SIMPCHINESE}	; 2052
-      StrCpy $0 "$INSTDIR\Languages\Chinese (Simplified).irl"
+      StrCpy $0 "Chinese (Simplified).irl"
       ${Break}
     ${Case} ${LANG_SPANISH}	; 1034
-      StrCpy $0 "$INSTDIR\Languages\Spanish.irl"
+      StrCpy $0 "Spanish.irl"
       ${Break}
     ${Case} ${LANG_SWEDISH}	; 1053
-      StrCpy $0 "$INSTDIR\Languages\Swedish.irl"
+      StrCpy $0 "Swedish.irl"
       ${Break}
     ${Case} ${LANG_TRADCHINESE}	; 1028
-      StrCpy $0 "$INSTDIR\Languages\Chinese (Traditional).irl"
+      StrCpy $0 "Chinese (Traditional).irl"
       ${Break}
     ${Case} ${LANG_TURKISH}	; 1055
-      StrCpy $0 "$INSTDIR\Languages\Turkish.irl"
+      StrCpy $0 "Turkish.irl"
       ${Break}
     ${Case} ${LANG_UKRAINIAN}	; 1058
-      StrCpy $0 "$INSTDIR\Languages\Ukrainian.irl"
+      StrCpy $0 "Ukrainian.irl"
       ${Break}
   ${EndSwitch}
 

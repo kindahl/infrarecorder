@@ -164,7 +164,7 @@ BEGIN
     DEFPUSHBUTTON   "OK",IDOK,208,170,50,14
     CONTROL         "",IDC_WHITESTATIC,"Static",SS_WHITERECT,0,0,265,162
     CONTROL         237,IDC_LOGOSTATIC,"Static",SS_BITMAP | SS_REALSIZEIMAGE,0,0,269,40
-    LTEXT           "Copyright © 2006-2007 Christian Kindahl\n\nInfraRecorder comes with absolutely no warranty. This is free software, and you are welcome to redistribute it under certain conditions; please see License.txt for more information.",IDC_INFOSTATIC,7,43,251,43
+    LTEXT           "Copyright © 2006-2008 Christian Kindahl\n\nInfraRecorder comes with absolutely no warranty. This is free software, and you are welcome to redistribute it under certain conditions; please see License.txt for more information.",IDC_INFOSTATIC,7,43,251,43
     CONTROL         "",IDC_BEVELSTATIC2,"Static",SS_ETCHEDHORZ | WS_GROUP,0,162,266,1,WS_EX_STATICEDGE
     RTEXT           "",IDC_VERSIONSTATIC,147,4,111,27
     LTEXT           "Installed codecs (double-click to view copyright note):",IDC_CODECSSTATIC,7,91,170,8
@@ -684,7 +684,7 @@ BEGIN
             VALUE "FileDescription", "InfraRecorder"
             VALUE "FileVersion", "0.44.1.0"
             VALUE "InternalName", "InfraRecorder"
-            VALUE "LegalCopyright", "Copyright © 2006-2007 Christian Kindahl"
+            VALUE "LegalCopyright", "Copyright © 2006-2008 Christian Kindahl"
             VALUE "OriginalFilename", "InfraRecorder.exe"
             VALUE "ProductName", "InfraRecorder"
             VALUE "ProductVersion", "0.44.1.0"
@@ -1291,6 +1291,7 @@ IDB_MAINLARGEBITMAP     BITMAP                  "Resources\\MainLarge.bmp"
 IDB_MAINLARGEBITMAP_    BITMAP                  "Resources\\MainLarge_.bmp"
 IDB_SPLASHBITMAP_       BITMAP                  "Resources\\Splash_.bmp"
 IDB_LOGOBORDERBITMAP    BITMAP                  "Resources\\LogoBorder.bmp"
+IDB_PANECLOSEBITMAP     BITMAP                  "Resources\\PaneClose.bmp"
 #endif    // Swedish resources
 /////////////////////////////////////////////////////////////////////////////
 

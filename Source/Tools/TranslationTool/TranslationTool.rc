@@ -56,8 +56,7 @@ IDR_MAINFRAME           ICON                    "Resources\\TranslationTool.ico"
 //
 
 IDD_MAINDLG DIALOGEX 0, 0, 322, 116
-STYLE DS_SETFONT | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP | WS_CAPTION | 
-    WS_SYSMENU | WS_THICKFRAME
+STYLE DS_SETFONT | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
 CAPTION "TranslationTool"
 FONT 8, "MS Sans Serif", 0, 0, 0x0
 BEGIN
@@ -67,9 +66,7 @@ BEGIN
     EDITTEXT        IDC_REFEDIT,60,7,173,13,ES_AUTOHSCROLL
     PUSHBUTTON      "...",IDC_REFBUTTON,238,7,14,13
     LTEXT           "Translations:",IDC_TRANSSTATIC,7,25,41,8
-    LISTBOX         IDC_TRANSLIST,60,23,192,69,LBS_SORT | 
-                    LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP,
-                    WS_EX_ACCEPTFILES
+    LISTBOX         IDC_TRANSLIST,60,23,192,69,LBS_SORT | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP,WS_EX_ACCEPTFILES
     PUSHBUTTON      "Add",IDC_TRANSADDBUTTON,60,95,33,14
     PUSHBUTTON      "Remove",IDC_TRANSREMOVEBUTTON,97,95,33,14
     PUSHBUTTON      "Clear",IDC_TRANSCLEARBUTTON,134,95,33,14
@@ -144,7 +141,7 @@ BEGIN
             VALUE "FileDescription", "TranslationTool"
             VALUE "FileVersion", "1.0.0.1"
             VALUE "InternalName", "TranslationTool"
-            VALUE "LegalCopyright", "Copyright © 2006-2007 Christian Kindahl"
+            VALUE "LegalCopyright", "Copyright © 2006-2008 Christian Kindahl"
             VALUE "OriginalFilename", "TranslationTool.exe"
             VALUE "ProductName", "TranslationTool"
             VALUE "ProductVersion", "1.0.0.1"
@@ -249,8 +246,39 @@ END
 /////////////////////////////////////////////////////////////////////////////
 
 
+/////////////////////////////////////////////////////////////////////////////
+// Swedish resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_SVE)
+#ifdef _WIN32
+LANGUAGE LANG_SWEDISH, SUBLANG_DEFAULT
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+#endif    // Swedish resources
+/////////////////////////////////////////////////////////////////////////////
+
+
 
 #ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
 
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED

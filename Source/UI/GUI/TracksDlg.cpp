@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2007 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -454,7 +454,8 @@ bool CTracksDlg::EncodeTrack(const TCHAR *szFileName,CCodec *pEncoder)
 		lstrcpy(szNameBuffer,szFileName);
 		ExtractFileName(szNameBuffer);
 
-		g_ProgressDlg.AddLogEntry(LOGTYPE_ERROR,lngGetString(ERROR_NODECODER),szNameBuffer);
+		g_ProgressDlg.AddLogEntry(CAdvancedProgress::LT_ERROR,
+			lngGetString(ERROR_NODECODER),szNameBuffer);
 		return false;
 	}
 
@@ -466,7 +467,7 @@ bool CTracksDlg::EncodeTrack(const TCHAR *szFileName,CCodec *pEncoder)
 	// Initialize the encoder.
 	if (!pEncoder->irc_encode_init(szTargetFile,iNumChannels,iSampleRate,iBitRate))
 	{
-		g_ProgressDlg.AddLogEntry(LOGTYPE_ERROR,lngGetString(ERROR_CODECINIT),
+		g_ProgressDlg.AddLogEntry(CAdvancedProgress::LT_ERROR,lngGetString(ERROR_CODECINIT),
 			pEncoder->irc_string(IRC_STR_ENCODER),
 			iNumChannels,iSampleRate,iBitRate,uiDuration);
 
@@ -492,7 +493,7 @@ bool CTracksDlg::EncodeTrack(const TCHAR *szFileName,CCodec *pEncoder)
 
 		if (pEncoder->irc_encode_process(pBuffer,iBytesRead) < 0)
 		{
-			g_ProgressDlg.AddLogEntry(LOGTYPE_ERROR,lngGetString(ERROR_ENCODEDATA));
+			g_ProgressDlg.AddLogEntry(CAdvancedProgress::LT_ERROR,lngGetString(ERROR_ENCODEDATA));
 			break;
 		}
 
@@ -514,7 +515,7 @@ bool CTracksDlg::EncodeTrack(const TCHAR *szFileName,CCodec *pEncoder)
 
 	ExtractFileName(szTargetFile);
 
-	g_ProgressDlg.AddLogEntry(LOGTYPE_INFORMATION,
+	g_ProgressDlg.AddLogEntry(CAdvancedProgress::LT_INFORMATION,
 		lngGetString(SUCCESS_ENCODETRACK),szTargetFile);
 
 	return true;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2007 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,13 +18,22 @@
 
 #pragma once
 
-#define LABELCONTAINER_COLOR_BACKGROUND			RGB(255,255,255)
-#define LABELCONTAINER_COLOR_BORDER				RGB(64,154,222)
-#define LABELCONTAINER_COLOR_BACKGROUNDVISTA	RGB(252,252,252)
+#define LABELCONTAINER_COLOR_BACKGROUND				RGB(255,255,255)
+#define LABELCONTAINER_COLOR_BORDER					RGB(64,154,222)
+#define LABELCONTAINER_COLOR_BACKGROUNDVISTA		RGB(252,252,252)
+#define LABELCONTAINER_COLOR_BACKGROUNDALT			::GetSysColor(COLOR_BTNSHADOW)
 
-#define LABELCONTAINER_BOTTOMBORDER_HEIGHT		4
-#define LABELCONTAINER_BORDER_HEIGHT			1
-#define LABELCONTAINER_MAXTEXT					32
+#define LABELCONTAINER_BOTTOMBORDER_HEIGHT			4
+#define LABELCONTAINER_BORDER_HEIGHT				1
+#define LABELCONTAINER_MAXTEXT						32
+
+#define LABELCONTAINER_BUTTON_TOPSPACING			1
+#define LABELCONTAINER_BUTTON_RIGHTSPACING			0
+
+#define PANE_BUTTON_NORMAL							0
+#define PANE_BUTTON_HOVER							1
+#define PANE_BUTTON_DOWN							2
+#define PANE_BUTTON_DISABLED						3
 
 class CLabelContainer : public CWindowImpl<CLabelContainer,CWindow,CControlWinTraits>
 {
@@ -35,12 +44,23 @@ private:
 	HBRUSH m_hBorderBrush;
 	TCHAR m_szLabelText[LABELCONTAINER_MAXTEXT];
 
+	// Button related.
+	HIMAGELIST m_hCloseImageList;
+	int m_iButtonState;
+	bool m_bButtonDown;
+
 	// Handle to the control that should receivce custom draw messages.
 	HWND m_hWndCustomDraw;
 	int m_iControlID;
 
+	// The host window that should receive the close message.
+	HWND m_hWndCloseHost;
+
+	void InitializeImageList();
+
 	void DrawText(CDCHandle dc,RECT *pHeaderRect);
 	void DrawBackground(CDCHandle dc,RECT *pHeaderRect);
+	void DrawButton(CDCHandle dc,RECT *pHeaderRect);
 
 public:
 	static CWndClassInfo &GetWndClassInfo()
@@ -59,7 +79,7 @@ public:
 		return wc;
 	}
 
-	CLabelContainer();
+	CLabelContainer(bool bClosable = false);
 	~CLabelContainer();
 
 	BEGIN_MSG_MAP(CLabelContainer)
@@ -67,6 +87,9 @@ public:
 		MESSAGE_HANDLER(WM_SETFOCUS,OnSetFocus)
 		MESSAGE_HANDLER(WM_ERASEBKGND,OnEraseBkgnd)
 		MESSAGE_HANDLER(WM_PAINT,OnPaint)
+		MESSAGE_HANDLER(WM_MOUSEMOVE,OnMouseMove)
+		MESSAGE_HANDLER(WM_LBUTTONDOWN,OnMouseDown)
+		MESSAGE_HANDLER(WM_LBUTTONUP,OnMouseUp)
 
 		NOTIFY_CODE_HANDLER(NM_CUSTOMDRAW,OnCustomDraw)
 
@@ -77,11 +100,15 @@ public:
 	LRESULT OnSetFocus(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 	LRESULT OnEraseBkgnd(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 	LRESULT OnPaint(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+	LRESULT OnMouseMove(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+	LRESULT OnMouseDown(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+	LRESULT OnMouseUp(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 
 	LRESULT OnCustomDraw(int idCtrl,LPNMHDR pnmh,BOOL &bHandled);
 
 	void SetCustomDrawHandler(HWND hWndCustomDraw,int iID);
 	void SetClient(HWND hWndClient);
+	void SetCloseHost(HWND hWndCloseHost);
 
 	void UpdateLayout();
 	void UpdateLayout(int iWidth,int iHeight);

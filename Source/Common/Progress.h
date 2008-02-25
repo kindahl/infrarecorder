@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2007 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,6 +26,21 @@ public:
 
 	// Returns true of the operation has been cancelled.
 	virtual bool IsCanceled() = 0;
+};
+
+class CProgressEx : public CProgress
+{
+public:
+	enum eLogType
+	{
+		LT_INFORMATION,
+		LT_WARNING,
+		LT_ERROR,
+		LT_WINLOGO
+	};
+
+	virtual void AddLogEntry(eLogType Type,const TCHAR *szMessage,...) = 0;
+	virtual void SetStatus(const TCHAR *szStatus,...) = 0;
 };
 
 class CFilesProgress

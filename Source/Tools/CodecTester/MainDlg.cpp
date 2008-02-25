@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2007 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -193,7 +193,7 @@ LRESULT CMainDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHand
 
 LRESULT CMainDlg::OnAppAbout(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
-	MessageBox(_T("Copyright © 2006-2007 Christian Kindahl"),_T("About"),MB_OK | MB_ICONINFORMATION);
+	MessageBox(_T("Copyright © 2006-2008 Christian Kindahl"),_T("About"),MB_OK | MB_ICONINFORMATION);
 	return 0;
 }
 

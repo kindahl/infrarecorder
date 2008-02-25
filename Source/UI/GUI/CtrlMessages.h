@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2007 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -96,3 +96,11 @@
 	index of the currently selected device.
 */
 #define WM_CHECKMEDIA					WM_APP + 18
+
+/*
+	WM_LABELCONTAINER_CLOSE
+	-----------------------
+	Sent to the host of a label container control when the close button is
+	pressed.
+*/
+#define WM_LABELCONTAINER_CLOSE			WM_APP + 19

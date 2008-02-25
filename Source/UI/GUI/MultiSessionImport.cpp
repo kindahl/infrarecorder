@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2007 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,10 +27,6 @@ CMultiSessionImport g_MultiSessionImport;
 CMultiSessionImport::CMultiSessionImport()
 {
 	m_iMode = -1;
-
-	/*m_szRootLetter[1] = ':';
-	m_szRootLetter[2] = '\\';
-	m_szRootLetter[3] = '0';*/
 
 	m_pSpaceMeter = NULL;
 }
@@ -88,7 +84,11 @@ void CMultiSessionImport::ImportOutput(const char *szBuffer)
 	// Listing a directory.
 	if (!strncmp(szBuffer,"Directory",9))
 	{
-		CharToTChar(szBuffer + 21,m_szCurDir);
+#ifdef UNICODE
+		AnsiToUnicode(m_szCurDir,szBuffer + 21,sizeof(m_szCurDir) / sizeof(wchar_t));
+#else
+		strcpy(m_szCurDir,szBuffer + 21);
+#endif
 	}
 	else
 	{
@@ -100,15 +100,16 @@ void CMultiSessionImport::ImportOutput(const char *szBuffer)
 		
 		// Time and date.
 		char szDateTime[32];
-		strncpy(szDateTime,szBuffer + 41,11);
+		strncpy(szDateTime,szBuffer + 41 - 5,11); // RSS:080105 - added offset -5
 		szDateTime[11] = '\0';
 
 		// File name.
 		TCHAR szFileName[MAX_PATH];
-
-		// UPDATE. 2007-02-01.
-		//CharToTChar(szBuffer + 67,szFileName);
-		CharToTChar(szBuffer + 61,szFileName);
+#ifdef UNICODE
+		AnsiToUnicode(szFileName,szBuffer + 61,sizeof(szFileName) / sizeof(wchar_t));
+#else
+		strcpy(szFileName,szBuffer + 61);
+#endif
 
 		// If it's a file we want to remove the "version information" separated by a semicolon.
 		if (bIsFolder)
@@ -153,9 +154,6 @@ void CMultiSessionImport::ImportOutput(const char *szBuffer)
 			CProjectNode *pNode = g_TreeManager.AddPath(szFullName);
 			pNode->pItemData->ucFlags |= PROJECTITEM_FLAG_ISLOCKED | PROJECTITEM_FLAG_ISIMPORTED;
 			pNode->pItemData->usFileDate = usFileDate;
-
-			/*lstrcpy(pNode->pItemData->szFullPath,m_szRootLetter);
-			lstrcat(pNode->pItemData->szFullPath,szFullName);*/
 		}
 		else
 		{
@@ -184,10 +182,6 @@ void CMultiSessionImport::ImportOutput(const char *szBuffer)
 				pCurrentNode = g_TreeManager.AddPath(szFullName);
 			else
 				pCurrentNode = g_TreeManager.GetRootNode();
-
-			// Full path.
-			/*lstrcpy(pItemData->szFullPath,m_szRootLetter);
-			lstrcat(pItemData->szFullPath,szFullName);*/
 
 			// Modified time.
 			pItemData->usFileDate = usFileDate;
@@ -249,8 +243,6 @@ bool CMultiSessionImport::GetInfo(tDeviceInfo *pDeviceInfo,unsigned __int64 &uiL
 			pDeviceInfo->szVendor,pDeviceInfo->szIdentification,pDeviceInfo->szRevision);
 	}
 
-	//m_szRootLetter[0] = pDeviceInfo->Address.m_cDriveLetter;
-
 	TCHAR szCommandLine[MAX_PATH + 21];
 	lstrcpy(szCommandLine,_T("\""));
 	lstrcat(szCommandLine,g_GlobalSettings.m_szCDRToolsPath);
@@ -297,6 +289,35 @@ bool CMultiSessionImport::Import(tDeviceInfo *pDeviceInfo,unsigned __int64 uiSes
 
 	lsprintf(szBuffer,_T(" -T %I64d"),uiSessionStart);
 	lstrcat(szCommandLine,szBuffer);
+
+	// RSS:080105 - addded codepage for isoinfo
+	// isoinfo requires strict codepage for non latin symbols
+	// 
+	// Added automatic codepage detection and manual selection from 
+	// section [isoinfo] in language file with key 0x0001=codepage
+	// E.g.:
+	//   [isoinfo]
+	//    0x0001=cp1251
+	CLNGProcessor *pLNG = g_LanguageSettings.m_pLNGProcessor;	
+	// Config codepage for isoinfo
+	if (pLNG && pLNG->EnterSection(_T("isoinfo")))
+	{
+		TCHAR *szStrValue;
+		if (pLNG->GetValuePtr(1,szStrValue))
+		{
+			lstrcat(szCommandLine,_T(" -j "));
+			lstrcat(szCommandLine,szStrValue);
+		}
+	}
+	else
+	{
+		int iCurCharSet = CodePageToCharacterSet(GetACP());
+		if (iCurCharSet > 0)
+		{
+			lstrcat(szCommandLine,_T(" -j "));
+			lstrcat(szCommandLine,g_szCharacterSets[iCurCharSet]);
+		}
+	}
 
 	return Launch(szCommandLine);
 }
