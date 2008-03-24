@@ -81,8 +81,7 @@ namespace ckFileSystem
 	*/
 	void CSectorOutStream::PadSector()
 	{
-		char szTemp[1];
-		szTemp[0] = 0;
+		char szTemp[1] = { 0 };
 
 		unsigned long ulProcessedSize,ulRemaining = GetRemaining();
 

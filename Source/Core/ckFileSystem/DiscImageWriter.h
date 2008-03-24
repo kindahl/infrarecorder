@@ -21,88 +21,60 @@
 #include <map>
 #include <vector>
 #include <string>
+#include <queue>
 #include "../../Common/StringUtil.h"
 #include "../../Common/FileStream.h"
 #include "../../Common/Progress.h"
 #include "../../Common/Log.h"
-#include "Iso9660.h"
 #include "FileSet.h"
 #include "FileTree.h"
 #include "SectorStream.h"
 #include "Const.h"
+#include "Iso9660.h"
 #include "Joliet.h"
 #include "ElTorito.h"
-
-#define DISCIMAGEWRITER_IO_BUFFER_SIZE			0x10000
-#define DISCIMAGEWRITER_FILENAME_BUFFER_LEN		206			// Must be enough to hold the largest possible string using
-															// any of the supported file system extensions.
+#include "Udf.h"
 
 namespace ckFileSystem
 {
 	class CDiscImageWriter
 	{
-	private:
-		enum eSysDirType
+	public:
+		enum eFileSystem
 		{
-			TYPE_CURRENT,
-			TYPE_PARENT
+			FS_ISO9660,
+			FS_ISO9660_JOLIET,
+			FS_ISO9660_UDF,
+			FS_ISO9660_UDF_JOLIET,
+			FS_UDF,
+			FS_DVDVIDEO
 		};
 
+	private:
 		CLog *m_pLog;
 
 		COutFileStream *m_pFileStream;
 		CSectorOutStream *m_pOutStream;
 
+		// What file system should be created.
+		eFileSystem m_FileSystem;
+
 		// Different standard implementations.
 		CIso9660 m_Iso9660;
 		CJoliet m_Joliet;
 		CElTorito m_ElTorito;
-
-		SYSTEMTIME m_stImageCreate;	// The time when the Create function was called.
-
-		// Restrictions.
-		bool m_bUseFileTimes;
-		bool m_bUseJoliet;
+		CUdf m_Udf;
 
 		bool Close();
-		bool Fail(const TCHAR *szFullPath);
-
-		bool WritePathTable(CFileSet &Files,CFileTree &FileTree,bool bJolietTable,bool bMSBF,
-			CProgressEx &Progress);
-
-		bool WriteSysDirectory(CFileTreeNode *pParent,eSysDirType Type,unsigned long ulDataPos);
-
-		int WriteFileNode(CFileTreeNode *pNode,CProgressEx &Progress,
-			CFilesProgress &FilesProgress);
-		int WriteLocalDirEntry(CFileTreeNode *pLocalNode,bool bJoliet,int iLevel,
-			CProgressEx &Progress,CFilesProgress &FilesProgress);
-		int WriteLocalDirectory(std::vector<std::pair<CFileTreeNode *,int> > &DirNodeStack,
-			CFileTreeNode *pLocalNode,int iLevel,CProgressEx &Progress,
-			CFilesProgress &FilesProgress);
-		int WriteDirectories(CFileTree &FileTree,CProgressEx &Progress,
-			CFilesProgress &FilesProgress);
-
-		bool CalcPathTableSize(CFileSet &Files,bool bJolietTable,unsigned __int64 &uiPathTableSize,
-			CProgressEx &Progress);
-		bool CalcLocalDirEntrySize(CFileTreeNode *pLocalNode,bool bJoliet,int iLevel,
-			unsigned long &ulDirSecSize);
-		bool CalcLocalFileSysData(std::vector<std::pair<CFileTreeNode *,int> > &DirNodeStack,
-			CFileTreeNode *pLocalNode,int iLevel,unsigned __int64 &uiSecOffset,
-			CProgressEx &Progress);
-		bool CalcFileSysData(CFileTree &FileTree,unsigned __int64 uiStartSec,
-			unsigned __int64 &uiLastSec,CProgressEx &Progress);
+		int Fail(int iResult,const TCHAR *szFullPath);
 
 	public:
-		bool ValidateTreeNode(std::vector<std::pair<CFileTreeNode *,int> > &DirNodeStack,
-			CFileTreeNode *pNode,int iLevel);
-		bool ValidateTree(CFileTree &FileTree);
-
-	public:
-		CDiscImageWriter(CLog *pLog);
+		CDiscImageWriter(CLog *pLog,eFileSystem FileSystem);
 		~CDiscImageWriter();	
 
 		int Create(const TCHAR *szFullPath,CFileSet &Files,CProgressEx &Progress);
 
+		// File system modifiers, mixed set for Joliet, UDF and ISO9660.
 		void SetVolumeLabel(const TCHAR *szLabel);
 		void SetTextFields(const TCHAR *szSystem,const TCHAR *szVolSetIdent,
 			const TCHAR *szPublIdent,const TCHAR *szPrepIdent);
@@ -110,6 +82,7 @@ namespace ckFileSystem
 			const TCHAR *ucBiblIdent);
 		void SetInterchangeLevel(CIso9660::eInterLevel InterLevel);
 		void SetIncludeFileVerInfo(bool bIncludeInfo);
+		void SetPartAccessType(CUdf::ePartAccessType AccessType);
 
 		bool AddBootImageNoEmu(const TCHAR *szFullPath,bool bBootable,
 			unsigned short usLoadSegment,unsigned short usSectorCount);

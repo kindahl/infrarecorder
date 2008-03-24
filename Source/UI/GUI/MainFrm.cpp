@@ -36,6 +36,8 @@
 #include "../../Core/ckFileSystem/Iso9660.h"
 #include "../../Core/ckFileSystem/FileTree.h"
 #include "../../Core/ckFileSystem/Joliet.h"
+#include "../../Core/ckFileSystem/Udf.h"
+#include "../../Core/ckFileSystem/IfoReader.h"
 #include "ProgressDlg.h"
 // FIXME: }
 #include "TreeManager.h"
@@ -2954,6 +2956,10 @@ LRESULT CMainFrame::OnAppAbout(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHan
 
 	// FIXME: Clean up when done.
 	//g_ActionManager.CreateImage(m_hWnd,false);
+
+	/*TCHAR szTemp[64];
+	lsprintf(szTemp,_T("%d"),sizeof(ckFileSystem::tUdfExtendedAttrCgms));
+	MessageBox(szTemp);*/
 
 	return 0;
 }

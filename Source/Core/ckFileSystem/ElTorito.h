@@ -182,6 +182,7 @@ namespace ckFileSystem
 			unsigned __int64 &uiLastSec);
 
 		unsigned __int64 GetBootCatSize();
+		unsigned __int64 GetBootDataSize();
 		unsigned __int64 GetBootImageCount();
 	};
 };

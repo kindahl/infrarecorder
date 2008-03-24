@@ -2112,13 +2112,13 @@ bool CProjectManager::SaveCDText(const TCHAR *szFullPath)
 	@param szFileNameBuffer file name buffer used for improving performance.
 	@param iPathStripLen number of characters that should be stripped from
 	the current project path.
-	@param pCRC32File helper object for calculating a CRC32 checksum.
+	@param pCrc32File helper object for calculating a CRC32 checksum.
 	@param uiFailCount number of files that failed the CRC32 verification.
 	@return true if completed (with or without errors), and false if cancelled.
 */
 bool CProjectManager::VerifyLocalFiles(CProjectNode *pNode,std::vector<CProjectNode *> &FolderStack,
 									   CAdvancedProgress *pProgress,TCHAR *szFileNameBuffer,int iPathStripLen,
-									   CCRC32File *pCRC32File,unsigned __int64 &uiFailCount)
+									   CCrc32File *pCrc32File,unsigned __int64 &uiFailCount)
 {
 	TCHAR szStatus[MAX_PATH + 32];
 
@@ -2144,17 +2144,17 @@ bool CProjectManager::VerifyLocalFiles(CProjectNode *pNode,std::vector<CProjectN
 		pProgress->SetStatus(szStatus);
 
 		// Compare the CRC of the file on the disc to the one on the harddrive.
-		unsigned long ulGoodCRC = pCRC32File->Calculate(pItemData->szFullPath);
+		unsigned long ulGoodCrc = pCrc32File->Calculate(pItemData->szFullPath);
 		if (pProgress->IsCanceled())
 			return false;
 
-		unsigned long ulTestCRC = pCRC32File->Calculate(szFileNameBuffer);
+		unsigned long ulTestCrc = pCrc32File->Calculate(szFileNameBuffer);
 		if (pProgress->IsCanceled())
 			return false;
 
-		if (ulTestCRC != ulGoodCRC)
+		if (ulTestCrc != ulGoodCrc)
 		{
-			if (ulTestCRC == 0)
+			if (ulTestCrc == 0)
 			{
 				pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,
 					lngGetString(FAILURE_VERIFYNOFILE),szFileNameBuffer + 3);
@@ -2162,7 +2162,7 @@ bool CProjectManager::VerifyLocalFiles(CProjectNode *pNode,std::vector<CProjectN
 			else
 			{
 				pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,
-					lngGetString(FAILURE_VERIFYREADERROR),szFileNameBuffer,ulTestCRC,ulGoodCRC);
+					lngGetString(FAILURE_VERIFYREADERROR),szFileNameBuffer,ulTestCrc,ulGoodCrc);
 			}
 
 			uiFailCount++;
@@ -2207,10 +2207,10 @@ bool CProjectManager::VerifyCompilation(CAdvancedProgress *pProgress,const TCHAR
 	unsigned __int64 uiFailCount = 0;
 
 	CFilesProgress FilesProgress(g_TreeManager.GetNodeSize(pRootNode) << 1);
-	CCRC32File CRC32File(pProgress,&FilesProgress);
+	CCrc32File Crc32File(pProgress,&FilesProgress);
 
 	std::vector<CProjectNode *> FolderStack;
-	if (!VerifyLocalFiles(pRootNode,FolderStack,pProgress,szFileNameBuffer,iPathStripLen,&CRC32File,uiFailCount))
+	if (!VerifyLocalFiles(pRootNode,FolderStack,pProgress,szFileNameBuffer,iPathStripLen,&Crc32File,uiFailCount))
 		return false;
 
 	while (FolderStack.size() > 0)
@@ -2218,7 +2218,7 @@ bool CProjectManager::VerifyCompilation(CAdvancedProgress *pProgress,const TCHAR
 		pRootNode = FolderStack[FolderStack.size() - 1];
 		FolderStack.pop_back();
 
-		if (!VerifyLocalFiles(pRootNode,FolderStack,pProgress,szFileNameBuffer,iPathStripLen,&CRC32File,uiFailCount))
+		if (!VerifyLocalFiles(pRootNode,FolderStack,pProgress,szFileNameBuffer,iPathStripLen,&Crc32File,uiFailCount))
 			return false;
 	}
 	

@@ -448,7 +448,10 @@ DWORD WINAPI CActionManager::CreateImageThread42(LPVOID lpThreadParameter)
 {
 	TCHAR *szFileName = (TCHAR *)lpThreadParameter;
 
-	ckFileSystem::CFileSet Files;
+	bool bDvdVideo = false;
+
+	ckFileSystem::CFileComparator FileComp(bDvdVideo);
+	ckFileSystem::CFileSet Files(FileComp);
 	
 	switch (g_ProjectManager.GetProjectType())
 	{
@@ -472,17 +475,23 @@ DWORD WINAPI CActionManager::CreateImageThread42(LPVOID lpThreadParameter)
 	g_ProgressDlg.SetDevice(lngGetString(PROGRESS_IMAGEDEVICE));
 	g_ProgressDlg.SetStatus(lngGetString(PROGRESS_INIT));
 
-	ckFileSystem::CDiscImageWriter DiscImageWriter(&g_LogDlg);
+	ckFileSystem::CDiscImageWriter DiscImageWriter(&g_LogDlg,ckFileSystem::CDiscImageWriter::FS_UDF);
 	DiscImageWriter.SetVolumeLabel(_T("080101_2159"));
 	DiscImageWriter.SetTextFields(_T("System."),_T("Volume set."),_T("Publisher."),_T("Preparer."));
 	DiscImageWriter.SetFileFields(_T("Copyright."),_T("Abstract."),_T("Bibliographic."));
 
 	//DiscImageWriter.SetInterchangeLevel(CIso9660::LEVEL_2);
-	DiscImageWriter.SetInterchangeLevel(ckFileSystem::CIso9660::ISO9660_1999);
+	DiscImageWriter.SetInterchangeLevel(ckFileSystem::CIso9660::LEVEL_3);
 
 	/*DiscImageWriter.AddBootImageNoEmu(_T("C:\\Users\\Christian Kindahl\\Desktop\\isolinux.bin"),true,0,4);
 	DiscImageWriter.AddBootImageNoEmu(_T("C:\\Users\\Christian Kindahl\\Desktop\\isolinux.bin"),false,0x42,0x42);
 	DiscImageWriter.AddBootImageNoEmu(_T("C:\\Users\\Christian Kindahl\\Desktop\\isolinux.bin"),true,0x84,0x42);*/
+
+	/*g_LogDlg.AddLine(_T("Dumping file set:"));
+
+	ckFileSystem::CFileSet::const_iterator itFile;
+	for (itFile = Files.begin(); itFile != Files.end(); itFile++)
+		g_LogDlg.AddLine(_T("  %s"),itFile->m_InternalPath.c_str());*/
 
 	g_ProgressDlg.AddLogEntry(CProgressDlg::LT_INFORMATION,lngGetString(PROGRESS_BEGINDISCIMAGE));
 
@@ -592,7 +601,7 @@ INT_PTR CActionManager::CreateImage(HWND hWndParent,bool bAppMode)
 
 		// Create the new thread.
 		unsigned long ulThreadID = 0;
-		HANDLE hThread = ::CreateThread(NULL,0,/*CreateImageThread42*/CreateImageThread,szFileName,0,&ulThreadID);
+		HANDLE hThread = ::CreateThread(NULL,0,CreateImageThread,szFileName,0,&ulThreadID);
 		::CloseHandle(hThread);
 
 		// Run the message loop if we're in application mode.

@@ -137,6 +137,7 @@
               <File Id="Galician.irl" Name="Galician.irl" Source="../Binary64/Languages/Galician.irl"/>
               <File Id="German.irl" Name="German.irl" Source="../Binary64/Languages/German.irl"/>
               <File Id="German.chm" Name="German.chm" Source="../Binary64/Languages/German.chm"/>
+              <File Id="Greek.irl" Name="Greek.irl" Source="../Binary64/Languages/Greek.irl"/>
               <File Id="Hebrew.irl" Name="Hebrew.irl" Source="../Binary64/Languages/Hebrew.irl"/>
               <File Id="Hungarian.irl" Name="Hungarian.irl" Source="../Binary64/Languages/Hungarian.irl"/>
               <File Id="Italian.irl" Name="Italian.irl" Source="../Binary64/Languages/Italian.irl"/>

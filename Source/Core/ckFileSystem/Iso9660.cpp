@@ -190,7 +190,7 @@ namespace ckFileSystem
 		sprintf(szBuffer,"%.2u",st.wSecond);
 		memcpy(&DateTime.usSecond,szBuffer,2);
 
-		sprintf(szBuffer,"%.2u",st.wMilliseconds * 10);
+		sprintf(szBuffer,"%.2u",st.wMilliseconds/10);
 		memcpy(&DateTime.usHundreds,szBuffer,2);
 
 		TIME_ZONE_INFORMATION tzi;
@@ -827,6 +827,15 @@ namespace ckFileSystem
 		}
 	}
 
+	/**
+		Determines the length of the compatible file name generated from the
+		specified file name. A compatible file name is a file name that is
+		generated from the specified file name that is supported by the current
+		file system configuration.
+		@param szFileName the origial file name.
+		@param bIsDir if true, szFileName is assumed to be a directory name.
+		@return the length of the compatible file name.
+	*/
 	unsigned char CIso9660::CalcFileNameLen(const TCHAR *szFileName,bool bIsDir)
 	{
 		switch (m_InterLevel)
@@ -872,6 +881,11 @@ namespace ckFileSystem
 		}
 	}
 
+	/**
+		Obtains the maximum numbe of directory levels supported by the current
+		file system configuration.
+		@return maximum number of allowed directory levels.
+	*/
 	unsigned char CIso9660::GetMaxDirLevel()
 	{
 		if (m_bRelaxMaxDirLevel)
@@ -893,11 +907,22 @@ namespace ckFileSystem
 		}
 	}
 
-	/*
-		Returns true if the file system has a supplementary volume descriptor.
+	/**
+		Checks whether the file system has a supplementary volume descriptor or not.
+		@return true if the file system has a supplementary volume descriptor.
 	*/
 	bool CIso9660::HasVolDescSuppl()
 	{
 		return m_InterLevel == ISO9660_1999;
+	}
+
+	/**
+		Checks whether the file system allows files to be fragmented (multiple
+		extents) or not.
+		@return true if the file system allows fragmentation.
+	*/
+	bool CIso9660::AllowsFragmentation()
+	{
+		return m_InterLevel == LEVEL_3;
 	}
 };

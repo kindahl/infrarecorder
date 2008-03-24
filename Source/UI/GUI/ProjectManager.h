@@ -22,7 +22,7 @@
 #include "TreeManager.h"
 #include "CustomContainer.h"
 #include "../../Common/XMLProcessor.h"
-#include "../../Common/CRC32.h"
+#include "../../Common/Crc32.h"
 #include "AdvancedProgress.h"
 #include "ConfirmFileReplaceDlg.h"
 
@@ -83,7 +83,7 @@ private:
 
 	bool VerifyLocalFiles(CProjectNode *pNode,std::vector<CProjectNode *> &FolderStack,
 		CAdvancedProgress *pProgress,TCHAR *szFileNameBuffer,int iPathStripLen,
-		CCRC32File *pCRC32File,unsigned __int64 &uiFailCount);
+		CCrc32File *pCrc32File,unsigned __int64 &uiFailCount);
 
 	bool GenerateNewFolderName(CProjectNode *pParent,TCHAR *szFolderName,
 		unsigned int uiFolderNameSize);

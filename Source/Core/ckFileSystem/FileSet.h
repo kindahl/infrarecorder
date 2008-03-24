@@ -56,13 +56,88 @@ namespace ckFileSystem
 	*/
 	class CFileComparator
 	{
+	private:
+		bool m_bDvdVideo;
+
+		/*
+			Returns a weight of the specified file name, a ligher file should
+			be placed heigher in the directory hierarchy.
+		*/
+		unsigned long GetFileWeight(const TCHAR *szFullPath) const
+		{
+			unsigned long ulWeight = 0xFFFFFFFF;
+
+			// Quick test for optimization.
+			if (szFullPath[1] == 'V')
+			{
+				if (!lstrcmp(szFullPath,_T("/VIDEO_TS")))	// The VIDEO_TS folder should be first.
+					ulWeight = 0;
+				else if (!lstrncmp(szFullPath,_T("/VIDEO_TS/"),10))
+				{
+					const TCHAR *szFileName = szFullPath + 10;
+
+					if (!lstrncmp(szFileName,_T("VIDEO_TS"),8))
+					{
+						ulWeight -= 0x80000000;
+
+						const TCHAR *szFileExt = szFileName + 9;
+						if (!lstrcmp(szFileExt,_T("IFO")))
+							ulWeight -= 3;
+						else if (!lstrcmp(szFileExt,_T("VOB")))
+							ulWeight -= 2;
+						else if (!lstrcmp(szFileExt,_T("BUP")))
+							ulWeight -= 1;
+					}
+					else if (!lstrncmp(szFileName,_T("VTS_"),4))
+					{
+						ulWeight -= 0x40000000;
+
+						// Just a safety measure.
+						if (lstrlen(szFileName) < 64)
+						{
+							TCHAR szFileExt[64];
+							unsigned long ulNum = 0,ulSubNum = 0;
+
+							if (lsscanf(szFileName,_T("VTS_%u_%u.%[^\0]"),&ulNum,&ulSubNum,szFileExt) == 3)
+							{
+								// The first number is worth the most, the lower the lighter.
+								ulWeight -= 0xFFFFFF - (ulNum << 8);
+
+								if (!lstrcmp(szFileExt,_T("IFO")))
+								{
+									ulWeight -= 0xFF;
+								}
+								else if (!lstrcmp(szFileExt,_T("VOB")))
+								{
+									ulWeight -= 0x0F - ulSubNum;
+								}
+								else if (!lstrcmp(szFileExt,_T("BUP")))
+								{
+									ulWeight -= 1;
+								}
+							}
+						}
+					}
+				}
+			}
+
+			return ulWeight;
+		}
+
 	public:
+		/*
+			@param bDvdVideo set to true to use DVD-Video compatible sorting.
+		*/
+		CFileComparator(bool bDvdVideo) : m_bDvdVideo(bDvdVideo)
+		{
+		}
+
 		static int Level(const CFileDescriptor &Item)
 		{
 			const TCHAR *szFullPath = Item.m_InternalPath.c_str();
 
 			int iLevel = 0;
-			for (size_t i = 0; i < lstrlen(szFullPath); i++)
+			for (size_t i = 0; i < (size_t)lstrlen(szFullPath); i++)
 			{
 				if (szFullPath[i] == '/' || szFullPath[i] == '\\')
 					iLevel++;
@@ -76,6 +151,20 @@ namespace ckFileSystem
 
 		bool operator() (const CFileDescriptor &Item1,const CFileDescriptor &Item2) const
 		{
+			if (m_bDvdVideo)
+			{
+				unsigned long ulWeight1 = GetFileWeight(Item1.m_InternalPath.c_str());
+				unsigned long ulWeight2 = GetFileWeight(Item2.m_InternalPath.c_str());
+
+				if (ulWeight1 != ulWeight2)
+				{
+					if (ulWeight1 < ulWeight2)
+						return true;
+					else
+						return false;
+				}
+			}
+
 			int iLevelItem1 = Level(Item1);
 			int iLevelItem2 = Level(Item2);
 

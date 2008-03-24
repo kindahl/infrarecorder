@@ -20,7 +20,7 @@
 #include "CRC32.h"
 #include "FileManager.h"
 
-CCRC32::CCRC32(unsigned int uiPolynomial)
+CCrc32::CCrc32(unsigned int uiPolynomial)
 {
 	m_ulValue = 0xFFFFFFFF;
 
@@ -46,21 +46,21 @@ CCRC32::CCRC32(unsigned int uiPolynomial)
 }
 
 /*
-	CCRC32::Reset
+	CCrc32::Reset
 	-------------
 	Resets the internal CRC32 value.
 */
-void CCRC32::Reset()
+void CCrc32::Reset()
 {
 	m_ulValue = 0xFFFFFFFF;
 }
 
 /*
-	CCRC32::Calculate
+	CCrc32::Calculate
 	-----------------
 	Calculates the CRC32 value of the specified buffer.
 */
-void CCRC32::Update(unsigned char *pBuffer,unsigned int uiLength)
+void CCrc32::Update(unsigned char *pBuffer,unsigned int uiLength)
 {
 	unsigned long ulCRC = m_ulValue;
 
@@ -71,29 +71,29 @@ void CCRC32::Update(unsigned char *pBuffer,unsigned int uiLength)
 }
 
 /*
-	CCRC32::GetValue
+	CCrc32::GetValue
 	----------------
 	Returns the current calculated CRC32 value.
 */
-unsigned long CCRC32::GetValue()
+unsigned long CCrc32::GetValue()
 {
 	return m_ulValue ^ 0xFFFFFFFF;
 }
 
-CCRC32File::CCRC32File(CProgress *pProgress,CFilesProgress *pFilesProgress)
+CCrc32File::CCrc32File(CProgress *pProgress,CFilesProgress *pFilesProgress)
 {
 	m_pProgress = pProgress;
 	m_pFilesProgress = pFilesProgress;
 }
 
 /*
-	CCRC32File::Calculate
+	CCrc32File::Calculate
 	---------------------
 	Calculates the CRC32 checksum of the specified file.
 */
-unsigned long CCRC32File::Calculate(const TCHAR *szFileName)
+unsigned long CCrc32File::Calculate(const TCHAR *szFileName)
 {
-	CCRC32 CRC32(CRC32_FILE_POLYNOMIAL);
+	CCrc32 CRC32(CRC32_FILE_POLYNOMIAL);
 
 	HANDLE hFile = fs_open(szFileName,_T("rb"));
 	if (hFile == INVALID_HANDLE_VALUE)

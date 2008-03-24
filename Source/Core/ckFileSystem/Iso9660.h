@@ -21,8 +21,9 @@
 
 #define ISO9660_SECTOR_SIZE						2048
 #define ISO9660_MAX_NAMELEN_1999				 207
-#define ISO9660_MAX_DIRLEVEL_NORMAL				   8	// Maximum is 8 for ISO9660:1988.
-#define ISO9660_MAX_DIRLEVEL_1999				 255	// Maximum is 255 for ISO9660:1999.
+#define ISO9660_MAX_DIRLEVEL_NORMAL				   8		// Maximum is 8 for ISO9660:1988.
+#define ISO9660_MAX_DIRLEVEL_1999				 255		// Maximum is 255 for ISO9660:1999.
+#define ISO9660_MAX_EXTENT_SIZE					0xFFFFF800
 
 #define DIRRECORD_FILEFLAG_HIDDEN				1 << 0
 #define DIRRECORD_FILEFLAG_DIRECTORY			1 << 1
@@ -244,6 +245,12 @@ namespace ckFileSystem
 
 #pragma pack()	// Switch back to normal alignment.
 
+	/// Class for handling ISO9660 file systems.
+	/**
+		Implements functionallity for creating parts of ISO9660 file systems.
+		For example writing certain descriptors and for generating ISO9660
+		compatible file names.
+	*/
 	class CIso9660
 	{
 	public:
@@ -251,6 +258,7 @@ namespace ckFileSystem
 		{
 			LEVEL_1,
 			LEVEL_2,
+			LEVEL_3,
 			ISO9660_1999
 		};
 
@@ -316,6 +324,7 @@ namespace ckFileSystem
 		unsigned char CalcFileNameLen(const TCHAR *szFileName,bool bIsDir);
 		unsigned char GetMaxDirLevel();
 		bool HasVolDescSuppl();
+		bool AllowsFragmentation();
 	};
 
 	/*

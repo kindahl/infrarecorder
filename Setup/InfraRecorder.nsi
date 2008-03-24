@@ -190,6 +190,7 @@ FunctionEnd
   !insertmacro MUI_LANGUAGE "French"
 ;  !insertmacro MUI_LANGUAGE "Galician"
   !insertmacro MUI_LANGUAGE "German"
+  !insertmacro MUI_LANGUAGE "Greek"
   !insertmacro MUI_LANGUAGE "Hebrew"
   !insertmacro MUI_LANGUAGE "Hungarian"
   !insertmacro MUI_LANGUAGE "Italian"
@@ -437,6 +438,18 @@ FunctionEnd
   LangString DESC_SecDeskShortcut ${LANG_GERMAN} "Symbol auf dem Desktop erstellen."
   LangString DESC_SecQuickShortcut ${LANG_GERMAN} "Symbol auf Schnellstartleiste erstellen."
   LangString DESC_SecLang ${LANG_GERMAN} "Weitere Sprachdateien fόr den mehrsprachigen Betrieb von InfraRecorder hinzufόgen."
+
+  ;Language strings (Greek)
+  LangString NAME_SecCore ${LANG_GREEK} "Βασικά αρχεία του InfraRecorder (απαραίτητο)"
+  LangString NAME_SecStartShortcut ${LANG_GREEK} "Συντομεύσεις στο μενού Έναρξη"
+  LangString NAME_SecDeskShortcut ${LANG_GREEK} "Συντόμευση στην Επιφάνεια Εργασίας"
+  LangString NAME_SecQuickShortcut ${LANG_GREEK} "Συντόμευση στη γραμμή Γρήγορης Εκκίνησης"
+  LangString NAME_SecLang ${LANG_GREEK} "Πολυγλωσσική υποστήριξη"
+  LangString DESC_SecCore ${LANG_GREEK} "Τα βασικά αρχεία απαιτούνται για να χρησιμοποιήσετε τον InfraRecorder."
+  LangString DESC_SecStartShortcut ${LANG_GREEK} "Προσθέτει εικονίδια στο μενού Έναρξη για εύκολη πρόσβαση."
+  LangString DESC_SecDeskShortcut ${LANG_GREEK} "Προσθέτει ένα εικονίδιο στην επιφάνεια εργασίας σας."
+  LangString DESC_SecQuickShortcut ${LANG_GREEK} "Προσθέτει ένα εικονίδιο στη γραμμή γρήγορης εκκίνησής σας."
+  LangString DESC_SecLang ${LANG_GREEK} "Η πολυγλωσσική υποστήριξη χρησιμοποιείται για να υποστηρίξει διαφορετικές γλώσσες στον InfraRecorder."
 
   ;Language strings (Hebrew)
   LangString NAME_SecCore ${LANG_HEBREW} "Infra Recorder χαφι δϊελπδ (required)"
@@ -805,6 +818,7 @@ Section $(NAME_SecLang) SecLang
   File "..\Binary32\Languages\French.irl"
   File "..\Binary32\Languages\Galician.irl"
   File "..\Binary32\Languages\German.irl"
+  File "..\Binary32\Languages\Greek.irl"
   File "..\Binary32\Languages\Hebrew.irl"
   File "..\Binary32\Languages\Hungarian.irl"
   File "..\Binary32\Languages\Italian.irl"
@@ -845,6 +859,7 @@ Section $(NAME_SecLang) SecLang
   File "..\BinaryA\Languages\French.irl"
   File "..\BinaryA\Languages\Galician.irl"
   File "..\BinaryA\Languages\German.irl"
+  File "..\BinaryA\Languages\Greek.irl"
   File "..\BinaryA\Languages\Hebrew.irl"
   File "..\BinaryA\Languages\Hungarian.irl"
   File "..\BinaryA\Languages\Italian.irl"
@@ -915,6 +930,9 @@ Section $(NAME_SecLang) SecLang
       ${Break}
     ${Case} "german"	; 1031
       StrCpy $LANGUAGE ${LANG_GERMAN}
+      ${Break}
+    ${Case} "greek"	; 1032
+      StrCpy $LANGUAGE ${LANG_GREEK}
       ${Break}
     ${Case} "hebrew"	; 1037
       StrCpy $LANGUAGE ${LANG_HEBREW}
@@ -1026,6 +1044,9 @@ Section $(NAME_SecLang) SecLang
       ${Break}
     ${Case} ${LANG_GERMAN}	; 1031
       StrCpy $0 "German.irl"
+      ${Break}
+    ${Case} ${LANG_GREEK}	; 1032
+      StrCpy $0 "Greek.irl"
       ${Break}
     ${Case} ${LANG_HEBREW}	; 1037
       StrCpy $0 "Hebrew.irl"

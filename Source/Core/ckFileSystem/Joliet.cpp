@@ -25,8 +25,7 @@ namespace ckFileSystem
 	CJoliet::CJoliet()
 	{
 		m_bIncFileVerInfo = true;	// Include ";1" file version information.
-		m_iMaxNameLen = 64;		// According to Joliet specification.
-		//m_iMaxNameLen = 101;	// 207 bytes = 101 wide characters + 4 wide characters for file version.
+		m_iMaxNameLen = 64;			// According to Joliet specification.
 
 		InitVolDesc();
 	}

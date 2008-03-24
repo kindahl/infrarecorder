@@ -40,17 +40,26 @@ namespace ckFileSystem
 
 		unsigned char m_ucFileFlags;
 		unsigned __int64 m_uiFileSize;
-		tstring m_FileName;				// File name in disc image.
-		tstring n_FileFullPath;			// Place on hard drive.
+		tstring m_FileName;					// File name in disc image.
+		tstring m_FileFullPath;				// Place on hard drive.
 
 		// File system information (not set by the routines in this file).
 		unsigned __int64 m_uiDataPosNormal;	// Sector number of first sector containing data.
 		unsigned __int64 m_uiDataPosJoliet;
-		unsigned __int64 m_uiDataLenNormal;	// Data length in bytes.
+		unsigned __int64 m_uiDataLenNormal;	// Data length in bytes. FIXME: Rename to DataSize to be consitent.
 		unsigned __int64 m_uiDataLenJoliet;
+
+		unsigned long m_ulDataPadLen;		// The number of sectors to pad with zeroes after the file.
+
+		// Sector size of UDF partition entry (all data) for an node and all it's children.
+		unsigned __int64 m_uiUdfSize;
+		unsigned __int64 m_uiUdfSizeTot;
+		unsigned __int64 m_uiUdfLinkTot;	// The number of directory links within the UDF file system.
+		unsigned long m_ulUdfPartLoc;		// Where is the actual UDF file entry stored.
 
 		CFileTreeNode(CFileTreeNode *pParent,const TCHAR *szFileName,
 			const TCHAR *szFileFullPath,unsigned __int64 uiFileSize,
+			bool bLastFragment,unsigned long ulFragmentIndex,
 			unsigned char ucFileFlags = 0)
 		{
 			m_pParent = pParent;
@@ -58,12 +67,18 @@ namespace ckFileSystem
 			m_ucFileFlags = ucFileFlags;
 			m_uiFileSize = uiFileSize;
 			m_FileName = szFileName;
-			n_FileFullPath = szFileFullPath;
+			m_FileFullPath = szFileFullPath;
 
 			m_uiDataPosNormal = 0;
 			m_uiDataPosJoliet = 0;
 			m_uiDataLenNormal = 0;
 			m_uiDataLenJoliet = 0;
+			m_ulDataPadLen = 0;
+
+			m_uiUdfSize = 0;
+			m_uiUdfSizeTot = 0;
+			m_uiUdfLinkTot = 0;
+			m_ulUdfPartLoc = 0;
 		}
 
 		~CFileTreeNode()
@@ -88,6 +103,10 @@ namespace ckFileSystem
 		CLog *m_pLog;
 		CFileTreeNode *m_pRootNode;
 
+		// File tree information.
+		unsigned long m_ulDirCount;
+		unsigned long m_ulFileCount;
+
 		CFileTreeNode *GetChildFromFileName(CFileTreeNode *pParent,const TCHAR *szFileName);
 		void AddFileFromPath(const CFileDescriptor &File);
 
@@ -99,11 +118,16 @@ namespace ckFileSystem
 		
 		void CreateFromFileSet(const CFileSet &Files);
 		CFileTreeNode *GetNodeFromPath(const CFileDescriptor &File);
+		CFileTreeNode *GetNodeFromPath(const TCHAR *szInternalPath);
 
 	#ifdef _DEBUG
 		void PrintLocalTree(std::vector<std::pair<CFileTreeNode *,int> > &DirNodeStack,
 			CFileTreeNode *pLocalNode,int iIndent);
 		void PrintTree();
 	#endif
+
+		// For obtaining file tree information.
+		unsigned long GetDirCount();
+		unsigned long GetFileCount();
 	};
 };

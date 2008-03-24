@@ -1948,11 +1948,19 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\Common\CRC32.cpp"
+				RelativePath="..\..\Common\Crc16.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Common\CRC32.h"
+				RelativePath="..\..\Common\Crc16.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Common\Crc32.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Common\Crc32.h"
 				>
 			</File>
 			<File
@@ -1981,6 +1989,14 @@
 			</File>
 			<File
 				RelativePath="..\..\Common\GraphUtil.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Common\IntConv.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Common\IntConv.h"
 				>
 			</File>
 			<File
@@ -2079,6 +2095,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\Core\ckFileSystem\DvdVideo.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Core\ckFileSystem\DvdVideo.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\Core\ckFileSystem\ElTorito.cpp"
 					>
 				</File>
@@ -2099,6 +2123,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\Core\ckFileSystem\IfoReader.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Core\ckFileSystem\IfoReader.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\Core\ckFileSystem\Iso9660.cpp"
 					>
 				</File>
@@ -2107,11 +2139,27 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\Core\ckFileSystem\Iso9660Writer.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Core\ckFileSystem\Iso9660Writer.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\Core\ckFileSystem\Joliet.cpp"
 					>
 				</File>
 				<File
 					RelativePath="..\..\Core\ckFileSystem\Joliet.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Core\ckFileSystem\SectorManager.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Core\ckFileSystem\SectorManager.h"
 					>
 				</File>
 				<File
@@ -2226,6 +2274,14 @@
 				</File>
 				<File
 					RelativePath="..\..\Core\ckFileSystem\Udf.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Core\ckFileSystem\UdfWriter.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Core\ckFileSystem\UdfWriter.h"
 					>
 				</File>
 			</Filter>

@@ -24,9 +24,8 @@
 
 namespace ckFileSystem
 {
-	CElTorito::CElTorito(CLog *pLog)
+	CElTorito::CElTorito(CLog *pLog) : m_pLog(pLog)
 	{
-		m_pLog = pLog;
 	}
 
 	CElTorito::~CElTorito()
@@ -394,6 +393,16 @@ namespace ckFileSystem
 		// The validator and default boot image allocates 64 bytes, the remaining
 		// boot images allocates 64 bytes a piece.
 		return m_BootImages.size() << 6;
+	}
+
+	unsigned __int64 CElTorito::GetBootDataSize()
+	{
+		unsigned __int64 uiSize = 0;
+		std::vector<CElToritoImage *>::iterator itImage;
+		for (itImage = m_BootImages.begin(); itImage != m_BootImages.end(); itImage++)
+			uiSize += BytesToSector64((unsigned __int64)fs_filesize((*itImage)->m_FullPath.c_str()));
+
+		return uiSize;
 	}
 
 	unsigned __int64 CElTorito::GetBootImageCount()

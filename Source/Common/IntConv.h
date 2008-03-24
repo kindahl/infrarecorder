@@ -17,34 +17,6 @@
  */
 
 #pragma once
-#include "Progress.h"
 
-#define CRC32_FILE_BUFFERSIZE			4096
-#define CRC32_FILE_POLYNOMIAL			0xEDB88320
-
-class CCRC32
-{
-private:
-	unsigned long m_ulValue;
-	unsigned long m_ulTable[256];
-
-public:
-	CCRC32(unsigned int uiPolynomial);
-
-	void Reset();
-	void Update(unsigned char *pBuffer,unsigned int uiLength);
-	unsigned long GetValue();
-};
-
-class CCRC32File
-{
-private:
-	CProgress *m_pProgress;
-	CFilesProgress *m_pFilesProgress;
-	unsigned __int64 m_uiTotalBytes;
-
-public:
-	CCRC32File(CProgress *pProgress,CFilesProgress *pFilesProgress);
-
-	unsigned long Calculate(const TCHAR *szFileName);
-};
+unsigned long BeToLe32(unsigned long ulBigEndian);
+unsigned short BeToLe16(unsigned short usBigEndian);

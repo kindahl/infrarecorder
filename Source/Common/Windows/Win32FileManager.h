@@ -33,7 +33,11 @@ bool fs_deletedir(const TCHAR *szFolderName/*,bool bForce*/);
 bool fs_renamefile(const TCHAR *szOldName,const TCHAR *szNewName);
 bool fs_getmodtime(HANDLE hFile,unsigned short &usFileDate,unsigned short &usFileTime);
 bool fs_getmodtime(const TCHAR *szFileName,unsigned short &usFileDate,unsigned short &usFileTime);
+bool fs_gettime(const TCHAR *szFileName,SYSTEMTIME &stCreateTime,SYSTEMTIME &stAccessTime,
+				SYSTEMTIME &stWriteTime);
 bool fs_getdirmodtime(const TCHAR *szFileName,unsigned short &usFileDate,unsigned short &usFileTime);
+bool fs_getdirtime(const TCHAR *szFileName,SYSTEMTIME &stCreateTime,SYSTEMTIME &stAccessTime,
+				   SYSTEMTIME &stWriteTime);
 bool fs_setmodtime(const TCHAR *szFileName,unsigned short usFileDate,unsigned short usFileTime);
 bool fs_filereadonly(const TCHAR *szFileName);
 __int64 fs_filesize(const TCHAR *szFileName);

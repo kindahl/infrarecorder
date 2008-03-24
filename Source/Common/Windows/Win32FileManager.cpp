@@ -39,6 +39,9 @@ HANDLE fs_open(const TCHAR *szFileName,TCHAR *pMode)
 
 bool fs_close(HANDLE hFile)
 {
+	if (hFile == INVALID_HANDLE_VALUE)
+		return false;
+
     return CloseHandle(hFile) == TRUE;
 }
 
@@ -178,6 +181,7 @@ bool fs_getmodtime(HANDLE hFile,unsigned short &usFileDate,unsigned short &usFil
 	return false;
 }
 
+// FIXME: Rename to fs_getwritetime.
 bool fs_getmodtime(const TCHAR *szFileName,unsigned short &usFileDate,unsigned short &usFileTime)
 {
 	HANDLE hFile = CreateFile(szFileName,GENERIC_READ,FILE_SHARE_READ | FILE_SHARE_WRITE,NULL,OPEN_EXISTING,FILE_ATTRIBUTE_ARCHIVE,NULL);
@@ -198,6 +202,33 @@ bool fs_getmodtime(const TCHAR *szFileName,unsigned short &usFileDate,unsigned s
 	return false;
 }
 
+bool fs_gettime(const TCHAR *szFileName,SYSTEMTIME &stCreateTime,SYSTEMTIME &stAccessTime,
+				SYSTEMTIME &stWriteTime)
+{
+	HANDLE hFile = CreateFile(szFileName,GENERIC_READ,FILE_SHARE_READ | FILE_SHARE_WRITE,NULL,OPEN_EXISTING,FILE_ATTRIBUTE_ARCHIVE,NULL);
+	if (hFile == INVALID_HANDLE_VALUE)
+		return false;
+
+	FILETIME CreateTime,AccessTime,WriteTime;
+	bool bResult = GetFileTime(hFile,&CreateTime,&AccessTime,&WriteTime) == TRUE;
+	CloseHandle(hFile);
+
+	if (!bResult)
+		return false;
+
+	// Convert to system time.
+	if (FileTimeToSystemTime(&CreateTime,&stCreateTime) == FALSE)
+		return false;
+
+	if (FileTimeToSystemTime(&AccessTime,&stAccessTime) == FALSE)
+		return false;
+
+	if (FileTimeToSystemTime(&WriteTime,&stWriteTime) == FALSE)
+		return false;
+
+	return true;
+}
+
 /*
 	fs_getdirmodtime
 	----------------
@@ -213,6 +244,28 @@ bool fs_getdirmodtime(const TCHAR *szFileName,unsigned short &usFileDate,unsigne
 
 		if (FileTimeToLocalFileTime(&FileInfo.ftLastWriteTime,&LocalFileTime))
 			return FileTimeToDosDateTime(&LocalFileTime,&usFileDate,&usFileTime) == TRUE;
+	}
+
+	return false;
+}
+
+bool fs_getdirtime(const TCHAR *szFileName,SYSTEMTIME &stCreateTime,SYSTEMTIME &stAccessTime,
+				   SYSTEMTIME &stWriteTime)
+{
+	WIN32_FILE_ATTRIBUTE_DATA FileInfo;
+	if (GetFileAttributesEx(szFileName,GetFileExInfoStandard,&FileInfo) == TRUE)
+	{
+		// Convert to system time.
+		if (FileTimeToSystemTime(&FileInfo.ftCreationTime,&stCreateTime) == FALSE)
+			return false;
+
+		if (FileTimeToSystemTime(&FileInfo.ftLastAccessTime,&stAccessTime) == FALSE)
+			return false;
+
+		if (FileTimeToSystemTime(&FileInfo.ftLastWriteTime,&stWriteTime) == FALSE)
+			return false;
+
+		return true;
 	}
 
 	return false;
