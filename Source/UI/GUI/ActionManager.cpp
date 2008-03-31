@@ -448,7 +448,7 @@ DWORD WINAPI CActionManager::CreateImageThread42(LPVOID lpThreadParameter)
 {
 	TCHAR *szFileName = (TCHAR *)lpThreadParameter;
 
-	bool bDvdVideo = false;
+	bool bDvdVideo = true;
 
 	ckFileSystem::CFileComparator FileComp(bDvdVideo);
 	ckFileSystem::CFileSet Files(FileComp);
@@ -475,7 +475,7 @@ DWORD WINAPI CActionManager::CreateImageThread42(LPVOID lpThreadParameter)
 	g_ProgressDlg.SetDevice(lngGetString(PROGRESS_IMAGEDEVICE));
 	g_ProgressDlg.SetStatus(lngGetString(PROGRESS_INIT));
 
-	ckFileSystem::CDiscImageWriter DiscImageWriter(&g_LogDlg,ckFileSystem::CDiscImageWriter::FS_UDF);
+	ckFileSystem::CDiscImageWriter DiscImageWriter(&g_LogDlg,ckFileSystem::CDiscImageWriter::FS_ISO9660);
 	DiscImageWriter.SetVolumeLabel(_T("080101_2159"));
 	DiscImageWriter.SetTextFields(_T("System."),_T("Volume set."),_T("Publisher."),_T("Preparer."));
 	DiscImageWriter.SetFileFields(_T("Copyright."),_T("Abstract."),_T("Bibliographic."));
@@ -509,6 +509,7 @@ DWORD WINAPI CActionManager::CreateImageThread42(LPVOID lpThreadParameter)
 
 		case RESULT_FAIL:
 			g_ProgressDlg.SetStatus(lngGetString(PROGRESS_FAILED));
+			g_ProgressDlg.AddLogEntry(CProgressDlg::LT_ERROR,lngGetString(FAILURE_CREATEIMAGE));
 			break;
 	}
 

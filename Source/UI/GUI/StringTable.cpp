@@ -385,5 +385,6 @@ TCHAR *g_szStringTable[] = {
 	_T("Unable to automatically reload the media. Please try to reload it manually, and then press OK."),
 
 	// Not yet added to translations.
-	_T("Operation failed.")
+	_T("Operation failed."),
+	_T("Failed to create disc image.")
 };

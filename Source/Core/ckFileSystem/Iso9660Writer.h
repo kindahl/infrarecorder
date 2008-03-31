@@ -27,8 +27,7 @@
 #include "Joliet.h"
 #include "ElTorito.h"
 
-#define ISO9660WRITER_IO_BUFFER_SIZE			0x10000
-#define ISO9660WRITER_FILENAME_BUFFER_LEN		206			// Must be enough to hold the largest possible string using
+#define ISO9660WRITER_FILENAME_BUFFER_SIZE		206			// Must be enough to hold the largest possible string using
 															// any of the supported file system extensions.
 namespace ckFileSystem
 {
@@ -44,7 +43,8 @@ namespace ckFileSystem
 			SR_PATHTABLE_NORMAL_L,
 			SR_PATHTABLE_NORMAL_M,
 			SR_PATHTABLE_JOLIET_L,
-			SR_PATHTABLE_JOLIET_M
+			SR_PATHTABLE_JOLIET_M,
+			SR_DIRENTRIES
 		};
 
 		// Identifiers the two different types of system directories.
@@ -77,30 +77,21 @@ namespace ckFileSystem
 		// File system preparation functions.
 		bool CalcPathTableSize(CFileSet &Files,bool bJolietTable,
 			unsigned __int64 &uiPathTableSize,CProgressEx &Progress);
-
-		bool CalcLocalDirEntrySize(CFileTreeNode *pLocalNode,bool bJoliet,int iLevel,
-			unsigned long &ulDirSecSize);
-		bool CalcLocalFileSysData(std::vector<std::pair<CFileTreeNode *,int> > &DirNodeStack,
-			CFileTreeNode *pLocalNode,int iLevel,unsigned __int64 &uiSecOffset,
-			CProgressEx &Progress);
-		bool CalcFileSysData(CFileTree &FileTree,unsigned __int64 uiStartSec,
-			unsigned __int64 &uiLastSec,CProgressEx &Progress);
+		bool CalcLocalDirEntryLength(CFileTreeNode *pLocalNode,bool bJoliet,int iLevel,
+			unsigned long &ulDirLength);
+		bool CalcLocalDirEntriesLength(std::vector<std::pair<CFileTreeNode *,int> > &DirNodeStack,
+			CFileTreeNode *pLocalNode,int iLevel,unsigned __int64 &uiSecOffset,CProgressEx &Progress);
+		bool CalcDirEntriesLength(CFileTree &FileTree,CProgressEx &Progress,
+			unsigned __int64 uiStartSector,unsigned __int64 &uiLength);
 
 		// Write functions.
 		bool WritePathTable(CFileSet &Files,CFileTree &FileTree,bool bJolietTable,
 			bool bMSBF,CProgressEx &Progress);
-
 		bool WriteSysDirectory(CFileTreeNode *pParent,eSysDirType Type,unsigned long ulDataPos);
-
-		int WriteFileNode(CFileTreeNode *pNode,CProgressEx &Progress,
-			CFilesProgress &FilesProgress);
-		int WriteLocalDirEntry(CFileTreeNode *pLocalNode,bool bJoliet,int iLevel,
-			CProgressEx &Progress,CFilesProgress &FilesProgress);
-		int WriteLocalDirectory(std::vector<std::pair<CFileTreeNode *,int> > &DirNodeStack,
-			CFileTreeNode *pLocalNode,int iLevel,CProgressEx &Progress,
-			CFilesProgress &FilesProgress);
-		int WriteDirectories(CFileTree &FileTree,CProgressEx &Progress,
-			CFilesProgress &FilesProgress);
+		int WriteLocalDirEntry(CProgressEx &Progress,CFileTreeNode *pLocalNode,
+			bool bJoliet,int iLevel);
+		int WriteLocalDirEntries(std::vector<std::pair<CFileTreeNode *,int> > &DirNodeStack,
+			CProgressEx &Progress,CFileTreeNode *pLocalNode,int iLevel);
 
 	public:
 		CIso9660Writer(CLog *pLog,CSectorOutStream *pOutStream,
@@ -110,11 +101,11 @@ namespace ckFileSystem
 
 		int AllocateHeader();
 		int AllocatePathTables(CProgressEx &Progress,CFileSet &Files);
-		int AllocateFileData(CProgressEx &Progress,CFileTree &FileTree);
+		int AllocateDirEntries(CFileTree &FileTree,CProgressEx &Progress);
 
 		int WriteHeader(CFileSet &Files,CFileTree &FileTree,CProgressEx &Progress);
 		int WritePathTables(CFileSet &Files,CFileTree &FileTree,CProgressEx &Progress);
-		int WriteFileData(CFileTree &FileTree,CProgressEx &Progress);
+		int WriteDirEntries(CFileTree &FileTree,CProgressEx &Progress);
 
 		// Helper functions.
 		bool ValidateTreeNode(std::vector<std::pair<CFileTreeNode *,int> > &DirNodeStack,

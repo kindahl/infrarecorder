@@ -35,6 +35,8 @@
 #include "ElTorito.h"
 #include "Udf.h"
 
+#define DISCIMAGEWRITER_IO_BUFFER_SIZE			0x10000
+
 namespace ckFileSystem
 {
 	class CDiscImageWriter
@@ -64,6 +66,17 @@ namespace ckFileSystem
 		CJoliet m_Joliet;
 		CElTorito m_ElTorito;
 		CUdf m_Udf;
+
+		bool CalcLocalFileSysData(std::vector<std::pair<CFileTreeNode *,int> > &DirNodeStack,
+			CFileTreeNode *pLocalNode,int iLevel,unsigned __int64 &uiSecOffset,CProgressEx &Progress);
+		bool CalcFileSysData(CFileTree &FileTree,CProgressEx &Progress,
+			unsigned __int64 uiStartSec,unsigned __int64 &uiLastSec);
+
+		int WriteFileNode(CFileTreeNode *pNode,CProgressEx &Progress,CFilesProgress &FilesProgress);
+		int WriteLocalFileData(std::vector<std::pair<CFileTreeNode *,int> > &DirNodeStack,
+			CFileTreeNode *pLocalNode,int iLevel,CProgressEx &Progress,CFilesProgress &FilesProgress);
+		int WriteFileData(CFileTree &FileTree,CProgressEx &Progress,
+			CFilesProgress &FilesProgress);
 
 		bool Close();
 		int Fail(int iResult,const TCHAR *szFullPath);

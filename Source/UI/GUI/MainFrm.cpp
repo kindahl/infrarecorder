@@ -2957,10 +2957,6 @@ LRESULT CMainFrame::OnAppAbout(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHan
 	// FIXME: Clean up when done.
 	//g_ActionManager.CreateImage(m_hWnd,false);
 
-	/*TCHAR szTemp[64];
-	lsprintf(szTemp,_T("%d"),sizeof(ckFileSystem::tUdfExtendedAttrCgms));
-	MessageBox(szTemp);*/
-
 	return 0;
 }
 

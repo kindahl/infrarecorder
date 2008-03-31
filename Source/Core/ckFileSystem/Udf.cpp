@@ -1029,7 +1029,7 @@ namespace ckFileSystem
 			ulTotAllocDescSize = sizeof(tUdfShortAllocDesc);
 		}
 
-		// FIXME: Move everything into a complete buffer.
+		// FIXME: Move everything to m_pByteBuffer.
 		unsigned char *pCompleteBuffer = new unsigned char[sizeof(tUdfFileEntry) +
 			FileEntry.ulExtendedAttrLen + ulTotAllocDescSize];
 

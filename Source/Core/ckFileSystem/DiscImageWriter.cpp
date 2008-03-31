@@ -31,7 +31,7 @@ namespace ckFileSystem
 		m_pLog(pLog),m_ElTorito(pLog),m_Udf(FileSystem == FS_DVDVIDEO)
 	{
 		m_pFileStream = new COutFileStream();
-		m_pOutStream = new CSectorOutStream(m_pFileStream,ISO9660WRITER_IO_BUFFER_SIZE,ISO9660_SECTOR_SIZE);
+		m_pOutStream = new CSectorOutStream(m_pFileStream,DISCIMAGEWRITER_IO_BUFFER_SIZE,ISO9660_SECTOR_SIZE);
 	}
 
 	CDiscImageWriter::~CDiscImageWriter()
@@ -50,6 +50,215 @@ namespace ckFileSystem
 			delete m_pFileStream;
 			m_pFileStream = NULL;
 		}
+	}
+
+	/*
+		Calculates file system specific data such as extent location and size for a
+		single file.
+	*/
+	bool CDiscImageWriter::CalcLocalFileSysData(std::vector<std::pair<CFileTreeNode *,int> > &DirNodeStack,
+		CFileTreeNode *pLocalNode,int iLevel,unsigned __int64 &uiSecOffset,CProgressEx &Progress)
+	{
+		std::vector<CFileTreeNode *>::const_iterator itFile;
+		for (itFile = pLocalNode->m_Children.begin(); itFile !=
+			pLocalNode->m_Children.end(); itFile++)
+		{
+			if ((*itFile)->m_ucFileFlags & CFileTreeNode::FLAG_DIRECTORY)
+			{
+				// Validate directory level.
+				if (iLevel >= m_Iso9660.GetMaxDirLevel())
+					continue;
+				else
+					DirNodeStack.push_back(std::make_pair(*itFile,iLevel + 1));
+			}
+			else
+			{
+				// Validate file size.
+				if ((*itFile)->m_uiFileSize > ISO9660_MAX_EXTENT_SIZE && !m_Iso9660.AllowsFragmentation())
+				{
+					m_pLog->AddLine(_T("  Warning: Skipping \"%s\", the file is larger than 4 GiB."),
+						(*itFile)->m_FileName.c_str());
+					Progress.AddLogEntry(CProgressEx::LT_WARNING,g_StringTable.GetString(WARNING_SKIP4GFILE),
+						(*itFile)->m_FileName.c_str());
+
+					continue;
+				}
+
+				(*itFile)->m_uiDataLenNormal = (*itFile)->m_uiFileSize;
+				(*itFile)->m_uiDataLenJoliet = (*itFile)->m_uiFileSize;
+				(*itFile)->m_uiDataPosNormal = uiSecOffset;
+				(*itFile)->m_uiDataPosJoliet = uiSecOffset;
+
+				uiSecOffset += (*itFile)->m_uiDataLenNormal/ISO9660_SECTOR_SIZE;
+				if ((*itFile)->m_uiDataLenNormal % ISO9660_SECTOR_SIZE != 0)
+					uiSecOffset++;
+
+				// Pad if necessary.
+				uiSecOffset += (*itFile)->m_ulDataPadLen;
+			}
+		}
+
+		return true;
+	}
+
+	/*
+		Calculates file system specific data such as location of extents and sizes of
+		extents.
+	*/
+	bool CDiscImageWriter::CalcFileSysData(CFileTree &FileTree,CProgressEx &Progress,
+		unsigned __int64 uiStartSec,unsigned __int64 &uiLastSec)
+	{
+		CFileTreeNode *pCurNode = FileTree.GetRoot();
+		unsigned __int64 uiSecOffset = uiStartSec;
+
+		std::vector<std::pair<CFileTreeNode *,int> > DirNodeStack;
+		if (!CalcLocalFileSysData(DirNodeStack,pCurNode,0,uiSecOffset,Progress))
+			return false;
+
+		while (DirNodeStack.size() > 0)
+		{ 
+			pCurNode = DirNodeStack[DirNodeStack.size() - 1].first;
+			int iLevel = DirNodeStack[DirNodeStack.size() - 1].second;
+			DirNodeStack.pop_back();
+
+			if (!CalcLocalFileSysData(DirNodeStack,pCurNode,iLevel,uiSecOffset,Progress))
+				return false;
+		}
+
+		uiLastSec = uiSecOffset;
+		return true;
+	}
+
+	int CDiscImageWriter::WriteFileNode(CFileTreeNode *pNode,CProgressEx &Progress,
+		CFilesProgress &FilesProgress)
+	{
+		CInFileStream FileStream;
+		if (!FileStream.Open(pNode->m_FileFullPath.c_str()))
+		{
+			m_pLog->AddLine(_T("  Error: Unable to obtain file handle to \"%s\"."),
+				pNode->m_FileFullPath.c_str());
+			Progress.AddLogEntry(CProgressEx::LT_ERROR,g_StringTable.GetString(ERROR_OPENREAD),
+				pNode->m_FileFullPath.c_str());
+			return RESULT_FAIL;
+		}
+
+		char szBuffer[DISCIMAGEWRITER_IO_BUFFER_SIZE];
+		unsigned long ulProcessedSize = 0;
+
+		unsigned __int64 uiReadSize = 0;
+		while (uiReadSize < pNode->m_uiFileSize)
+		{
+			// Check if we should abort.
+			if (Progress.IsCanceled())
+				return RESULT_CANCEL;
+
+			if (FileStream.Read(szBuffer,DISCIMAGEWRITER_IO_BUFFER_SIZE,&ulProcessedSize) != STREAM_OK)
+			{
+				m_pLog->AddLine(_T("  Error: Unable read file: %s."),pNode->m_FileFullPath.c_str());
+				return RESULT_FAIL;
+			}
+
+			if (ulProcessedSize == 0)
+			{
+				// We may have a problem. The file size may have changed since specied in file list.
+				m_pLog->AddLine(_T("  Error: File size missmatch on \"%s\". Reported size %I64d bytes versus actual size %I64d bytes."),
+					pNode->m_FileFullPath.c_str(),pNode->m_uiFileSize,uiReadSize);
+				return RESULT_FAIL;
+			}
+
+			uiReadSize += ulProcessedSize;
+
+			// Check if we should abort.
+			if (Progress.IsCanceled())
+				return RESULT_CANCEL;
+
+			if (m_pOutStream->Write(szBuffer,ulProcessedSize,&ulProcessedSize) != STREAM_OK)
+			{
+				m_pLog->AddLine(_T("  Error: Unable write to disc image."));
+				return RESULT_FAIL;
+			}
+
+			Progress.SetProgress(FilesProgress.UpdateProcessed(ulProcessedSize));
+		}
+
+		// Pad the sector.
+		if (m_pOutStream->GetAllocated() != 0)
+			m_pOutStream->PadSector();
+
+		return RESULT_OK;
+	}
+
+	int CDiscImageWriter::WriteLocalFileData(std::vector<std::pair<CFileTreeNode *,int> > &DirNodeStack,
+		CFileTreeNode *pLocalNode,int iLevel,CProgressEx &Progress,CFilesProgress &FilesProgress)
+	{
+		std::vector<CFileTreeNode *>::const_iterator itFile;
+		for (itFile = pLocalNode->m_Children.begin(); itFile !=
+			pLocalNode->m_Children.end(); itFile++)
+		{
+			// Check if we should abort.
+			if (Progress.IsCanceled())
+				return RESULT_CANCEL;
+
+			if ((*itFile)->m_ucFileFlags & CFileTreeNode::FLAG_DIRECTORY)
+			{
+				// Validate directory level.
+				if (iLevel >= m_Iso9660.GetMaxDirLevel())
+					continue;
+				else
+					DirNodeStack.push_back(std::make_pair(*itFile,iLevel + 1));
+			}
+			else
+			{
+				// Validate file size.
+				if ((*itFile)->m_uiFileSize > ISO9660_MAX_EXTENT_SIZE && !m_Iso9660.AllowsFragmentation())
+					continue;
+
+				switch (WriteFileNode(*itFile,Progress,FilesProgress))
+				{
+					case RESULT_FAIL:
+						m_pLog->AddLine(_T("  Error: Unable to write node \"%s\" to (%I64d,%I64d)."),
+							(*itFile)->m_FileName.c_str(),(*itFile)->m_uiDataPosNormal,(*itFile)->m_uiDataLenNormal);
+						return RESULT_FAIL;
+
+					case RESULT_CANCEL:
+						return RESULT_CANCEL;
+				}
+
+				// Pad if necessary.
+				char szTemp[1] = { 0 };
+				unsigned long ulProcessedSize;
+				for (unsigned int i = 0; i < (*itFile)->m_ulDataPadLen; i++)
+				{
+					for (unsigned int j = 0; j < ISO9660_SECTOR_SIZE; j++)
+						m_pOutStream->Write(szTemp,1,&ulProcessedSize);
+				}
+			}
+		}
+
+		return RESULT_OK;
+	}
+
+	int CDiscImageWriter::WriteFileData(CFileTree &FileTree,
+		CProgressEx &Progress,CFilesProgress &FilesProgress)
+	{
+		CFileTreeNode *pCurNode = FileTree.GetRoot();
+
+		std::vector<std::pair<CFileTreeNode *,int> > DirNodeStack;
+		if (!WriteLocalFileData(DirNodeStack,pCurNode,1,Progress,FilesProgress))
+			return RESULT_FAIL;
+
+		while (DirNodeStack.size() > 0)
+		{ 
+			pCurNode = DirNodeStack[DirNodeStack.size() - 1].first;
+			int iLevel = DirNodeStack[DirNodeStack.size() - 1].second;
+			DirNodeStack.pop_back();
+
+			int iResult = WriteLocalFileData(DirNodeStack,pCurNode,iLevel,Progress,FilesProgress);
+			if (iResult != RESULT_OK)
+				return iResult;
+		}
+
+		return RESULT_OK;
 	}
 
 	int CDiscImageWriter::Create(const TCHAR *szFullPath,CFileSet &Files,CProgressEx &Progress)
@@ -88,7 +297,8 @@ namespace ckFileSystem
 		}
 
 		bool bUseIso = m_FileSystem != FS_UDF;
-		bool bUseUdf = m_FileSystem == FS_ISO9660_UDF || m_FileSystem == FS_UDF || m_FileSystem == FS_DVDVIDEO;
+		bool bUseUdf = m_FileSystem == FS_ISO9660_UDF || m_FileSystem == FS_ISO9660_UDF_JOLIET ||
+			m_FileSystem == FS_UDF || m_FileSystem == FS_DVDVIDEO;
 		bool bUseJoliet = m_FileSystem == FS_ISO9660_JOLIET || m_FileSystem == FS_ISO9660_UDF_JOLIET;
 
 		CSectorManager SectorManager(16);
@@ -117,6 +327,10 @@ namespace ckFileSystem
 			iResult = IsoWriter.AllocatePathTables(Progress,Files);
 			if (iResult != RESULT_OK)
 				return Fail(iResult,szFullPath);
+
+			iResult = IsoWriter.AllocateDirEntries(FileTree,Progress);
+			if (iResult != RESULT_OK)
+				return Fail(iResult,szFullPath);
 		}
 
 		if (bUseUdf)
@@ -126,11 +340,26 @@ namespace ckFileSystem
 				return Fail(iResult,szFullPath);
 		}
 
+		// Allocate file data.
+		unsigned __int64 uiFirstDataSec = SectorManager.GetNextFree();
+		unsigned __int64 uiLastDataSec = 0;
+		if (!CalcFileSysData(FileTree,Progress,uiFirstDataSec,uiLastDataSec))
+		{
+			m_pLog->AddLine(_T("  Error: Could not calculate necessary file system information."));
+			return Fail(RESULT_FAIL,szFullPath);
+		}
+
+		/*TCHAR szTemp2[128];
+		lsprintf(szTemp2,_T("%I64d %I64d"),uiFirstDataSec,uiLastDataSec);
+		MessageBox(NULL,szTemp2,_T(""),MB_OK);*/
+
+		SectorManager.AllocateDataSectors(uiLastDataSec - uiFirstDataSec);
+
 		if (bUseIso)
 		{
-			iResult = IsoWriter.AllocateFileData(Progress,FileTree);
+			/*iResult = IsoWriter.AllocateFileData(Progress,FileTree);
 			if (iResult != RESULT_OK)
-				return Fail(iResult,szFullPath);
+				return Fail(iResult,szFullPath);*/
 
 			iResult = IsoWriter.WriteHeader(Files,FileTree,Progress);
 			if (iResult != RESULT_OK)
@@ -149,6 +378,10 @@ namespace ckFileSystem
 			iResult = IsoWriter.WritePathTables(Files,FileTree,Progress);
 			if (iResult != RESULT_OK)
 				return Fail(iResult,szFullPath);
+
+			iResult = IsoWriter.WriteDirEntries(FileTree,Progress);
+			if (iResult != RESULT_OK)
+				return Fail(iResult,szFullPath);
 		}
 
 		if (bUseUdf)
@@ -158,14 +391,11 @@ namespace ckFileSystem
 				return Fail(iResult,szFullPath);
 		}
 
-		// FIXME: The files needs to be written even if not using a ISO9660 file system.
-		//		  Perhaps separate the file data from the directory entries?
-		if (bUseIso)
-		{
-			iResult = IsoWriter.WriteFileData(FileTree,Progress);
-			if (iResult != RESULT_OK)
-				return Fail(iResult,szFullPath);
-		}
+		// To help keep track of the progress.
+		CFilesProgress FilesProgress(SectorManager.GetDataLength() * ISO9660_SECTOR_SIZE);
+		iResult = WriteFileData(FileTree,Progress,FilesProgress);
+		if (iResult != RESULT_OK)
+			return Fail(iResult,szFullPath);
 
 		if (bUseUdf)
 		{

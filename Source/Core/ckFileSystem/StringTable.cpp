@@ -30,6 +30,7 @@ namespace ckFileSystem
 		m_Strings[WARNING_SKIP4GFILE] = _T("Skipping \"%s\", the file is larger than 4 GiB.");
 		m_Strings[ERROR_PATHTABLESIZE] = _T("The disc image path table is to large. The project contains too many files.");
 		m_Strings[ERROR_OPENWRITE] = _T("Unable to open file for writing: %s.");
+		m_Strings[ERROR_OPENREAD] = _T("Unable to open file for reading: %s.");
 	}
 
 	const TCHAR *CDynStringTable::GetString(eStrings StringID)

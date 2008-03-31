@@ -363,10 +363,6 @@ namespace ckFileSystem
 		unsigned long ulUdfCurSec = (unsigned long)m_pSectorManager->GetStart(this,SR_MAINDESCRIPTORS);
 		unsigned long ulPartLength = (unsigned long)m_uiPartLength + 1 + (unsigned long)m_pSectorManager->GetDataLength();
 
-		/*TCHAR szTemp2[64];
-		lsprintf(szTemp2,_T("%u %u %u"),ulUdfCurSec,m_uiPartLength,ulUdfCurSec + m_uiPartLength);
-		MessageBox(NULL,szTemp2,_T(""),MB_OK);*/
-
 		// Assign a unique identifier that's larger than any unique identifier of a
 		// file entry + 16 for the reserved numbers.
 		unsigned __int64 uiUniqueIdent = FileTree.GetDirCount() + FileTree.GetFileCount() + 1 + UDF_UNIQUEIDENT_MIN;
