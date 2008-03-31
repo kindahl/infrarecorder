@@ -41,6 +41,193 @@ namespace ckFileSystem
 	{
 	}
 
+	/**
+		Tries to assure that the specified file name is unqiue. Only 255 collisions
+		are supported. If any more collisions occur duplicate file names will be
+		written to the file system.
+	*/
+	void CIso9660Writer::MakeUniqueJoliet(CFileTreeNode *pNode,unsigned char *pFileName,unsigned char ucFileNameSize)
+	{
+		CFileTreeNode *pParentNode = pNode->GetParent();
+		if (pParentNode == NULL)
+			return;
+
+		unsigned char ucFileNameLen = ucFileNameSize >> 1;
+		unsigned char ucFileNamePos = 0;
+
+		wchar_t szFileName[(ISO9660WRITER_FILENAME_BUFFER_SIZE >> 1) + 1];
+		for (unsigned int i = 0; i < ucFileNameLen; i++)
+		{
+			szFileName[i]  = pFileName[ucFileNamePos++] << 8;
+			szFileName[i] |= pFileName[ucFileNamePos++];
+		}
+
+		szFileName[ucFileNameLen] = '\0';
+
+		// We're only interested in the file name without the extension and
+		// version information.
+		int iDelimiter = -1;
+		for (unsigned int i = 0; i < ucFileNameLen; i++)
+		{
+			if (szFileName[i] == '.')
+				iDelimiter = i;
+		}
+
+		unsigned char ucFileNameEnd;
+
+		// If no '.' character was found just remove the version information if
+		// we're dealing with a file.
+		if (iDelimiter == -1)
+		{
+			if (!(pNode->m_ucFileFlags & CFileTreeNode::FLAG_DIRECTORY) &&
+				m_pIso9660->IncludesFileVerInfo())
+				ucFileNameEnd = ucFileNameLen - 2;
+			else
+				ucFileNameEnd = ucFileNameLen;
+		}
+		else
+		{
+			ucFileNameEnd = iDelimiter;
+		}
+
+		// We can't handle file names shorted than 3 characters (255 limit).
+		if (ucFileNameEnd <= 3)
+			return;
+
+		unsigned char ucNextNumber = 1;
+		wchar_t szNextNumber[4];
+
+		std::vector<CFileTreeNode *>::const_iterator itSibling;
+		for (itSibling = pParentNode->m_Children.begin(); itSibling != pParentNode->m_Children.end(); itSibling++)
+		{
+			// Ignore any siblings that has not yet been assigned an ISO9660 compatible file name.
+			if ((*itSibling)->m_FileNameIso9660 == "")
+				continue;
+
+			if (!lstrcmp((*itSibling)->m_FileNameJoliet.c_str(),szFileName))
+			{
+				swprintf(szNextNumber,_T("%d"),ucNextNumber);
+
+				// Using if-statements for optimization.
+				if (ucNextNumber < 10)
+					szFileName[ucFileNameEnd - 1] = szNextNumber[0];
+				else if (ucNextNumber < 100)
+					memcpy(szFileName + ucFileNameEnd - 2,szNextNumber,2 * sizeof(wchar_t));
+				else
+					memcpy(szFileName + ucFileNameEnd - 3,szNextNumber,3 * sizeof(wchar_t));
+
+				if (ucNextNumber == 255)
+				{
+					// We have failed, files with duplicate names will exist.
+					m_pLog->AddLine(_T("  Warning: Unable to calculate unique Joliet name for %s. Duplicate file names will exist in Joliet name extension."),
+						pNode->m_FileFullPath.c_str());
+					break;
+				}
+
+				// Start from the beginning.
+				ucNextNumber++;
+				itSibling = pParentNode->m_Children.begin();
+			}
+		}
+
+		pNode->m_FileNameJoliet = szFileName;
+
+		// Copy back to original buffer.
+		ucFileNamePos = 0;
+		for (unsigned int i = 0; i < ucFileNameSize; i += 2,ucFileNamePos++)
+		{
+			pFileName[i    ] = szFileName[ucFileNamePos] >> 8;
+			pFileName[i + 1] = szFileName[ucFileNamePos] & 0xFF;
+		}
+	}
+
+	/**
+		Tries to assure that the specified file name is unqiue. Only 255 collisions
+		are supported. If any more collisions occur duplicate file names will be
+		written to the file system.
+	*/
+	void CIso9660Writer::MakeUniqueIso9660(CFileTreeNode *pNode,unsigned char *pFileName,unsigned char ucFileNameSize)
+	{
+		CFileTreeNode *pParentNode = pNode->GetParent();
+		if (pParentNode == NULL)
+			return;
+
+		// We're only interested in the file name without the extension and
+		// version information.
+		int iDelimiter = -1;
+		for (unsigned int i = 0; i < ucFileNameSize; i++)
+		{
+			if (pFileName[i] == '.')
+				iDelimiter = i;
+		}
+
+		unsigned char ucFileNameEnd;
+
+		// If no '.' character was found just remove the version information if
+		// we're dealing with a file.
+		if (iDelimiter == -1)
+		{
+			if (!(pNode->m_ucFileFlags & CFileTreeNode::FLAG_DIRECTORY) &&
+				m_pIso9660->IncludesFileVerInfo())
+				ucFileNameEnd = ucFileNameSize - 2;
+			else
+				ucFileNameEnd = ucFileNameSize;
+		}
+		else
+		{
+			ucFileNameEnd = iDelimiter;
+		}
+
+		// We can't handle file names shorted than 3 characters (255 limit).
+		if (ucFileNameEnd <= 3)
+			return;
+
+		unsigned char ucNextNumber = 1;
+		char szNextNumber[4];
+
+		std::vector<CFileTreeNode *>::const_iterator itSibling;
+		for (itSibling = pParentNode->m_Children.begin(); itSibling != pParentNode->m_Children.end(); itSibling++)
+		{
+			// Ignore any siblings that has not yet been assigned an ISO9660 compatible file name.
+			if ((*itSibling)->m_FileNameIso9660 == "")
+				continue;
+
+			if (!memcmp((*itSibling)->m_FileNameIso9660.c_str(),pFileName,ucFileNameSize))
+			{
+				sprintf(szNextNumber,"%d",ucNextNumber);
+
+				// Using if-statements for optimization.
+				if (ucNextNumber < 10)
+					pFileName[ucFileNameEnd - 1] = szNextNumber[0];
+				else if (ucNextNumber < 100)
+					memcpy(pFileName + ucFileNameEnd - 2,szNextNumber,2);
+				else
+					memcpy(pFileName + ucFileNameEnd - 3,szNextNumber,3);
+
+				if (ucNextNumber == 255)
+				{
+					// We have failed, files with duplicate names will exist.
+					m_pLog->AddLine(_T("  Warning: Unable to calculate unique ISO9660 name for %s. Duplicate file names will exist in ISO9660 file system."),
+						pNode->m_FileFullPath.c_str());
+					break;
+				}
+
+				// Start from the beginning.
+				ucNextNumber++;
+				itSibling = pParentNode->m_Children.begin();
+			}
+		}
+
+		char szFileName[ISO9660WRITER_FILENAME_BUFFER_SIZE + 1];
+		memcpy(szFileName,pFileName,ucFileNameSize);
+		szFileName[ucFileNameSize] = '\0';
+
+		pNode->m_FileNameIso9660 = szFileName;
+
+		// Copy back to original buffer.
+		memcpy(pFileName,szFileName,ucFileNameSize);
+	}
+
 	bool CIso9660Writer::CalcPathTableSize(CFileSet &Files,bool bJolietTable,
 		unsigned __int64 &uiPathTableSize,CProgressEx &Progress)
 	{
@@ -233,8 +420,8 @@ namespace ckFileSystem
 		}
 
 		// We now know how much space is needed to store the current directory record.
-		pLocalNode->m_uiDataLenNormal = ulDirLenNormal * ISO9660_SECTOR_SIZE;
-		pLocalNode->m_uiDataLenJoliet = ulDirLenJoliet * ISO9660_SECTOR_SIZE;
+		pLocalNode->m_uiDataSizeNormal = ulDirLenNormal * ISO9660_SECTOR_SIZE;
+		pLocalNode->m_uiDataSizeJoliet = ulDirLenJoliet * ISO9660_SECTOR_SIZE;
 
 		pLocalNode->m_uiDataPosNormal = uiSecOffset;
 		uiSecOffset += ulDirLenNormal;
@@ -360,9 +547,15 @@ namespace ckFileSystem
 							unsigned char ucNameLen;
 							unsigned char szFileName[ISO9660WRITER_FILENAME_BUFFER_SIZE];	// Large enough for both level 1, 2 and even Joliet.
 							if (bJolietTable)
+							{
 								ucNameLen = m_pJoliet->WriteFileName(szFileName,CurDirName.c_str(),true) << 1;
+								MakeUniqueJoliet(pCurNode,szFileName,ucNameLen);
+							}
 							else
+							{
 								ucNameLen = m_pIso9660->WriteFileName(szFileName,CurDirName.c_str(),true);
+								MakeUniqueIso9660(pCurNode,szFileName,ucNameLen);
+							}
 
 							// If the record length is not even padd it with a 0 byte.
 							bool bPadByte = false;
@@ -606,7 +799,7 @@ namespace ckFileSystem
 
 		if (!m_pIso9660->WriteVolDescPrimary(m_pOutStream,m_stImageCreate,(unsigned long)uiFileDataEndSector,
 				(unsigned long)m_uiPathTableSizeNormal,ulPosPathTableNormalL,ulPosPathTableNormalM,
-				(unsigned long)uiDirEntriesSector,(unsigned long)FileTree.GetRoot()->m_uiDataLenNormal))
+				(unsigned long)uiDirEntriesSector,(unsigned long)FileTree.GetRoot()->m_uiDataSizeNormal))
 		{
 			return RESULT_FAIL;
 		}
@@ -629,7 +822,7 @@ namespace ckFileSystem
 		{
 			if (!m_pIso9660->WriteVolDescSuppl(m_pOutStream,m_stImageCreate,(unsigned long)uiFileDataEndSector,
 				(unsigned long)m_uiPathTableSizeNormal,ulPosPathTableNormalL,ulPosPathTableNormalM,
-				(unsigned long)uiDirEntriesSector,(unsigned long)FileTree.GetRoot()->m_uiDataLenNormal))
+				(unsigned long)uiDirEntriesSector,(unsigned long)FileTree.GetRoot()->m_uiDataSizeNormal))
 			{
 				m_pLog->AddLine(_T("  Error: Failed to write supplementary volume descriptor."));
 				return RESULT_FAIL;
@@ -639,19 +832,19 @@ namespace ckFileSystem
 		// Write the Joliet header.
 		if (m_bUseJoliet)
 		{
-			if (FileTree.GetRoot()->m_uiDataLenNormal > 0xFFFFFFFF)
+			if (FileTree.GetRoot()->m_uiDataSizeNormal > 0xFFFFFFFF)
 			{
 				m_pLog->AddLine(_T("  Error: Root folder is larger (%I64d) than the ISO9660 file system can handle."),
-					FileTree.GetRoot()->m_uiDataLenNormal);
+					FileTree.GetRoot()->m_uiDataSizeNormal);
 				return RESULT_FAIL;
 			}
 
 			unsigned long ulRootExtentLocJoliet = (unsigned long)uiDirEntriesSector +
-				BytesToSector((unsigned long)FileTree.GetRoot()->m_uiDataLenNormal);
+				BytesToSector((unsigned long)FileTree.GetRoot()->m_uiDataSizeNormal);
 
 			if (!m_pJoliet->WriteVolDesc(m_pOutStream,m_stImageCreate,(unsigned long)uiFileDataEndSector,
 				(unsigned long)m_uiPathTableSizeJoliet,ulPosPathTableJolietL,ulPosPathTableJolietM,
-				ulRootExtentLocJoliet,(unsigned long)FileTree.GetRoot()->m_uiDataLenJoliet))
+				ulRootExtentLocJoliet,(unsigned long)FileTree.GetRoot()->m_uiDataSizeJoliet))
 			{
 				return false;
 			}
@@ -751,7 +944,7 @@ namespace ckFileSystem
 				continue;
 
 			// This loop is necessary for multi-extent support.
-			unsigned __int64 uiFileRemain = bJoliet ? (*itFile)->m_uiDataLenJoliet : (*itFile)->m_uiDataLenNormal;
+			unsigned __int64 uiFileRemain = bJoliet ? (*itFile)->m_uiDataSizeJoliet : (*itFile)->m_uiDataSizeNormal;
 			unsigned __int64 uiExtentLoc = bJoliet ? (*itFile)->m_uiDataPosJoliet : (*itFile)->m_uiDataPosNormal;
 
 			do
@@ -763,14 +956,20 @@ namespace ckFileSystem
 				memset(&DirRecord,0,sizeof(DirRecord));
 
 				// Make a valid file name.
-				unsigned char ucNameLen;
+				unsigned char ucNameLen;	// FIXME: Rename to ucNameSize;
 				unsigned char szFileName[ISO9660WRITER_FILENAME_BUFFER_SIZE + 4]; // Large enough for level 1, 2 and even Joliet.
 
 				bool bIsFolder = (*itFile)->m_ucFileFlags & CFileTreeNode::FLAG_DIRECTORY;
 				if (bJoliet)
+				{
 					ucNameLen = m_pJoliet->WriteFileName(szFileName,(*itFile)->m_FileName.c_str(),bIsFolder) << 1;
+					MakeUniqueJoliet((*itFile),szFileName,ucNameLen);
+				}
 				else
+				{
 					ucNameLen = m_pIso9660->WriteFileName(szFileName,(*itFile)->m_FileName.c_str(),bIsFolder);
+					MakeUniqueIso9660((*itFile),szFileName,ucNameLen);
+				}
 
 				// If the record length is not even padd it with a 0 byte.
 				bool bPadByte = false;

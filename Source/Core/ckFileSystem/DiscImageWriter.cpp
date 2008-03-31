@@ -74,23 +74,46 @@ namespace ckFileSystem
 			else
 			{
 				// Validate file size.
+				/*if (m_FileSystem == FS_ISO9660 || m_FileSystem == FS_ISO9660_JOLIET || m_FileSystem == FS_DVDVIDEO)
+				{
+					if ((*itFile)->m_uiFileSize > ISO9660_MAX_EXTENT_SIZE && !m_Iso9660.AllowsFragmentation())
+					{
+						m_pLog->AddLine(_T("  Warning: Skipping \"%s\", the file is larger than 4 GiB."),
+							(*itFile)->m_FileName.c_str());
+						Progress.AddLogEntry(CProgressEx::LT_WARNING,g_StringTable.GetString(WARNING_SKIP4GFILE),
+							(*itFile)->m_FileName.c_str());
+
+						continue;
+					}
+				}*/
+
 				if ((*itFile)->m_uiFileSize > ISO9660_MAX_EXTENT_SIZE && !m_Iso9660.AllowsFragmentation())
 				{
-					m_pLog->AddLine(_T("  Warning: Skipping \"%s\", the file is larger than 4 GiB."),
-						(*itFile)->m_FileName.c_str());
-					Progress.AddLogEntry(CProgressEx::LT_WARNING,g_StringTable.GetString(WARNING_SKIP4GFILE),
-						(*itFile)->m_FileName.c_str());
+					if (m_FileSystem == FS_ISO9660 || m_FileSystem == FS_ISO9660_JOLIET || m_FileSystem == FS_DVDVIDEO)
+					{
+						m_pLog->AddLine(_T("  Warning: Skipping \"%s\", the file is larger than 4 GiB."),
+							(*itFile)->m_FileName.c_str());
+						Progress.AddLogEntry(CProgressEx::LT_WARNING,g_StringTable.GetString(WARNING_SKIP4GFILE),
+							(*itFile)->m_FileName.c_str());
 
-					continue;
+						continue;
+					}
+					else if (m_FileSystem == FS_ISO9660_UDF || m_FileSystem == FS_ISO9660_UDF_JOLIET)
+					{
+						m_pLog->AddLine(_T("  Warning: THe file \"%s\" is larger than 4 GiB. It will not be visible in the ISO9660/Joliet file system."),
+							(*itFile)->m_FileName.c_str());
+						Progress.AddLogEntry(CProgressEx::LT_WARNING,g_StringTable.GetString(WARNING_SKIP4GFILEISO),
+							(*itFile)->m_FileName.c_str());
+					}
 				}
 
-				(*itFile)->m_uiDataLenNormal = (*itFile)->m_uiFileSize;
-				(*itFile)->m_uiDataLenJoliet = (*itFile)->m_uiFileSize;
+				(*itFile)->m_uiDataSizeNormal = (*itFile)->m_uiFileSize;
+				(*itFile)->m_uiDataSizeJoliet = (*itFile)->m_uiFileSize;
 				(*itFile)->m_uiDataPosNormal = uiSecOffset;
 				(*itFile)->m_uiDataPosJoliet = uiSecOffset;
 
-				uiSecOffset += (*itFile)->m_uiDataLenNormal/ISO9660_SECTOR_SIZE;
-				if ((*itFile)->m_uiDataLenNormal % ISO9660_SECTOR_SIZE != 0)
+				uiSecOffset += (*itFile)->m_uiDataSizeNormal/ISO9660_SECTOR_SIZE;
+				if ((*itFile)->m_uiDataSizeNormal % ISO9660_SECTOR_SIZE != 0)
 					uiSecOffset++;
 
 				// Pad if necessary.
@@ -210,14 +233,17 @@ namespace ckFileSystem
 			else
 			{
 				// Validate file size.
-				if ((*itFile)->m_uiFileSize > ISO9660_MAX_EXTENT_SIZE && !m_Iso9660.AllowsFragmentation())
-					continue;
+				if (m_FileSystem == FS_ISO9660 || m_FileSystem == FS_ISO9660_JOLIET || m_FileSystem == FS_DVDVIDEO)
+				{
+					if ((*itFile)->m_uiFileSize > ISO9660_MAX_EXTENT_SIZE && !m_Iso9660.AllowsFragmentation())
+						continue;
+				}
 
 				switch (WriteFileNode(*itFile,Progress,FilesProgress))
 				{
 					case RESULT_FAIL:
 						m_pLog->AddLine(_T("  Error: Unable to write node \"%s\" to (%I64d,%I64d)."),
-							(*itFile)->m_FileName.c_str(),(*itFile)->m_uiDataPosNormal,(*itFile)->m_uiDataLenNormal);
+							(*itFile)->m_FileName.c_str(),(*itFile)->m_uiDataPosNormal,(*itFile)->m_uiDataSizeNormal);
 						return RESULT_FAIL;
 
 					case RESULT_CANCEL:
@@ -244,8 +270,9 @@ namespace ckFileSystem
 		CFileTreeNode *pCurNode = FileTree.GetRoot();
 
 		std::vector<std::pair<CFileTreeNode *,int> > DirNodeStack;
-		if (!WriteLocalFileData(DirNodeStack,pCurNode,1,Progress,FilesProgress))
-			return RESULT_FAIL;
+		int iResult = WriteLocalFileData(DirNodeStack,pCurNode,1,Progress,FilesProgress);
+		if (iResult != RESULT_OK)
+			return iResult;
 
 		while (DirNodeStack.size() > 0)
 		{ 
@@ -253,7 +280,7 @@ namespace ckFileSystem
 			int iLevel = DirNodeStack[DirNodeStack.size() - 1].second;
 			DirNodeStack.pop_back();
 
-			int iResult = WriteLocalFileData(DirNodeStack,pCurNode,iLevel,Progress,FilesProgress);
+			iResult = WriteLocalFileData(DirNodeStack,pCurNode,iLevel,Progress,FilesProgress);
 			if (iResult != RESULT_OK)
 				return iResult;
 		}

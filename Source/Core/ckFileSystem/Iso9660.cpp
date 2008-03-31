@@ -925,4 +925,13 @@ namespace ckFileSystem
 	{
 		return m_InterLevel == LEVEL_3;
 	}
+
+	/**
+		Returns true if the file names includes the two character file version
+		information (;1).
+	*/
+	bool CIso9660::IncludesFileVerInfo()
+	{
+		return m_bIncFileVerInfo;
+	}
 };

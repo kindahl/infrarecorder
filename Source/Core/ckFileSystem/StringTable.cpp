@@ -28,6 +28,7 @@ namespace ckFileSystem
 		m_Strings[WARNING_FSDIRLEVEL] = _T("The directory structure is deeper than %d levels. Deep files and folders will be ignored.");
 		m_Strings[WARNING_SKIPFILE] = _T("Skipping \"%s\".");
 		m_Strings[WARNING_SKIP4GFILE] = _T("Skipping \"%s\", the file is larger than 4 GiB.");
+		m_Strings[WARNING_SKIP4GFILEISO] = _T("The file \"%s\" is larger than 4 GiB. It will not be visible in the ISO9660/Joliet file system.");
 		m_Strings[ERROR_PATHTABLESIZE] = _T("The disc image path table is to large. The project contains too many files.");
 		m_Strings[ERROR_OPENWRITE] = _T("Unable to open file for writing: %s.");
 		m_Strings[ERROR_OPENREAD] = _T("Unable to open file for reading: %s.");

@@ -40,14 +40,18 @@ namespace ckFileSystem
 
 		unsigned char m_ucFileFlags;
 		unsigned __int64 m_uiFileSize;
-		tstring m_FileName;					// File name in disc image.
+		tstring m_FileName;					// File name in disc image (requested name not actual, using ISO9660 may cripple the name).
 		tstring m_FileFullPath;				// Place on hard drive.
+
+		// I am not sure this is the best way, this uses lots of memory.
+		std::string m_FileNameIso9660;
+		std::wstring m_FileNameJoliet;
 
 		// File system information (not set by the routines in this file).
 		unsigned __int64 m_uiDataPosNormal;	// Sector number of first sector containing data.
 		unsigned __int64 m_uiDataPosJoliet;
-		unsigned __int64 m_uiDataLenNormal;	// Data length in bytes. FIXME: Rename to DataSize to be consitent.
-		unsigned __int64 m_uiDataLenJoliet;
+		unsigned __int64 m_uiDataSizeNormal;// Data length in bytes.
+		unsigned __int64 m_uiDataSizeJoliet;
 
 		unsigned long m_ulDataPadLen;		// The number of sectors to pad with zeroes after the file.
 
@@ -71,8 +75,8 @@ namespace ckFileSystem
 
 			m_uiDataPosNormal = 0;
 			m_uiDataPosJoliet = 0;
-			m_uiDataLenNormal = 0;
-			m_uiDataLenJoliet = 0;
+			m_uiDataSizeNormal = 0;
+			m_uiDataSizeJoliet = 0;
 			m_ulDataPadLen = 0;
 
 			m_uiUdfSize = 0;

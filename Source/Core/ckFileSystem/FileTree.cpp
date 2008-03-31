@@ -213,8 +213,8 @@ namespace ckFileSystem
 				m_pLog->AddString(_T("<f>"));
 				m_pLog->AddString((*itFile)->m_FileName.c_str());
 				m_pLog->AddLine(_T(" (%I64d:%I64d,%I64d:%I64d,%I64d:%I64d)"),(*itFile)->m_uiDataPosNormal,
-					(*itFile)->m_uiDataLenNormal,(*itFile)->m_uiDataPosJoliet,
-					(*itFile)->m_uiDataLenJoliet,(*itFile)->m_uiUdfSize,(*itFile)->m_uiUdfSizeTot);
+					(*itFile)->m_uiDataSizeNormal,(*itFile)->m_uiDataPosJoliet,
+					(*itFile)->m_uiDataSizeJoliet,(*itFile)->m_uiUdfSize,(*itFile)->m_uiUdfSizeTot);
 			}
 		}
 	}
@@ -229,8 +229,8 @@ namespace ckFileSystem
 
 		m_pLog->AddLine(_T("CFileTree::PrintTree"));
 		m_pLog->AddLine(_T("  <root> (%I64d:%I64d,%I64d:%I64d,%I64d:%I64d)"),pCurNode->m_uiDataPosNormal,
-				pCurNode->m_uiDataLenNormal,pCurNode->m_uiDataPosJoliet,
-				pCurNode->m_uiDataLenJoliet,pCurNode->m_uiUdfSize,pCurNode->m_uiUdfSizeTot);
+				pCurNode->m_uiDataSizeNormal,pCurNode->m_uiDataPosJoliet,
+				pCurNode->m_uiDataSizeJoliet,pCurNode->m_uiUdfSize,pCurNode->m_uiUdfSizeTot);
 
 		std::vector<std::pair<CFileTreeNode *,int> > DirNodeStack;
 		PrintLocalTree(DirNodeStack,pCurNode,4);
@@ -249,8 +249,8 @@ namespace ckFileSystem
 			m_pLog->AddString(_T("<d>"));
 			m_pLog->AddString(pCurNode->m_FileName.c_str());
 			m_pLog->AddLine(_T(" (%I64d:%I64d,%I64d:%I64d,%I64d:%I64d)"),pCurNode->m_uiDataPosNormal,
-				pCurNode->m_uiDataLenNormal,pCurNode->m_uiDataPosJoliet,
-				pCurNode->m_uiDataLenJoliet,pCurNode->m_uiUdfSize,pCurNode->m_uiUdfSizeTot);
+				pCurNode->m_uiDataSizeNormal,pCurNode->m_uiDataPosJoliet,
+				pCurNode->m_uiDataSizeJoliet,pCurNode->m_uiUdfSize,pCurNode->m_uiUdfSizeTot);
 
 			PrintLocalTree(DirNodeStack,pCurNode,iIndent + 2);
 		}

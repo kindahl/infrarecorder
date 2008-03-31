@@ -75,6 +75,9 @@ namespace ckFileSystem
 		SYSTEMTIME m_stImageCreate;
 
 		// File system preparation functions.
+		void MakeUniqueJoliet(CFileTreeNode *pNode,unsigned char *pFileName,unsigned char ucFileNameSize);
+		void MakeUniqueIso9660(CFileTreeNode *pNode,unsigned char *pFileName,unsigned char ucFileNameSize);
+
 		bool CalcPathTableSize(CFileSet &Files,bool bJolietTable,
 			unsigned __int64 &uiPathTableSize,CProgressEx &Progress);
 		bool CalcLocalDirEntryLength(CFileTreeNode *pLocalNode,bool bJoliet,int iLevel,

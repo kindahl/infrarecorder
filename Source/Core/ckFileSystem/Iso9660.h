@@ -325,6 +325,7 @@ namespace ckFileSystem
 		unsigned char GetMaxDirLevel();
 		bool HasVolDescSuppl();
 		bool AllowsFragmentation();
+		bool IncludesFileVerInfo();
 	};
 
 	/*

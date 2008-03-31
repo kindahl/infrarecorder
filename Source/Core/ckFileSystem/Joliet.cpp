@@ -259,28 +259,6 @@ namespace ckFileSystem
 
 	unsigned char CJoliet::WriteFileName(unsigned char *pOutBuffer,const TCHAR *szFileName,bool bIsDir)
 	{
-		/*int iFileNameLen = (int)lstrlen(szFileName);
-		int iMax = iFileNameLen < m_iMaxNameLen ? iFileNameLen : m_iMaxNameLen;
-
-#ifdef UNICODE
-		MemStrCopy(pOutBuffer,szFileName,iMax * sizeof(TCHAR));
-#else
-		wchar_t szWideFileName[JOLIET_MAX_NAMELEN_RELAXED + 1];
-		AnsiToUnicode(szWideFileName,szFileName,sizeof(szWideFileName) / sizeof(wchar_t);
-		MemStrCopy(pOutBuffer,szWideFileName,iMax);
-#endif
-
-		if (!bIsDir && m_bIncFileVerInfo)
-		{
-			int iOutPos = iMax << 1;
-			pOutBuffer[iOutPos + 0] = 0x00;
-			pOutBuffer[iOutPos + 1] = ';';
-			pOutBuffer[iOutPos + 2] = 0x00;
-			pOutBuffer[iOutPos + 3] = '1';
-
-			iMax += 2;
-		}*/
-
 #ifndef UNICODE
 		wchar_t szWideFileName[JOLIET_MAX_NAMELEN_RELAXED + 1];
 		AnsiToUnicode(szWideFileName,szFileName,sizeof(szWideFileName) / sizeof(wchar_t);

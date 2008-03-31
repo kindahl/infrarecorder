@@ -475,13 +475,13 @@ DWORD WINAPI CActionManager::CreateImageThread42(LPVOID lpThreadParameter)
 	g_ProgressDlg.SetDevice(lngGetString(PROGRESS_IMAGEDEVICE));
 	g_ProgressDlg.SetStatus(lngGetString(PROGRESS_INIT));
 
-	ckFileSystem::CDiscImageWriter DiscImageWriter(&g_LogDlg,ckFileSystem::CDiscImageWriter::FS_ISO9660);
+	ckFileSystem::CDiscImageWriter DiscImageWriter(&g_LogDlg,ckFileSystem::CDiscImageWriter::FS_ISO9660_UDF_JOLIET);
 	DiscImageWriter.SetVolumeLabel(_T("080101_2159"));
 	DiscImageWriter.SetTextFields(_T("System."),_T("Volume set."),_T("Publisher."),_T("Preparer."));
 	DiscImageWriter.SetFileFields(_T("Copyright."),_T("Abstract."),_T("Bibliographic."));
 
-	//DiscImageWriter.SetInterchangeLevel(CIso9660::LEVEL_2);
-	DiscImageWriter.SetInterchangeLevel(ckFileSystem::CIso9660::LEVEL_3);
+	//DiscImageWriter.SetInterchangeLevel(ckFileSystem::CIso9660::LEVEL_3);
+	DiscImageWriter.SetInterchangeLevel(ckFileSystem::CIso9660::LEVEL_1);
 
 	/*DiscImageWriter.AddBootImageNoEmu(_T("C:\\Users\\Christian Kindahl\\Desktop\\isolinux.bin"),true,0,4);
 	DiscImageWriter.AddBootImageNoEmu(_T("C:\\Users\\Christian Kindahl\\Desktop\\isolinux.bin"),false,0x42,0x42);
