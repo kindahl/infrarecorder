@@ -45,6 +45,11 @@
 #define FIFO_MAX						128
 #define FIFO_MIN						4
 
+#define FILESYSTEM_ISO9660				0
+#define FILESYSTEM_ISO9660_UDF			1
+#define FILESYSTEM_DVDVIDEO				2
+#define FILESYSTEM_UDF					3
+
 class ISettings
 {
 public:
@@ -306,6 +311,7 @@ public:
 class CProjectSettings : public ISettings
 {
 public:
+	int m_iFileSystem;
 	int m_iISOLevel;
 	int m_iISOCharSet;
 	int m_iISOFormat;
@@ -392,6 +398,7 @@ public:
 			m_iISOCharSet = 36;			// Default is Latin1.
 		}
 
+		m_iFileSystem = FILESYSTEM_ISO9660;
 		m_iISOFormat = 0;
 		m_bJoliet = true;
 		m_bJolietLongNames = true;

@@ -21,6 +21,7 @@
 #include "ProjectManager.h"
 #include "StringTable.h"
 #include "LangUtil.h"
+#include "Settings.h"
 
 CProjectPropDlg::CProjectPropDlg() : CPropertySheetImpl<CProjectPropDlg>(lngGetString(PROJECTPROP_TITLE),0,NULL)
 {
@@ -29,25 +30,50 @@ CProjectPropDlg::CProjectPropDlg() : CPropertySheetImpl<CProjectPropDlg>(lngGetS
 	m_psh.dwFlags |= PSH_NOAPPLYNOW;
 	m_psh.dwFlags |= PSH_HASHELP;
 
-	AddPage(m_GeneralPage);
+	m_hGeneralPage = ::CreatePropertySheetPage(m_GeneralPage);
+	m_hFileSysPage = ::CreatePropertySheetPage(m_FileSysPage);
+	m_hIsoPage = ::CreatePropertySheetPage(m_IsoPage);
+	m_hFieldsPage = ::CreatePropertySheetPage(m_FieldsPage);
+	m_hAudioPage = ::CreatePropertySheetPage(m_AudioPage);
+	m_hBootPage = ::CreatePropertySheetPage(m_BootPage);
+
+	AddPage(m_hGeneralPage);
 
 	switch (g_ProjectManager.GetProjectType())
 	{
 		case PROJECTTYPE_DATA:
+			AddPage(m_hFileSysPage);
+
+			if (g_ProjectSettings.m_iFileSystem == FILESYSTEM_ISO9660 || 
+				g_ProjectSettings.m_iFileSystem == FILESYSTEM_ISO9660_UDF)
+			{
+				AddPage(m_hIsoPage);
+				AddPage(m_hFieldsPage);
+				AddPage(m_hBootPage);
+			}
+			break;
+
 		case PROJECTTYPE_DVDVIDEO:
-			AddPage(m_ISOPage);
-			AddPage(m_FieldsPage);
-			AddPage(m_BootPage);
+			AddPage(m_hFileSysPage);
+			AddPage(m_hIsoPage);
+			AddPage(m_hFieldsPage);
+			AddPage(m_hBootPage);
 			break;
 
 		case PROJECTTYPE_AUDIO:
-			AddPage(m_AudioPage);
+			AddPage(m_hAudioPage);
 			break;
 
 		case PROJECTTYPE_MIXED:
-			AddPage(m_ISOPage);
-			AddPage(m_FieldsPage);
-			AddPage(m_AudioPage);
+			AddPage(m_hFileSysPage);
+
+			if (g_ProjectSettings.m_iFileSystem == FILESYSTEM_ISO9660 || 
+				g_ProjectSettings.m_iFileSystem == FILESYSTEM_ISO9660_UDF)
+			{
+				AddPage(m_hIsoPage);
+				AddPage(m_hFieldsPage);
+				AddPage(m_hBootPage);
+			}
 			break;
 	};
 }
@@ -65,6 +91,47 @@ LRESULT CProjectPropDlg::OnShowWindow(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL
 		m_bCentered = true;
 	}
 
-	bHandled = FALSE;
+	bHandled = false;
+	return 0;
+}
+
+LRESULT CProjectPropDlg::OnSetFileSystem(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
+{
+	switch (lParam)
+	{
+		case FILESYSTEM_ISO9660:
+			if (wParam == FILESYSTEM_UDF)	// Check previous selection.
+			{
+				m_hIsoPage = ::CreatePropertySheetPage(m_IsoPage);
+				m_hFieldsPage = ::CreatePropertySheetPage(m_FieldsPage);
+				m_hBootPage = ::CreatePropertySheetPage(m_BootPage);
+
+				AddPage(m_hIsoPage);
+				AddPage(m_hFieldsPage);
+				AddPage(m_hBootPage);
+
+				//RemovePage(m_hUdfPage);
+			}
+			break;
+
+		case FILESYSTEM_UDF:
+			if (wParam != FILESYSTEM_UDF)	// Check previous selection.
+			{
+				//m_hUdfPage = ::CreatePropertySheetPage(m_UdfPage);
+
+				//AddPage(m_hUdfPage);
+
+				RemovePage(m_hIsoPage);
+				RemovePage(m_hFieldsPage);
+				RemovePage(m_hBootPage);
+			}
+			break;
+
+		case FILESYSTEM_ISO9660_UDF:
+		case FILESYSTEM_DVDVIDEO:
+			break;
+	}
+
+	bHandled = true;
 	return 0;
 }

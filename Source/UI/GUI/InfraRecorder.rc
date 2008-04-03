@@ -484,6 +484,15 @@ BEGIN
     LTEXT           "Boot catalog:",IDC_BOOTCATALOGSTATIC,7,113,49,8
 END
 
+IDD_PROPPAGE_PROJECTPROPFILESYS DIALOGEX 0, 0, 226, 154
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "File System"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    LTEXT           "File system:",IDC_FILESYSSTATIC,7,9,50,8
+    COMBOBOX        IDC_FILESYSCOMBO,57,7,162,140,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -635,6 +644,14 @@ BEGIN
         RIGHTMARGIN, 219
         TOPMARGIN, 7
         BOTTOMMARGIN, 146
+    END
+
+    IDD_PROPPAGE_PROJECTPROPFILESYS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 219
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 147
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -857,8 +874,10 @@ IDR_PROJLISTSELMENU MENU
 BEGIN
     POPUP "Popup Menu"
     BEGIN
-        MENUITEM "&Rename",                     ID_EDIT_RENAME
+        MENUITEM "Rena&me",                     ID_EDIT_RENAME
         MENUITEM "&Remove",                     ID_EDIT_REMOVE
+        MENUITEM SEPARATOR
+        MENUITEM "&Properties...",              ID_POPUPMENU_PROPERTIES
     END
 END
 

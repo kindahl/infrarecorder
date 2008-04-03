@@ -75,7 +75,7 @@ TCHAR *g_szStringTable[] = {
 	_T("Project Properties"),
 	_T("Level 1 (11 character file names)"),
 	_T("Level 2 (31 character file names)"),
-	_T("Level 3"),
+	_T("Level 3 (files larger than 4 GiB)"),
 	_T("Mode 1"),
 	_T("Mode 2 XA (multisession)"),
 	_T("Properties of Track %d"),
@@ -383,8 +383,9 @@ TCHAR *g_szStringTable[] = {
 
 	// Added version 0.45.
 	_T("Unable to automatically reload the media. Please try to reload it manually, and then press OK."),
+	_T("Operation failed."),
+	_T("Failed to create disc image."),
+	_T("File System")
 
 	// Not yet added to translations.
-	_T("Operation failed."),
-	_T("Failed to create disc image.")
 };

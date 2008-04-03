@@ -846,6 +846,13 @@ bool CMainFrame::Translate()
 		ModifyMenu(hCurMenu,ID_APP_ABOUT,MF_BYCOMMAND | MF_STRING,ID_APP_ABOUT,(LPCTSTR)szBuffer);
 	}
 
+	// Project list seleced menu.
+	if (pLNG->GetValuePtr(ID_POPUPMENU_PROPERTIES,szStrValue))
+	{
+		ModifyMenu(m_hProjListSelMenu,ID_POPUPMENU_PROPERTIES,MF_BYCOMMAND | MF_STRING,
+			ID_POPUPMENU_PROPERTIES,(LPCTSTR)szStrValue);
+	}
+
 	return true;
 }
 
@@ -2951,11 +2958,11 @@ LRESULT CMainFrame::OnHelpHelptopics(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL
 
 LRESULT CMainFrame::OnAppAbout(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
-	CAboutDlg AboutDlg;
-	AboutDlg.DoModal();
+	/*CAboutDlg AboutDlg;
+	AboutDlg.DoModal();*/
 
 	// FIXME: Clean up when done.
-	//g_ActionManager.CreateImage(m_hWnd,false);
+	g_ActionManager.CreateImage(m_hWnd,false);
 
 	return 0;
 }

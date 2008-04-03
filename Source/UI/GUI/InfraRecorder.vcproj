@@ -1230,6 +1230,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ProjectPropFileSysPage.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\ProjectPropGeneralPage.cpp"
 				>
 			</File>
@@ -1720,6 +1724,10 @@
 			</File>
 			<File
 				RelativePath=".\ProjectPropFieldsPage.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ProjectPropFileSysPage.h"
 				>
 			</File>
 			<File

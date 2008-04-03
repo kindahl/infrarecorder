@@ -381,7 +381,8 @@ enum eStringTable
 	// Added version 0.45.
 	INFO_RELOAD,
 	PROGRESS_FAILED,
-	FAILURE_CREATEIMAGE
+	FAILURE_CREATEIMAGE,
+	TITLE_FILESYSTEM
 };
 
 extern TCHAR *g_szStringTable[];

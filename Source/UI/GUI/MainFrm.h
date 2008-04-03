@@ -348,6 +348,9 @@ public:
 		COMMAND_ID_HANDLER(ID_HELP_HELPTOPICS,OnHelpHelptopics)
 		COMMAND_ID_HANDLER(ID_APP_ABOUT,OnAppAbout)
 
+		// Project list popup menu.
+		COMMAND_ID_HANDLER(ID_POPUPMENU_PROPERTIES,OnFileProjectproperties)
+
 		// Custom.
 		COMMAND_ID_HANDLER(ID_SHELL_PASTE,OnShellPaste)
 

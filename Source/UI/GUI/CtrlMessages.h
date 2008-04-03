@@ -104,3 +104,10 @@
 	pressed.
 */
 #define WM_LABELCONTAINER_CLOSE			WM_APP + 19
+
+/*
+	Sent to the host of the file system property page when changing the file
+	system. wParam is the previously selected file system and lParam is the
+	file system identifier as defined in Settings.h.
+*/
+#define WM_SETFILESYSTEM				WM_APP + 20

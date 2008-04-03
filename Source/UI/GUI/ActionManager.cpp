@@ -602,7 +602,7 @@ INT_PTR CActionManager::CreateImage(HWND hWndParent,bool bAppMode)
 
 		// Create the new thread.
 		unsigned long ulThreadID = 0;
-		HANDLE hThread = ::CreateThread(NULL,0,CreateImageThread,szFileName,0,&ulThreadID);
+		HANDLE hThread = ::CreateThread(NULL,0,CreateImageThread42,szFileName,0,&ulThreadID);
 		::CloseHandle(hThread);
 
 		// Run the message loop if we're in application mode.

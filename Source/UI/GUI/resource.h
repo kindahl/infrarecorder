@@ -67,8 +67,8 @@
 #define IDI_REFRESHICON                 247
 #define IDD_CONFIRMFILEREPLACEDLG       248
 #define IDB_MAINLARGEBITMAP             249
+#define IDD_PROPPAGE_PROJECTPROPFILESYS 249
 #define IDB_MAINLARGEBITMAP_            250
-#define IDB_BITMAP1                     251
 #define IDB_PANECLOSEBITMAP             251
 #define IDC_TOTALPROGRESS               1000
 #define IDC_TOTALSTATIC                 1001
@@ -288,7 +288,9 @@
 #define IDC_REPLACEINFO2STATIC          1209
 #define IDC_REFRESHBUTTON               1209
 #define IDC_NEWSIZESTATIC               1210
+#define IDC_FILESYSSTATIC               1210
 #define IDC_NEWDATESTATIC               1211
+#define IDC_FILESYSCOMBO                1211
 #define IDC_PROJECTTREEVIEW             10001
 #define IDC_PROJECTLISTVIEW             10002
 #define IDC_SHELLTREEVIEW               10003
@@ -348,14 +350,15 @@
 #define ID_VIEW_TBCUSTOMIZE             32835
 #define ID_EDIT_SELECTALL               32836
 #define ID_EDIT_INVERTSELECTION         32837
+#define ID_POPUPMENU_PROPERTIES         32840
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        252
-#define _APS_NEXT_COMMAND_VALUE         32840
-#define _APS_NEXT_CONTROL_VALUE         1210
+#define _APS_NEXT_COMMAND_VALUE         32841
+#define _APS_NEXT_CONTROL_VALUE         1212
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

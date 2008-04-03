@@ -18,10 +18,12 @@
 
 #pragma once
 #include "ProjectPropGeneralPage.h"
+#include "ProjectPropFileSysPage.h"
 #include "ProjectPropISOPage.h"
 #include "ProjectPropFieldsPage.h"
 #include "ProjectPropAudioPage.h"
 #include "ProjectPropBootPage.h"
+#include "CtrlMessages.h"
 
 class CProjectPropDlg : public CPropertySheetImpl<CProjectPropDlg>
 {
@@ -29,10 +31,18 @@ private:
 	bool m_bCentered;
 
 	CProjectPropGeneralPage m_GeneralPage;
-	CProjectPropISOPage m_ISOPage;
+	CProjectPropFileSysPage m_FileSysPage;
+	CProjectPropISOPage m_IsoPage;
 	CProjectPropFieldsPage m_FieldsPage;
 	CProjectPropAudioPage m_AudioPage;
 	CProjectPropBootPage m_BootPage;
+
+	HPROPSHEETPAGE m_hGeneralPage;
+	HPROPSHEETPAGE m_hFileSysPage;
+	HPROPSHEETPAGE m_hIsoPage;
+	HPROPSHEETPAGE m_hFieldsPage;
+	HPROPSHEETPAGE m_hAudioPage;
+	HPROPSHEETPAGE m_hBootPage;
 
 public:
 	CProjectPropDlg();
@@ -40,9 +50,11 @@ public:
 
 	BEGIN_MSG_MAP(CProjectPropDlg)
 		MESSAGE_HANDLER(WM_SHOWWINDOW,OnShowWindow)
+		MESSAGE_HANDLER(WM_SETFILESYSTEM,OnSetFileSystem);
 
 		CHAIN_MSG_MAP(CPropertySheetImpl<CProjectPropDlg>)
 	END_MSG_MAP()
 
 	LRESULT OnShowWindow(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+	LRESULT OnSetFileSystem(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 };

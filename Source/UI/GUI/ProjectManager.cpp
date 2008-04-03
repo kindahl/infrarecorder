@@ -1243,6 +1243,9 @@ void CProjectManager::NotifyListSelChanged(unsigned int uiSelCount)
 		else
 			EnableAll(ID_EDIT_REMOVE,false,g_MainFrame.m_hProjListSelMenu);
 	}
+
+	// Currently the properties menu item only works when right-clicking on the project tree root.
+	g_ProjectManager.EnableAll(ID_POPUPMENU_PROPERTIES,false,g_MainFrame.m_hProjListSelMenu);
 }
 
 /**
@@ -1271,6 +1274,12 @@ void CProjectManager::NotifyTreeSelChanged(CProjectNode *pNode)
 			g_ProjectManager.EnableAll(ID_EDIT_REMOVE,pNode != m_pMixDataNode,g_MainFrame.m_hProjListSelMenu);
 		}
 	}
+
+	// Currently the properties menu item only works when right-clicking on the project tree root.
+	if (pNode == g_TreeManager.GetRootNode())
+		g_ProjectManager.EnableAll(ID_POPUPMENU_PROPERTIES,true,g_MainFrame.m_hProjListSelMenu);
+	else
+		g_ProjectManager.EnableAll(ID_POPUPMENU_PROPERTIES,false,g_MainFrame.m_hProjListSelMenu);
 }
 
 /**
