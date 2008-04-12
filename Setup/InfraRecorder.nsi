@@ -756,8 +756,6 @@ Section $(NAME_SecCore) SecCore
   File "..\Binary32\cdrtools\cdda2wav.exe"
   File "..\Binary32\cdrtools\cdrecord.exe"
   File "..\Binary32\cdrtools\cygwin1.dll"
-  File "..\Binary32\cdrtools\isoinfo.exe"
-  File "..\Binary32\cdrtools\mkisofs.exe"
   File "..\Binary32\cdrtools\readcd.exe"
   File "..\Binary32\cdrtools\COPYING"
   

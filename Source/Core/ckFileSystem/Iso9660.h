@@ -353,4 +353,5 @@ namespace ckFileSystem
 	void MakeDateTime(SYSTEMTIME &st,tVolDescDateTime &DateTime);
 	void MakeDateTime(SYSTEMTIME &st,tDirRecordDateTime &DateTime);
 	void MakeDateTime(unsigned short usDate,unsigned short usTime,tDirRecordDateTime &DateTime);
+	void MakeDosDateTime(tDirRecordDateTime &DateTime,unsigned short &usDate,unsigned short &usTime);
 };

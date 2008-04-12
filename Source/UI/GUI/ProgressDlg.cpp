@@ -17,12 +17,12 @@
  */
 
 #include "stdafx.h"
-#include "ProgressDlg.h"
 #include "../../Common/StringUtil.h"
 #include "StringTable.h"
 #include "LangUtil.h"
 #include "Settings.h"
 #include "InfraRecorder.h"
+#include "ProgressDlg.h"
 
 CProgressDlg g_ProgressDlg;
 
@@ -45,6 +45,8 @@ CProgressDlg::CProgressDlg()
 
 	m_iPercent = -1;
 
+	m_szHostTitle = NULL;
+
 	SMOKE_INIT
 }
 
@@ -52,6 +54,12 @@ CProgressDlg::~CProgressDlg()
 {
 	if (m_hListImageList != NULL)
 		ImageList_Destroy(m_hListImageList);
+
+	if (m_szHostTitle != NULL)
+	{
+		delete m_szHostTitle;
+		m_szHostTitle = NULL;
+	}
 }
 
 bool CProgressDlg::Translate()
@@ -187,6 +195,15 @@ void CProgressDlg::NotifyComplteted()
 		AddLogEntry(LT_WARNING,lngGetString(PROGRESS_CANCELED));
 	}
 
+	// Restore the window title.
+	if (!m_bAppMode && m_szHostTitle != NULL)
+	{
+		GetParent().SetWindowText(m_szHostTitle);
+
+		delete m_szHostTitle;
+		m_szHostTitle = NULL;
+	}
+
 	SMOKE_STOP
 }
 
@@ -215,6 +232,18 @@ void CProgressDlg::SetProgress(int iPercent)
 		TCHAR szProgress[32];
 		lsnprintf_s(szProgress,32,lngGetString(PROGRESS_TOTAL),iPercent);
 		m_TotalStatic.SetWindowText(szProgress);
+
+		// Update parent title if necessary.
+		if (!m_bAppMode && m_szHostTitle != NULL)
+		{
+			TCHAR szTitle[64];
+			GetWindowText(szTitle,sizeof(szTitle)/sizeof(TCHAR));
+
+			TCHAR szHostTitle[32 + 64];
+			lsnprintf_s(szHostTitle,sizeof(szHostTitle)/sizeof(TCHAR),_T("%d%% - %s"),iPercent,szTitle);
+
+			GetParent().SetWindowText(szHostTitle);
+		}
 
 		ProcessMessages();
 	}
@@ -285,6 +314,16 @@ LRESULT CProgressDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &b
 	// Translate the window.
 	Translate();
 
+	if (!m_bAppMode)
+	{
+		if (m_szHostTitle != NULL)
+			delete [] m_szHostTitle;
+
+		int iSize = GetParent().GetWindowTextLength() + 1;
+		m_szHostTitle = new TCHAR[iSize];
+		GetParent().GetWindowText(m_szHostTitle,iSize);
+	}
+
 	return TRUE;
 }
 
@@ -303,7 +342,6 @@ LRESULT CProgressDlg::OnReload(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHan
 LRESULT CProgressDlg::OnOK(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
 	// Re-enable the main window.
-	//g_MainFrame.EnableWindow(true);
 	if (::IsWindow(m_hWndHost))
 		::EnableWindow(m_hWndHost,true);
 

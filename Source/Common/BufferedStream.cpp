@@ -22,10 +22,9 @@
 /*
 	CBufferedInStream
 */
-CBufferedInStream::CBufferedInStream(CInStream *pInStream,unsigned long ulBufferSize)
+CBufferedInStream::CBufferedInStream(CInStream &InStream,unsigned long ulBufferSize) :
+	m_InStream(InStream)
 {
-	m_pInStream = pInStream;
-
 	m_pBuffer = new unsigned char[ulBufferSize];
 	m_ulBufferSize = ulBufferSize;
 	m_ulBufferPos = 0;
@@ -56,7 +55,7 @@ int CBufferedInStream::Read(void *pBuffer,unsigned long ulSize,unsigned long *pP
 		m_ulBytesInBuffer = 0;
 
 		unsigned long ulNewBufferSize = 0;
-		m_pInStream->Read(m_pBuffer,m_ulBufferSize,&ulNewBufferSize);
+		m_InStream.Read(m_pBuffer,m_ulBufferSize,&ulNewBufferSize);
 		
 		if (ulNewBufferSize == 0)
 		{
@@ -87,10 +86,9 @@ bool CBufferedInStream::EOS()
 /*
 	COutBufferedStream
 */
-CBufferedOutStream::CBufferedOutStream(COutStream *pOutStream,unsigned long ulBufferSize)
+CBufferedOutStream::CBufferedOutStream(COutStream &OutStream,unsigned long ulBufferSize) :
+	m_OutStream(OutStream)
 {
-	m_pOutStream = pOutStream;
-
 	m_pBuffer = new unsigned char[ulBufferSize];
 	m_ulBufferSize = ulBufferSize;
 	m_ulBufferPos = 0;
@@ -118,7 +116,7 @@ int CBufferedOutStream::Write(void *pBuffer,unsigned long ulSize,
 		ulLocalBufPos += m_ulBufferSize - m_ulBufferPos;
 
 		// Flush.
-		iResult = m_pOutStream->Write(m_pBuffer,m_ulBufferSize,NULL);
+		iResult = m_OutStream.Write(m_pBuffer,m_ulBufferSize,NULL);
 		m_ulBufferPos = 0;
 
 		ulSize = ulRemainLen;
@@ -136,7 +134,7 @@ int CBufferedOutStream::Write(void *pBuffer,unsigned long ulSize,
 
 int CBufferedOutStream::Flush()
 {
-	int iResult = m_pOutStream->Write(m_pBuffer,m_ulBufferPos,NULL);
+	int iResult = m_OutStream.Write(m_pBuffer,m_ulBufferPos,NULL);
 	m_ulBufferPos = 0;
 
 	return iResult;

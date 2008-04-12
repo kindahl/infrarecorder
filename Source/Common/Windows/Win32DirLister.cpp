@@ -60,7 +60,7 @@ bool CDirLister::ListDirectory(const TCHAR *szPath,TCHAR *szFilter)
 
 			tFileInfo FileInfo;
 			FileInfo.FileData = FileData;
-			lstrcpy(FileInfo.szPath,szPath);
+			lstrcpy(FileInfo.szFilePath,szPath);
 
 			m_FileList.push_back(FileInfo);
 		}
@@ -134,7 +134,7 @@ __int64 CDirLister::GetItemSize(unsigned int uiIndex)
 	if (m_FileList[uiIndex].FileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
 	{
 		TCHAR szFullName[MAX_PATH];
-		lstrcpy(szFullName,m_FileList[uiIndex].szPath);
+		lstrcpy(szFullName,m_FileList[uiIndex].szFilePath);
 		lstrcat(szFullName,m_FileList[uiIndex].FileData.cFileName);
 
 		iResult = GetFolderSize(szFullName);

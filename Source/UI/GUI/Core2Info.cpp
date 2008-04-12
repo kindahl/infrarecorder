@@ -56,8 +56,8 @@ bool CCore2Info::ReadCapacity(CCore2Device *pDevice,unsigned long &ulBlockAddres
 	return true;
 }
 
-bool CCore2Info::ReadTrackInformation(CCore2Device *pDevice,unsigned long ulTrackAddr,
-									  CCore2TrackInfo *pTrackInfo)
+bool CCore2Info::ReadTrackInformation(CCore2Device *pDevice,eTrackInfoType InfoType,
+									  unsigned long ulTrackAddr,CCore2TrackInfo *pTrackInfo)
 {
 	if (pDevice == NULL || pTrackInfo == NULL)
 		return false;
@@ -70,6 +70,7 @@ bool CCore2Info::ReadTrackInformation(CCore2Device *pDevice,unsigned long ulTrac
 	memset(ucCdb,0,sizeof(ucCdb));
 
 	ucCdb[0] = SCSI_READ_TRACK_INFORMATION;
+	ucCdb[1] = InfoType & 0x3;
 	ucCdb[2] = 0;
 	ucCdb[2] = (unsigned char)(ulTrackAddr >> 24);
 	ucCdb[3] = (unsigned char)(ulTrackAddr >> 16);
@@ -91,8 +92,10 @@ bool CCore2Info::ReadTrackInformation(CCore2Device *pDevice,unsigned long ulTrac
 	pTrackInfo->m_ucLJRS = (ucBuffer[5] >> 6) & 0x03;
 	pTrackInfo->m_ucTrackMode = ucBuffer[5] & 0x0F;
 	pTrackInfo->m_ucDataMode = ucBuffer[6] & 0x0F;
-	pTrackInfo->m_ucTrackNumber = ucBuffer[32];
-	pTrackInfo->m_ucSessionNumber = ucBuffer[33];
+
+	pTrackInfo->m_usTrackNumber = ((unsigned short)ucBuffer[32] << 8) | ucBuffer[2];
+	pTrackInfo->m_usSessionNumber = ((unsigned short)ucBuffer[33] << 8) | ucBuffer[3];
+
 	pTrackInfo->m_ulTrackAddr = ((unsigned int)ucBuffer[8] << 24) | ((unsigned int)ucBuffer[9] << 16) |
 		((unsigned int)ucBuffer[10] << 8) | ucBuffer[11];
 	pTrackInfo->m_ulNextWritableAddr = ((unsigned int)ucBuffer[12] << 24) | ((unsigned int)ucBuffer[13] << 16) |
@@ -216,6 +219,7 @@ bool CCore2Info::ReadTOC(CCore2Device *pDevice,unsigned char &ucFirstTrackNumber
 	memset(ucCdb,0,sizeof(ucCdb));
 
 	ucCdb[0] = SCSI_READ_TOC_PMA_ATIP;
+	ucCdb[2] = 0x00;						// TOC.
 	ucCdb[7] = sizeof(ucBuffer) >> 8;		// Allocation length (MSB).
 	ucCdb[8] = sizeof(ucBuffer) & 0xFF;		// Allocation length (LSB).
 	ucCdb[9] = 0;
@@ -240,6 +244,49 @@ bool CCore2Info::ReadTOC(CCore2Device *pDevice,unsigned char &ucFirstTrackNumber
 
 		Tracks.push_back(CCore2TOCTrackDesc(ucCurTrackNumber,ulTrackAddr));
 	}
+
+	return true;
+}
+
+/*
+	Read session information.
+*/
+bool CCore2Info::ReadSI(CCore2Device *pDevice,unsigned char &ucFirstSessNumber,
+						unsigned char &ucLastSessNumber,
+						unsigned long &ulLastSessFirstTrackPos)
+{
+	if (pDevice == NULL)
+		return false;
+
+	// Initialize buffers.
+	unsigned char ucBuffer[4 + 2048];		// It feels stupid to allocate this much memory when
+											// only 2 bytes of data is needed. The problem is that
+											// some drives (tested with TSSTCorp CD/DVDW SH-S183A SB00)
+											// returns more data then requested which may cause buffer
+											// overruns.
+	memset(ucBuffer,0,sizeof(ucBuffer));
+
+	unsigned char ucCdb[16];
+	memset(ucCdb,0,sizeof(ucCdb));
+
+	ucCdb[0] = SCSI_READ_TOC_PMA_ATIP;
+	ucCdb[2] = 0x01;						// Session information.
+	ucCdb[7] = sizeof(ucBuffer) >> 8;		// Allocation length (MSB).
+	ucCdb[8] = sizeof(ucBuffer) & 0xFF;		// Allocation length (LSB).
+	ucCdb[9] = 0;
+
+	if (!pDevice->Transport(ucCdb,10,ucBuffer,sizeof(ucBuffer)))
+		return false;
+
+	unsigned short usDataLen = ((unsigned short)ucBuffer[0] << 8) | ucBuffer[1];
+	if (usDataLen < 2)
+		return false;
+		
+	ucFirstSessNumber = ucBuffer[2];
+	ucLastSessNumber = ucBuffer[3];
+
+	ulLastSessFirstTrackPos = (ucBuffer[8] << 24) | (ucBuffer[9] << 16) |
+		(ucBuffer[10] << 8) |ucBuffer[11];
 
 	return true;
 }

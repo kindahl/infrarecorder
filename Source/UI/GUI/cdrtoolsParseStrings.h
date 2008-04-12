@@ -26,8 +26,6 @@
 #define CDRTOOLS_SCSIBUS_LENGTH				7
 #define CDRTOOLS_ERROR						"cdrecord: "
 #define CDRTOOLS_ERROR_LENGTH				10
-#define CDRTOOLS_ERROR2						"mkisofs: "
-#define CDRTOOLS_ERROR2_LENGTH				9
 #define CDRTOOLS_ERROR3						"readcd: "
 #define CDRTOOLS_ERROR3_LENGTH				8
 #define CDRTOOLS_ERROR4						"cdda2wav: "

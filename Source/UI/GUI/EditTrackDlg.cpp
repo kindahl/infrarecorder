@@ -62,8 +62,8 @@ LRESULT CEditTrackDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &
 	CenterWindow(GetParent());
 	SetWindowText((TCHAR *)lParam);
 
-	SetDlgItemText(IDC_TITLEEDIT,m_pItemData->szTrackTitle);
-	SetDlgItemText(IDC_ARTISTEDIT,m_pItemData->szTrackArtist);
+	SetDlgItemText(IDC_TITLEEDIT,m_pItemData->GetAudioData()->szTrackTitle);
+	SetDlgItemText(IDC_ARTISTEDIT,m_pItemData->GetAudioData()->szTrackArtist);
 
 	// Translate the window.
 	Translate();
@@ -73,8 +73,8 @@ LRESULT CEditTrackDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &
 
 LRESULT CEditTrackDlg::OnOK(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
-	GetDlgItemText(IDC_TITLEEDIT,m_pItemData->szTrackTitle,159);
-	GetDlgItemText(IDC_ARTISTEDIT,m_pItemData->szTrackArtist,159);
+	GetDlgItemText(IDC_TITLEEDIT,m_pItemData->GetAudioData()->szTrackTitle,159);
+	GetDlgItemText(IDC_ARTISTEDIT,m_pItemData->GetAudioData()->szTrackArtist,159);
 
 	EndDialog(wID);
 	return FALSE;

@@ -18,10 +18,11 @@
 
 #pragma once
 #include <vector>
+#include "../../Common/StringUtil.h"
+#include "../../Core/ckFileSystem/FileSet.h"
 #include "ConsolePipe.h"
 #include "DeviceManager.h"
 #include "AdvancedProgress.h"
-#include "../../Common/StringUtil.h"
 
 #define CORE_IGNORE_ERRORINFOMESSAGES		// Should we ignore error information message (copyright etc.)?
 #define CORE_PRINT_UNSUPERRORMESSAGES		// Should we print unhandled/unsupported messages to the log window?
@@ -66,23 +67,37 @@ private:
 	bool CheckProgress(const char *szBuffer);
 
 	void ErrorOutputCDRECORD(const char *szBuffer);
-	void ErrorOutputMKISOFS(const char *szBuffer);
 	void ErrorOutputREADCD(const char *szBuffer);
 	void ErrorOutputCDDA2WAV(const char *szBuffer);
 
 	void EraseOutput(const char *szBuffer);
 	void FixateOutput(const char *szBuffer);
 	void BurnImageOutput(const char *szBuffer);
-	void CreateImageOutput(const char *szBuffer);
 	void ReadDataTrackOutput(const char *szBuffer);
 	void ReadAudioTrackOutput(const char *szBuffer);
 	void ScanTrackOutput(const char *szBuffer);
 	void ReadDiscOutput(const char *szBuffer);
-	void EstimateSizeOutput(const char *szBuffer);
 
 	// Inherited.
 	void FlushOutput(const char *szBuffer);
 	void ProcessEnded();
+
+	// Thead functions.
+	class CCompImageParams	// A pointer to a structure of this type should be passed as thead parameter for CreateCompImageThread.
+	{
+	public:
+		CConsolePipe &m_ConsolePipe;
+		CProgressEx &m_Progress;
+		ckFileSystem::CFileSet &m_Files;
+
+		CCompImageParams(CConsolePipe &ConsolePipe,CProgressEx &Progress,
+			ckFileSystem::CFileSet &Files) : m_ConsolePipe(ConsolePipe),
+			m_Progress(Progress),m_Files(Files)
+		{
+		}
+	};
+
+	static DWORD WINAPI CreateCompImageThread(LPVOID lpThreadParameter);
 
 	bool BurnImage(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 		tDeviceInfoEx *pDeviceInfoEx,CAdvancedProgress *pProgress,
@@ -91,8 +106,6 @@ private:
 		tDeviceInfoEx *pDeviceInfoEx,CAdvancedProgress *pProgress,
 		const TCHAR *szDataTrack,std::vector<TCHAR *> &AudioTracks,
 		const TCHAR *szAudioText,int iDataMode,int iMode,bool bWaitForProcess);
-	bool CreateImage(const TCHAR *szFileName,const TCHAR *szPathList,
-		CAdvancedProgress *pProgress,int iMode,bool bEstimateSize,bool bWaitForProcess);
 	bool ReadDataTrack(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,const TCHAR *szFileName,
 		unsigned int uiTrackNumber,unsigned long ulStartSector,unsigned long ulEndSector,
 		int iMode,bool bWaitForProcess);
@@ -103,8 +116,8 @@ private:
 	bool ReadDisc(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,const TCHAR *szFileName,
 		int iMode,bool bWaitForProcess);
 	bool BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
-		tDeviceInfoEx *pDeviceInfoEx,CAdvancedProgress *pProgress,
-		const TCHAR *szPathList,std::vector<TCHAR *> &AudioTracks,
+		tDeviceInfoEx *pDeviceInfoEx,CAdvancedProgress *pProgress,CProgressEx &Progress,
+		ckFileSystem::CFileSet &Files,std::vector<TCHAR *> &AudioTracks,
 		const TCHAR *szAudioText,int iDataMode,unsigned __int64 uiDataBytes,int iMode);
 
 	enum eMode
@@ -114,8 +127,6 @@ private:
 		MODE_FIXATE,
 		MODE_BURNIMAGE,
 		MODE_BURNIMAGEEX,
-		MODE_CREATEIMAGE,
-		MODE_CREATEIMAGEEX,
 		MODE_READDATATRACK,
 		MODE_READDATATRACKEX,
 		MODE_READAUDIOTRACK,
@@ -123,8 +134,7 @@ private:
 		MODE_SCANTRACK,
 		MODE_SCANTRACKEX,
 		MODE_READDISC,
-		MODE_READDISCEX,
-		MODE_ESTIMATESIZE
+		MODE_READDISCEX
 	};
 
 	enum eStatusMode
@@ -160,10 +170,6 @@ public:
 		tDeviceInfoEx *pDeviceInfoEx,CAdvancedProgress *pProgress,
 		const TCHAR *szDataTrack,std::vector<TCHAR *> &AudioTracks,
 		const TCHAR *szAudioText,int iDataMode);
-	bool CreateImage(const TCHAR *szFileName,const TCHAR *szPathList,
-		CAdvancedProgress *pProgress);
-	int CreateImageEx(const TCHAR *szFileName,const TCHAR *szPathList,
-		CAdvancedProgress *pProgress);
 	bool ReadDataTrack(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,const TCHAR *szFileName,
 		unsigned int uiTrackNumber,unsigned long ulStartSector,unsigned long ulEndSector);
 	int ReadDataTrackEx(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,const TCHAR *szFileName,
@@ -181,14 +187,13 @@ public:
 	bool ReadDisc(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,const TCHAR *szFileName);
 	int ReadDiscEx(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,const TCHAR *szFileName);
 	bool BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
-		tDeviceInfoEx *pDeviceInfoEx,CAdvancedProgress *pProgress,
-		const TCHAR *szPathList,std::vector<TCHAR *> &AudioTracks,
+		tDeviceInfoEx *pDeviceInfoEx,CAdvancedProgress *pProgress,CProgressEx &Progress,
+		ckFileSystem::CFileSet &Files,std::vector<TCHAR *> &AudioTracks,
 		const TCHAR *szAudioText,int iMode,unsigned __int64 uiDataBytes);
 	int BurnCompilationEx(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
-		tDeviceInfoEx *pDeviceInfoEx,CAdvancedProgress *pProgress,
-		const TCHAR *szPathList,std::vector<TCHAR *> &AudioTracks,
+		tDeviceInfoEx *pDeviceInfoEx,CAdvancedProgress *pProgress,CProgressEx &Progress,
+		ckFileSystem::CFileSet &Files,std::vector<TCHAR *> &AudioTracks,
 		const TCHAR *szAudioText,int iMode,unsigned __int64 uiDataBytes);
-	bool EstimateImageSize(const TCHAR *szPathList,CAdvancedProgress *pProgress,unsigned __int64 &uiSize);
 };
 
 extern CCore g_Core;

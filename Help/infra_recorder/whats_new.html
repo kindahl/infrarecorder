@@ -12,8 +12,29 @@
 <div id="content">
 	<p>Version 0.45.0.0</p>
 	<ul>
+		<li>Fixed a bug causing incorrect file names to be used when verifying
+		    recorded discs.</li>
+		<li>Added functionallity to rename and remove files from imported sessions.</li>
+		<li>Added support for selecting which multi-session track to import.</li>
+		<li>When trying to record to a non-empty rewritable disc, InfraRecorder now
+		    asks if the disc should be erased.</li>
+		<li>When performing an operation the progress is now also displayed in the
+		    taskbar.</li>
+		<li>Reduced memory usage when dealing with projects.</li>
+		<li>Fixed a bug making it impossible to open saved projects containing no
+		    files.</li>
+		<li>Included a Thai translation, thanks to Prasit Kaephukhieo!</li>
+		<li>Improved compatibility with the ISO9660 standard.</li>
+		<li>Added support for creating UDF-only file systems.</li>
+		<li>Added support for Unicode files names in Joliet extension and UDF file
+		    system.</li>
+		<li>Added support for fragmented files in ISO9660 level 3. Files larger than
+		    4 GiB can now be recorded to an ISO9660 file system.</li>
+		<li>Removed mkisofs and isoinfo dependencies.</li>
+		<li>Fixed some bugs related to importing disc sessions.</li>
+		<li>Added properties menu item when right-clicking on the project tree root
+		    node.</li>
 		<li>Added proper flagging of hidden files in the disc file system.</li>
-		<li>Fixed a bug making it possible to rename files imported from a session.</li>
 		<li>Changed the default write method for multi-session projects to TAO.</li>
 		<li>Fixed a bug causing InfraRecorder to crash when renaming project files to
 		    include slash or backslash characters.</li>

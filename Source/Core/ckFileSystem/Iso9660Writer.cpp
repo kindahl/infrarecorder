@@ -21,6 +21,7 @@
 #include "../../Common/FileManager.h"
 #include "StringTable.h"
 #include "Const.h"
+#include "Iso9660Reader.h"
 #include "Iso9660Writer.h"
 
 namespace ckFileSystem
@@ -51,6 +52,19 @@ namespace ckFileSystem
 		CFileTreeNode *pParentNode = pNode->GetParent();
 		if (pParentNode == NULL)
 			return;
+
+		// Don't calculate a new name of one has already been generated.
+		if (pNode->m_FileNameJoliet != _T(""))
+		{
+			unsigned char ucFileNamePos = 0;
+			for (unsigned int i = 0; i < ucFileNameSize; i += 2,ucFileNamePos++)
+			{
+				pFileName[i    ] = pNode->m_FileNameJoliet[ucFileNamePos] >> 8;
+				pFileName[i + 1] = pNode->m_FileNameJoliet[ucFileNamePos] & 0xFF;
+			}
+
+			return;
+		}
 
 		unsigned char ucFileNameLen = ucFileNameSize >> 1;
 		unsigned char ucFileNamePos = 0;
@@ -98,11 +112,14 @@ namespace ckFileSystem
 		wchar_t szNextNumber[4];
 
 		std::vector<CFileTreeNode *>::const_iterator itSibling;
-		for (itSibling = pParentNode->m_Children.begin(); itSibling != pParentNode->m_Children.end(); itSibling++)
+		for (itSibling = pParentNode->m_Children.begin(); itSibling != pParentNode->m_Children.end();)
 		{
 			// Ignore any siblings that has not yet been assigned an ISO9660 compatible file name.
 			if ((*itSibling)->m_FileNameIso9660 == "")
+			{
+				itSibling++;
 				continue;
+			}
 
 			if (!lstrcmp((*itSibling)->m_FileNameJoliet.c_str(),szFileName))
 			{
@@ -127,7 +144,10 @@ namespace ckFileSystem
 				// Start from the beginning.
 				ucNextNumber++;
 				itSibling = pParentNode->m_Children.begin();
+				continue;
 			}
+
+			itSibling++;
 		}
 
 		pNode->m_FileNameJoliet = szFileName;
@@ -151,6 +171,13 @@ namespace ckFileSystem
 		CFileTreeNode *pParentNode = pNode->GetParent();
 		if (pParentNode == NULL)
 			return;
+
+		// Don't calculate a new name of one has already been generated.
+		if (pNode->m_FileNameIso9660 != "")
+		{
+			memcpy(pFileName,pNode->m_FileNameIso9660.c_str(),ucFileNameSize);
+			return;
+		}
 
 		// We're only interested in the file name without the extension and
 		// version information.
@@ -186,13 +213,16 @@ namespace ckFileSystem
 		char szNextNumber[4];
 
 		std::vector<CFileTreeNode *>::const_iterator itSibling;
-		for (itSibling = pParentNode->m_Children.begin(); itSibling != pParentNode->m_Children.end(); itSibling++)
+		for (itSibling = pParentNode->m_Children.begin(); itSibling != pParentNode->m_Children.end();)
 		{
 			// Ignore any siblings that has not yet been assigned an ISO9660 compatible file name.
 			if ((*itSibling)->m_FileNameIso9660 == "")
+			{
+				itSibling++;
 				continue;
+			}
 
-			if (!memcmp((*itSibling)->m_FileNameIso9660.c_str(),pFileName,ucFileNameSize))
+			if (!memcmp((*itSibling)->m_FileNameIso9660.c_str(),pFileName,/*ucFileNameSize*/ucFileNameEnd))
 			{
 				sprintf(szNextNumber,"%d",ucNextNumber);
 
@@ -215,7 +245,10 @@ namespace ckFileSystem
 				// Start from the beginning.
 				ucNextNumber++;
 				itSibling = pParentNode->m_Children.begin();
+				continue;
 			}
+
+			itSibling++;
 		}
 
 		char szFileName[ISO9660WRITER_FILENAME_BUFFER_SIZE + 1];
@@ -365,7 +398,7 @@ namespace ckFileSystem
 
 			bool bIsFolder = (*itFile)->m_ucFileFlags & CFileTreeNode::FLAG_DIRECTORY;
 
-			unsigned char ucNameLen;
+			unsigned char ucNameLen;	// FIXME: Rename to Size?
 			if (bJoliet)
 				ucNameLen = m_pJoliet->CalcFileNameLen((*itFile)->m_FileName.c_str(),bIsFolder) << 1;
 			else
@@ -924,6 +957,10 @@ namespace ckFileSystem
 			WriteSysDirectory(pLocalNode,TYPE_PARENT,(unsigned long)pParentNode->m_uiDataPosNormal);
 		}
 
+		// The number of bytes of data in the current sector.
+		// Each directory always includes '.' and '..'.
+		unsigned long ulDirSecData = sizeof(tDirRecord) << 1;
+
 		std::vector<CFileTreeNode *>::const_iterator itFile;
 		for (itFile = pLocalNode->m_Children.begin(); itFile !=
 			pLocalNode->m_Children.end(); itFile++)
@@ -973,52 +1010,76 @@ namespace ckFileSystem
 
 				// If the record length is not even padd it with a 0 byte.
 				bool bPadByte = false;
-				unsigned char ucDirRecLen = sizeof(DirRecord) + ucNameLen - 1;
-				if (ucDirRecLen % 2 == 1)
+				unsigned char ucDirRecSize = sizeof(DirRecord) + ucNameLen - 1;
+				if (ucDirRecSize % 2 == 1)
 				{
 					bPadByte = true;
-					ucDirRecLen++;
+					ucDirRecSize++;
 				}
 
-				DirRecord.ucDirRecordLen = ucDirRecLen;
+				DirRecord.ucDirRecordLen = ucDirRecSize;	// FIXME: Rename member.
 				DirRecord.ucExtAttrRecordLen = 0;
 
 				Write733(DirRecord.ucExtentLocation,(unsigned long)uiExtentLoc);
 				Write733(DirRecord.ucDataLen,(unsigned long)ulExtentSize);
 
-				// Date time.
-				if (m_bUseFileTimes)
+				if ((*itFile)->m_ucFileFlags & CFileTreeNode::FLAG_IMPORTED)
 				{
-					unsigned short usFileDate = 0;
-					unsigned short usFileTime = 0;
-					bool bResult = true;
+					CIso9660ImportData *pImportNode = (CIso9660ImportData *)(*itFile)->m_pData;
+					if (pImportNode == NULL)
+					{
+						m_pLog->AddLine(_T("  Error: The file \"%s\" does not contain imported session data like advertised."),
+							(*itFile)->m_FileName.c_str());
+						return RESULT_FAIL;
+					}
 
-					if ((*itFile)->m_ucFileFlags & CFileTreeNode::FLAG_DIRECTORY)
-						bResult = fs_getdirmodtime((*itFile)->m_FileFullPath.c_str(),usFileDate,usFileTime);
-					else
-						bResult = fs_getmodtime((*itFile)->m_FileFullPath.c_str(),usFileDate,usFileTime);
+					memcpy(&DirRecord.RecDateTime,&pImportNode->m_RecDateTime,sizeof(tDirRecordDateTime));
 
-					if (bResult)
-						MakeDateTime(usFileDate,usFileTime,DirRecord.RecDateTime);
-					else
-						MakeDateTime(m_stImageCreate,DirRecord.RecDateTime);
+					DirRecord.ucFileFlags = pImportNode->m_ucFileFlags;
+					DirRecord.ucFileUnitSize = pImportNode->m_ucFileUnitSize;
+					DirRecord.ucInterleaveGapSize = pImportNode->m_ucInterleaveGapSize;
+					Write723(DirRecord.ucVolSeqNumber,pImportNode->m_usVolSeqNumber);
 				}
 				else
 				{
-					// The time when the disc image creation was initialized.
-					MakeDateTime(m_stImageCreate,DirRecord.RecDateTime);
-				}
+					// Date time.
+					if (m_bUseFileTimes)
+					{
+						unsigned short usFileDate = 0;
+						unsigned short usFileTime = 0;
+						bool bResult = true;
 
-				// File flags.
-				DirRecord.ucFileFlags = 0;
-				if ((*itFile)->m_ucFileFlags & CFileTreeNode::FLAG_DIRECTORY)
-					DirRecord.ucFileFlags |= DIRRECORD_FILEFLAG_DIRECTORY;
+						if ((*itFile)->m_ucFileFlags & CFileTreeNode::FLAG_DIRECTORY)
+							bResult = fs_getdirmodtime((*itFile)->m_FileFullPath.c_str(),usFileDate,usFileTime);
+						else
+							bResult = fs_getmodtime((*itFile)->m_FileFullPath.c_str(),usFileDate,usFileTime);
 
-				unsigned long ulFileAttr = fs_getfileattributes((*itFile)->m_FileFullPath.c_str());
-				if (ulFileAttr != INVALID_FILE_ATTRIBUTES)
-				{
-					if (ulFileAttr & FILE_ATTRIBUTE_HIDDEN)
-						DirRecord.ucFileFlags |= DIRRECORD_FILEFLAG_HIDDEN;
+						if (bResult)
+							MakeDateTime(usFileDate,usFileTime,DirRecord.RecDateTime);
+						else
+							MakeDateTime(m_stImageCreate,DirRecord.RecDateTime);
+					}
+					else
+					{
+						// The time when the disc image creation was initialized.
+						MakeDateTime(m_stImageCreate,DirRecord.RecDateTime);
+					}
+
+					// File flags.
+					DirRecord.ucFileFlags = 0;
+					if ((*itFile)->m_ucFileFlags & CFileTreeNode::FLAG_DIRECTORY)
+						DirRecord.ucFileFlags |= DIRRECORD_FILEFLAG_DIRECTORY;
+
+					unsigned long ulFileAttr = fs_getfileattributes((*itFile)->m_FileFullPath.c_str());
+					if (ulFileAttr != INVALID_FILE_ATTRIBUTES)
+					{
+						if (ulFileAttr & FILE_ATTRIBUTE_HIDDEN)
+							DirRecord.ucFileFlags |= DIRRECORD_FILEFLAG_HIDDEN;
+					}
+
+					DirRecord.ucFileUnitSize = 0;
+					DirRecord.ucInterleaveGapSize = 0;
+					Write723(DirRecord.ucVolSeqNumber,0x01);
 				}
 
 				// Remaining bytes, before checking if we're dealing with the last segment.
@@ -1026,10 +1087,29 @@ namespace ckFileSystem
 				if ((*itFile)->m_uiFileSize > ISO9660_MAX_EXTENT_SIZE && uiFileRemain > 0)
 					DirRecord.ucFileFlags |= DIRRECORD_FILEFLAG_MULTIEXTENT;
 
-				DirRecord.ucFileUnitSize = 0;
+				/*DirRecord.ucFileUnitSize = 0;
 				DirRecord.ucInterleaveGapSize = 0;
-				Write723(DirRecord.ucVolSeqNumber,0x01);
+				Write723(DirRecord.ucVolSeqNumber,0x01);*/
 				DirRecord.ucFileIdentifierLen = ucNameLen;
+
+				// Pad the sector with zeros if we can not fit the complete
+				// directory entry on this sector.
+				if ((ulDirSecData + ucDirRecSize) > ISO9660_SECTOR_SIZE)
+				{
+					/*TCHAR szTemp[64];
+					lsprintf(szTemp,_T("%d %d %d"),ulDirSecData + ucDirRecSize,ISO9660_SECTOR_SIZE - ulDirSecData,
+						m_pOutStream->GetRemaining());
+					MessageBox(NULL,szTemp,(*itFile)->m_FileName.c_str(),MB_OK);*/
+
+					ulDirSecData = ucDirRecSize;
+					
+					// Pad the sector with zeros.
+					m_pOutStream->PadSector();
+				}
+				else
+				{
+					ulDirSecData += ucDirRecSize;
+				}
 
 				// Write the record.
 				unsigned long ulProcessedSize;

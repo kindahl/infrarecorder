@@ -106,8 +106,6 @@
               <File Id="cdrecord.exe" Name="cdrecord.exe" Source="../Binary64/cdrtools/cdrecord.exe"/>
               <File Id="COPYING" Name="COPYING" Source="../Binary64/cdrtools/COPYING"/>
               <File Id="cygwin1.dll" Name="cygwin1.dll" Source="../Binary64/cdrtools/cygwin1.dll"/>
-              <File Id="isoinfo.exe" Name="isoinfo.exe" Source="../Binary64/cdrtools/isoinfo.exe"/>
-              <File Id="mkisofs.exe" Name="mkisofs.exe" Source="../Binary64/cdrtools/mkisofs.exe"/>
               <File Id="readcd.exe" Name="readcd.exe" Source="../Binary64/cdrtools/readcd.exe"/>
             </Component>
           </Directory>

@@ -38,6 +38,8 @@ private:
 	char m_szLineBuffer[CONSOLEPIPE_MAX_LINE_SIZE];
 	int m_iLineBufferIndex;
 
+	bool m_bRunning;	// Set to true when the process has been started.
+
 	bool CreateProcess(TCHAR *szCommandLine,HANDLE hStdIn,HANDLE hStdOut,HANDLE hStdErr);
 	bool CleanUp();
 	int ReadOutput();

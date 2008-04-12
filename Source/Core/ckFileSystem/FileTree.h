@@ -35,7 +35,8 @@ namespace ckFileSystem
 		// File information.
 		enum
 		{
-			FLAG_DIRECTORY = 0x01
+			FLAG_DIRECTORY = 0x01,
+			FLAG_IMPORTED = 0x02
 		};
 
 		unsigned char m_ucFileFlags;
@@ -61,10 +62,12 @@ namespace ckFileSystem
 		unsigned __int64 m_uiUdfLinkTot;	// The number of directory links within the UDF file system.
 		unsigned long m_ulUdfPartLoc;		// Where is the actual UDF file entry stored.
 
+		void *m_pData;						// Pointer to a user-defined structure, designed for CIso9660TreeNode
+
 		CFileTreeNode(CFileTreeNode *pParent,const TCHAR *szFileName,
 			const TCHAR *szFileFullPath,unsigned __int64 uiFileSize,
 			bool bLastFragment,unsigned long ulFragmentIndex,
-			unsigned char ucFileFlags = 0)
+			unsigned char ucFileFlags = 0,void *pData = NULL)
 		{
 			m_pParent = pParent;
 
@@ -83,6 +86,8 @@ namespace ckFileSystem
 			m_uiUdfSizeTot = 0;
 			m_uiUdfLinkTot = 0;
 			m_ulUdfPartLoc = 0;
+
+			m_pData = pData;
 		}
 
 		~CFileTreeNode()

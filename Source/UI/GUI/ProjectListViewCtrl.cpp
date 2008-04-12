@@ -307,6 +307,12 @@ LRESULT CProjectListViewCtrl::OnCustomDraw(UINT uMsg,WPARAM wParam,LPARAM lParam
 
 		case CDDS_ITEMPREPAINT:
 			CItemData *pItemData = (CItemData *)lpNMCustomDraw->nmcd.lItemlParam;
+
+			if (pItemData->ucFlags & PROJECTITEM_FLAG_ISIMPORTED)
+			{
+				lpNMCustomDraw->clrText = PROJECTLISTVIEW_COLOR_IMPORTED;
+				return CDRF_NEWFONT;
+			}
 			
 			if (pItemData->ucFlags & PROJECTITEM_FLAG_ISLOCKED)
 			{

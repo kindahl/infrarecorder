@@ -23,7 +23,7 @@
 typedef struct
 {
 	WIN32_FIND_DATA FileData;
-	TCHAR szPath[MAX_PATH];
+	TCHAR szFilePath[MAX_PATH];
 } tFileInfo;
 
 class CDirLister

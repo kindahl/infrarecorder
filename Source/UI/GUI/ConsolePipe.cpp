@@ -38,6 +38,8 @@ CConsolePipe::CConsolePipe()
 
 	m_hStdIn = NULL;
 	m_hStdOut = NULL;
+
+	m_bRunning = false;
 }
 
 CConsolePipe::~CConsolePipe()
@@ -198,6 +200,8 @@ bool CConsolePipe::Launch(TCHAR *szCommandLine,bool bWaitForProcess)
 	::DuplicateHandle(::GetCurrentProcess(),m_hProcess,::GetCurrentProcess(),
 		&g_hCloseHandle,0,false,DUPLICATE_SAME_ACCESS);
 
+	m_bRunning = true;
+
 	if (bWaitForProcess)
 		WaitForSingleObject(m_hThread,INFINITE);
 
@@ -253,6 +257,8 @@ bool CConsolePipe::CleanUp()
 	}
 
 	m_ulThreadID = 0;
+
+	m_bRunning = false;
 
 	return true;
 }
@@ -366,6 +372,10 @@ DWORD WINAPI CConsolePipe::ListenThread(LPVOID lpThreadParameter)
 */
 unsigned long CConsolePipe::WriteInput(const char *szInput,unsigned int uiLength)
 {
+	// Wait if the process has not been started.
+	while (!m_bRunning)
+		Sleep(100);
+
 	unsigned long ulWritten = 0;
 	::WriteFile(m_hStdIn,szInput,uiLength,&ulWritten,NULL);
 

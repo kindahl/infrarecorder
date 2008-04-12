@@ -41,6 +41,8 @@ private:
 
 	int m_iPercent;
 
+	TCHAR *m_szHostTitle;
+
 	bool Translate();
 
 public:

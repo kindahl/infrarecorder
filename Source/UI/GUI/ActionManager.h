@@ -23,7 +23,6 @@ class CActionManager
 private:
 	static DWORD WINAPI BurnCompilationThread(LPVOID lpThreadParameter);
 	static DWORD WINAPI CreateImageThread(LPVOID lpThreadParameter);
-	static DWORD WINAPI CreateImageThread42(LPVOID lpThreadParameter);
 	static DWORD WINAPI CopyDiscOnFlyThread(LPVOID lpThreadParameter);
 	static DWORD WINAPI CopyDiscThread(LPVOID lpThreadParameter);
 	static DWORD WINAPI EraseThread(LPVOID lpThreadParameter);

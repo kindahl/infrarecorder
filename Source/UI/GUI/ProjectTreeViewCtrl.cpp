@@ -173,14 +173,29 @@ LRESULT CProjectTreeViewCtrl::OnCustomDraw(UINT uMsg,WPARAM wParam,LPARAM lParam
 		case CDDS_ITEMPREPAINT:
 			CProjectNode *pNode = (CProjectNode *)lpNMCustomDraw->nmcd.lItemlParam;
 
-			if (pNode == NULL || !(pNode->pItemData->ucFlags & PROJECTITEM_FLAG_ISLOCKED))
+			/*if (pNode == NULL || !(pNode->pItemData->ucFlags & PROJECTITEM_FLAG_ISLOCKED))
 			{
 				bHandled = false;
 				return CDRF_DODEFAULT;
 			}
 
 			lpNMCustomDraw->clrText = GetSysColor(COLOR_GRAYTEXT); 
-			return CDRF_NEWFONT;
+			return CDRF_NEWFONT;*/
+
+			if (pNode != NULL && pNode->pItemData->ucFlags & PROJECTITEM_FLAG_ISIMPORTED)
+			{
+				lpNMCustomDraw->clrText = PROJECTTREEVIEW_COLOR_IMPORTED; 
+				return CDRF_NEWFONT;
+			}
+
+			if (pNode != NULL && pNode->pItemData->ucFlags & PROJECTITEM_FLAG_ISLOCKED)
+			{
+				lpNMCustomDraw->clrText = GetSysColor(COLOR_GRAYTEXT); 
+				return CDRF_NEWFONT;
+			}
+
+			bHandled = false;
+			return CDRF_DODEFAULT;
 	}
 
 	bHandled = false;

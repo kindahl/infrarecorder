@@ -18,11 +18,13 @@
 
 #pragma once
 #include <vector>
+#include <map>
+#include "../../Common/StringUtil.h"
+#include "../../Core/ckFileSystem/SectorStream.h"
+#include "../../Core/ckFileSystem/FileSet.h"
 #include "SCSI.h"
-#include "DeviceManager.h"
 #include "AdvancedProgress.h"
 #include "Core2Device.h"
-#include "../../Common/StringUtil.h"
 
 class CCore2
 {
@@ -103,6 +105,12 @@ public:
 	bool ReadDataTrack(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 		unsigned char ucTrackNumber,bool bIgnoreErr,const TCHAR *szFilePath);
 	bool ReadFullTOC(CCore2Device *pDevice,const TCHAR *szFileName);
+	int CreateImage(COutStream &OutStream,ckFileSystem::CFileSet &Files,
+		CProgressEx &Progress,std::map<tstring,tstring> *pFilePathMap = NULL);
+	int CreateImage(const TCHAR *szFullPath,ckFileSystem::CFileSet &Files,		// Wrapper.
+		CProgressEx &Progress,std::map<tstring,tstring> *pFilePathMap = NULL);
+	int EstimateImageSize(ckFileSystem::CFileSet &Files,CProgressEx &Progress,	// Wrapper.
+		unsigned __int64 &uiImageSize);
 };
 
 extern CCore2 g_Core2;

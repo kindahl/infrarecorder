@@ -17,5 +17,6 @@
  */
 
 #ifdef _WINDOWS
+#include "Windows/Win32DirLister.h"
 #include "Windows/Win32FileManager.h"
 #endif

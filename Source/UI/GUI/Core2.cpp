@@ -17,6 +17,10 @@
  */
 
 #include "stdafx.h"
+#include "../../Common/FileManager.h"
+#include "../../Common/FileStream.h"
+#include "../../Common/SizeStream.h"
+#include "../../Core/ckFileSystem/DiscImageWriter.h"
 #include "Core2.h"
 #include "Core2Format.h"
 #include "Core2Blank.h"
@@ -27,7 +31,6 @@
 #include "Settings.h"
 #include "StringTable.h"
 #include "LangUtil.h"
-#include "../../Common/FileManager.h"
 
 CCore2 g_Core2;
 
@@ -97,7 +100,8 @@ bool CCore2::HandleEvents(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 
 					if (!StartStopUnit(pDevice,LOADMEDIA_START,false))
 					{
-						pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,lngGetString(FAILURE_NOMEDIA));
+						if (pProgress != NULL)
+							pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,lngGetString(FAILURE_NOMEDIA));
 						return false;
 					}
 
@@ -174,7 +178,7 @@ bool CCore2::WaitForUnit(CCore2Device *pDevice,CAdvancedProgress *pProgress)
 			ucCode == SENSE_LONGWRITEINPROGRESS)
 		{
 			// Check if the operation has been cancelled.
-			if (pProgress->IsCanceled())
+			if (pProgress != NULL && pProgress->IsCanceled())
 			{
 				// Stop the unit and unlock the media.
 				//StartStopUnit(pDevice,LOADMEDIA_STOP,true);
@@ -911,7 +915,7 @@ bool CCore2::EraseDisc(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 }
 
 bool CCore2::ReadDataTrack(CCore2Device *pDevice,CAdvancedProgress *pProgress,
-					   unsigned char ucTrackNumber,bool bIgnoreErr,const TCHAR *szFilePath)
+						   unsigned char ucTrackNumber,bool bIgnoreErr,const TCHAR *szFilePath)
 {
 	// Initialize log.
 	if (g_GlobalSettings.m_bLog)
@@ -959,7 +963,7 @@ bool CCore2::ReadDataTrack(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 	unsigned long ulTrackAddr = Tracks[ucTrackNumber - 1].m_ulTrackAddr;
 
 	CCore2TrackInfo TrackInfo;
-	if (!Info.ReadTrackInformation(pDevice,ulTrackAddr,&TrackInfo))
+	if (!Info.ReadTrackInformation(pDevice,CCore2Info::TIT_LBA,ulTrackAddr,&TrackInfo))
 	{
 		g_LogDlg.AddLine(_T("  Error: Unable to read track information."));
 		return false;
@@ -1003,21 +1007,30 @@ bool CCore2::ReadDataTrack(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 	std::vector<CCore2TOCTrackDesc>::const_iterator it;
 	for (it = Tracks.begin(); it != Tracks.end(); it++)
 	{
-		CCore2TrackInfo Foo;
-		if (Info.ReadTrackInformation(pDevice,(*it).m_ulTrackAddr,&Foo))
+		CCore2TrackInfo TrackInfo;
+		if (Info.ReadTrackInformation(pDevice,CCore2Info::TIT_LBA,(*it).m_ulTrackAddr,&TrackInfo))
 		{
-			unsigned long ulMin = (Foo.m_ulTrackSize + 150)/(60*75);
-			unsigned long ulSec = (Foo.m_ulTrackSize + 150 - ulMin * 60 * 75)/75;
-			unsigned long ulFrame = Foo.m_ulTrackSize + 150 - ulMin * 60 * 75 - ulSec * 75;
-			g_LogDlg.AddLine(_T("    %d, %02d:%02d:%02d (%d)"),(*it).m_ulTrackAddr,ulMin,ulSec,ulFrame,Foo.m_ulTrackSize);
+			unsigned long ulMin = (TrackInfo.m_ulTrackSize + 150)/(60*75);
+			unsigned long ulSec = (TrackInfo.m_ulTrackSize + 150 - ulMin * 60 * 75)/75;
+			unsigned long ulFrame = TrackInfo.m_ulTrackSize + 150 - ulMin * 60 * 75 - ulSec * 75;
+			g_LogDlg.AddLine(_T("    %d, %02d:%02d:%02d (%d)"),(*it).m_ulTrackAddr,ulMin,ulSec,ulFrame,TrackInfo.m_ulTrackSize);
 		}
 	}
 #endif
 
-	Core2ReadFunction::CReadUserData ReadFunc(pDevice,szFilePath);
+	COutFileStream OutStream;
+	if (!OutStream.Open(szFilePath))
+	{
+		g_LogDlg.AddLine(_T("  Error: Unable to open the output file: \"%s\"."),szFilePath);
+		return false;
+	}
+
+	Core2ReadFunction::CReadUserData ReadFunc(pDevice,/*szFilePath*/&OutStream);
 
 	// Start reading the selected sectors from the disc.
 	bool bResult = Read.ReadData(pDevice,pProgress,&ReadFunc,ulTrackAddr,ulTrackSize,bIgnoreErr);
+	OutStream.Close();
+
 	if (bResult)
 		pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,lngGetString(SUCCESS_READTRACK),ucTrackNumber);
 
@@ -1067,4 +1080,122 @@ bool CCore2::ReadFullTOC(CCore2Device *pDevice,const TCHAR *szFileName)
 
 	fs_close(hFile);
 	return true;
+}
+
+int CCore2::CreateImage(COutStream &OutStream,ckFileSystem::CFileSet &Files,
+						CProgressEx &Progress,std::map<tstring,tstring> *pFilePathMap)
+{
+	ckFileSystem::CDiscImageWriter::eFileSystem FileSystem;
+	switch (g_ProjectSettings.m_iFileSystem)
+	{
+		case FILESYSTEM_ISO9660:
+			FileSystem = g_ProjectSettings.m_bJoliet ?
+				ckFileSystem::CDiscImageWriter::FS_ISO9660_JOLIET :
+				ckFileSystem::CDiscImageWriter::FS_ISO9660;
+			break;
+				
+		case FILESYSTEM_ISO9660_UDF:
+			FileSystem = g_ProjectSettings.m_bJoliet ?
+				ckFileSystem::CDiscImageWriter::FS_ISO9660_UDF_JOLIET : 
+				ckFileSystem::CDiscImageWriter::FS_ISO9660_UDF;
+				break;
+
+		case FILESYSTEM_DVDVIDEO:
+			FileSystem = ckFileSystem::CDiscImageWriter::FS_DVDVIDEO;
+			break;
+
+		case FILESYSTEM_UDF:
+			FileSystem = ckFileSystem::CDiscImageWriter::FS_UDF;			
+			break;
+	}
+
+	ckFileSystem::CIso9660::eInterLevel InterchangeLevel;
+	switch (g_ProjectSettings.m_iIsoLevel)
+	{
+		case 0:
+			InterchangeLevel = ckFileSystem::CIso9660::LEVEL_1;			
+			break;
+
+		case 1:
+			InterchangeLevel = ckFileSystem::CIso9660::LEVEL_2;
+			break;
+
+		case 2:
+			InterchangeLevel = ckFileSystem::CIso9660::LEVEL_3;
+			break;
+
+		case 3:
+			InterchangeLevel = ckFileSystem::CIso9660::ISO9660_1999;
+			break;
+	}
+
+	ckFileSystem::CDiscImageWriter DiscImageWriter(&g_LogDlg,FileSystem);
+
+	DiscImageWriter.SetLongJolietNames(g_ProjectSettings.m_bJolietLongNames);
+	DiscImageWriter.SetInterchangeLevel(InterchangeLevel);
+	DiscImageWriter.SetIncludeFileVerInfo(!g_ProjectSettings.m_bOmitVerNum);
+	DiscImageWriter.SetRelaxMaxDirLevel(g_ProjectSettings.m_bDeepDirs);
+
+	DiscImageWriter.SetVolumeLabel(g_ProjectSettings.m_szLabel);
+	DiscImageWriter.SetTextFields(g_ProjectSettings.m_szSystem,
+		g_ProjectSettings.m_szVolumeSet,g_ProjectSettings.m_szPublisher,
+		g_ProjectSettings.m_szPreparer);
+	DiscImageWriter.SetFileFields(g_ProjectSettings.m_szCopyright,
+		g_ProjectSettings.m_szAbstract,g_ProjectSettings.m_szBibliographic);
+
+	std::list<CProjectBootImage *>::const_iterator itBootImage;
+	for (itBootImage = g_ProjectSettings.m_BootImages.begin(); itBootImage !=
+		g_ProjectSettings.m_BootImages.end(); itBootImage++)
+	{
+		switch ((*itBootImage)->m_iEmulation)
+		{
+			case PROJECTBI_BOOTEMU_NONE:
+				DiscImageWriter.AddBootImageNoEmu((*itBootImage)->m_FullPath.c_str(),
+					!(*itBootImage)->m_bNoBoot,(*itBootImage)->m_iLoadSegment,(*itBootImage)->m_iLoadSize);
+				break;
+
+			case PROJECTBI_BOOTEMU_FLOPPY:
+				DiscImageWriter.AddBootImageFloppy((*itBootImage)->m_FullPath.c_str(),
+					!(*itBootImage)->m_bNoBoot);
+				break;
+
+			case PROJECTBI_BOOTEMU_HARDDISK:
+				DiscImageWriter.AddBootImageHardDisk((*itBootImage)->m_FullPath.c_str(),
+					!(*itBootImage)->m_bNoBoot);
+				break;
+		}
+	}
+
+	unsigned long ulSectorOffset = 0;
+	if (g_ProjectSettings.m_bMultiSession)
+		ulSectorOffset = (unsigned long)g_ProjectSettings.m_uiNextWritableAddr;
+
+	ckFileSystem::CSectorOutStream OutSecStream(OutStream,DISCIMAGEWRITER_IO_BUFFER_SIZE);
+	return DiscImageWriter.Create(OutSecStream,Files,Progress,ulSectorOffset,pFilePathMap);
+}
+
+/*
+	A wrapper method for the function above.
+*/
+int CCore2::CreateImage(const TCHAR *szFullPath,ckFileSystem::CFileSet &Files,
+						CProgressEx &Progress,std::map<tstring,tstring> *pFilePathMap)
+{
+	COutFileStream FileStream;
+	if (!FileStream.Open(szFullPath))
+	{
+		g_LogDlg.AddLine(_T("  Error: Unable to obtain file handle to \"%s\"."),szFullPath);
+		return RESULT_FAIL;
+	}
+
+	return CreateImage(FileStream,Files,Progress,pFilePathMap);
+}
+
+int CCore2::EstimateImageSize(ckFileSystem::CFileSet &Files,CProgressEx &Progress,
+							  unsigned __int64 &uiImageSize)
+{
+	COutSizeStream OutStream;
+	int iResult = CreateImage(OutStream,Files,Progress);
+
+	uiImageSize = OutStream.GetWrittenSize();
+	return iResult;
 }

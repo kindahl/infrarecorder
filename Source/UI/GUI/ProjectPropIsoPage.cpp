@@ -17,23 +17,22 @@
  */
 
 #include "stdafx.h"
-#include "ProjectPropISOPage.h"
+#include "ProjectPropIsoPage.h"
 #include "Settings.h"
-#include "System.h"
 #include "StringTable.h"
 #include "LangUtil.h"
 #include "TransUtil.h"
 
-CProjectPropISOPage::CProjectPropISOPage()
+CProjectPropIsoPage::CProjectPropIsoPage()
 {
 	m_psp.dwFlags |= PSP_HASHELP;
 }
 
-CProjectPropISOPage::~CProjectPropISOPage()
+CProjectPropIsoPage::~CProjectPropIsoPage()
 {
 }
 
-bool CProjectPropISOPage::Translate()
+bool CProjectPropIsoPage::Translate()
 {
 	if (g_LanguageSettings.m_pLNGProcessor == NULL)
 		return false;
@@ -57,15 +56,6 @@ bool CProjectPropISOPage::Translate()
 		if (iStaticRight > iMaxStaticRight)
 			iMaxStaticRight = iStaticRight;
 	}
-	if (pLNG->GetValuePtr(IDC_CHARSETSTATIC,szStrValue))
-	{
-		SetDlgItemText(IDC_CHARSETSTATIC,szStrValue);
-
-		// Update the static width if necessary.
-		int iStaticRight = UpdateStaticWidth(m_hWnd,IDC_CHARSETSTATIC,szStrValue);
-		if (iStaticRight > iMaxStaticRight)
-			iMaxStaticRight = iStaticRight;
-	}
 	if (pLNG->GetValuePtr(IDC_FORMATSTATIC,szStrValue))
 	{
 		SetDlgItemText(IDC_FORMATSTATIC,szStrValue);
@@ -79,39 +69,34 @@ bool CProjectPropISOPage::Translate()
 		SetDlgItemText(IDC_JOLIETCHECK,szStrValue);
 	if (pLNG->GetValuePtr(IDC_JOLIETLONGNAMESCHECK,szStrValue))
 		SetDlgItemText(IDC_JOLIETLONGNAMESCHECK,szStrValue);
-	if (pLNG->GetValuePtr(IDC_UDFCHECK,szStrValue))
-		SetDlgItemText(IDC_UDFCHECK,szStrValue);
-	if (pLNG->GetValuePtr(IDC_ROCKRIDGECHECK,szStrValue))
-		SetDlgItemText(IDC_ROCKRIDGECHECK,szStrValue);
 	if (pLNG->GetValuePtr(IDC_OMITVNCHECK,szStrValue))
 		SetDlgItemText(IDC_OMITVNCHECK,szStrValue);
+	if (pLNG->GetValuePtr(IDC_DEEPDIRCHECK,szStrValue))
+		SetDlgItemText(IDC_DEEPDIRCHECK,szStrValue);
 
 	// Make sure that the edit controls are not in the way of the statics.
 	if (iMaxStaticRight > 75)
 	{
 		UpdateEditPos(m_hWnd,IDC_LEVELCOMBO,iMaxStaticRight);
-		UpdateEditPos(m_hWnd,IDC_CHARSETCOMBO,iMaxStaticRight);
 		UpdateEditPos(m_hWnd,IDC_FORMATCOMBO,iMaxStaticRight);
 	}
 
 	return true;
 }
 
-bool CProjectPropISOPage::OnApply()
+bool CProjectPropIsoPage::OnApply()
 {
-	g_ProjectSettings.m_iISOLevel = m_LevelCombo.GetCurSel();
-	g_ProjectSettings.m_iISOCharSet = m_CharSetCombo.GetCurSel();
-	g_ProjectSettings.m_iISOFormat = m_FormatCombo.GetCurSel();
+	g_ProjectSettings.m_iIsoLevel = m_LevelCombo.GetCurSel();
+	g_ProjectSettings.m_iIsoFormat = m_FormatCombo.GetCurSel();
 	g_ProjectSettings.m_bJoliet = IsDlgButtonChecked(IDC_JOLIETCHECK) == TRUE;
 	g_ProjectSettings.m_bJolietLongNames = IsDlgButtonChecked(IDC_JOLIETLONGNAMESCHECK) == TRUE;
-	g_ProjectSettings.m_bUDF = IsDlgButtonChecked(IDC_UDFCHECK) == TRUE;
-	g_ProjectSettings.m_bRockRidge = IsDlgButtonChecked(IDC_ROCKRIDGECHECK) == TRUE;
-	g_ProjectSettings.m_bOmitVN = IsDlgButtonChecked(IDC_OMITVNCHECK) == TRUE;
+	g_ProjectSettings.m_bOmitVerNum = IsDlgButtonChecked(IDC_OMITVNCHECK) == TRUE;
+	g_ProjectSettings.m_bDeepDirs = IsDlgButtonChecked(IDC_DEEPDIRCHECK) == TRUE;
 
 	return true;
 }
 
-void CProjectPropISOPage::OnHelp()
+void CProjectPropIsoPage::OnHelp()
 {
 	TCHAR szFileName[MAX_PATH];
 	GetModuleFileName(NULL,szFileName,MAX_PATH - 1);
@@ -123,7 +108,7 @@ void CProjectPropISOPage::OnHelp()
 	HtmlHelp(m_hWnd,szFileName,HH_DISPLAY_TOC,NULL);
 }
 
-LRESULT CProjectPropISOPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
+LRESULT CProjectPropIsoPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
 	// Setup the level combo box.
 	m_LevelCombo = GetDlgItem(IDC_LEVELCOMBO);
@@ -132,57 +117,23 @@ LRESULT CProjectPropISOPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,
 	m_LevelCombo.AddString(lngGetString(PROJECTPROP_ISOLEVEL2));
 	m_LevelCombo.AddString(lngGetString(PROJECTPROP_ISOLEVEL3));
 	m_LevelCombo.AddString(lngGetString(PROJECTPROP_ISOLEVEL4));
-	m_LevelCombo.SetCurSel(g_ProjectSettings.m_iISOLevel);
-
-	// Setup the character set combo box.
-	m_CharSetCombo = GetDlgItem(IDC_CHARSETCOMBO);
-
-	int iCurCharSet = CodePageToCharacterSet(GetACP());
-	TCHAR szBuffer[64];
-
-	for (unsigned int i = 0; i < 37; i++)
-	{
-		if (i == iCurCharSet)
-		{
-			lstrcpy(szBuffer,g_szCharacterSets[i]);
-			lstrcat(szBuffer,lngGetString(MISC_AUTODETECT));
-
-			m_CharSetCombo.AddString(szBuffer);
-		}
-		else
-		{
-			m_CharSetCombo.AddString(g_szCharacterSets[i]);
-		}
-	}
-
-	m_CharSetCombo.SetCurSel(g_ProjectSettings.m_iISOCharSet);
+	m_LevelCombo.SetCurSel(g_ProjectSettings.m_iIsoLevel);
 
 	// Format combo box.
 	m_FormatCombo = GetDlgItem(IDC_FORMATCOMBO);
 
 	m_FormatCombo.AddString(lngGetString(PROJECTPROP_MODE1));
 	m_FormatCombo.AddString(lngGetString(PROJECTPROP_MODE2));
-	m_FormatCombo.SetCurSel(g_ProjectSettings.m_iISOFormat);
+	m_FormatCombo.SetCurSel(g_ProjectSettings.m_iIsoFormat);
 
 	// Joliet.
 	CheckDlgButton(IDC_JOLIETCHECK,g_ProjectSettings.m_bJoliet);
 	CheckDlgButton(IDC_JOLIETLONGNAMESCHECK,g_ProjectSettings.m_bJolietLongNames);
-	
-	if (g_ProjectSettings.m_bJoliet)
-	{
-		::EnableWindow(GetDlgItem(IDC_JOLIETLONGNAMESCHECK),true);
-		::EnableWindow(GetDlgItem(IDC_ROCKRIDGECHECK),false);
-		CheckDlgButton(IDC_ROCKRIDGECHECK,true);
-	}
-	else
-	{
-		::EnableWindow(GetDlgItem(IDC_JOLIETLONGNAMESCHECK),false);
-		CheckDlgButton(IDC_ROCKRIDGECHECK,g_ProjectSettings.m_bRockRidge);
-	}
+	::EnableWindow(GetDlgItem(IDC_JOLIETLONGNAMESCHECK),g_ProjectSettings.m_bJoliet);
 
 	// Miscellaneous.
-	CheckDlgButton(IDC_UDFCHECK,g_ProjectSettings.m_bUDF);
-	CheckDlgButton(IDC_OMITVNCHECK,g_ProjectSettings.m_bOmitVN);
+	CheckDlgButton(IDC_OMITVNCHECK,g_ProjectSettings.m_bOmitVerNum);
+	CheckDlgButton(IDC_DEEPDIRCHECK,g_ProjectSettings.m_bDeepDirs);
 
 	// Translate the window.
 	Translate();
@@ -190,7 +141,7 @@ LRESULT CProjectPropISOPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,
 	return TRUE;
 }
 
-LRESULT CProjectPropISOPage::OnCommand(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
+LRESULT CProjectPropIsoPage::OnCommand(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
 	LRESULT lResult = DefWindowProc();
 
@@ -200,12 +151,7 @@ LRESULT CProjectPropISOPage::OnCommand(UINT uMsg,WPARAM wParam,LPARAM lParam,BOO
 		if (LOWORD(wParam) == IDC_JOLIETCHECK)
 		{
 			bool bJoliet = IsDlgButtonChecked(IDC_JOLIETCHECK) == TRUE;
-
 			::EnableWindow(GetDlgItem(IDC_JOLIETLONGNAMESCHECK),bJoliet);
-
-			::EnableWindow(GetDlgItem(IDC_ROCKRIDGECHECK),!bJoliet);
-			if (bJoliet)
-				CheckDlgButton(IDC_ROCKRIDGECHECK,true);
 		}
 	}
 

@@ -34,8 +34,8 @@ public:
 	unsigned char m_ucLJRS;
 	unsigned char m_ucTrackMode;
 	unsigned char m_ucDataMode;
-	unsigned char m_ucTrackNumber;
-	unsigned char m_ucSessionNumber;
+	unsigned short m_usTrackNumber;
+	unsigned short m_usSessionNumber;
 	unsigned long m_ulTrackAddr;
 	unsigned long m_ulNextWritableAddr;
 	unsigned long m_ulFreeBlocks;
@@ -123,18 +123,27 @@ public:
 class CCore2Info
 {
 public:
+	enum eTrackInfoType
+	{
+		TIT_LBA = 0,
+		TIT_TRACK = 1,
+		TIT_SESSION = 2
+	};
+
 	CCore2Info();
 	~CCore2Info();
 
 	// Closely related to SCSI MMC functions.
 	bool ReadCapacity(CCore2Device *pDevice,unsigned long &ulBlockAddress,
 		unsigned long &ulBlockLength);
-	bool ReadTrackInformation(CCore2Device *pDevice,unsigned long ulTrackAddr,
-		CCore2TrackInfo *pTrackInfo);
+	bool ReadTrackInformation(CCore2Device *pDevice,eTrackInfoType InfoType,
+		unsigned long ulTrackAddr,CCore2TrackInfo *pTrackInfo);
 	bool ReadDiscInformation(CCore2Device *pDevice,CCore2DiscInfo *pDiscInfo);
 	bool ReadPhysFmtInfo(CCore2Device *pDevice,CCore2PhysFmtInfo *pPhysInfo);
 	bool ReadTOC(CCore2Device *pDevice,unsigned char &ucFirstTrackNumber,
 		unsigned char &ucLastTrackNumber,std::vector<CCore2TOCTrackDesc> &Tracks);
+	bool ReadSI(CCore2Device *pDevice,unsigned char &ucFirstSessNumber,
+		unsigned char &ucLastSessNumber,unsigned long &ulLastSessFirstTrackPos);
 
 	bool GetTotalDiscCapacity(CCore2Device *pDevice,unsigned __int64 &uiUsedBytes,
 		unsigned __int64 &uiFreeBytes);

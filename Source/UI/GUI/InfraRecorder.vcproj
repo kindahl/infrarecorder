@@ -998,6 +998,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ConsolePipeStream.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\CopyDiscDlg.cpp"
 				>
 			</File>
@@ -1050,7 +1054,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Core2Stream.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Core2Util.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\CustomComboBox.cpp"
 				>
 			</File>
 			<File
@@ -1178,10 +1190,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\MultiSessionImport.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\NewFileExtDlg.cpp"
 				>
 			</File>
@@ -1238,7 +1246,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\ProjectPropISOPage.cpp"
+				RelativePath=".\ProjectPropIsoPage.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ProjectPropUdfPage.cpp"
 				>
 			</File>
 			<File
@@ -1378,10 +1390,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\System.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\TempManager.cpp"
 				>
 			</File>
@@ -1491,6 +1499,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ConsolePipeStream.h"
+				>
+			</File>
+			<File
 				RelativePath=".\CopyDiscDlg.h"
 				>
 			</File>
@@ -1543,11 +1555,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Core2Stream.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Core2Util.h"
 				>
 			</File>
 			<File
 				RelativePath=".\CtrlMessages.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CustomComboBox.h"
 				>
 			</File>
 			<File
@@ -1675,10 +1695,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\MultiSessionImport.h"
-				>
-			</File>
-			<File
 				RelativePath=".\NewFileExtDlg.h"
 				>
 			</File>
@@ -1735,7 +1751,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\ProjectPropISOPage.h"
+				RelativePath=".\ProjectPropIsoPage.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ProjectPropUdfPage.h"
 				>
 			</File>
 			<File
@@ -1796,10 +1816,6 @@
 			</File>
 			<File
 				RelativePath=".\StringTable.h"
-				>
-			</File>
-			<File
-				RelativePath=".\System.h"
 				>
 			</File>
 			<File
@@ -2028,6 +2044,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\Common\SizeStream.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Common\SizeStream.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\Common\Stream.h"
 				>
 			</File>
@@ -2095,6 +2119,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\Core\ckFileSystem\DiscImageHelper.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Core\ckFileSystem\DiscImageHelper.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\Core\ckFileSystem\DiscImageWriter.cpp"
 					>
 				</File>
@@ -2144,6 +2176,14 @@
 				</File>
 				<File
 					RelativePath="..\..\Core\ckFileSystem\Iso9660.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Core\ckFileSystem\Iso9660Reader.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Core\ckFileSystem\Iso9660Reader.h"
 					>
 				</File>
 				<File

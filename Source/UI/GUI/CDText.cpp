@@ -435,7 +435,7 @@ bool CCDText::WriteFileEx(const TCHAR *szFileName,const TCHAR *szAlbumName,
 	for (unsigned int i = 0; i < Tracks.size(); i++)
 	{
 #ifdef UNICODE
-		UnicodeToAnsi(szBuffer,Tracks[i]->szTrackTitle,sizeof(szBuffer));
+		UnicodeToAnsi(szBuffer,Tracks[i]->GetAudioData()->szTrackTitle,sizeof(szBuffer));
 #else
 		strcpy(szBuffer,Tracks[i]->szTrackTitle);
 #endif
@@ -463,7 +463,7 @@ bool CCDText::WriteFileEx(const TCHAR *szFileName,const TCHAR *szAlbumName,
 	for (unsigned int i = 0; i < Tracks.size(); i++)
 	{
 #ifdef UNICODE
-		UnicodeToAnsi(szBuffer,Tracks[i]->szTrackArtist,sizeof(szBuffer));
+		UnicodeToAnsi(szBuffer,Tracks[i]->GetAudioData()->szTrackArtist,sizeof(szBuffer));
 #else
 		strcpy(szBuffer,Tracks[i]->szTrackArtist);
 #endif

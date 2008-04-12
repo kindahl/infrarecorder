@@ -17,7 +17,6 @@
  */
 
 #include "stdafx.h"
-#include "Core.h"
 #include "cdrtoolsParseStrings.h"
 #include "../../Common/FileManager.h"
 #include "../../Common/StringContainer.h"
@@ -27,6 +26,9 @@
 #include "LangUtil.h"
 #include "WinVer.h"
 #include "TempManager.h"
+#include "ConsolePipeStream.h"
+#include "Core2.h"
+#include "Core.h"
 
 // FIXME: How come Windows 95 supports larger command lines than Windows 2000?
 //        Windows 2000 seems to be the only OS that is limited to MAX_PATH.
@@ -325,58 +327,6 @@ void CCore::ErrorOutputCDRECORD(const char *szBuffer)
 	}
 }
 
-void CCore::ErrorOutputMKISOFS(const char *szBuffer)
-{
-	if (m_pProgress != NULL)
-	{
-		if (!strncmp(szBuffer,CDRTOOLS_FILENOTFOUND,CDRTOOLS_FILENOTFOUND_LENGTH))
-		{
-			TCHAR szMessage[MAX_PATH + 128];
-			lstrcpy(szMessage,lngGetString(FAILURE_FILENOTFOUND));
-
-#ifdef UNICODE
-			TCHAR szFileName[MAX_PATH + 3];
-			AnsiToUnicode(szFileName,szBuffer + CDRTOOLS_FILENOTFOUND_LENGTH + 15,sizeof(szFileName) / sizeof(wchar_t));
-			lstrcat(szMessage,szFileName);
-#else
-			lstrcat(szMessage,szBuffer + CDRTOOLS_FILENOTFOUND_LENGTH + 15);
-#endif
-
-			m_pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,szMessage);
-		}
-		else if (!strncmp(szBuffer,CDRTOOLS_DEPPDIR,CDRTOOLS_DEEPDIR_LENGTH))
-		{
-			char szFileName[MAX_PATH];
-			int iDepth = 0;
-			int iMaxDepth = 0;
-
-			sscanf(szBuffer,"Directories too deep for '%[^']' (%d) max is %d.",szFileName,&iDepth,&iMaxDepth);
-#ifdef UNICODE
-			TCHAR szWideFileName[MAX_PATH];
-			AnsiToUnicode(szWideFileName,szFileName,sizeof(szWideFileName) / sizeof(wchar_t));
-
-			m_pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,lngGetString(FAILURE_DEEPDIR),
-				szWideFileName,iDepth,iMaxDepth);
-#else
-			m_pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,lngGetString(FAILURE_DEEPDIR),
-				szFileName,iDepth,iMaxDepth);
-#endif
-		}
-#ifdef CORE_PRINT_UNSUPERRORMESSAGES
-		else
-		{
-#ifdef UNICODE
-			TCHAR szWideBuffer[CONSOLEPIPE_MAX_LINE_SIZE];
-			AnsiToUnicode(szWideBuffer,szBuffer,sizeof(szWideBuffer) / sizeof(wchar_t));
-			m_pProgress->AddLogEntry(CAdvancedProgress::LT_WINLOGO,szWideBuffer);
-#else
-			m_pProgress->AddLogEntry(CAdvancedProgress::LT_WINLOGO,szBuffer);
-#endif
-		}
-#endif
-	}
-}
-
 void CCore::ErrorOutputREADCD(const char *szBuffer)
 {
 	if (m_pProgress != NULL)
@@ -515,50 +465,6 @@ void CCore::BurnImageOutput(const char *szBuffer)
 	}
 }
 
-void CCore::CreateImageOutput(const char *szBuffer)
-{
-	// Look for progress information.
-	float fProgress = 0.0f;
-	char szTime[64];
-
-	if (sscanf(szBuffer,"%f%% done, estimate finish %*s %*s %*s %s %*[^\0]",&fProgress,szTime) == 2)
-	{
-		m_pProgress->SetProgress((int)fProgress);
-
-		// Update the status.
-#ifdef UNICODE
-		TCHAR szWideTime[64];
-		AnsiToUnicode(szWideTime,szTime,sizeof(szWideTime) / sizeof(wchar_t));
-
-		TCHAR szStatus[128];
-		lsnprintf_s(szStatus,128,lngGetString(STATUS_WRITEIMAGE),szWideTime);
-		m_pProgress->SetStatus(szStatus);
-#else
-		char szStatus[128];
-		sprintf(szStatus,lngGetString(STATUS_WRITEIMAGE),szTime);
-		m_pProgress->SetStatus(szStatus);
-#endif
-	}
-	else if (!strncmp(szBuffer,CDRTOOLS_TOTALTTSIZE,CDRTOOLS_TOTALTTSIZE_LENGTH))
-	{
-		m_pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,lngGetString(SUCCESS_CREATEIMAGE));
-		m_bOperationRes = true;		// Success.
-	}
-	// This is a special case. mkisofs likes to print a boot image error on a weird place.
-	else if (!strncmp(szBuffer,CDRTOOLS_SIZEOFBOOT,CDRTOOLS_SIZEOFBOOT_LENGTH))
-	{
-		// Typical string: Size of boot image is 24 sectors -> /cygdrive/...
-		const char *pBuffer = szBuffer;
-		while (*pBuffer != '>')
-			pBuffer++;
-
-		pBuffer += 2;
-
-		if (!strncmp(pBuffer,CDRTOOLS_CYGWINPATH,CDRTOOLS_CYGWINPATH_LENGTH))
-			ErrorOutputMKISOFS(pBuffer + m_uiCDRToolsPathLen + CDRTOOLS_ERROR2_LENGTH);
-	}
-}
-
 void CCore::ReadDataTrackOutput(const char *szBuffer)
 {
 	if (!strncmp(szBuffer,CDRTOOLS_END,CDRTOOLS_END_LENGTH))
@@ -667,18 +573,6 @@ void CCore::ReadDiscOutput(const char *szBuffer)
 	}
 }
 
-void CCore::EstimateSizeOutput(const char *szBuffer)
-{
-	if (!strncmp(szBuffer,CDRTOOLS_TOTALEXTENT,CDRTOOLS_TOTALEXTENT_LENGTH))
-	{
-		sscanf(szBuffer,"Total extents scheduled to be written = %I64d",&m_uiEstimatedSize);
-
-		m_pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,lngGetString(SUCCESS_ESTIMAGESIZE),m_uiEstimatedSize);
-
-		m_bOperationRes = true;
-	}
-}
-
 void CCore::FlushOutput(const char *szBuffer)
 {
 	// Write to the log.
@@ -709,11 +603,6 @@ void CCore::FlushOutput(const char *szBuffer)
 				ErrorOutputCDRECORD(szBuffer + m_uiCDRToolsPathLen + CDRTOOLS_ERROR_LENGTH);
 				return;
 			}
-			else if (!strncmp(szBuffer + m_uiCDRToolsPathLen,CDRTOOLS_ERROR2,CDRTOOLS_ERROR2_LENGTH))
-			{
-				ErrorOutputMKISOFS(szBuffer + m_uiCDRToolsPathLen + CDRTOOLS_ERROR2_LENGTH);
-				return;
-			}
 			else if (!strncmp(szBuffer + m_uiCDRToolsPathLen,CDRTOOLS_ERROR3,CDRTOOLS_ERROR3_LENGTH))
 			{
 				ErrorOutputREADCD(szBuffer + m_uiCDRToolsPathLen + CDRTOOLS_ERROR3_LENGTH);
@@ -732,11 +621,6 @@ void CCore::FlushOutput(const char *szBuffer)
 		if (!strncmp(szBuffer,CDRTOOLS_ERROR,CDRTOOLS_ERROR_LENGTH))
 		{
 			ErrorOutputCDRECORD(szBuffer + CDRTOOLS_ERROR_LENGTH);
-			return;
-		}
-		else if (!strncmp(szBuffer,CDRTOOLS_ERROR2,CDRTOOLS_ERROR2_LENGTH))
-		{
-			ErrorOutputMKISOFS(szBuffer + CDRTOOLS_ERROR2_LENGTH);
 			return;
 		}
 		else if (!strncmp(szBuffer,CDRTOOLS_ERROR3,CDRTOOLS_ERROR3_LENGTH))
@@ -942,10 +826,6 @@ void CCore::FlushOutput(const char *szBuffer)
 			BurnImageOutput(szBuffer);
 			break;
 
-		case MODE_CREATEIMAGE:
-		case MODE_CREATEIMAGEEX:
-			CreateImageOutput(szBuffer);
-
 		case MODE_READDATATRACK:
 		case MODE_READDATATRACKEX:
 			ReadDataTrackOutput(szBuffer);
@@ -965,10 +845,6 @@ void CCore::FlushOutput(const char *szBuffer)
 		case MODE_READDISCEX:
 			ReadDiscOutput(szBuffer);
 			break;
-
-		case MODE_ESTIMATESIZE:
-			EstimateSizeOutput(szBuffer);
-			break;
 	};
 }
 
@@ -985,7 +861,6 @@ void CCore::ProcessEnded()
 		case MODE_ERASE:
 		case MODE_FIXATE:
 		case MODE_BURNIMAGE:
-		case MODE_CREATEIMAGE:
 		case MODE_READDATATRACK:
 		case MODE_READAUDIOTRACK:
 		case MODE_SCANTRACK:
@@ -996,12 +871,10 @@ void CCore::ProcessEnded()
 			break;
 
 		case MODE_BURNIMAGEEX:
-		case MODE_CREATEIMAGEEX:
 		case MODE_READDATATRACKEX:
 		case MODE_READAUDIOTRACKEX:
 		case MODE_SCANTRACKEX:
 		case MODE_READDISCEX:
-		case MODE_ESTIMATESIZE:
 			if (m_bOperationRes)
 			{
 				m_pProgress->SetProgress(0);
@@ -1700,362 +1573,6 @@ int CCore::BurnTracksEx(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	return m_bOperationRes ? RESULT_OK : RESULT_EXTERNALERROR;
 }
 
-bool CCore::CreateImage(const TCHAR *szFileName,const TCHAR *szPathList,
-						CAdvancedProgress *pProgress,int iMode,bool bEstimateSize,
-						bool bWaitForProcess)
-{
-	m_bOperationRes = false;
-
-	// Initialize log.
-	if (g_GlobalSettings.m_bLog)
-	{
-		if (bEstimateSize)
-			g_LogDlg.AddLine(_T("CCore::CreateImage (estimate file system size only)"));
-		else
-			g_LogDlg.AddLine(_T("CCore::CreateImage"));
-
-		g_LogDlg.AddLine(_T("  File = %s."),szFileName);
-
-		g_LogDlg.AddLine(_T("  ISOLevel = %d, ISOCharSet = %d, Joliet = %d, JolietLongNames = %d, UDF = %d, RR = %d, OmitVN = %d, DVD-Video = %d, BootImages = %d."),
-			g_ProjectSettings.m_iISOLevel,
-			g_ProjectSettings.m_iISOCharSet,
-			(int)g_ProjectSettings.m_bJoliet,
-			(int)g_ProjectSettings.m_bJolietLongNames,
-			(int)g_ProjectSettings.m_bUDF,
-			(int)g_ProjectSettings.m_bRockRidge,
-			(int)g_ProjectSettings.m_bOmitVN,
-			(int)g_ProjectSettings.m_bDVDVideo,
-			(int)g_ProjectSettings.m_BootImages.size());
-	}
-
-	// Initialize this object.
-	Initialize(iMode,pProgress);
-
-	tstring CommandLine;
-	CommandLine.reserve(MAX_PATH);
-
-	CommandLine = _T("\"");
-	CommandLine += g_GlobalSettings.m_szCDRToolsPath;
-	CommandLine += _T("mkisofs.exe\" -V \"");
-	CommandLine += g_ProjectSettings.m_szLabel;
-	CommandLine += _T("\"");
-
-	// First we try to save a file containing the volume information to we
-	// don't have to waste command line space.
-	CStringContainerA StringContainer;
-	char szLargeBuffer[MAX_PATH + 32];
-
-	// Publiser.
-	strcpy(szLargeBuffer,"PUBL=");
-#ifdef UNICODE
-	UnicodeToAnsi(szLargeBuffer + 5,g_ProjectSettings.m_szPublisher,sizeof(szLargeBuffer) - 5);
-#else
-	lstrcat(szLargeBuffer,g_ProjectSettings.m_szPublisher);
-#endif
-	StringContainer.m_szStrings.push_back(szLargeBuffer);
-
-	// Preparer.
-	strcpy(szLargeBuffer,"PREP=");
-#ifdef UNICODE
-	UnicodeToAnsi(szLargeBuffer + 5,g_ProjectSettings.m_szPreparer,sizeof(szLargeBuffer) - 5);
-#else
-	lstrcat(szLargeBuffer,g_ProjectSettings.m_szPreparer);
-#endif
-	StringContainer.m_szStrings.push_back(szLargeBuffer);
-
-	// Application (*).
-	StringContainer.m_szStrings.push_back("APPI=InfraRecorder (C) 2006-2008 Christian Kindahl");
-
-	// System.
-	strcpy(szLargeBuffer,"SYSI=");
-#ifdef UNICODE
-	UnicodeToAnsi(szLargeBuffer + 5,g_ProjectSettings.m_szSystem,sizeof(szLargeBuffer) - 5);
-#else
-	lstrcat(szLargeBuffer,g_ProjectSettings.m_szSystem);
-#endif
-	StringContainer.m_szStrings.push_back(szLargeBuffer);
-
-	// Volume set.
-	strcpy(szLargeBuffer,"VOLS=");
-#ifdef UNICODE
-	UnicodeToAnsi(szLargeBuffer + 5,g_ProjectSettings.m_szVolumeSet,sizeof(szLargeBuffer) - 5);
-#else
-	lstrcat(szLargeBuffer,g_ProjectSettings.m_szVolumeSet);
-#endif
-	StringContainer.m_szStrings.push_back(szLargeBuffer);
-
-	// Copyright.
-	strcpy(szLargeBuffer,"COPY=");
-#ifdef UNICODE
-	UnicodeToAnsi(szLargeBuffer + 5,g_ProjectSettings.m_szCopyright,sizeof(szLargeBuffer) - 5);
-#else
-	lstrcat(szLargeBuffer,g_ProjectSettings.m_szCopyright);
-#endif
-	StringContainer.m_szStrings.push_back(szLargeBuffer);
-
-	// Abstract.
-	strcpy(szLargeBuffer,"ABST=");
-#ifdef UNICODE
-	UnicodeToAnsi(szLargeBuffer + 5,g_ProjectSettings.m_szAbstract,sizeof(szLargeBuffer) - 5);
-#else
-	lstrcat(szLargeBuffer,g_ProjectSettings.m_szAbstract);
-#endif
-	StringContainer.m_szStrings.push_back(szLargeBuffer);
-
-	// Bibliographic.
-	strcpy(szLargeBuffer,"BIBL=");
-#ifdef UNICODE
-	UnicodeToAnsi(szLargeBuffer + 5,g_ProjectSettings.m_szBibliographic,sizeof(szLargeBuffer) - 5);
-#else
-	lstrcat(szLargeBuffer,g_ProjectSettings.m_szBibliographic);
-#endif
-	StringContainer.m_szStrings.push_back(szLargeBuffer);
-
-	// Calculate the file name and try to save the file.
-	TCHAR szMkisofsFileName[MAX_PATH];
-	lstrcpy(szMkisofsFileName,g_GlobalSettings.m_szCDRToolsPath);
-	lstrcat(szMkisofsFileName,_T(".mkisofsrc"));
-
-	if (StringContainer.SaveToFile(szMkisofsFileName) == SCRES_OK)
-	{
-		// If the file was successfully created, make sure that it's removed
-		// when InfraRecorder closes.
-		g_TempManager.AddObject(szMkisofsFileName);
-	}
-	else
-	{
-		if (g_GlobalSettings.m_bLog)
-			g_LogDlg.AddLine(_T("  Warning: Could write .mkisofs file, using the command line instead."));
-
-		// Publisher.
-		if (g_ProjectSettings.m_szPublisher[0] != '\0')
-		{
-			CommandLine += _T(" -publisher \"");
-			CommandLine += g_ProjectSettings.m_szPublisher;
-			CommandLine += _T("\"");
-		}
-
-		// Preparer.
-		if (g_ProjectSettings.m_szPreparer[0] != '\0')
-		{
-			CommandLine += _T(" -p \"");
-			CommandLine += g_ProjectSettings.m_szPreparer;
-			CommandLine += _T("\"");
-		}
-
-		// Application (*)
-		CommandLine += _T(" -A \"InfraRecorder\"");
-
-		// System.
-		if (g_ProjectSettings.m_szSystem[0] != '\0')
-		{
-			CommandLine += _T(" -sysid \"");
-			CommandLine += g_ProjectSettings.m_szSystem;
-			CommandLine += _T("\"");
-		}
-
-		// Volume set.
-		if (g_ProjectSettings.m_szVolumeSet[0] != '\0')
-		{
-			CommandLine += _T(" -volset \"");
-			CommandLine += g_ProjectSettings.m_szVolumeSet;
-			CommandLine += _T("\"");
-		}
-
-		// Copyright.
-		if (g_ProjectSettings.m_szCopyright[0] != '\0')
-		{
-			CommandLine += _T(" -copyright \"");
-			CommandLine += g_ProjectSettings.m_szCopyright;
-			CommandLine += _T("\"");
-		}
-
-		// Abstract.
-		if (g_ProjectSettings.m_szAbstract[0] != '\0')
-		{
-			CommandLine += _T(" -abstract \"");
-			CommandLine += g_ProjectSettings.m_szAbstract;
-			CommandLine += _T("\"");
-		}
-
-		// Bibliographic.
-		if (g_ProjectSettings.m_szBibliographic[0] != '\0')
-		{
-			CommandLine += _T(" -biblio \"");
-			CommandLine += g_ProjectSettings.m_szBibliographic;
-			CommandLine += _T("\"");
-		}
-	}
-
-	// ISO level.
-	TCHAR szBuffer[64];
-	lsprintf(szBuffer,_T(" -iso-level %d"),g_ProjectSettings.m_iISOLevel + 1);
-	CommandLine += szBuffer;
-
-	// ISO character set.
-	CommandLine += _T(" -input-charset ");
-	CommandLine += g_szCharacterSets[g_ProjectSettings.m_iISOCharSet];
-
-	// Joliet.
-	if (g_ProjectSettings.m_bJoliet)
-	{
-		CommandLine += _T(" -r -J");
-
-		if (g_ProjectSettings.m_bJolietLongNames)
-			CommandLine += _T(" -joliet-long");
-	}
-	else
-	{
-		// Rock Ridge (automatically enabled when using Joliet).
-		if (g_ProjectSettings.m_bRockRidge)
-			CommandLine += _T(" -r");
-	}
-
-	// UDF.
-	if (g_ProjectSettings.m_bUDF)
-		CommandLine += _T(" -udf");
-
-	// Omit version numbers.
-	if (g_ProjectSettings.m_bOmitVN)
-		CommandLine += _T(" -N");
-
-	if (g_ProjectSettings.m_bDVDVideo)
-		CommandLine += _T(" -dvd-video");
-
-	// Boot information.
-	bool bFirst = true;
-
-	std::list <CProjectBootImage *>::iterator itImageObject;
-	for (itImageObject = g_ProjectSettings.m_BootImages.begin(); itImageObject != g_ProjectSettings.m_BootImages.end(); itImageObject++)
-	{
-		if (!bFirst)
-			CommandLine += _T(" -eltorito-alt-boot");
-
-		CommandLine += _T(" -b \"");
-
-		// Prepare the full relative image name.
-		TCHAR szImageFullPath[MAX_PATH];
-		if ((*itImageObject)->m_LocalPath.c_str()[0] == '/' ||
-			(*itImageObject)->m_LocalPath.c_str()[0] == '\\')
-		{
-			lstrcpy(szImageFullPath,(*itImageObject)->m_LocalPath.c_str() + 1);
-		}
-		else
-		{
-			lstrcpy(szImageFullPath,(*itImageObject)->m_LocalPath.c_str());
-		}
-
-		lstrcat(szImageFullPath,(*itImageObject)->m_LocalName.c_str());
-		ForceSlashDelimiters(szImageFullPath);
-
-		CommandLine += szImageFullPath;
-		CommandLine += _T("\"");
-
-		switch ((*itImageObject)->m_iEmulation)
-		{
-			case PROJECTBI_BOOTEMU_NONE:
-				CommandLine += _T(" -no-emul-boot");
-
-				CommandLine += _T(" -boot-load-seg ");
-				lsnprintf_s(szBuffer,64,_T("%d"),(*itImageObject)->m_iLoadSegment);
-				CommandLine += szBuffer;
-
-				CommandLine += _T(" -boot-load-size ");
-				lsnprintf_s(szBuffer,64,_T("%d"),(*itImageObject)->m_iLoadSize);
-				CommandLine += szBuffer;
-				break;
-
-			case PROJECTBI_BOOTEMU_FLOPPY:
-				if ((*itImageObject)->m_bNoBoot)
-					CommandLine += _T(" -no-boot");
-				break;
-
-			case PROJECTBI_BOOTEMU_HARDDISK:
-				CommandLine += _T(" -hard-disk-boot");
-
-				if ((*itImageObject)->m_bNoBoot)
-					CommandLine += _T(" -no-boot");
-				break;
-		}
-
-		if ((*itImageObject)->m_bBootInfoTable)
-			CommandLine += _T(" -boot-info-table");
-
-		bFirst = false;
-	}
-
-	if (g_ProjectSettings.m_BootImages.size() > 0)
-	{
-		CommandLine += _T(" -c ");
-		CommandLine += g_ProjectSettings.m_szBootCatalog;
-	}
-
-	// Multisession.
-	if (g_ProjectSettings.m_bMultiSession)
-	{
-		lsprintf(szBuffer,_T(" -C %I64d,%I64d"),g_ProjectSettings.m_uiLastSession,g_ProjectSettings.m_uiNextSession);
-		CommandLine += szBuffer;
-
-		tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(g_ProjectSettings.m_uiDeviceIndex);
-		
-		if (pDeviceInfo != NULL)
-		{
-			g_DeviceManager.GetDeviceAddr(pDeviceInfo,szBuffer);
-
-			CommandLine += _T(" -M ");
-			CommandLine += szBuffer;
-		}
-	}
-
-	// Paths.
-	CommandLine += _T(" -graft-points -path-list \"");
-	CommandLine += szPathList;
-
-	if (bEstimateSize)
-	{
-		CommandLine += _T("\" -print-size");
-
-		m_pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,lngGetString(PROGRESS_BEGINESTIMAGESIZE));
-	}
-	else
-	{
-		CommandLine += _T("\" -gui -o \"");
-		CommandLine += szFileName;
-		CommandLine += _T("\"");
-
-		m_pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,lngGetString(PROGRESS_BEGINDISCIMAGE));
-	}
-
-	return SafeLaunch(CommandLine,bWaitForProcess);
-}
-
-/*
-	CCore::CreateImage
-	------------------
-	Creates a disc image to szFileName containing the files in the szPathList file.
-*/
-bool CCore::CreateImage(const TCHAR *szFileName,const TCHAR *szPathList,
-						CAdvancedProgress *pProgress)
-{
-	return CreateImage(szFileName,szPathList,pProgress,MODE_CREATEIMAGE,false,true);
-}
-
-/*
-	CCore::CreateImageEx
-	--------------------
-	Same as CreateImage but does not tell the progress window when the process
-	has completed so multiple actions can be performed using the same progress
-	window. It also has extra return values.
-*/
-int CCore::CreateImageEx(const TCHAR *szFileName,const TCHAR *szPathList,
-						CAdvancedProgress *pProgress)
-{
-	if (!CreateImage(szFileName,szPathList,pProgress,MODE_CREATEIMAGEEX,false,true))
-		return RESULT_INTERNALERROR;
-
-	return m_bOperationRes ? RESULT_OK : RESULT_EXTERNALERROR;
-}
-
 /*
 	CCore::ReadDataTrack
 	--------------------
@@ -2596,6 +2113,16 @@ int CCore::ReadDiscEx(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,cons
 	return m_bOperationRes ? RESULT_OK : RESULT_EXTERNALERROR;
 }
 
+DWORD WINAPI CCore::CreateCompImageThread(LPVOID lpThreadParameter)
+{
+	CCompImageParams *pParams = (CCompImageParams *)lpThreadParameter;
+
+	COutConsolePipeStream OutStream(pParams->m_ConsolePipe);
+	g_Core2.CreateImage(OutStream,pParams->m_Files,pParams->m_Progress);
+
+	return 0;
+}
+
 /*
 	CCore::BurnCompilation
 	----------------------
@@ -2603,8 +2130,8 @@ int CCore::ReadDiscEx(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,cons
 	the g_BurnImageSettings and g_ProjectSettings object.
 */
 bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
-		tDeviceInfoEx *pDeviceInfoEx,CAdvancedProgress *pProgress,
-		const TCHAR *szPathList,std::vector<TCHAR *> &AudioTracks,
+		tDeviceInfoEx *pDeviceInfoEx,CAdvancedProgress *pProgress,CProgressEx &Progress,
+		ckFileSystem::CFileSet &Files,std::vector<TCHAR *> &AudioTracks,
 		const TCHAR *szAudioText,int iDataMode,unsigned __int64 uiDataBytes,int iMode)
 {
 	m_bOperationRes = true;
@@ -2615,7 +2142,7 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 		g_LogDlg.AddLine(_T("CCore::BurnCompilation"));
 		g_LogDlg.AddLine(_T("  [%d,%d,%d] %s %s %s"),pDeviceInfo->Address.m_iBus,pDeviceInfo->Address.m_iTarget,
 			pDeviceInfo->Address.m_iLun,pDeviceInfo->szVendor,pDeviceInfo->szIdentification,pDeviceInfo->szRevision);
-		g_LogDlg.AddLine(_T("  Eject = %d, Simulate = %d, BUP = %d, Pad tracks = %d, Fixate = %d, Overburn = %d, Swab = %d, Ignore size = %d, Immed = %d, Audio master = %d, Forcespeed = %d, VariRec (enabled) = %d, VariRec (value) = %d."),
+		g_LogDlg.AddLine(_T("  Eject = %d, Simulate = %d, BUP = %d, Pad tracks = %d, Fixate = %d, Overburn = %d, Swab = %d, Ignore size = %d, Immed = %d, Audio master = %d, Forcespeed = %d, VariRec (enabled) = %d, VariRec (value) = %d, Data bytes %I64d."),
 			(int)g_BurnImageSettings.m_bEject,
 			(int)g_BurnImageSettings.m_bSimulate,
 			(int)g_BurnImageSettings.m_bBUP,
@@ -2628,7 +2155,8 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 			(int)g_BurnAdvancedSettings.m_bAudioMaster,
 			(int)g_BurnAdvancedSettings.m_bForceSpeed,
 			(int)g_BurnAdvancedSettings.m_bVariRec,
-			g_BurnAdvancedSettings.m_iVariRec);
+			g_BurnAdvancedSettings.m_iVariRec,
+			uiDataBytes);
 	}
 
 	// Initialize this object.
@@ -2653,360 +2181,25 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	}
 
 	// Setup the command line.
-	std::string CommandLine;
+	tstring CommandLine;
 	CommandLine.reserve(MAX_PATH);
 
-	CommandLine = "mkisofs.exe -gui -V \"";
-
-#ifdef UNICODE
-	char szMultiBuffer[MAX_PATH];
-	UnicodeToAnsi(szMultiBuffer,g_ProjectSettings.m_szLabel,sizeof(szMultiBuffer));
-	CommandLine += szMultiBuffer;
-#else
-	CommandLine += g_ProjectSettings.m_szLabel;
-#endif
-	CommandLine += "\"";
-
-	// First we try to save a file containing the volume information to we
-	// don't have to waste command line space.
-	CStringContainerA StringContainer;
-	char szLargeBuffer[MAX_PATH + 32];
-
-	// Publiser.
-	strcpy(szLargeBuffer,"PUBL=");
-#ifdef UNICODE
-	UnicodeToAnsi(szLargeBuffer + 5,g_ProjectSettings.m_szPublisher,sizeof(szLargeBuffer) - 5);
-#else
-	lstrcat(szLargeBuffer,g_ProjectSettings.m_szPublisher);
-#endif
-	StringContainer.m_szStrings.push_back(szLargeBuffer);
-
-	// Preparer.
-	strcpy(szLargeBuffer,"PREP=");
-#ifdef UNICODE
-	UnicodeToAnsi(szLargeBuffer + 5,g_ProjectSettings.m_szPreparer,sizeof(szLargeBuffer) - 5);
-#else
-	lstrcat(szLargeBuffer,g_ProjectSettings.m_szPreparer);
-#endif
-	StringContainer.m_szStrings.push_back(szLargeBuffer);
-
-	// Application (*).
-	StringContainer.m_szStrings.push_back("APPI=InfraRecorder (C) 2006-2008 Christian Kindahl");
-
-	// System.
-	strcpy(szLargeBuffer,"SYSI=");
-#ifdef UNICODE
-	UnicodeToAnsi(szLargeBuffer + 5,g_ProjectSettings.m_szSystem,sizeof(szLargeBuffer) - 5);
-#else
-	lstrcat(szLargeBuffer,g_ProjectSettings.m_szSystem);
-#endif
-	StringContainer.m_szStrings.push_back(szLargeBuffer);
-
-	// Volume set.
-	strcpy(szLargeBuffer,"VOLS=");
-#ifdef UNICODE
-	UnicodeToAnsi(szLargeBuffer + 5,g_ProjectSettings.m_szVolumeSet,sizeof(szLargeBuffer) - 5);
-#else
-	lstrcat(szLargeBuffer,g_ProjectSettings.m_szVolumeSet);
-#endif
-	StringContainer.m_szStrings.push_back(szLargeBuffer);
-
-	// Copyright.
-	strcpy(szLargeBuffer,"COPY=");
-#ifdef UNICODE
-	UnicodeToAnsi(szLargeBuffer + 5,g_ProjectSettings.m_szCopyright,sizeof(szLargeBuffer) - 5);
-#else
-	lstrcat(szLargeBuffer,g_ProjectSettings.m_szCopyright);
-#endif
-	StringContainer.m_szStrings.push_back(szLargeBuffer);
-
-	// Abstract.
-	strcpy(szLargeBuffer,"ABST=");
-#ifdef UNICODE
-	UnicodeToAnsi(szLargeBuffer + 5,g_ProjectSettings.m_szAbstract,sizeof(szLargeBuffer) - 5);
-#else
-	lstrcat(szLargeBuffer,g_ProjectSettings.m_szAbstract);
-#endif
-	StringContainer.m_szStrings.push_back(szLargeBuffer);
-
-	// Bibliographic.
-	strcpy(szLargeBuffer,"BIBL=");
-#ifdef UNICODE
-	UnicodeToAnsi(szLargeBuffer + 5,g_ProjectSettings.m_szBibliographic,sizeof(szLargeBuffer) - 5);
-#else
-	lstrcat(szLargeBuffer,g_ProjectSettings.m_szBibliographic);
-#endif
-	StringContainer.m_szStrings.push_back(szLargeBuffer);
-
-	// Calculate the file name and try to save the file.
-	TCHAR szMkisofsFileName[MAX_PATH];
-	lstrcpy(szMkisofsFileName,g_GlobalSettings.m_szCDRToolsPath);
-	lstrcat(szMkisofsFileName,_T(".mkisofsrc"));
-
-	if (StringContainer.SaveToFile(szMkisofsFileName) == SCRES_OK)
-	{
-		// If the file was successfully created, make sure that it's removed
-		// when InfraRecorder closes.
-		g_TempManager.AddObject(szMkisofsFileName);
-	}
-	else
-	{
-		if (g_GlobalSettings.m_bLog)
-			g_LogDlg.AddLine(_T("  Warning: Could write .mkisofs file, using the command line instead."));
-
-		// Publisher.
-		if (g_ProjectSettings.m_szPublisher[0] != '\0')
-		{
-			CommandLine += " -publisher \"";
-#ifdef UNICODE
-			UnicodeToAnsi(szMultiBuffer,g_ProjectSettings.m_szPublisher,sizeof(szMultiBuffer));
-			CommandLine += szMultiBuffer;
-#else
-			CommandLine += g_ProjectSettings.m_szPublisher;
-#endif
-			CommandLine += "\"";
-		}
-
-		// Preparer.
-		if (g_ProjectSettings.m_szPreparer[0] != '\0')
-		{
-			CommandLine += " -p \"";
-#ifdef UNICODE
-			UnicodeToAnsi(szMultiBuffer,g_ProjectSettings.m_szPreparer,sizeof(szMultiBuffer));
-			CommandLine += szMultiBuffer;
-#else
-			CommandLine += g_ProjectSettings.m_szPreparer;
-#endif
-			CommandLine += "\"";
-		}
-
-		// Application (*)
-		CommandLine += " -A \"InfraRecorder\"";
-
-		// System.
-		if (g_ProjectSettings.m_szSystem[0] != '\0')
-		{
-			CommandLine += " -sysid \"";
-#ifdef UNICODE
-			UnicodeToAnsi(szMultiBuffer,g_ProjectSettings.m_szSystem,sizeof(szMultiBuffer));
-			CommandLine += szMultiBuffer;
-#else
-			CommandLine += g_ProjectSettings.m_szSystem;
-#endif
-			CommandLine += "\"";
-		}
-
-		// Volume set.
-		if (g_ProjectSettings.m_szVolumeSet[0] != '\0')
-		{
-			CommandLine += " -volset \"";
-#ifdef UNICODE
-			UnicodeToAnsi(szMultiBuffer,g_ProjectSettings.m_szVolumeSet,sizeof(szMultiBuffer));
-			CommandLine += szMultiBuffer;
-#else
-			CommandLine += g_ProjectSettings.m_szVolumeSet;
-#endif
-			CommandLine += "\"";
-		}
-
-		// Copyright.
-		if (g_ProjectSettings.m_szCopyright[0] != '\0')
-		{
-			CommandLine += " -copyright \"";
-#ifdef UNICODE
-			UnicodeToAnsi(szMultiBuffer,g_ProjectSettings.m_szCopyright,sizeof(szMultiBuffer));
-			CommandLine += szMultiBuffer;
-#else
-			CommandLine += g_ProjectSettings.m_szCopyright;
-#endif
-			CommandLine += "\"";
-		}
-
-		// Abstract.
-		if (g_ProjectSettings.m_szAbstract[0] != '\0')
-		{
-			CommandLine += " -abstract \"";
-#ifdef UNICODE
-			UnicodeToAnsi(szMultiBuffer,g_ProjectSettings.m_szAbstract,sizeof(szMultiBuffer));
-			CommandLine += szMultiBuffer;
-#else
-			CommandLine += g_ProjectSettings.m_szAbstract;
-#endif
-			CommandLine += "\"";
-		}
-
-		// Bibliographic.
-		if (g_ProjectSettings.m_szBibliographic[0] != '\0')
-		{
-			CommandLine += " -biblio \"";
-#ifdef UNICODE
-			UnicodeToAnsi(szMultiBuffer,g_ProjectSettings.m_szBibliographic,sizeof(szMultiBuffer));
-			CommandLine += szMultiBuffer;
-#else
-			CommandLine += g_ProjectSettings.m_szBibliographic;
-#endif
-			CommandLine += "\"";
-		}
-	}
-
-	// ISO level.
-	char szBuffer[64];
-	sprintf(szBuffer," -iso-level %d",g_ProjectSettings.m_iISOLevel + 1);
-	CommandLine += szBuffer;
-
-	// ISO character set.
-	CommandLine += " -input-charset ";
-#ifdef UNICODE
-	UnicodeToAnsi(szMultiBuffer,g_szCharacterSets[g_ProjectSettings.m_iISOCharSet],sizeof(szMultiBuffer));
-	CommandLine += szMultiBuffer;
-#else
-	CommandLine += g_szCharacterSets[g_ProjectSettings.m_iISOCharSet];
-#endif
-
-	// Joliet.
-	if (g_ProjectSettings.m_bJoliet)
-	{
-		CommandLine += " -r -J";
-
-		if (g_ProjectSettings.m_bJolietLongNames)
-			CommandLine += " -joliet-long";
-	}
-	else
-	{
-		// Rock Ridge (automatically enabled when using Joliet).
-		if (g_ProjectSettings.m_bRockRidge)
-			CommandLine += " -r";
-	}
-
-	// UDF.
-	if (g_ProjectSettings.m_bUDF)
-		CommandLine += " -udf";
-
-	// Omit version numbers.
-	if (g_ProjectSettings.m_bOmitVN)
-		CommandLine += " -N";
-
-	if (g_ProjectSettings.m_bDVDVideo)
-		CommandLine += " -dvd-video";
-
-	// Boot information.
-	bool bFirst = true;
-
-	std::list <CProjectBootImage *>::iterator itImageObject;
-	for (itImageObject = g_ProjectSettings.m_BootImages.begin(); itImageObject != g_ProjectSettings.m_BootImages.end(); itImageObject++)
-	{
-		if (!bFirst)
-			CommandLine += " -eltorito-alt-boot";
-
-		CommandLine += " -b \"";
-
-		// Prepare the full relative image name.
-		TCHAR szImageFullPath[MAX_PATH];
-		if ((*itImageObject)->m_LocalPath.c_str()[0] == '/' ||
-			(*itImageObject)->m_LocalPath.c_str()[0] == '\\')
-		{
-			lstrcpy(szImageFullPath,(*itImageObject)->m_LocalPath.c_str() + 1);
-		}
-		else
-		{
-			lstrcpy(szImageFullPath,(*itImageObject)->m_LocalPath.c_str());
-		}
-
-		lstrcat(szImageFullPath,(*itImageObject)->m_LocalName.c_str());
-		ForceSlashDelimiters(szImageFullPath);
-
-#ifdef UNICODE
-		UnicodeToAnsi(szMultiBuffer,szImageFullPath,sizeof(szMultiBuffer));
-		CommandLine += szMultiBuffer;
-#else
-		CommandLine += szImageFullPath;
-#endif
-		CommandLine += "\"";
-
-		switch ((*itImageObject)->m_iEmulation)
-		{
-			case PROJECTBI_BOOTEMU_NONE:
-				CommandLine += " -no-emul-boot";
-
-				CommandLine += " -boot-load-seg ";
-				sprintf(szBuffer,"%d",(*itImageObject)->m_iLoadSegment);
-				CommandLine += szBuffer;
-
-				CommandLine += " -boot-load-size ";
-				sprintf(szBuffer,"%d",(*itImageObject)->m_iLoadSize);
-				CommandLine += szBuffer;
-				break;
-
-			case PROJECTBI_BOOTEMU_FLOPPY:
-				if ((*itImageObject)->m_bNoBoot)
-					CommandLine += " -no-boot";
-				break;
-
-			case PROJECTBI_BOOTEMU_HARDDISK:
-				CommandLine += " -hard-disk-boot";
-
-				if ((*itImageObject)->m_bNoBoot)
-					CommandLine += " -no-boot";
-				break;
-		}
-
-		if ((*itImageObject)->m_bBootInfoTable)
-			CommandLine += " -boot-info-table";
-
-		bFirst = false;
-	}
-
-	if (g_ProjectSettings.m_BootImages.size() > 0)
-	{
-		CommandLine += " -c ";
-#ifdef UNICODE
-		UnicodeToAnsi(szMultiBuffer,g_ProjectSettings.m_szBootCatalog,sizeof(szMultiBuffer));
-		CommandLine += szMultiBuffer;
-#else
-		CommandLine += g_ProjectSettings.m_szBootCatalog;
-#endif
-	}
-
-	// Multisession.
-	if (g_ProjectSettings.m_bMultiSession)
-	{
-		sprintf(szBuffer," -C %I64d,%I64d",g_ProjectSettings.m_uiLastSession,g_ProjectSettings.m_uiNextSession);
-		CommandLine += szBuffer;
-
-		tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(g_ProjectSettings.m_uiDeviceIndex);
-		
-		if (pDeviceInfo != NULL)
-		{
-			g_DeviceManager.GetDeviceAddrA(pDeviceInfo,szBuffer);
-
-			CommandLine += " -M ";
-			CommandLine += szBuffer;
-		}
-	}
-
-	// Path list.
-	CommandLine += " -graft-points -path-list \"";
-#ifdef UNICODE
-	UnicodeToAnsi(szMultiBuffer,szPathList,sizeof(szMultiBuffer));
-	CommandLine += szMultiBuffer;
-#else
-	CommandLine += szPathList;
-#endif
-	CommandLine += "\" 2> NUL: | ";
-
 	// cdrecord part of the command line.
-	CommandLine += "cdrecord.exe -v dev=";
+	CommandLine = _T("\"");
+	CommandLine += g_GlobalSettings.m_szCDRToolsPath;
+	CommandLine += _T("cdrecord.exe\" -v dev=");
 
-	g_DeviceManager.GetDeviceAddrA(pDeviceInfo,szBuffer);
+	TCHAR szBuffer[64];
+	g_DeviceManager.GetDeviceAddr(pDeviceInfo,szBuffer);
 	CommandLine += szBuffer;
 
-	sprintf(szBuffer," gracetime=%d",g_GlobalSettings.m_iGraceTime);
+	lsprintf(szBuffer,_T(" gracetime=%d"),g_GlobalSettings.m_iGraceTime);
 	CommandLine += szBuffer;
 
 	// FIFO.
 	if (g_GlobalSettings.m_iFIFOSize != 4)
 	{
-		sprintf(szBuffer," fs=%dm",g_GlobalSettings.m_iFIFOSize);
+		lsprintf(szBuffer,_T(" fs=%dm"),g_GlobalSettings.m_iFIFOSize);
 		CommandLine += szBuffer;
 	}
 
@@ -3014,47 +2207,47 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	if (pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_TESTWRITING)
 	{
 		if (g_BurnImageSettings.m_bEject)
-			CommandLine += " -eject";
+			CommandLine += _T(" -eject");
 	}
 
 	// Simulation.
 	if (g_BurnImageSettings.m_bSimulate)
-		CommandLine += " -dummy";
+		CommandLine += _T(" -dummy");
 
 	// Write method.
 	switch (g_BurnImageSettings.m_iWriteMethod)
 	{
 		case WRITEMETHOD_SAO:
-			CommandLine += " -sao";
+			CommandLine += _T(" -sao");
 
 			// The SAO method needs to know the size of the file system beforehand (specified in sectors).
-			sprintf(szBuffer," tsize=%I64ds",uiDataBytes/2048);
+			lsprintf(szBuffer,_T(" tsize=%I64ds"),uiDataBytes/2048);
 			CommandLine += szBuffer;
 			break;
 
 		case WRITEMETHOD_TAO:
-			CommandLine += " -tao";
+			CommandLine += _T(" -tao");
 			break;
 
 		case WRITEMETHOD_TAONOPREGAP:
-			CommandLine += " -tao pregap=0";
+			CommandLine += _T(" -tao pregap=0");
 			break;
 
 		case WRITEMETHOD_RAW96R:
-			CommandLine += " -raw96r";
+			CommandLine += _T(" -raw96r");
 			break;
 
 		case WRITEMETHOD_RAW16:
-			CommandLine += " -raw16";
+			CommandLine += _T(" -raw16");
 			break;
 
 		case WRITEMETHOD_RAW96P:
-			CommandLine += " -raw96p";
+			CommandLine += _T(" -raw96p");
 			break;
 	};
 
-	char szDriverOpts[128];
-	strcpy(szDriverOpts," driveropts=");
+	TCHAR szDriverOpts[128];
+	lstrcpy(szDriverOpts,_T(" driveropts="));
 	bool bUseDriverOpts = false;
 
 	// Buffer underrun protection.
@@ -3063,9 +2256,9 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 		bUseDriverOpts = true;
 
 		if (g_BurnImageSettings.m_bBUP)
-			strcat(szDriverOpts,"burnfree,");
+			lstrcat(szDriverOpts,_T("burnfree,"));
 		else
-			strcat(szDriverOpts,"noburnfree,");
+			lstrcat(szDriverOpts,_T("noburnfree,"));
 	}
 
 	// Audio master.
@@ -3073,7 +2266,7 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	{
 		if (g_BurnAdvancedSettings.m_bAudioMaster)
 		{
-			strcat(szDriverOpts,"audiomaster,");
+			lstrcat(szDriverOpts,_T("audiomaster,"));
 			bUseDriverOpts = true;
 		}
 	}
@@ -3083,7 +2276,7 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	{
 		if (!g_BurnAdvancedSettings.m_bForceSpeed)
 		{
-			strcat(szDriverOpts,"noforcespeed,");
+			lstrcat(szDriverOpts,_T("noforcespeed,"));
 			bUseDriverOpts = true;
 		}
 	}
@@ -3093,50 +2286,50 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	{
 		if (g_BurnAdvancedSettings.m_bVariRec)
 		{
-			char szVariRec[32];
-			sprintf(szVariRec,"varirec=%d,",g_BurnAdvancedSettings.m_iVariRec);
-			strcat(szDriverOpts,szVariRec);
+			TCHAR szVariRec[32];
+			lsprintf(szVariRec,_T("varirec=%d,"),g_BurnAdvancedSettings.m_iVariRec);
+			lstrcat(szDriverOpts,szVariRec);
 			bUseDriverOpts = true;
 		}
 	}
 
 	if (bUseDriverOpts)
 	{
-		szDriverOpts[strlen(szDriverOpts) - 1] = '\0';
+		szDriverOpts[lstrlen(szDriverOpts) - 1] = '\0';
 		CommandLine += szDriverOpts;
 	}
 
 	// Pad tracks.
 	if (g_BurnImageSettings.m_bPadTracks)
-		CommandLine += " -pad";
+		CommandLine += _T(" -pad");
 
 	// Fixate.
 	if (!g_BurnImageSettings.m_bFixate)
-		CommandLine += " -nofix";
+		CommandLine += _T(" -nofix");
 
 	// Overburning.
 	if (g_BurnAdvancedSettings.m_bOverburn)
-		CommandLine += " -overburn";
+		CommandLine += _T(" -overburn");
 
 	// Swap audio byte order.
 	if (strstr(pDeviceInfoEx->szWriteFlags,CDRTOOLS_WRITEFLAGS_SWABAUDIO))
 	{
 		if (g_BurnAdvancedSettings.m_bSwab)
-			CommandLine += " -swab";
+			CommandLine += _T(" -swab");
 	}
 
 	// Ignore size.
 	if (g_BurnAdvancedSettings.m_bIgnoreSize)
-		CommandLine += " -ignsize";
+		CommandLine += _T(" -ignsize");
 
 	// SCSI IMMED flag.
 	if (g_BurnAdvancedSettings.m_bImmed)
-		CommandLine += " -immed";
+		CommandLine += _T(" -immed");
 
 	// Speed.
 	if (g_BurnImageSettings.m_uiWriteSpeed != -1)
 	{
-		sprintf(szBuffer," speed=%d",g_BurnImageSettings.m_uiWriteSpeed);
+		lsprintf(szBuffer,_T(" speed=%d"),g_BurnImageSettings.m_uiWriteSpeed);
 		CommandLine += szBuffer;
 	}
 
@@ -3144,17 +2337,17 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	switch (iDataMode)
 	{
 		case 0:		// Mode 1
-			CommandLine += " -data -";
+			CommandLine += _T(" -data -");
 			break;
 
 		case 1:		// Mode 2 XA (multisession)
-			CommandLine += " -multi -";
+			CommandLine += _T(" -multi -");
 			break;
 	};
 
 	// Audio tracks.
 	if (AudioTracks.size() > 0)
-		CommandLine += " -audio";
+		CommandLine += _T(" -audio");
 
 	TCHAR szCygwinFileName[MAX_PATH + 16];
 
@@ -3162,41 +2355,18 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	{
 		GetCygwinFileName(AudioTracks[i],szCygwinFileName);
 
-		CommandLine += " \"";
-#ifdef UNICODE
-		UnicodeToAnsi(szMultiBuffer,szCygwinFileName,sizeof(szMultiBuffer));
-		CommandLine += szMultiBuffer;
-#else
+		CommandLine += _T(" \"");
 		CommandLine += szCygwinFileName;
-#endif
-		CommandLine += "\"";
+		CommandLine += _T("\"");
 	}
 
 	// Audio text.
 	if (szAudioText != NULL)
 	{
-		CommandLine += " textfile=\"";
-#ifdef UNICODE
-		UnicodeToAnsi(szMultiBuffer,szCygwinFileName,sizeof(szMultiBuffer));
-		CommandLine += szMultiBuffer;
-#else
-		CommandLine += szAudioText;
-#endif
-		CommandLine += "\"";
+		CommandLine += _T(" textfile=\"");
+		CommandLine += szCygwinFileName;
+		CommandLine += _T("\"");
 	}
-
-	// Change directory command.
-	char szChangeDir[MAX_PATH + 3];
-	strcpy(szChangeDir,"cd ");
-
-#ifdef UNICODE
-	char szFolderPath[MAX_PATH];
-	UnicodeToAnsi(szFolderPath,g_GlobalSettings.m_szCDRToolsPath,sizeof(szFolderPath));
-
-	strcat(szChangeDir,szFolderPath);
-#else
-	strcat(szChangeDir,g_GlobalSettings.m_szCDRToolsPath);
-#endif
 
 	if (CommandLine.length() > 2047)
 	{
@@ -3219,51 +2389,33 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 		}
 	}
 
-	// Create the batch file.
-	TCHAR szBatchPath[MAX_PATH];
-	CreateBatchFile(szChangeDir,CommandLine.c_str(),szBatchPath);
+	// Create a separate thread for writing the file system to the process.
+	CCompImageParams CompImageParams(*this,Progress,Files);
 
-	TCHAR szBatchCmdLine[MAX_PATH + 2];
-	lstrcpy(szBatchCmdLine,_T("\""));
-	lstrcat(szBatchCmdLine,szBatchPath);
-	lstrcat(szBatchCmdLine,_T("\""));
+	unsigned long ulThreadID = 0;
+	HANDLE hThread = ::CreateThread(NULL,0,CreateCompImageThread,&CompImageParams,0,&ulThreadID);
+	::CloseHandle(hThread);
 
-	bool bResult = Launch(szBatchCmdLine,true);
-		fs_deletefile(szBatchPath);
-	return bResult;
+	return Launch((TCHAR *)CommandLine.c_str(),true);
 }
 
 bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
-		tDeviceInfoEx *pDeviceInfoEx,CAdvancedProgress *pProgress,
-		const TCHAR *szPathList,std::vector<TCHAR *> &AudioTracks,
+		tDeviceInfoEx *pDeviceInfoEx,CAdvancedProgress *pProgress,CProgressEx &Progress,
+		ckFileSystem::CFileSet &Files,std::vector<TCHAR *> &AudioTracks,
 		const TCHAR *szAudioText,int iMode,unsigned __int64 uiDataBytes)
 {
-	return BurnCompilation(pDeviceInfo,pDeviceCap,pDeviceInfoEx,pProgress,szPathList,
+	return BurnCompilation(pDeviceInfo,pDeviceCap,pDeviceInfoEx,pProgress,Progress,Files,
 		AudioTracks,szAudioText,iMode,uiDataBytes,MODE_BURNIMAGE);
 }
 
 int CCore::BurnCompilationEx(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
-		tDeviceInfoEx *pDeviceInfoEx,CAdvancedProgress *pProgress,
-		const TCHAR *szPathList,std::vector<TCHAR *> &AudioTracks,
+		tDeviceInfoEx *pDeviceInfoEx,CAdvancedProgress *pProgress,CProgressEx &Progress,
+		ckFileSystem::CFileSet &Files,std::vector<TCHAR *> &AudioTracks,
 		const TCHAR *szAudioText,int iMode,unsigned __int64 uiDataBytes)
 {
-	if (!BurnCompilation(pDeviceInfo,pDeviceCap,pDeviceInfoEx,pProgress,szPathList,
+	if (!BurnCompilation(pDeviceInfo,pDeviceCap,pDeviceInfoEx,pProgress,Progress,Files,
 		AudioTracks,szAudioText,iMode,uiDataBytes,MODE_BURNIMAGEEX))
 		return RESULT_INTERNALERROR;		
 
 	return m_bOperationRes ? RESULT_OK : RESULT_EXTERNALERROR;
-}
-
-/*
-	CCore::EstimateImageSize
-	------------------------
-	Estimates the file system size in multiples of sectors (2048 bytes). This
-	is needed when burning discs in SAO (DAO) mode when the file system size
-	needs to be known beforehand.
-*/
-bool CCore::EstimateImageSize(const TCHAR *szPathList,CAdvancedProgress *pProgress,unsigned __int64 &uiSize)
-{
-	bool bResult = CreateImage(NULL,szPathList,pProgress,MODE_ESTIMATESIZE,true,true);
-		uiSize = m_uiEstimatedSize;
-	return bResult;
 }

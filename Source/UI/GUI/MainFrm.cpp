@@ -30,16 +30,7 @@
 #include "StringTable.h"
 #include "../../Common/StringUtil.h"
 #include "../../Common/FileManager.h"
-#include "../../Common/CRC32.h"
-// FIXME: Remove after testing {
-#include "../../Core/ckFileSystem/DiscImageWriter.h"
-#include "../../Core/ckFileSystem/Iso9660.h"
-#include "../../Core/ckFileSystem/FileTree.h"
-#include "../../Core/ckFileSystem/Joliet.h"
-#include "../../Core/ckFileSystem/Udf.h"
-#include "../../Core/ckFileSystem/IfoReader.h"
-#include "ProgressDlg.h"
-// FIXME: }
+#include "../../Common/Crc32.h"
 #include "TreeManager.h"
 #include "WinVer.h"
 #include "ProjectPropDlg.h"
@@ -49,9 +40,9 @@
 #include "DiscDlg.h"
 #include "SCSI.h"
 #include "ImportSessionDlg.h"
-#include "MultiSessionImport.h"
 #include "DriveLetterDlg.h"
 #include "Core2DriverASPI.h"
+#include "Core2Stream.h"
 #include "ProjectDropSource.h"
 #include "FilesDataObject.h"
 
@@ -485,7 +476,6 @@ void CMainFrame::InitializeProjectView(unsigned int uiSplitterPos)
 	// Assign controls.
 	g_TreeManager.AssignControls(&m_ProjectTreeView,&m_ProjectListView);
 	g_ProjectManager.AssignControls(&m_ProjectView,&m_ProjectListViewContainer,&m_SpaceMeter,&m_ProjectListView,&m_ProjectTreeView);
-	g_MultiSessionImport.AssignControls(&m_SpaceMeter);
 
 	// Prepare the apropriate project type.
 	switch (m_iDefaultProjType)
@@ -2242,17 +2232,17 @@ LRESULT CMainFrame::OnPLVGetDispInfo(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled)
 
 				case COLUMN_SUBINDEX_TITLE:
 					// If no title is specified the file name is displayed.
-					if (pItemData->szTrackTitle[0] == '\0')
+					if (pItemData->GetAudioData()->szTrackTitle[0] == '\0')
 						lstrcpy(pDispInfo->item.pszText,pItemData->GetFileName());
 					else
-						lstrcpy(pDispInfo->item.pszText,pItemData->szTrackTitle);
+						lstrcpy(pDispInfo->item.pszText,pItemData->GetAudioData()->szTrackTitle);
 					break;
 
 				case COLUMN_SUBINDEX_LENGTH:
 					lsprintf(pDispInfo->item.pszText,_T("%.2d:%.2d:%.2d"),
-						(unsigned int)(pItemData->uiTrackLength/(1000 * 3600)),
-						(unsigned int)((pItemData->uiTrackLength/(1000 * 60)) % 60),
-						(unsigned int)((pItemData->uiTrackLength/1000) % 60));
+						(unsigned int)(pItemData->GetAudioData()->uiTrackLength/(1000 * 3600)),
+						(unsigned int)((pItemData->GetAudioData()->uiTrackLength/(1000 * 60)) % 60),
+						(unsigned int)((pItemData->GetAudioData()->uiTrackLength/1000) % 60));
 					break;
 
 				case COLUMN_SUBINDEX_LOCATION:
@@ -2810,31 +2800,90 @@ LRESULT CMainFrame::OnActionsDiscInfo(UINT uNotifyCode,int nID,CWindow wnd)
 
 LRESULT CMainFrame::OnActionsImportsession(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
+	g_LogDlg.AddLine(_T("CMainFrame::OnActionsImportsession"));
+	// We can only import to projects containing a data track.
+	CProjectNode *pDataRootNode = NULL;
+	switch (g_ProjectManager.GetProjectType())
+	{
+		case PROJECTTYPE_DATA:
+		case PROJECTTYPE_DVDVIDEO:
+			pDataRootNode = g_TreeManager.GetRootNode();
+			break;
+
+		case PROJECTTYPE_MIXED:
+			pDataRootNode = g_ProjectManager.GetMixDataRootNode();
+			break;
+
+		//case PROJECTTYPE_AUDIO:
+		default:
+			return 0;
+	}
+
+	if (g_ProjectSettings.m_iFileSystem != FILESYSTEM_ISO9660)
+	{
+		if (lngMessageBox(m_hWnd,WARNING_IMPORTFS,GENERAL_WARNING,MB_YESNO | MB_ICONWARNING) == IDYES)
+			g_ProjectSettings.m_iFileSystem = FILESYSTEM_ISO9660;
+		else
+			return 0;
+	}
+
 	CImportSessionDlg ImportSessionDlg;
 	if (ImportSessionDlg.DoModal() == IDOK)
 	{
 		// Remove any previously imported sessions.
 		g_ProjectManager.DeleteImportedItems();
 
+		// Make sure a valid track was selected.
+		if (ImportSessionDlg.m_pSelTrackData == NULL)
+		{
+			g_LogDlg.AddLine(_T("  Error: Invalid track selection in import session dialog."));
+			return 0;
+		}
+
 		// Import the new session.
 		tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(ImportSessionDlg.m_uiDeviceIndex);
 
-		unsigned __int64 uiLastSession = 0;
-		unsigned __int64 uiNextSession = 0;
-		if (g_MultiSessionImport.GetInfo(pDeviceInfo,uiLastSession,uiNextSession))
+		CCore2Device Device;
+		if (!Device.Open(&pDeviceInfo->Address))
 		{
-			g_MultiSessionImport.Import(pDeviceInfo,uiLastSession);
-
-			// Update the space meter.
-			m_SpaceMeter.SetAllocatedSize(ImportSessionDlg.m_uiAllocatedSize);
-
-			// Update the (internal) project settings.
-			g_ProjectSettings.m_bMultiSession = true;
-			g_ProjectSettings.m_uiLastSession = uiLastSession;
-			g_ProjectSettings.m_uiNextSession = uiNextSession;
-			g_ProjectSettings.m_uiDeviceIndex = ImportSessionDlg.m_uiDeviceIndex;
-			g_ProjectSettings.m_iISOFormat = 1;	// Mode 2 (multi-session)
+			g_LogDlg.AddLine(_T("  Error: Failed to open device when trying to import session."));
+			return 0;
 		}
+		
+		CCore2Info Info;
+		CCore2TrackInfo TrackInfo;
+		if (!Info.ReadTrackInformation(&Device,CCore2Info::TIT_TRACK,0xFF,&TrackInfo))
+		{
+			g_LogDlg.AddLine(_T("  Error: Failed to read track information when trying to import session."));
+			return 0;
+		}
+
+		// Import file tree.
+		CCore2InStream InStream(&g_LogDlg,&Device,0,
+			ImportSessionDlg.m_pSelTrackData->m_ulTrackAddr + ImportSessionDlg.m_pSelTrackData->m_ulTrackLen);
+
+		ckFileSystem::CIso9660Reader Reader(&g_LogDlg);
+		Reader.Read(InStream,ImportSessionDlg.m_pSelTrackData->m_ulTrackAddr);
+		//Reader.PrintTree();
+
+		g_TreeManager.ImportIso9660Tree(Reader.GetRoot(),pDataRootNode);
+		g_TreeManager.Refresh();
+
+		// Update the space meter.
+		m_SpaceMeter.SetAllocatedSize(ImportSessionDlg.m_uiAllocatedSize);
+		
+		// Update the (internal) project settings.
+		g_ProjectSettings.m_bMultiSession = true;
+		g_ProjectSettings.m_uiImportTrackAddr = ImportSessionDlg.m_pSelTrackData->m_ulTrackAddr;
+		g_ProjectSettings.m_uiImportTrackLen = ImportSessionDlg.m_pSelTrackData->m_ulTrackLen;
+		g_ProjectSettings.m_uiNextWritableAddr = TrackInfo.m_ulNextWritableAddr;
+		g_ProjectSettings.m_uiDeviceIndex = ImportSessionDlg.m_uiDeviceIndex;
+		g_ProjectSettings.m_iIsoFormat = 1;	// Mode 2 (multi-session)
+
+		g_LogDlg.AddLine(_T("  Imported session: %I64d-%I64d, %I64d."),
+			g_ProjectSettings.m_uiImportTrackAddr,
+			g_ProjectSettings.m_uiImportTrackAddr + g_ProjectSettings.m_uiImportTrackLen,
+			g_ProjectSettings.m_uiNextWritableAddr);
 	}
 
 	return 0;
@@ -2958,11 +3007,8 @@ LRESULT CMainFrame::OnHelpHelptopics(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL
 
 LRESULT CMainFrame::OnAppAbout(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
-	/*CAboutDlg AboutDlg;
-	AboutDlg.DoModal();*/
-
-	// FIXME: Clean up when done.
-	g_ActionManager.CreateImage(m_hWnd,false);
+	CAboutDlg AboutDlg;
+	AboutDlg.DoModal();
 
 	return 0;
 }

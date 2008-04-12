@@ -21,6 +21,8 @@
 #include "TreeManager.h"
 #include "ProjectDropTargetBase.h"
 
+#define PROJECTTREEVIEW_COLOR_IMPORTED				RGB(92,53,102)
+
 class CProjectTreeViewDropTarget : public CProjectDropTargetBase
 {
 private:

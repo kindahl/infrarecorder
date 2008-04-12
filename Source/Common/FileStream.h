@@ -19,7 +19,7 @@
 #pragma once
 #include "Stream.h"
 
-class CInFileStream : public CInStream
+class CInFileStream : public CSeekInStream
 {
 private:
 	HANDLE m_hFile;
@@ -32,7 +32,8 @@ public:
 	bool EOS();
 	bool Close();
 	int Read(void *pBuffer,unsigned long ulSize,unsigned long *pProcessedSize);
-	__int64 Seek(__int64 iDistance,int iMode);
+	__int64 Seek(__int64 iDistance,int iMode);	// FIXME: Remove this.
+	__int64 Seek(__int64 iDistance,eSeekMode SeekMode);
 	__int64 Tell();
 	__int64 GetSize();
 	bool GetModifiedData(unsigned short &usFileDate,unsigned short &usFileTime);

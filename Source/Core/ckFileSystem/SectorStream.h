@@ -18,6 +18,7 @@
 
 #pragma once
 #include "../../Common/BufferedStream.h"
+#include "Iso9660.h"
 
 namespace ckFileSystem
 {
@@ -29,7 +30,8 @@ namespace ckFileSystem
 		unsigned __int64 m_uiWritten;
 
 	public:
-		CSectorOutStream(COutStream *pOutStream,unsigned long ulBufferSize,unsigned long ulSectorSize);
+		CSectorOutStream(COutStream &OutStream,unsigned long ulBufferSize,
+			unsigned long ulSectorSize = ISO9660_SECTOR_SIZE);
 		~CSectorOutStream();
 
 		int Write(void *pBuffer,unsigned long ulSize,unsigned long *pProcessedSize);

@@ -19,10 +19,11 @@
 #pragma once
 #include "ProjectPropGeneralPage.h"
 #include "ProjectPropFileSysPage.h"
-#include "ProjectPropISOPage.h"
+#include "ProjectPropIsoPage.h"
 #include "ProjectPropFieldsPage.h"
 #include "ProjectPropAudioPage.h"
 #include "ProjectPropBootPage.h"
+#include "ProjectPropUdfPage.h"
 #include "CtrlMessages.h"
 
 class CProjectPropDlg : public CPropertySheetImpl<CProjectPropDlg>
@@ -32,17 +33,19 @@ private:
 
 	CProjectPropGeneralPage m_GeneralPage;
 	CProjectPropFileSysPage m_FileSysPage;
-	CProjectPropISOPage m_IsoPage;
+	CProjectPropIsoPage m_IsoPage;
 	CProjectPropFieldsPage m_FieldsPage;
-	CProjectPropAudioPage m_AudioPage;
 	CProjectPropBootPage m_BootPage;
+	CProjectPropUdfPage m_UdfPage;
+	CProjectPropAudioPage m_AudioPage;
 
 	HPROPSHEETPAGE m_hGeneralPage;
 	HPROPSHEETPAGE m_hFileSysPage;
 	HPROPSHEETPAGE m_hIsoPage;
 	HPROPSHEETPAGE m_hFieldsPage;
-	HPROPSHEETPAGE m_hAudioPage;
 	HPROPSHEETPAGE m_hBootPage;
+	HPROPSHEETPAGE m_hUdfPage;
+	HPROPSHEETPAGE m_hAudioPage;
 
 public:
 	CProjectPropDlg();

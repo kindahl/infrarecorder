@@ -32,3 +32,15 @@ class COutStream
 public:
 	virtual int Write(void *pBuffer,unsigned long ulSize,unsigned long *pProcessedSize) = 0;
 };
+
+class CSeekInStream : public CInStream
+{
+public:
+	enum eSeekMode
+	{
+		SM_BEGIN,
+		SM_CURRENT
+	};
+
+	virtual __int64 Seek(__int64 iDistance,eSeekMode SeekMode) = 0;
+};

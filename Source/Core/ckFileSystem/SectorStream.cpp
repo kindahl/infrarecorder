@@ -24,9 +24,9 @@ namespace ckFileSystem
 	/*
 		COutBufferedStream
 	*/
-	CSectorOutStream::CSectorOutStream(COutStream *pOutStream,unsigned long ulBufferSize,
+	CSectorOutStream::CSectorOutStream(COutStream &OutStream,unsigned long ulBufferSize,
 									   unsigned long ulSectorSize) :
-		CBufferedOutStream(pOutStream,ulBufferSize)
+		CBufferedOutStream(OutStream,ulBufferSize)
 	{
 		m_ulSectorSize = ulSectorSize;
 		m_uiSector = 0;		// We start at sector 0.

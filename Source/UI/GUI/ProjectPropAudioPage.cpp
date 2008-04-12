@@ -147,8 +147,8 @@ LRESULT CProjectPropAudioPage::OnListDblClick(int iCtrlID,LPNMHDR pNMH,BOOL &bHa
 		CEditTrackDlg  EditTrackDlg(pItemData);
 		if (EditTrackDlg.DoModal(::GetActiveWindow(),(LPARAM)szTitle) == IDOK)
 		{
-			m_ListView.SetItemText(uiTrackIndex,1,pItemData->szTrackTitle);
-			m_ListView.SetItemText(uiTrackIndex,2,pItemData->szTrackArtist);
+			m_ListView.SetItemText(uiTrackIndex,1,pItemData->GetAudioData()->szTrackTitle);
+			m_ListView.SetItemText(uiTrackIndex,2,pItemData->GetAudioData()->szTrackArtist);
 		}
 	}
 

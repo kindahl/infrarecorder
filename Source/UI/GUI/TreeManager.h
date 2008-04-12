@@ -22,6 +22,8 @@
 #include "../../Common/XMLProcessor.h"
 #include "../../Common/StringContainer.h"
 #include "../../Core/ckFileSystem/FileSet.h"
+#include "../../Core/ckFileSystem/Iso9660Reader.h"
+#include "../../Core/ckFileSystem/Iso9660Writer.h"
 
 #define PROJECTITEM_FLAG_ISFOLDER					1
 #define PROJECTITEM_FLAG_ISLOCKED					2
@@ -35,12 +37,59 @@ class CProjectNode;
 // This structure represents a file (or folder) inside the project view.
 class CItemData
 {
+public:
+	class CAudioData
+	{
+	public:
+		unsigned __int64 uiTrackLength;
+		TCHAR szTrackTitle[160];
+		TCHAR szTrackArtist[160];
+
+		CAudioData()
+		{
+			uiTrackLength = 0;
+			szTrackTitle[0] = '\0';
+			szTrackArtist[0] = '\0';
+		}
+	};
+
+	typedef ckFileSystem::CIso9660ImportData CIso9660Data;
+
+	/*class CIso9660Data
+	{
+	public:
+		unsigned char ucFileFlags;
+		unsigned char ucFileUnitSize;
+		unsigned char ucInterleaveGapSize;
+		unsigned short usVolSeqNumber;
+		unsigned long ulExtentLocation;
+		unsigned long ulExtentLength;
+
+		ckFileSystem::tDirRecordDateTime RecDateTime;
+
+		CIso9660Data()
+		{
+			ucFileFlags = 0;
+			ucFileUnitSize = 0;
+			ucInterleaveGapSize = 0;
+			usVolSeqNumber = 0;
+			ulExtentLocation = 0;
+			ulExtentLength = 0;
+
+			memset(&RecDateTime,0,sizeof(ckFileSystem::tDirRecordDateTime));
+		}
+	};*/
+
 private:
 	TCHAR m_szFileName[MAX_PATH];	// File name in the project (disc image).
 	TCHAR m_szFilePath[MAX_PATH];	// File path in the project (disc image).
 
 	void FileNameChanged();
 	void FilePathChanged();
+
+	// Only allocated when needed.
+	CAudioData *m_pAudioData;
+	CIso9660Data *m_pIsoData;
 
 public:
 	CItemData();
@@ -58,9 +107,10 @@ public:
 									// information as uiTrackLength.
 
 	// Only used in audio mode. Audio track length in milliseconds.
-	unsigned __int64 uiTrackLength;
+	// UPDATE: An object with this information is only created when needed.
+	/*unsigned __int64 uiTrackLength;
 	TCHAR szTrackTitle[160];
-	TCHAR szTrackArtist[160];
+	TCHAR szTrackArtist[160];*/
 
 	unsigned char ucFlags;
 
@@ -74,6 +124,11 @@ public:
 	void EndEditFileName();
 	TCHAR *BeginEditFilePath();
 	void EndEditFilePath();
+
+	bool HasAudioData();
+	CAudioData *GetAudioData();
+	bool HasIsoData();
+	CIso9660Data *GetIsoData();
 };
 
 class CProjectNode
@@ -181,9 +236,6 @@ private:
 		std::vector<CProjectNode *> &FolderStack,unsigned int &uiFileCount,
 		unsigned int uiRootLength);
 
-	void CopyMkisofsPathEntry(TCHAR *szTarget,const TCHAR *szSource);
-	void SaveLocalPathList(CStringContainerA *pContainer,CProjectNode *pNode,
-		std::vector<CProjectNode *> &FolderStack,int iPathStripLen = 0);
 	void GetLocalPathList(ckFileSystem::CFileSet &Files,CProjectNode *pNode,
 		std::vector<CProjectNode *> &FolderStack,int iPathStripLen);
 
@@ -243,10 +295,11 @@ public:
 	bool LoadNodeFileData(CXMLProcessor *pXML,CProjectNode *pRootNode);
 	bool LoadNodeAudioData(CXMLProcessor *pXML,CProjectNode *pRootNode);
 
-	// For use with cdrtools.
-	void SavePathList(const TCHAR *szFileName,CProjectNode *pRootNode,int iPathStripLen = 0);
-
 	void GetPathList(ckFileSystem::CFileSet &Files,CProjectNode *pRootNode,int iPathStripLen = 0);
+
+	void ImportLocalIso9660Tree(ckFileSystem::CIso9660TreeNode *pLocalIsoNode,CProjectNode *pLocalNode,
+		std::vector<std::pair<ckFileSystem::CIso9660TreeNode *,CProjectNode *> > &FolderStack);
+	void ImportIso9660Tree(ckFileSystem::CIso9660TreeNode *pIsoRootNode,CProjectNode *pRootNode);
 };
 
 extern CTreeManager g_TreeManager;

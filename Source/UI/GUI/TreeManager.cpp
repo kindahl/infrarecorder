@@ -36,15 +36,18 @@ CItemData::CItemData()
 	m_szFileName[0] = '\0';
 	m_szFilePath[0] = '\0';
 
+	m_pAudioData = NULL;
+	m_pIsoData = NULL;
+
 	szFullPath[0] = '\0';
 	szFileType[0] = '\0';
 	usFileDate = 0;
 	usFileTime = 0;
 	uiSize = 0;
 
-	uiTrackLength = 0;
+	/*uiTrackLength = 0;
 	szTrackTitle[0] = '\0';
-	szTrackArtist[0] = '\0';
+	szTrackArtist[0] = '\0';*/
 
 	ucFlags = 0;
 }
@@ -60,6 +63,19 @@ CItemData::~CItemData()
 			delete pBootImage;
 			g_ProjectSettings.m_BootImages.remove(pBootImage);
 		}
+	}
+
+	// Free any optional data.
+	if (m_pAudioData != NULL)
+	{
+		delete m_pAudioData;
+		m_pAudioData = NULL;
+	}
+
+	if (m_pIsoData != NULL)
+	{
+		delete m_pIsoData;
+		m_pIsoData = NULL;
 	}
 }
 
@@ -127,6 +143,32 @@ TCHAR *CItemData::BeginEditFilePath()
 void CItemData::EndEditFilePath()
 {
 	FilePathChanged();
+}
+
+CItemData::CAudioData *CItemData::GetAudioData()
+{
+	if (m_pAudioData == NULL)
+		m_pAudioData = new CAudioData();
+
+	return m_pAudioData;
+}
+
+bool CItemData::HasAudioData()
+{
+	return m_pAudioData != NULL;
+}
+
+CItemData::CIso9660Data *CItemData::GetIsoData()
+{
+	if (m_pIsoData == NULL)
+		m_pIsoData = new CIso9660Data();
+	
+	return m_pIsoData;
+}
+
+bool CItemData::HasIsoData()
+{
+	return m_pIsoData != NULL;
 }
 
 /*
@@ -238,11 +280,11 @@ bool CFileComparator::operator() (const CItemData *pSafeItemData1,
 			case COLUMN_SUBINDEX_TITLE:
 				{
 					// If no title is specified the file name is displayed.
-					const TCHAR *szTitle1 = pItemData1->szTrackTitle;
+					const TCHAR *szTitle1 = pItemData1->GetAudioData()->szTrackTitle;
 					if (szTitle1[0] == '\0')
 						szTitle1 = pItemData1->GetFileName();
 
-					const TCHAR *szTitle2 = pItemData2->szTrackTitle;
+					const TCHAR *szTitle2 = pItemData2->GetAudioData()->szTrackTitle;
 					if (szTitle2[0] == '\0')
 						szTitle2 = pItemData2->GetFileName();
 
@@ -250,7 +292,7 @@ bool CFileComparator::operator() (const CItemData *pSafeItemData1,
 				}
 
 			case COLUMN_SUBINDEX_LENGTH:
-				if (pItemData1->uiTrackLength < pItemData2->uiTrackLength)
+				if (pItemData1->GetAudioData()->uiTrackLength < pItemData2->GetAudioData()->uiTrackLength)
 					return true;
 				else
 					return false;
@@ -580,6 +622,8 @@ void CTreeManager::Refresh()
 	m_pListView->DeleteAllItems();
 
 	ListNode(m_pCurrentNode);
+
+	m_pTreeView->Expand(m_pRootNode->m_hTreeItem);
 }
 
 void CTreeManager::CreateTree(const TCHAR *szRootName,int iImage)
@@ -1265,8 +1309,8 @@ void CTreeManager::ListNodeFiles(CProjectNode *pNode,CListViewCtrl *pListView)
 		lsprintf(szBuffer,_T("%d"),uiItemCount + 1);
 
 		pListView->AddItem(uiItemCount,0,szBuffer);
-		pListView->AddItem(uiItemCount,1,pItemData->szTrackTitle);
-		pListView->AddItem(uiItemCount,2,pItemData->szTrackArtist);
+		pListView->AddItem(uiItemCount,1,pItemData->GetAudioData()->szTrackTitle);
+		pListView->AddItem(uiItemCount,2,pItemData->GetAudioData()->szTrackArtist);
 		pListView->SetItemData(uiItemCount,(DWORD_PTR)pItemData);
 
 		uiItemCount++;
@@ -1286,8 +1330,8 @@ bool CTreeManager::HasExtraAudioData(CProjectNode *pNode)
 	{
 		CItemData *pItemData = (*itFileObject);
 
-		if (pItemData->szTrackArtist[0] == '\0' ||
-			pItemData->szTrackTitle[0] == '\0')
+		if (pItemData->GetAudioData()->szTrackArtist[0] == '\0' ||
+			pItemData->GetAudioData()->szTrackTitle[0] == '\0')
 		{
 			return false;
 		}
@@ -1409,11 +1453,14 @@ void CTreeManager::SaveNodeAudioData(CXMLProcessor *pXML,CProjectNode *pRootNode
 
 			pXML->AddElement(_T("InternalName"),szInternalName);
 			pXML->AddElement(_T("FullPath"),pItemData->szFullPath);
-
 			pXML->AddElement(_T("FileSize"),(__int64)pItemData->uiSize);
-			pXML->AddElement(_T("FileLength"),(__int64)pItemData->uiTrackLength);
-			pXML->AddElement(_T("TrackTitle"),pItemData->szTrackTitle);
-			pXML->AddElement(_T("TrackArtist"),pItemData->szTrackArtist);
+
+			if (pItemData->HasAudioData())
+			{
+				pXML->AddElement(_T("TrackLength"),(__int64)pItemData->GetAudioData()->uiTrackLength);
+				pXML->AddElement(_T("TrackTitle"),pItemData->GetAudioData()->szTrackTitle);
+				pXML->AddElement(_T("TrackArtist"),pItemData->GetAudioData()->szTrackArtist);
+			}
 		pXML->LeaveElement();
 	}
 }
@@ -1567,13 +1614,27 @@ bool CTreeManager::LoadNodeAudioData(CXMLProcessor *pXML,CProjectNode *pRootNode
 		pItemData->uiSize = iSizeTemp;
 
 		// Length.
-		__int64 iLengthTemp = 0;
-		pXML->GetSafeElementData(_T("FileLength"),&iLengthTemp);
-		pItemData->uiTrackLength = iLengthTemp;
+		if (pXML->EnterElement(_T("TrackLength")))
+		{
+			pXML->LeaveElement();
+
+			__int64 iLengthTemp = 0;
+			pXML->GetSafeElementData(_T("TrackLength"),&iLengthTemp);
+			pItemData->GetAudioData()->uiTrackLength = iLengthTemp;
+		}
 
 		// Track information.
-		pXML->GetSafeElementData(_T("TrackTitle"),pItemData->szTrackTitle,159);
-		pXML->GetSafeElementData(_T("TrackArtist"),pItemData->szTrackArtist,159);
+		if (pXML->EnterElement(_T("TrackTitle")))
+		{
+			pXML->LeaveElement();
+			pXML->GetSafeElementData(_T("TrackTitle"),pItemData->GetAudioData()->szTrackTitle,159);	// FIXME: Constant value?!
+		}
+
+		if (pXML->EnterElement(_T("TrackArtist")))
+		{
+			pXML->LeaveElement();
+			pXML->GetSafeElementData(_T("TrackArtist"),pItemData->GetAudioData()->szTrackArtist,159);
+		}
 
 		pRootNode->m_Files.push_back(pItemData);
 
@@ -1581,187 +1642,6 @@ bool CTreeManager::LoadNodeAudioData(CXMLProcessor *pXML,CProjectNode *pRootNode
 	}
 
 	return true;
-}
-
-/*
-	CTreeManager::CopyMkisofsPathEntry
-	----------------------------------
-	Copies a possibly unsafe source path name to the target memory buffer in a
-	Mkisofs safe way (escaped equal characters).
-*/
-void CTreeManager::CopyMkisofsPathEntry(TCHAR *szTarget,const TCHAR *szSource)
-{
-	unsigned int uiIndex = 0;
-	unsigned int uiLength = (unsigned int)lstrlen(szSource);
-	for (unsigned int i = 0; i < uiLength; i++)
-	{
-		if (szSource[i] == '=')
-		{
-			szTarget[uiIndex++] = '\\';
-			szTarget[uiIndex++] = '=';
-		}
-		else
-		{
-			szTarget[uiIndex++] = szSource[i];
-		}
-	}
-
-	szTarget[uiIndex] = '\0';
-}
-
-void CTreeManager::SaveLocalPathList(CStringContainerA *pContainer,CProjectNode *pNode,
-									 std::vector<CProjectNode *> &FolderStack,int iPathStripLen)
-{
-	TCHAR szWideBuffer[MAX_PATH << 1];
-#ifdef UNICODE
-	char szBuffer[MAX_PATH << 1];
-#endif
-	bool bHasChildren = false;
-
-	std::list <CProjectNode *>::iterator itNodeObject;
-	for (itNodeObject = pNode->m_Children.begin(); itNodeObject != pNode->m_Children.end(); itNodeObject++)
-	{
-		bHasChildren = true;
-		FolderStack.push_back(*itNodeObject);
-	}
-
-	std::list <CItemData *>::iterator itFileObject;
-	for (itFileObject = pNode->m_Files.begin(); itFileObject != pNode->m_Files.end(); itFileObject++)
-	{
-		CItemData *pItemData = (*itFileObject);
-
-		// Skip imported files.
-		if (pItemData->ucFlags & PROJECTITEM_FLAG_ISIMPORTED)
-			continue;
-
-		// Skip video files, they should be included by adding the parent directory.
-		if (pItemData->ucFlags & PROJECTITEM_FLAG_ISDVDVIDEO)
-			continue;
-
-		bHasChildren = true;
-
-		// Force slash delimiters (no backslash delimiters allowed).
-		TCHAR *szFilePathBuffer = pItemData->BeginEditFilePath();
-			ForceSlashDelimiters(szFilePathBuffer + iPathStripLen);
-		pItemData->EndEditFilePath();
-
-		ForceSlashDelimiters(pItemData->szFullPath);
-
-		// Copy the file path (esape equal characters).
-		CopyMkisofsPathEntry(szWideBuffer,pItemData->GetFilePath() + iPathStripLen);
-
-		// Copy the file name (esape equal characters).
-		CopyMkisofsPathEntry(szWideBuffer + lstrlen(szWideBuffer),pItemData->GetFileName());
-
-		// Copy the real file name.
-		lstrcat(szWideBuffer,_T("="));
-		lstrcat(szWideBuffer,pItemData->szFullPath);
-
-#ifdef UNICODE
-		UnicodeToAnsi(szBuffer,szWideBuffer,sizeof(szBuffer));
-		pContainer->m_szStrings.push_back(szBuffer);
-#else
-		pContainer->m_szStrings.push_back(szWideBuffer);
-#endif
-	}
-
-	// If the folder does not have children, add it manually.
-	if (!bHasChildren)
-	{
-		// Force slash delimiters (no backslash delimiters allowed).
-		TCHAR *szFilePathBuffer = pNode->pItemData->BeginEditFilePath();
-			ForceSlashDelimiters(szFilePathBuffer + iPathStripLen);
-		pNode->pItemData->EndEditFilePath();
-
-		ForceSlashDelimiters(pNode->pItemData->szFullPath);
-
-		// Copy the file path (esape equal characters).
-		CopyMkisofsPathEntry(szWideBuffer,pNode->pItemData->GetFilePath() + iPathStripLen);
-
-		// Copy the file name (esape equal characters).
-		CopyMkisofsPathEntry(szWideBuffer + lstrlen(szWideBuffer),pNode->pItemData->GetFileName());
-
-		// Copy the file name of a temporary empty directory.
-		TCHAR szEmptyFolder[MAX_PATH];
-		lstrcpy(szEmptyFolder,g_TempManager.GetEmtpyDirectory());
-		ForceSlashDelimiters(szEmptyFolder);
-
-		lstrcat(szWideBuffer,_T("/="));
-		lstrcat(szWideBuffer,szEmptyFolder);
-
-#ifdef UNICODE
-		UnicodeToAnsi(szBuffer,szWideBuffer,sizeof(szBuffer));
-		pContainer->m_szStrings.push_back(szBuffer);
-#else
-		pContainer->m_szStrings.push_back(szWideBuffer);
-#endif
-	}
-}
-
-/*
-	CTreeManager::SavePathList
-	--------------------------
-	Saves a file containing a list of all files and folders in the specified
-	root node and all its subnodes.
-*/
-void CTreeManager::SavePathList(const TCHAR *szFileName,CProjectNode *pRootNode,
-								int iPathStripLen)
-{
-	CStringContainerA PathList;
-	CProjectNode *pCurNode = pRootNode;
-
-	// String buffers.
-	TCHAR szWideBuffer[MAX_PATH << 1];
-#ifdef UNICODE
-	char szBuffer[MAX_PATH << 1];
-#endif
-
-	// Save the information.
-	std::vector<CProjectNode *> FolderStack;
-	SaveLocalPathList(&PathList,pCurNode,FolderStack,iPathStripLen);
-
-	bool bIncludedVideo = false;
-
-	while (FolderStack.size() > 0)
-	{ 
-		pCurNode = FolderStack[FolderStack.size() - 1];
-		FolderStack.pop_back();
-
-		if (pCurNode->pItemData->ucFlags & PROJECTITEM_FLAG_ISDVDVIDEO)
-		{
-			if (bIncludedVideo)
-			{
-				// Skip any more video files, they will automatically be added since the
-				// parent directory has been added.
-				continue;
-			}
-			else
-			{
-				// Calulate the parent folder name.
-				TCHAR szFullPath[MAX_PATH];
-				lstrcpy(szFullPath,pCurNode->pItemData->szFullPath);
-				ExcludeTrailingBackslash(szFullPath);
-				ExtractFilePath(szFullPath);
-				ForceSlashDelimiters(szFullPath);
-
-				lstrcpy(szWideBuffer,_T("/="));
-				lstrcat(szWideBuffer,szFullPath);
-
-#ifdef UNICODE
-				UnicodeToAnsi(szBuffer,szWideBuffer,sizeof(szBuffer));
-				PathList.m_szStrings.push_back(szBuffer);
-#else
-				PathList.m_szStrings.push_back(szWideBuffer);
-#endif
-
-				bIncludedVideo = true;
-			}
-		}
-
-		SaveLocalPathList(&PathList,pCurNode,FolderStack,iPathStripLen);
-	}
-
-	PathList.SaveToFile(szFileName,false);
 }
 
 void CTreeManager::GetLocalPathList(ckFileSystem::CFileSet &Files,CProjectNode *pNode,
@@ -1776,8 +1656,8 @@ void CTreeManager::GetLocalPathList(ckFileSystem::CFileSet &Files,CProjectNode *
 		CItemData *pItemData = (*itNodeObject)->pItemData;
 
 		// Skip imported folders.
-		if (pItemData->ucFlags & PROJECTITEM_FLAG_ISIMPORTED)
-			continue;
+		/*if (pItemData->ucFlags & PROJECTITEM_FLAG_ISIMPORTED)
+			continue;*/
 
 		bHasChildren = true;
 
@@ -1793,8 +1673,17 @@ void CTreeManager::GetLocalPathList(ckFileSystem::CFileSet &Files,CProjectNode *
 		lstrcpy(szInternalFilePath,pItemData->GetFilePath() + iPathStripLen);
 		lstrcat(szInternalFilePath,pItemData->GetFileName());
 
-		Files.insert(ckFileSystem::CFileDescriptor(szInternalFilePath,pItemData->szFullPath,
-			0,ckFileSystem::CFileDescriptor::FLAG_DIRECTORY));
+		// Handle import data.
+		unsigned char ucFlags = ckFileSystem::CFileDescriptor::FLAG_DIRECTORY;
+		void *pData = NULL;
+		if (pItemData->ucFlags & PROJECTITEM_FLAG_ISIMPORTED)
+		{
+			ucFlags |= ckFileSystem::CFileDescriptor::FLAG_IMPORTED;
+			pData = pItemData->GetIsoData();
+		}
+
+		Files.insert(ckFileSystem::CFileDescriptor(szInternalFilePath,
+			pItemData->szFullPath,0,ucFlags,pData));
 	}
 
 	std::list <CItemData *>::iterator itFileObject;
@@ -1803,8 +1692,8 @@ void CTreeManager::GetLocalPathList(ckFileSystem::CFileSet &Files,CProjectNode *
 		CItemData *pItemData = (*itFileObject);
 
 		// Skip imported files.
-		if (pItemData->ucFlags & PROJECTITEM_FLAG_ISIMPORTED)
-			continue;
+		/*if (pItemData->ucFlags & PROJECTITEM_FLAG_ISIMPORTED)
+			continue;*/
 
 		bHasChildren = true;
 
@@ -1818,7 +1707,17 @@ void CTreeManager::GetLocalPathList(ckFileSystem::CFileSet &Files,CProjectNode *
 		lstrcpy(szInternalFilePath,pItemData->GetFilePath() + iPathStripLen);
 		lstrcat(szInternalFilePath,pItemData->GetFileName());
 
-		Files.insert(ckFileSystem::CFileDescriptor(szInternalFilePath,pItemData->szFullPath,pItemData->uiSize));
+		// Handle import data.
+		unsigned char ucFlags = 0;
+		void *pData = NULL;
+		if (pItemData->ucFlags & PROJECTITEM_FLAG_ISIMPORTED)
+		{
+			ucFlags |= ckFileSystem::CFileDescriptor::FLAG_IMPORTED;
+			pData = pItemData->GetIsoData();
+		}
+
+		Files.insert(ckFileSystem::CFileDescriptor(szInternalFilePath,
+			pItemData->szFullPath,pItemData->uiSize,ucFlags,pData));
 	}
 
 	// If the folder does not have children, add it manually.
@@ -1839,8 +1738,17 @@ void CTreeManager::GetLocalPathList(ckFileSystem::CFileSet &Files,CProjectNode *
 		lstrcpy(szEmptyFolder,g_TempManager.GetEmtpyDirectory());
 		ForceSlashDelimiters(szEmptyFolder);
 
+		// Handle import data.
+		unsigned char ucFlags = ckFileSystem::CFileDescriptor::FLAG_DIRECTORY;
+		void *pData = NULL;
+		if (pNode->pItemData->ucFlags & PROJECTITEM_FLAG_ISIMPORTED)
+		{
+			ucFlags |= ckFileSystem::CFileDescriptor::FLAG_IMPORTED;
+			pData = pNode->pItemData->GetIsoData();
+		}
+
 		Files.insert(ckFileSystem::CFileDescriptor(szInternalFilePath,szEmptyFolder,
-			0,ckFileSystem::CFileDescriptor::FLAG_DIRECTORY));
+			0,ucFlags,pData));
 	}
 }
 
@@ -1858,5 +1766,127 @@ void CTreeManager::GetPathList(ckFileSystem::CFileSet &Files,CProjectNode *pRoot
 		FolderStack.pop_back();
 
 		GetLocalPathList(Files,pCurNode,FolderStack,iPathStripLen);
+	}
+}
+
+void CTreeManager::ImportLocalIso9660Tree(ckFileSystem::CIso9660TreeNode *pLocalIsoNode,
+										  CProjectNode *pLocalNode,
+										  std::vector<std::pair<ckFileSystem::CIso9660TreeNode *,
+										  CProjectNode *> > &FolderStack)
+{
+	std::vector<ckFileSystem::CIso9660TreeNode *>::const_iterator itIsoNode;
+	for (itIsoNode = pLocalIsoNode->m_Children.begin(); itIsoNode !=
+		pLocalIsoNode->m_Children.end(); itIsoNode++)
+	{
+		if ((*itIsoNode)->m_ucFileFlags & DIRRECORD_FILEFLAG_DIRECTORY)
+		{
+			// Try to locate the corresponding project node.
+			CProjectNode *pCurNode = NULL;
+
+			std::list<CProjectNode *>::const_iterator itNode;
+			for (itNode = pLocalNode->m_Children.begin(); itNode != pLocalNode->m_Children.end(); itNode++)
+			{
+				if (!lstrcmpi((*itNode)->pItemData->GetFileName(),(*itIsoNode)->m_FileName.c_str()))
+				{
+					pCurNode = *itNode;
+					break;
+				}
+			}
+
+			// Create a new node if necessary.
+			if (pCurNode == NULL)
+			{
+				pCurNode = new CProjectNode(pLocalNode);
+				pCurNode->pItemData->ucFlags |= PROJECTITEM_FLAG_ISIMPORTED;
+				pCurNode->pItemData->SetFileName((*itIsoNode)->m_FileName.c_str());
+
+				TCHAR *szFilePath = pCurNode->pItemData->BeginEditFilePath();
+				lstrcpy(szFilePath,pLocalNode->pItemData->GetFilePath());
+				lstrcat(szFilePath,pLocalNode->pItemData->GetFileName());
+				lstrcat(szFilePath,_T("\\"));
+				pCurNode->pItemData->EndEditFilePath();
+
+				MakeDosDateTime((*itIsoNode)->m_RecDateTime,
+					pCurNode->pItemData->usFileDate,
+					pCurNode->pItemData->usFileTime);
+
+				// Force a folder icon to be used.
+				SHFILEINFO shFileInfo;
+				if (SHGetFileInfo(_T(""),FILE_ATTRIBUTE_DIRECTORY,&shFileInfo,
+					sizeof(shFileInfo),SHGFI_USEFILEATTRIBUTES | SHGFI_SYSICONINDEX | SHGFI_TYPENAME))
+				{
+					pCurNode->iIconIndex = shFileInfo.iIcon;
+					lstrcpy(pCurNode->pItemData->szFileType,shFileInfo.szTypeName);
+				}
+
+				// Add ISO9660 data.
+				CItemData::CIso9660Data *pIsoData = pCurNode->pItemData->GetIsoData();
+
+				pIsoData->m_ucFileFlags = (*itIsoNode)->m_ucFileFlags;
+				pIsoData->m_ucFileUnitSize = (*itIsoNode)->m_ucFileUnitSize;
+				pIsoData->m_ucInterleaveGapSize = (*itIsoNode)->m_ucInterleaveGapSize;
+				pIsoData->m_usVolSeqNumber = (*itIsoNode)->m_usVolSeqNumber;
+				pIsoData->m_ulExtentLocation = (*itIsoNode)->m_ulExtentLocation;
+				pIsoData->m_ulExtentLength = (*itIsoNode)->m_ulExtentLength;
+
+				memcpy(&pIsoData->m_RecDateTime,&(*itIsoNode)->m_RecDateTime,
+					sizeof(ckFileSystem::tDirRecordDateTime));
+
+				// Finalize.
+				pLocalNode->m_Children.push_back(pCurNode);
+
+				AddTreeNode(pLocalNode->m_hTreeItem,pCurNode);
+			}
+
+			FolderStack.push_back(std::make_pair(*itIsoNode,pCurNode));
+		}
+		else
+		{
+			CItemData *pItemData = new CItemData();
+			pItemData->ucFlags |= PROJECTITEM_FLAG_ISIMPORTED;
+			pItemData->uiSize = (*itIsoNode)->m_ulExtentLength;
+			pItemData->SetFileName((*itIsoNode)->m_FileName.c_str());
+
+			TCHAR *szFilePath = pItemData->BeginEditFilePath();
+			lstrcpy(szFilePath,pLocalNode->pItemData->GetFilePath());
+			lstrcat(szFilePath,pLocalNode->pItemData->GetFileName());
+			lstrcat(szFilePath,_T("\\"));
+			pItemData->EndEditFilePath();
+
+			MakeDosDateTime((*itIsoNode)->m_RecDateTime,pItemData->usFileDate,pItemData->usFileTime);
+
+			// Add ISO9660 data.
+			CItemData::CIso9660Data *pIsoData = pItemData->GetIsoData();
+
+			pIsoData->m_ucFileFlags = (*itIsoNode)->m_ucFileFlags;
+			pIsoData->m_ucFileUnitSize = (*itIsoNode)->m_ucFileUnitSize;
+			pIsoData->m_ucInterleaveGapSize = (*itIsoNode)->m_ucInterleaveGapSize;
+			pIsoData->m_usVolSeqNumber = (*itIsoNode)->m_usVolSeqNumber;
+			pIsoData->m_ulExtentLocation = (*itIsoNode)->m_ulExtentLocation;
+			pIsoData->m_ulExtentLength = (*itIsoNode)->m_ulExtentLength;
+
+			memcpy(&pIsoData->m_RecDateTime,&(*itIsoNode)->m_RecDateTime,
+				sizeof(ckFileSystem::tDirRecordDateTime));
+
+			// Finalize.
+			pLocalNode->m_Files.push_back(pItemData);
+		}
+	}
+}
+
+void CTreeManager::ImportIso9660Tree(ckFileSystem::CIso9660TreeNode *pIsoRootNode,CProjectNode *pRootNode)
+{
+	// Save the information.
+	std::vector<std::pair<ckFileSystem::CIso9660TreeNode *,CProjectNode *> > FolderStack;
+	ImportLocalIso9660Tree(pIsoRootNode,pRootNode,FolderStack);
+
+	while (FolderStack.size() > 0)
+	{ 
+		ckFileSystem::CIso9660TreeNode *pIsoNode = FolderStack.back().first;
+		CProjectNode *pNode = FolderStack.back().second;
+
+		FolderStack.pop_back();
+
+		ImportLocalIso9660Tree(pIsoNode,pNode,FolderStack);
 	}
 }

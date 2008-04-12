@@ -34,18 +34,28 @@ CProjectPropDlg::CProjectPropDlg() : CPropertySheetImpl<CProjectPropDlg>(lngGetS
 	m_hFileSysPage = ::CreatePropertySheetPage(m_FileSysPage);
 	m_hIsoPage = ::CreatePropertySheetPage(m_IsoPage);
 	m_hFieldsPage = ::CreatePropertySheetPage(m_FieldsPage);
-	m_hAudioPage = ::CreatePropertySheetPage(m_AudioPage);
 	m_hBootPage = ::CreatePropertySheetPage(m_BootPage);
+	m_hUdfPage = ::CreatePropertySheetPage(m_UdfPage);
+	m_hAudioPage = ::CreatePropertySheetPage(m_AudioPage);
 
 	AddPage(m_hGeneralPage);
 
 	switch (g_ProjectManager.GetProjectType())
 	{
 		case PROJECTTYPE_DATA:
+		case PROJECTTYPE_DVDVIDEO:
 			AddPage(m_hFileSysPage);
 
+			if (g_ProjectSettings.m_iFileSystem == FILESYSTEM_ISO9660_UDF ||
+				g_ProjectSettings.m_iFileSystem == FILESYSTEM_UDF ||
+				g_ProjectSettings.m_iFileSystem == FILESYSTEM_DVDVIDEO)
+			{
+				AddPage(m_hUdfPage);
+			}
+
 			if (g_ProjectSettings.m_iFileSystem == FILESYSTEM_ISO9660 || 
-				g_ProjectSettings.m_iFileSystem == FILESYSTEM_ISO9660_UDF)
+				g_ProjectSettings.m_iFileSystem == FILESYSTEM_ISO9660_UDF ||
+				g_ProjectSettings.m_iFileSystem == FILESYSTEM_DVDVIDEO)
 			{
 				AddPage(m_hIsoPage);
 				AddPage(m_hFieldsPage);
@@ -53,22 +63,24 @@ CProjectPropDlg::CProjectPropDlg() : CPropertySheetImpl<CProjectPropDlg>(lngGetS
 			}
 			break;
 
-		case PROJECTTYPE_DVDVIDEO:
-			AddPage(m_hFileSysPage);
-			AddPage(m_hIsoPage);
-			AddPage(m_hFieldsPage);
-			AddPage(m_hBootPage);
-			break;
-
 		case PROJECTTYPE_AUDIO:
 			AddPage(m_hAudioPage);
 			break;
 
 		case PROJECTTYPE_MIXED:
+			AddPage(m_hAudioPage);
 			AddPage(m_hFileSysPage);
 
+			if (g_ProjectSettings.m_iFileSystem == FILESYSTEM_ISO9660_UDF ||
+				g_ProjectSettings.m_iFileSystem == FILESYSTEM_UDF ||
+				g_ProjectSettings.m_iFileSystem == FILESYSTEM_DVDVIDEO)
+			{
+				AddPage(m_hUdfPage);
+			}
+
 			if (g_ProjectSettings.m_iFileSystem == FILESYSTEM_ISO9660 || 
-				g_ProjectSettings.m_iFileSystem == FILESYSTEM_ISO9660_UDF)
+				g_ProjectSettings.m_iFileSystem == FILESYSTEM_ISO9660_UDF ||
+				g_ProjectSettings.m_iFileSystem == FILESYSTEM_DVDVIDEO)
 			{
 				AddPage(m_hIsoPage);
 				AddPage(m_hFieldsPage);
@@ -109,26 +121,48 @@ LRESULT CProjectPropDlg::OnSetFileSystem(UINT uMsg,WPARAM wParam,LPARAM lParam,B
 				AddPage(m_hIsoPage);
 				AddPage(m_hFieldsPage);
 				AddPage(m_hBootPage);
-
-				//RemovePage(m_hUdfPage);
+			}
+			
+			if (wParam != FILESYSTEM_ISO9660)
+			{
+				RemovePage(m_hUdfPage);
 			}
 			break;
 
 		case FILESYSTEM_UDF:
 			if (wParam != FILESYSTEM_UDF)	// Check previous selection.
 			{
-				//m_hUdfPage = ::CreatePropertySheetPage(m_UdfPage);
-
-				//AddPage(m_hUdfPage);
-
 				RemovePage(m_hIsoPage);
 				RemovePage(m_hFieldsPage);
 				RemovePage(m_hBootPage);
+			}
+
+			if (wParam == FILESYSTEM_ISO9660)
+			{
+				m_hUdfPage = ::CreatePropertySheetPage(m_UdfPage);
+
+				AddPage(m_hUdfPage);
 			}
 			break;
 
 		case FILESYSTEM_ISO9660_UDF:
 		case FILESYSTEM_DVDVIDEO:
+			if (wParam == FILESYSTEM_UDF)	// Check previous selection.
+			{
+				m_hIsoPage = ::CreatePropertySheetPage(m_IsoPage);
+				m_hFieldsPage = ::CreatePropertySheetPage(m_FieldsPage);
+				m_hBootPage = ::CreatePropertySheetPage(m_BootPage);
+
+				AddPage(m_hIsoPage);
+				AddPage(m_hFieldsPage);
+				AddPage(m_hBootPage);
+			}
+			else if (wParam == FILESYSTEM_ISO9660)
+			{
+				m_hUdfPage = ::CreatePropertySheetPage(m_UdfPage);
+
+				InsertPage(2,m_hUdfPage);
+			}
 			break;
 	}
 

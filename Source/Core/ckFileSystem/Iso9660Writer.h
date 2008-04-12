@@ -31,6 +31,31 @@
 															// any of the supported file system extensions.
 namespace ckFileSystem
 {
+	class CIso9660ImportData
+	{
+	public:
+		unsigned char m_ucFileFlags;
+		unsigned char m_ucFileUnitSize;
+		unsigned char m_ucInterleaveGapSize;
+		unsigned short m_usVolSeqNumber;
+		unsigned long m_ulExtentLocation;
+		unsigned long m_ulExtentLength;
+
+		ckFileSystem::tDirRecordDateTime m_RecDateTime;
+
+		CIso9660ImportData()
+		{
+			m_ucFileFlags = 0;
+			m_ucFileUnitSize = 0;
+			m_ucInterleaveGapSize = 0;
+			m_usVolSeqNumber = 0;
+			m_ulExtentLocation = 0;
+			m_ulExtentLength = 0;
+
+			memset(&m_RecDateTime,0,sizeof(ckFileSystem::tDirRecordDateTime));
+		}
+	};
+
 	class CIso9660Writer : public ISectorClient
 	{
 	private:

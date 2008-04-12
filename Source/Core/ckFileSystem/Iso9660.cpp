@@ -226,6 +226,17 @@ namespace ckFileSystem
 		DateTime.ucZone = -(unsigned char)(tzi.Bias/15);
 	}
 
+	void MakeDosDateTime(tDirRecordDateTime &DateTime,unsigned short &usDate,unsigned short &usTime)
+	{
+		usDate = ((DateTime.ucYear - 80) & 0x7F) << 9;
+		usDate |= (DateTime.ucMonth & 0x7F) << 5;
+		usDate |= (DateTime.ucDay & 0x1F);
+
+		usTime = (DateTime.ucHour & 0x1F) << 11;
+		usTime |= (DateTime.ucMinute & 0x3F) << 5;
+		usTime |= (DateTime.ucSecond & 0x1F) >> 1;
+	}
+
 	CIso9660::CIso9660()
 	{
 		m_InterLevel = LEVEL_1;
@@ -423,7 +434,7 @@ namespace ckFileSystem
 		char *szMultiDirName = szDirName;
 	#endif
 
-		for (size_t i = 0; i < iMax; i++)
+		for (size_t i = 0; i < (size_t)iMax; i++)
 			pOutBuffer[i] = MakeCharD(szMultiDirName[i]);
 			
 		pOutBuffer[iMax] = '\0';
@@ -448,7 +459,7 @@ namespace ckFileSystem
 		char *szMultiDirName = szDirName;
 	#endif
 
-		for (size_t i = 0; i < iMax; i++)
+		for (size_t i = 0; i < (size_t)iMax; i++)
 			pOutBuffer[i] = MakeCharD(szMultiDirName[i]);
 			
 		pOutBuffer[iMax] = '\0';

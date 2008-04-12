@@ -337,7 +337,7 @@ namespace ckFileSystem
 		return m_iMaxNameLen;*/
 
 		size_t iNameLen = lstrlen(szFileName);
-		if (iNameLen >= m_iMaxNameLen)
+		if (iNameLen >= (size_t)m_iMaxNameLen)
 			iNameLen = m_iMaxNameLen;
 
 		if (!bIsDir && m_bIncFileVerInfo)

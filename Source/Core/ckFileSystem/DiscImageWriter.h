@@ -55,9 +55,6 @@ namespace ckFileSystem
 	private:
 		CLog *m_pLog;
 
-		COutFileStream *m_pFileStream;
-		CSectorOutStream *m_pOutStream;
-
 		// What file system should be created.
 		eFileSystem m_FileSystem;
 
@@ -72,20 +69,29 @@ namespace ckFileSystem
 		bool CalcFileSysData(CFileTree &FileTree,CProgressEx &Progress,
 			unsigned __int64 uiStartSec,unsigned __int64 &uiLastSec);
 
-		int WriteFileNode(CFileTreeNode *pNode,CProgressEx &Progress,CFilesProgress &FilesProgress);
-		int WriteLocalFileData(std::vector<std::pair<CFileTreeNode *,int> > &DirNodeStack,
+		int WriteFileNode(CSectorOutStream &OutStream,CFileTreeNode *pNode,
+			CProgressEx &Progress,CFilesProgress &FilesProgress);
+		int WriteLocalFileData(CSectorOutStream &OutStream,
+			std::vector<std::pair<CFileTreeNode *,int> > &DirNodeStack,
 			CFileTreeNode *pLocalNode,int iLevel,CProgressEx &Progress,CFilesProgress &FilesProgress);
-		int WriteFileData(CFileTree &FileTree,CProgressEx &Progress,
+		int WriteFileData(CSectorOutStream &OutStream,CFileTree &FileTree,CProgressEx &Progress,
 			CFilesProgress &FilesProgress);
 
-		bool Close();
-		int Fail(int iResult,const TCHAR *szFullPath);
+		void GetInternalPath(CFileTreeNode *pChildNode,tstring &NodePath,
+			bool bExternalPath,bool bJoliet);
+		void CreateLocalFilePathMap(CFileTreeNode *pLocalNode,
+			std::vector<CFileTreeNode *> &DirNodeStack,
+			std::map<tstring,tstring> &FilePathMap,bool bJoliet);
+		void CreateFilePathMap(CFileTree &FileTree,std::map<tstring,tstring> &FilePathMap,bool bJoliet);
+
+		int Fail(int iResult,CSectorOutStream &OutStream);
 
 	public:
 		CDiscImageWriter(CLog *pLog,eFileSystem FileSystem);
 		~CDiscImageWriter();	
 
-		int Create(const TCHAR *szFullPath,CFileSet &Files,CProgressEx &Progress);
+		int Create(CSectorOutStream &OutStream,CFileSet &Files,CProgressEx &Progress,
+			unsigned long ulSectorOffset = 0,std::map<tstring,tstring> *pFilePathMap = NULL);
 
 		// File system modifiers, mixed set for Joliet, UDF and ISO9660.
 		void SetVolumeLabel(const TCHAR *szLabel);
@@ -96,6 +102,8 @@ namespace ckFileSystem
 		void SetInterchangeLevel(CIso9660::eInterLevel InterLevel);
 		void SetIncludeFileVerInfo(bool bIncludeInfo);
 		void SetPartAccessType(CUdf::ePartAccessType AccessType);
+		void SetRelaxMaxDirLevel(bool bRelaxRestriction);
+		void SetLongJolietNames(bool bEnable);
 
 		bool AddBootImageNoEmu(const TCHAR *szFullPath,bool bBootable,
 			unsigned short usLoadSegment,unsigned short usSectorCount);

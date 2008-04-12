@@ -411,17 +411,17 @@ void GetCygwinFileName(const TCHAR *szFileName,TCHAR *szCygwinFileName)
 	A secure version of lsprintf which does not allow buffer overruns and alwways
 	terminates with a null character.
 */
-void lsnprintf_s(TCHAR *szBuffer,int iBufferSize,const TCHAR *szFormatString,...)
+void lsnprintf_s(TCHAR *szBuffer,int iBufferLength,const TCHAR *szFormatString,...)
 {
 	va_list vlArgs;
 	va_start(vlArgs,szFormatString);
 
 #ifdef UNICODE
-	int iCount = _vsnwprintf(szBuffer,iBufferSize - 1,szFormatString,vlArgs);
+	int iCount = _vsnwprintf(szBuffer,iBufferLength - 1,szFormatString,vlArgs);
 #else
-	int iCount = _vsnprintf(szBuffer,iBufferSize - 1,szFormatString,vlArgs);
+	int iCount = _vsnprintf(szBuffer,iBufferLength - 1,szFormatString,vlArgs);
 #endif
 
-	if (iCount < 0 || iCount == iBufferSize)
-		szBuffer[iBufferSize - 1] = '\0';
+	if (iCount < 0 || iCount == iBufferLength)
+		szBuffer[iBufferLength - 1] = '\0';
 }

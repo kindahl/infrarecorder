@@ -69,6 +69,7 @@
 #define IDB_MAINLARGEBITMAP             249
 #define IDD_PROPPAGE_PROJECTPROPFILESYS 249
 #define IDB_MAINLARGEBITMAP_            250
+#define IDD_PROPPAGE_PROJECTPROPUDF     250
 #define IDB_PANECLOSEBITMAP             251
 #define IDC_TOTALPROGRESS               1000
 #define IDC_TOTALSTATIC                 1001
@@ -150,8 +151,6 @@
 #define IDC_CONTAINSSTATIC              1069
 #define IDC_LEVELSTATIC                 1070
 #define IDC_LEVELCOMBO                  1071
-#define IDC_CHARSETCOMBO                1072
-#define IDC_CHARSETSTATIC               1073
 #define IDC_JOLIETCHECK                 1074
 #define IDC_JOLIETLONGNAMESCHECK        1075
 #define IDC_PUBLISHEREDIT               1076
@@ -181,6 +180,7 @@
 #define IDC_DRIVESTATIC                 1104
 #define IDC_AUTORUNCHECK                1105
 #define IDC_LOGCHECK                    1106
+#define IDC_TRACKCOMBO                  1106
 #define IDC_LANGUAGESTATIC              1107
 #define IDC_LANGUAGECOMBO               1108
 #define IDC_LANGUAGEINFOSTATIC          1109
@@ -265,14 +265,14 @@
 #define IDC_BOOTSEGMENTSTATIC           1191
 #define IDC_BOOTSIZEEDIT                1192
 #define IDC_BOOTSIZESTATIC              1193
-#define IDC_UDFCHECK                    1195
 #define IDC_CHECK2                      1196
 #define IDC_CHECK                       1196
 #define IDC_OMITVNCHECK                 1196
 #define IDC_CHECK1                      1197
 #define IDC_VERIFYCHECK                 1197
-#define IDC_ROCKRIDGECHECK              1197
 #define IDC_SMOKECHECK                  1197
+#define IDC_OMITVNCHECK2                1197
+#define IDC_DEEPDIRCHECK                1197
 #define IDC_DRIVELETTERCOMBO            1198
 #define IDC_DRIVECOMBO                  1198
 #define IDC_SPEEDCOMBO                  1199
@@ -291,6 +291,8 @@
 #define IDC_FILESYSSTATIC               1210
 #define IDC_NEWDATESTATIC               1211
 #define IDC_FILESYSCOMBO                1211
+#define IDC_VERSIONCOMBO                1212
+#define IDC_PARTACCESSSTATIC            1214
 #define IDC_PROJECTTREEVIEW             10001
 #define IDC_PROJECTLISTVIEW             10002
 #define IDC_SHELLTREEVIEW               10003
@@ -358,7 +360,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        252
 #define _APS_NEXT_COMMAND_VALUE         32841
-#define _APS_NEXT_CONTROL_VALUE         1212
+#define _APS_NEXT_CONTROL_VALUE         1216
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

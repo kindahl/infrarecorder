@@ -316,7 +316,7 @@ namespace ckFileSystem
 	unsigned char CUdf::MakeFileIdent(unsigned char *pOutBuffer,const TCHAR *szFileName)
 	{
 		size_t iNameLen = lstrlen(szFileName);
-		size_t iCopyLen = iNameLen < 254 ? iNameLen : 254;		// One byte is reserved for compression descriptor.
+		size_t iCopyLen = iNameLen < (254 >> 1) ? iNameLen : (254 >> 1);		// One byte is reserved for compression descriptor.
 
 		// DVD-Video should use 8 bits to represent one character.
 		unsigned char ucStrComp = m_bDvdVideo ? UDF_COMPRESSION_BYTE : UDF_COMPRESSION_UNICODE;

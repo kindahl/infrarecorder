@@ -84,17 +84,27 @@ namespace ckFileSystem
 		// We now have our parent.
 		const TCHAR *szFileName = File.m_InternalPath.c_str() + iPrevDelim + 1;
 
+		// Check if imported.
+		unsigned char ucImportFlag = 0;
+		void *pImportData = NULL;
+		if (File.m_ucFlags & CFileDescriptor::FLAG_IMPORTED)
+		{
+			ucImportFlag = CFileTreeNode::FLAG_IMPORTED;
+			pImportData = File.m_pData;
+		}
+
 		if (File.m_ucFlags & CFileDescriptor::FLAG_DIRECTORY)
 		{
 			pCurNode->m_Children.push_back(new CFileTreeNode(pCurNode,szFileName,
-				File.m_ExternalPath.c_str(),0,true,0,CFileTreeNode::FLAG_DIRECTORY));
+				File.m_ExternalPath.c_str(),0,true,0,CFileTreeNode::FLAG_DIRECTORY | ucImportFlag,
+				pImportData));
 
 			m_ulDirCount++;
 		}
 		else
 		{
 			pCurNode->m_Children.push_back(new CFileTreeNode(pCurNode,szFileName,
-				File.m_ExternalPath.c_str(),File.m_uiFileSize,true,0));
+				File.m_ExternalPath.c_str(),File.m_uiFileSize,true,0,ucImportFlag,pImportData));
 
 			m_ulFileCount++;
 		}

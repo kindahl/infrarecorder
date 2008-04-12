@@ -208,7 +208,7 @@ TCHAR *g_szStringTable[] = {
 	_T("Writing pregap for track %d at %ld."),
 	_T("Waiting for reader process to fill input buffer."),
 	_T("Fixating."),
-	_T("Writing disc image (estimated finish %s)."),
+	_T("Writing disc image."),
 	_T("Reading track."),
 	_T("Scanning track."),
 	_T("Found %d bytes of C2 errors in %d sectors."),
@@ -385,7 +385,12 @@ TCHAR *g_szStringTable[] = {
 	_T("Unable to automatically reload the media. Please try to reload it manually, and then press OK."),
 	_T("Operation failed."),
 	_T("Failed to create disc image."),
-	_T("File System")
-
-	// Not yet added to translations.
+	_T("File System"),
+	_T("Unable to import session, could not list disc contents."),
+	_T("Session"),
+	_T("track"),
+	_T("mode"),
+	_T("The inserted disc does not appear to be empty, do you want to erase it first?"),
+	_T("Multi-session discs require an ISO9660 file system (without any additional file systems). Do you want InfraRecorder to change your project to use this file system and continue?"),
+	_T("Verifying Disc")
 };

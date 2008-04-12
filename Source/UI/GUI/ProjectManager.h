@@ -18,11 +18,12 @@
 
 #pragma once
 #include <vector>
+#include "../../Core/ckFileSystem/DiscImageHelper.h"
+#include "../../Common/XMLProcessor.h"
+#include "../../Common/Crc32.h"
 #include "SpaceMeter.h"
 #include "TreeManager.h"
 #include "CustomContainer.h"
-#include "../../Common/XMLProcessor.h"
-#include "../../Common/Crc32.h"
 #include "AdvancedProgress.h"
 #include "ConfirmFileReplaceDlg.h"
 
@@ -48,7 +49,7 @@
 #define PROJECTTYPE_DVDVIDEO				3
 
 // What project file version does this build use.
-#define PROJECTMANAGER_FILEVERSION			2
+#define PROJECTMANAGER_FILEVERSION			3
 
 /// Class for project content management.
 /**
@@ -83,7 +84,8 @@ private:
 
 	bool VerifyLocalFiles(CProjectNode *pNode,std::vector<CProjectNode *> &FolderStack,
 		CAdvancedProgress *pProgress,TCHAR *szFileNameBuffer,int iPathStripLen,
-		CCrc32File *pCrc32File,unsigned __int64 &uiFailCount);
+		CCrc32File *pCrc32File,unsigned __int64 &uiFailCount,
+		std::map<tstring,tstring> &FilePathMap);
 
 	bool GenerateNewFolderName(CProjectNode *pParent,TCHAR *szFolderName,
 		unsigned int uiFolderNameSize);
@@ -91,6 +93,8 @@ private:
 	void CloseProject();
 	void SaveProjectData(CXMLProcessor *pXML);
 	bool LoadProjectData(CXMLProcessor *pXML);
+	void SaveProjectFileSys(CXMLProcessor *pXML);
+	bool LoadProjectFileSys(CXMLProcessor *pXML);
 	void SaveProjectISO(CXMLProcessor *pXML);
 	bool LoadProjectISO(CXMLProcessor *pXML);
 	void SaveProjectFields(CXMLProcessor *pXML);
@@ -111,7 +115,15 @@ public:
 	*/
 	class CFileTransaction
 	{
+	public:
+		enum eMode
+		{
+			MODE_NORMAL,
+			MODE_IMPORT
+		};
+
 	private:
+		eMode m_Mode;
 		CConfirmFileReplaceDlg m_ReplaceDlg;
 
 		void AddFilesInFolder(CProjectNode *pParentNode,std::vector<CProjectNode *> &FolderStack);
@@ -126,7 +138,7 @@ public:
 		bool AddAudioFile(CProjectNode *pParentNode,const TCHAR *szFullPath);
 
 	public:
-		CFileTransaction();
+		CFileTransaction(eMode Mode = MODE_NORMAL);
 		~CFileTransaction();
 
 		bool AddFile(const TCHAR *szFullPath,CProjectNode *pTargetNode = NULL);
@@ -188,7 +200,8 @@ public:
 		std::vector<TCHAR *> &DecodedTracks,CAdvancedProgress *pProgress);
 	bool SaveCDText(const TCHAR *szFullPath);
 
-	bool VerifyCompilation(CAdvancedProgress *pProgress,const TCHAR *szDriveLetter);
+	bool VerifyCompilation(CAdvancedProgress *pProgress,const TCHAR *szDriveLetter,
+		std::map<tstring,tstring> &FilePathMap);
 
 	void SetDiscLabel(TCHAR *szLabelName);
 

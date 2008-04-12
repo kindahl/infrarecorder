@@ -24,6 +24,7 @@
 
 // Color of items flagged as boot images.
 #define PROJECTLISTVIEW_COLOR_BOOTIMAGE				RGB(0,102,204)
+#define PROJECTLISTVIEW_COLOR_IMPORTED				RGB(92,53,102)
 
 class CProjectListViewCtrl;
 

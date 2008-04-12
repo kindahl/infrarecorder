@@ -17,7 +17,6 @@
  */
 
 #include "stdafx.h"
-#include "ProjectManager.h"
 #include "../../Common/StringUtil.h"
 #include "../../Common/FileManager.h"
 #include "../../Common/DirLister.h"
@@ -28,10 +27,11 @@
 #include "CDText.h"
 #include "LangUtil.h"
 #include "InfraRecorder.h"
+#include "ProjectManager.h"
 
 CProjectManager g_ProjectManager;
 
-CProjectManager::CFileTransaction::CFileTransaction()
+CProjectManager::CFileTransaction::CFileTransaction(eMode Mode) : m_Mode(Mode)
 {
 }
 
@@ -55,6 +55,8 @@ bool CProjectManager::CFileTransaction::AddDataFile(CProjectNode *pParentNode,co
 
 	// Add the new item.
 	CItemData *pItemData = new CItemData();
+	if (m_Mode == MODE_IMPORT)
+		pItemData->ucFlags |= PROJECTITEM_FLAG_ISIMPORTED | PROJECTITEM_FLAG_ISLOCKED;
 
 	// Paths.
 	pItemData->SetFileName(szFileName);
@@ -105,12 +107,10 @@ CItemData *CProjectManager::CFileTransaction::
 
 	// Add the new item.
 	CItemData *pItemData = new CItemData();
+	if (m_Mode == MODE_IMPORT)
+		pItemData->ucFlags |= PROJECTITEM_FLAG_ISIMPORTED | PROJECTITEM_FLAG_ISLOCKED;
 
 	// Paths.
-	/*TCHAR *szSafeFileName = pItemData->BeginEditFileName();
-		lstrcpy(szSafeFileName,szFullPath);
-		ExtractFileName(szSafeFileName);
-	pItemData->EndEditFileName();*/
 	pItemData->SetFileName(szFileName);
 
 	TCHAR *szSafeFilePath = pItemData->BeginEditFilePath();
@@ -156,6 +156,8 @@ CProjectNode *CProjectManager::CFileTransaction::
 
 	// Add a new node.
 	CProjectNode *pNode = new CProjectNode(pParentNode);
+	if (m_Mode == MODE_IMPORT)
+		pNode->pItemData->ucFlags |= PROJECTITEM_FLAG_ISIMPORTED | PROJECTITEM_FLAG_ISLOCKED;
 
 	// Paths.
 	pNode->pItemData->SetFileName(szFolderName);
@@ -199,12 +201,10 @@ CProjectNode *CProjectManager::CFileTransaction::
 
 	// Add a new node.
 	CProjectNode *pNode = new CProjectNode(pParentNode);
+	if (m_Mode == MODE_IMPORT)
+		pNode->pItemData->ucFlags |= PROJECTITEM_FLAG_ISIMPORTED | PROJECTITEM_FLAG_ISLOCKED;
 
 	// Paths.
-	/*TCHAR *szSafeFileName = pNode->pItemData->BeginEditFileName();
-		lstrcpy(szSafeFileName,szFullPath);
-		ExtractFileName(szSafeFileName);
-	pNode->pItemData->EndEditFileName();*/
 	pNode->pItemData->SetFileName(szFolderName);
 
 	TCHAR *szSafeFilePath = pNode->pItemData->BeginEditFilePath();
@@ -274,6 +274,8 @@ bool CProjectManager::CFileTransaction::
 	}
 
 	CItemData *pItemData = new CItemData();
+	if (m_Mode == MODE_IMPORT)
+		pItemData->ucFlags |= PROJECTITEM_FLAG_ISIMPORTED | PROJECTITEM_FLAG_ISLOCKED;
 
 	// Paths.
 	TCHAR *szSafeFileName = pItemData->BeginEditFileName();
@@ -291,14 +293,14 @@ bool CProjectManager::CFileTransaction::
 
 	// Track length.
 	if (bEncoded)
-		pItemData->uiTrackLength = uiDuration;
+		pItemData->GetAudioData()->uiTrackLength = uiDuration;
 	else
-		pItemData->uiTrackLength = GetAudioLength(szFullPath);
+		pItemData->GetAudioData()->uiTrackLength = GetAudioLength(szFullPath);
 
 	if (g_ProjectManager.m_iProjectType == PROJECTTYPE_MIXED)	// Count using the Mode-1 sector size since the spacemeter in these projects are based on that disc size.
-		pItemData->uiSize = (pItemData->uiTrackLength / 1000) * 75 * 2048;
+		pItemData->uiSize = (pItemData->GetAudioData()->uiTrackLength / 1000) * 75 * 2048;
 	else
-		pItemData->uiSize = pItemData->uiTrackLength;
+		pItemData->uiSize = pItemData->GetAudioData()->uiTrackLength;
 
 	pParentNode->m_Files.push_back(pItemData);
 
@@ -308,8 +310,8 @@ bool CProjectManager::CFileTransaction::
 	return true;
 }
 
-void CProjectManager::CFileTransaction::
-	AddFilesInFolder(CProjectNode *pParentNode,std::vector<CProjectNode *> &FolderStack)
+void CProjectManager::CFileTransaction::AddFilesInFolder(CProjectNode *pParentNode,
+														 std::vector<CProjectNode *> &FolderStack)
 {
 	// Real parent path.
 	TCHAR szRealParentPath[MAX_PATH];
@@ -944,8 +946,6 @@ bool CProjectManager::NewDVDVideoProject(bool bAskForDirectory)
 	g_MainFrame.UIEnable(ID_BURNCOMPILATION_DISCIMAGE,true);
 	g_MainFrame.UIEnable(ID_ACTIONS_IMPORTSESSION,true);
 
-	g_ProjectSettings.m_bDVDVideo = true;
-
 	// DVD-Video projects are basicly data projects with a twist.
 	if (bLoadFolder)
 	{
@@ -959,7 +959,7 @@ bool CProjectManager::NewDVDVideoProject(bool bAskForDirectory)
 		{
 			for (unsigned int i = 0; i < DirLister.m_FileList.size(); i++)
 			{
-				lstrcpy(szFileName,DirLister.m_FileList[i].szPath);
+				lstrcpy(szFileName,DirLister.m_FileList[i].szFilePath);
 				IncludeTrailingBackslash(szFileName);
 				lstrcat(szFileName,DirLister.m_FileList[i].FileData.cFileName);
 
@@ -1414,7 +1414,7 @@ bool CProjectManager::LoadProjectData(CXMLProcessor *pXML)
 		case PROJECTTYPE_DATA:
 		case PROJECTTYPE_DVDVIDEO:
 			if (!pXML->EnterElement(_T("Data")))
-				return false;
+				return true;
 
 			g_TreeManager.LoadNodeFileData(pXML,g_TreeManager.GetRootNode());
 
@@ -1423,7 +1423,7 @@ bool CProjectManager::LoadProjectData(CXMLProcessor *pXML)
 
 		case PROJECTTYPE_AUDIO:
 			if (!pXML->EnterElement(_T("Audio")))
-				return false;
+				return true;
 
 			g_TreeManager.LoadNodeAudioData(pXML,g_TreeManager.GetRootNode());
 
@@ -1432,16 +1432,14 @@ bool CProjectManager::LoadProjectData(CXMLProcessor *pXML)
 
 		case PROJECTTYPE_MIXED:
 			if (!pXML->EnterElement(_T("Data")))
-				return false;
+				return true;
 
 			g_TreeManager.LoadNodeFileData(pXML,m_pMixDataNode);
 
 			pXML->LeaveElement();
 
-			// Made audio data optional.
 			if (!pXML->EnterElement(_T("Audio")))
 				return true;
-				//return false;
 
 			g_TreeManager.LoadNodeAudioData(pXML,m_pMixAudioNode);
 
@@ -1452,19 +1450,34 @@ bool CProjectManager::LoadProjectData(CXMLProcessor *pXML)
 	return true;
 }
 
+void CProjectManager::SaveProjectFileSys(CXMLProcessor *pXML)
+{
+	pXML->AddElement(_T("FileSystem"),_T(""),true);
+		pXML->AddElement(_T("Identifier"),g_ProjectSettings.m_iFileSystem);
+	pXML->LeaveElement();
+}
+
+bool CProjectManager::LoadProjectFileSys(CXMLProcessor *pXML)
+{
+	if (!pXML->EnterElement(_T("FileSystem")))
+		return false;
+
+	pXML->GetSafeElementData(_T("Identifier"),&g_ProjectSettings.m_iFileSystem);
+	pXML->LeaveElement();
+	return true;
+}
+
 void CProjectManager::SaveProjectISO(CXMLProcessor *pXML)
 {
 	pXML->AddElement(_T("ISO"),_T(""),true);
-		pXML->AddElement(_T("Level"),g_ProjectSettings.m_iISOLevel);
-		pXML->AddElement(_T("CharSet"),g_ProjectSettings.m_iISOCharSet);
-		pXML->AddElement(_T("Format"),g_ProjectSettings.m_iISOFormat);
+		pXML->AddElement(_T("Level"),g_ProjectSettings.m_iIsoLevel);
+		pXML->AddElement(_T("Format"),g_ProjectSettings.m_iIsoFormat);
+		pXML->AddElement(_T("DeepDirs"),g_ProjectSettings.m_bDeepDirs);
 		pXML->AddElement(_T("Joliet"),_T(""),true);
 			pXML->AddElementAttr(_T("enable"),g_ProjectSettings.m_bJoliet);
 			pXML->AddElement(_T("LongNames"),g_ProjectSettings.m_bJolietLongNames);
 		pXML->LeaveElement();
-		pXML->AddElement(_T("UDF"),g_ProjectSettings.m_bUDF);
-		pXML->AddElement(_T("RockRidge"),g_ProjectSettings.m_bRockRidge);
-		pXML->AddElement(_T("OmitVN"),g_ProjectSettings.m_bOmitVN);
+		pXML->AddElement(_T("OmitVerNum"),g_ProjectSettings.m_bOmitVerNum);
 	pXML->LeaveElement();
 }
 
@@ -1473,9 +1486,9 @@ bool CProjectManager::LoadProjectISO(CXMLProcessor *pXML)
 	if (!pXML->EnterElement(_T("ISO")))
 		return false;
 
-	pXML->GetSafeElementData(_T("Level"),&g_ProjectSettings.m_iISOLevel);
-	pXML->GetSafeElementData(_T("CharSet"),&g_ProjectSettings.m_iISOCharSet);
-	pXML->GetSafeElementData(_T("Format"),&g_ProjectSettings.m_iISOFormat);
+	pXML->GetSafeElementData(_T("Level"),&g_ProjectSettings.m_iIsoLevel);
+	pXML->GetSafeElementData(_T("Format"),&g_ProjectSettings.m_iIsoFormat);
+	pXML->GetSafeElementData(_T("DeepDirs"),&g_ProjectSettings.m_bDeepDirs);
 
 	if (!pXML->EnterElement(_T("Joliet")))
 	{
@@ -1487,9 +1500,7 @@ bool CProjectManager::LoadProjectISO(CXMLProcessor *pXML)
 	pXML->GetSafeElementData(_T("LongNames"),&g_ProjectSettings.m_bJolietLongNames);
 	pXML->LeaveElement();
 
-	pXML->GetSafeElementData(_T("UDF"),&g_ProjectSettings.m_bUDF);
-	pXML->GetSafeElementData(_T("RockRidge"),&g_ProjectSettings.m_bRockRidge);
-	pXML->GetSafeElementData(_T("OmitVN"),&g_ProjectSettings.m_bOmitVN);
+	pXML->GetSafeElementData(_T("OmitVerNum"),&g_ProjectSettings.m_bOmitVerNum);
 
 	pXML->LeaveElement();
 	return true;
@@ -1638,6 +1649,7 @@ bool CProjectManager::SaveProject(const TCHAR *szFullPath)
 				case PROJECTTYPE_DATA:
 				case PROJECTTYPE_DVDVIDEO:
 					XML.AddElement(_T("Label"),g_ProjectSettings.m_szLabel);
+					SaveProjectFileSys(&XML);
 					SaveProjectISO(&XML);
 					SaveProjectFields(&XML);
 					SaveProjectBoot(&XML);
@@ -1653,6 +1665,7 @@ bool CProjectManager::SaveProject(const TCHAR *szFullPath)
 					XML.AddElement(_T("AlbumName"),g_ProjectSettings.m_szAlbumName);
 					XML.AddElement(_T("AlbumArtist"),g_ProjectSettings.m_szAlbumArtist);
 
+					SaveProjectFileSys(&XML);
 					SaveProjectISO(&XML);
 					SaveProjectFields(&XML);
 					break;
@@ -1720,6 +1733,7 @@ bool CProjectManager::LoadProject(const TCHAR *szFullPath)
 			SetDiscLabel(g_ProjectSettings.m_szLabel);
 
 			// Data information.
+			LoadProjectFileSys(&XML);
 			LoadProjectISO(&XML);
 			LoadProjectFields(&XML);
 			LoadProjectBoot(&XML);
@@ -1745,6 +1759,7 @@ bool CProjectManager::LoadProject(const TCHAR *szFullPath)
 			XML.GetSafeElementData(_T("AlbumArtist"),g_ProjectSettings.m_szAlbumArtist,159);
 
 			// Data information.
+			LoadProjectFileSys(&XML);
 			LoadProjectISO(&XML);
 			LoadProjectFields(&XML);
 			break;
@@ -1757,6 +1772,7 @@ bool CProjectManager::LoadProject(const TCHAR *szFullPath)
 			SetDiscLabel(g_ProjectSettings.m_szLabel);
 
 			// Data information.
+			LoadProjectFileSys(&XML);
 			LoadProjectISO(&XML);
 			LoadProjectFields(&XML);
 			LoadProjectBoot(&XML);
@@ -2127,9 +2143,16 @@ bool CProjectManager::SaveCDText(const TCHAR *szFullPath)
 */
 bool CProjectManager::VerifyLocalFiles(CProjectNode *pNode,std::vector<CProjectNode *> &FolderStack,
 									   CAdvancedProgress *pProgress,TCHAR *szFileNameBuffer,int iPathStripLen,
-									   CCrc32File *pCrc32File,unsigned __int64 &uiFailCount)
+									   CCrc32File *pCrc32File,unsigned __int64 &uiFailCount,
+									   std::map<tstring,tstring> &FilePathMap)
 {
 	TCHAR szStatus[MAX_PATH + 32];
+	tstring FileName;
+
+	TCHAR szDriveLetter[3];
+	szDriveLetter[0] = szFileNameBuffer[0];
+	szDriveLetter[1] = szFileNameBuffer[1];
+	szDriveLetter[2] = '\0';
 
 	std::list <CProjectNode *>::iterator itNodeObject;
 	for (itNodeObject = pNode->m_Children.begin(); itNodeObject != pNode->m_Children.end(); itNodeObject++)
@@ -2157,7 +2180,10 @@ bool CProjectManager::VerifyLocalFiles(CProjectNode *pNode,std::vector<CProjectN
 		if (pProgress->IsCanceled())
 			return false;
 
-		unsigned long ulTestCrc = pCrc32File->Calculate(szFileNameBuffer);
+		FileName = szDriveLetter;
+		FileName.append(FilePathMap[szFileNameBuffer + 2]);
+
+		unsigned long ulTestCrc = pCrc32File->Calculate(FileName.c_str());
 		if (pProgress->IsCanceled())
 			return false;
 
@@ -2166,12 +2192,12 @@ bool CProjectManager::VerifyLocalFiles(CProjectNode *pNode,std::vector<CProjectN
 			if (ulTestCrc == 0)
 			{
 				pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,
-					lngGetString(FAILURE_VERIFYNOFILE),szFileNameBuffer + 3);
+					lngGetString(FAILURE_VERIFYNOFILE),FileName.c_str() + 3);
 			}
 			else
 			{
 				pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,
-					lngGetString(FAILURE_VERIFYREADERROR),szFileNameBuffer,ulTestCrc,ulGoodCrc);
+					lngGetString(FAILURE_VERIFYREADERROR),/*szFileNameBuffer*/FileName.c_str(),ulTestCrc,ulGoodCrc);
 			}
 
 			uiFailCount++;
@@ -2189,7 +2215,8 @@ bool CProjectManager::VerifyLocalFiles(CProjectNode *pNode,std::vector<CProjectN
 	 @return true of the operation completed successfully (with or without
 	 errors), and false if the operation was cancelled.
 */
-bool CProjectManager::VerifyCompilation(CAdvancedProgress *pProgress,const TCHAR *szDriveLetter)
+bool CProjectManager::VerifyCompilation(CAdvancedProgress *pProgress,const TCHAR *szDriveLetter,
+										std::map<tstring,tstring> &FilePathMap)
 {
 	int iPathStripLen = 0;
 
@@ -2219,7 +2246,7 @@ bool CProjectManager::VerifyCompilation(CAdvancedProgress *pProgress,const TCHAR
 	CCrc32File Crc32File(pProgress,&FilesProgress);
 
 	std::vector<CProjectNode *> FolderStack;
-	if (!VerifyLocalFiles(pRootNode,FolderStack,pProgress,szFileNameBuffer,iPathStripLen,&Crc32File,uiFailCount))
+	if (!VerifyLocalFiles(pRootNode,FolderStack,pProgress,szFileNameBuffer,iPathStripLen,&Crc32File,uiFailCount,FilePathMap))
 		return false;
 
 	while (FolderStack.size() > 0)
@@ -2227,7 +2254,7 @@ bool CProjectManager::VerifyCompilation(CAdvancedProgress *pProgress,const TCHAR
 		pRootNode = FolderStack[FolderStack.size() - 1];
 		FolderStack.pop_back();
 
-		if (!VerifyLocalFiles(pRootNode,FolderStack,pProgress,szFileNameBuffer,iPathStripLen,&Crc32File,uiFailCount))
+		if (!VerifyLocalFiles(pRootNode,FolderStack,pProgress,szFileNameBuffer,iPathStripLen,&Crc32File,uiFailCount,FilePathMap))
 			return false;
 	}
 	

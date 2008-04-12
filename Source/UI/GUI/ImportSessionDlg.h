@@ -17,22 +17,47 @@
  */
 
 #pragma once
+#include <vector>
 #include "resource.h"
+#include "Core2Device.h"
 
 class CImportSessionDlg : public CDialogImpl<CImportSessionDlg>
 {
 private:
+	class CTrackData
+	{
+	public:
+		unsigned char m_ucMode;
+		unsigned short m_usSessionNumber;
+		unsigned short m_usTrackNumber;
+		unsigned long m_ulTrackAddr;
+		unsigned long m_ulTrackLen;
+
+		CTrackData(unsigned char ucMode,unsigned short usSessionNumber,
+			unsigned short usTrackNumber,unsigned long ulTrackAddr,unsigned long ulTrackLen) :
+			m_ucMode(ucMode),m_usSessionNumber(usSessionNumber),m_usTrackNumber(usTrackNumber),
+			m_ulTrackAddr(ulTrackAddr),m_ulTrackLen(ulTrackLen)
+		{
+		}
+	};
+
+	std::vector<CTrackData *> m_TrackData;
 	CComboBox m_DeviceCombo;
+	CComboBox m_TrackCombo;
 
 	bool Translate();
+	bool UpdateDiscInfo(CCore2Device *pDevice);
+
+	void ResetDiscInfo();
 
 public:
 	enum { IDD = IDD_IMPORTSESSIONDLG };
 
-	// Data member that can be accessed from another object when the dialog
+	// Data members that can be accessed from another object when the dialog
 	// has closed.
 	unsigned __int64 m_uiAllocatedSize;
 	UINT_PTR m_uiDeviceIndex;
+	CTrackData *m_pSelTrackData;
 
 	CImportSessionDlg();
 	~CImportSessionDlg();
@@ -43,6 +68,8 @@ public:
 
 		COMMAND_ID_HANDLER(IDOK,OnOK)
 		COMMAND_ID_HANDLER(IDCANCEL,OnCancel)
+
+		REFLECT_NOTIFICATIONS()
 	END_MSG_MAP()
 
 	LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);

@@ -16,6 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 #pragma once
+#include "../../Common/Stream.h"
 #include "Core2Device.h"
 #include "AdvancedProgress.h"
 
@@ -25,82 +26,83 @@
 
 namespace Core2ReadFunction
 {
-class CReadFunction
-{
-private:
-	CCore2Device *m_pDevice;
-
-protected:
-	enum eMainChannelData
+	class CReadFunction
 	{
-		MCD_NONE = 0x00,
-		MCD_USERDATA = 0x10
+	private:
+		CCore2Device *m_pDevice;
+
+	protected:
+		enum eMainChannelData
+		{
+			MCD_NONE = 0x00,
+			MCD_USERDATA = 0x10
+		};
+
+		enum eSubChannelData
+		{
+			SCD_NONE,
+			SCD_FORMATTEDQ,
+			SCD_DEINTERLEAVED_RW
+		};
+
+		enum eC2ErrorInfo
+		{
+			C2EI_NONE = 0x0,
+			C2EI_BITS = 0x2,			// 294 bytes.
+			C2EI_BLOCKANDBITS = 0x4,	// 296 bytes.
+		};
+
+		bool ReadCD(unsigned char *pBuffer,unsigned long ulAddress,unsigned long ulBlockCount,
+			eMainChannelData MCD,eSubChannelData SCD,eC2ErrorInfo ErrorInfo);
+
+	public:
+		CReadFunction(CCore2Device *pDevice);
+
+		virtual bool Read(unsigned char *pBuffer,unsigned long ulAddress,
+			unsigned long ulBlockCount) = 0;
+		virtual bool Process(unsigned char *pBuffer,unsigned long ulBlockCount) = 0;
+		virtual unsigned long GetFrameSize() = 0;
 	};
 
-	enum eSubChannelData
+	class CReadUserData : public CReadFunction
 	{
-		SCD_NONE,
-		SCD_FORMATTEDQ,
-		SCD_DEINTERLEAVED_RW
+	private:
+		//HANDLE m_hFile;
+		COutStream *m_pOutStream;
+		unsigned long m_ulFrameSize;
+
+	public:
+		CReadUserData(CCore2Device *pDevice,/*const TCHAR *szFilePath*/COutStream *pOutStream);
+		~CReadUserData();
+
+		bool Read(unsigned char *pBuffer,unsigned long ulAddress,
+			unsigned long ulBlockCount);
+		bool Process(unsigned char *pBuffer,unsigned long ulBlockCount);
+		unsigned long GetFrameSize();
 	};
 
-	enum eC2ErrorInfo
+	class CReadRaw
 	{
-		C2EI_NONE = 0x0,
-		C2EI_BITS = 0x2,			// 294 bytes.
-		C2EI_BLOCKANDBITS = 0x4,	// 296 bytes.
 	};
 
-	bool ReadCD(unsigned char *pBuffer,unsigned long ulAddress,unsigned long ulBlockCount,
-		eMainChannelData MCD,eSubChannelData SCD,eC2ErrorInfo ErrorInfo);
+	class CReadC2 : public CReadFunction
+	{
+	private:
+		unsigned long m_ulErrSecCount;
+		unsigned long m_ulErrByteCount;
+		unsigned __int64 m_uiTotalBytes;
 
-public:
-	CReadFunction(CCore2Device *pDevice);
+		unsigned char NumBits(unsigned char ucData);
 
-	virtual bool Read(unsigned char *pBuffer,unsigned long ulAddress,
-		unsigned long ulBlockCount) = 0;
-	virtual bool Process(unsigned char *pBuffer,unsigned long ulBlockCount) = 0;
-	virtual unsigned long GetFrameSize() = 0;
-};
+	public:
+		CReadC2(CCore2Device *pDevice);
+		~CReadC2();
 
-class CReadUserData : public CReadFunction
-{
-private:
-	HANDLE m_hFile;
-	unsigned long m_ulFrameSize;
-
-public:
-	CReadUserData(CCore2Device *pDevice,const TCHAR *szFilePath);
-	~CReadUserData();
-
-	bool Read(unsigned char *pBuffer,unsigned long ulAddress,
-		unsigned long ulBlockCount);
-	bool Process(unsigned char *pBuffer,unsigned long ulBlockCount);
-	unsigned long GetFrameSize();
-};
-
-class CReadRaw
-{
-};
-
-class CReadC2 : public CReadFunction
-{
-private:
-	unsigned long m_ulErrSecCount;
-	unsigned long m_ulErrByteCount;
-	unsigned __int64 m_uiTotalBytes;
-
-	unsigned char NumBits(unsigned char ucData);
-
-public:
-	CReadC2(CCore2Device *pDevice);
-	~CReadC2();
-
-	bool Read(unsigned char *pBuffer,unsigned long ulAddress,
-		unsigned long ulBlockCount);
-	bool Process(unsigned char *pBuffer,unsigned long ulBlockCount);
-	unsigned long GetFrameSize();
-};
+		bool Read(unsigned char *pBuffer,unsigned long ulAddress,
+			unsigned long ulBlockCount);
+		bool Process(unsigned char *pBuffer,unsigned long ulBlockCount);
+		unsigned long GetFrameSize();
+	};
 }
 
 class CCore2Read

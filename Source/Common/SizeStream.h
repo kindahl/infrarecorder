@@ -17,7 +17,19 @@
  */
 
 #pragma once
+#include "Stream.h"
 
-int CodePageToCharacterSet(int iCodePage);
+class COutSizeStream : public COutStream
+{
+private:
+	unsigned __int64 m_uiTotalWritten;
 
-extern TCHAR *g_szCharacterSets[];
+public:
+	COutSizeStream();
+	~COutSizeStream();
+
+	unsigned __int64 GetWrittenSize();
+
+	// COutStream.
+	int Write(void *pBuffer,unsigned long ulSize,unsigned long *pProcessedSize);
+};

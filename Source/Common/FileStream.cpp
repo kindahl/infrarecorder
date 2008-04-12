@@ -72,6 +72,11 @@ __int64 CInFileStream::Seek(__int64 iDistance,int iMode)
 	return fs_seek(m_hFile,iDistance,iMode);
 }
 
+__int64 CInFileStream::Seek(__int64 iDistance,eSeekMode SeekMode)
+{
+	return fs_seek(m_hFile,iDistance,SeekMode == SM_BEGIN ? FILE_BEGIN : FILE_CURRENT);
+}
+
 __int64 CInFileStream::Tell()
 {
 	return fs_tell(m_hFile);

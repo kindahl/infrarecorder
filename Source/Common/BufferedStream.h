@@ -22,7 +22,7 @@
 class CBufferedInStream : public CInStream
 {
 private:
-	CInStream *m_pInStream;
+	CInStream &m_InStream;
 
 	unsigned char *m_pBuffer;
 	unsigned long m_ulBufferSize;
@@ -32,7 +32,7 @@ private:
 	bool m_bEOBS;
 
 public:
-	CBufferedInStream(CInStream *pInStream,unsigned long ulBufferSize);
+	CBufferedInStream(CInStream &InStream,unsigned long ulBufferSize);
 	~CBufferedInStream();
 
 	int Read(void *pBuffer,unsigned long ulSize,unsigned long *pProcessedSize);
@@ -42,7 +42,7 @@ public:
 class CBufferedOutStream : public COutStream
 {
 private:
-	COutStream *m_pOutStream;
+	COutStream &m_OutStream;
 
 	unsigned char *m_pBuffer;
 	unsigned long m_ulBufferSize;
@@ -51,7 +51,7 @@ private:
 	unsigned __int64 m_uiTotalWritten;
 
 public:
-	CBufferedOutStream(COutStream *pOutStream,unsigned long ulBufferSize);
+	CBufferedOutStream(COutStream &OutStream,unsigned long ulBufferSize);
 	~CBufferedOutStream();
 
 	int Write(void *pBuffer,unsigned long ulSize,unsigned long *pProcessedSize);

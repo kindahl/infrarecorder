@@ -21,7 +21,6 @@
 #include "../../Common/StringUtil.h"
 #include "../../Common/XMLProcessor.h"
 #include "../../Common/LNGProcessor.h"
-#include "System.h"
 #include "TreeManager.h"
 
 #define WRITEMETHOD_SAO					0
@@ -286,7 +285,7 @@ public:
 #define PROJECTBI_BOOTEMU_FLOPPY			1
 #define PROJECTBI_BOOTEMU_HARDDISK			2
 
-class CProjectBootImage
+class CProjectBootImage	// FIXME: Make m_iLoadSegment and m_iLoadSize unsigned short, m_iEmulation to enum type and m_iLoadSize to LoadLen (sectors).
 {
 public:
 	bool m_bNoBoot;
@@ -312,14 +311,12 @@ class CProjectSettings : public ISettings
 {
 public:
 	int m_iFileSystem;
-	int m_iISOLevel;
-	int m_iISOCharSet;
-	int m_iISOFormat;
+	int m_iIsoLevel;
+	int m_iIsoFormat;	// FIXME: Use defined values here. Rename?
 	bool m_bJoliet;
 	bool m_bJolietLongNames;
-	bool m_bUDF;
-	bool m_bRockRidge;
-	bool m_bOmitVN;
+	bool m_bOmitVerNum;
+	bool m_bDeepDirs;
 	TCHAR m_szLabel[128];
 	TCHAR m_szPublisher[128];
 	TCHAR m_szPreparer[128];
@@ -339,13 +336,10 @@ public:
 	// Multi session related, are only changed when importing an existing session.
 	// They should not be saved in a project.
 	bool m_bMultiSession;
-	unsigned __int64 m_uiLastSession;
-	unsigned __int64 m_uiNextSession;
+	unsigned __int64 m_uiImportTrackAddr;
+	unsigned __int64 m_uiImportTrackLen;
+	unsigned __int64 m_uiNextWritableAddr;
 	UINT_PTR m_uiDeviceIndex;
-
-	// Only used internally to keep track if the current project should be
-	// recorded as a DVD-Video disc.
-	bool m_bDVDVideo;
 
 	CProjectSettings()
 	{
@@ -385,26 +379,13 @@ public:
 
 	void Reset(bool bFindCharacterSet = true)
 	{
-		m_iISOLevel = 0;
-
-		if (bFindCharacterSet)
-		{
-			m_iISOCharSet = CodePageToCharacterSet(GetACP());
-			if (m_iISOCharSet == -1)
-				m_iISOCharSet = 36;		// Default is Latin1.
-		}
-		else
-		{
-			m_iISOCharSet = 36;			// Default is Latin1.
-		}
-
 		m_iFileSystem = FILESYSTEM_ISO9660;
-		m_iISOFormat = 0;
+		m_iIsoLevel = 0;
+		m_iIsoFormat = 0;
 		m_bJoliet = true;
 		m_bJolietLongNames = true;
-		m_bUDF = false;
-		m_bRockRidge = true;
-		m_bOmitVN = false;
+		m_bOmitVerNum = false;
+		m_bDeepDirs = false;
 
 		m_szLabel[0] = '\0';
 		m_szPublisher[0] = '\0';
@@ -429,12 +410,10 @@ public:
 
 		// Multi session related, are only changed when importing an existing session.
 		m_bMultiSession = false;
-		m_uiLastSession = 0;
-		m_uiNextSession = 0;
+		m_uiImportTrackAddr = 0;
+		m_uiImportTrackLen = 0;
+		m_uiNextWritableAddr = 0;
 		m_uiDeviceIndex = 0;
-
-		// Internal use only (should be set to true when a DVD-Video project is creaed).
-		m_bDVDVideo = false;
 	}
 
 	bool Save(CXMLProcessor *pXML);

@@ -29,26 +29,26 @@ namespace ckFileSystem
 	public:
 		enum
 		{
-			FLAG_DIRECTORY = 0x01
+			FLAG_DIRECTORY = 0x01,
+			FLAG_IMPORTED = 0x02
 		};
 
 		CFileDescriptor(const TCHAR *szInternalPath,const TCHAR *szExternalPath,
-			unsigned __int64 uiFileSize,unsigned char ucFlags = 0)
+			unsigned __int64 uiFileSize,unsigned char ucFlags = 0,void *pData = NULL)
 		{
 			m_ucFlags = ucFlags;
-			m_ulExtentSector = 0;
 			m_uiFileSize = uiFileSize;
 			m_InternalPath = szInternalPath;
 			m_ExternalPath = szExternalPath;
+			m_pData = pData;
 		}
 
 		unsigned char m_ucFlags;
-		unsigned long m_ulExtentSector;	// The sector which contains the extent
-										// information. This is unknown until the
-										// extent information is actually written.
 		unsigned __int64 m_uiFileSize;
 		tstring m_InternalPath;			// Path in disc image.
 		tstring m_ExternalPath;			// Path on hard drive.
+
+		void *m_pData;					// Pointer to a user-defined structure, designed for CIso9660TreeNode
 	};
 
 	/*

@@ -17,33 +17,30 @@
  */
 
 #pragma once
-#include "resource.h"
 
-class CProjectPropISOPage : public CPropertyPageImpl<CProjectPropISOPage>
+#define CUSTOMCOMBO_ICONSPACING			1
+
+class CCustomComboBox : public CWindowImpl<CCustomComboBox,CComboBox>,
+	public COwnerDraw<CCustomComboBox>
 {
 private:
-	CComboBox m_LevelCombo;
-	CComboBox m_CharSetCombo;
-	CComboBox m_FormatCombo;
-
-	bool Translate();
+	HIMAGELIST m_hImageList;
+	int m_iImageList;
 
 public:
-	enum { IDD = IDD_PROPPAGE_PROJECTPROPISO };
+	DECLARE_WND_CLASS(_T("ckComboBox"));
 
-	CProjectPropISOPage();
-	~CProjectPropISOPage();
+	CCustomComboBox();
+	~CCustomComboBox();
 
-	bool OnApply();
-	void OnHelp();
-
-	BEGIN_MSG_MAP(CProjectPropISOPage)
-		MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
-		MESSAGE_HANDLER(WM_COMMAND,OnCommand)
-
-		CHAIN_MSG_MAP(CPropertyPageImpl<CProjectPropISOPage>)
+	BEGIN_MSG_MAP(CCustomComboBox)
+		CHAIN_MSG_MAP_ALT(COwnerDraw<CCustomComboBox>,1)
 	END_MSG_MAP()
 
-	LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnCommand(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+	LRESULT OnChar(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+
+	void SetImageList(HIMAGELIST hImageList,int iImageList);
+
+	// For ownerdraw.
+	void DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct);
 };
