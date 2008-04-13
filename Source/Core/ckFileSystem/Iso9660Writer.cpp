@@ -544,6 +544,8 @@ namespace ckFileSystem
 
 			// Locate the node in the file tree.
 			pCurNode = FileTree.GetNodeFromPath(*itFile);
+			if (pCurNode == NULL)
+				return false;
 
 			// Make sure that the path to the current file or folder exists.
 			size_t iPrevDelim = 0;
@@ -647,14 +649,14 @@ namespace ckFileSystem
 	}
 
 	bool CIso9660Writer::WriteSysDirectory(CFileTreeNode *pParent,eSysDirType Type,
-		unsigned long ulDataPos)
+		unsigned long ulDataPos,unsigned long ulDataSize)
 	{
 		tDirRecord DirRecord;
 		memset(&DirRecord,0,sizeof(DirRecord));
 
 		DirRecord.ucDirRecordLen = 0x22;
 		Write733(DirRecord.ucExtentLocation,ulDataPos);
-		Write733(DirRecord.ucDataLen,ISO9660_SECTOR_SIZE);
+		Write733(DirRecord.ucDataLen,/*ISO9660_SECTOR_SIZE*/ulDataSize);
 		MakeDateTime(m_stImageCreate,DirRecord.RecDateTime);
 		DirRecord.ucFileFlags = DIRRECORD_FILEFLAG_DIRECTORY;
 		Write723(DirRecord.ucVolSeqNumber,0x01);	// The directory is on the first volume set.
@@ -907,6 +909,8 @@ namespace ckFileSystem
 
 	int CIso9660Writer::WritePathTables(CFileSet &Files,CFileTree &FileTree,CProgressEx &Progress)
 	{
+		Progress.SetStatus(_T("Writing ISO9660 path tables."));
+
 		// Write the path tables.
 		if (!WritePathTable(Files,FileTree,false,false,Progress))
 		{
@@ -921,6 +925,8 @@ namespace ckFileSystem
 
 		if (m_bUseJoliet)
 		{
+			Progress.SetStatus(_T("Writing Joliet path tables."));
+
 			if (!WritePathTable(Files,FileTree,true,false,Progress))
 			{
 				m_pLog->AddLine(_T("  Error: Failed to write Joliet path table (LSBF)."));
@@ -948,14 +954,26 @@ namespace ckFileSystem
 
 		if (bJoliet)
 		{
-			WriteSysDirectory(pLocalNode,TYPE_CURRENT,(unsigned long)pLocalNode->m_uiDataPosJoliet);
-			WriteSysDirectory(pLocalNode,TYPE_PARENT,(unsigned long)pParentNode->m_uiDataPosJoliet);
+			WriteSysDirectory(pLocalNode,TYPE_CURRENT,
+				(unsigned long)pLocalNode->m_uiDataPosJoliet,
+				(unsigned long)pLocalNode->m_uiDataSizeJoliet);
+			WriteSysDirectory(pLocalNode,TYPE_PARENT,
+				(unsigned long)pParentNode->m_uiDataPosJoliet,
+				(unsigned long)pParentNode->m_uiDataSizeJoliet);
 		}
 		else
 		{
-			WriteSysDirectory(pLocalNode,TYPE_CURRENT,(unsigned long)pLocalNode->m_uiDataPosNormal);
-			WriteSysDirectory(pLocalNode,TYPE_PARENT,(unsigned long)pParentNode->m_uiDataPosNormal);
+			WriteSysDirectory(pLocalNode,TYPE_CURRENT,
+				(unsigned long)pLocalNode->m_uiDataPosNormal,
+				(unsigned long)pLocalNode->m_uiDataSizeNormal);
+			WriteSysDirectory(pLocalNode,TYPE_PARENT,
+				(unsigned long)pParentNode->m_uiDataPosNormal,
+				(unsigned long)pParentNode->m_uiDataSizeNormal);
 		}
+
+		bool bVerbose = false;
+		if (pLocalNode->m_FileName == _T("COMPDATA"))
+			bVerbose = true;
 
 		// The number of bytes of data in the current sector.
 		// Each directory always includes '.' and '..'.
@@ -1106,6 +1124,10 @@ namespace ckFileSystem
 					// Pad the sector with zeros.
 					m_pOutStream->PadSector();
 				}
+				else if ((ulDirSecData + ucDirRecSize) == ISO9660_SECTOR_SIZE)
+				{
+					ulDirSecData = 0;
+				}
 				else
 				{
 					ulDirSecData += ucDirRecSize;
@@ -1178,6 +1200,8 @@ namespace ckFileSystem
 
 	int CIso9660Writer::WriteDirEntries(CFileTree &FileTree,CProgressEx &Progress)
 	{
+		Progress.SetStatus(_T("Writing directory entries."));
+
 		CFileTreeNode *pCurNode = FileTree.GetRoot();
 
 		std::vector<std::pair<CFileTreeNode *,int> > DirNodeStack;

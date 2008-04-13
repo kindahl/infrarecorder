@@ -210,7 +210,8 @@ int FirstDelimiter(const TCHAR *szString,TCHAR cDelimiter)
 	return -1;
 }
 
-int FindInString(const TCHAR *szString1,const TCHAR *szString2)
+// UPDATE: 2008-04-13 works but is not needed.
+/*int FindInString(const TCHAR *szString1,const TCHAR *szString2)
 {
 	const TCHAR *szResult;
 
@@ -221,7 +222,7 @@ int FindInString(const TCHAR *szString1,const TCHAR *szString2)
 #endif
 
 	return (szResult == NULL) ? -1 : (int)(szResult - szString1);
-}
+}*/
 
 bool ExtractFilePath(TCHAR *szFileName)
 {

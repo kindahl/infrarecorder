@@ -116,7 +116,7 @@ CItemData *CProjectManager::CFileTransaction::
 	TCHAR *szSafeFilePath = pItemData->BeginEditFilePath();
 		lstrcpy(szSafeFilePath,pParentNode->pItemData->GetFilePath());
 		lstrcat(szSafeFilePath,pParentNode->pItemData->GetFileName());
-		lstrcat(szSafeFilePath,_T("\\"));
+		lstrcat(szSafeFilePath,_T("/"));
 	pItemData->EndEditFilePath();
 
 	lstrcpy(pItemData->szFullPath,szFullPath);
@@ -210,7 +210,7 @@ CProjectNode *CProjectManager::CFileTransaction::
 	TCHAR *szSafeFilePath = pNode->pItemData->BeginEditFilePath();
 		lstrcpy(szSafeFilePath,pParentNode->pItemData->GetFilePath());
 		lstrcat(szSafeFilePath,pParentNode->pItemData->GetFileName());
-		lstrcat(szSafeFilePath,_T("\\"));
+		lstrcat(szSafeFilePath,_T("/"));
 	pNode->pItemData->EndEditFilePath();
 
 	lstrcpy(pNode->pItemData->szFullPath,szFullPath);
@@ -286,7 +286,7 @@ bool CProjectManager::CFileTransaction::
 	TCHAR *szSafeFilePath = pItemData->BeginEditFilePath();
 		lstrcpy(szSafeFilePath,pParentNode->pItemData->GetFilePath());
 		lstrcat(szSafeFilePath,pParentNode->pItemData->GetFileName());
-		lstrcat(szSafeFilePath,_T("\\"));
+		lstrcat(szSafeFilePath,_T("/"));
 	pItemData->EndEditFilePath();
 
 	lstrcpy(pItemData->szFullPath,szFullPath);
@@ -327,7 +327,7 @@ void CProjectManager::CFileTransaction::AddFilesInFolder(CProjectNode *pParentNo
 	TCHAR szParentPath[MAX_PATH];
 	lstrcpy(szParentPath,pParentNode->pItemData->GetFilePath());
 	lstrcat(szParentPath,pParentNode->pItemData->GetFileName());
-	lstrcat(szParentPath,_T("\\"));
+	lstrcat(szParentPath,_T("/"));
 
 	WIN32_FIND_DATA FileData;
 	HANDLE hFind = FindFirstFile(szSearchPath,&FileData);
@@ -1112,7 +1112,7 @@ bool CProjectManager::TreeAddNewFolder(CProjectNode *pParentNode)
 	TCHAR *szSafeFilePath = pNode->pItemData->BeginEditFilePath();
 		lstrcpy(szSafeFilePath,pParentNode->pItemData->GetFilePath());
 		lstrcat(szSafeFilePath,pParentNode->pItemData->GetFileName());
-		lstrcat(szSafeFilePath,_T("\\"));
+		lstrcat(szSafeFilePath,_T("/"));
 	pNode->pItemData->EndEditFilePath();
 
 	// File type.

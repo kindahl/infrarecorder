@@ -481,9 +481,23 @@ namespace ckFileSystem
 		for (unsigned int i = 0; i < ISO9660_SECTOR_SIZE << 4; i++)
 			OutStream.Write(szTemp,1,&ulProcessedSize);
 
+		// ...
+		/*CFileSet::const_iterator itFile;
+		for (itFile = Files.begin(); itFile != Files.end(); itFile++)
+		{
+			m_pLog->AddLine(_T("  %s"),(*itFile).m_InternalPath.c_str());
+		}*/
+		// ...
+
+		Progress.SetStatus(_T("Building file tree."));
+
 		// Create a file tree.
 		CFileTree FileTree(m_pLog);
-		FileTree.CreateFromFileSet(Files);
+		if (!FileTree.CreateFromFileSet(Files))
+		{
+			m_pLog->AddLine(_T("  Error: Failed to build file tree."));
+			return Fail(RESULT_FAIL,OutStream);
+		}
 
 		// Calculate padding if DVD-Video file system.
 		if (m_FileSystem == FS_DVDVIDEO)
@@ -568,6 +582,7 @@ namespace ckFileSystem
 				return Fail(iResult,OutStream);
 		}
 
+		// FIXME: Add progress for this.
 		if (bUseIso)
 		{
 			iResult = IsoWriter.WritePathTables(Files,FileTree,Progress);
@@ -585,6 +600,8 @@ namespace ckFileSystem
 			if (iResult != RESULT_OK)
 				return Fail(iResult,OutStream);
 		}
+
+		Progress.SetStatus(_T("Writing file data."));
 
 		// To help keep track of the progress.
 		CFilesProgress FilesProgress(SectorManager.GetDataLength() * ISO9660_SECTOR_SIZE);

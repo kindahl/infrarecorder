@@ -117,7 +117,7 @@ namespace ckFileSystem
 		unsigned long m_ulFileCount;
 
 		CFileTreeNode *GetChildFromFileName(CFileTreeNode *pParent,const TCHAR *szFileName);
-		void AddFileFromPath(const CFileDescriptor &File);
+		bool AddFileFromPath(const CFileDescriptor &File);
 
 	public:
 		CFileTree(CLog *pLog);
@@ -125,7 +125,7 @@ namespace ckFileSystem
 
 		CFileTreeNode *GetRoot();
 		
-		void CreateFromFileSet(const CFileSet &Files);
+		bool CreateFromFileSet(const CFileSet &Files);
 		CFileTreeNode *GetNodeFromPath(const CFileDescriptor &File);
 		CFileTreeNode *GetNodeFromPath(const TCHAR *szInternalPath);
 

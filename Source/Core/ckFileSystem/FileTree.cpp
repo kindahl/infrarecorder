@@ -55,7 +55,7 @@ namespace ckFileSystem
 		return NULL;
 	}
 
-	void CFileTree::AddFileFromPath(const CFileDescriptor &File)
+	bool CFileTree::AddFileFromPath(const CFileDescriptor &File)
 	{
 		size_t iDirPathLen = File.m_InternalPath.length(),iPrevDelim = 0,iPos;
 		tstring CurDirName;
@@ -72,9 +72,15 @@ namespace ckFileSystem
 					for (size_t j = iPrevDelim + 1; j < iPos; j++)
 						CurDirName.push_back(File.m_InternalPath.c_str()[j]);
 
+					CFileTreeNode *pTemp = pCurNode;
+
 					pCurNode = GetChildFromFileName(pCurNode,CurDirName.c_str());
 					if (pCurNode == NULL)
-						m_pLog->AddLine(_T("  Error: Unable to find child node \"%s\"."),CurDirName.c_str());
+					{
+						m_pLog->AddLine(_T("  Error: Unable to find child node \"%s\" in path \"%s\"."),
+							CurDirName.c_str(),File.m_InternalPath.c_str());
+						return false;
+					}
 				}
 
 				iPrevDelim = iPos;
@@ -108,9 +114,11 @@ namespace ckFileSystem
 
 			m_ulFileCount++;
 		}
+
+		return true;
 	}
 
-	void CFileTree::CreateFromFileSet(const CFileSet &Files)
+	bool CFileTree::CreateFromFileSet(const CFileSet &Files)
 	{
 		if (m_pRootNode != NULL)
 			delete m_pRootNode;
@@ -120,11 +128,17 @@ namespace ckFileSystem
 
 		CFileSet::const_iterator itFile;
 		for (itFile = Files.begin(); itFile != Files.end(); itFile++)
-			AddFileFromPath(*itFile);
+		{
+			if (!AddFileFromPath(*itFile))
+				return false;
+		}
+
+		return true;
 	}
 
 	CFileTreeNode *CFileTree::GetNodeFromPath(const CFileDescriptor &File)
 	{
+		//m_pLog->AddLine(_T("BEGIN: %s"),File.m_ExternalPath.c_str());
 		size_t iDirPathLen = File.m_InternalPath.length(),iPrevDelim = 0,iPos;
 		tstring CurDirName;
 		CFileTreeNode *pCurNode = m_pRootNode;
@@ -142,7 +156,10 @@ namespace ckFileSystem
 
 					pCurNode = GetChildFromFileName(pCurNode,CurDirName.c_str());
 					if (pCurNode == NULL)
+					{
 						m_pLog->AddLine(_T("  Error: Unable to find child node \"%s\"."),CurDirName.c_str());
+						return NULL;
+					}
 				}
 
 				iPrevDelim = iPos;
@@ -152,6 +169,7 @@ namespace ckFileSystem
 		// We now have our parent.
 		const TCHAR *szFileName = File.m_InternalPath.c_str() + iPrevDelim + 1;
 
+		//m_pLog->AddLine(_T("  END: %s"),File.m_ExternalPath.c_str());
 		return GetChildFromFileName(pCurNode,szFileName);
 	}
 
@@ -174,7 +192,10 @@ namespace ckFileSystem
 
 					pCurNode = GetChildFromFileName(pCurNode,CurDirName.c_str());
 					if (pCurNode == NULL)
+					{
 						m_pLog->AddLine(_T("  Error: Unable to find child node \"%s\"."),CurDirName.c_str());
+						return NULL;
+					}
 				}
 
 				iPrevDelim = iPos;

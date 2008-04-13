@@ -115,7 +115,8 @@ namespace ckFileSystem
 		// Write functions.
 		bool WritePathTable(CFileSet &Files,CFileTree &FileTree,bool bJolietTable,
 			bool bMSBF,CProgressEx &Progress);
-		bool WriteSysDirectory(CFileTreeNode *pParent,eSysDirType Type,unsigned long ulDataPos);
+		bool WriteSysDirectory(CFileTreeNode *pParent,eSysDirType Type,
+			unsigned long ulDataPos,unsigned long ulDataSize);
 		int WriteLocalDirEntry(CProgressEx &Progress,CFileTreeNode *pLocalNode,
 			bool bJoliet,int iLevel);
 		int WriteLocalDirEntries(std::vector<std::pair<CFileTreeNode *,int> > &DirNodeStack,

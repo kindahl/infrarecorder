@@ -493,18 +493,11 @@ CProjectNode *CTreeManager::NodalizePath(const TCHAR *szPath)
 					lstrcpy(pChildNode->pItemData->szFileType,shFileInfo.szTypeName);
 				}
 
-				int iEndOfPath = FindInString(szPath,szText);
-
-				if (iEndOfPath > 0)
-				{
-					TCHAR *szTempPath = SubString(szPath,0,iEndOfPath);
-					pChildNode->pItemData->SetFilePath(szTempPath);
-					delete [] szTempPath;
-				}
-				else
-				{
-					pChildNode->pItemData->SetFilePath(_T("\\"));
-				}
+				TCHAR *szFilePath = pChildNode->pItemData->BeginEditFilePath();
+				lstrcpy(szFilePath,pParentNode->pItemData->GetFilePath());
+				lstrcat(szFilePath,pParentNode->pItemData->GetFileName());
+				lstrcat(szFilePath,_T("/"));
+				pChildNode->pItemData->EndEditFilePath();
 
 				pParentNode->m_Children.push_back(pChildNode);
                 pParentNode = pChildNode;
@@ -603,7 +596,7 @@ void CTreeManager::SelectPath(const TCHAR *szPath)
 
 	// Copy the path to m_szCurrentPath.
 	if (pCurrentNode == m_pRootNode)
-		lstrcpy(m_szCurrentPath,_T("\\"));
+		lstrcpy(m_szCurrentPath,_T("/"));
 	else
 		lstrcpy(m_szCurrentPath,szPath);
 
@@ -659,7 +652,7 @@ void CTreeManager::CreateTree(const TCHAR *szRootName,int iImage)
 	}
 
 	// Initialize the paths.
-	m_szCurrentPath[0] = '\\';
+	m_szCurrentPath[0] = '/';
 	m_szCurrentPath[1] = '\0';
 	m_pCurrentNode = m_pRootNode;
 }
@@ -670,7 +663,7 @@ CProjectNode *CTreeManager::InsertVirtualRoot(const TCHAR *szNodeName,int iImage
 	CProjectNode *pNode = new CProjectNode(m_pRootNode);
 	pNode->iIconIndex = iImage;
 	pNode->pItemData->SetFileName(szNodeName);
-	pNode->pItemData->SetFilePath(_T("\\"));
+	pNode->pItemData->SetFilePath(_T("/"));
 	pNode->pItemData->ucFlags |= PROJECTITEM_FLAG_ISPROJECTROOT;
 
 	m_pRootNode->m_Children.push_back(pNode);
@@ -716,7 +709,7 @@ void CTreeManager::RebuildLocalPaths(CProjectNode *pNode,std::vector<CProjectNod
 	TCHAR szPath[MAX_PATH];
 	lstrcpy(szPath,pNode->pItemData->GetFilePath());
 	lstrcat(szPath,pNode->pItemData->GetFileName());
-	lstrcat(szPath,_T("\\"));
+	lstrcat(szPath,_T("/"));
 
 	std::list <CProjectNode *>::iterator itNodeObject;
 	for (itNodeObject = pNode->m_Children.begin(); itNodeObject != pNode->m_Children.end(); itNodeObject++)
@@ -904,7 +897,7 @@ bool CTreeManager::MoveEntry(CProjectNode *pParent,CItemData *pItemData,CProject
 				lstrcpy(szNewNodePath,pParentNode->pItemData->GetFilePath());
 				//IncludeTrailingBackslash(szFilePath);
 				lstrcat(szNewNodePath,pParentNode->pItemData->GetFileName());
-				lstrcat(szNewNodePath,_T("\\"));
+				lstrcat(szNewNodePath,_T("/"));
 
 				// Set the same file path for all files in the folder.
 				std::list<CItemData *>::iterator itFile;
@@ -913,7 +906,7 @@ bool CTreeManager::MoveEntry(CProjectNode *pParent,CItemData *pItemData,CProject
 					TCHAR *szFilePath = (*itFile)->BeginEditFilePath();
 						lstrcpy(szFilePath,szNewNodePath);
 						lstrcat(szFilePath,pNewNode->pItemData->GetFileName());
-						lstrcat(szFilePath,_T("\\"));
+						lstrcat(szFilePath,_T("/"));
 					(*itFile)->EndEditFilePath();
 				}
 			pNewNode->pItemData->EndEditFilePath();
@@ -1513,6 +1506,8 @@ bool CTreeManager::LoadNodeFileData(CXMLProcessor *pXML,CProjectNode *pRootNode)
 
 			CProjectNode *pNode = AddPath(szTemp);
 
+			//MessageBox(NULL,pNode->pItemData->GetFilePath(),szTemp,MB_OK);
+
 			/*if (bIsLocked)
 				pNode->pItemData->ucFlags |= PROJECTITEM_FLAG_ISLOCKED;*/
 			pNode->pItemData->ucFlags = (unsigned char)iFlags;
@@ -1544,7 +1539,7 @@ bool CTreeManager::LoadNodeFileData(CXMLProcessor *pXML,CProjectNode *pRootNode)
 			TCHAR *szFilePathBuffer = pItemData->BeginEditFilePath();
 				lstrcpy(szFilePathBuffer,szInternalName);
 				if (!ExtractFilePath(szFilePathBuffer))
-					lstrcpy(szFilePathBuffer,_T("\\"));
+					lstrcpy(szFilePathBuffer,_T("/"));
 			pItemData->EndEditFilePath();
 			
 			lstrcpy(pItemData->szFullPath,szFullName);
@@ -1603,7 +1598,7 @@ bool CTreeManager::LoadNodeAudioData(CXMLProcessor *pXML,CProjectNode *pRootNode
 		TCHAR *szFilePathBuffer = pItemData->BeginEditFilePath();
 			lstrcpy(szFilePathBuffer,szInternalName);
 			if (!ExtractFilePath(szFilePathBuffer))
-				lstrcpy(szFilePathBuffer,_T("\\"));
+				lstrcpy(szFilePathBuffer,_T("/"));
 		pItemData->EndEditFilePath();
 
 		lstrcpy(pItemData->szFullPath,szFullName);
@@ -1803,7 +1798,7 @@ void CTreeManager::ImportLocalIso9660Tree(ckFileSystem::CIso9660TreeNode *pLocal
 				TCHAR *szFilePath = pCurNode->pItemData->BeginEditFilePath();
 				lstrcpy(szFilePath,pLocalNode->pItemData->GetFilePath());
 				lstrcat(szFilePath,pLocalNode->pItemData->GetFileName());
-				lstrcat(szFilePath,_T("\\"));
+				lstrcat(szFilePath,_T("/"));
 				pCurNode->pItemData->EndEditFilePath();
 
 				MakeDosDateTime((*itIsoNode)->m_RecDateTime,
@@ -1850,7 +1845,7 @@ void CTreeManager::ImportLocalIso9660Tree(ckFileSystem::CIso9660TreeNode *pLocal
 			TCHAR *szFilePath = pItemData->BeginEditFilePath();
 			lstrcpy(szFilePath,pLocalNode->pItemData->GetFilePath());
 			lstrcat(szFilePath,pLocalNode->pItemData->GetFileName());
-			lstrcat(szFilePath,_T("\\"));
+			lstrcat(szFilePath,_T("/"));
 			pItemData->EndEditFilePath();
 
 			MakeDosDateTime((*itIsoNode)->m_RecDateTime,pItemData->usFileDate,pItemData->usFileTime);

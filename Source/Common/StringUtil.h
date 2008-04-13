@@ -33,7 +33,7 @@ int LastDelimiterA(const char *szString,char cDelimiter);
 //int LastDelimiterEx(const TCHAR *szString,char cDelimiter);
 //int LastDelimiterExA(const char *szString,char cDelimiter);
 int FirstDelimiter(const TCHAR *szString,TCHAR cDelimiter);
-int FindInString(const TCHAR *szString1,const TCHAR *szString2);
+//int FindInString(const TCHAR *szString1,const TCHAR *szString2);
 bool ExtractFilePath(TCHAR *szFileName);
 bool ExtractFileName(TCHAR *szFileName);
 bool ExtractFileExt(const TCHAR *szFileName,TCHAR *szFileExt);
