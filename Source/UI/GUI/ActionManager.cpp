@@ -467,6 +467,127 @@ DWORD WINAPI CActionManager::CreateImageThread(LPVOID lpThreadParameter)
 	return 0;
 }
 
+/**
+	Tries to erase the disc inserted in the specified recorder using a fast
+	method. The function will not let you know if it fails.
+*/
+void CActionManager::QuickErase(INT_PTR iRecorder)
+{
+	tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(iRecorder);
+
+	CCore2Device Device;
+	if (Device.Open(&pDeviceInfo->Address))
+	{
+		// Get current profile.
+		unsigned short usProfile = PROFILE_NONE;
+		if (g_Core2.GetProfile(&Device,usProfile))
+		{
+			int iMode = g_EraseSettings.m_iMode;
+			bool bForce = g_EraseSettings.m_bForce;
+			bool bEject = g_EraseSettings.m_bEject;
+			bool bSimulate = g_EraseSettings.m_bSimulate;
+
+			switch (usProfile)
+			{
+				case PROFILE_DVDPLUSRW:
+				case PROFILE_DVDPLUSRW_DL:
+					g_EraseSettings.m_iMode = CCore2::ERASE_FORMAT_QUICK;
+					break;
+
+				case PROFILE_DVDRAM:
+					g_EraseSettings.m_iMode = CCore2::ERASE_FORMAT_FULL;
+					break;
+
+				//case PROFILE_CDRW:
+				//case PROFILE_DVDMINUSRW_RESTOV:
+				//case PROFILE_DVDMINUSRW_SEQ:
+				default:
+					g_EraseSettings.m_iMode = CCore2::ERASE_BLANK_MINIMAL;
+					break;
+			}
+
+			g_EraseSettings.m_iMode = CCore2::ERASE_BLANK_MINIMAL;
+			g_EraseSettings.m_bForce = true;
+			g_EraseSettings.m_bEject = false;
+			g_EraseSettings.m_bSimulate = false;
+			g_EraseSettings.m_iRecorder = iRecorder;
+			g_EraseSettings.m_uiSpeed = 0xFFFFFFFF;	// Maximum.
+
+			g_ProgressDlg.SetWindowText(lngGetString(STITLE_ERASE));
+			g_ProgressDlg.SetStatus(lngGetString(PROGRESS_INIT));
+
+			// Set the device information.
+			TCHAR szDeviceName[128];
+			g_DeviceManager.GetDeviceName(pDeviceInfo,szDeviceName);
+			g_ProgressDlg.SetDevice(szDeviceName);
+
+			// Create the new erase thread.
+			unsigned long ulThreadID = 0;
+			bool bNotifyCompleted = false;
+			HANDLE hThread = ::CreateThread(NULL,0,EraseThread,&bNotifyCompleted,0,&ulThreadID);
+
+			// Wait for the thread to finish.
+			while (true)
+			{
+				if (WaitForSingleObject(hThread,100) == WAIT_TIMEOUT)
+				{
+					ProcessMessages();
+					Sleep(100);
+				}
+				else
+				{
+					break;
+				}
+			}
+
+			::CloseHandle(hThread);
+
+			g_ProgressDlg.Reset();
+			g_ProgressDlg.AllowCancel(true);
+
+			// Restore settings.
+			g_EraseSettings.m_iMode = iMode;
+			g_EraseSettings.m_bForce = bForce;
+			g_EraseSettings.m_bEject = bEject;
+			g_EraseSettings.m_bSimulate = bSimulate;
+		}
+	}
+}
+
+/**
+	Depending on the media inserted into the disc this function will try to
+	determine if the media should be erased. This includes asking the user if
+	necessary.
+*/
+bool CActionManager::QuickEraseQuery(INT_PTR iRecorder,HWND hWndParent)
+{
+	if (!g_ProjectSettings.m_bMultiSession)
+	{
+		tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(iRecorder);
+
+		CCore2Device Device;
+		if (Device.Open(&pDeviceInfo->Address))
+		{
+			CCore2Info Info;
+			CCore2DiscInfo DiscInfo;
+			if (Info.ReadDiscInformation(&Device,&DiscInfo))
+			{
+				if (DiscInfo.m_ucDiscStatus != CCore2DiscInfo::DS_EMTPY &&
+					DiscInfo.m_ucFlags & CCore2DiscInfo::FLAG_ERASABLE)
+				{
+					if (lngMessageBox(hWndParent,MISC_ERASENONEMPTY,GENERAL_QUESTION,
+						MB_YESNO | MB_ICONQUESTION) == IDYES)
+					{
+						return true;
+					}
+				}
+			}
+		}
+	}
+
+	return false;
+}
+
 INT_PTR CActionManager::BurnCompilation(HWND hWndParent,bool bAppMode)
 {
 	bool bAudioProject = g_ProjectManager.GetProjectType() == PROJECTTYPE_AUDIO;
@@ -479,7 +600,7 @@ INT_PTR CActionManager::BurnCompilation(HWND hWndParent,bool bAppMode)
 	if (iResult == IDOK)
 	{
 		// Open the device to see if the disc is rewritable and not blank.
-		bool bErase = false;
+		/*bool bErase = false;
 		tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(g_BurnImageSettings.m_iRecorder);
 		if (!g_ProjectSettings.m_bMultiSession)
 		{
@@ -501,7 +622,9 @@ INT_PTR CActionManager::BurnCompilation(HWND hWndParent,bool bAppMode)
 					}
 				}
 			}
-		}
+		}*/
+		// Check if we should erase the disc.
+		bool bErase = QuickEraseQuery(g_BurnImageSettings.m_iRecorder,hWndParent);
 
 		// Disable the parent window.
 		if (hWndParent != NULL)
@@ -527,7 +650,7 @@ INT_PTR CActionManager::BurnCompilation(HWND hWndParent,bool bAppMode)
 
 		if (bErase)
 		{
-			CCore2Device Device;
+			/*CCore2Device Device;
 			if (Device.Open(&pDeviceInfo->Address))
 			{
 				// Get current profile.
@@ -603,7 +726,9 @@ INT_PTR CActionManager::BurnCompilation(HWND hWndParent,bool bAppMode)
 					g_EraseSettings.m_bEject = bEject;
 					g_EraseSettings.m_bSimulate = bSimulate;
 				}
-			}
+			}*/
+
+			QuickErase(g_BurnImageSettings.m_iRecorder);
 		}
 
 		// Create the new thread.
@@ -686,6 +811,7 @@ INT_PTR CActionManager::BurnImage(HWND hWndParent,bool bAppMode)
 	return iResult;
 }
 
+// FIXME: Erase nonblank disc here as well.
 INT_PTR CActionManager::BurnImageEx(HWND hWndParent,bool bAppMode,const TCHAR *szFilePath)
 {
 	// Dialog title.
@@ -712,6 +838,9 @@ INT_PTR CActionManager::BurnImageEx(HWND hWndParent,bool bAppMode,const TCHAR *s
 
 	if (iResult == IDOK)
 	{
+		// Check if we should erase the disc.
+		bool bErase = QuickEraseQuery(g_BurnImageSettings.m_iRecorder,hWndParent);
+
 		tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(g_BurnImageSettings.m_iRecorder);
 		tDeviceCap *pDeviceCap = g_DeviceManager.GetDeviceCap(g_BurnImageSettings.m_iRecorder);
 		tDeviceInfoEx *pDeviceInfoEx = g_DeviceManager.GetDeviceInfoEx(g_BurnImageSettings.m_iRecorder);
@@ -734,16 +863,21 @@ INT_PTR CActionManager::BurnImageEx(HWND hWndParent,bool bAppMode,const TCHAR *s
 			g_ProgressDlg.Create(hWndParent);
 
 		g_ProgressDlg.ShowWindow(true);
-		g_ProgressDlg.SetWindowText(lngGetString(STITLE_BURNIMAGE));
+		//g_ProgressDlg.SetWindowText(lngGetString(STITLE_BURNIMAGE));
 		g_ProgressDlg.Reset();
 		g_ProgressDlg.AttachConsolePipe(&g_Core);
 		g_ProgressDlg.AttachHost(hWndParent);
 		ProcessMessages();
 
+		// Erase the disc if necessary.
+		if (bErase)
+			QuickErase(g_BurnImageSettings.m_iRecorder);
+
 		// Set the device information.
 		TCHAR szDeviceName[128];
 		g_DeviceManager.GetDeviceName(pDeviceInfo,szDeviceName);
 
+		g_ProgressDlg.SetWindowText(lngGetString(STITLE_BURNIMAGE));
 		g_ProgressDlg.SetDevice(szDeviceName);
 		g_ProgressDlg.SetStatus(lngGetString(PROGRESS_INIT));
 

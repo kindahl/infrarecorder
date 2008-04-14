@@ -70,16 +70,12 @@ bool CAddBootImageDlg::Translate()
 		SetDlgItemText(IDCANCEL,szStrValue);
 	if (pLNG->GetValuePtr(IDC_HELPBUTTON,szStrValue))
 		SetDlgItemText(IDC_HELPBUTTON,szStrValue);
-	if (pLNG->GetValuePtr(IDC_NAMESTATIC,szStrValue))
-		SetDlgItemText(IDC_NAMESTATIC,szStrValue);
 	if (pLNG->GetValuePtr(IDC_EMULATIONSTATIC,szStrValue))
 		SetDlgItemText(IDC_EMULATIONSTATIC,szStrValue);
 	if (pLNG->GetValuePtr(IDC_OPTIONSSTATIC,szStrValue))
 		SetDlgItemText(IDC_OPTIONSSTATIC,szStrValue);
 	if (pLNG->GetValuePtr(IDC_NOBOOTCHECK,szStrValue))
 		SetDlgItemText(IDC_NOBOOTCHECK,szStrValue);
-	if (pLNG->GetValuePtr(IDC_BOOTINFOTABLECHECK,szStrValue))
-		SetDlgItemText(IDC_BOOTINFOTABLECHECK,szStrValue);
 	if (pLNG->GetValuePtr(IDC_BOOTSEGMENTSTATIC,szStrValue))
 		SetDlgItemText(IDC_BOOTSEGMENTSTATIC,szStrValue);
 	if (pLNG->GetValuePtr(IDC_BOOTSIZESTATIC,szStrValue))
@@ -93,13 +89,8 @@ LRESULT CAddBootImageDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOO
 	CenterWindow(GetParent());
 
 	// Set edit field length limit.
-	::SendMessage(GetDlgItem(IDC_NAMEEDIT),EM_SETLIMITTEXT,MAX_PATH - 1,0);
 	::SendMessage(GetDlgItem(IDC_BOOTSEGMENTEDIT),EM_SETLIMITTEXT,MAX_BOOTLOAD_SIZE - 1,0);
 	::SendMessage(GetDlgItem(IDC_BOOTSIZEEDIT),EM_SETLIMITTEXT,MAX_BOOTLOAD_SIZE - 1,0);
-
-	SetDlgItemText(IDC_NAMEEDIT,m_pBootImage->m_LocalPath.c_str());
-	if (m_bEdit)
-		::EnableWindow(GetDlgItem(IDC_NAMEEDIT),FALSE);
 
 	// Initialize the emulation combo box.
 	m_EmuCombo = GetDlgItem(IDC_EMULATIONCOMBO);
@@ -113,7 +104,6 @@ LRESULT CAddBootImageDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOO
 
 	// Setup the default settings.
 	CheckDlgButton(IDC_NOBOOTCHECK,m_pBootImage->m_bNoBoot);
-	CheckDlgButton(IDC_BOOTINFOTABLECHECK,m_pBootImage->m_bBootInfoTable);
 
 	TCHAR szBuffer[32];
 	lsnprintf_s(szBuffer,32,_T("0x%x"),m_pBootImage->m_iLoadSegment);
@@ -130,46 +120,9 @@ LRESULT CAddBootImageDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOO
 
 LRESULT CAddBootImageDlg::OnOK(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
-	// Validate the path.
-	TCHAR szPathName[MAX_PATH];
-	GetDlgItemText(IDC_NAMEEDIT,szPathName,MAX_PATH - 1);
-
-	if (szPathName[0] != '/' && szPathName[0] != '\\')
-	{
-		TCHAR szTemp[MAX_PATH];
-		lstrcpy(szTemp,szPathName);
-		
-		lstrcpy(szPathName,_T("/"));
-		lstrcat(szPathName,szTemp);
-	}
-
-	// Make sure that there are not double delimiters.
-	bool bPrevDelim = false;
-	unsigned int uiPathLength = lstrlen(szPathName);
-	for (unsigned int i = 0; i < uiPathLength; i++)
-	{
-		if (bPrevDelim)
-		{
-			if (szPathName[i] == '/' || szPathName[i] == '\\')
-				szPathName[i] = '_';
-
-			bPrevDelim = false;
-		}
-		else
-		{
-			if (szPathName[i] == '/' || szPathName[i] == '\\')
-				bPrevDelim = true;
-		}
-	}
-
-	IncludeTrailingBackslash(szPathName);
-	ForceSlashDelimiters(szPathName);
-
 	// Copy all information over to the CProjectBootImage object.
-	m_pBootImage->m_LocalPath = szPathName;
 	m_pBootImage->m_iEmulation = m_EmuCombo.GetCurSel();
 	m_pBootImage->m_bNoBoot = IsDlgButtonChecked(IDC_NOBOOTCHECK) == TRUE;
-	m_pBootImage->m_bBootInfoTable = IsDlgButtonChecked(IDC_BOOTINFOTABLECHECK) == TRUE;
 
 	TCHAR szBuffer[MAX_BOOTLOAD_SIZE];
 	GetDlgItemText(IDC_BOOTSEGMENTEDIT,szBuffer,MAX_BOOTLOAD_SIZE - 1);
@@ -189,17 +142,6 @@ LRESULT CAddBootImageDlg::OnCancel(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &
 {
 	EndDialog(wID);
 	return FALSE;
-}
-
-LRESULT CAddBootImageDlg::OnBrowse(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
-{
-	WTL::CFileDialog FileDialog(true,0,0,OFN_FILEMUSTEXIST | OFN_EXPLORER,
-		_T("All Files (*.*)\0*.*\0\0"),m_hWnd);
-
-	if (FileDialog.DoModal() == IDOK)
-		SetDlgItemText(IDC_NAMEEDIT,FileDialog.m_szFileName);
-
-	return 0;
 }
 
 LRESULT CAddBootImageDlg::OnHelp(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)

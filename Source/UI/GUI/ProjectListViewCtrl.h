@@ -22,8 +22,7 @@
 #include "TreeManager.h"
 #include "ProjectDropTargetBase.h"
 
-// Color of items flagged as boot images.
-#define PROJECTLISTVIEW_COLOR_BOOTIMAGE				RGB(0,102,204)
+// Color of items flagged as imported.
 #define PROJECTLISTVIEW_COLOR_IMPORTED				RGB(92,53,102)
 
 class CProjectListViewCtrl;

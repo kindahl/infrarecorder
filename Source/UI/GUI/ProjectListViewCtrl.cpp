@@ -320,12 +320,6 @@ LRESULT CProjectListViewCtrl::OnCustomDraw(UINT uMsg,WPARAM wParam,LPARAM lParam
 				return CDRF_NEWFONT;
 			}
 
-			if (pItemData->ucFlags & PROJECTITEM_FLAG_ISBOOTIMAGE)
-			{
-				lpNMCustomDraw->clrText = PROJECTLISTVIEW_COLOR_BOOTIMAGE; 
-				return CDRF_NEWFONT;
-			}
-
 			bHandled = false;
 			return CDRF_DODEFAULT;
 	}

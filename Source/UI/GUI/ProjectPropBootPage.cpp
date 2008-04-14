@@ -64,17 +64,8 @@ bool CProjectPropBootPage::Translate()
 
 	// Translate.
 	TCHAR *szStrValue;
-
 	if (pLNG->GetValuePtr(IDC_BOOTSTATIC,szStrValue))
 		SetDlgItemText(IDC_BOOTSTATIC,szStrValue);
-	if (pLNG->GetValuePtr(IDC_BOOTCATALOGSTATIC,szStrValue))
-	{
-		SetDlgItemText(IDC_BOOTCATALOGSTATIC,szStrValue);
-
-		int iStaticRight = UpdateStaticWidth(m_hWnd,IDC_BOOTCATALOGSTATIC,szStrValue);
-		if (iStaticRight != -1)
-			UpdateEditPos(m_hWnd,IDC_BOOTCATALOGEDIT,iStaticRight);
-	}
 
 	return true;
 }
@@ -164,7 +155,6 @@ void CProjectPropBootPage::FillListView()
 
 bool CProjectPropBootPage::OnApply()
 {
-	GetDlgItemText(IDC_BOOTCATALOGEDIT,g_ProjectSettings.m_szBootCatalog,31);
 	return true;
 }
 
@@ -182,10 +172,6 @@ void CProjectPropBootPage::OnHelp()
 
 LRESULT CProjectPropBootPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
-	// Initialize the boot catalog edit field.
-	::SendMessage(GetDlgItem(IDC_BOOTCATALOGEDIT),EM_SETLIMITTEXT,31,0);
-	SetDlgItemText(IDC_BOOTCATALOGEDIT,g_ProjectSettings.m_szBootCatalog);
-
 	// Create the toolbar.
 	InitToolBarImageList();
 	CreateToolBarCtrl();
@@ -227,7 +213,6 @@ LRESULT CProjectPropBootPage::OnListAdd(WORD wNotifyCode,WORD wID,HWND hWndCtl,B
 
 		ExtractFileName(FileDialog.m_szFileName);
 		pBootImage->m_LocalName = FileDialog.m_szFileName;
-		pBootImage->m_LocalPath = _T("/boot/");
 
 		CAddBootImageDlg AddBootImageDlg(pBootImage,false);
 
@@ -240,13 +225,6 @@ LRESULT CProjectPropBootPage::OnListAdd(WORD wNotifyCode,WORD wID,HWND hWndCtl,B
 			m_ListView.AddItem(iItemCount,0,LPSTR_TEXTCALLBACK);
 			m_ListView.AddItem(iItemCount,1,LPSTR_TEXTCALLBACK);
 			m_ListView.SetItemData(iItemCount,(DWORD_PTR)pBootImage);
-
-			CProjectManager::CFileTransaction Transaction;
-			CItemData *pItemData = Transaction.AddFile(pBootImage->m_FullPath.c_str(),
-				pBootImage->m_LocalPath.c_str());
-			pItemData->ucFlags = PROJECTITEM_FLAG_ISBOOTIMAGE;
-
-			g_TreeManager.Refresh();
 
 			return 0;
 		}
@@ -263,13 +241,6 @@ LRESULT CProjectPropBootPage::OnListRemove(WORD wNotifyCode,WORD wID,HWND hWndCt
 
 	int iSelected = m_ListView.GetSelectedIndex();
 	CProjectBootImage *pBootImage = (CProjectBootImage *)m_ListView.GetItemData(iSelected);
-
-	// Remove the file item  by using the manager.
-	if (!g_TreeManager.RemoveEntry(pBootImage->m_LocalPath.c_str(),
-		pBootImage->m_FullPath.c_str()))
-	{
-		return 0;
-	}
 
 	// Deltete the item from the list view.
 	m_ListView.DeleteItem(iSelected);

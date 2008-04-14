@@ -289,21 +289,18 @@ class CProjectBootImage	// FIXME: Make m_iLoadSegment and m_iLoadSize unsigned s
 {
 public:
 	bool m_bNoBoot;
-	bool m_bBootInfoTable;
 	int m_iEmulation;
 	int m_iLoadSegment;
 	int m_iLoadSize;
 	tstring m_FullPath;			// Full path to the file on the harddrive.
 	tstring m_LocalName;		// Internal name.
-	tstring m_LocalPath;		// Internal path.
 
 	CProjectBootImage()
 	{
 		m_bNoBoot = false;
-		m_bBootInfoTable = false;
 		m_iEmulation = PROJECTBI_BOOTEMU_FLOPPY;
-		m_iLoadSegment = 0;
-		m_iLoadSize = 0;
+		m_iLoadSegment = 0x7c0;
+		m_iLoadSize = 4;
 	}
 };
 
@@ -331,7 +328,6 @@ public:
 
 	// Boot information.
 	std::list<CProjectBootImage *> m_BootImages;
-	TCHAR m_szBootCatalog[32];
 
 	// Multi session related, are only changed when importing an existing session.
 	// They should not be saved in a project.
@@ -398,9 +394,6 @@ public:
 
 		m_szAlbumName[0] = '\0';
 		m_szAlbumArtist[0] = '\0';
-
-		// Boot information.
-		lstrcpy(m_szBootCatalog,_T("boot.catalog"));
 
 		std::list <CProjectBootImage *>::iterator itImageObject;
 		for (itImageObject = m_BootImages.begin(); itImageObject != m_BootImages.end(); itImageObject++)

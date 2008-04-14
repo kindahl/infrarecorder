@@ -18,13 +18,13 @@
 
 #include "stdafx.h"
 #include <queue>
-#include "TreeManager.h"
 #include "MainFrm.h"
 #include "../../Common/StringUtil.h"
 #include "StringTable.h"
 #include "TempManager.h"
 #include "Settings.h"
 #include "ProjectManager.h"
+#include "TreeManager.h"
 
 CTreeManager g_TreeManager;
 
@@ -54,17 +54,6 @@ CItemData::CItemData()
 
 CItemData::~CItemData()
 {
-	// If the item is flagged as a boot image remove it from the project settings.
-	if (ucFlags & PROJECTITEM_FLAG_ISBOOTIMAGE)
-	{
-		CProjectBootImage *pBootImage = g_ProjectSettings.GetBootImage(szFullPath);
-		if (pBootImage != NULL)
-		{
-			delete pBootImage;
-			g_ProjectSettings.m_BootImages.remove(pBootImage);
-		}
-	}
-
 	// Free any optional data.
 	if (m_pAudioData != NULL)
 	{
@@ -81,26 +70,26 @@ CItemData::~CItemData()
 
 void CItemData::FileNameChanged()
 {
-	if (ucFlags & PROJECTITEM_FLAG_ISBOOTIMAGE)
+	/*if (ucFlags & PROJECTITEM_FLAG_ISBOOTIMAGE)
 	{
 		CProjectBootImage *pBootImage = g_ProjectSettings.GetBootImage(szFullPath);
 		if (pBootImage != NULL)
 		{
 			pBootImage->m_LocalName = m_szFileName;
 		}
-	}
+	}*/
 }
 
 void CItemData::FilePathChanged()
 {
-	if (ucFlags & PROJECTITEM_FLAG_ISBOOTIMAGE)
+	/*if (ucFlags & PROJECTITEM_FLAG_ISBOOTIMAGE)
 	{
 		CProjectBootImage *pBootImage = g_ProjectSettings.GetBootImage(szFullPath);
 		if (pBootImage != NULL)
 		{
 			pBootImage->m_LocalPath = m_szFilePath;
 		}
-	}
+	}*/
 }
 
 void CItemData::SetFileName(const TCHAR *szFileName)

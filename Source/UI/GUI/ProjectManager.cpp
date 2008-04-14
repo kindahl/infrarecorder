@@ -1550,8 +1550,6 @@ bool CProjectManager::LoadProjectFields(CXMLProcessor *pXML)
 void CProjectManager::SaveProjectBoot(CXMLProcessor *pXML)
 {
 	pXML->AddElement(_T("Boot"),_T(""),true);
-		pXML->AddElement(_T("BootCatalog"),g_ProjectSettings.m_szBootCatalog);
-
 		pXML->AddElement(_T("Images"),_T(""),true);
 			int iCounter = 0;
 			TCHAR szName[32];
@@ -1565,10 +1563,8 @@ void CProjectManager::SaveProjectBoot(CXMLProcessor *pXML)
 				pXML->AddElement(szName,_T(""),true);
 					pXML->AddElement(_T("FullPath"),pBootImage->m_FullPath.c_str());
 					pXML->AddElement(_T("LocalName"),pBootImage->m_LocalName.c_str());
-					pXML->AddElement(_T("LocalPath"),pBootImage->m_LocalPath.c_str());
 					pXML->AddElement(_T("Emulation"),pBootImage->m_iEmulation);
 					pXML->AddElement(_T("NoBoot"),pBootImage->m_bNoBoot);
-					pXML->AddElement(_T("InfoTable"),pBootImage->m_bBootInfoTable);
 					pXML->AddElement(_T("LoadSegment"),pBootImage->m_iLoadSegment);
 					pXML->AddElement(_T("LoadSize"),pBootImage->m_iLoadSize);
 				pXML->LeaveElement();
@@ -1581,8 +1577,6 @@ bool CProjectManager::LoadProjectBoot(CXMLProcessor *pXML)
 {
 	if (!pXML->EnterElement(_T("Boot")))
 		return false;
-
-	pXML->GetSafeElementData(_T("BootCatalog"),g_ProjectSettings.m_szBootCatalog,31);
 
 	if (!pXML->EnterElement(_T("Images")))
 	{
@@ -1609,12 +1603,8 @@ bool CProjectManager::LoadProjectBoot(CXMLProcessor *pXML)
 		pXML->GetSafeElementData(_T("LocalName"),szFileName,MAX_PATH - 1);
 		pBootImage->m_LocalName = szFileName;
 
-		pXML->GetSafeElementData(_T("LocalPath"),szFileName,MAX_PATH - 1);
-		pBootImage->m_LocalPath = szFileName;
-
 		pXML->GetSafeElementData(_T("Emulation"),&pBootImage->m_iEmulation);
 		pXML->GetSafeElementData(_T("NoBoot"),&pBootImage->m_bNoBoot);
-		pXML->GetSafeElementData(_T("InfoTable"),&pBootImage->m_bBootInfoTable);
 		pXML->GetSafeElementData(_T("LoadSegment"),&pBootImage->m_iLoadSegment);
 		pXML->GetSafeElementData(_T("LoadSize"),&pBootImage->m_iLoadSize);	
 
