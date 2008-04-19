@@ -317,7 +317,7 @@ LRESULT CEraseDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHan
 
 	// Add the window to the task bar and add a minimize button to the dialog if
 	// the windows is in application mode.
-	if (m_bAppMode)
+	/*if (m_bAppMode)
 	{
 		ModifyStyle(WS_POPUPWINDOW | WS_DLGFRAME | DS_MODALFRAME,(WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX) | WS_OVERLAPPED,0);
 		ModifyStyleEx(WS_EX_DLGMODALFRAME,WS_EX_APPWINDOW,0);
@@ -329,6 +329,16 @@ LRESULT CEraseDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHan
 		HICON hIconSmall = (HICON)::LoadImage(_Module.GetResourceInstance(),MAKEINTRESOURCE(IDR_MAINFRAME), 
 			IMAGE_ICON,::GetSystemMetrics(SM_CXSMICON),::GetSystemMetrics(SM_CYSMICON),LR_DEFAULTCOLOR);
 		SetIcon(hIconSmall,FALSE);
+	}*/
+	if (m_bAppMode)
+	{
+		ModifyStyle(0,WS_MINIMIZEBOX | WS_SYSMENU);
+		ModifyStyleEx(0,WS_EX_APPWINDOW);
+
+		HMENU hSysMenu = GetSystemMenu(FALSE);
+		::InsertMenu(hSysMenu,0,MF_BYPOSITION,SC_RESTORE,_T("&Restore"));
+		::InsertMenu(hSysMenu,2,MF_BYPOSITION,SC_MINIMIZE,_T("Mi&nimize"));
+		::InsertMenu(hSysMenu,3,MF_BYPOSITION | MF_SEPARATOR,0,_T(""));
 	}
 
 	m_RecorderCombo = GetDlgItem(IDC_RECORDERCOMBO);

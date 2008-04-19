@@ -131,7 +131,8 @@ INT_PTR ParseAndRun(LPTSTR lpstrCmdLine,int nCmdShow = SW_SHOWDEFAULT)
 	}
 	else if (!lstrcmp(lpstrCmdLine,_T("-dvdvideoproject")))
 	{
-		g_MainFrame.m_iDefaultProjType = PROJECTTYPE_DVDVIDEO;
+		g_MainFrame.m_bDefaultProjDataDVD = true;
+		g_MainFrame.m_bDefaultProjDVDVideo = true;
 	}
 	else if (!lstrcmp(lpstrCmdLine,_T("-burnimage")))
 	{
@@ -173,7 +174,7 @@ INT_PTR ParseAndRun(LPTSTR lpstrCmdLine,int nCmdShow = SW_SHOWDEFAULT)
 	else if (lpstrCmdLine[0] != '\0')
 	{
 		// Strip quotes.
-		if (lpstrCmdLine[0] == '\"')
+		/*if (lpstrCmdLine[0] == '\"')
 		{
 			lstrcpy(g_MainFrame.m_szProjectFile,lpstrCmdLine + 1);
 			g_MainFrame.m_szProjectFile[lstrlen(g_MainFrame.m_szProjectFile) - 1] = '\0';
@@ -181,7 +182,36 @@ INT_PTR ParseAndRun(LPTSTR lpstrCmdLine,int nCmdShow = SW_SHOWDEFAULT)
 		else
 		{
 			lstrcpy(g_MainFrame.m_szProjectFile,lpstrCmdLine);
+		}*/
+
+		TCHAR *szFullPath = new TCHAR[lstrlen(lpstrCmdLine) + 1];
+
+		// Strip quotes.
+		if (lpstrCmdLine[0] == '\"')
+		{
+			lstrcpy(szFullPath,lpstrCmdLine + 1);
+			szFullPath[lstrlen(szFullPath) - 1] = '\0';
 		}
+		else
+		{
+			lstrcpy(szFullPath,lpstrCmdLine);
+		}
+
+		// Check what type of file that was specified.
+		int iDelim = LastDelimiter(lpstrCmdLine,'.');
+		if (iDelim != -1)
+		{
+			// FIXME: Move this check to a common class for disc image management?
+			if (!lstrcmpi(szFullPath + iDelim,_T(".iso")) ||
+				!lstrcmpi(szFullPath + iDelim,_T(".img")) ||
+				!lstrcmpi(szFullPath + iDelim,_T(".cue")) ||
+				!lstrcmpi(szFullPath + iDelim,_T(".bin")) ||
+				!lstrcmpi(szFullPath + iDelim,_T(".raw")))
+				return g_ActionManager.BurnImageEx(NULL,true,szFullPath);
+		}
+
+		lstrcpy(g_MainFrame.m_szProjectFile,szFullPath);
+		delete [] szFullPath;
 	}
 
 	return Run(lpstrCmdLine,nCmdShow);

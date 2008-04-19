@@ -34,7 +34,7 @@ namespace ckFileSystem
 		tVolDescSuppl m_VolDescSuppl;
 
 		wchar_t MakeChar(wchar_t c);
-		void MemStrCopy(unsigned char *szTarget,const wchar_t *szSource,size_t iLength);
+		void MemStrCopy(unsigned char *szTarget,const wchar_t *szSource,size_t iSize);
 		void EmptyStrBuffer(unsigned char *szBuffer,size_t iBufferLen);
 
 		void InitVolDesc();
@@ -61,5 +61,6 @@ namespace ckFileSystem
 		// Helper functions.
 		unsigned char WriteFileName(unsigned char *pOutBuffer,const TCHAR *szFileName,bool bIsDir);
 		unsigned char CalcFileNameLen(const TCHAR *szFileName,bool bIsDir);
+		bool IncludesFileVerInfo();
 	};
 };

@@ -45,13 +45,16 @@
 #include "Core2Stream.h"
 #include "ProjectDropSource.h"
 #include "FilesDataObject.h"
+// FIXME:
+#include "WizardDlg.h"
 
 CMainFrame g_MainFrame;
 
-CMainFrame::CMainFrame() : m_QuickHelpContainer(true)
+CMainFrame::CMainFrame()
 {
 	m_iDefaultProjType = PROJECTTYPE_DATA;
 	m_bDefaultProjDataDVD = false;		// CD project by default.
+	m_bDefaultProjDVDVideo = false;
 
 	// Empty the file name.
 	m_szProjectFile[0] = '\0';
@@ -207,43 +210,20 @@ void CMainFrame::InitializeMainView()
 	m_SpaceMeter.Initialize();
 
 	// Main view.
-	/*m_MainView*/m_QuickHelpView.Create(m_SpaceMeterView,rcDefault,NULL,WS_CHILD | WS_VISIBLE |
+	m_MainView.Create(m_SpaceMeterView,rcDefault,NULL,WS_CHILD | WS_VISIBLE |
 		WS_CLIPSIBLINGS | WS_CLIPCHILDREN,WS_EX_CONTROLPARENT);
-	/*m_MainView*/m_QuickHelpView.m_cxySplitBar = 4;	// Force the splitter size 2, Vista uses a larger size by default.
+	m_MainView.m_cxySplitBar = 4;	// Force the splitter size 2, Vista uses a larger size by default.
 
 	UpdateLayout();
 
 	m_SpaceMeterView.SetSplitterPane(SPLIT_PANE_BOTTOM,m_SpaceMeter);
-	m_SpaceMeterView.SetSplitterPane(SPLIT_PANE_TOP,/*m_MainView*/m_QuickHelpView);
+	m_SpaceMeterView.SetSplitterPane(SPLIT_PANE_TOP,m_MainView);
 
 	// Update the splitter origins.
 	RECT rcClient;
 	::GetClientRect(m_hWndClient,&rcClient);
 	
 	m_SpaceMeterView.SetSplitterPos(rcClient.bottom - rcClient.top - MAINFRAME_SPACEMETER_HEIGHT);
-	//m_MainView.SetSplitterPos((rcClient.bottom - rcClient.top - MAINFRAME_SPACEMETER_HEIGHT)/2);
-
-	// Quick help pane.
-	m_QuickHelpContainer.Create(m_QuickHelpView,rcDefault,NULL,
-		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN,WS_EX_CONTROLPARENT,(unsigned int)0,NULL);
-	//m_QuickHelpContainer.SetHeaderHeight(m_ProjectListViewContainer.GetHeaderHeight());
-	m_QuickHelpContainer.SetHeaderHeight(22);
-	m_QuickHelpContainer.SetLabelText(_T("Quick Help"));
-	m_QuickHelpContainer.SetCloseHost(m_hWnd);
-
-	m_QuickHelpCtrl.Create(m_QuickHelpContainer,rcDefault,NULL,WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN,WS_EX_CONTROLPARENT | WS_EX_CLIENTEDGE);
-	m_QuickHelpContainer.SetClient(m_QuickHelpCtrl);
-
-	// Main view.
-	m_MainView.Create(m_QuickHelpView,rcDefault,
-		NULL,WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN,WS_EX_CONTROLPARENT);
-	m_MainView.m_cxySplitBar = 4;	// Force the splitter size 2, Vista uses a larger size by default.
-
-	UpdateLayout();
-
-	// Show or hide the quick help.
-	ShowQuickHelp(g_DynamicSettings.m_bViewQuickHelp);
-
 	m_MainView.SetSplitterPos((rcClient.bottom - rcClient.top - MAINFRAME_SPACEMETER_HEIGHT)/2);
 }
 
@@ -482,6 +462,9 @@ void CMainFrame::InitializeProjectView(unsigned int uiSplitterPos)
 	{
 		case PROJECTTYPE_DATA:
 			g_ProjectManager.NewDataProject(m_bDefaultProjDataDVD);
+
+			if (m_bDefaultProjDVDVideo)
+				g_ProjectSettings.m_iFileSystem = FILESYSTEM_DVDVIDEO;
 			break;
 
 		case PROJECTTYPE_AUDIO:
@@ -490,14 +473,6 @@ void CMainFrame::InitializeProjectView(unsigned int uiSplitterPos)
 
 		case PROJECTTYPE_MIXED:
 			g_ProjectManager.NewMixedProject();
-			break;
-
-		case PROJECTTYPE_DVDVIDEO:
-			// Since we don't have a project to fall back on if the DVD-Video
-			// project creation fails we need to manually create an empty data
-			// project.
-			if (!g_ProjectManager.NewDVDVideoProject(true))
-				g_ProjectManager.NewDataProject(true);
 			break;
 	}
 }
@@ -684,6 +659,8 @@ bool CMainFrame::Translate()
 	hCurMenu = GetSubMenu(hCurMenu,0);
 	if (pLNG->GetValuePtr(ID_NEWPROJECT_DATACD,szStrValue))
 		ModifyMenu(hCurMenu,ID_NEWPROJECT_DATACD,MF_BYCOMMAND | MF_STRING,ID_NEWPROJECT_DATACD,(LPCTSTR)szStrValue);
+	if (pLNG->GetValuePtr(ID_NEWPROJECT_DATACDMS,szStrValue))
+		ModifyMenu(hCurMenu,ID_NEWPROJECT_DATACDMS,MF_BYCOMMAND | MF_STRING,ID_NEWPROJECT_DATACDMS,(LPCTSTR)szStrValue);
 	if (pLNG->GetValuePtr(ID_NEWPROJECT_AUDIO,szStrValue))
 		ModifyMenu(hCurMenu,ID_NEWPROJECT_AUDIO,MF_BYCOMMAND | MF_STRING,ID_NEWPROJECT_AUDIO,(LPCTSTR)szStrValue);
 	if (pLNG->GetValuePtr(ID_NEWPROJECT_MIXED,szStrValue))
@@ -968,27 +945,6 @@ bool CMainFrame::SaveProjectPrompt()
 	return true;
 }
 
-void CMainFrame::ShowQuickHelp(bool bShow)
-{
-	g_DynamicSettings.m_bViewQuickHelp = bShow;
-
-	if (bShow)
-	{
-		RECT rcClient;
-		GetClientRect(&rcClient);
-
-		m_QuickHelpView.SetSplitterPane(SPLIT_PANE_LEFT,m_MainView);
-		m_QuickHelpView.SetSplitterPane(SPLIT_PANE_RIGHT,m_QuickHelpContainer);
-		m_QuickHelpView.SetSplitterExtendedStyle(SPLIT_RIGHTALIGNED);
-		m_QuickHelpView.SetSplitterPos(rcClient.right - rcClient.left - 160);
-	}
-	else
-	{
-		m_QuickHelpView.SetSplitterPane(SPLIT_PANE_LEFT,m_MainView);
-		m_QuickHelpView.SetSinglePaneMode(SPLIT_PANE_LEFT);
-	}
-}
-
 LRESULT CMainFrame::OnCreate(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
 	// Main small image list (menus and small toolbar buttons).
@@ -1062,7 +1018,13 @@ LRESULT CMainFrame::OnCreate(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandle
 
 	InitializeMainView();
 	InitializeExplorerView(iSplitterPos);
-	InitializeProjectView(iSplitterPos);
+
+	bool bWelcomePane = false;
+
+	if (bWelcomePane)
+		m_SpaceMeterView.SetSinglePaneMode(SPLIT_PANE_TOP);
+	else
+		InitializeProjectView(iSplitterPos);
 
 	// Perform an autorun check.
 	//if (g_GlobalSettings.m_bAutoRunCheck)
@@ -1075,7 +1037,8 @@ LRESULT CMainFrame::OnCreate(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandle
 	FillDriveMenus();
 
 	// Apply the settings.
-	g_DynamicSettings.Apply();
+	if (!bWelcomePane)
+		g_DynamicSettings.Apply();
 
 	// Show/hide the tool bar and status bar.
 	if (!g_DynamicSettings.m_bViewToolBar)
@@ -1248,14 +1211,6 @@ LRESULT CMainFrame::OnGetIShellBrowser(UINT uMsg,WPARAM wParam,LPARAM lParam,BOO
 	// function call will fail on Windows 98 systems for all other directories than the desktop.
 	bHandled = TRUE;
 	return (LRESULT)m_pShellListView;
-}
-
-LRESULT CMainFrame::OnQuickHelpClose(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
-{
-	ShowQuickHelp(false);
-
-	bHandled = false;
-	return 0;
 }
 
 LRESULT CMainFrame::OnSLVBrowseObject(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
@@ -2101,8 +2056,7 @@ LRESULT CMainFrame::OnPTVEndLabelEdit(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled)
 	else
 	{
 		// Update label.
-		if (g_ProjectManager.GetProjectType() == PROJECTTYPE_DATA ||
-			g_ProjectManager.GetProjectType() == PROJECTTYPE_DVDVIDEO)
+		if (g_ProjectManager.GetProjectType() == PROJECTTYPE_DATA)
 			lstrcpy(g_ProjectSettings.m_szLabel,lpDispInfo->item.pszText);
 	}
 
@@ -2518,6 +2472,22 @@ LRESULT CMainFrame::OnNewProjectDataCD(WORD wNotifyCode,WORD wID,HWND hWndCtl,BO
 	return 0;
 }
 
+LRESULT CMainFrame::OnNewProjectDataCDMS(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
+{
+	if (!SaveProjectPrompt())
+		return 0;
+
+	SetTitleNormal();
+	m_szProjectFile[0] = '\0';
+
+	g_ProjectManager.NewDataProject(false);
+
+	g_ProjectSettings.m_iFileSystem = FILESYSTEM_ISO9660;
+	g_ProjectSettings.m_iIsoFormat = 1;	// Mode 2 (multi-session).
+
+	return 0;
+}
+
 LRESULT CMainFrame::OnNewProjectDataDVD(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
 	if (!SaveProjectPrompt())
@@ -2562,7 +2532,9 @@ LRESULT CMainFrame::OnNewProjectDVDVideo(WORD wNotifyCode,WORD wID,HWND hWndCtl,
 	SetTitleNormal();
 	m_szProjectFile[0] = '\0';
 
-	g_ProjectManager.NewDVDVideoProject(true);
+	g_ProjectManager.NewDataProject(true);
+
+	g_ProjectSettings.m_iFileSystem = FILESYSTEM_DVDVIDEO;
 	return 0;
 }
 
@@ -2801,12 +2773,12 @@ LRESULT CMainFrame::OnActionsDiscInfo(UINT uNotifyCode,int nID,CWindow wnd)
 LRESULT CMainFrame::OnActionsImportsession(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
 	g_LogDlg.AddLine(_T("CMainFrame::OnActionsImportsession"));
+
 	// We can only import to projects containing a data track.
 	CProjectNode *pDataRootNode = NULL;
 	switch (g_ProjectManager.GetProjectType())
 	{
 		case PROJECTTYPE_DATA:
-		case PROJECTTYPE_DVDVIDEO:
 			pDataRootNode = g_TreeManager.GetRootNode();
 			break;
 
@@ -3009,6 +2981,9 @@ LRESULT CMainFrame::OnAppAbout(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHan
 {
 	CAboutDlg AboutDlg;
 	AboutDlg.DoModal();
+
+	/*CWizardDlg Wizard;
+	Wizard.DoModal();*/
 
 	return 0;
 }

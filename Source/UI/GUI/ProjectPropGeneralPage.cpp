@@ -179,36 +179,6 @@ void CProjectPropGeneralPage::SetupMixedProject()
 	SetDlgItemText(IDC_CONTAINSSTATIC,szBuffer);
 }
 
-void CProjectPropGeneralPage::SetupDVDVideoProject()
-{
-	TCHAR szBuffer[64];
-
-	// Create the icon.
-	m_hIcon = (HICON)LoadImage(_Module.GetResourceInstance(),MAKEINTRESOURCE(IDI_DVDVIDEOICON),
-		IMAGE_ICON,GetSystemMetrics(SM_CXICON),GetSystemMetrics(SM_CYICON),LR_DEFAULTCOLOR);
-	SendMessage(GetDlgItem(IDC_ICONSTATIC),STM_SETICON,(WPARAM)m_hIcon,0L);
-
-	// Label name.
-	SetDlgItemText(IDC_NAMEEDIT,g_ProjectSettings.m_szLabel);
-
-	// Type.
-	SetDlgItemText(IDC_TYPESTATIC,lngGetString(PROJECT_DVDVIDEO));
-
-	// Size.
-	unsigned __int64 uiSize = g_ProjectManager.GetProjectSize();
-	TCHAR szSizeText[32];
-	FormatBytes(szBuffer,uiSize);
-	lsprintf(szSizeText,_T(" (%I64d Bytes)"),uiSize);
-	lstrcat(szBuffer,szSizeText);
-	SetDlgItemText(IDC_SIZESTATIC,szBuffer);
-
-	// Contents.
-	unsigned __int64 uiFileCount,uiFolderCount,uiTrackCount;
-	g_ProjectManager.GetProjectContents(uiFileCount,uiFolderCount,uiTrackCount);
-	lsnprintf_s(szBuffer,64,lngGetString(PROJECT_CONTENTS),uiFileCount,uiFolderCount,uiTrackCount);
-	SetDlgItemText(IDC_CONTAINSSTATIC,szBuffer);
-}
-
 LRESULT CProjectPropGeneralPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
 	// Set edit field length limit.
@@ -226,10 +196,6 @@ LRESULT CProjectPropGeneralPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lPa
 
 		case PROJECTTYPE_DATA:
 			SetupDataProject();
-			break;
-
-		case PROJECTTYPE_DVDVIDEO:
-			SetupDVDVideoProject();
 			break;
 	};
 

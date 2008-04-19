@@ -103,6 +103,9 @@ namespace ckFileSystem
 		void MakeUniqueJoliet(CFileTreeNode *pNode,unsigned char *pFileName,unsigned char ucFileNameSize);
 		void MakeUniqueIso9660(CFileTreeNode *pNode,unsigned char *pFileName,unsigned char ucFileNameSize);
 
+		bool CompareStrings(const char *szString1,const TCHAR *szString2,unsigned char ucLength);
+		bool CompareStrings(const unsigned char *pWideString1,const TCHAR *szString2,unsigned char ucLength);
+
 		bool CalcPathTableSize(CFileSet &Files,bool bJolietTable,
 			unsigned __int64 &uiPathTableSize,CProgressEx &Progress);
 		bool CalcLocalDirEntryLength(CFileTreeNode *pLocalNode,bool bJoliet,int iLevel,

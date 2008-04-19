@@ -30,6 +30,7 @@ void FormatBytes(TCHAR *szBuffer,unsigned __int64 iBytes);
 void FormatBytesEx(TCHAR *szBuffer,unsigned __int64 iBytes);
 int LastDelimiter(const TCHAR *szString,TCHAR cDelimiter);
 int LastDelimiterA(const char *szString,char cDelimiter);
+int LastDelimiterW(const wchar_t *szString,wchar_t cDelimiter);
 //int LastDelimiterEx(const TCHAR *szString,char cDelimiter);
 //int LastDelimiterExA(const char *szString,char cDelimiter);
 int FirstDelimiter(const TCHAR *szString,TCHAR cDelimiter);

@@ -25,13 +25,14 @@ class CCopyImageDlg : public CPropertySheetImpl<CCopyImageDlg>
 {
 private:
 	bool m_bCentered;
+	bool m_bAppMode;
 	unsigned int m_uiSourceDeviceIndex;
 
 	CCopyImageGeneralPage m_GeneralPage;
 	CReadOptionsPage m_ReadPage;
 
 public:
-	CCopyImageDlg();
+	CCopyImageDlg(bool bAppMode);
 	~CCopyImageDlg();
 
 	BEGIN_MSG_MAP(CCopyImageDlg)

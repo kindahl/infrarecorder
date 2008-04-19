@@ -95,8 +95,7 @@ private:
 	CCommandBarCtrl m_CmdBar;
 	CCustomToolBarCtrl m_ToolBar;
 	CHorSplitterWindow m_SpaceMeterView;
-	CHorSplitterWindow m_MainView;
-	CMainView m_QuickHelpView;
+	CMainView m_MainView;
 
 	CSplitterWindow m_ExplorerView;
 	CSplitterWindow m_ProjectView;
@@ -108,9 +107,6 @@ private:
 	CCustomContainer m_ShellListViewContainer;
 	CLabelContainer m_ShellTreeViewContainer;
 	CCustomHeaderCtrl m_ProjectListViewHeader;
-
-	CLabelContainer m_QuickHelpContainer;
-	CMiniHtmlCtrl m_QuickHelpCtrl;
 
 	HIMAGELIST m_hProjectTreeImageList;
 
@@ -154,8 +150,6 @@ private:
 	bool SaveProjectAs();
 	bool SaveProjectPrompt();
 
-	void ShowQuickHelp(bool bShow);
-
 	// Shell related.
 	bool OpenSpecialFolder(int iFolder);
 	bool OpenFolder(TCHAR *szFullPath,HTREEITEM hFrom,bool bExpandMyComp);
@@ -176,6 +170,7 @@ public:
 
 	int m_iDefaultProjType;
 	bool m_bDefaultProjDataDVD;
+	bool m_bDefaultProjDVDVideo;
 
 	TCHAR m_szProjectFile[MAX_PATH];
 
@@ -248,7 +243,6 @@ public:
 		MESSAGE_HANDLER(WM_CLOSE,OnClose)
 		MESSAGE_HANDLER(WM_SHELLCHANGE,OnShellChange)
 		MESSAGE_HANDLER(WM_GETISHELLBROWSER,OnGetIShellBrowser)
-		MESSAGE_HANDLER(WM_LABELCONTAINER_CLOSE,OnQuickHelpClose)
 
 		// Shell list view.
 		MESSAGE_HANDLER(WM_SLVC_BROWSEOBJECT,OnSLVBrowseObject)
@@ -297,6 +291,7 @@ public:
 
 		// File menu.
 		COMMAND_ID_HANDLER(ID_NEWPROJECT_DATACD,OnNewProjectDataCD)
+		COMMAND_ID_HANDLER(ID_NEWPROJECT_DATACDMS,OnNewProjectDataCDMS)
 		COMMAND_ID_HANDLER(ID_NEWPROJECT_DATADVD,OnNewProjectDataDVD)
 		COMMAND_ID_HANDLER(ID_NEWPROJECT_AUDIO,OnNewProjectAudio)
 		COMMAND_ID_HANDLER(ID_NEWPROJECT_MIXED,OnNewProjectMixed)
@@ -367,7 +362,6 @@ public:
 	LRESULT OnClose(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 	LRESULT OnShellChange(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 	LRESULT OnGetIShellBrowser(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnQuickHelpClose(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 
 	// Shell list view.
 	LRESULT OnSLVBrowseObject(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
@@ -405,6 +399,7 @@ public:
 
 	// File menu.
 	LRESULT OnNewProjectDataCD(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+	LRESULT OnNewProjectDataCDMS(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
 	LRESULT OnNewProjectDataDVD(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
 	LRESULT OnNewProjectAudio(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
 	LRESULT OnNewProjectMixed(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);

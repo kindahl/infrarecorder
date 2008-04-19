@@ -26,6 +26,7 @@ class CCopyDiscDlg : public CPropertySheetImpl<CCopyDiscDlg>
 {
 private:
 	bool m_bCentered;
+	bool m_bAppMode;
 	unsigned int m_uiSourceDeviceIndex;
 	unsigned int m_uiTargetDeviceIndex;
 
@@ -34,7 +35,7 @@ private:
 	CReadOptionsPage m_ReadPage;
 
 public:
-	CCopyDiscDlg();
+	CCopyDiscDlg(bool bAppMode);
 	~CCopyDiscDlg();
 
 	BEGIN_MSG_MAP(CCopyDiscDlg)

@@ -25,6 +25,7 @@ class CBurnImageDlg : public CPropertySheetImpl<CBurnImageDlg>
 {
 private:
 	bool m_bCentered;
+	bool m_bAppMode;
 	unsigned int m_uiDeviceIndex;
 
 	CBurnImageGeneralPage m_GeneralPage;
@@ -32,7 +33,7 @@ private:
 
 public:
 	CBurnImageDlg(const TCHAR *szTitle,bool bImageHasTOC,
-		bool bEnableOnFly,bool bEnableVerify);
+		bool bEnableOnFly,bool bEnableVerify,bool bAppMode);
 	~CBurnImageDlg();
 
 	BEGIN_MSG_MAP(CBurnImageDlg)

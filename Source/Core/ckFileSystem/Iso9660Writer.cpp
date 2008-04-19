@@ -54,7 +54,7 @@ namespace ckFileSystem
 			return;
 
 		// Don't calculate a new name of one has already been generated.
-		if (pNode->m_FileNameJoliet != _T(""))
+		if (pNode->m_FileNameJoliet != L"")
 		{
 			unsigned char ucFileNamePos = 0;
 			for (unsigned int i = 0; i < ucFileNameSize; i += 2,ucFileNamePos++)
@@ -94,7 +94,7 @@ namespace ckFileSystem
 		if (iDelimiter == -1)
 		{
 			if (!(pNode->m_ucFileFlags & CFileTreeNode::FLAG_DIRECTORY) &&
-				m_pIso9660->IncludesFileVerInfo())
+				m_pJoliet->IncludesFileVerInfo())
 				ucFileNameEnd = ucFileNameLen - 2;
 			else
 				ucFileNameEnd = ucFileNameLen;
@@ -121,9 +121,9 @@ namespace ckFileSystem
 				continue;
 			}
 
-			if (!lstrcmp((*itSibling)->m_FileNameJoliet.c_str(),szFileName))
+			if (!lstrcmpW((*itSibling)->m_FileNameJoliet.c_str(),szFileName))
 			{
-				swprintf(szNextNumber,_T("%d"),ucNextNumber);
+				swprintf(szNextNumber,L"%d",ucNextNumber);
 
 				// Using if-statements for optimization.
 				if (ucNextNumber < 10)
@@ -261,6 +261,47 @@ namespace ckFileSystem
 		memcpy(pFileName,szFileName,ucFileNameSize);
 	}
 
+	bool CIso9660Writer::CompareStrings(const char *szString1,const TCHAR *szString2,unsigned char ucLength)
+	{
+#ifdef UNICODE
+		for (unsigned char i = 0; i < ucLength; i++)
+			if (toupper(szString1[i]) != toupper(szString2[i]))
+				return false;
+
+		return true;
+#else
+		return !_strnicmp(szString1,szString2,ucLength);
+#endif
+	}
+
+	bool CIso9660Writer::CompareStrings(const unsigned char *pWideString1,const TCHAR *szString2,unsigned char ucLength)
+	{
+#ifdef UNICODE
+		unsigned char ucFileNamePos = 0;
+		for (unsigned int i = 0; i < ucLength; i++)
+		{
+			wchar_t c = pWideString1[ucFileNamePos++] << 8;
+			c |= pWideString1[ucFileNamePos++];
+
+			if (towupper(c) != towupper(szString2[i]))
+				return false;
+		}
+
+		return true;
+#else
+		unsigned char ucFileNamePos = 0;
+		for (unsigned int i = 0; i < ucLength; i++)
+		{
+			wchar_t c = pWideString1[ucFileNamePos++] << 8;
+			c |= pWideString1[ucFileNamePos++];
+
+			if (towupper(c) != toupper(szString2[i]))
+				return false;
+		}
+		return true;
+#endif
+	}
+
 	bool CIso9660Writer::CalcPathTableSize(CFileSet &Files,bool bJolietTable,
 		unsigned __int64 &uiPathTableSize,CProgressEx &Progress)
 	{
@@ -336,7 +377,6 @@ namespace ckFileSystem
 							unsigned char ucNameLen = bJolietTable ?
 								m_pJoliet->CalcFileNameLen(CurDirName.c_str(),true) << 1 : 
 								m_pIso9660->CalcFileNameLen(CurDirName.c_str(),true);
-
 							unsigned char ucPathTableRecLen = sizeof(tPathTableRecord) + ucNameLen - 1;
 
 							// If the record length is not even padd it with a 0 byte.
@@ -399,10 +439,62 @@ namespace ckFileSystem
 			bool bIsFolder = (*itFile)->m_ucFileFlags & CFileTreeNode::FLAG_DIRECTORY;
 
 			unsigned char ucNameLen;	// FIXME: Rename to Size?
-			if (bJoliet)
+			/*if (bJoliet)
 				ucNameLen = m_pJoliet->CalcFileNameLen((*itFile)->m_FileName.c_str(),bIsFolder) << 1;
 			else
-				ucNameLen = m_pIso9660->CalcFileNameLen((*itFile)->m_FileName.c_str(),bIsFolder);
+				ucNameLen = m_pIso9660->CalcFileNameLen((*itFile)->m_FileName.c_str(),bIsFolder);*/
+			
+			// Optimization: If the the compatible file name is equal (not case-sensitive) to the
+			// original file name we assume that it is uniqe.
+			unsigned char szFileName[ISO9660WRITER_FILENAME_BUFFER_SIZE + 4]; // Large enough for level 1, 2 and even Joliet.
+			if (bJoliet)
+			{
+				ucNameLen = m_pJoliet->WriteFileName(szFileName,(*itFile)->m_FileName.c_str(),bIsFolder) << 1;
+
+				unsigned char ucFileNameEnd;
+				if (!bIsFolder && m_pJoliet->IncludesFileVerInfo())
+					ucFileNameEnd = (ucNameLen >> 1) - 2;
+				else
+					ucFileNameEnd = (ucNameLen >> 1);
+
+				if (CompareStrings(szFileName,(*itFile)->m_FileName.c_str(),ucFileNameEnd))
+				{
+#ifdef UNICODE
+					(*itFile)->m_FileNameJoliet = (*itFile)->m_FileName;
+
+					if (!bIsFolder && m_pJoliet->IncludesFileVerInfo())
+						(*itFile)->m_FileNameJoliet.append(L";1");
+#else
+					wchar_t szWideFileName[(ISO9660WRITER_FILENAME_BUFFER_SIZE >> 1) + 1];
+					unsigned char ucFileNamePos = 0;
+					for (unsigned char i = 0; i < (ucNameLen >> 1); i++)
+					{
+						szWideFileName[i]  = szFileName[ucFileNamePos++] << 8;
+						szWideFileName[i] |= szFileName[ucFileNamePos++];
+					}
+
+					szWideFileName[ucNameLen >> 1] = '\0';
+
+					(*itFile)->m_FileNameJoliet = szWideFileName;
+#endif
+				}
+			}
+			else
+			{
+				ucNameLen = m_pIso9660->WriteFileName(szFileName,(*itFile)->m_FileName.c_str(),bIsFolder);
+
+				unsigned char ucFileNameEnd;
+				if (!bIsFolder && m_pIso9660->IncludesFileVerInfo())
+					ucFileNameEnd = ucNameLen - 2;
+				else
+					ucFileNameEnd = ucNameLen;
+
+				if (CompareStrings((const char *)szFileName,(*itFile)->m_FileName.c_str(),ucFileNameEnd))
+				{
+					szFileName[ucNameLen] = '\0';
+					(*itFile)->m_FileNameIso9660 = (const char *)szFileName;
+				}
+			}
 
 			unsigned char ucCurRecSize = sizeof(tDirRecord) + ucNameLen - 1;
 
@@ -909,7 +1001,7 @@ namespace ckFileSystem
 
 	int CIso9660Writer::WritePathTables(CFileSet &Files,CFileTree &FileTree,CProgressEx &Progress)
 	{
-		Progress.SetStatus(_T("Writing ISO9660 path tables."));
+		Progress.SetStatus(g_StringTable.GetString(STATUS_WRITEISOTABLE));
 
 		// Write the path tables.
 		if (!WritePathTable(Files,FileTree,false,false,Progress))
@@ -925,7 +1017,7 @@ namespace ckFileSystem
 
 		if (m_bUseJoliet)
 		{
-			Progress.SetStatus(_T("Writing Joliet path tables."));
+			Progress.SetStatus(g_StringTable.GetString(STATUS_WRITEJOLIETTABLE));
 
 			if (!WritePathTable(Files,FileTree,true,false,Progress))
 			{
@@ -970,10 +1062,6 @@ namespace ckFileSystem
 				(unsigned long)pParentNode->m_uiDataPosNormal,
 				(unsigned long)pParentNode->m_uiDataSizeNormal);
 		}
-
-		bool bVerbose = false;
-		if (pLocalNode->m_FileName == _T("COMPDATA"))
-			bVerbose = true;
 
 		// The number of bytes of data in the current sector.
 		// Each directory always includes '.' and '..'.
@@ -1105,20 +1193,12 @@ namespace ckFileSystem
 				if ((*itFile)->m_uiFileSize > ISO9660_MAX_EXTENT_SIZE && uiFileRemain > 0)
 					DirRecord.ucFileFlags |= DIRRECORD_FILEFLAG_MULTIEXTENT;
 
-				/*DirRecord.ucFileUnitSize = 0;
-				DirRecord.ucInterleaveGapSize = 0;
-				Write723(DirRecord.ucVolSeqNumber,0x01);*/
 				DirRecord.ucFileIdentifierLen = ucNameLen;
 
 				// Pad the sector with zeros if we can not fit the complete
 				// directory entry on this sector.
 				if ((ulDirSecData + ucDirRecSize) > ISO9660_SECTOR_SIZE)
 				{
-					/*TCHAR szTemp[64];
-					lsprintf(szTemp,_T("%d %d %d"),ulDirSecData + ucDirRecSize,ISO9660_SECTOR_SIZE - ulDirSecData,
-						m_pOutStream->GetRemaining());
-					MessageBox(NULL,szTemp,(*itFile)->m_FileName.c_str(),MB_OK);*/
-
 					ulDirSecData = ucDirRecSize;
 					
 					// Pad the sector with zeros.
@@ -1200,7 +1280,7 @@ namespace ckFileSystem
 
 	int CIso9660Writer::WriteDirEntries(CFileTree &FileTree,CProgressEx &Progress)
 	{
-		Progress.SetStatus(_T("Writing directory entries."));
+		Progress.SetStatus(g_StringTable.GetString(STATUS_WRITEDIRENTRIES));
 
 		CFileTreeNode *pCurNode = FileTree.GetRoot();
 

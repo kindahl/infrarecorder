@@ -16,34 +16,25 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "stdafx.h"
-#include "DeviceDlg.h"
-
-CDeviceDlg::CDeviceDlg(UINT_PTR uiDeviceIndex,const TCHAR *szTitle) : CPropertySheetImpl<CDeviceDlg>(szTitle,0,NULL)
+#pragma once
+#include "resource.h"
+class CWizardDlg : public CDialogImpl<CWizardDlg>
 {
-	m_bCentered = false;
+public:
+	enum { IDD = IDD_WIZARDDLG };
 
-	m_psh.dwFlags |= PSH_NOAPPLYNOW | PSH_NOCONTEXTHELP;
+	CWizardDlg();
+	~CWizardDlg();
 
-	m_GeneralPage.SetDeviceIndex(uiDeviceIndex);
-	m_AdvancedPage.SetDeviceIndex(uiDeviceIndex);
-	AddPage(m_GeneralPage);
-	AddPage(m_AdvancedPage);
-}
+	BEGIN_MSG_MAP(CWizardDlg)
+		MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
 
-CDeviceDlg::~CDeviceDlg()
-{
-}
+		COMMAND_ID_HANDLER(IDOK,OnOK)
+		COMMAND_ID_HANDLER(IDCANCEL,OnCancel)
+	END_MSG_MAP()
 
-LRESULT CDeviceDlg::OnShowWindow(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
-{
-	// Center the window, once.
-	if (wParam == TRUE && !m_bCentered)
-	{
-		CenterWindow();
-		m_bCentered = true;
-	}
+	LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 
-	bHandled = FALSE;
-	return 0;
-}
+	LRESULT OnOK(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+	LRESULT OnCancel(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+};

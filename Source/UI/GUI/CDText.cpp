@@ -437,7 +437,7 @@ bool CCDText::WriteFileEx(const TCHAR *szFileName,const TCHAR *szAlbumName,
 #ifdef UNICODE
 		UnicodeToAnsi(szBuffer,Tracks[i]->GetAudioData()->szTrackTitle,sizeof(szBuffer));
 #else
-		strcpy(szBuffer,Tracks[i]->szTrackTitle);
+		strcpy(szBuffer,Tracks[i]->GetAudioData()->szTrackTitle);
 #endif
 
 		uiCharPos = WriteText(hFile,PTI_NAMETITLE,(unsigned char)i + 1,szBuffer,uiCharPos);
@@ -465,7 +465,7 @@ bool CCDText::WriteFileEx(const TCHAR *szFileName,const TCHAR *szAlbumName,
 #ifdef UNICODE
 		UnicodeToAnsi(szBuffer,Tracks[i]->GetAudioData()->szTrackArtist,sizeof(szBuffer));
 #else
-		strcpy(szBuffer,Tracks[i]->szTrackArtist);
+		strcpy(szBuffer,Tracks[i]->GetAudioData()->szTrackArtist);
 #endif
 
 		uiCharPos = WriteText(hFile,PTI_NAMEPERFORMER,(unsigned char)i + 1,szBuffer,uiCharPos);

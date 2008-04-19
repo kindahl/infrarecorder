@@ -24,14 +24,15 @@
 #include "WaitDlg.h"
 #include "SCSI.h"
 
-CCopyImageDlg::CCopyImageDlg() : CPropertySheetImpl<CCopyImageDlg>(lngGetString(COPYIMAGE_TITLE),0,NULL),
+CCopyImageDlg::CCopyImageDlg(bool bAppMode) :
+	CPropertySheetImpl<CCopyImageDlg>(lngGetString(COPYIMAGE_TITLE),0,NULL),
 	m_ReadPage(true,true)
 {
 	m_bCentered = false;
+	m_bAppMode = bAppMode;
 	m_uiSourceDeviceIndex = 0;
 
-	m_psh.dwFlags |= PSH_NOAPPLYNOW;
-	m_psh.dwFlags |= PSH_HASHELP;
+	m_psh.dwFlags |= PSH_NOAPPLYNOW | PSH_HASHELP | PSH_NOCONTEXTHELP;
 
 	AddPage(m_GeneralPage);
 	AddPage(m_ReadPage);
@@ -48,6 +49,18 @@ LRESULT CCopyImageDlg::OnShowWindow(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &
 	{
 		CenterWindow();
 		m_bCentered = true;
+	}
+
+	// Add the dialog to the task bar and enable it to be minimized.
+	if (m_bAppMode)
+	{
+		ModifyStyle(0,WS_MINIMIZEBOX | WS_SYSMENU);
+		ModifyStyleEx(0,WS_EX_APPWINDOW);
+
+		HMENU hSysMenu = GetSystemMenu(FALSE);
+		::InsertMenu(hSysMenu,0,MF_BYPOSITION,SC_RESTORE,_T("&Restore"));
+		::InsertMenu(hSysMenu,2,MF_BYPOSITION,SC_MINIMIZE,_T("Mi&nimize"));
+		::InsertMenu(hSysMenu,3,MF_BYPOSITION | MF_SEPARATOR,0,_T(""));
 	}
 
 	bHandled = FALSE;

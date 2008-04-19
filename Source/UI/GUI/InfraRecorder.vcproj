@@ -1425,6 +1425,10 @@
 				RelativePath=".\WinVer.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\WizardDlg.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -1854,6 +1858,14 @@
 				RelativePath=".\WinVer.h"
 				>
 			</File>
+			<File
+				RelativePath=".\WizardDlg.h"
+				>
+			</File>
+			<File
+				RelativePath=".\WizardWindow.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
@@ -1945,6 +1957,14 @@
 			</File>
 			<File
 				RelativePath=".\Resources\TrackToolBar_.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\WizardMainHeader.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\WizardMainWatermark.bmp"
 				>
 			</File>
 		</Filter>

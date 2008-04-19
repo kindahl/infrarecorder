@@ -47,14 +47,14 @@ namespace ckFileSystem
 
 	/*
 		Copies the source string to the target buffer assuring that all characters
-		in the source string are allowed by the Joliet file system. iLength should
+		in the source string are allowed by the Joliet file system. iSize should
 		be the length of the source string in bytes.
 	*/
-	void CJoliet::MemStrCopy(unsigned char *szTarget,const wchar_t *szSource,size_t iLength)
+	void CJoliet::MemStrCopy(unsigned char *szTarget,const wchar_t *szSource,size_t iSize)
 	{
 		size_t iSourcePos = 0;
 
-		for (size_t i = 0; i < iLength; i += 2)
+		for (size_t i = 0; i < iSize; i += 2)
 		{
 			wchar_t cSafe = MakeChar(szSource[iSourcePos++]);
 
@@ -258,10 +258,10 @@ namespace ckFileSystem
 	}
 
 	unsigned char CJoliet::WriteFileName(unsigned char *pOutBuffer,const TCHAR *szFileName,bool bIsDir)
-	{
+	{/*
 #ifndef UNICODE
 		wchar_t szWideFileName[JOLIET_MAX_NAMELEN_RELAXED + 1];
-		AnsiToUnicode(szWideFileName,szFileName,sizeof(szWideFileName) / sizeof(wchar_t);
+		AnsiToUnicode(szWideFileName,szFileName,sizeof(szWideFileName) / sizeof(wchar_t));
 #endif
 
 		int iFileNameLen = (int)lstrlen(szFileName),iMax = 0;
@@ -288,7 +288,11 @@ namespace ckFileSystem
 				pOutBuffer[iOutPos++] = '.';
 
 				// Copy the extension.
+#ifdef UNICODE
 				MemStrCopy(pOutBuffer + iOutPos,szFileName + iExtDelimiter + 1,iExtLen * sizeof(TCHAR));
+#else
+				MemStrCopy(pOutBuffer + iOutPos,szWideFileName + iExtDelimiter + 1,iExtLen * sizeof(TCHAR));
+#endif
 
 				iMax = m_iMaxNameLen;
 			}
@@ -325,6 +329,65 @@ namespace ckFileSystem
 			iMax += 2;
 		}
 
+		return iMax;*/
+
+#ifndef UNICODE
+		wchar_t szWideFileName[JOLIET_MAX_NAMELEN_RELAXED + 1];
+		AnsiToUnicode(szWideFileName,szFileName,sizeof(szWideFileName) / sizeof(wchar_t));
+#else
+		const wchar_t *szWideFileName = szFileName;
+#endif
+
+		int iFileNameLen = (int)lstrlenW(szWideFileName),iMax = 0;
+
+		if (iFileNameLen > m_iMaxNameLen)
+		{
+			int iExtDelimiter = LastDelimiterW(szWideFileName,'.');
+			if (iExtDelimiter != -1)
+			{
+				int iExtLen = (int)iFileNameLen - iExtDelimiter - 1;
+				if (iExtLen > m_iMaxNameLen - 1)	// The file can at most contain an extension of length m_iMaxNameLen - 1 characters.
+					iExtLen = m_iMaxNameLen - 1;
+
+				// Copy the file name.
+				iMax = iExtDelimiter < (m_iMaxNameLen - iExtLen) ? iExtDelimiter : (m_iMaxNameLen - 1 - iExtLen);
+
+				MemStrCopy(pOutBuffer,szWideFileName,iMax * sizeof(wchar_t));
+
+				int iOutPos = iMax << 1;
+				pOutBuffer[iOutPos++] = 0x00;
+				pOutBuffer[iOutPos++] = '.';
+
+				// Copy the extension.
+				MemStrCopy(pOutBuffer + iOutPos,szWideFileName + iExtDelimiter + 1,iExtLen * sizeof(wchar_t));
+
+				iMax = m_iMaxNameLen;
+			}
+			else
+			{
+				iMax = m_iMaxNameLen;
+
+				MemStrCopy(pOutBuffer,szWideFileName,iMax * sizeof(wchar_t));
+			}
+		}
+		else
+		{
+			iMax = iFileNameLen;
+
+			MemStrCopy(pOutBuffer,szWideFileName,iMax * sizeof(wchar_t));
+		}
+
+		if (!bIsDir && m_bIncFileVerInfo)
+		{
+			int iOutPos = iMax << 1;
+			pOutBuffer[iOutPos + 0] = 0x00;
+			pOutBuffer[iOutPos + 1] = ';';
+			pOutBuffer[iOutPos + 2] = 0x00;
+			pOutBuffer[iOutPos + 3] = '1';
+
+			iMax += 2;
+		}
+
 		return iMax;
 	}
 
@@ -344,5 +407,14 @@ namespace ckFileSystem
 			iNameLen += 2;
 
 		return (unsigned char)iNameLen;
+	}
+
+	/**
+		Returns true if the file names includes the two character file version
+		information (;1).
+	*/
+	bool CJoliet::IncludesFileVerInfo()
+	{
+		return m_bIncFileVerInfo;
 	}
 };

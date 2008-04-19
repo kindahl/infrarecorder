@@ -64,6 +64,7 @@ public:
 	void SetRealMode(bool bRealMode);
 
 	void SetProgress(int iPercent);
+	void SetProgressMarquee(bool bMarquee);
 	void SetBuffer(int iPercent);
 	void AllowReload();
 	void AllowCancel(bool bAllow);

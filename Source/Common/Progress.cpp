@@ -24,6 +24,11 @@ void CProgress::SetProgress(int iPercent)
 	// Do nothing.
 }
 
+void CProgress::SetProgressMarquee(bool bMarquee)
+{
+	// Do nothing.
+}
+
 CFilesProgress::CFilesProgress(unsigned __int64 uiTotalBytes)
 {
 	m_uiTotalBytes = uiTotalBytes;

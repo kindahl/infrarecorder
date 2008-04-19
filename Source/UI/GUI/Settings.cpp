@@ -198,7 +198,6 @@ bool CDynamicSettings::Save(CXMLProcessor *pXML)
 			pXML->AddElementAttr(_T("icon"),m_iToolBarIcon);
 		pXML->LeaveElement();
 		pXML->AddElement(_T("StatusBar"),m_bViewStatusBar);
-		pXML->AddElement(_T("QuickHelp"),m_bViewQuickHelp);
 
 		pXML->AddElement(_T("WindowLeft"),m_rcWindow.left);
 		pXML->AddElement(_T("WindowRight"),m_rcWindow.right);
@@ -240,7 +239,6 @@ bool CDynamicSettings::Load(CXMLProcessor *pXML)
 	}
 
 	pXML->GetSafeElementData(_T("StatusBar"),&m_bViewStatusBar);
-	pXML->GetSafeElementData(_T("QuickHelp"),&m_bViewQuickHelp);
 
 	pXML->GetSafeElementData(_T("WindowLeft"),&m_rcWindow.left);
 	pXML->GetSafeElementData(_T("WindowRight"),&m_rcWindow.right);

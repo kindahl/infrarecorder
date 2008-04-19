@@ -849,132 +849,6 @@ void CProjectManager::NewMixedProject()
 }
 
 /**
-	Creates a new DVD-Video project. 
-	@param bAskForDirectory If true the user will be asked to specify a folder
-	containing a VIDEO_TS sub folder. If false the program will assume that such
-	folder will be added at a later time.
-	@return true if successfull, false otherwise.
-*/
-bool CProjectManager::NewDVDVideoProject(bool bAskForDirectory)
-{
-	// Ask the user to specify the DVD-Video root folder.
-	bool bLoadFolder = false;
-	CFolderDialog FolderDlg(g_MainFrame,lngGetString(MISC_SPECIFYDVDFOLDER),BIF_NEWDIALOGSTYLE | BIF_RETURNONLYFSDIRS);
-
-	if (bAskForDirectory)
-	{
-		CDirLister DirLister;
-
-		bool bDone = false;
-		while (!bDone)
-		{
-			if (FolderDlg.DoModal() == IDOK)
-			{
-				// Validate the selected folder.
-				bool bFoundVideo = false;
-
-				if (DirLister.ListDirectory(FolderDlg.GetFolderPath(),_T("*")))
-				{
-					for (unsigned int i = 0; i < DirLister.m_FileList.size(); i++)
-					{
-						if (DirLister.m_FileList[i].FileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
-						{
-							if (!lstrcmp(DirLister.m_FileList[i].FileData.cFileName,_T("VIDEO_TS")))
-								bFoundVideo = true;
-						}
-					}
-				}
-
-				if (bFoundVideo)
-				{
-					bLoadFolder = true;
-					bDone = true;
-				}
-				else
-				{
-					lngMessageBox(g_MainFrame,ERROR_INVALIDDVDFOLDER,GENERAL_ERROR,
-						MB_OK | MB_ICONERROR);
-				}
-			}
-			else
-			{
-				return false;
-			}
-		}
-	}
-
-	// Reset the old project settings.
-	g_ProjectSettings.Reset();
-
-	m_bModified = false;
-
-	if (m_pProjectView != NULL)
-		m_pProjectView->SetSinglePaneMode(SPLIT_PANE_NONE);
-
-	CloseProject();
-
-	m_iProjectType = PROJECTTYPE_DVDVIDEO;
-	m_bProjectDVD = true;
-
-	if (m_pProjectView != NULL)
-		SetupDataListView();
-
-	// Get system date and time.
-	SYSTEMTIME st;
-	GetLocalTime(&st);
-	TCHAR szDate[8];
-	GetDateFormat(LOCALE_USER_DEFAULT,0,&st,_T("yyMMdd_"),szDate,8);
-	TCHAR szDateTime[12];
-	lsprintf(szDateTime,_T("%s%.2d%.2d"),szDate,st.wHour,st.wMinute);
-
-	// Insert tree root item.
-	g_TreeManager.CreateTree(szDateTime,PROJECTTREE_IAMGEINDEX_DVDVIDEO);
-
-	// Update the space meter.
-	if (m_pSpaceMeter != NULL)
-	{
-		m_pSpaceMeter->SetDisplayMode(PROJECTVIEWTYPE_DATA);
-		m_pSpaceMeter->SetDiscSize(SPACEMETER_SIZE_DVD);
-		m_pSpaceMeter->SetAllocatedSize(0);
-		m_pSpaceMeter->ForceRedraw();
-	}
-
-	// Project settings.
-	lstrcpy(g_ProjectSettings.m_szLabel,szDateTime);
-
-	// Enable/disable menu items.
-	g_MainFrame.UIEnable(ID_BURNCOMPILATION_DISCIMAGE,true);
-	g_MainFrame.UIEnable(ID_ACTIONS_IMPORTSESSION,true);
-
-	// DVD-Video projects are basicly data projects with a twist.
-	if (bLoadFolder)
-	{
-		// Add the contents of the specified folder to the project and lock all items.
-		CDirLister DirLister;
-		TCHAR szFileName[MAX_PATH];
-
-		CFileTransaction Transaction;
-
-		if (DirLister.ListDirectory(FolderDlg.GetFolderPath(),_T("*")))
-		{
-			for (unsigned int i = 0; i < DirLister.m_FileList.size(); i++)
-			{
-				lstrcpy(szFileName,DirLister.m_FileList[i].szFilePath);
-				IncludeTrailingBackslash(szFileName);
-				lstrcat(szFileName,DirLister.m_FileList[i].FileData.cFileName);
-
-				Transaction.AddFile(szFileName);
-			}
-		}
-
-		CProjectNode *pRootNode = g_TreeManager.GetRootNode();
-		g_TreeManager.RecursiveSetFlags(pRootNode,PROJECTITEM_FLAG_ISLOCKED | PROJECTITEM_FLAG_ISDVDVIDEO);
-	}
-
-	return true;
-}
-
-/**
 	Changes to project data view for mixed mode projects.
 */
 void CProjectManager::DataSelected()
@@ -1255,8 +1129,7 @@ void CProjectManager::NotifyListSelChanged(unsigned int uiSelCount)
 */
 void CProjectManager::NotifyTreeSelChanged(CProjectNode *pNode)
 {
-	if (m_iProjectType == PROJECTTYPE_DATA ||
-		m_iProjectType == PROJECTTYPE_DVDVIDEO)
+	if (m_iProjectType == PROJECTTYPE_DATA)
 	{
 		g_ProjectManager.EnableAll(ID_EDIT_RENAME,true,g_MainFrame.m_hProjListSelMenu);
 		g_ProjectManager.EnableAll(ID_EDIT_REMOVE,pNode != g_TreeManager.GetRootNode(),g_MainFrame.m_hProjListSelMenu);
@@ -1378,7 +1251,6 @@ void CProjectManager::SaveProjectData(CXMLProcessor *pXML)
 	switch (m_iProjectType)
 	{
 		case PROJECTTYPE_DATA:
-		case PROJECTTYPE_DVDVIDEO:
 			pXML->AddElement(_T("Data"),_T(""),true);
 				g_TreeManager.SaveNodeFileData(pXML,g_TreeManager.GetRootNode());
 			pXML->LeaveElement();
@@ -1412,7 +1284,6 @@ bool CProjectManager::LoadProjectData(CXMLProcessor *pXML)
 	switch (m_iProjectType)
 	{
 		case PROJECTTYPE_DATA:
-		case PROJECTTYPE_DVDVIDEO:
 			if (!pXML->EnterElement(_T("Data")))
 				return true;
 
@@ -1637,7 +1508,6 @@ bool CProjectManager::SaveProject(const TCHAR *szFullPath)
 			switch (m_iProjectType)
 			{
 				case PROJECTTYPE_DATA:
-				case PROJECTTYPE_DVDVIDEO:
 					XML.AddElement(_T("Label"),g_ProjectSettings.m_szLabel);
 					SaveProjectFileSys(&XML);
 					SaveProjectISO(&XML);
@@ -1754,20 +1624,6 @@ bool CProjectManager::LoadProject(const TCHAR *szFullPath)
 			LoadProjectFields(&XML);
 			break;
 
-		case PROJECTTYPE_DVDVIDEO:
-			NewDVDVideoProject(false);
-
-			// Label.
-			XML.GetSafeElementData(_T("Label"),g_ProjectSettings.m_szLabel,MAX_PATH - 1);
-			SetDiscLabel(g_ProjectSettings.m_szLabel);
-
-			// Data information.
-			LoadProjectFileSys(&XML);
-			LoadProjectISO(&XML);
-			LoadProjectFields(&XML);
-			LoadProjectBoot(&XML);
-			break;
-
 		default:
 			lngMessageBox(g_MainFrame,ERROR_LOADPROJECT,GENERAL_ERROR,MB_OK | MB_ICONERROR);
 			return false;
@@ -1781,7 +1637,7 @@ bool CProjectManager::LoadProject(const TCHAR *szFullPath)
 	}
 
 	// Try to expand the root item for data projects.
-	if (iType == PROJECTTYPE_DATA || iType == PROJECTTYPE_DVDVIDEO)
+	if (iType == PROJECTTYPE_DATA)
 		m_pTreeView->Expand(g_TreeManager.GetRootNode()->m_hTreeItem);
 
 	// Update the space meter.
@@ -1806,7 +1662,6 @@ void CProjectManager::GetProjectContents(unsigned __int64 &uiFileCount,unsigned 
 	switch (m_iProjectType)
 	{
 		case PROJECTTYPE_DATA:
-		case PROJECTTYPE_DVDVIDEO:
 			g_TreeManager.GetNodeContents(g_TreeManager.GetRootNode(),uiFileCount,uiFolderCount);
 			uiTrackCount = 0;
 			break;
@@ -2272,7 +2127,6 @@ void CProjectManager::SetDiscLabel(TCHAR *szLabelName)
 	switch (m_iProjectType)
 	{
 		case PROJECTTYPE_DATA:
-		case PROJECTTYPE_DVDVIDEO:
 			if (m_pTreeView != NULL)
 				m_pTreeView->SetItemText(g_TreeManager.GetRootNode()->m_hTreeItem,szLabelName);
 			break;

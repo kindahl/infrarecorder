@@ -17,33 +17,31 @@
  */
 
 #include "stdafx.h"
-#include "DeviceDlg.h"
+#include "WizardDlg.h"
 
-CDeviceDlg::CDeviceDlg(UINT_PTR uiDeviceIndex,const TCHAR *szTitle) : CPropertySheetImpl<CDeviceDlg>(szTitle,0,NULL)
-{
-	m_bCentered = false;
-
-	m_psh.dwFlags |= PSH_NOAPPLYNOW | PSH_NOCONTEXTHELP;
-
-	m_GeneralPage.SetDeviceIndex(uiDeviceIndex);
-	m_AdvancedPage.SetDeviceIndex(uiDeviceIndex);
-	AddPage(m_GeneralPage);
-	AddPage(m_AdvancedPage);
-}
-
-CDeviceDlg::~CDeviceDlg()
+CWizardDlg::CWizardDlg()
 {
 }
 
-LRESULT CDeviceDlg::OnShowWindow(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
+CWizardDlg::~CWizardDlg()
 {
-	// Center the window, once.
-	if (wParam == TRUE && !m_bCentered)
-	{
-		CenterWindow();
-		m_bCentered = true;
-	}
+}
 
-	bHandled = FALSE;
-	return 0;
+LRESULT CWizardDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
+{
+	CenterWindow(GetParent());
+
+	return TRUE;
+}
+
+LRESULT CWizardDlg::OnOK(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
+{
+	EndDialog(wID);
+	return FALSE;
+}
+
+LRESULT CWizardDlg::OnCancel(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
+{
+	EndDialog(wID);
+	return FALSE;
 }

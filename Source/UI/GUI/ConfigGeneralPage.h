@@ -22,9 +22,10 @@
 class CConfigGeneralPage : public CPropertyPageImpl<CConfigGeneralPage>
 {
 private:
-	bool IsProjectExtRegistered();
-	bool RegisterProjectExt();
-	bool UnregisterProjectExt();
+	bool IsFileExtRegistered(const TCHAR *szFileExt);
+	bool RegisterFileExt(const TCHAR *szFileExt,const TCHAR *szTypeKeyName,
+		const TCHAR *szTypeDesc);
+	bool UnregisterFileExt(const TCHAR *szFileExt);
 
 	bool Translate();
 

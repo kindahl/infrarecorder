@@ -230,8 +230,9 @@ LRESULT CSimpleProgressDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,B
 	CenterWindow(GetParent());
 
 	// If we're in application mode, add a minimize button to the window.
-	if (m_bAppMode)
-		ModifyStyle(0,WS_MINIMIZEBOX,0);
+	// UPDATE: This does not work, nor is it a good idea regarding the smoke effect.
+	/*if (m_bAppMode)
+		ModifyStyle(0,WS_MINIMIZEBOX,0);*/
 
 	// Initialize the list view.
 	m_ListView = GetDlgItem(IDC_MESSAGELIST);

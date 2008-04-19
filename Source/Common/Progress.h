@@ -23,6 +23,7 @@ class CProgress
 public:
 	// Not forced to be implemented by inheritor.
 	virtual void SetProgress(int iPercent);
+	virtual void SetProgressMarquee(bool bMarquee);
 
 	// Returns true of the operation has been cancelled.
 	virtual bool IsCanceled() = 0;

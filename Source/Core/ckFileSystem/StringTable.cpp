@@ -32,6 +32,11 @@ namespace ckFileSystem
 		m_Strings[ERROR_PATHTABLESIZE] = _T("The disc image path table is to large. The project contains too many files.");
 		m_Strings[ERROR_OPENWRITE] = _T("Unable to open file for writing: %s.");
 		m_Strings[ERROR_OPENREAD] = _T("Unable to open file for reading: %s.");
+		m_Strings[STATUS_BUILDTREE] = _T("Building file tree.");
+		m_Strings[STATUS_WRITEDATA] = _T("Writing file data.");
+		m_Strings[STATUS_WRITEISOTABLE] = _T("Writing ISO9660 path tables.");
+		m_Strings[STATUS_WRITEJOLIETTABLE] = _T("Writing Joliet path tables.");
+		m_Strings[STATUS_WRITEDIRENTRIES] = _T("Writing directory entries.");
 	}
 
 	const TCHAR *CDynStringTable::GetString(eStrings StringID)

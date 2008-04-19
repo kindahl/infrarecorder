@@ -65,8 +65,7 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 	std::map<tstring,tstring> FilePathMap;
 
 	if (iProjectType == PROJECTTYPE_DATA ||
-		iProjectType == PROJECTTYPE_MIXED ||
-		iProjectType == PROJECTTYPE_DVDVIDEO)
+		iProjectType == PROJECTTYPE_MIXED)
 	{
 		ckFileSystem::CFileComparator FileComp(g_ProjectSettings.m_iFileSystem == FILESYSTEM_DVDVIDEO);
 		ckFileSystem::CFileSet Files(FileComp);
@@ -74,7 +73,6 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 		switch (iProjectType)
 		{
 			case PROJECTTYPE_DATA:
-			case PROJECTTYPE_DVDVIDEO:
 				g_TreeManager.GetPathList(Files,g_TreeManager.GetRootNode());
 				break;
 
@@ -177,7 +175,6 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 	switch (iProjectType)
 	{
 		case PROJECTTYPE_DATA:
-		case PROJECTTYPE_DVDVIDEO:
 			if (g_BurnImageSettings.m_bOnFly)
 			{
 				// Try to estimate the file system size before burning the compilation.
@@ -419,7 +416,6 @@ DWORD WINAPI CActionManager::CreateImageThread(LPVOID lpThreadParameter)
 	switch (g_ProjectManager.GetProjectType())
 	{
 		case PROJECTTYPE_DATA:
-		case PROJECTTYPE_DVDVIDEO:
 			g_TreeManager.GetPathList(Files,g_TreeManager.GetRootNode());
 			break;
 
@@ -594,7 +590,7 @@ INT_PTR CActionManager::BurnCompilation(HWND hWndParent,bool bAppMode)
 
 	// Display the burn image dialog.
 	CBurnImageDlg BurnImageDlg(lngGetString(MISC_BURNCOMPILATION),false,
-		!bAudioProject,!bAudioProject);
+		!bAudioProject,!bAudioProject,bAppMode);
 	INT_PTR iResult = BurnImageDlg.DoModal();
 
 	if (iResult == IDOK)
@@ -811,7 +807,6 @@ INT_PTR CActionManager::BurnImage(HWND hWndParent,bool bAppMode)
 	return iResult;
 }
 
-// FIXME: Erase nonblank disc here as well.
 INT_PTR CActionManager::BurnImageEx(HWND hWndParent,bool bAppMode,const TCHAR *szFilePath)
 {
 	// Dialog title.
@@ -833,7 +828,7 @@ INT_PTR CActionManager::BurnImageEx(HWND hWndParent,bool bAppMode,const TCHAR *s
 		bImageHasTOC = true;
 
 	// Display the burn image dialog.
-	CBurnImageDlg BurnImageDlg(szTitle,bImageHasTOC,false,false);
+	CBurnImageDlg BurnImageDlg(szTitle,bImageHasTOC,false,false,bAppMode);
 	INT_PTR iResult = BurnImageDlg.DoModal();
 
 	if (iResult == IDOK)
@@ -1108,7 +1103,7 @@ INT_PTR CActionManager::CopyDisc(HWND hWndParent,bool bAppMode)
 	}
 
 	// Display the burn image dialog.
-	CCopyDiscDlg CopyDiscDlg;
+	CCopyDiscDlg CopyDiscDlg(bAppMode);
 	INT_PTR iResult = CopyDiscDlg.DoModal();
 
 	if (iResult == IDOK)
@@ -1179,7 +1174,7 @@ INT_PTR CActionManager::CopyDisc(HWND hWndParent,bool bAppMode)
 INT_PTR CActionManager::CopyImage(HWND hWndParent,bool bAppMode)
 {
 	// Display the copy image dialog.
-	CCopyImageDlg CopyImageDlg;
+	CCopyImageDlg CopyImageDlg(bAppMode);
 	INT_PTR iResult = CopyImageDlg.DoModal();
 
 	if (iResult == IDOK)

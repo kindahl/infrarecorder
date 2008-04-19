@@ -25,8 +25,7 @@ CConfigDlg::CConfigDlg() : CPropertySheetImpl<CConfigDlg>(lngGetString(TITLE_CON
 {
 	m_bCentered = false;
 
-	m_psh.dwFlags |= PSH_NOAPPLYNOW;
-	m_psh.dwFlags |= PSH_HASHELP;
+	m_psh.dwFlags |= PSH_NOAPPLYNOW | PSH_HASHELP | PSH_NOCONTEXTHELP;
 
 	AddPage(m_GeneralPage);
 	AddPage(m_AdvancedPage);

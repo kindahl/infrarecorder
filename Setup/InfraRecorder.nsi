@@ -210,6 +210,7 @@ FunctionEnd
   !insertmacro MUI_LANGUAGE "SimpChinese"
   !insertmacro MUI_LANGUAGE "Spanish"
   !insertmacro MUI_LANGUAGE "Swedish"
+  !insertmacro MUI_LANGUAGE "Thai"
   !insertmacro MUI_LANGUAGE "TradChinese"
   !insertmacro MUI_LANGUAGE "Turkish"
   !insertmacro MUI_LANGUAGE "Ukrainian"
@@ -679,6 +680,18 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_SWEDISH} "Lägger till en ikon på snabbstartfältet."
   LangString DESC_SecLang ${LANG_SWEDISH} "Språkfiler som används för att stödja olika språk i InfraRecorder."
 
+  ;Language strings (Thai)
+  LangString NAME_SecCore ${LANG_THAI} "InfraRecorder Core Files (required)"
+  LangString NAME_SecStartShortcut ${LANG_THAI} "Start Menu Shortcuts"
+  LangString NAME_SecDeskShortcut ${LANG_THAI} "Desktop Shortcut"
+  LangString NAME_SecQuickShortcut ${LANG_THAI} "Quick Launch Shortcut"
+  LangString NAME_SecLang ${LANG_THAI} "Language Files"
+  LangString DESC_SecCore ${LANG_THAI} "The core files required to use InfraRecorder."
+  LangString DESC_SecStartShortcut ${LANG_THAI} "Adds icons to your start menu for easy access."
+  LangString DESC_SecDeskShortcut ${LANG_THAI} "Adds an icon to your desktop."
+  LangString DESC_SecQuickShortcut ${LANG_THAI} "Adds an icon to your quick launch bar."
+  LangString DESC_SecLang ${LANG_THAI} "Language files used for supporting different languages in InfraRecorder."
+
   ;Language strings (Traditional Chinese)
   LangString NAME_SecCore ${LANG_TRADCHINESE} "InfraRecorder®Ö¤ßÀÉ®×(¥²­n¦w¸Ë)"
   LangString NAME_SecStartShortcut ${LANG_TRADCHINESE} "¶}©l¥\¯àªí±¶®|"
@@ -836,12 +849,14 @@ Section $(NAME_SecLang) SecLang
   File "..\Binary32\Languages\Chinese (Simplified).irl"
   File "..\Binary32\Languages\Spanish.irl"
   File "..\Binary32\Languages\Swedish.irl"
+  File "..\Binary32\Languages\Thai.irl"
   File "..\Binary32\Languages\Chinese (Traditional).irl"
   File "..\Binary32\Languages\Turkish.irl"
   File "..\Binary32\Languages\Ukrainian.irl"
   File "..\Binary32\Languages\German.chm"
   File "..\Binary32\Languages\Russian.chm"
   File "..\Binary32\Languages\Ukrainian.chm"
+  File "..\Binary32\Languages\Thai.chm"
   File "..\Binary32\Languages\Turkish.chm"
 !else
   File "..\BinaryA\Languages\Arabic.irl"
@@ -877,12 +892,14 @@ Section $(NAME_SecLang) SecLang
   File "..\BinaryA\Languages\Chinese (Simplified).irl"
   File "..\BinaryA\Languages\Spanish.irl"
   File "..\BinaryA\Languages\Swedish.irl"
+  File "..\BinaryA\Languages\Thai.irl"
   File "..\BinaryA\Languages\Chinese (Traditional).irl"
   File "..\BinaryA\Languages\Turkish.irl"
   File "..\BinaryA\Languages\Ukrainian.irl"
   File "..\BinaryA\Languages\German.chm"
   File "..\BinaryA\Languages\Russian.chm"
   File "..\BinaryA\Languages\Ukrainian.chm"
+  File "..\BinaryA\Languages\Thai.chm"
   File "..\BinaryA\Languages\Turkish.chm"
 !endif
 
@@ -988,6 +1005,9 @@ Section $(NAME_SecLang) SecLang
       ${Break}
     ${Case} "swedish"	; 1053
       StrCpy $LANGUAGE ${LANG_SWEDISH}
+      ${Break}
+    ${Case} "thai"	; 1054
+      StrCpy $LANGUAGE ${LANG_THAI}
       ${Break}
     ${Case} "tradchinese"; 1028
       StrCpy $LANGUAGE ${LANG_TRADCHINESE}
@@ -1102,6 +1122,9 @@ Section $(NAME_SecLang) SecLang
       ${Break}
     ${Case} ${LANG_SWEDISH}	; 1053
       StrCpy $0 "Swedish.irl"
+      ${Break}
+    ${Case} ${LANG_THAI}	; 1054
+      StrCpy $0 "Thai.irl"
       ${Break}
     ${Case} ${LANG_TRADCHINESE}	; 1028
       StrCpy $0 "Chinese (Traditional).irl"

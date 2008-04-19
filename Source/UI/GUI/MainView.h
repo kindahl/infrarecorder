@@ -21,7 +21,7 @@
 #define MAINVIEW_NORMALBORDER_SIZE				2
 #define MAINVIEW_THEMEDBORDER_SIZE				4
 
-class CMainView : public CSplitterWindowImpl<CMainView,/*false*/true>
+class CMainView : public CSplitterWindowImpl<CMainView,false>
 {
 private:
 	unsigned int m_uiBorderSize;
@@ -30,7 +30,7 @@ public:
 	CMainView();
 	~CMainView();
 
-	typedef CSplitterWindowImpl<CMainView,/*false*/true> _baseClass;
+	typedef CSplitterWindowImpl<CMainView,false> _baseClass;
 
 	BEGIN_MSG_MAP(CMainView)
 		MESSAGE_HANDLER(WM_CREATE,OnCreate)

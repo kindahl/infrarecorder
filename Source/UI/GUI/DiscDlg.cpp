@@ -24,8 +24,7 @@ CDiscDlg::CDiscDlg(const TCHAR *szTitle,const TCHAR *szDiscLabel,CCore2DeviceAdd
 {
 	m_bCentered = false;
 
-	m_psh.dwFlags |= PSH_NOAPPLYNOW;
-	//m_psh.dwFlags |= PSH_HASHELP;
+	m_psh.dwFlags |= PSH_NOAPPLYNOW | PSH_NOCONTEXTHELP;
 
 	AddPage(m_GeneralPage);
 }

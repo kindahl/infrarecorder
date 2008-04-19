@@ -155,6 +155,8 @@
               <File Id="Slovenian.irl" Name="Slovenian.irl" Source="../Binary64/Languages/Slovenian.irl"/>
               <File Id="Spanish.irl" Name="Spanish.irl" Source="../Binary64/Languages/Spanish.irl"/>
               <File Id="Swedish.irl" Name="Swedish.irl" Source="../Binary64/Languages/Swedish.irl"/>
+              <File Id="Thai.irl" Name="Thai.irl" Source="../Binary64/Languages/Thai.irl"/>
+              <File Id="Thai.chm" Name="Thai.chm" Source="../Binary64/Languages/Thai.chm"/>
               <File Id="Turkish.irl" Name="Turkish.irl" Source="../Binary64/Languages/Turkish.irl"/>
               <File Id="Turkish.chm" Name="Turkish.chm" Source="../Binary64/Languages/Turkish.chm"/>
               <File Id="Ukrainian.irl" Name="Ukrainian.irl" Source="../Binary64/Languages/Ukrainian.irl"/>

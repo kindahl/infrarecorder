@@ -25,6 +25,15 @@
 #include "ProjectDropSource.h"
 #include "ProjectDataObject.h"
 
+/*
+	FIXME: For Windows XP and newer.
+#ifndef LVM_SETSELECTEDCOLUMN
+	#define LVM_SETSELECTEDCOLUMN   (LVM_FIRST + 140)
+#endif
+
+	::SendMessage(m_hWnd,LVM_SETSELECTEDCOLUMN,0,0);
+*/
+
 CProjectListViewDropTarget::CProjectListViewDropTarget(CProjectListViewCtrl *pHost)
 {
 	m_pHost = pHost;

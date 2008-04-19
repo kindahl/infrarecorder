@@ -165,7 +165,6 @@ public:
 	int m_iToolBarIcon;
 	bool m_bViewToolBar;
 	bool m_bViewStatusBar;
-	bool m_bViewQuickHelp;
 	bool m_bWinMaximized;
 
 	// Window rectangle.
@@ -181,7 +180,6 @@ public:
 		m_iToolBarIcon = TOOLBAR_ICON_SMALL;
 		m_bViewToolBar = true;
 		m_bViewStatusBar = true;
-		m_bViewQuickHelp = false;
 		m_bWinMaximized = false;
 
 		// -1 means not set.
@@ -342,7 +340,7 @@ public:
 		// We don't want to display an error message if the code page is not
 		// found two times. First when the object enters scope and later when
 		// the new project is created (from the NewDataProject function).
-		Reset(false);
+		Reset();
 	}
 
 	~CProjectSettings()
@@ -373,7 +371,7 @@ public:
 		return NULL;
 	}
 
-	void Reset(bool bFindCharacterSet = true)
+	void Reset()
 	{
 		m_iFileSystem = FILESYSTEM_ISO9660;
 		m_iIsoLevel = 0;

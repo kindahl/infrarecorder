@@ -27,8 +27,7 @@ CProjectPropDlg::CProjectPropDlg() : CPropertySheetImpl<CProjectPropDlg>(lngGetS
 {
 	m_bCentered = false;
 
-	m_psh.dwFlags |= PSH_NOAPPLYNOW;
-	m_psh.dwFlags |= PSH_HASHELP;
+	m_psh.dwFlags |= PSH_NOAPPLYNOW | PSH_HASHELP | PSH_NOCONTEXTHELP;
 
 	m_hGeneralPage = ::CreatePropertySheetPage(m_GeneralPage);
 	m_hFileSysPage = ::CreatePropertySheetPage(m_FileSysPage);
@@ -43,7 +42,6 @@ CProjectPropDlg::CProjectPropDlg() : CPropertySheetImpl<CProjectPropDlg>(lngGetS
 	switch (g_ProjectManager.GetProjectType())
 	{
 		case PROJECTTYPE_DATA:
-		case PROJECTTYPE_DVDVIDEO:
 			AddPage(m_hFileSysPage);
 
 			if (g_ProjectSettings.m_iFileSystem == FILESYSTEM_ISO9660_UDF ||

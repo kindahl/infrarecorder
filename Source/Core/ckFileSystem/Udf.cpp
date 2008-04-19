@@ -357,8 +357,7 @@ namespace ckFileSystem
 		m_PartVolDesc.usPartNum = 0;		// We always create the first parition using these routines.
 
 		m_PartVolDesc.PartConentIdent.ucFlags = m_bDvdVideo ? UDF_ENTITYFLAG_DVDVIDEO : 0;
-		memcpy(m_PartVolDesc.PartConentIdent.ucIdentifier,g_IdentPartContentNsr,
-			sizeof(g_IdentPartContentNsr));
+		memcpy(m_PartVolDesc.PartConentIdent.ucIdentifier,g_IdentPartContentNsr,strlen(g_IdentPartContentNsr));
 
 		switch (m_PartAccessType)
 		{
@@ -423,7 +422,7 @@ namespace ckFileSystem
 		wchar_t szWidePrimaryLabel[17];
 		AnsiToUnicode(szWidePrimaryLabel,szLabel,sizeof(szWidePrimaryLabel) / sizeof(wchar_t));
 
-		unsigned char ucByteLen = (unsigned char)CompressUnicodeStr(iLabelCopyLen,ucStrComp,
+		unsigned char ucByteLen = (unsigned char)CompressUnicodeStr(iPrimaryCopyLen,ucStrComp,
 			(const unsigned short *)szWidePrimaryLabel,m_PrimVolDesc.ucVolIdentifier);
 		m_PrimVolDesc.ucVolIdentifier[31] = ucByteLen;
 

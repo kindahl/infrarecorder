@@ -318,7 +318,7 @@ namespace ckFileSystem
 		szMultiFileName = new char [iFileNameLen + 1];
 		UnicodeToAnsi(szMultiFileName,szFileName,iFileNameLen + 1);
 	#else
-		szMultiFileName = szFileName;
+		szMultiFileName = (char *)szFileName;
 	#endif
 
 		int iExtDelimiter = LastDelimiterA(szMultiFileName,'.');
@@ -368,7 +368,7 @@ namespace ckFileSystem
 		char *szMultiFileName = new char [iFileNameLen + 1];
 		UnicodeToAnsi(szMultiFileName,szFileName,iFileNameLen + 1);
 	#else
-		char *szMultiFileName = szFileName;
+		char *szMultiFileName = (char *)szFileName;
 	#endif
 
 		int iExtDelimiter = LastDelimiterA(szMultiFileName,'.');
@@ -431,7 +431,7 @@ namespace ckFileSystem
 		char *szMultiDirName = new char [iDirNameLen + 1];
 		UnicodeToAnsi(szMultiDirName,szDirName,iDirNameLen + 1);
 	#else
-		char *szMultiDirName = szDirName;
+		char *szMultiDirName = (char *)szDirName;
 	#endif
 
 		for (size_t i = 0; i < (size_t)iMax; i++)
@@ -456,7 +456,7 @@ namespace ckFileSystem
 		char *szMultiDirName = new char [iDirNameLen + 1];
 		UnicodeToAnsi(szMultiDirName,szDirName,iDirNameLen + 1);
 	#else
-		char *szMultiDirName = szDirName;
+		char *szMultiDirName = (char *)szDirName;
 	#endif
 
 		for (size_t i = 0; i < (size_t)iMax; i++)

@@ -45,16 +45,17 @@ CConfigGeneralPage::~CConfigGeneralPage()
 }
 
 /*
-	CConfigGeneralPage::IsProjectExtRegistered
-	------------------------------------------
-	Returns true if InfraRecorder is associated with .irp files.
+	CConfigGeneralPage::IsFileExtRegistered
+	---------------------------------------
+	Returns true if InfraRecorder is associated with the specified file
+	extension.
 */
-bool CConfigGeneralPage::IsProjectExtRegistered()
+bool CConfigGeneralPage::IsFileExtRegistered(const TCHAR *szFileExt)
 {
 	CRegistry Reg;
 	Reg.SetRoot(HKEY_CLASSES_ROOT);
 
-	if (!Reg.OpenKey(_T(".irp"),false))
+	if (!Reg.OpenKey(szFileExt,false))
 		return false;
 
 	TCHAR szKeyName[64];
@@ -95,27 +96,39 @@ bool CConfigGeneralPage::IsProjectExtRegistered()
 }
 
 /*
-	CConfigGeneralPage::RegisterProjectExt
-	--------------------------------------
-	Associate InfraRecorder with .irp files. Returns true if successfull,
-	otherwise false.
+	CConfigGeneralPage::RegisterFileExt
+	-----------------------------------
+	Associates InfraRecorder with the specified file extension. Returns true if
+	successfull, otherwise false. szTypeKeyName may not contain more than 64
+	characters.
 */
-bool CConfigGeneralPage::RegisterProjectExt()
+bool CConfigGeneralPage::RegisterFileExt(const TCHAR *szFileExt,const TCHAR *szTypeKeyName,
+										 const TCHAR *szTypeDesc)
 {
 	CRegistry Reg;
 	Reg.SetRoot(HKEY_CLASSES_ROOT);
 
-	if (Reg.OpenKey(_T(".irp")))
+	if (Reg.OpenKey(szFileExt))
 	{
 		TCHAR szKeyName[64];
 
+		bool bCreate = false;
+		if (Reg.ReadString(_T(""),szKeyName,sizeof(szKeyName)) || !lstrcmp(szKeyName,_T("")))
+		{
+			if (lstrcmp(szKeyName,szTypeKeyName))
+				bCreate = true;
+		}
+		else
+		{
+			bCreate = true;
+		}
+
 		// If no key is specified we create our own.
-		if (!Reg.ReadString(_T(""),szKeyName,64 * sizeof(TCHAR)) || !lstrcmp(szKeyName,_T("")))
+		//if (!Reg.ReadString(_T(""),szKeyName,sizeof(szKeyName)) || !lstrcmp(szKeyName,_T("")))
+		if (bCreate)
 		{
 			// Extension key name.
-			lstrcpy(szKeyName,_T("irproject"));
-
-			if (!Reg.WriteString(_T(""),szKeyName,64 * sizeof(TCHAR)))
+			if (!Reg.WriteString(_T(""),(TCHAR *)szTypeKeyName,lstrlen(szTypeKeyName) * sizeof(TCHAR)))
 			{
 				Reg.CloseKey();
 				return false;
@@ -124,10 +137,10 @@ bool CConfigGeneralPage::RegisterProjectExt()
 			Reg.CloseKey();
 
 			// Key name description.
-			if (!Reg.OpenKey(_T("irproject"),true))
+			if (!Reg.OpenKey(szTypeKeyName,true))
 				return false;
 
-			if (!Reg.WriteString(_T(""),_T("InfraRecorder project"),25 * sizeof(TCHAR)))
+			if (!Reg.WriteString(_T(""),(TCHAR *)szTypeDesc,lstrlen(szTypeDesc) * sizeof(TCHAR)))
 			{
 				Reg.CloseKey();
 				return false;
@@ -138,7 +151,7 @@ bool CConfigGeneralPage::RegisterProjectExt()
 		Reg.CloseKey();
 
 		TCHAR szFullName[256];
-		lstrcpy(szFullName,szKeyName),
+		lstrcpy(szFullName,/*szKeyName*/szTypeKeyName),
 		lstrcat(szFullName,_T("\\shell\\open\\command"));
 
 		if (!Reg.OpenKey(szFullName))
@@ -166,7 +179,7 @@ bool CConfigGeneralPage::RegisterProjectExt()
 
 		TCHAR szIconPath[MAX_PATH + 2];
 		GetModuleFileName(NULL,szIconPath,MAX_PATH - 1);
-		lstrcat(szIconPath,_T(",4"));
+		lstrcat(szIconPath,_T(",5"));
 
 		if (!Reg.WriteString(_T(""),szIconPath,MAX_PATH + 2 * sizeof(TCHAR)))
 		{
@@ -182,17 +195,17 @@ bool CConfigGeneralPage::RegisterProjectExt()
 }
 
 /*
-	CConfigGeneralPage::UnregisterProjectExt
-	----------------------------------------
-	Deassociate InfraRecorder with .irp files. Returns true if the process
-	was successfull, false otherwise.
+	CConfigGeneralPage::UnregisterFileExt
+	-------------------------------------
+	Deassociate InfraRecorder with the specified file extension. Returns true
+	if the process was successfull, false otherwise.
 */
-bool CConfigGeneralPage::UnregisterProjectExt()
+bool CConfigGeneralPage::UnregisterFileExt(const TCHAR *szFileExt)
 {
 	CRegistry Reg;
 	Reg.SetRoot(HKEY_CLASSES_ROOT);
 
-	if (!Reg.OpenKey(_T(".irp"),false))
+	if (!Reg.OpenKey(szFileExt,false))
 		return true;
 
 	TCHAR szKeyName[64];
@@ -261,6 +274,8 @@ bool CConfigGeneralPage::Translate()
 		SetDlgItemText(IDC_AUTORUNCHECK,szStrValue);
 	if (pLNG->GetValuePtr(IDC_ASSOCIATECHECK,szStrValue))
 		SetDlgItemText(IDC_ASSOCIATECHECK,szStrValue);
+	if (pLNG->GetValuePtr(IDC_ASSOCIATEDISCIMAGECHECK,szStrValue))
+		SetDlgItemText(IDC_ASSOCIATEDISCIMAGECHECK,szStrValue);
 	if (pLNG->GetValuePtr(IDC_SHELLFOLDERGROUPSTATIC,szStrValue))
 		SetDlgItemText(IDC_SHELLFOLDERGROUPSTATIC,szStrValue);
 	if (pLNG->GetValuePtr(IDC_SHELLFOLDERINFOSTATIC,szStrValue))
@@ -287,11 +302,30 @@ bool CConfigGeneralPage::OnApply()
 
 	// Register the project file extension.
 	if (IsDlgButtonChecked(IDC_ASSOCIATECHECK) == TRUE)
-		RegisterProjectExt();
+	{
+		RegisterFileExt(_T(".irp"),_T("irproject"),_T("InfraRecorder project"));
+	}
 	else
 	{
-		if (IsProjectExtRegistered())
-			UnregisterProjectExt();
+		if (IsFileExtRegistered(_T(".irp")))
+			UnregisterFileExt(_T(".irp"));
+	}
+
+	// Register the disc image extensions.
+	if (IsDlgButtonChecked(IDC_ASSOCIATEDISCIMAGECHECK) == TRUE)
+	{
+		RegisterFileExt(_T(".iso"),_T("irdiscimage"),_T("InfraRecorder disc image"));
+		RegisterFileExt(_T(".img"),_T("irdiscimage"),_T("InfraRecorder disc image"));
+		RegisterFileExt(_T(".cue"),_T("irdiscimage"),_T("InfraRecorder disc image"));
+	}
+	else
+	{
+		if (IsFileExtRegistered(_T(".iso")))
+			UnregisterFileExt(_T(".iso"));
+		if (IsFileExtRegistered(_T(".img")))
+			UnregisterFileExt(_T(".img"));
+		if (IsFileExtRegistered(_T(".cue")))
+			UnregisterFileExt(_T(".cue"));
 	}
 
 	return true;
@@ -318,7 +352,9 @@ LRESULT CConfigGeneralPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,B
 	::SendMessage(GetDlgItem(IDC_SHELLFOLDEREDIT),EM_SETLIMITTEXT,MAX_PATH - 1,0);
 	SetDlgItemText(IDC_SHELLFOLDEREDIT,g_DynamicSettings.m_szShellDir);
 
-	CheckDlgButton(IDC_ASSOCIATECHECK,IsProjectExtRegistered());
+	CheckDlgButton(IDC_ASSOCIATECHECK,IsFileExtRegistered(_T(".irp")));
+	CheckDlgButton(IDC_ASSOCIATEDISCIMAGECHECK,IsFileExtRegistered(_T(".iso")) ||
+		IsFileExtRegistered(_T(".img")) || IsFileExtRegistered(_T(".cue")));
 
 	if (g_GlobalSettings.m_bRememberShell)
 	{

@@ -249,6 +249,36 @@ void CProgressDlg::SetProgress(int iPercent)
 	}
 }
 
+#ifndef PBM_SETMARQUEE
+#define PBM_SETMARQUEE      (WM_USER + 10)
+#endif
+
+#ifndef PBS_MARQUEE
+#define PBS_MARQUEE         0x08
+#endif
+
+void CProgressDlg::SetProgressMarquee(bool bMarquee)
+{
+	// Only supported in Windows XP and newer (common controls version 6).
+	if (g_WinVer.m_ulMajorCCVersion >= 6)
+	{
+		HWND hWndCtrl = GetDlgItem(IDC_TOTALPROGRESS);
+
+		if (bMarquee)
+		{
+			unsigned long ulStyle = ::GetWindowLong(hWndCtrl,GWL_STYLE);
+			::SetWindowLong(hWndCtrl,GWL_STYLE,ulStyle | PBS_MARQUEE);
+			::SendMessage(hWndCtrl,PBM_SETMARQUEE,TRUE,50);
+		}
+		else
+		{
+			unsigned long ulStyle = ::GetWindowLong(hWndCtrl,GWL_STYLE);
+			::SetWindowLong(hWndCtrl,GWL_STYLE,ulStyle & ~PBS_MARQUEE);
+			::SendMessage(hWndCtrl,PBM_SETMARQUEE,FALSE,50);
+		}
+	}
+}
+
 void CProgressDlg::SetBuffer(int iPercent)
 {
 	SendDlgItemMessage(IDC_BUFFERPROGRESS,PBM_SETPOS,(WPARAM)iPercent,0);
@@ -285,8 +315,9 @@ LRESULT CProgressDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &b
 	CenterWindow(GetParent());
 
 	// If we're in application mode, add a minimize button to the window.
-	if (m_bAppMode)
-		ModifyStyle(0,WS_MINIMIZEBOX,0);
+	// UPDATE: This does not work, nor is it a good idea regarding the smoke effect.
+	/*if (m_bAppMode)
+		ModifyStyle(0,WS_MINIMIZEBOX,0);*/
 
 	SendDlgItemMessage(IDC_TOTALPROGRESS,PBM_SETRANGE32,0,100);
 	SendDlgItemMessage(IDC_BUFFERPROGRESS,PBM_SETRANGE32,0,100);

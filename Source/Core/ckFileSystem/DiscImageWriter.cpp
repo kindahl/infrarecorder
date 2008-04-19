@@ -18,12 +18,12 @@
 
 #include "stdafx.h"
 #include "../../Common/FileManager.h"
-#include "DiscImageWriter.h"
 #include "StringTable.h"
 #include "SectorManager.h"
 #include "Iso9660Writer.h"
 #include "UdfWriter.h"
 #include "DvdVideo.h"
+#include "DiscImageWriter.h"
 
 namespace ckFileSystem
 {
@@ -489,7 +489,8 @@ namespace ckFileSystem
 		}*/
 		// ...
 
-		Progress.SetStatus(_T("Building file tree."));
+		Progress.SetStatus(g_StringTable.GetString(STATUS_BUILDTREE));
+		Progress.SetProgressMarquee(true);
 
 		// Create a file tree.
 		CFileTree FileTree(m_pLog);
@@ -601,7 +602,8 @@ namespace ckFileSystem
 				return Fail(iResult,OutStream);
 		}
 
-		Progress.SetStatus(_T("Writing file data."));
+		Progress.SetStatus(g_StringTable.GetString(STATUS_WRITEDATA));
+		Progress.SetProgressMarquee(false);
 
 		// To help keep track of the progress.
 		CFilesProgress FilesProgress(SectorManager.GetDataLength() * ISO9660_SECTOR_SIZE);

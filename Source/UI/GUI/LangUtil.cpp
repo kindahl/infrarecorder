@@ -78,8 +78,26 @@ void lngTranslateTables()
 				ckFileSystem::g_StringTable.SetString(ckFileSystem::WARNING_FSDIRLEVEL,szStrValue);
 			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckFileSystem::WARNING_SKIPFILE,szStrValue))
 				ckFileSystem::g_StringTable.SetString(ckFileSystem::WARNING_SKIPFILE,szStrValue);
+			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckFileSystem::WARNING_SKIP4GFILE,szStrValue))
+				ckFileSystem::g_StringTable.SetString(ckFileSystem::WARNING_SKIP4GFILE,szStrValue);
+			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckFileSystem::WARNING_SKIP4GFILEISO,szStrValue))
+				ckFileSystem::g_StringTable.SetString(ckFileSystem::WARNING_SKIP4GFILEISO,szStrValue);
 			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckFileSystem::ERROR_PATHTABLESIZE,szStrValue))
 				ckFileSystem::g_StringTable.SetString(ckFileSystem::ERROR_PATHTABLESIZE,szStrValue);
+			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckFileSystem::ERROR_OPENWRITE,szStrValue))
+				ckFileSystem::g_StringTable.SetString(ckFileSystem::ERROR_OPENWRITE,szStrValue);
+			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckFileSystem::ERROR_OPENREAD,szStrValue))
+				ckFileSystem::g_StringTable.SetString(ckFileSystem::ERROR_OPENREAD,szStrValue);
+			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckFileSystem::STATUS_BUILDTREE,szStrValue))
+				ckFileSystem::g_StringTable.SetString(ckFileSystem::STATUS_BUILDTREE,szStrValue);
+			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckFileSystem::STATUS_WRITEDATA,szStrValue))
+				ckFileSystem::g_StringTable.SetString(ckFileSystem::STATUS_WRITEDATA,szStrValue);
+			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckFileSystem::STATUS_WRITEISOTABLE,szStrValue))
+				ckFileSystem::g_StringTable.SetString(ckFileSystem::STATUS_WRITEISOTABLE,szStrValue);
+			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckFileSystem::STATUS_WRITEJOLIETTABLE,szStrValue))
+				ckFileSystem::g_StringTable.SetString(ckFileSystem::STATUS_WRITEJOLIETTABLE,szStrValue);
+			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckFileSystem::STATUS_WRITEDIRENTRIES,szStrValue))
+				ckFileSystem::g_StringTable.SetString(ckFileSystem::STATUS_WRITEDIRENTRIES,szStrValue);
 		}
 	}
 }

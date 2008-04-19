@@ -156,6 +156,19 @@ int LastDelimiterA(const char *szString,char cDelimiter)
 	return -1;
 }
 
+int LastDelimiterW(const wchar_t *szString,wchar_t cDelimiter)
+{    
+	int iLength = lstrlenW(szString);
+
+	for (int i = iLength - 1; i >= 0; i--)
+	{
+		if (szString[i] == cDelimiter)
+			return i;
+	}
+
+	return -1;
+}
+
 /*
 	UPDATE 2006-08-09
 	-----------------
@@ -379,7 +392,7 @@ void AnsiToUnicode(wchar_t *szTarget,const char *szSource,int iTargetSize)
 void UnicodeToAnsi(char *szTarget,const wchar_t *szSource,int iTargetSize)
 {
 	int iConverted = WideCharToMultiByte(::AreFileApisANSI() ? CP_ACP : CP_OEMCP,0,
-		szSource,(int)lstrlen(szSource) + 1,szTarget,iTargetSize,NULL,NULL);
+		szSource,(int)lstrlenW(szSource) + 1,szTarget,iTargetSize,NULL,NULL);
 
 	if (iConverted == iTargetSize)
 		szTarget[iTargetSize - 1] = '\0';

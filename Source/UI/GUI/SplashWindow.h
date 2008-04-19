@@ -39,7 +39,7 @@
 #define ULW_ALPHA								0x00000002
 #endif
 
-typedef BOOL (WINAPI *tUpdateLayeredWindow)(HWND hWnd,HDC hdcDst,POINT *pptDst,SIZE *psize,HDC hdcSrc,POINT *pptSrc, COLORREF crKey, BLENDFUNCTION *pblend,DWORD dwFlags);
+typedef BOOL (WINAPI *tUpdateLayeredWindow)(HWND hWnd,HDC hdcDst,POINT *pptDst,SIZE *psize,HDC hdcSrc,POINT *pptSrc,COLORREF crKey,BLENDFUNCTION *pblend,DWORD dwFlags);
 
 class CSplashWindow : public CWindowImpl<CSplashWindow,CWindow,CWinTraits<WS_POPUP | WS_VISIBLE,WS_EX_TOOLWINDOW> >
 {

@@ -46,7 +46,6 @@
 #define PROJECTTYPE_DATA					0
 #define PROJECTTYPE_AUDIO					1
 #define PROJECTTYPE_MIXED					2
-#define PROJECTTYPE_DVDVIDEO				3
 
 // What project file version does this build use.
 #define PROJECTMANAGER_FILEVERSION			3
@@ -163,7 +162,6 @@ public:
 	void NewDataProject(bool bDVD);
 	void NewAudioProject();
 	void NewMixedProject();
-	bool NewDVDVideoProject(bool bAskForDirectory);
 
 	void DataSelected();
 	void AudioSelected();

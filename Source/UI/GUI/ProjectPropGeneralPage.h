@@ -27,7 +27,6 @@ private:
 	void SetupDataProject();
 	void SetupAudioProject();
 	void SetupMixedProject();
-	void SetupDVDVideoProject();
 
 	bool Translate();
 

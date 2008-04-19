@@ -53,6 +53,7 @@ BEGIN
         POPUP "&New Project"
         BEGIN
             MENUITEM "Data &CD",                    ID_NEWPROJECT_DATACD
+            MENUITEM "Data CD (&multi-session)",    ID_NEWPROJECT_DATACDMS
             MENUITEM "Data &DVD",                   ID_NEWPROJECT_DATADVD
             MENUITEM SEPARATOR
             MENUITEM "&Audio CD",                   ID_NEWPROJECT_AUDIO
@@ -334,17 +335,19 @@ BEGIN
     CONTROL         "Check if autorun is enabled on each startup",IDC_AUTORUNCHECK,
                     "Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,7,7,233,10
     CONTROL         "Remember the last active folder",IDC_REMEMBERSHELLCHECK,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,77,219,10
-    GROUPBOX        "Explorer folder",IDC_SHELLFOLDERGROUPSTATIC,7,31,233,60
-    LTEXT           "Enter the folder that you want to be the default folder in the explorer view part of the program.",IDC_SHELLFOLDERINFOSTATIC,14,41,218,18
-    EDITTEXT        IDC_SHELLFOLDEREDIT,14,60,201,13,ES_AUTOHSCROLL
-    PUSHBUTTON      "...",IDC_SHELLFOLDERBROWSEBUTTON,220,60,14,13
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,89,219,10
+    GROUPBOX        "Explorer folder",IDC_SHELLFOLDERGROUPSTATIC,7,43,233,60
+    LTEXT           "Enter the folder that you want to be the default folder in the explorer view part of the program.",IDC_SHELLFOLDERINFOSTATIC,14,53,218,18
+    EDITTEXT        IDC_SHELLFOLDEREDIT,14,72,201,13,ES_AUTOHSCROLL
+    PUSHBUTTON      "...",IDC_SHELLFOLDERBROWSEBUTTON,220,72,14,13
     CONTROL         "Associate InfraRecorder with .irp (InfraRecorder Project) files",IDC_ASSOCIATECHECK,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,19,233,10
-    GROUPBOX        "Temporary folder",IDC_TEMPFOLDERGROUPSTATIC,7,94,233,49
-    LTEXT           "The folder specified below will be used when data has to be temporarily stored on your harddrive.",IDC_TEMPFOLDERINFOSTATIC,14,104,218,18
-    EDITTEXT        IDC_TEMPFOLDEREDIT,14,124,201,13,ES_AUTOHSCROLL
-    PUSHBUTTON      "...",IDC_TEMPFOLDERBROWSEBUTTON,220,124,14,13
+    GROUPBOX        "Temporary folder",IDC_TEMPFOLDERGROUPSTATIC,7,106,233,49
+    LTEXT           "The folder specified below will be used when data has to be temporarily stored on your harddrive.",IDC_TEMPFOLDERINFOSTATIC,14,116,218,18
+    EDITTEXT        IDC_TEMPFOLDEREDIT,14,136,201,13,ES_AUTOHSCROLL
+    PUSHBUTTON      "...",IDC_TEMPFOLDERBROWSEBUTTON,220,136,14,13
+    CONTROL         "Associate InfraRecorder with disc images (.iso, .img and .cue)",IDC_ASSOCIATEDISCIMAGECHECK,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,32,233,10
 END
 
 IDD_PROPPAGE_CONFIGADVANCED DIALOGEX 0, 0, 247, 188
@@ -694,8 +697,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,44,1,0
- PRODUCTVERSION 0,44,1,0
+ FILEVERSION 0,45,0,0
+ PRODUCTVERSION 0,45,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -711,12 +714,12 @@ BEGIN
         BLOCK "040904b0"
         BEGIN
             VALUE "FileDescription", "InfraRecorder"
-            VALUE "FileVersion", "0.44.1.0"
+            VALUE "FileVersion", "0.45.0.0"
             VALUE "InternalName", "InfraRecorder"
             VALUE "LegalCopyright", "Copyright © 2006-2008 Christian Kindahl"
             VALUE "OriginalFilename", "InfraRecorder.exe"
             VALUE "ProductName", "InfraRecorder"
-            VALUE "ProductVersion", "0.44.1.0"
+            VALUE "ProductVersion", "0.45.0.0"
         END
     END
     BLOCK "VarFileInfo"
@@ -848,6 +851,7 @@ STRINGTABLE
 BEGIN
     ID_EDIT_SELECTALL       "Select all items in the window."
     ID_EDIT_INVERTSELECTION "Reverse which items are selected and which are not."
+    ID_NEWPROJECT_DATACDMS  "Create a new multi-session data CD project."
 END
 
 #endif    // English (U.S.) resources
@@ -1162,6 +1166,13 @@ BEGIN
     LTEXT           "",IDC_NEWDATESTATIC,62,85,217,8
 END
 
+IDD_WIZARDDLG DIALOGEX 0, 0, 304, 198
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Welcome to InfraRecorder"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1297,6 +1308,14 @@ BEGIN
         RIGHTMARGIN, 279
         TOPMARGIN, 7
         BOTTOMMARGIN, 115
+    END
+
+    IDD_WIZARDDLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 297
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 191
     END
 END
 #endif    // APSTUDIO_INVOKED
