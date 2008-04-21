@@ -113,7 +113,7 @@ public:
 	CGlobalSettings()
 	{
 		m_bAutoRunCheck = true;
-		m_bAutoCheckBus = false;
+		m_bAutoCheckBus = true;
 		m_bLog = true;
 		m_bRememberShell = true;
 		m_bCopyWarning = true;

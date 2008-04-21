@@ -338,13 +338,16 @@ void CBurnImageGeneralPage::SuggestWriteMethod()
 
 void CBurnImageGeneralPage::InitRefreshButton()
 {
-	m_hRefreshIcon = (HICON)LoadImage(_Module.GetResourceInstance(),MAKEINTRESOURCE(IDI_REFRESHICON),IMAGE_ICON,/*GetSystemMetrics(SM_CXICON)*/16,/*GetSystemMetrics(SM_CYICON)*/16,LR_DEFAULTCOLOR);
+	m_hRefreshIcon = (HICON)LoadImage(_Module.GetResourceInstance(),MAKEINTRESOURCE(IDI_REFRESHICON),IMAGE_ICON,16,16,LR_DEFAULTCOLOR);
 
 	// In Windows XP there is a bug causing the button to loose it's themed style if
 	// assigned an icon. The solution to this is to assign an image list instead.
 	if (g_WinVer.m_ulMajorCCVersion >= 6)
 	{
-		m_hRefreshImageList = ImageList_Create(16,16,ILC_COLOR32,0,1);
+		// Get color depth (minimum requirement is 32-bits for alpha blended images).
+		int iBitsPixel = GetDeviceCaps(::GetDC(HWND_DESKTOP),BITSPIXEL);
+
+		m_hRefreshImageList = ImageList_Create(16,16,ILC_COLOR32 | (iBitsPixel < 32 ? ILC_MASK : 0),0,1);
 		ImageList_AddIcon(m_hRefreshImageList,m_hRefreshIcon);
 
 		BUTTON_IMAGELIST bImageList;

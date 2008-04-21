@@ -147,8 +147,11 @@ void CMainFrame::InitializeMainSmallImageList()
 {
 	// Create the image list.
 	HBITMAP hSmallBitmap,hLargeBitmap;
+
+	// Get color depth (minimum requirement is 32-bits for alpha blended images).
+	int iBitsPixel = GetDeviceCaps(::GetDC(HWND_DESKTOP),BITSPIXEL);
 	
-	if (g_WinVer.m_ulMajorCCVersion >= 6)
+	if (g_WinVer.m_ulMajorCCVersion >= 6 && iBitsPixel >= 32)
 	{
 		hSmallBitmap = LoadBitmap(_Module.GetResourceInstance(),MAKEINTRESOURCE(IDB_MAINSMALLBITMAP));
 		m_hMainSmallImageList = ImageList_Create(16,16,ILC_COLOR32,0,19);
@@ -177,8 +180,11 @@ void CMainFrame::InitializeMiniToolBarImageList()
 {
 	// Create the image list.
 	HBITMAP hBitmap;
+
+	// Get color depth (minimum requirement is 32-bits for alpha blended images).
+	int iBitsPixel = GetDeviceCaps(::GetDC(HWND_DESKTOP),BITSPIXEL);
 	
-	if (g_WinVer.m_ulMajorCCVersion >= 6)
+	if (g_WinVer.m_ulMajorCCVersion >= 6 && iBitsPixel >= 32)
 	{
 		hBitmap = LoadBitmap(_Module.GetResourceInstance(),MAKEINTRESOURCE(IDB_MINITOOLBARBITMAP));
 

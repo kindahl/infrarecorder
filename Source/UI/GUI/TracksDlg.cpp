@@ -89,11 +89,11 @@ void CTracksDlg::InitListImageList()
 {
 	m_hListImageList = ImageList_Create(16,16,ILC_COLOR32,4,5);
 
-	HICON hIcon = (HICON)LoadImage(_Module.GetResourceInstance(),MAKEINTRESOURCE(IDI_DATAICON),IMAGE_ICON,16,16,/*LR_DEFAULTCOLOR*/LR_LOADTRANSPARENT);
+	HICON hIcon = (HICON)LoadImage(_Module.GetResourceInstance(),MAKEINTRESOURCE(IDI_DATAICON),IMAGE_ICON,16,16,LR_LOADTRANSPARENT);
 	ImageList_AddIcon(m_hListImageList,hIcon);
 	DestroyIcon(hIcon);
 
-	hIcon = (HICON)LoadImage(_Module.GetResourceInstance(),MAKEINTRESOURCE(IDI_AUDIOICON),IMAGE_ICON,16,16,/*LR_DEFAULTCOLOR*/LR_LOADTRANSPARENT);
+	hIcon = (HICON)LoadImage(_Module.GetResourceInstance(),MAKEINTRESOURCE(IDI_AUDIOICON),IMAGE_ICON,16,16,LR_LOADTRANSPARENT);
 	ImageList_AddIcon(m_hListImageList,hIcon);
 	DestroyIcon(hIcon);
 }
@@ -102,8 +102,11 @@ void CTracksDlg::InitToolBarImageList()
 {
 	// Create the image list.
 	HBITMAP hBitmap;
+
+	// Get color depth (minimum requirement is 32-bits for alpha blended images).
+	int iBitsPixel = GetDeviceCaps(::GetDC(HWND_DESKTOP),BITSPIXEL);
 	
-	if (g_WinVer.m_ulMajorCCVersion >= 6)
+	if (g_WinVer.m_ulMajorCCVersion >= 6 && iBitsPixel >= 32)
 	{
 		hBitmap = LoadBitmap(_Module.GetResourceInstance(),MAKEINTRESOURCE(IDB_TRACKTOOLBARBITMAP));
 
