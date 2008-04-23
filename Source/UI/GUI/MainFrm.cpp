@@ -324,7 +324,7 @@ bool CMainFrame::InitializeShellTreeView()
 		if (!m_DirectoryMonitor.Register(m_hWnd,WM_SHELLCHANGE,SHCNE_MKDIR |
 			SHCNE_RENAMEFOLDER | SHCNE_RMDIR,pidl,true))
 		{
-			MessageBox(_T("An error occured when trying to register the directory monitor. As a result the InfraRecorder explorer tree may will not automatically syncronize with Windows Explorer."),_T("Error"),MB_OK | MB_ICONERROR);
+			MessageBox(_T("An error occured when trying to register the directory monitor. As a result the InfraRecorder explorer tree will not automatically synchronize with Windows Explorer."),_T("Error"),MB_OK | MB_ICONERROR);
 		}
 	}
 
@@ -2330,10 +2330,10 @@ LRESULT CMainFrame::OnPLVDblClk(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled)
 			while (hTreeItem)
 			{
 				CProjectNode *pTreeNode = (CProjectNode *)m_ProjectTreeView.GetItemData(hTreeItem);
-
 				if (pTreeNode)
 				{
-					if (!lstrcmp(pTreeNode->pItemData->GetFileName(),pItemData->GetFileName()))
+					//if (!lstrcmp(pTreeNode->pItemData->GetFileName(),pItemData->GetFileName()))
+					if (pTreeNode->pItemData == pItemData)
 					{
 						m_ProjectTreeView.SelectItem(hTreeItem);
 						break;

@@ -488,6 +488,10 @@ bool CProjectManager::CFileTransaction::
 	CItemData *pExistingItemData = g_TreeManager.GetChildItem(pNewParent,pItemData->GetFileName());
 	if (pExistingItemData != NULL)
 	{
+		// It does not make sense to move oneself to itself.
+		if (pExistingItemData == pItemData)
+			return false;
+
 		if (m_ReplaceDlg.Execute(pItemData,pExistingItemData))
 			g_ProjectManager.RemoveFile(pNewParent,pExistingItemData);
 		else
