@@ -106,7 +106,19 @@ namespace ckFileSystem
 
 		// We can't handle file names shorted than 3 characters (255 limit).
 		if (ucFileNameEnd <= 3)
+		{
+			pNode->m_FileNameJoliet = szFileName;
+
+			// Copy back to original buffer.
+			ucFileNamePos = 0;
+			for (unsigned int i = 0; i < ucFileNameSize; i += 2,ucFileNamePos++)
+			{
+				pFileName[i    ] = szFileName[ucFileNamePos] >> 8;
+				pFileName[i + 1] = szFileName[ucFileNamePos] & 0xFF;
+			}
+
 			return;
+		}
 
 		unsigned char ucNextNumber = 1;
 		wchar_t szNextNumber[4];
@@ -207,7 +219,17 @@ namespace ckFileSystem
 
 		// We can't handle file names shorted than 3 characters (255 limit).
 		if (ucFileNameEnd <= 3)
+		{
+			char szFileName[ISO9660WRITER_FILENAME_BUFFER_SIZE + 1];
+			memcpy(szFileName,pFileName,ucFileNameSize);
+			szFileName[ucFileNameSize] = '\0';
+
+			pNode->m_FileNameIso9660 = szFileName;
+
+			// Copy back to original buffer.
+			memcpy(pFileName,szFileName,ucFileNameSize);
 			return;
+		}
 
 		unsigned char ucNextNumber = 1;
 		char szNextNumber[4];
