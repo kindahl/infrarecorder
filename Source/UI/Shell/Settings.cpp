@@ -33,10 +33,17 @@ bool CLanguageSettings::Load(CXMLProcessor *pXML)
 
 	pXML->GetSafeElementData(_T("LanguageFile"),m_szLanguageFile,MAX_PATH - 1);
 
-	if (fs_fileexists(m_szLanguageFile))
+	// Calculate full path.
+	TCHAR szFullPath[MAX_PATH];
+	::GetModuleFileName(NULL,szFullPath,MAX_PATH - 1);
+	ExtractFilePath(szFullPath);
+	lstrcat(szFullPath,_T("Languages\\"));
+	lstrcat(szFullPath,m_szLanguageFile);
+
+	if (fs_fileexists(szFullPath))
 	{
 		m_pLNGProcessor = new CLNGProcessor();
-		m_pLNGProcessor->Load(m_szLanguageFile);
+		m_pLNGProcessor->Load(szFullPath);
 	}
 
 	pXML->LeaveElement();

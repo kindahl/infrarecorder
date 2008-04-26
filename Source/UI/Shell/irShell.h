@@ -4,10 +4,10 @@
 
 
  /* File created by MIDL compiler version 6.00.0366 */
-/* at Tue Jan 01 13:12:49 2008
+/* at Sat Apr 26 22:12:10 2008
  */
 /* Compiler settings for .\irShell.idl:
-    Oicf, W1, Zp8, env=Win32 (32b run)
+    Oicf, W1, Zp8, env=Win64 (32b run)
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
     VC __declspec() decoration level: 

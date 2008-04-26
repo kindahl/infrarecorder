@@ -4,10 +4,10 @@
 
 
  /* File created by MIDL compiler version 6.00.0366 */
-/* at Tue Jan 01 13:12:49 2008
+/* at Sat Apr 26 22:12:10 2008
  */
 /* Compiler settings for .\irShell.idl:
-    Oicf, W1, Zp8, env=Win32 (32b run)
+    Oicf, W1, Zp8, env=Win64 (32b run)
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
     VC __declspec() decoration level: 
@@ -16,18 +16,16 @@
 */
 //@@MIDL_FILE_HEADING(  )
 
-#if !defined(_M_IA64) && !defined(_M_AMD64)
+#if defined(_M_AMD64)
 
 
 #pragma warning( disable: 4049 )  /* more than 64k source lines */
 #if _MSC_VER >= 1200
 #pragma warning(push)
 #endif
-#pragma warning( disable: 4100 ) /* unreferenced arguments in x86 call */
+
 #pragma warning( disable: 4211 )  /* redefine extent to static */
 #pragma warning( disable: 4232 )  /* dllimport identity*/
-#pragma optimize("", off ) 
-
 #define USE_STUBLESS_PROXY
 
 
@@ -79,17 +77,9 @@ extern const MIDL_STUBLESS_PROXY_INFO IirShellExt_ProxyInfo;
 
 
 
-#if !defined(__RPC_WIN32__)
+#if !defined(__RPC_WIN64__)
 #error  Invalid build platform for this stub.
 #endif
-
-#if !(TARGET_IS_NT50_OR_LATER)
-#error You need a Windows 2000 or later to run this stub because it uses these features:
-#error   /robust command line switch.
-#error However, your C/C++ compilation flags indicate you intend to run this app on earlier systems.
-#error This app will die there with the RPC_X_WRONG_STUB_VERSION error.
-#endif
-
 
 static const MIDL_PROC_FORMAT_STRING __MIDL_ProcFormatString =
     {
@@ -234,11 +224,10 @@ const ExtendedProxyFileInfo irShell_ProxyFileInfo =
     0, /* Filler2 */
     0  /* Filler3 */
 };
-#pragma optimize("", on )
 #if _MSC_VER >= 1200
 #pragma warning(pop)
 #endif
 
 
-#endif /* !defined(_M_IA64) && !defined(_M_AMD64)*/
+#endif /* defined(_M_AMD64)*/
 
