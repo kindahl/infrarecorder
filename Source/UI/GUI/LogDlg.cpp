@@ -39,6 +39,32 @@ CLogDlg::~CLogDlg()
 		fs_close(m_hLogFile);
 }
 
+void CLogDlg::GetLogPath(TCHAR *szLogPath)
+{
+#ifdef PORTABLE
+	GetModuleFileName(NULL,szLogPath,MAX_PATH - 1);
+	ExtractFilePath(szLogPath);
+
+	lstrcat(szLogPath,_T("Logs\\"));
+#else
+#ifdef UNICODE
+	if (SUCCEEDED(SHGetFolderPath(m_hWnd,CSIDL_APPDATA | CSIDL_FLAG_CREATE,NULL,
+		SHGFP_TYPE_CURRENT,szLogPath)))
+#else	// Win 9x.
+	if (SUCCEEDED(SHGetSpecialFolderPath(m_hWnd,szFileName,CSIDL_APPDATA,true)))
+#endif
+	{
+		IncludeTrailingBackslash(szLogPath);
+		lstrcat(szLogPath,_T("InfraRecorder\\Logs\\"));
+	}
+	else
+	{
+		GetModuleFileName(NULL,szLogPath,MAX_PATH - 1);
+		ExtractFilePath(szLogPath);
+	}
+#endif
+}
+
 void CLogDlg::InitializeLogFile()
 {
 	// Get system date.
@@ -48,51 +74,43 @@ void CLogDlg::InitializeLogFile()
 	TCHAR szDate[7];
 	GetDateFormat(LOCALE_USER_DEFAULT,0,&st,_T("yyMMdd"),szDate,7);
 
+	// Get the log file path.
 	TCHAR szFileName[MAX_PATH];
-#ifdef UNICODE
-	if (SUCCEEDED(SHGetFolderPath(m_hWnd,CSIDL_APPDATA | CSIDL_FLAG_CREATE,NULL,
-		SHGFP_TYPE_CURRENT,szFileName)))
-#else	// Win 9x.
-	if (SUCCEEDED(SHGetSpecialFolderPath(m_hWnd,szFileName,CSIDL_APPDATA,true)))
-#endif
-	{
-		IncludeTrailingBackslash(szFileName);
-		lstrcat(szFileName,_T("InfraRecorder\\Logs\\"));
+	GetLogPath(szFileName);
 
-		// Create the file path if it doesn't exist.
-		fs_createpath(szFileName);
+	// Create the file path if it doesn't exist.
+	fs_createpath(szFileName);
 
-		lstrcat(szFileName,szDate);
+	lstrcat(szFileName,szDate);
 
 #ifdef UNICODE
-		lstrcat(szFileName,_T("_u"));
+	lstrcat(szFileName,_T("_u"));
 #else
-		lstrcat(szFileName,_T("_a"));
+	lstrcat(szFileName,_T("_a"));
 #endif
-		lstrcat(szFileName,_T(".log"));
+	lstrcat(szFileName,_T(".log"));
 
-		if (fs_fileexists(szFileName))
+	if (fs_fileexists(szFileName))
+	{
+		m_hLogFile = fs_open(szFileName,_T("a"));
+		if (m_hLogFile != NULL)
 		{
-			m_hLogFile = fs_open(szFileName,_T("a"));
-			if (m_hLogFile != NULL)
-			{
-				fs_seek(m_hLogFile,0,FILE_END);
-				fs_write(_T("\r\n"),sizeof(TCHAR) << 1,m_hLogFile);
-			}
+			fs_seek(m_hLogFile,0,FILE_END);
+			fs_write(_T("\r\n"),sizeof(TCHAR) << 1,m_hLogFile);
 		}
-		else
-		{
-			m_hLogFile = fs_open(szFileName,_T("w"));
+	}
+	else
+	{
+		m_hLogFile = fs_open(szFileName,_T("w"));
 
 #ifdef UNICODE
-			// Write byte order mark.
-			if (m_hLogFile != NULL)
-			{
-				unsigned short usBOM = BOM_UTF32BE;
-				fs_write(&usBOM,2,m_hLogFile);
-			}
-#endif
+		// Write byte order mark.
+		if (m_hLogFile != NULL)
+		{
+			unsigned short usBOM = BOM_UTF32BE;
+			fs_write(&usBOM,2,m_hLogFile);
 		}
+#endif
 	}
 }
 
@@ -336,18 +354,9 @@ LRESULT CLogDlg::OnSaveAs(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 LRESULT CLogDlg::OnFiles(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
 	TCHAR szPathName[MAX_PATH];
-#ifdef UNICODE
-	if (SUCCEEDED(SHGetFolderPath(m_hWnd,CSIDL_APPDATA | CSIDL_FLAG_CREATE,NULL,
-		SHGFP_TYPE_CURRENT,szPathName)))
-#else
-	if (SUCCEEDED(SHGetSpecialFolderPath(m_hWnd,szPathName,CSIDL_APPDATA,true)))
-#endif
-	{
-		IncludeTrailingBackslash(szPathName);
-		lstrcat(szPathName,_T("InfraRecorder\\Logs\\"));
-		ShellExecute(HWND_DESKTOP,_T("open"),_T("explorer.exe"),szPathName,NULL,SW_SHOWDEFAULT);
-	}
+	GetLogPath(szPathName);
 
+	ShellExecute(HWND_DESKTOP,_T("open"),_T("explorer.exe"),szPathName,NULL,SW_SHOWDEFAULT);
 	return 0;
 }
 

@@ -41,6 +41,7 @@ private:
 	TCHAR m_szLineBuffer[LOG_LINEBUFFER_SIZE];
 
 	HANDLE m_hLogFile;
+	void GetLogPath(TCHAR *szLogPath);
 	void InitializeLogFile();
 
 	bool Translate();
