@@ -121,7 +121,16 @@ public:
 
 class CXMLProcessor
 {
+public:
+	enum eMode
+	{
+		MODE_NORMAL,
+		MODE_HTML
+	};
+
 private:
+	eMode m_Mode;
+
 	HANDLE m_hFile;
 
 	TCHAR m_ucBuffer[XML_BUFFER_SIZE];
@@ -150,7 +159,7 @@ private:
 #endif
 
 public:
-	CXMLProcessor();
+	CXMLProcessor(eMode Mode = MODE_NORMAL);
 	~CXMLProcessor();
 
 	int Load(const TCHAR *szFileName);

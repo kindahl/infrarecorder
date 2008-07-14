@@ -79,6 +79,36 @@ public:
 		m_szString[m_uiPos++] = c;
 	}
 
+	void AppendString(const TCHAR *szString)
+	{
+		size_t iStrLen = lstrlen(szString);
+		for (size_t i = 0; i < iStrLen; i++)
+			Append(szString[i]);
+	}
+
+	void CopyFromHtml(const TCHAR *szNewString)
+	{
+		size_t iNewStrLen = lstrlen(szNewString);
+
+		Reset();
+
+		for (size_t i = 0; i < iNewStrLen; i++)
+		{
+			if (szNewString[i] == '&')
+				AppendString(_T("&amp;"));
+			else if (szNewString[i] == '"')
+				AppendString(_T("&quot;"));
+			else if (szNewString[i] == '<')
+				AppendString(_T("&lt;"));
+			else if (szNewString[i] == '>')
+				AppendString(_T("&gt;"));
+			else
+				Append(szNewString[i]);
+		}
+
+		Append('\0');
+	}
+
 	void CopyFrom(const TCHAR *szNewString)
 	{
 		lstrcpy(m_szString,szNewString);

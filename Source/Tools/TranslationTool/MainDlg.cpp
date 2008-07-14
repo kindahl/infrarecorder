@@ -239,7 +239,7 @@ LRESULT CMainDlg::OnOK(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 		m_TransList.GetText(i,szTransFileName);
 
 		// Analyze the current translation.
-		CXMLProcessor XML;
+		CXMLProcessor XML(CXMLProcessor::MODE_HTML);
 		XML.AddElement(_T("InfraRecorder"),_T(""),true);
 			XML.AddElement(_T("Translation"),_T(""),true);
 

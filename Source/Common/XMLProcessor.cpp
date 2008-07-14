@@ -27,7 +27,7 @@ const wchar_t CXMLProcessor::m_szXMLHeader[] = _T("<?xml version=\"1.0\" encodin
 const char CXMLProcessor::m_szXMLHeader[] = "<?xml version=\"1.0\" encoding=\"windows-%i\" standalone=\"yes\"?>\r\n";
 #endif
 
-CXMLProcessor::CXMLProcessor()
+CXMLProcessor::CXMLProcessor(eMode Mode) : m_Mode(Mode)
 {
 	m_ulBufferSize = 0;
 	m_ulBufferPos = 0;
@@ -737,7 +737,11 @@ bool CXMLProcessor::AddElement(const TCHAR *szName,const TCHAR *szData,bool bEnt
 
 	pNewElem->m_pParent = m_pCurrent;
 	pNewElem->m_szName.CopyFrom(szName);
-	pNewElem->m_szData.CopyFrom(szData);
+
+	if (m_Mode == MODE_HTML)
+		pNewElem->m_szData.CopyFromHtml(szData);
+	else
+		pNewElem->m_szData.CopyFrom(szData);
 
 	m_pCurrent->m_Children.push_back(pNewElem);
 
@@ -811,7 +815,11 @@ bool CXMLProcessor::AddElementAttr(const TCHAR *szAttrName,const TCHAR *szValue)
 		return false;
 
 	pNewAttr->m_szName.CopyFrom(szAttrName);
-	pNewAttr->m_szValue.CopyFrom(szValue);
+
+	if (m_Mode == MODE_HTML)
+		pNewAttr->m_szValue.CopyFromHtml(szValue);
+	else
+		pNewAttr->m_szValue.CopyFrom(szValue);
 
 	m_pCurrent->m_Attributes.push_back(pNewAttr);
 	m_pCurrent->m_ulAttrLength += lstrlen(szAttrName) + lstrlen(szValue);
