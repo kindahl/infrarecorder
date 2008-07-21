@@ -193,6 +193,7 @@ FunctionEnd
   !insertmacro MUI_LANGUAGE "Greek"
   !insertmacro MUI_LANGUAGE "Hebrew"
   !insertmacro MUI_LANGUAGE "Hungarian"
+  !insertmacro MUI_LANGUAGE "Indonesian"
   !insertmacro MUI_LANGUAGE "Italian"
   !insertmacro MUI_LANGUAGE "Japanese"
   !insertmacro MUI_LANGUAGE "Korean"
@@ -475,6 +476,18 @@ FunctionEnd
   LangString DESC_SecDeskShortcut ${LANG_HUNGARIAN} "Ikon elhelyezése az asztalra."
   LangString DESC_SecQuickShortcut ${LANG_HUNGARIAN} "Ikon elhelyezése a gyorsindító pulton."
   LangString DESC_SecLang ${LANG_HUNGARIAN} "A nyelvi fájlok segítségével különbözõ nyelveken használhatja az InfraRecordert."
+
+  ;Language strings (Indonesian)
+  LangString NAME_SecCore ${LANG_INDONESIAN} "Berkas Inti InfraRecorder (dibutuhkan)"
+  LangString NAME_SecStartShortcut ${LANG_INDONESIAN} "Jalan Pintas Menu Start"
+  LangString NAME_SecDeskShortcut ${LANG_INDONESIAN} "Jalan Pintas Destop"
+  LangString NAME_SecQuickShortcut ${LANG_INDONESIAN} "Jalan Pintas Luncur Cepat"
+  LangString NAME_SecLang ${LANG_INDONESIAN} "Berkas Bahasa"
+  LangString DESC_SecCore ${LANG_INDONESIAN} "Berkas inti yang dibutuhkan untuk menggunakan InfraRecorder."
+  LangString DESC_SecStartShortcut ${LANG_INDONESIAN} "Tambah ikon ke menu start anda untuk kemudahan akses."
+  LangString DESC_SecDeskShortcut ${LANG_INDONESIAN} "Tambah ikon ke destop anda."
+  LangString DESC_SecQuickShortcut ${LANG_INDONESIAN} "Tambah ikon ke batang luncur cepat anda."
+  LangString DESC_SecLang ${LANG_INDONESIAN} "Berkas bahasa yang digunakan untuk dukungan bahasa yang berbeda di InfraRecorder."
 
   ;Language strings (Italian)
   LangString NAME_SecCore ${LANG_ITALIAN} "File del programma InfraRecorder (Necessari)"
@@ -832,6 +845,7 @@ Section $(NAME_SecLang) SecLang
   File "..\Binary32\Languages\Greek.irl"
   File "..\Binary32\Languages\Hebrew.irl"
   File "..\Binary32\Languages\Hungarian.irl"
+  File "..\Binary32\Languages\Indonesian.irl"
   File "..\Binary32\Languages\Italian.irl"
   File "..\Binary32\Languages\Japanese.irl"
   File "..\Binary32\Languages\Korean.irl"
@@ -875,6 +889,7 @@ Section $(NAME_SecLang) SecLang
   File "..\BinaryA\Languages\Greek.irl"
   File "..\BinaryA\Languages\Hebrew.irl"
   File "..\BinaryA\Languages\Hungarian.irl"
+  File "..\BinaryA\Languages\Indonesian.irl"
   File "..\BinaryA\Languages\Italian.irl"
   File "..\BinaryA\Languages\Japanese.irl"
   File "..\BinaryA\Languages\Korean.irl"
@@ -954,6 +969,9 @@ Section $(NAME_SecLang) SecLang
       ${Break}
     ${Case} "hungarian"	; 1038
       StrCpy $LANGUAGE ${LANG_HUNGARIAN}
+      ${Break}
+    ${Case} "indonesian"; 1057
+      StrCpy $LANGUAGE ${LANG_INDONESIAN}
       ${Break}
     ${Case} "italian"	; 1040
       StrCpy $LANGUAGE ${LANG_ITALIAN}
@@ -1071,6 +1089,9 @@ Section $(NAME_SecLang) SecLang
       ${Break}
     ${Case} ${LANG_HUNGARIAN}	; 1038
       StrCpy $0 "Hungarian.irl"
+      ${Break}
+    ${Case} ${LANG_INDONESIAN}	; 1057
+      StrCpy $0 "Indonesian.irl"
       ${Break}
     ${Case} ${LANG_ITALIAN}	; 1040
       StrCpy $0 "Italian.irl"
