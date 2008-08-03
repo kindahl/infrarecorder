@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;IRINSTALLPLUGIN_EXPORTS;UNICODE"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;IRINSTALLPLUGIN_EXPORTS;UNICODE;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"

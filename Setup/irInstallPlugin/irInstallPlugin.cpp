@@ -66,7 +66,7 @@ void __declspec(dllexport) CreateConfig(HWND hWndParent,int iStringSize,
 	GetConfigPath(szConfigFileName);
 
 	pStackEntry = pStackEntry->pNext;
-	CharToTChar(pStackEntry->szText,g_LanguageSettings.m_szLanguageFile);
+	AnsiToUnicode(g_LanguageSettings.m_szLanguageFile,pStackEntry->szText,MAX_PATH);
 
 	// Only create new config file if one does not already exist.
 	if (!fs_fileexists(szConfigFileName))
