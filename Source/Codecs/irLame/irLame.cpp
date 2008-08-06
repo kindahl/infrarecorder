@@ -88,7 +88,7 @@ void mp3_errorf(const char *szFormat,va_list ap)
 
 #ifdef UNICODE
 	TCHAR *szWideMessage = new TCHAR[iLength];
-	CharToTChar(szMessage,szWideMessage);
+	AnsiToUnicode(szWideMessage,szMessage,iLength);
 
 	LocalSendMessage(IRC_MESSAGE_ERROR,szWideMessage);
 	delete [] szWideMessage;
@@ -118,7 +118,7 @@ void mp3_msgf(const char *szFormat,va_list ap)
 
 #ifdef UNICODE
 	TCHAR *szWideMessage = new TCHAR[iLength];
-	CharToTChar(szMessage,szWideMessage);
+	AnsiToUnicode(szWideMessage,szMessage,iLength);
 
 	LocalSendMessage(IRC_MESSAGE_INFO,szWideMessage);
 	delete [] szWideMessage;
