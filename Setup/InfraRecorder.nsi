@@ -603,16 +603,16 @@ FunctionEnd
   LangString DESC_SecLang ${LANG_ROMANIAN} "Language files used for supporting different languages in InfraRecorder."
 
   ;Language strings (Russian)
-  LangString NAME_SecCore ${LANG_RUSSIAN} "InfraRecorder основные файлы (требуются)"
-  LangString NAME_SecStartShortcut ${LANG_RUSSIAN} "Ярлык в меню Пуск"
-  LangString NAME_SecDeskShortcut ${LANG_RUSSIAN} "Ярлык на Рабочем столе"
-  LangString NAME_SecQuickShortcut ${LANG_RUSSIAN} "Ярлык на панели Быстрый запуск"
+  LangString NAME_SecCore ${LANG_RUSSIAN} "Системные файлы InfraRecorder (обязательно)"
+  LangString NAME_SecStartShortcut ${LANG_RUSSIAN} "Ярлыки в главном меню"
+  LangString NAME_SecDeskShortcut ${LANG_RUSSIAN} "Ярлык на рабочем столе"
+  LangString NAME_SecQuickShortcut ${LANG_RUSSIAN} "Ярлык на панели быстрого запуска"
   LangString NAME_SecLang ${LANG_RUSSIAN} "Языковые файлы"
-  LangString DESC_SecCore ${LANG_RUSSIAN} "Файлы необходимые для работы InfraRecorder."
-  LangString DESC_SecStartShortcut ${LANG_RUSSIAN} "Добавляет ярлык в меню Пуск для быстрого доступа."
-  LangString DESC_SecDeskShortcut ${LANG_RUSSIAN} "Добавляет ярлык на Рабочий стол."
-  LangString DESC_SecQuickShortcut ${LANG_RUSSIAN} "Добавляет ярлык на панель Быстрый запуск."
-  LangString DESC_SecLang ${LANG_RUSSIAN} "Языковые файлы, используемые для поддержки других языков в InfraRecorder."
+  LangString DESC_SecCore ${LANG_RUSSIAN} "Системные файлы, необходимые для работы InfraRecorder."
+  LangString DESC_SecStartShortcut ${LANG_RUSSIAN} "Добавить значки в главное меню для упрощения доступа к программе."
+  LangString DESC_SecDeskShortcut ${LANG_RUSSIAN} "Добавить значок на рабочий стол."
+  LangString DESC_SecQuickShortcut ${LANG_RUSSIAN} "Добавить значок на панель быстрого запуска."
+  LangString DESC_SecLang ${LANG_RUSSIAN} "Языковые файлы для включения различных языков в InfraRecorder."
 
   ;Language strings (Cyrillic Serbian)
   LangString NAME_SecCore ${LANG_SERBIAN} "InfraRecorder датотеке (потребно)"
