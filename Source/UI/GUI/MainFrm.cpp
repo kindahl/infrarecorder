@@ -1,19 +1,19 @@
 /*
- * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
- *
- * This program is free software; you can redistribute it and/or modify
+ * InfraRecorder - CD/DVD burning software
+ * Copyright (C) 2006-2008 Christian Kindahl
+ * 
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "stdafx.h"
@@ -29,8 +29,6 @@
 #include "SettingsManager.h"
 #include "StringTable.h"
 #include "../../Common/StringUtil.h"
-#include "../../Common/FileManager.h"
-#include "../../Common/Crc32.h"
 #include "TreeManager.h"
 #include "WinVer.h"
 #include "ProjectPropDlg.h"
@@ -2778,7 +2776,7 @@ LRESULT CMainFrame::OnActionsDiscInfo(UINT uNotifyCode,int nID,CWindow wnd)
 
 LRESULT CMainFrame::OnActionsImportsession(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
-	g_LogDlg.AddLine(_T("CMainFrame::OnActionsImportsession"));
+	g_LogDlg.PrintLine(_T("CMainFrame::OnActionsImportsession"));
 
 	// We can only import to projects containing a data track.
 	CProjectNode *pDataRootNode = NULL;
@@ -2814,7 +2812,7 @@ LRESULT CMainFrame::OnActionsImportsession(WORD wNotifyCode,WORD wID,HWND hWndCt
 		// Make sure a valid track was selected.
 		if (ImportSessionDlg.m_pSelTrackData == NULL)
 		{
-			g_LogDlg.AddLine(_T("  Error: Invalid track selection in import session dialog."));
+			g_LogDlg.PrintLine(_T("  Error: Invalid track selection in import session dialog."));
 			return 0;
 		}
 
@@ -2824,7 +2822,7 @@ LRESULT CMainFrame::OnActionsImportsession(WORD wNotifyCode,WORD wID,HWND hWndCt
 		CCore2Device Device;
 		if (!Device.Open(&pDeviceInfo->Address))
 		{
-			g_LogDlg.AddLine(_T("  Error: Failed to open device when trying to import session."));
+			g_LogDlg.PrintLine(_T("  Error: Failed to open device when trying to import session."));
 			return 0;
 		}
 		
@@ -2832,7 +2830,7 @@ LRESULT CMainFrame::OnActionsImportsession(WORD wNotifyCode,WORD wID,HWND hWndCt
 		CCore2TrackInfo TrackInfo;
 		if (!Info.ReadTrackInformation(&Device,CCore2Info::TIT_TRACK,0xFF,&TrackInfo))
 		{
-			g_LogDlg.AddLine(_T("  Error: Failed to read track information when trying to import session."));
+			g_LogDlg.PrintLine(_T("  Error: Failed to read track information when trying to import session."));
 			return 0;
 		}
 
@@ -2840,7 +2838,7 @@ LRESULT CMainFrame::OnActionsImportsession(WORD wNotifyCode,WORD wID,HWND hWndCt
 		CCore2InStream InStream(&g_LogDlg,&Device,0,
 			ImportSessionDlg.m_pSelTrackData->m_ulTrackAddr + ImportSessionDlg.m_pSelTrackData->m_ulTrackLen);
 
-		ckFileSystem::CIso9660Reader Reader(&g_LogDlg);
+		ckfilesystem::Iso9660Reader Reader(g_LogDlg);
 		Reader.Read(InStream,ImportSessionDlg.m_pSelTrackData->m_ulTrackAddr);
 		//Reader.PrintTree();
 
@@ -2858,7 +2856,7 @@ LRESULT CMainFrame::OnActionsImportsession(WORD wNotifyCode,WORD wID,HWND hWndCt
 		g_ProjectSettings.m_uiDeviceIndex = ImportSessionDlg.m_uiDeviceIndex;
 		g_ProjectSettings.m_iIsoFormat = 1;	// Mode 2 (multi-session)
 
-		g_LogDlg.AddLine(_T("  Imported session: %I64d-%I64d, %I64d."),
+		g_LogDlg.PrintLine(_T("  Imported session: %I64d-%I64d, %I64d."),
 			g_ProjectSettings.m_uiImportTrackAddr,
 			g_ProjectSettings.m_uiImportTrackAddr + g_ProjectSettings.m_uiImportTrackLen,
 			g_ProjectSettings.m_uiNextWritableAddr);
@@ -2987,9 +2985,6 @@ LRESULT CMainFrame::OnAppAbout(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHan
 {
 	CAboutDlg AboutDlg;
 	AboutDlg.DoModal();
-
-	/*CWizardDlg Wizard;
-	Wizard.DoModal();*/
 
 	return 0;
 }

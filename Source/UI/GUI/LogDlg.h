@@ -1,25 +1,26 @@
 /*
- * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
- *
- * This program is free software; you can redistribute it and/or modify
+ * InfraRecorder - CD/DVD burning software
+ * Copyright (C) 2006-2008 Christian Kindahl
+ * 
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #pragma once
 #include "resource.h"
+#include <ckcore/file.hh>
+#include <ckcore/log.hh>
 #include "DropDownButton.h"
-#include "../../Common/Log.h"
 
 #define BOM_UTF8					0xEFBBBF
 #define BOM_UTF32BE					0x0000FEFF
@@ -30,7 +31,7 @@
 #define LOG_WRITEBUFFER_SIZE		1024
 #define LOG_LINEBUFFER_SIZE			512
 
-class CLogDlg : public CDialogImpl<CLogDlg>,public CDialogResize<CLogDlg>,public CLog
+class CLogDlg : public CDialogImpl<CLogDlg>,public CDialogResize<CLogDlg>,public ckcore::Log
 {
 private:
 	CEdit m_LogEdit;
@@ -40,8 +41,11 @@ private:
 	// argument list.
 	TCHAR m_szLineBuffer[LOG_LINEBUFFER_SIZE];
 
-	HANDLE m_hLogFile;
-	void GetLogPath(TCHAR *szLogPath);
+	ckcore::File m_LogFile;
+
+	ckcore::Path GetLogFullPath();
+	ckcore::Path GetLogDirPath();
+
 	void InitializeLogFile();
 
 	bool Translate();
@@ -54,8 +58,8 @@ public:
 	~CLogDlg();
 
 	void Show();
-	void AddString(const TCHAR *szString,...);
-	void AddLine(const TCHAR *szLine,...);
+	void Print(const TCHAR *szString,...);
+	void PrintLine(const TCHAR *szLine,...);
 
 	// Resize maps.
 	BEGIN_DLGRESIZE_MAP(CLogDlg)

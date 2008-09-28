@@ -1,27 +1,28 @@
 /*
- * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
- *
- * This program is free software; you can redistribute it and/or modify
+ * InfraRecorder - CD/DVD burning software
+ * Copyright (C) 2006-2008 Christian Kindahl
+ * 
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #pragma once
 #include <vector>
 #include <map>
+#include <ckcore/stream.hh>
+#include <ckfilesystem/sectorstream.hh>
+#include <ckfilesystem/fileset.hh>
 #include "../../Common/StringUtil.h"
-#include "../../Core/ckFileSystem/SectorStream.h"
-#include "../../Core/ckFileSystem/FileSet.h"
 #include "SCSI.h"
 #include "AdvancedProgress.h"
 #include "Core2Device.h"
@@ -105,11 +106,11 @@ public:
 	bool ReadDataTrack(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 		unsigned char ucTrackNumber,bool bIgnoreErr,const TCHAR *szFilePath);
 	bool ReadFullTOC(CCore2Device *pDevice,const TCHAR *szFileName);
-	int CreateImage(COutStream &OutStream,ckFileSystem::CFileSet &Files,
-		CProgressEx &Progress,std::map<tstring,tstring> *pFilePathMap = NULL);
-	int CreateImage(const TCHAR *szFullPath,ckFileSystem::CFileSet &Files,		// Wrapper.
-		CProgressEx &Progress,std::map<tstring,tstring> *pFilePathMap = NULL);
-	int EstimateImageSize(ckFileSystem::CFileSet &Files,CProgressEx &Progress,	// Wrapper.
+	int CreateImage(ckcore::OutStream &OutStream,ckfilesystem::FileSet &Files,
+		ckcore::Progress &Progress,std::map<tstring,tstring> *pFilePathMap = NULL);
+	int CreateImage(const TCHAR *szFullPath,ckfilesystem::FileSet &Files,		// Wrapper.
+		ckcore::Progress &Progress,std::map<tstring,tstring> *pFilePathMap = NULL);
+	int EstimateImageSize(ckfilesystem::FileSet &Files,ckcore::Progress &Progress,	// Wrapper.
 		unsigned __int64 &uiImageSize);
 };
 

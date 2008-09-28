@@ -1,25 +1,25 @@
 /*
- * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
- *
- * This program is free software; you can redistribute it and/or modify
+ * InfraRecorder - CD/DVD burning software
+ * Copyright (C) 2006-2008 Christian Kindahl
+ * 
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "stdafx.h"
-#include "MiniHtmlCtrl.h"
+#include <ckcore/file.hh>
 #include "../../Common/StringUtil.h"
-#include "../../Common/FileManager.h"
+#include "MiniHtmlCtrl.h"
 
 HBRUSH CMiniHtmlCtrl::m_hBackgroundBrush = NULL;
 
@@ -99,15 +99,20 @@ bool CMiniHtmlCtrl::Load(const TCHAR *szFileName)
 {
 	Close();
 
-	HANDLE hFile = fs_open(szFileName,_T("rb"));
-	if (hFile == INVALID_HANDLE_VALUE)
+	ckcore::File File(szFileName);
+	if (!File.Open(ckcore::FileBase::ckOPEN_READ))
+		return false;
+
+	// Make sure that the file is not too large.
+	if (File.Size() > 0xFFFFFFFF)
 		return false;
 
 	// If the application is in an unicode environment we need to check what
 	// byte-order us used.
 #ifdef UNICODE
 	unsigned short usBOM = 0;
-	fs_read(&usBOM,2,hFile);
+	if (File.Read(&usBOM,2) == -1)
+		return false;
 
 	switch (usBOM)
 	{
@@ -122,20 +127,20 @@ bool CMiniHtmlCtrl::Load(const TCHAR *szFileName)
 
 		default:
 			// If no BOM is found the file pointer has to be re-moved to the beginning.
-			fs_seek(hFile,0,FILE_BEGIN);
+			File.Seek(0,ckcore::FileBase::ckFILE_BEGIN);
 			break;
 	};
 #endif
 
-	unsigned long ulFuxx = (unsigned long)fs_tell(hFile);
-	unsigned long ulFileSize = (unsigned long)fs_filesize(hFile) - (unsigned long)fs_tell(hFile);
+	unsigned long ulFileSize = (unsigned long)File.Size() - (unsigned long)File.Tell();
 	m_ulDocLength = ulFileSize / sizeof(TCHAR);
 
 	m_pDocBuffer = new TCHAR[m_ulDocLength + 1];
-	fs_read(m_pDocBuffer,ulFileSize,hFile);
+	if (File.Read(m_pDocBuffer,ulFileSize) == -1)
+		return false;
+
 	m_pDocBuffer[m_ulDocLength] = '\0';
 
-	fs_close(hFile);
 	return ParseBuffer();
 }
 

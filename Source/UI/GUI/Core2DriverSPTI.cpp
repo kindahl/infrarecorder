@@ -1,19 +1,19 @@
 /*
- * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
- *
- * This program is free software; you can redistribute it and/or modify
+ * InfraRecorder - CD/DVD burning software
+ * Copyright (C) 2006-2008 Christian Kindahl
+ * 
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "stdafx.h"
@@ -253,7 +253,7 @@ bool CCore2DriverSPTI::Transport(unsigned char *pCdb,unsigned char ucCdbLength,
 		&sptwb,sizeof(SCSI_PASS_THROUGH_DIRECT_WITH_BUFFER),&ulReturned,FALSE))
 	{
 		if (m_bLog)
-			g_LogDlg.AddLine(_T("  DeviceIoControl failed, last error: %d."),GetLastError());
+			g_LogDlg.PrintLine(_T("  DeviceIoControl failed, last error: %d."),GetLastError());
 
 		return false;
 	}
@@ -262,30 +262,30 @@ bool CCore2DriverSPTI::Transport(unsigned char *pCdb,unsigned char ucCdbLength,
 	{
 		if (m_bLog)
 		{
-			g_LogDlg.AddLine(_T("  Error: SCSI command failed, returned: 0x%.2X."),sptwb.spt.ScsiStatus);
+			g_LogDlg.PrintLine(_T("  Error: SCSI command failed, returned: 0x%.2X."),sptwb.spt.ScsiStatus);
 
 			// Dump CDB.
-			g_LogDlg.AddString(_T("  CDB:\t"));
+			g_LogDlg.Print(_T("  CDB:\t"));
 			for (unsigned int i = 0; i < ucCdbLength; i++)
 			{
 				if (i == 0)
-					g_LogDlg.AddString(_T("0x%.2X"),pCdb[i]);
+					g_LogDlg.Print(_T("0x%.2X"),pCdb[i]);
 				else
-					g_LogDlg.AddString(_T(",0x%.2X"),pCdb[i]);
+					g_LogDlg.Print(_T(",0x%.2X"),pCdb[i]);
 			}
 
-			g_LogDlg.AddLine(_T(""));
+			g_LogDlg.PrintLine(_T(""));
 
 			// Dump sense information.
-			g_LogDlg.AddLine(_T("  Sense:\t0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X"),
+			g_LogDlg.PrintLine(_T("  Sense:\t0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X"),
 				sptwb.ucSenseBuf[0],sptwb.ucSenseBuf[1],sptwb.ucSenseBuf[2],sptwb.ucSenseBuf[3],
 				sptwb.ucSenseBuf[4],sptwb.ucSenseBuf[5],sptwb.ucSenseBuf[6],sptwb.ucSenseBuf[7]);
 
-			g_LogDlg.AddLine(_T("  \t0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X"),
+			g_LogDlg.PrintLine(_T("  \t0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X"),
 				sptwb.ucSenseBuf[ 8],sptwb.ucSenseBuf[ 9],sptwb.ucSenseBuf[10],sptwb.ucSenseBuf[11],
 				sptwb.ucSenseBuf[12],sptwb.ucSenseBuf[13],sptwb.ucSenseBuf[14],sptwb.ucSenseBuf[15]);
 
-			g_LogDlg.AddLine(_T("  \t0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X"),
+			g_LogDlg.PrintLine(_T("  \t0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X"),
 				sptwb.ucSenseBuf[16],sptwb.ucSenseBuf[17],sptwb.ucSenseBuf[18],sptwb.ucSenseBuf[19],
 				sptwb.ucSenseBuf[20],sptwb.ucSenseBuf[21],sptwb.ucSenseBuf[22],sptwb.ucSenseBuf[23]);
 		}
@@ -294,7 +294,7 @@ bool CCore2DriverSPTI::Transport(unsigned char *pCdb,unsigned char ucCdbLength,
 	}
 
 /*#ifdef _DEBUG
-	g_LogDlg.AddLine(_T("DEBUG: Command 0x%.2X returned %d bytes of data."),pCdb[0],ulReturned);
+	g_LogDlg.PrintLine(_T("DEBUG: Command 0x%.2X returned %d bytes of data."),pCdb[0],ulReturned);
 #endif*/
 
 	return true;
@@ -361,13 +361,13 @@ bool CCore2DriverSPTI::TransportWithSense(unsigned char *pCdb,unsigned char ucCd
 		&sptwb,sizeof(SCSI_PASS_THROUGH_DIRECT_WITH_BUFFER),&ulReturned,FALSE))
 	{
 		if (m_bLog)
-			g_LogDlg.AddLine(_T("  DeviceIoControl failed, last error: %d."),GetLastError());
+			g_LogDlg.PrintLine(_T("  DeviceIoControl failed, last error: %d."),GetLastError());
 
 		return false;
 	}
 
 /*#ifdef _DEBUG
-	g_LogDlg.AddLine(_T("DEBUG: Command 0x%.2X returned %d bytes of data."),pCdb[0],ulReturned);
+	g_LogDlg.PrintLine(_T("DEBUG: Command 0x%.2X returned %d bytes of data."),pCdb[0],ulReturned);
 #endif*/
 
 	memcpy(pSense,sptwb.ucSenseBuf,24);

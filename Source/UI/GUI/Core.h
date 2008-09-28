@@ -1,25 +1,25 @@
 /*
- * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
- *
- * This program is free software; you can redistribute it and/or modify
+ * InfraRecorder - CD/DVD burning software
+ * Copyright (C) 2006-2008 Christian Kindahl
+ * 
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #pragma once
 #include <vector>
+#include <ckfilesystem/fileset.hh>
 #include "../../Common/StringUtil.h"
-#include "../../Core/ckFileSystem/FileSet.h"
 #include "ConsolePipe.h"
 #include "DeviceManager.h"
 #include "AdvancedProgress.h"
@@ -87,11 +87,11 @@ private:
 	{
 	public:
 		CConsolePipe &m_ConsolePipe;
-		CProgressEx &m_Progress;
-		ckFileSystem::CFileSet &m_Files;
+		ckcore::Progress &m_Progress;
+		ckfilesystem::FileSet &m_Files;
 
-		CCompImageParams(CConsolePipe &ConsolePipe,CProgressEx &Progress,
-			ckFileSystem::CFileSet &Files) : m_ConsolePipe(ConsolePipe),
+		CCompImageParams(CConsolePipe &ConsolePipe,ckcore::Progress &Progress,
+			ckfilesystem::FileSet &Files) : m_ConsolePipe(ConsolePipe),
 			m_Progress(Progress),m_Files(Files)
 		{
 		}
@@ -116,8 +116,8 @@ private:
 	bool ReadDisc(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,const TCHAR *szFileName,
 		int iMode,bool bWaitForProcess);
 	bool BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
-		tDeviceInfoEx *pDeviceInfoEx,CAdvancedProgress *pProgress,CProgressEx &Progress,
-		ckFileSystem::CFileSet &Files,std::vector<TCHAR *> &AudioTracks,
+		tDeviceInfoEx *pDeviceInfoEx,CAdvancedProgress *pProgress,ckcore::Progress &Progress,
+		ckfilesystem::FileSet &Files,std::vector<TCHAR *> &AudioTracks,
 		const TCHAR *szAudioText,int iDataMode,unsigned __int64 uiDataBytes,int iMode);
 
 	enum eMode
@@ -187,12 +187,12 @@ public:
 	bool ReadDisc(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,const TCHAR *szFileName);
 	int ReadDiscEx(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,const TCHAR *szFileName);
 	bool BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
-		tDeviceInfoEx *pDeviceInfoEx,CAdvancedProgress *pProgress,CProgressEx &Progress,
-		ckFileSystem::CFileSet &Files,std::vector<TCHAR *> &AudioTracks,
+		tDeviceInfoEx *pDeviceInfoEx,CAdvancedProgress *pProgress,ckcore::Progress &Progress,
+		ckfilesystem::FileSet &Files,std::vector<TCHAR *> &AudioTracks,
 		const TCHAR *szAudioText,int iMode,unsigned __int64 uiDataBytes);
 	int BurnCompilationEx(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
-		tDeviceInfoEx *pDeviceInfoEx,CAdvancedProgress *pProgress,CProgressEx &Progress,
-		ckFileSystem::CFileSet &Files,std::vector<TCHAR *> &AudioTracks,
+		tDeviceInfoEx *pDeviceInfoEx,CAdvancedProgress *pProgress,ckcore::Progress &Progress,
+		ckfilesystem::FileSet &Files,std::vector<TCHAR *> &AudioTracks,
 		const TCHAR *szAudioText,int iMode,unsigned __int64 uiDataBytes);
 };
 

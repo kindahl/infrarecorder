@@ -1,29 +1,29 @@
 /*
- * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
- *
- * This program is free software; you can redistribute it and/or modify
+ * InfraRecorder - CD/DVD burning software
+ * Copyright (C) 2006-2008 Christian Kindahl
+ * 
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #pragma once
 #include <list>
 #include <vector>
+#include <ckfilesystem/fileset.hh>
+#include <ckfilesystem/iso9660reader.hh>
+#include <ckfilesystem/iso9660writer.hh>
 #include "../../Common/XMLProcessor.h"
 #include "../../Common/StringContainer.h"
-#include "../../Core/ckFileSystem/FileSet.h"
-#include "../../Core/ckFileSystem/Iso9660Reader.h"
-#include "../../Core/ckFileSystem/Iso9660Writer.h"
 
 #define PROJECTITEM_FLAG_ISFOLDER					1
 #define PROJECTITEM_FLAG_ISLOCKED					2
@@ -52,32 +52,7 @@ public:
 		}
 	};
 
-	typedef ckFileSystem::CIso9660ImportData CIso9660Data;
-
-	/*class CIso9660Data
-	{
-	public:
-		unsigned char ucFileFlags;
-		unsigned char ucFileUnitSize;
-		unsigned char ucInterleaveGapSize;
-		unsigned short usVolSeqNumber;
-		unsigned long ulExtentLocation;
-		unsigned long ulExtentLength;
-
-		ckFileSystem::tDirRecordDateTime RecDateTime;
-
-		CIso9660Data()
-		{
-			ucFileFlags = 0;
-			ucFileUnitSize = 0;
-			ucInterleaveGapSize = 0;
-			usVolSeqNumber = 0;
-			ulExtentLocation = 0;
-			ulExtentLength = 0;
-
-			memset(&RecDateTime,0,sizeof(ckFileSystem::tDirRecordDateTime));
-		}
-	};*/
+	typedef ckfilesystem::Iso9660ImportData CIso9660Data;
 
 private:
 	TCHAR m_szFileName[MAX_PATH];	// File name in the project (disc image).
@@ -235,7 +210,7 @@ private:
 		std::vector<CProjectNode *> &FolderStack,unsigned int &uiFileCount,
 		unsigned int uiRootLength);
 
-	void GetLocalPathList(ckFileSystem::CFileSet &Files,CProjectNode *pNode,
+	void GetLocalPathList(ckfilesystem::FileSet &Files,CProjectNode *pNode,
 		std::vector<CProjectNode *> &FolderStack,int iPathStripLen);
 
 	void GetLocalNodeContents(CProjectNode *pNode,std::vector<CProjectNode *> &FolderStack,
@@ -294,11 +269,11 @@ public:
 	bool LoadNodeFileData(CXMLProcessor *pXML,CProjectNode *pRootNode);
 	bool LoadNodeAudioData(CXMLProcessor *pXML,CProjectNode *pRootNode);
 
-	void GetPathList(ckFileSystem::CFileSet &Files,CProjectNode *pRootNode,int iPathStripLen = 0);
+	void GetPathList(ckfilesystem::FileSet &Files,CProjectNode *pRootNode,int iPathStripLen = 0);
 
-	void ImportLocalIso9660Tree(ckFileSystem::CIso9660TreeNode *pLocalIsoNode,CProjectNode *pLocalNode,
-		std::vector<std::pair<ckFileSystem::CIso9660TreeNode *,CProjectNode *> > &FolderStack);
-	void ImportIso9660Tree(ckFileSystem::CIso9660TreeNode *pIsoRootNode,CProjectNode *pRootNode);
+	void ImportLocalIso9660Tree(ckfilesystem::Iso9660TreeNode *pLocalIsoNode,CProjectNode *pLocalNode,
+		std::vector<std::pair<ckfilesystem::Iso9660TreeNode *,CProjectNode *> > &FolderStack);
+	void ImportIso9660Tree(ckfilesystem::Iso9660TreeNode *pIsoRootNode,CProjectNode *pRootNode);
 };
 
 extern CTreeManager g_TreeManager;

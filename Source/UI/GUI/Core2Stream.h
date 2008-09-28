@@ -1,31 +1,32 @@
 /*
- * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
- *
- * This program is free software; you can redistribute it and/or modify
+ * InfraRecorder - CD/DVD burning software
+ * Copyright (C) 2006-2008 Christian Kindahl
+ * 
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 #pragma once
-#include "../../Common/Stream.h"
-#include "../../Common/Log.h"
+#include <ckcore/stream.hh>
+#include <ckcore/log.hh>
 #include "Core2Read.h"
 
 #define CORE2_INSTREAM_FRAMEFACTOR			10	// We will cache 10 frames in the memory.
 
-class CCore2InStream : public CSeekInStream
+class CCore2InStream : public ckcore::InStream
 {
 private:
-	class CInternalStream : public COutStream
+	class CInternalStream : public ckcore::OutStream
 	{
 	private:
 		unsigned char *m_pBuffer;
@@ -43,18 +44,18 @@ private:
 			m_ulBufferSize = ulBufferSize;
 		}
 
-		int Write(void *pBuffer,unsigned long ulSize,unsigned long *pProcessedSize)
+		ckcore::tint64 Write(void *pBuffer,ckcore::tuint32 uiCount)
 		{
 			if (m_pBuffer == NULL)
-				return STREAM_FAIL;
+				return -1;
 
-			if (m_ulBufferSize < ulSize)
-				return STREAM_FAIL;
+			if (m_ulBufferSize < uiCount)
+				return -1;
 
-			memcpy(m_pBuffer,pBuffer,ulSize);
-			m_ulBufferData = ulSize;
+			memcpy(m_pBuffer,pBuffer,uiCount);
+			m_ulBufferData = uiCount;
 
-			return STREAM_OK;
+			return uiCount;
 		}
 
 		unsigned long GetBufferDataSize()
@@ -73,7 +74,7 @@ private:
 	const unsigned long m_ulEndBlock;	// The last sector.
 	unsigned long m_ulCurBlock;
 
-	CLog *m_pLog;
+	ckcore::Log *m_pLog;
 	CCore2Device *m_pDevice;
 
 	Core2ReadFunction::CReadUserData m_ReadFunc;
@@ -81,17 +82,16 @@ private:
 
 	unsigned long GetSafeFrameReadCount();
 	unsigned long BytesToFrame(unsigned __int64 uiBytes);
-	int FillBuffer();
+	bool FillBuffer();
 
 public:
-	CCore2InStream(CLog *pLog,CCore2Device *pDevice,
+	CCore2InStream(ckcore::Log *pLog,CCore2Device *pDevice,
 		unsigned long ulStartBlock,unsigned long ulEndBlock);
 	~CCore2InStream();
 
-	// CInStream.
-	int Read(void *pBuffer,unsigned long ulSize,unsigned long *pProcessedSize);
-	bool EOS();
-
-	// CSeekInStream.
-	__int64 Seek(__int64 iDistance,eSeekMode SeekMode);
+	// ckCore::InStream.
+	ckcore::tint64 Read(void *pBuffer,ckcore::tuint32 uiCount);
+	ckcore::tint64 Size();
+	bool End();
+	bool Seek(ckcore::tuint32 uiDistnace,ckcore::InStream::StreamWhence Whence);
 };

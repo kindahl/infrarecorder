@@ -1,23 +1,24 @@
 /*
- * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
- *
- * This program is free software; you can redistribute it and/or modify
+ * InfraRecorder - CD/DVD burning software
+ * Copyright (C) 2006-2008 Christian Kindahl
+ * 
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #pragma once
 #include <vector>
+#include <ckcore/file.hh>
 #include "TreeManager.h"
 
 #define CDTEXT_SIGNATURE			0x2201
@@ -41,16 +42,16 @@ private:
 
 	void Reset();
 	unsigned int FindBufferEOS(unsigned int uiStart,unsigned int uiEnd);
-	unsigned int ReadPacket(HANDLE hFile,unsigned long ulPID,unsigned long ulBlockInfo);
+	unsigned int ReadPacket(ckcore::File &File,unsigned long ulPID,unsigned long ulBlockInfo);
 
 	// CRC routines.
 	void InitCRC();
 	unsigned short CalcCRC(unsigned char *pBuffer,unsigned int uiLength);
 
 	// Write routines.
-	unsigned int WriteText(HANDLE hFile,unsigned char ucType,unsigned char ucPID2,
+	unsigned int WriteText(ckcore::File &File,unsigned char ucType,unsigned char ucPID2,
 		const char *szText,unsigned int uiCharPos);
-	void FlushText(HANDLE hFile,unsigned char ucType,unsigned int uiCharPos);
+	void FlushText(ckcore::File &File,unsigned char ucType,unsigned int uiCharPos);
 
 	enum ePTI
 	{

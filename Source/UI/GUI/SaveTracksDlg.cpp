@@ -1,24 +1,23 @@
 /*
- * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
- *
- * This program is free software; you can redistribute it and/or modify
+ * InfraRecorder - CD/DVD burning software
+ * Copyright (C) 2006-2008 Christian Kindahl
+ * 
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "stdafx.h"
 #include "SaveTracksDlg.h"
-#include "../../Common/FileManager.h"
 #include "StringTable.h"
 #include "Settings.h"
 #include "LangUtil.h"
@@ -106,7 +105,7 @@ LRESULT CSaveTracksDlg::OnOK(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandl
 	TCHAR szFolderPath[MAX_PATH];
 	GetDlgItemText(IDC_TARGETEDIT,szFolderPath,MAX_PATH - 1);
 
-	if (!fs_validpath(szFolderPath))
+	if (szFolderPath == NULL || lstrlen(szFolderPath) < 3 || szFolderPath[1] != ':')
 	{
 		MessageBox(lngGetString(ERROR_TARGETFOLDER),lngGetString(GENERAL_ERROR),MB_OK | MB_ICONERROR);
 		return FALSE;

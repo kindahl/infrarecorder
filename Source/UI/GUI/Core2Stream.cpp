@@ -1,25 +1,26 @@
 /*
- * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
- *
- * This program is free software; you can redistribute it and/or modify
+ * InfraRecorder - CD/DVD burning software
+ * Copyright (C) 2006-2008 Christian Kindahl
+ * 
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 #include "stdafx.h"
 #include "Core2Read.h"
 #include "Core2Stream.h"
 
-CCore2InStream::CCore2InStream(CLog *pLog,CCore2Device *pDevice,
+CCore2InStream::CCore2InStream(ckcore::Log *pLog,CCore2Device *pDevice,
 							   unsigned long ulStartBlock,unsigned long ulEndBlock) :
 	m_pLog(pLog),m_pDevice(pDevice),m_ReadFunc(pDevice,&m_Stream),m_ulStartBlock(ulStartBlock),
 	m_ulEndBlock(ulEndBlock),m_ulCurBlock(ulStartBlock)
@@ -72,14 +73,14 @@ unsigned long CCore2InStream::BytesToFrame(unsigned __int64 uiBytes)
 	return ulSectors;
 }
 
-int CCore2InStream::FillBuffer()
+bool CCore2InStream::FillBuffer()
 {
 	unsigned long ulNumFrames = GetSafeFrameReadCount();
 	if (!m_Read.ReadData(m_pDevice,NULL,&m_ReadFunc,m_ulCurBlock,ulNumFrames,false))
 	{
-		m_pLog->AddLine(_T("  Error: Unable to read user data from disc (%u, %u)."),
+		m_pLog->PrintLine(_T("  Error: Unable to read user data from disc (%u, %u)."),
 			m_ulCurBlock,ulNumFrames);
-		return STREAM_FAIL;
+		return false;
 	}
 
 	m_ulBufferData = m_Stream.GetBufferDataSize();
@@ -87,22 +88,23 @@ int CCore2InStream::FillBuffer()
 
 	m_ulCurBlock += ulNumFrames;
 
-	return STREAM_OK;
+	return true;
 }
 
-int CCore2InStream::Read(void *pBuffer,unsigned long ulSize,unsigned long *pProcessedSize)
+ckcore::tint64 CCore2InStream::Read(void *pBuffer,ckcore::tuint32 uiCount)
 {
-	if (EOS())
-		return STREAM_FAIL;
+	if (End())
+		return -1;	// W00t? This was discovered when switching to ckcore.
+
+	ckcore::tint64 iResult = 0;
 
 	// Check if the requested data can be found in the buffer.
-	if (ulSize <= m_ulBufferData - m_ulBufferPos)
+	if (uiCount <= m_ulBufferData - m_ulBufferPos)
 	{
-		memcpy(pBuffer,m_pBuffer + m_ulBufferPos,ulSize);
-		m_ulBufferPos += ulSize;
+		memcpy(pBuffer,m_pBuffer + m_ulBufferPos,uiCount);
+		m_ulBufferPos += uiCount;
 
-		if (pProcessedSize != NULL)
-			*pProcessedSize = ulSize;
+		iResult = uiCount;
 	}
 	else
 	{
@@ -112,20 +114,14 @@ int CCore2InStream::Read(void *pBuffer,unsigned long ulSize,unsigned long *pProc
 		memcpy(pBuffer,m_pBuffer + m_ulBufferPos,ulInBuffer);
 		m_ulBufferPos += ulInBuffer;
 
-		unsigned long ulRemain = ulSize - ulInBuffer;
+		unsigned long ulRemain = uiCount - ulInBuffer;
 
-		if (EOS())
-		{
-			if (pProcessedSize != NULL)
-				*pProcessedSize = ulInBuffer;
-
-			return STREAM_OK;
-		}
+		if (End())
+			return ulInBuffer;
 
 		// Check if we can read more from the CD.
-		int iResult = FillBuffer();
-		if (iResult != STREAM_OK)
-			return iResult;
+		if (!FillBuffer())
+			return -1;
 
 		if (ulRemain > m_ulBufferData - m_ulBufferPos)
 		{
@@ -135,53 +131,51 @@ int CCore2InStream::Read(void *pBuffer,unsigned long ulSize,unsigned long *pProc
 			memcpy((unsigned char *)pBuffer + ulInBuffer,m_pBuffer + m_ulBufferPos,ulCanRead);
 			m_ulBufferPos += ulCanRead;
 
-			if (pProcessedSize != NULL)
-				*pProcessedSize = ulInBuffer + ulCanRead;
+			iResult = ulInBuffer + ulCanRead;
 		}
 		else
 		{
 			memcpy((unsigned char *)pBuffer + ulInBuffer,m_pBuffer + m_ulBufferPos,ulRemain);
 			m_ulBufferPos += ulRemain;
 
-			if (pProcessedSize != NULL)
-				*pProcessedSize = ulSize;
+			iResult = uiCount;
 		}
 	}
 
-	return STREAM_OK;
+	return iResult;
 }
 
-bool CCore2InStream::EOS()
+ckcore::tint64 CCore2InStream::Size()
+{
+	return -1;
+}
+
+bool CCore2InStream::End()
 {
 	return m_ulCurBlock >= m_ulEndBlock && m_ulBufferPos >= m_ulBufferData;
 }
 
-__int64 CCore2InStream::Seek(__int64 iDistance,eSeekMode SeekMode)
+bool CCore2InStream::Seek(ckcore::tuint32 uiDistance,ckcore::InStream::StreamWhence Whence)
 {
-	// Assure that the type cast will be safe.
-	if (iDistance > 0xFFFFFFFF *  m_ReadFunc.GetFrameSize())
-		return -1;
-
-	if (SeekMode == SM_BEGIN)
+	if (Whence == ckcore::InStream::ckSTREAM_BEGIN)
 	{
-		unsigned long ulFrame = BytesToFrame(iDistance);
+		unsigned long ulFrame = BytesToFrame(uiDistance);
 
 		// Calculate which sector the byte distance corresponds to.
 		m_ulCurBlock = m_ulStartBlock + ulFrame;
 
-		int iResult = FillBuffer();
-		if (iResult != STREAM_OK)
-			return -1;
+		if (!FillBuffer())
+			return false;
 
-		m_ulBufferPos = (unsigned long)(iDistance - ulFrame * m_ReadFunc.GetFrameSize());
-		return iDistance;
+		m_ulBufferPos = (unsigned long)(uiDistance - ulFrame * m_ReadFunc.GetFrameSize());
+		return true;
 	}
 	else
 	{
 		// Check if we can just move forward in the internal buffer.
-		if (iDistance < m_ulBufferData - m_ulBufferPos)
+		if (uiDistance < m_ulBufferData - m_ulBufferPos)
 		{
-			m_ulBufferPos += (unsigned long)iDistance;
+			m_ulBufferPos += (unsigned long)uiDistance;
 		}
 		else
 		{
@@ -190,19 +184,18 @@ __int64 CCore2InStream::Seek(__int64 iDistance,eSeekMode SeekMode)
 
 			// Search through the current frame.
 			ulFrame++;
-			__int64 iRemain = iDistance - (m_ulBufferData - m_ulBufferPos);
+			__int64 iRemain = uiDistance - (m_ulBufferData - m_ulBufferPos);
 
 			// How many more frames should we move through.
 			ulFrame += BytesToFrame(iRemain);
 
 			m_ulCurBlock = m_ulStartBlock + ulFrame;
 
-			int iResult = FillBuffer();
-			if (iResult != STREAM_OK)
-				return -1;
+			if (!FillBuffer())
+				return false;
 
 			m_ulBufferPos = (unsigned long)(iRemain - ulFrame * m_ReadFunc.GetFrameSize());
-			return iDistance;
+			return true;
 		}
 	}
 

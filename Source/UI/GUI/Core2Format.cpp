@@ -1,19 +1,19 @@
 /*
- * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
- *
- * This program is free software; you can redistribute it and/or modify
+ * InfraRecorder - CD/DVD burning software
+ * Copyright (C) 2006-2008 Christian Kindahl
+ * 
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "stdafx.h"
@@ -53,7 +53,7 @@ bool CCore2Format::WaitBkgndFormat(CCore2Device *pDevice,CAdvancedProgress *pPro
 		// See if one second have passed.
 		if (GetTickCount() > (ulPrevTime + 1000))
 		{
-			if (pProgress->IsCanceled())
+			if (pProgress->Cancelled())
 			{
 				// It's safe to abort the format process at this stage. We just need to
 				// close the current track.
@@ -103,7 +103,7 @@ bool CCore2Format::WaitBkgndFormat(CCore2Device *pDevice,CAdvancedProgress *pPro
 
 bool CCore2Format::FormatUnit(CCore2Device *pDevice,CAdvancedProgress *pProgress,bool bFull)
 {
-	g_LogDlg.AddLine(_T("CCore2Format::FormatUnit"));
+	g_LogDlg.PrintLine(_T("CCore2Format::FormatUnit"));
 
 	// Initialize buffers.
 	unsigned char ucBuffer[192];
@@ -134,13 +134,13 @@ bool CCore2Format::FormatUnit(CCore2Device *pDevice,CAdvancedProgress *pProgress
 		return false;
 
 	unsigned short usProfile = ucBuffer[6] << 8 | ucBuffer[7];
-	g_LogDlg.AddLine(_T("  Current profile: 0x%.4X."),usProfile);
+	g_LogDlg.PrintLine(_T("  Current profile: 0x%.4X."),usProfile);
 
 	if (usProfile != PROFILE_DVDPLUSRW && usProfile != PROFILE_DVDPLUSRW_DL &&
 		usProfile != PROFILE_DVDRAM && usProfile != PROFILE_DVDMINUSRW_RESTOV &&
 		usProfile != PROFILE_DVDMINUSRW_SEQ)
 	{
-		g_LogDlg.AddLine(_T("  Error: Unsupported media."));
+		g_LogDlg.PrintLine(_T("  Error: Unsupported media."));
 		return false;
 	}
 
@@ -154,11 +154,11 @@ bool CCore2Format::FormatUnit(CCore2Device *pDevice,CAdvancedProgress *pProgress
 		return false;
 
 	unsigned char ucCapListLen = ucBuffer[3];
-	g_LogDlg.AddLine(_T("  Capacity list length: %d bytes."),ucCapListLen);
+	g_LogDlg.PrintLine(_T("  Capacity list length: %d bytes."),ucCapListLen);
 
 	if (ucCapListLen % 8 != 0 || ucCapListLen == 0)
 	{
-		g_LogDlg.AddLine(_T("  Error: Invalid capacity list length."));
+		g_LogDlg.PrintLine(_T("  Error: Invalid capacity list length."));
 		return false;
 	}
 
@@ -205,7 +205,7 @@ bool CCore2Format::FormatUnit(CCore2Device *pDevice,CAdvancedProgress *pProgress
 
 	if ((ucBuffer[8] & 0x03) == 0x03)		// No media present or unknown capacity.
 	{
-		g_LogDlg.AddLine(_T("  Error: Unable to determine media capacity."));
+		g_LogDlg.PrintLine(_T("  Error: Unable to determine media capacity."));
 		return false;
 	}
 	else
@@ -213,20 +213,20 @@ bool CCore2Format::FormatUnit(CCore2Device *pDevice,CAdvancedProgress *pProgress
 		unsigned int uiCapacity = ucBuffer[4] << 24 | ucBuffer[5] << 16 |
 			ucBuffer[6] << 8 | ucBuffer[7];
 
-		g_LogDlg.AddLine(_T("  Disc capacity: %.2f GiB (%I64d bytes)."),
+		g_LogDlg.PrintLine(_T("  Disc capacity: %.2f GiB (%I64d bytes)."),
 			((double)uiCapacity * 2048)/1073741824,(__int64)uiCapacity * 2048);
 
 		if ((ucBuffer[8] & 0x03) == 0x01)	// Unformatted or blank media.
-			g_LogDlg.AddLine(_T("  The disc media is unformatted or blank."));
+			g_LogDlg.PrintLine(_T("  The disc media is unformatted or blank."));
 		else if ((ucBuffer[8] & 0x03) == 0x02)	// Formatted media.
-			g_LogDlg.AddLine(_T("  The disc media is formatted."));
+			g_LogDlg.PrintLine(_T("  The disc media is formatted."));
 	}
 
 	// Handle any unhandled events.
 	unsigned char ucEvents;
 	if (g_Core2.HandleEvents(pDevice,pProgress,ucEvents))
 	{
-		g_LogDlg.AddLine(_T("  Handled events: 0x%.2X"),ucEvents);
+		g_LogDlg.PrintLine(_T("  Handled events: 0x%.2X"),ucEvents);
 	}
 	else
 	{
@@ -248,13 +248,13 @@ bool CCore2Format::FormatUnit(CCore2Device *pDevice,CAdvancedProgress *pProgress
 	ucBuffer[uiFmtDescOffset + 2] = 0x00;
 	ucBuffer[uiFmtDescOffset + 3] = 0x08;
 
-	pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,lngGetString(PROGRESS_BEGINFORMAT),
+	pProgress->Notify(ckcore::Progress::ckINFORMATION,lngGetString(PROGRESS_BEGINFORMAT),
 		lngGetString(WRITEMODE_REAL));
 	pProgress->SetStatus(lngGetString(STATUS_FORMAT));
 
 	if (!pDevice->Transport(ucCdb,6,ucBuffer + uiFmtDescOffset,12,CCore2Device::DATAMODE_WRITE))
 	{
-		pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,lngGetString(FAILURE_FORMAT));
+		pProgress->Notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_FORMAT));
 		return false;
 	}
 
@@ -278,12 +278,12 @@ bool CCore2Format::FormatUnit(CCore2Device *pDevice,CAdvancedProgress *pProgress
 		pProgress->SetStatus(lngGetString(STATUS_CLOSETRACK));
 
 		if (!g_Core2.CloseTrackSession(pDevice,0x00,0x00,true))
-			pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,lngGetString(FAILURE_STOPBKGNDFORMAT));
+			pProgress->Notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_STOPBKGNDFORMAT));
 
 		if (!g_Core2.WaitForUnit(pDevice,pProgress))
 			return false;
 	}
 
-	pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,lngGetString(SUCCESS_FORMAT));
+	pProgress->Notify(ckcore::Progress::ckINFORMATION,lngGetString(SUCCESS_FORMAT));
 	return true;
 }

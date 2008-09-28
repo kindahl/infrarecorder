@@ -1,19 +1,19 @@
 /*
- * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
- *
- * This program is free software; you can redistribute it and/or modify
+ * InfraRecorder - CD/DVD burning software
+ * Copyright (C) 2006-2008 Christian Kindahl
+ * 
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "stdafx.h"
@@ -25,7 +25,8 @@
 
 CSimpleProgressDlg g_SimpleProgressDlg;
 
-CSimpleProgressDlg::CSimpleProgressDlg()
+CSimpleProgressDlg::CSimpleProgressDlg() : m_bAppMode(false),
+	m_bRealMode(false),m_bCancelled(false),m_hWndHost(NULL)
 {
 	// Load the icons.
 	m_hListImageList = ImageList_Create(16,16,ILC_COLOR32,0,4);
@@ -34,12 +35,6 @@ CSimpleProgressDlg::CSimpleProgressDlg()
 	ImageList_AddIcon(m_hListImageList,LoadIcon(NULL,IDI_WARNING));
 	ImageList_AddIcon(m_hListImageList,LoadIcon(NULL,IDI_ERROR));
 	ImageList_AddIcon(m_hListImageList,LoadIcon(NULL,IDI_WINLOGO));
-
-	m_bAppMode = false;
-	m_bRealMode = false;
-	m_bCanceled = false;
-
-	m_hWndHost = NULL;
 
 	SMOKE_INIT
 }
@@ -94,51 +89,14 @@ void CSimpleProgressDlg::AttachHost(HWND hWndHost)
 	m_hWndHost = hWndHost;
 }
 
-void CSimpleProgressDlg::AddLogEntry(eLogType Type,const TCHAR *szMessage,...)
+void CSimpleProgressDlg::SetAppMode(bool bAppMode)
 {
-	int iItemIndex = m_ListView.GetItemCount();
+	m_bAppMode = bAppMode;
+}
 
-	// Time.
-	SYSTEMTIME st;
-	GetLocalTime(&st);
-
-	TCHAR szTime[9];	// xx:yy:zz
-	lsprintf(szTime,_T("%.2d:%.2d:%.2d"),st.wHour,st.wMinute,st.wSecond);
-	szTime[8] = '\0';
-
-	// Convert the log type to an index.
-	int iImageIndex = 0;
-	switch (Type)
-	{
-		case LT_INFORMATION:
-			iImageIndex = 0;
-			break;
-		case LT_WARNING:
-			iImageIndex = 1;
-			break;
-		case LT_ERROR:
-			iImageIndex = 2;
-			break;
-		case LT_WINLOGO:
-			iImageIndex = 3;
-			break;
-	}
-
-	m_ListView.AddItem(iItemIndex,0,szTime,iImageIndex);
-
-	// Parse the variable argument list.
-	va_list args;
-	va_start(args,szMessage);
-
-#ifdef UNICODE
-	_vsnwprintf(m_szStringBuffer,PROGRESS_STRINGBUFFER_SIZE - 1,szMessage,args);
-#else
-	_vsnprintf(m_szStringBuffer,PROGRESS_STRINGBUFFER_SIZE - 1,szMessage,args);
-#endif
-	m_ListView.AddItem(iItemIndex,1,m_szStringBuffer);
-
-	m_ListView.SetColumnWidth(1,LVSCW_AUTOSIZE);
-	m_ListView.EnsureVisible(iItemIndex,false);
+void CSimpleProgressDlg::SetRealMode(bool bRealMode)
+{
+	m_bRealMode = bRealMode;
 }
 
 void CSimpleProgressDlg::SetStatus(const TCHAR *szStatus,...)
@@ -166,6 +124,58 @@ void CSimpleProgressDlg::SetStatus(const TCHAR *szStatus,...)
 	SetDlgItemText(IDC_STATUSSTATIC,m_szStringBuffer);
 }
 
+void CSimpleProgressDlg::Notify(ckcore::Progress::MessageType Type,const TCHAR *szMessage,...)
+{
+	int iItemIndex = m_ListView.GetItemCount();
+
+	// Time.
+	SYSTEMTIME st;
+	GetLocalTime(&st);
+
+	TCHAR szTime[9];	// xx:yy:zz
+	lsprintf(szTime,_T("%.2d:%.2d:%.2d"),st.wHour,st.wMinute,st.wSecond);
+	szTime[8] = '\0';
+
+	// Convert the log type to an index.
+	int iImageIndex = 0;
+	switch (Type)
+	{
+		case ckcore::Progress::ckINFORMATION:
+			iImageIndex = 0;
+			break;
+		case ckcore::Progress::ckWARNING:
+			iImageIndex = 1;
+			break;
+		case ckcore::Progress::ckERROR:
+			iImageIndex = 2;
+			break;
+		case ckcore::Progress::ckEXTERNAL:
+			iImageIndex = 3;
+			break;
+	}
+
+	m_ListView.AddItem(iItemIndex,0,szTime,iImageIndex);
+
+	// Parse the variable argument list.
+	va_list args;
+	va_start(args,szMessage);
+
+#ifdef UNICODE
+	_vsnwprintf(m_szStringBuffer,PROGRESS_STRINGBUFFER_SIZE - 1,szMessage,args);
+#else
+	_vsnprintf(m_szStringBuffer,PROGRESS_STRINGBUFFER_SIZE - 1,szMessage,args);
+#endif
+	m_ListView.AddItem(iItemIndex,1,m_szStringBuffer);
+
+	m_ListView.SetColumnWidth(1,LVSCW_AUTOSIZE);
+	m_ListView.EnsureVisible(iItemIndex,false);
+}
+
+bool CSimpleProgressDlg::Cancelled()
+{
+	return m_bCancelled;
+}
+
 void CSimpleProgressDlg::SetDevice(const TCHAR *szDevice)
 {
 	TCHAR szDeviceStr[128];
@@ -181,23 +191,13 @@ void CSimpleProgressDlg::NotifyComplteted()
 	SendMessage(WM_NEXTDLGCTL,(WPARAM)GetDlgItem(IDOK).m_hWnd,0);	// Change default focus to the OK button.
 	::EnableWindow(GetDlgItem(IDCANCEL),false);
 
-	if (m_bCanceled)
+	if (m_bCancelled)
 	{
 		SetStatus(lngGetString(PROGRESS_CANCELED));
-		AddLogEntry(LT_WARNING,lngGetString(PROGRESS_CANCELED));
+		Notify(ckcore::Progress::ckWARNING,lngGetString(PROGRESS_CANCELED));
 	}
 
 	SMOKE_STOP
-}
-
-void CSimpleProgressDlg::SetAppMode(bool bAppMode)
-{
-	m_bAppMode = bAppMode;
-}
-
-void CSimpleProgressDlg::SetRealMode(bool bRealMode)
-{
-	m_bRealMode = bRealMode;
 }
 
 void CSimpleProgressDlg::AllowReload()
@@ -210,15 +210,10 @@ void CSimpleProgressDlg::AllowCancel(bool bAllow)
 	::EnableWindow(GetDlgItem(IDCANCEL),bAllow);
 }
 
-bool CSimpleProgressDlg::IsCanceled()
-{
-	return m_bCanceled;
-}
-
 void CSimpleProgressDlg::Reset()
 {
 	m_bRealMode = false;
-	m_bCanceled = false;
+	m_bCancelled = false;
 }
 
 void CSimpleProgressDlg::StartSmoke()
@@ -301,7 +296,7 @@ LRESULT CSimpleProgressDlg::OnCancel(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL
 			return TRUE;
 	}
 
-	m_bCanceled = true;
+	m_bCancelled = true;
 	m_pConsolePipe->Kill();
 
 	// Hide the reload button.

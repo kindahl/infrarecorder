@@ -1,19 +1,19 @@
 /*
- * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
- *
- * This program is free software; you can redistribute it and/or modify
+ * InfraRecorder - CD/DVD burning software
+ * Copyright (C) 2006-2008 Christian Kindahl
+ * 
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "stdafx.h"
@@ -34,7 +34,7 @@ CCore2Blank::~CCore2Blank()
 bool CCore2Blank::Blank(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 						int iMethod,bool bForce,bool bSimulate)
 {
-	g_LogDlg.AddLine(_T("CCore2Blank::Blank"));
+	g_LogDlg.PrintLine(_T("CCore2Blank::Blank"));
 
 	unsigned char ucBlankType;
 	switch (iMethod)
@@ -56,7 +56,7 @@ bool CCore2Blank::Blank(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 			break;
 
 		default:
-			g_LogDlg.AddLine(_T("  Warning: Unknown erase method, using full erase."));
+			g_LogDlg.PrintLine(_T("  Warning: Unknown erase method, using full erase."));
 			ucBlankType = 0x00;
 			break;
 	}
@@ -69,11 +69,11 @@ bool CCore2Blank::Blank(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 	unsigned char ucEvents;
 	if (g_Core2.HandleEvents(pDevice,pProgress,ucEvents))
 	{
-		g_LogDlg.AddLine(_T("  Handled events: 0x%.2X"),ucEvents);
+		g_LogDlg.PrintLine(_T("  Handled events: 0x%.2X"),ucEvents);
 	}
 	else
 	{
-		g_LogDlg.AddLine(_T("  Error: Failed to handle events, handled events: 0x%.2X"),ucEvents);
+		g_LogDlg.PrintLine(_T("  Error: Failed to handle events, handled events: 0x%.2X"),ucEvents);
 		return false;
 	}
 
@@ -87,7 +87,7 @@ bool CCore2Blank::Blank(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 	ucCdb[ 1] = 0x10 | ucBlankType;		// Immed and blank type.
 	ucCdb[11] = 0x00;
 
-	pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,lngGetString(PROGRESS_BEGINERASE),bSimulate ? 
+	pProgress->Notify(ckcore::Progress::ckINFORMATION,lngGetString(PROGRESS_BEGINERASE),bSimulate ? 
 		lngGetString(WRITEMODE_SIMULATION) : lngGetString(WRITEMODE_REAL));
 	pProgress->SetStatus(lngGetString(STATUS_ERASE));
 
@@ -96,13 +96,13 @@ bool CCore2Blank::Blank(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 
 	if (!pDevice->Transport(ucCdb,12,NULL,0))
 	{
-		pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,lngGetString(FAILURE_ERASE));
+		pProgress->Notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_ERASE));
 		return false;
 	}
 
 	if (!g_Core2.WaitForUnit(pDevice,pProgress))
 		return false;
 
-	pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,lngGetString(SUCCESS_ERASE));
+	pProgress->Notify(ckcore::Progress::ckINFORMATION,lngGetString(SUCCESS_ERASE));
 	return true;
 }

@@ -1,26 +1,26 @@
 /*
- * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
- *
- * This program is free software; you can redistribute it and/or modify
+ * InfraRecorder - CD/DVD burning software
+ * Copyright (C) 2006-2008 Christian Kindahl
+ * 
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "stdafx.h"
+#include <ckfilesystem/stringtable.hh>
 #include "LangUtil.h"
 #include "Settings.h"
 #include "StringTable.h"
-#include "../../Core/ckFileSystem/StringTable.h"
 
 const TCHAR *g_szHelpFile = _T("InfraRecorder.chm");
 
@@ -74,30 +74,30 @@ void lngTranslateTables()
 		if (g_LanguageSettings.m_pLNGProcessor->EnterSection(_T("filesystem")))
 		{
 			TCHAR *szStrValue;
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckFileSystem::WARNING_FSDIRLEVEL,szStrValue))
-				ckFileSystem::g_StringTable.SetString(ckFileSystem::WARNING_FSDIRLEVEL,szStrValue);
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckFileSystem::WARNING_SKIPFILE,szStrValue))
-				ckFileSystem::g_StringTable.SetString(ckFileSystem::WARNING_SKIPFILE,szStrValue);
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckFileSystem::WARNING_SKIP4GFILE,szStrValue))
-				ckFileSystem::g_StringTable.SetString(ckFileSystem::WARNING_SKIP4GFILE,szStrValue);
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckFileSystem::WARNING_SKIP4GFILEISO,szStrValue))
-				ckFileSystem::g_StringTable.SetString(ckFileSystem::WARNING_SKIP4GFILEISO,szStrValue);
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckFileSystem::ERROR_PATHTABLESIZE,szStrValue))
-				ckFileSystem::g_StringTable.SetString(ckFileSystem::ERROR_PATHTABLESIZE,szStrValue);
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckFileSystem::ERROR_OPENWRITE,szStrValue))
-				ckFileSystem::g_StringTable.SetString(ckFileSystem::ERROR_OPENWRITE,szStrValue);
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckFileSystem::ERROR_OPENREAD,szStrValue))
-				ckFileSystem::g_StringTable.SetString(ckFileSystem::ERROR_OPENREAD,szStrValue);
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckFileSystem::STATUS_BUILDTREE,szStrValue))
-				ckFileSystem::g_StringTable.SetString(ckFileSystem::STATUS_BUILDTREE,szStrValue);
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckFileSystem::STATUS_WRITEDATA,szStrValue))
-				ckFileSystem::g_StringTable.SetString(ckFileSystem::STATUS_WRITEDATA,szStrValue);
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckFileSystem::STATUS_WRITEISOTABLE,szStrValue))
-				ckFileSystem::g_StringTable.SetString(ckFileSystem::STATUS_WRITEISOTABLE,szStrValue);
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckFileSystem::STATUS_WRITEJOLIETTABLE,szStrValue))
-				ckFileSystem::g_StringTable.SetString(ckFileSystem::STATUS_WRITEJOLIETTABLE,szStrValue);
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckFileSystem::STATUS_WRITEDIRENTRIES,szStrValue))
-				ckFileSystem::g_StringTable.SetString(ckFileSystem::STATUS_WRITEDIRENTRIES,szStrValue);
+			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckfilesystem::StringTable::WARNING_FSDIRLEVEL,szStrValue))
+				ckfilesystem::StringTable::Instance().SetString(ckfilesystem::StringTable::WARNING_FSDIRLEVEL,szStrValue);
+			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckfilesystem::StringTable::WARNING_SKIPFILE,szStrValue))
+				ckfilesystem::StringTable::Instance().SetString(ckfilesystem::StringTable::WARNING_SKIPFILE,szStrValue);
+			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckfilesystem::StringTable::WARNING_SKIP4GFILE,szStrValue))
+				ckfilesystem::StringTable::Instance().SetString(ckfilesystem::StringTable::WARNING_SKIP4GFILE,szStrValue);
+			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckfilesystem::StringTable::WARNING_SKIP4GFILEISO,szStrValue))
+				ckfilesystem::StringTable::Instance().SetString(ckfilesystem::StringTable::WARNING_SKIP4GFILEISO,szStrValue);
+			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckfilesystem::StringTable::ERROR_PATHTABLESIZE,szStrValue))
+				ckfilesystem::StringTable::Instance().SetString(ckfilesystem::StringTable::ERROR_PATHTABLESIZE,szStrValue);
+			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckfilesystem::StringTable::ERROR_OPENWRITE,szStrValue))
+				ckfilesystem::StringTable::Instance().SetString(ckfilesystem::StringTable::ERROR_OPENWRITE,szStrValue);
+			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckfilesystem::StringTable::ERROR_OPENREAD,szStrValue))
+				ckfilesystem::StringTable::Instance().SetString(ckfilesystem::StringTable::ERROR_OPENREAD,szStrValue);
+			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckfilesystem::StringTable::STATUS_BUILDTREE,szStrValue))
+				ckfilesystem::StringTable::Instance().SetString(ckfilesystem::StringTable::STATUS_BUILDTREE,szStrValue);
+			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckfilesystem::StringTable::STATUS_WRITEDATA,szStrValue))
+				ckfilesystem::StringTable::Instance().SetString(ckfilesystem::StringTable::STATUS_WRITEDATA,szStrValue);
+			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckfilesystem::StringTable::STATUS_WRITEISOTABLE,szStrValue))
+				ckfilesystem::StringTable::Instance().SetString(ckfilesystem::StringTable::STATUS_WRITEISOTABLE,szStrValue);
+			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckfilesystem::StringTable::STATUS_WRITEJOLIETTABLE,szStrValue))
+				ckfilesystem::StringTable::Instance().SetString(ckfilesystem::StringTable::STATUS_WRITEJOLIETTABLE,szStrValue);
+			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckfilesystem::StringTable::STATUS_WRITEDIRENTRIES,szStrValue))
+				ckfilesystem::StringTable::Instance().SetString(ckfilesystem::StringTable::STATUS_WRITEDIRENTRIES,szStrValue);
 		}
 	}
 }

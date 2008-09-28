@@ -1,23 +1,23 @@
 /*
- * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
- *
- * This program is free software; you can redistribute it and/or modify
+ * InfraRecorder - CD/DVD burning software
+ * Copyright (C) 2006-2008 Christian Kindahl
+ * 
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "stdafx.h"
-#include "../../Common/FileManager.h"
+#include <ckcore/convert.hh>
 #include "ConfirmFileReplaceDlg.h"
 #include "Settings.h"
 #include "LangUtil.h"
@@ -196,12 +196,16 @@ LRESULT CConfirmFileReplaceDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lPar
 		}
 
 		// Set new size.
-		FormatBytes(szTempBuffer,fs_filesize(m_szNewFullPath));
+		FormatBytes(szTempBuffer,ckcore::File::Size(m_szNewFullPath));
 		::SetWindowText(GetDlgItem(IDC_NEWSIZESTATIC),szTempBuffer);
 
 		// Set new date.
 		unsigned short usFileDate = 0,usFileTime = 0;
-		fs_getmodtime(m_szNewFullPath,usFileDate,usFileTime);	
+
+		struct tm AccessTime,ModifyTime,CreateTime;
+		ckcore::File::Time(m_szNewFullPath,AccessTime,ModifyTime,CreateTime);
+		ckcore::convert::tm_to_dostime(ModifyTime,usFileDate,usFileTime);
+
 		::DosDateTimeToFileTime(usFileDate,usFileTime,&ft);
 		::FileTimeToSystemTime(&ft,&st);
 		::GetDateFormat(LOCALE_USER_DEFAULT,0,&st,szDatePattern,szTempBuffer,sizeof(szTempBuffer));

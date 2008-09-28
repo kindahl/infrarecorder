@@ -1,26 +1,26 @@
 /*
- * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
- *
- * This program is free software; you can redistribute it and/or modify
+ * InfraRecorder - CD/DVD burning software
+ * Copyright (C) 2006-2008 Christian Kindahl
+ * 
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "stdafx.h"
+#include <ckcore/directory.hh>
 #include "Settings.h"
 #include "MainFrm.h"
 #include "ToolBarManager.h"
-#include "../../Common/FileManager.h"
 
 CLanguageSettings g_LanguageSettings;
 CGlobalSettings g_GlobalSettings;
@@ -63,10 +63,10 @@ bool CLanguageSettings::Load(CXMLProcessor *pXML)
 	lstrcat(szFullPath,_T("Languages\\"));
 	lstrcat(szFullPath,m_szLanguageFile);
 
-	if (fs_fileexists(szFullPath))
+	if (ckcore::File::Exist(szFullPath))
 	{
-		m_pLNGProcessor = new CLNGProcessor();
-		m_pLNGProcessor->Load(szFullPath);
+		m_pLNGProcessor = new CLNGProcessor(szFullPath);
+		m_pLNGProcessor->Load();
 	}
 
 	pXML->LeaveElement();
@@ -144,13 +144,13 @@ bool CGlobalSettings::Load(CXMLProcessor *pXML)
 
 	// Temporary folder.
 	pXML->GetSafeElementData(_T("TempPath"),m_szTempPath,MAX_PATH - 1);
-	if (!fs_directoryexists(m_szTempPath))
+	if (!ckcore::Directory::Exist(m_szTempPath))
 	{
 		// If the folder does not exist, create it.
-		if (fs_validpath(m_szTempPath))
+		if (m_szTempPath == NULL || lstrlen(m_szTempPath) < 3 || m_szTempPath[1] != ':')
 		{
 			IncludeTrailingBackslash(m_szTempPath);
-			fs_createpath(m_szTempPath);
+			ckcore::Directory::Create(m_szTempPath);
 		}
 		else
 		{

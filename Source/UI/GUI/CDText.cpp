@@ -1,25 +1,24 @@
 /*
- * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
- *
- * This program is free software; you can redistribute it and/or modify
+ * InfraRecorder - CD/DVD burning software
+ * Copyright (C) 2006-2008 Christian Kindahl
+ * 
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "stdafx.h"
 #include <math.h>
 #include "CDText.h"
-#include "../../Common/FileManager.h"
 #include "../../Common/StringUtil.h"
 
 void CCDText::InitCRC()
@@ -101,8 +100,8 @@ unsigned int CCDText::FindBufferEOS(unsigned int uiStart,unsigned int uiEnd)
 	return 0;
 }
 
-unsigned int CCDText::ReadPacket(HANDLE hFile,unsigned long ulPID,
-								  unsigned long ulBlockInfo)
+unsigned int CCDText::ReadPacket(ckcore::File &File,unsigned long ulPID,
+								 unsigned long ulBlockInfo)
 {
 	// If the buffer can't hold the data we abort.
 	if (m_uiBufferPos + 12 >= CDTEXT_MAXFIELDSIZE)
@@ -113,28 +112,16 @@ unsigned int CCDText::ReadPacket(HANDLE hFile,unsigned long ulPID,
 	unsigned char ucBlockNumber = (unsigned char)(ulBlockInfo & 0x70) >> 4;
 	unsigned char ucCharPos = (unsigned char)(ulBlockInfo & 0x0F);
 
-	fs_read(m_szBuffer + m_uiBufferPos,12,hFile);
-
-	// CRC check. Not currently used. (ulTemp should contain the complete header)
-	/*unsigned char ucTemp[17];
-	memcpy(ucTemp,&ulTemp,4);
-	memcpy(ucTemp + 4,m_szBuffer + m_uiBufferPos,12);
-		
-	TCHAR szTemp[128];
-	swprintf(szTemp,_T("0x%x"),CalcCRC((unsigned char *)ucTemp,16));
-	MessageBox(NULL,szTemp,_T("Calculated CRC"),MB_OK);*/
+	if (File.Read(m_szBuffer + m_uiBufferPos,12) == -1)
+		return false;
 
 	// Debug information.
 	char szTemp[25];
 	sprintf(szTemp,"%d, %d, %d",(int)(ulPID & 0xFF0000) >> 16,(int)(ulPID & 0xFF00) >> 8,(int)ulPID & 0xFF);
 
-	/*char szTemp[25];
-	sprintf(szTemp,"%d, %d, %d",(int)ucDBCC,(int)ucBlockNumber,(int)ucCharPos);*/
-
 	char szTemp2[13];
 	memcpy(szTemp2,m_szBuffer + m_uiBufferPos,12);
 	szTemp2[12] = '\0';
-	//MessageBoxA(NULL,szTemp2,szTemp,MB_OK);
 
 	unsigned int uiEOS = FindBufferEOS(m_uiBufferPos,m_uiBufferPos + 12);
 
@@ -192,21 +179,26 @@ bool CCDText::ReadFile(const TCHAR *szFileName)
 	// Clear any previous data.
 	Reset();
 
-	HANDLE hFile = fs_open(szFileName,_T("rb"));
-	if (hFile == INVALID_HANDLE_VALUE)
+	ckcore::File File(szFileName);
+	if (!File.Open(ckcore::FileBase::ckOPEN_READ))
 		return false;
 
-	// I think it's safe to assume that the file is not larger than 4GB.
-	unsigned int uiDataSize = (unsigned int)fs_filesize(hFile);
+	// Make sure that the file is not too large.
+	ckcore::tint64 iFileSize = File.Size();
+	if (iFileSize > 0xFFFFFFFF)
+		return false;
+
+	unsigned int uiDataSize = (unsigned int)File.Size();
 
 	// Try to find a signature.
 	unsigned long ulSignature = 0;
-	fs_read(&ulSignature,4,hFile);
+	if (File.Read(&ulSignature,4) == -1)
+		return false;
 
 	if (ulSignature == CDTEXT_SIGNATURE)
 		uiDataSize -= 4;
 	else
-		fs_seek(hFile,0,FILE_BEGIN);
+		File.Seek(0,ckcore::FileBase::ckFILE_BEGIN);
 
 	unsigned int uiNumPackets = uiDataSize/18;
 
@@ -214,45 +206,22 @@ bool CCDText::ReadFile(const TCHAR *szFileName)
 	{
 		// Read header.
 		unsigned long ulHeader = 0;
-		fs_read(&ulHeader,sizeof(unsigned long),hFile);
+		if (File.Read(&ulHeader,sizeof(unsigned long)) == -1)
+			return false;
 
 		// The first three bytes of the header is the Pack Type Indicator (PID),
 		// the last byte contain block information.
-		ReadPacket(hFile,ulHeader & 0xFFFFFF,(ulHeader & 0xFF000000) >> 24);
+		ReadPacket(File,ulHeader & 0xFFFFFF,(ulHeader & 0xFF000000) >> 24);
 
 		// Skip the CRC-field.
-		fs_seek(hFile,2,FILE_CURRENT);
-
-		// CRC check. Not currently used.
-		/*unsigned char ucCRC[2];
-		fs_read(ucCRC,2,hFile);
-		unsigned long ulReadCRC = (ucCRC[0] & 0xFF) << 8 | (ucCRC[1] & 0xFF);
-		ulReadCRC ^= 0xFFFF;
-
-		TCHAR szTemp2[25];
-		swprintf(szTemp2,_T("0x%x"),ulReadCRC);
-		MessageBox(NULL,szTemp2,_T("Read CRC"),MB_OK);*/
+		if (File.Seek(2,ckcore::FileBase::ckFILE_CURRENT) == -1)
+			return false;
 	}
 
-	// Display some information.
-	//MessageBoxA(NULL,m_szAlbumName,"Album Name",MB_OK);
-	//MessageBoxA(NULL,m_szArtistName,"Artist Name",MB_OK);
-
-	/*for (unsigned int i = 0; i < m_TrackNames.size(); i++)
-	{
-		MessageBoxA(NULL,m_TrackNames[i].c_str(),"Track Name",MB_OK);
-	}
-
-	for (unsigned int i = 0; i < m_ArtistNames.size(); i++)
-	{
-		MessageBoxA(NULL,m_ArtistNames[i].c_str(),"Artist Name",MB_OK);
-	}*/
-
-	fs_close(hFile);
 	return true;
 }
 
-unsigned int CCDText::WriteText(HANDLE hFile,unsigned char ucType,unsigned char ucPID2,
+unsigned int CCDText::WriteText(ckcore::File &File,unsigned char ucType,unsigned char ucPID2,
 								const char *szText,unsigned int uiCharPos)
 {
 	unsigned char ucBuffer[18];
@@ -289,7 +258,7 @@ unsigned int CCDText::WriteText(HANDLE hFile,unsigned char ucType,unsigned char 
 			ucBuffer[17] = (usCRC & 0xFF);
 
 			// Write.
-			fs_write(ucBuffer,18,hFile);
+			File.Write(ucBuffer,18);
 
 			m_uiBufferPos = 0;
 
@@ -316,7 +285,7 @@ unsigned int CCDText::WriteText(HANDLE hFile,unsigned char ucType,unsigned char 
 	return uiCurrentPos;
 }
 
-void CCDText::FlushText(HANDLE hFile,unsigned char ucType,unsigned int uiCharPos)
+void CCDText::FlushText(ckcore::File &File,unsigned char ucType,unsigned int uiCharPos)
 {
 	// Is there anything to flush?
 	if (m_uiBufferPos > 0)
@@ -338,7 +307,7 @@ void CCDText::FlushText(HANDLE hFile,unsigned char ucType,unsigned int uiCharPos
 		ucBuffer[17] = (usCRC & 0xFF);
 
 		// Flush.
-		fs_write(ucBuffer,18,hFile);
+		File.Write(ucBuffer,18);
 
 		m_uiBufferPos = 0;
 	}
@@ -346,8 +315,8 @@ void CCDText::FlushText(HANDLE hFile,unsigned char ucType,unsigned int uiCharPos
 
 bool CCDText::WriteFile(const TCHAR *szFileName)
 {
-	HANDLE hFile = fs_open(szFileName,_T("wb"));
-	if (hFile == INVALID_HANDLE_VALUE)
+	ckcore::File File(szFileName);
+	if (!File.Open(ckcore::FileBase::ckOPEN_WRITE))
 		return false;
 
 #ifdef CDTEXT_SAVESIGNATURE
@@ -365,51 +334,50 @@ bool CCDText::WriteFile(const TCHAR *szFileName)
 	// Track title information.
 	if (m_szAlbumName[0] != '\0')
 	{
-		uiCharPos = WriteText(hFile,PTI_NAMETITLE,0,m_szAlbumName,uiCharPos);
+		uiCharPos = WriteText(File,PTI_NAMETITLE,0,m_szAlbumName,uiCharPos);
 		m_uiPrevPID2 = 0;
 	}
 
 	for (unsigned int i = 0; i < m_TrackNames.size(); i++)
 	{
-		uiCharPos = WriteText(hFile,PTI_NAMETITLE,(unsigned char)i + 1,m_TrackNames[i].c_str(),uiCharPos);
+		uiCharPos = WriteText(File,PTI_NAMETITLE,(unsigned char)i + 1,m_TrackNames[i].c_str(),uiCharPos);
 		m_uiPrevPID2 = i + 1;
 	}
 
-	FlushText(hFile,PTI_NAMETITLE,uiCharPos);
+	FlushText(File,PTI_NAMETITLE,uiCharPos);
 	uiCharPos = 0;
 
 	// Track artist information.
 	if (m_szArtistName[0] != '\0')
 	{
-		uiCharPos = WriteText(hFile,PTI_NAMEPERFORMER,0,m_szArtistName,uiCharPos);
+		uiCharPos = WriteText(File,PTI_NAMEPERFORMER,0,m_szArtistName,uiCharPos);
 		m_uiPrevPID2 = 0;
 	}
 
 	for (unsigned int i = 0; i < m_ArtistNames.size(); i++)
 	{
-		uiCharPos = WriteText(hFile,PTI_NAMEPERFORMER,(unsigned char)i + 1,m_ArtistNames[i].c_str(),uiCharPos);
+		uiCharPos = WriteText(File,PTI_NAMEPERFORMER,(unsigned char)i + 1,m_ArtistNames[i].c_str(),uiCharPos);
 		m_uiPrevPID2 = i + 1;
 	}
 
-	FlushText(hFile,PTI_NAMEPERFORMER,uiCharPos);
+	FlushText(File,PTI_NAMEPERFORMER,uiCharPos);
 	uiCharPos = 0;
 
-	// Done.
-	fs_close(hFile);
 	return true;
 }
 
 bool CCDText::WriteFileEx(const TCHAR *szFileName,const TCHAR *szAlbumName,
 						  const TCHAR *szArtistName,std::vector<CItemData *> &Tracks)
 {
-	HANDLE hFile = fs_open(szFileName,_T("wb"));
-	if (hFile == INVALID_HANDLE_VALUE)
+	ckcore::File File(szFileName);
+	if (!File.Open(ckcore::FileBase::ckOPEN_WRITE))
 		return false;
 
 #ifdef CDTEXT_SAVESIGNATURE
 	// Write a signature.
 	unsigned long ulSignature = CDTEXT_SIGNATURE;
-	fs_write(&ulSignature,4,hFile);
+	if (File.Write(&ulSignature,4) == -1)
+		return false;
 #endif
 
 	// Reset the internal counters.
@@ -428,7 +396,7 @@ bool CCDText::WriteFileEx(const TCHAR *szFileName,const TCHAR *szAlbumName,
 		strcpy(szBuffer,szAlbumName);
 #endif
 
-		uiCharPos = WriteText(hFile,PTI_NAMETITLE,0,szBuffer,uiCharPos);
+		uiCharPos = WriteText(File,PTI_NAMETITLE,0,szBuffer,uiCharPos);
 		m_uiPrevPID2 = 0;
 	}
 
@@ -440,11 +408,11 @@ bool CCDText::WriteFileEx(const TCHAR *szFileName,const TCHAR *szAlbumName,
 		strcpy(szBuffer,Tracks[i]->GetAudioData()->szTrackTitle);
 #endif
 
-		uiCharPos = WriteText(hFile,PTI_NAMETITLE,(unsigned char)i + 1,szBuffer,uiCharPos);
+		uiCharPos = WriteText(File,PTI_NAMETITLE,(unsigned char)i + 1,szBuffer,uiCharPos);
 		m_uiPrevPID2 = i + 1;
 	}
 
-	FlushText(hFile,PTI_NAMETITLE,uiCharPos);
+	FlushText(File,PTI_NAMETITLE,uiCharPos);
 	uiCharPos = 0;
 
 	// Track artist information.
@@ -456,7 +424,7 @@ bool CCDText::WriteFileEx(const TCHAR *szFileName,const TCHAR *szAlbumName,
 		strcpy(szBuffer,szArtistName);
 #endif
 
-		uiCharPos = WriteText(hFile,PTI_NAMEPERFORMER,0,szBuffer,uiCharPos);
+		uiCharPos = WriteText(File,PTI_NAMEPERFORMER,0,szBuffer,uiCharPos);
 		m_uiPrevPID2 = 0;
 	}
 
@@ -468,14 +436,12 @@ bool CCDText::WriteFileEx(const TCHAR *szFileName,const TCHAR *szAlbumName,
 		strcpy(szBuffer,Tracks[i]->GetAudioData()->szTrackArtist);
 #endif
 
-		uiCharPos = WriteText(hFile,PTI_NAMEPERFORMER,(unsigned char)i + 1,szBuffer,uiCharPos);
+		uiCharPos = WriteText(File,PTI_NAMEPERFORMER,(unsigned char)i + 1,szBuffer,uiCharPos);
 		m_uiPrevPID2 = i + 1;
 	}
 
-	FlushText(hFile,PTI_NAMEPERFORMER,uiCharPos);
+	FlushText(File,PTI_NAMEPERFORMER,uiCharPos);
 	uiCharPos = 0;
 
-	// Done.
-	fs_close(hFile);
 	return true;
 }

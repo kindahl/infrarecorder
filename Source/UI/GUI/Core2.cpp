@@ -1,26 +1,25 @@
 /*
- * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
- *
- * This program is free software; you can redistribute it and/or modify
+ * InfraRecorder - CD/DVD burning software
+ * Copyright (C) 2006-2008 Christian Kindahl
+ * 
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "stdafx.h"
-#include "../../Common/FileManager.h"
-#include "../../Common/FileStream.h"
-#include "../../Common/SizeStream.h"
-#include "../../Core/ckFileSystem/DiscImageWriter.h"
+#include <ckcore/filestream.hh>
+#include <ckcore/nullstream.hh>
+#include <ckfilesystem/discimagewriter.hh>
 #include "Core2.h"
 #include "Core2Format.h"
 #include "Core2Blank.h"
@@ -92,20 +91,20 @@ bool CCore2::HandleEvents(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 					// For some reasons this code is not compatible with all recorders.
 					if (ucStartCount == 10)
 					{
-						g_LogDlg.AddLine(_T("  Warning: Unable to start the drive, aborting after %d retries."),ucStartCount);
+						g_LogDlg.PrintLine(_T("  Warning: Unable to start the drive, aborting after %d retries."),ucStartCount);
 						return true;
 					}
 
-					g_LogDlg.AddLine(_T("  The drive is not in active state."));
+					g_LogDlg.PrintLine(_T("  The drive is not in active state."));
 
 					if (!StartStopUnit(pDevice,LOADMEDIA_START,false))
 					{
 						if (pProgress != NULL)
-							pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,lngGetString(FAILURE_NOMEDIA));
+							pProgress->Notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_NOMEDIA));
 						return false;
 					}
 
-					g_LogDlg.AddLine(_T("   -> Started the disc to make it ready for access."));
+					g_LogDlg.PrintLine(_T("   -> Started the disc to make it ready for access."));
 					ucStartCount++;
 				}
 
@@ -178,7 +177,7 @@ bool CCore2::WaitForUnit(CCore2Device *pDevice,CAdvancedProgress *pProgress)
 			ucCode == SENSE_LONGWRITEINPROGRESS)
 		{
 			// Check if the operation has been cancelled.
-			if (pProgress != NULL && pProgress->IsCanceled())
+			if (pProgress != NULL && pProgress->Cancelled())
 			{
 				// Stop the unit and unlock the media.
 				//StartStopUnit(pDevice,LOADMEDIA_STOP,true);
@@ -334,7 +333,7 @@ bool CCore2::StartStopUnit(CCore2Device *pDevice,eLoadMedia Action,bool bImmed)
 					case 0x02:	// MEDIUM NOT PRESENT – TRAY OPEN
 						if (Action != LOADMEDIA_LOAD)
 						{
-							g_LogDlg.AddLine(_T("  Warning: Unable to start media, trying to manually load it."));
+							g_LogDlg.PrintLine(_T("  Warning: Unable to start media, trying to manually load it."));
 							return StartStopUnit(pDevice,LOADMEDIA_LOAD,bImmed);
 						}
 						break;
@@ -342,30 +341,30 @@ bool CCore2::StartStopUnit(CCore2Device *pDevice,eLoadMedia Action,bool bImmed)
 			}
 		}
 
-		g_LogDlg.AddLine(_T("  Error: Could not start or stop the unit."));
+		g_LogDlg.PrintLine(_T("  Error: Could not start or stop the unit."));
 
 		// Dump CDB.
-		g_LogDlg.AddString(_T("  CDB:\t"));
+		g_LogDlg.Print(_T("  CDB:\t"));
 		for (unsigned int i = 0; i < 6; i++)
 		{
 			if (i == 0)
-				g_LogDlg.AddString(_T("0x%.2X"),ucCdb[i]);
+				g_LogDlg.Print(_T("0x%.2X"),ucCdb[i]);
 			else
-				g_LogDlg.AddString(_T(",0x%.2X"),ucCdb[i]);
+				g_LogDlg.Print(_T(",0x%.2X"),ucCdb[i]);
 		}
 
-		g_LogDlg.AddLine(_T(""));
+		g_LogDlg.PrintLine(_T(""));
 
 		// Dump sense information.
-		g_LogDlg.AddLine(_T("  Sense:\t0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X"),
+		g_LogDlg.PrintLine(_T("  Sense:\t0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X"),
 			ucSense[0],ucSense[1],ucSense[2],ucSense[3],
 			ucSense[4],ucSense[5],ucSense[6],ucSense[7]);
 
-		g_LogDlg.AddLine(_T("  \t0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X"),
+		g_LogDlg.PrintLine(_T("  \t0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X"),
 			ucSense[ 8],ucSense[ 9],ucSense[10],ucSense[11],
 			ucSense[12],ucSense[13],ucSense[14],ucSense[15]);
 
-		g_LogDlg.AddLine(_T("  \t0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X"),
+		g_LogDlg.PrintLine(_T("  \t0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X"),
 			ucSense[16],ucSense[17],ucSense[18],ucSense[19],
 			ucSense[20],ucSense[21],ucSense[22],ucSense[23]);
 
@@ -622,8 +621,8 @@ bool CCore2::GetMaxSpeeds(CCore2Device *pDevice,unsigned short &usReadSpeed,
 
 	if ((ucBuffer[8] & 0x3F) != 0x2A)
 	{
-		g_LogDlg.AddLine(_T("  Warning: Received wrong code page 0x%.2X (expected 0x2A)."),ucBuffer[8]);
-		g_LogDlg.AddLine(_T("  Debug: Read speed is %d, write speed is %d."),usReadSpeed,usWriteSpeed);
+		g_LogDlg.PrintLine(_T("  Warning: Received wrong code page 0x%.2X (expected 0x2A)."),ucBuffer[8]);
+		g_LogDlg.PrintLine(_T("  Debug: Read speed is %d, write speed is %d."),usReadSpeed,usWriteSpeed);
 		return false;
 	}
 
@@ -842,12 +841,12 @@ bool CCore2::EraseDisc(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 	// Initialize log.
 	if (g_GlobalSettings.m_bLog)
 	{
-		g_LogDlg.AddLine(_T("CCore2::EraseDisc"));
+		g_LogDlg.PrintLine(_T("CCore2::EraseDisc"));
 
 		TCHAR szParameters[128];
 		lsprintf(szParameters,_T("  Method = %d, Force = %d, Eject = %d, Simulate = %d."),
 			iMethod,(int)bForce,(int)bEject,(int)bSimulate);
-		g_LogDlg.AddLine(szParameters);
+		g_LogDlg.PrintLine(szParameters);
 	}
 
 	// Setup the progress dialog.
@@ -857,26 +856,26 @@ bool CCore2::EraseDisc(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 	// Load and start the recorder.
 	/*if (!StartStopUnit(pDevice,LOADMEDIA_LOAD,false))
 	{
-		g_LogDlg.AddLine(_T("  Error: Unable to load and start the media."));
+		g_LogDlg.PrintLine(_T("  Error: Unable to load and start the media."));
 		pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,lngGetString(FAILURE_NOMEDIA));
 		return false;
 	}*/
 
 	// Turn test writing on if selected.
 	if (!UpdateModePage5(pDevice,bSimulate))
-		g_LogDlg.AddLine(_T("  Warning: Unable to update code page 0x05."));
+		g_LogDlg.PrintLine(_T("  Warning: Unable to update code page 0x05."));
 
 // Disabled until these routines are concidered stable enough.
 #if 0
 //#ifndef _DEBUG
 	// Lock the media.
 	if (!LockMedia(pDevice,true))
-		g_LogDlg.AddLine(_T("  Warning: Unable to lock device media."));
+		g_LogDlg.PrintLine(_T("  Warning: Unable to lock device media."));
 #endif
 
 	// Set write speed.
 	if (!SetDiscSpeeds(pDevice,0xFFFF,(unsigned short)uiSpeed))
-		g_LogDlg.AddLine(_T("  Warning: Unable to set disc erase speed."));
+		g_LogDlg.PrintLine(_T("  Warning: Unable to set disc erase speed."));
 
 	bool bResult = false;
 	switch (iMethod)
@@ -902,13 +901,13 @@ bool CCore2::EraseDisc(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 
 	// Unlock the media.
 	if (!LockMedia(pDevice,false))
-		g_LogDlg.AddLine(_T("  Warning: Unable to unlock device media."));
+		g_LogDlg.PrintLine(_T("  Warning: Unable to unlock device media."));
 
 	// Eject the media (if requested).
 	if (bResult && bEject)
 	{
 		if (!StartStopUnit(pDevice,LOADMEDIA_EJECT,true))
-			g_LogDlg.AddLine(_T("  Warning: Unable to eject media."));
+			g_LogDlg.PrintLine(_T("  Warning: Unable to eject media."));
 	}
 
 	return bResult;
@@ -920,11 +919,11 @@ bool CCore2::ReadDataTrack(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 	// Initialize log.
 	if (g_GlobalSettings.m_bLog)
 	{
-		g_LogDlg.AddLine(_T("CCore2::ReadTrack"));
+		g_LogDlg.PrintLine(_T("CCore2::ReadTrack"));
 
 		TCHAR szParameters[128];
 		lsprintf(szParameters,_T("  Track = %d."),ucTrackNumber);
-		g_LogDlg.AddLine(szParameters);
+		g_LogDlg.PrintLine(szParameters);
 	}
 
 	CCore2Info Info;
@@ -933,29 +932,29 @@ bool CCore2::ReadDataTrack(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 	// Print the maximum read speed (for diagnostics purposes).
 	unsigned short usMaxReadSpeed = 0;
 	if (GetMaxReadSpeed(pDevice,usMaxReadSpeed))
-		g_LogDlg.AddLine(_T("  Maximum read speed: %d KiB/s."),usMaxReadSpeed);
+		g_LogDlg.PrintLine(_T("  Maximum read speed: %d KiB/s."),usMaxReadSpeed);
 
 	if (!SetDiscSpeeds(pDevice,0xFFFF,0xFFFF))
-		g_LogDlg.AddLine(_T("  Warning: Unable to set the device read speed."));
+		g_LogDlg.PrintLine(_T("  Warning: Unable to set the device read speed."));
 
 	unsigned char ucFirstTrackNumber = 0,ucLastTrackNumber = 0;
 	std::vector<CCore2TOCTrackDesc> Tracks;
 
 	if (Info.ReadTOC(pDevice,ucFirstTrackNumber,ucLastTrackNumber,Tracks))
 	{
-		g_LogDlg.AddLine(_T("  First and last disc track number: %d, %d."),
+		g_LogDlg.PrintLine(_T("  First and last disc track number: %d, %d."),
 			ucFirstTrackNumber,ucLastTrackNumber);
 
 		// Validate the requested track number.
 		if (ucFirstTrackNumber > ucTrackNumber || ucLastTrackNumber < ucTrackNumber)
 		{
-			g_LogDlg.AddLine(_T("  Error: The requested track number is invalid."));
+			g_LogDlg.PrintLine(_T("  Error: The requested track number is invalid."));
 			return false;
 		}
 	}
 	else
 	{
-		g_LogDlg.AddLine(_T("  Error: Unable to read TOC information to validate selected track."));
+		g_LogDlg.PrintLine(_T("  Error: Unable to read TOC information to validate selected track."));
 		return false;
 	}
 
@@ -965,7 +964,7 @@ bool CCore2::ReadDataTrack(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 	CCore2TrackInfo TrackInfo;
 	if (!Info.ReadTrackInformation(pDevice,CCore2Info::TIT_LBA,ulTrackAddr,&TrackInfo))
 	{
-		g_LogDlg.AddLine(_T("  Error: Unable to read track information."));
+		g_LogDlg.PrintLine(_T("  Error: Unable to read track information."));
 		return false;
 	}
 
@@ -988,22 +987,22 @@ bool CCore2::ReadDataTrack(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 		}
 		else
 		{
-			g_LogDlg.AddLine(_T("  Warning: Unable to read information about the next track."));
+			g_LogDlg.PrintLine(_T("  Warning: Unable to read information about the next track."));
 		}
 	}*/
 
-	g_LogDlg.AddLine(_T("  Track span: %d-%d."),ulTrackAddr,ulTrackAddr + ulTrackSize);
+	g_LogDlg.PrintLine(_T("  Track span: %d-%d."),ulTrackAddr,ulTrackAddr + ulTrackSize);
 
 	unsigned long ulMin = (ulTrackSize + 150)/(60*75);
 	unsigned long ulSec = (ulTrackSize + 150 - ulMin * 60 * 75)/75;
 	unsigned long ulFrame = ulTrackSize + 150 - ulMin * 60 * 75 - ulSec * 75;
-	g_LogDlg.AddLine(_T("  Track length: %02d:%02d:%02d"),ulMin,ulSec,ulFrame);
+	g_LogDlg.PrintLine(_T("  Track length: %02d:%02d:%02d"),ulMin,ulSec,ulFrame);
 
-	pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,lngGetString(PROGRESS_BEGINREADTRACK),ucTrackNumber);
+	pProgress->Notify(ckcore::Progress::ckINFORMATION,lngGetString(PROGRESS_BEGINREADTRACK),ucTrackNumber);
 	pProgress->SetStatus(lngGetString(STATUS_READTRACK));
 
 #ifdef DEBUG
-	g_LogDlg.AddLine(_T("  Tracks (start, length):"));
+	g_LogDlg.PrintLine(_T("  Tracks (start, length):"));
 	std::vector<CCore2TOCTrackDesc>::const_iterator it;
 	for (it = Tracks.begin(); it != Tracks.end(); it++)
 	{
@@ -1013,26 +1012,26 @@ bool CCore2::ReadDataTrack(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 			unsigned long ulMin = (TrackInfo.m_ulTrackSize + 150)/(60*75);
 			unsigned long ulSec = (TrackInfo.m_ulTrackSize + 150 - ulMin * 60 * 75)/75;
 			unsigned long ulFrame = TrackInfo.m_ulTrackSize + 150 - ulMin * 60 * 75 - ulSec * 75;
-			g_LogDlg.AddLine(_T("    %d, %02d:%02d:%02d (%d)"),(*it).m_ulTrackAddr,ulMin,ulSec,ulFrame,TrackInfo.m_ulTrackSize);
+			g_LogDlg.PrintLine(_T("    %d, %02d:%02d:%02d (%d)"),(*it).m_ulTrackAddr,ulMin,ulSec,ulFrame,TrackInfo.m_ulTrackSize);
 		}
 	}
 #endif
 
-	COutFileStream OutStream;
-	if (!OutStream.Open(szFilePath))
+	ckcore::FileOutStream OutStream(szFilePath);
+	if (!OutStream.Open())
 	{
-		g_LogDlg.AddLine(_T("  Error: Unable to open the output file: \"%s\"."),szFilePath);
+		g_LogDlg.PrintLine(_T("  Error: Unable to open the output file: \"%s\"."),szFilePath);
 		return false;
 	}
 
-	Core2ReadFunction::CReadUserData ReadFunc(pDevice,/*szFilePath*/&OutStream);
+	Core2ReadFunction::CReadUserData ReadFunc(pDevice,&OutStream);
 
 	// Start reading the selected sectors from the disc.
 	bool bResult = Read.ReadData(pDevice,pProgress,&ReadFunc,ulTrackAddr,ulTrackSize,bIgnoreErr);
 	OutStream.Close();
 
 	if (bResult)
-		pProgress->AddLogEntry(CAdvancedProgress::LT_INFORMATION,lngGetString(SUCCESS_READTRACK),ucTrackNumber);
+		pProgress->Notify(ckcore::Progress::ckINFORMATION,lngGetString(SUCCESS_READTRACK),ucTrackNumber);
 
 	return bResult;
 }
@@ -1068,68 +1067,71 @@ bool CCore2::ReadFullTOC(CCore2Device *pDevice,const TCHAR *szFileName)
 		return false;
 
 	// Save the data to the specified file name.
-	HANDLE hFile = fs_open(szFileName,_T("wb"));
-	if (!hFile)
+	ckcore::File File(szFileName);
+	if (!File.Open(ckcore::FileBase::ckOPEN_WRITE))
 	{
-		g_LogDlg.AddLine(_T("  Error: Unable to open file \"%s\" for writing."),szFileName);
+		g_LogDlg.PrintLine(_T("  Error: Unable to open file \"%s\" for writing."),szFileName);
 		return false;
 	}
 
 	unsigned short usDataLen = ((unsigned short)ucBuffer[0] << 8) | ucBuffer[1];
-	fs_write(ucBuffer,usDataLen + 2,hFile);
+	if (File.Write(ucBuffer,usDataLen + 2) == -1)
+	{
+		g_LogDlg.PrintLine(_T("  Error: Unable to write to file \"%s\"."),szFileName);
+		return false;
+	}
 
-	fs_close(hFile);
 	return true;
 }
 
-int CCore2::CreateImage(COutStream &OutStream,ckFileSystem::CFileSet &Files,
-						CProgressEx &Progress,std::map<tstring,tstring> *pFilePathMap)
+int CCore2::CreateImage(ckcore::OutStream &OutStream,ckfilesystem::FileSet &Files,
+						ckcore::Progress &Progress,std::map<tstring,tstring> *pFilePathMap)
 {
-	ckFileSystem::CDiscImageWriter::eFileSystem FileSystem;
+	ckfilesystem::DiscImageWriter::FileSystem FileSystem;
 	switch (g_ProjectSettings.m_iFileSystem)
 	{
 		case FILESYSTEM_ISO9660:
 			FileSystem = g_ProjectSettings.m_bJoliet ?
-				ckFileSystem::CDiscImageWriter::FS_ISO9660_JOLIET :
-				ckFileSystem::CDiscImageWriter::FS_ISO9660;
+				ckfilesystem::DiscImageWriter::FS_ISO9660_JOLIET :
+				ckfilesystem::DiscImageWriter::FS_ISO9660;
 			break;
 				
 		case FILESYSTEM_ISO9660_UDF:
 			FileSystem = g_ProjectSettings.m_bJoliet ?
-				ckFileSystem::CDiscImageWriter::FS_ISO9660_UDF_JOLIET : 
-				ckFileSystem::CDiscImageWriter::FS_ISO9660_UDF;
+				ckfilesystem::DiscImageWriter::FS_ISO9660_UDF_JOLIET : 
+				ckfilesystem::DiscImageWriter::FS_ISO9660_UDF;
 				break;
 
 		case FILESYSTEM_DVDVIDEO:
-			FileSystem = ckFileSystem::CDiscImageWriter::FS_DVDVIDEO;
+			FileSystem = ckfilesystem::DiscImageWriter::FS_DVDVIDEO;
 			break;
 
 		case FILESYSTEM_UDF:
-			FileSystem = ckFileSystem::CDiscImageWriter::FS_UDF;			
+			FileSystem = ckfilesystem::DiscImageWriter::FS_UDF;			
 			break;
 	}
 
-	ckFileSystem::CIso9660::eInterLevel InterchangeLevel;
+	ckfilesystem::Iso9660::InterLevel InterchangeLevel;
 	switch (g_ProjectSettings.m_iIsoLevel)
 	{
 		case 0:
-			InterchangeLevel = ckFileSystem::CIso9660::LEVEL_1;			
+			InterchangeLevel = ckfilesystem::Iso9660::LEVEL_1;			
 			break;
 
 		case 1:
-			InterchangeLevel = ckFileSystem::CIso9660::LEVEL_2;
+			InterchangeLevel = ckfilesystem::Iso9660::LEVEL_2;
 			break;
 
 		case 2:
-			InterchangeLevel = ckFileSystem::CIso9660::LEVEL_3;
+			InterchangeLevel = ckfilesystem::Iso9660::LEVEL_3;
 			break;
 
 		case 3:
-			InterchangeLevel = ckFileSystem::CIso9660::ISO9660_1999;
+			InterchangeLevel = ckfilesystem::Iso9660::ISO9660_1999;
 			break;
 	}
 
-	ckFileSystem::CDiscImageWriter DiscImageWriter(&g_LogDlg,FileSystem);
+	ckfilesystem::DiscImageWriter DiscImageWriter(g_LogDlg,FileSystem);
 
 	DiscImageWriter.SetLongJolietNames(g_ProjectSettings.m_bJolietLongNames);
 	DiscImageWriter.SetInterchangeLevel(InterchangeLevel);
@@ -1170,32 +1172,32 @@ int CCore2::CreateImage(COutStream &OutStream,ckFileSystem::CFileSet &Files,
 	if (g_ProjectSettings.m_bMultiSession)
 		ulSectorOffset = (unsigned long)g_ProjectSettings.m_uiNextWritableAddr;
 
-	ckFileSystem::CSectorOutStream OutSecStream(OutStream,DISCIMAGEWRITER_IO_BUFFER_SIZE);
+	ckfilesystem::SectorOutStream OutSecStream(OutStream);
 	return DiscImageWriter.Create(OutSecStream,Files,Progress,ulSectorOffset,pFilePathMap);
 }
 
 /*
 	A wrapper method for the function above.
 */
-int CCore2::CreateImage(const TCHAR *szFullPath,ckFileSystem::CFileSet &Files,
-						CProgressEx &Progress,std::map<tstring,tstring> *pFilePathMap)
+int CCore2::CreateImage(const TCHAR *szFullPath,ckfilesystem::FileSet &Files,
+						ckcore::Progress &Progress,std::map<tstring,tstring> *pFilePathMap)
 {
-	COutFileStream FileStream;
-	if (!FileStream.Open(szFullPath))
+	ckcore::FileOutStream FileStream(szFullPath);
+	if (!FileStream.Open())
 	{
-		g_LogDlg.AddLine(_T("  Error: Unable to obtain file handle to \"%s\"."),szFullPath);
+		g_LogDlg.PrintLine(_T("  Error: Unable to obtain file handle to \"%s\"."),szFullPath);
 		return RESULT_FAIL;
 	}
 
 	return CreateImage(FileStream,Files,Progress,pFilePathMap);
 }
 
-int CCore2::EstimateImageSize(ckFileSystem::CFileSet &Files,CProgressEx &Progress,
+int CCore2::EstimateImageSize(ckfilesystem::FileSet &Files,ckcore::Progress &Progress,
 							  unsigned __int64 &uiImageSize)
 {
-	COutSizeStream OutStream;
+	ckcore::NullStream OutStream;
 	int iResult = CreateImage(OutStream,Files,Progress);
 
-	uiImageSize = OutStream.GetWrittenSize();
+	uiImageSize = OutStream.Written();
 	return iResult;
 }

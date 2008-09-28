@@ -1,28 +1,27 @@
 /*
- * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
- *
- * This program is free software; you can redistribute it and/or modify
+ * InfraRecorder - CD/DVD burning software
+ * Copyright (C) 2006-2008 Christian Kindahl
+ * 
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "stdafx.h"
 #include "LNGProcessor.h"
-#include "FileManager.h"
 #include "StringConv.h"
 #include "StringUtil.h"
 
-CLNGProcessor::CLNGProcessor()
+CLNGProcessor::CLNGProcessor(const TCHAR *szFullPath) : m_File(szFullPath)
 {
 	m_ulBufferSize = 0;
 	m_ulBufferPos = 0;
@@ -57,7 +56,11 @@ bool CLNGProcessor::ReadNext(TCHAR &c)
 	{
 		memset(m_ucBuffer,0,sizeof(m_ucBuffer));
 
-		m_ulBufferSize = fs_read(m_ucBuffer,sizeof(m_ucBuffer),m_hFile);
+		ckcore::tint64 iRead = m_File.Read(m_ucBuffer,sizeof(m_ucBuffer));
+		if (iRead == -1)
+			return false;
+
+		m_ulBufferSize = (unsigned long)iRead;
 		m_ulBufferSize /= sizeof(TCHAR);
 		m_ulBufferPos = 0;
 
@@ -87,18 +90,18 @@ void CLNGProcessor::ReadBack()
 	-------------------
 	Loads the specified XML into a tree structure in memory. Varius return values.
 */
-int CLNGProcessor::Load(const TCHAR *szFileName)
+int CLNGProcessor::Load()
 {
 	// Open the file.
-	m_hFile = fs_open(szFileName,_T("rb"));
-	if (m_hFile == INVALID_HANDLE_VALUE)
+	if (!m_File.Open(ckcore::FileBase::ckOPEN_READ))
 		return LNGRES_FILEERROR;
 
 	// If the application is in an unicode environment we need to check what
 	// byte-order us used.
 #ifdef UNICODE
 	unsigned short usBOM = 0;
-	fs_read(&usBOM,2,m_hFile);
+	if (m_File.Read(&usBOM,2) == -1)
+		return LNGRES_FILEERROR;
 
 	switch (usBOM)
 	{
@@ -113,7 +116,9 @@ int CLNGProcessor::Load(const TCHAR *szFileName)
 
 		default:
 			// If no BOM is found the file pointer has to be re-moved to the beginning.
-			fs_seek(m_hFile,0,FILE_BEGIN);
+			if (m_File.Seek(0,ckcore::FileBase::ckFILE_BEGIN) == -1)
+				return LNGRES_FILEERROR;
+
 			break;
 	};
 #endif
@@ -129,7 +134,7 @@ int CLNGProcessor::Load(const TCHAR *szFileName)
 
 	CCustomString szNameBuffer(11);
 
-	m_iRemainBytes = fs_filesize(m_hFile) - fs_tell(m_hFile);
+	m_iRemainBytes = m_File.Size() - m_File.Tell();
 
 	bool bBreak = false;
 
@@ -210,21 +215,6 @@ int CLNGProcessor::Load(const TCHAR *szFileName)
 			pCurSection->m_Values.push_back(pNewValue);
 		}
 	}
-
-	fs_close(m_hFile);
-
-	// Temporary for debug purposes.
-	/*for (unsigned int i = 0; i < m_pSections.size(); i++)
-	{
-		MessageBox(NULL,m_pSections[i]->m_szName,_T("Section"),MB_OK);
-
-		for (unsigned int j = 0; j < m_pSections[i]->m_Values.size(); j++)
-		{
-			TCHAR szTemp[32];
-			swprintf(szTemp,_T("%x"),m_pSections[i]->m_Values[j]->ulName);
-			MessageBox(NULL,szTemp,m_pSections[i]->m_Values[j]->m_szValue,MB_OK);
-		}
-	}*/
 
 	return LNGRES_OK;
 }

@@ -1,19 +1,19 @@
 /*
- * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
- *
- * This program is free software; you can redistribute it and/or modify
+ * InfraRecorder - CD/DVD burning software
+ * Copyright (C) 2006-2008 Christian Kindahl
+ * 
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "stdafx.h"
@@ -21,7 +21,6 @@
 #include "DeviceManager.h"
 #include "StringTable.h"
 #include "../../Common/StringUtil.h"
-#include "../../Common/FileManager.h"
 #include "SCSI.h"
 #include "WaitDlg.h"
 #include "WinVer.h"
@@ -467,7 +466,7 @@ bool CTracksDlg::EncodeTrack(const TCHAR *szFileName,CCodec *pEncoder)
 		lstrcpy(szNameBuffer,szFileName);
 		ExtractFileName(szNameBuffer);
 
-		g_ProgressDlg.AddLogEntry(CAdvancedProgress::LT_ERROR,
+		g_ProgressDlg.Notify(ckcore::Progress::ckERROR,
 			lngGetString(ERROR_NODECODER),szNameBuffer);
 		return false;
 	}
@@ -480,7 +479,7 @@ bool CTracksDlg::EncodeTrack(const TCHAR *szFileName,CCodec *pEncoder)
 	// Initialize the encoder.
 	if (!pEncoder->irc_encode_init(szTargetFile,iNumChannels,iSampleRate,iBitRate))
 	{
-		g_ProgressDlg.AddLogEntry(CAdvancedProgress::LT_ERROR,lngGetString(ERROR_CODECINIT),
+		g_ProgressDlg.Notify(ckcore::Progress::ckERROR,lngGetString(ERROR_CODECINIT),
 			pEncoder->irc_string(IRC_STR_ENCODER),
 			iNumChannels,iSampleRate,iBitRate,uiDuration);
 
@@ -506,7 +505,7 @@ bool CTracksDlg::EncodeTrack(const TCHAR *szFileName,CCodec *pEncoder)
 
 		if (pEncoder->irc_encode_process(pBuffer,iBytesRead) < 0)
 		{
-			g_ProgressDlg.AddLogEntry(CAdvancedProgress::LT_ERROR,lngGetString(ERROR_ENCODEDATA));
+			g_ProgressDlg.Notify(ckcore::Progress::ckERROR,lngGetString(ERROR_ENCODEDATA));
 			break;
 		}
 
@@ -528,7 +527,7 @@ bool CTracksDlg::EncodeTrack(const TCHAR *szFileName,CCodec *pEncoder)
 
 	ExtractFileName(szTargetFile);
 
-	g_ProgressDlg.AddLogEntry(CAdvancedProgress::LT_INFORMATION,
+	g_ProgressDlg.Notify(ckcore::Progress::ckINFORMATION,
 		lngGetString(SUCCESS_ENCODETRACK),szTargetFile);
 
 	return true;
@@ -602,9 +601,7 @@ unsigned long WINAPI CTracksDlg::ReadTrackThread(LPVOID lpThreadParameter)
 				}
 				else
 				{
-					if (fs_fileexists(szFilePath))
-						fs_deletefile(szFilePath);
-
+					ckcore::File::Remove(szFilePath);
 					return 0;
 				}
 			}
@@ -614,9 +611,7 @@ unsigned long WINAPI CTracksDlg::ReadTrackThread(LPVOID lpThreadParameter)
 				{
 					if (g_Core.ReadAudioTrackEx(pDeviceInfo,&g_ProgressDlg,szFilePath,iItemIndex + 1) != RESULT_OK)
 					{
-						if (fs_fileexists(szFilePath))
-							fs_deletefile(szFilePath);
-
+						ckcore::File::Remove(szFilePath);
 						return 0;
 					}
 
@@ -628,7 +623,7 @@ unsigned long WINAPI CTracksDlg::ReadTrackThread(LPVOID lpThreadParameter)
 					g_ProgressDlg.SetStatus(szStatus);
 
 					if (EncodeTrack(szFilePath,pTracksDlg->m_pEncoder))
-						fs_deletefile(szFilePath);
+						ckcore::File::Remove(szFilePath);
 
 					g_ProgressDlg.SetStatus(lngGetString(PROGRESS_DONE));
 					g_ProgressDlg.NotifyComplteted();
@@ -637,9 +632,7 @@ unsigned long WINAPI CTracksDlg::ReadTrackThread(LPVOID lpThreadParameter)
 				{
 					if (!g_Core.ReadAudioTrack(pDeviceInfo,&g_ProgressDlg,szFilePath,iItemIndex + 1))
 					{
-						if (fs_fileexists(szFilePath))
-							fs_deletefile(szFilePath);
-
+						ckcore::File::Remove(szFilePath);
 						return 0;
 					}
 				}
@@ -656,8 +649,7 @@ unsigned long WINAPI CTracksDlg::ReadTrackThread(LPVOID lpThreadParameter)
 				}
 				else
 				{
-					if (fs_fileexists(szFilePath))
-						fs_deletefile(szFilePath);
+					ckcore::File::Remove(szFilePath);
 
 					g_ProgressDlg.SetProgress(100);
 					g_ProgressDlg.SetStatus(lngGetString(PROGRESS_DONE));
@@ -669,9 +661,7 @@ unsigned long WINAPI CTracksDlg::ReadTrackThread(LPVOID lpThreadParameter)
 			{
 				if (g_Core.ReadAudioTrackEx(pDeviceInfo,&g_ProgressDlg,szFilePath,iItemIndex + 1) != RESULT_OK)
 				{
-					if (fs_fileexists(szFilePath))
-						fs_deletefile(szFilePath);
-
+					ckcore::File::Remove(szFilePath);
 					return 0;
 				}
 
@@ -685,11 +675,11 @@ unsigned long WINAPI CTracksDlg::ReadTrackThread(LPVOID lpThreadParameter)
 					g_ProgressDlg.SetStatus(szStatus);
 
 					if (EncodeTrack(szFilePath,pTracksDlg->m_pEncoder))
-						fs_deletefile(szFilePath);
+						ckcore::File::Remove(szFilePath);
 				}
 
 				// Check if the encoding has been canceled.
-				if (g_ProgressDlg.IsCanceled())
+				if (g_ProgressDlg.Cancelled())
 				{
 					g_ProgressDlg.NotifyComplteted();
 					return 0;

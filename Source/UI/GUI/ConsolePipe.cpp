@@ -1,19 +1,19 @@
 /*
- * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
- *
- * This program is free software; you can redistribute it and/or modify
+ * InfraRecorder - CD/DVD burning software
+ * Copyright (C) 2006-2008 Christian Kindahl
+ * 
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "stdafx.h"
@@ -49,8 +49,8 @@ CConsolePipe::~CConsolePipe()
 bool CConsolePipe::CreateProcess(TCHAR *szCommandLine,HANDLE hStdIn,
 								 HANDLE hStdOut,HANDLE hStdErr)
 {
-	g_LogDlg.AddLine(_T("CConsolePipe::CreateProcess"));
-	g_LogDlg.AddLine(_T("  Command line = %s."),szCommandLine);
+	g_LogDlg.PrintLine(_T("CConsolePipe::CreateProcess"));
+	g_LogDlg.PrintLine(_T("  Command line = %s."),szCommandLine);
 
 	PROCESS_INFORMATION pi;
 	STARTUPINFO si;
@@ -65,7 +65,7 @@ bool CConsolePipe::CreateProcess(TCHAR *szCommandLine,HANDLE hStdIn,
 
 	if (!::CreateProcess(NULL,szCommandLine,NULL,NULL,true,CREATE_NEW_CONSOLE,NULL,NULL,&si,&pi))
 	{
-		g_LogDlg.AddLine(_T("  Error: CreateProcess failed, last error = %d."),
+		g_LogDlg.PrintLine(_T("  Error: CreateProcess failed, last error = %d."),
 			(int)GetLastError());
 		return false;
 	}
@@ -87,7 +87,7 @@ bool CConsolePipe::CreateProcess(TCHAR *szCommandLine,HANDLE hStdIn,
 */
 bool CConsolePipe::Launch(TCHAR *szCommandLine,bool bWaitForProcess)
 {
-	g_LogDlg.AddLine(_T("CConsolePipe::Launch"));
+	g_LogDlg.PrintLine(_T("CConsolePipe::Launch"));
 
 	HANDLE hOutputReadTemp,hOutputWrite;
 	HANDLE hInputWriteTemp,hInputRead;
@@ -106,7 +106,7 @@ bool CConsolePipe::Launch(TCHAR *szCommandLine,bool bWaitForProcess)
 	// Create the child output pipe.
 	if (!::CreatePipe(&hOutputReadTemp,&hOutputWrite,&sa,0))
 	{
-		g_LogDlg.AddLine(_T("  Error: CreatePipe failed, last error = %d."),(int)GetLastError());
+		g_LogDlg.PrintLine(_T("  Error: CreatePipe failed, last error = %d."),(int)GetLastError());
 		return false;
 	}
 
@@ -118,7 +118,7 @@ bool CConsolePipe::Launch(TCHAR *szCommandLine,bool bWaitForProcess)
 		::CloseHandle(hOutputReadTemp);
 		::CloseHandle(hOutputWrite);
 
-		g_LogDlg.AddLine(_T("  Error: DuplicateHandle failed, last error = %d."),(int)GetLastError());
+		g_LogDlg.PrintLine(_T("  Error: DuplicateHandle failed, last error = %d."),(int)GetLastError());
 		return false;
 	}
 
@@ -129,7 +129,7 @@ bool CConsolePipe::Launch(TCHAR *szCommandLine,bool bWaitForProcess)
 		::CloseHandle(hOutputWrite);
 		::CloseHandle(hErrorWrite);
 
-		g_LogDlg.AddLine(_T("  Error: CreatePipe failed, last error = %d."),(int)GetLastError());
+		g_LogDlg.PrintLine(_T("  Error: CreatePipe failed, last error = %d."),(int)GetLastError());
 		return false;
 	}
 
@@ -145,7 +145,7 @@ bool CConsolePipe::Launch(TCHAR *szCommandLine,bool bWaitForProcess)
 		::CloseHandle(hInputWriteTemp);
 		::CloseHandle(hInputRead);
 
-		g_LogDlg.AddLine(_T("  Error: DuplicateHandle failed, last error = %d."),(int)GetLastError());
+		g_LogDlg.PrintLine(_T("  Error: DuplicateHandle failed, last error = %d."),(int)GetLastError());
 		return false;
 	}
 
@@ -160,7 +160,7 @@ bool CConsolePipe::Launch(TCHAR *szCommandLine,bool bWaitForProcess)
 
 		::CloseHandle(m_hStdOut);
 
-		g_LogDlg.AddLine(_T("  Error: DuplicateHandle failed, last error = %d."),(int)GetLastError());
+		g_LogDlg.PrintLine(_T("  Error: DuplicateHandle failed, last error = %d."),(int)GetLastError());
 		return false;
 	}
 
@@ -192,7 +192,7 @@ bool CConsolePipe::Launch(TCHAR *szCommandLine,bool bWaitForProcess)
 	{
 		CleanUp();
 
-		g_LogDlg.AddLine(_T("  Error: CreateThread failed, last error = %d."),(int)GetLastError());
+		g_LogDlg.PrintLine(_T("  Error: CreateThread failed, last error = %d."),(int)GetLastError());
 		return false;
 	}
 

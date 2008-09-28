@@ -1,19 +1,19 @@
 /*
- * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
- *
- * This program is free software; you can redistribute it and/or modify
+ * InfraRecorder - CD/DVD burning software
+ * Copyright (C) 2006-2008 Christian Kindahl
+ * 
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "stdafx.h"
@@ -26,7 +26,9 @@
 
 CProgressDlg g_ProgressDlg;
 
-CProgressDlg::CProgressDlg()
+CProgressDlg::CProgressDlg() : m_pConsolePipe(NULL),m_bAppMode(false),
+	m_bRealMode(false),m_bCancelled(false),m_hWndHost(NULL),m_ucPercent(0),
+	m_szHostTitle(NULL)
 {
 	// Load the icons.
 	m_hListImageList = ImageList_Create(16,16,ILC_COLOR32,0,4);
@@ -35,17 +37,6 @@ CProgressDlg::CProgressDlg()
 	ImageList_AddIcon(m_hListImageList,LoadIcon(NULL,IDI_WARNING));
 	ImageList_AddIcon(m_hListImageList,LoadIcon(NULL,IDI_ERROR));
 	ImageList_AddIcon(m_hListImageList,LoadIcon(NULL,IDI_WINLOGO));
-
-	m_pConsolePipe = NULL;
-	m_bAppMode = false;
-	m_bRealMode = false;
-	m_bCanceled = false;
-
-	m_hWndHost = NULL;
-
-	m_iPercent = -1;
-
-	m_szHostTitle = NULL;
 
 	SMOKE_INIT
 }
@@ -98,51 +89,68 @@ void CProgressDlg::AttachHost(HWND hWndHost)
 	m_hWndHost = hWndHost;
 }
 
-void CProgressDlg::AddLogEntry(eLogType Type,const TCHAR *szMessage,...)
+void CProgressDlg::SetAppMode(bool bAppMode)
 {
-	int iItemIndex = m_ListView.GetItemCount();
+	m_bAppMode = bAppMode;
+}
 
-	// Time.
-	SYSTEMTIME st;
-	GetLocalTime(&st);
+void CProgressDlg::SetRealMode(bool bRealMode)
+{
+	m_bRealMode = bRealMode;
+}
 
-	TCHAR szTime[9];	// xx:yy:zz
-	lsprintf(szTime,_T("%.2d:%.2d:%.2d"),st.wHour,st.wMinute,st.wSecond);
-	szTime[8] = '\0';
+void CProgressDlg::SetProgress(unsigned char ucPercent)
+{
+	if (ucPercent < 0)
+		ucPercent = 0;
+	else if (ucPercent > 100)
+		ucPercent = 100;
 
-	// Convert the log type to an index.
-	int iImageIndex = 0;
-	switch (Type)
+	// Only redraw when we have to.
+	if (m_ucPercent != ucPercent)
 	{
-		case LT_INFORMATION:
-			iImageIndex = 0;
-			break;
-		case LT_WARNING:
-			iImageIndex = 1;
-			break;
-		case LT_ERROR:
-			iImageIndex = 2;
-			break;
-		case LT_WINLOGO:
-			iImageIndex = 3;
-			break;
+		SendDlgItemMessage(IDC_TOTALPROGRESS,PBM_SETPOS,(WPARAM)ucPercent,0);
+
+		TCHAR szProgress[32];
+		lsnprintf_s(szProgress,32,lngGetString(PROGRESS_TOTAL),ucPercent);
+		m_TotalStatic.SetWindowText(szProgress);
+
+		// Update parent title if necessary.
+		if (!m_bAppMode && m_szHostTitle != NULL)
+		{
+			TCHAR szTitle[64];
+			GetWindowText(szTitle,sizeof(szTitle)/sizeof(TCHAR));
+
+			TCHAR szHostTitle[32 + 64];
+			lsnprintf_s(szHostTitle,sizeof(szHostTitle)/sizeof(TCHAR),_T("%d%% - %s"),ucPercent,szTitle);
+
+			GetParent().SetWindowText(szHostTitle);
+		}
+
+		ProcessMessages();
 	}
+}
 
-	m_ListView.AddItem(iItemIndex,0,szTime,iImageIndex);
+void CProgressDlg::SetMarquee(bool bEnable)
+{
+	// Only supported in Windows XP and newer (common controls version 6).
+	if (g_WinVer.m_ulMajorCCVersion >= 6)
+	{
+		HWND hWndCtrl = GetDlgItem(IDC_TOTALPROGRESS);
 
-	// Parse the variable argument list.
-	va_list args;
-	va_start(args,szMessage);
-
-#ifdef UNICODE
-	_vsnwprintf(m_szStringBuffer,PROGRESS_STRINGBUFFER_SIZE - 1,szMessage,args);
-#else
-	_vsnprintf(m_szStringBuffer,PROGRESS_STRINGBUFFER_SIZE - 1,szMessage,args);
-#endif
-	m_ListView.AddItem(iItemIndex,1,m_szStringBuffer);
-
-	m_ListView.SetColumnWidth(1,LVSCW_AUTOSIZE);
-	m_ListView.EnsureVisible(iItemIndex,false);
+		if (bEnable)
+		{
+			unsigned long ulStyle = ::GetWindowLong(hWndCtrl,GWL_STYLE);
+			::SetWindowLong(hWndCtrl,GWL_STYLE,ulStyle | PBS_MARQUEE);
+			::SendMessage(hWndCtrl,PBM_SETMARQUEE,TRUE,50);
+		}
+		else
+		{
+			unsigned long ulStyle = ::GetWindowLong(hWndCtrl,GWL_STYLE);
+			::SetWindowLong(hWndCtrl,GWL_STYLE,ulStyle & ~PBS_MARQUEE);
+			::SendMessage(hWndCtrl,PBM_SETMARQUEE,FALSE,50);
+		}
+	}
 }
 
 void CProgressDlg::SetStatus(const TCHAR *szStatus,...)
@@ -170,6 +178,58 @@ void CProgressDlg::SetStatus(const TCHAR *szStatus,...)
 	m_StatusStatic.SetWindowText(m_szStringBuffer);
 }
 
+void CProgressDlg::Notify(ckcore::Progress::MessageType Type,const TCHAR *szMessage,...)
+{
+	int iItemIndex = m_ListView.GetItemCount();
+
+	// Time.
+	SYSTEMTIME st;
+	GetLocalTime(&st);
+
+	TCHAR szTime[9];	// xx:yy:zz
+	lsprintf(szTime,_T("%.2d:%.2d:%.2d"),st.wHour,st.wMinute,st.wSecond);
+	szTime[8] = '\0';
+
+	// Convert the log type to an index.
+	int iImageIndex = 0;
+	switch (Type)
+	{
+		case ckcore::Progress::ckINFORMATION:
+			iImageIndex = 0;
+			break;
+		case ckcore::Progress::ckWARNING:
+			iImageIndex = 1;
+			break;
+		case ckcore::Progress::ckERROR:
+			iImageIndex = 2;
+			break;
+		case ckcore::Progress::ckEXTERNAL:
+			iImageIndex = 3;
+			break;
+	}
+
+	m_ListView.AddItem(iItemIndex,0,szTime,iImageIndex);
+
+	// Parse the variable argument list.
+	va_list args;
+	va_start(args,szMessage);
+
+#ifdef UNICODE
+	_vsnwprintf(m_szStringBuffer,PROGRESS_STRINGBUFFER_SIZE - 1,szMessage,args);
+#else
+	_vsnprintf(m_szStringBuffer,PROGRESS_STRINGBUFFER_SIZE - 1,szMessage,args);
+#endif
+	m_ListView.AddItem(iItemIndex,1,m_szStringBuffer);
+
+	m_ListView.SetColumnWidth(1,LVSCW_AUTOSIZE);
+	m_ListView.EnsureVisible(iItemIndex,false);
+}
+
+bool CProgressDlg::Cancelled()
+{
+	return m_bCancelled;
+}
+
 void CProgressDlg::SetDevice(const TCHAR *szDevice)
 {
 	TCHAR szDeviceStr[128];
@@ -190,10 +250,10 @@ void CProgressDlg::NotifyComplteted()
 	SendMessage(WM_NEXTDLGCTL,(WPARAM)GetDlgItem(IDOK).m_hWnd,0);	// Change default focus to the OK button.
 	::EnableWindow(GetDlgItem(IDCANCEL),false);
 
-	if (m_bCanceled)
+	if (m_bCancelled)
 	{
 		SetStatus(lngGetString(PROGRESS_CANCELED));
-		AddLogEntry(LT_WARNING,lngGetString(PROGRESS_CANCELED));
+		Notify(ckcore::Progress::ckWARNING,lngGetString(PROGRESS_CANCELED));
 	}
 
 	// Restore the window title.
@@ -206,78 +266,6 @@ void CProgressDlg::NotifyComplteted()
 	}
 
 	SMOKE_STOP
-}
-
-void CProgressDlg::SetAppMode(bool bAppMode)
-{
-	m_bAppMode = bAppMode;
-}
-
-void CProgressDlg::SetRealMode(bool bRealMode)
-{
-	m_bRealMode = bRealMode;
-}
-
-void CProgressDlg::SetProgress(int iPercent)
-{
-	if (iPercent < 0)
-		iPercent = 0;
-	else if (iPercent > 100)
-		iPercent = 100;
-
-	// Only redraw when we have to.
-	if (m_iPercent != iPercent)
-	{
-		SendDlgItemMessage(IDC_TOTALPROGRESS,PBM_SETPOS,(WPARAM)iPercent,0);
-
-		TCHAR szProgress[32];
-		lsnprintf_s(szProgress,32,lngGetString(PROGRESS_TOTAL),iPercent);
-		m_TotalStatic.SetWindowText(szProgress);
-
-		// Update parent title if necessary.
-		if (!m_bAppMode && m_szHostTitle != NULL)
-		{
-			TCHAR szTitle[64];
-			GetWindowText(szTitle,sizeof(szTitle)/sizeof(TCHAR));
-
-			TCHAR szHostTitle[32 + 64];
-			lsnprintf_s(szHostTitle,sizeof(szHostTitle)/sizeof(TCHAR),_T("%d%% - %s"),iPercent,szTitle);
-
-			GetParent().SetWindowText(szHostTitle);
-		}
-
-		ProcessMessages();
-	}
-}
-
-#ifndef PBM_SETMARQUEE
-#define PBM_SETMARQUEE      (WM_USER + 10)
-#endif
-
-#ifndef PBS_MARQUEE
-#define PBS_MARQUEE         0x08
-#endif
-
-void CProgressDlg::SetProgressMarquee(bool bMarquee)
-{
-	// Only supported in Windows XP and newer (common controls version 6).
-	if (g_WinVer.m_ulMajorCCVersion >= 6)
-	{
-		HWND hWndCtrl = GetDlgItem(IDC_TOTALPROGRESS);
-
-		if (bMarquee)
-		{
-			unsigned long ulStyle = ::GetWindowLong(hWndCtrl,GWL_STYLE);
-			::SetWindowLong(hWndCtrl,GWL_STYLE,ulStyle | PBS_MARQUEE);
-			::SendMessage(hWndCtrl,PBM_SETMARQUEE,TRUE,50);
-		}
-		else
-		{
-			unsigned long ulStyle = ::GetWindowLong(hWndCtrl,GWL_STYLE);
-			::SetWindowLong(hWndCtrl,GWL_STYLE,ulStyle & ~PBS_MARQUEE);
-			::SendMessage(hWndCtrl,PBM_SETMARQUEE,FALSE,50);
-		}
-	}
 }
 
 void CProgressDlg::SetBuffer(int iPercent)
@@ -295,15 +283,10 @@ void CProgressDlg::AllowCancel(bool bAllow)
 	::EnableWindow(GetDlgItem(IDCANCEL),bAllow);
 }
 
-bool CProgressDlg::IsCanceled()
-{
-	return m_bCanceled;
-}
-
 void CProgressDlg::Reset()
 {
 	m_bRealMode = false;
-	m_bCanceled = false;
+	m_bCancelled = false;
 }
 
 void CProgressDlg::StartSmoke()
@@ -400,7 +383,7 @@ LRESULT CProgressDlg::OnCancel(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHan
 			return TRUE;
 	}
 
-	m_bCanceled = true;
+	m_bCancelled = true;
 
 	if (m_pConsolePipe != NULL)
 		m_pConsolePipe->Kill();

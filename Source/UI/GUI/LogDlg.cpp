@@ -1,24 +1,24 @@
 /*
- * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
- *
- * This program is free software; you can redistribute it and/or modify
+ * InfraRecorder - CD/DVD burning software
+ * Copyright (C) 2006-2008 Christian Kindahl
+ * 
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "stdafx.h"
+#include <ckcore/directory.hh>
 #include "LogDlg.h"
-#include "../../Common/FileManager.h"
 #include "StringTable.h"
 #include "LangUtil.h"
 #include "Settings.h"
@@ -27,62 +27,32 @@
 
 CLogDlg g_LogDlg;
 
-// FIXME: No arrow is used, not much space.
-CLogDlg::CLogDlg() : m_DiagButton(IDR_DIAGNOSTICSMENU,false)
+// FIXME: No arrow is used, not enough space.
+CLogDlg::CLogDlg() : m_DiagButton(IDR_DIAGNOSTICSMENU,false),
+	m_LogFile(GetLogFullPath())
 {
-	m_hLogFile = NULL;
 }
 
 CLogDlg::~CLogDlg()
 {
-	if (m_hLogFile != NULL)
-		fs_close(m_hLogFile);
 }
 
-void CLogDlg::GetLogPath(TCHAR *szLogPath)
-{
-#ifdef PORTABLE
-	GetModuleFileName(NULL,szLogPath,MAX_PATH - 1);
-	ExtractFilePath(szLogPath);
-
-	lstrcat(szLogPath,_T("Logs\\"));
-#else
-#ifdef UNICODE
-	if (SUCCEEDED(SHGetFolderPath(m_hWnd,CSIDL_APPDATA | CSIDL_FLAG_CREATE,NULL,
-		SHGFP_TYPE_CURRENT,szLogPath)))
-#else	// Win 9x.
-	if (SUCCEEDED(SHGetSpecialFolderPath(m_hWnd,szFileName,CSIDL_APPDATA,true)))
-#endif
-	{
-		IncludeTrailingBackslash(szLogPath);
-		lstrcat(szLogPath,_T("InfraRecorder\\Logs\\"));
-	}
-	else
-	{
-		GetModuleFileName(NULL,szLogPath,MAX_PATH - 1);
-		ExtractFilePath(szLogPath);
-	}
-#endif
-}
-
-void CLogDlg::InitializeLogFile()
+ckcore::Path CLogDlg::GetLogFullPath()
 {
 	// Get system date.
 	SYSTEMTIME st;
 	GetLocalTime(&st);
 
-	TCHAR szDate[7];
-	GetDateFormat(LOCALE_USER_DEFAULT,0,&st,_T("yyMMdd"),szDate,7);
+	TCHAR szFileName[13];
+	GetDateFormat(LOCALE_USER_DEFAULT,0,&st,_T("yyMMdd"),szFileName,7);
 
-	// Get the log file path.
-	TCHAR szFileName[MAX_PATH];
-	GetLogPath(szFileName);
-
+	// Get the log dir path.
+	ckcore::Path DirPath = GetLogDirPath();
+	
 	// Create the file path if it doesn't exist.
-	fs_createpath(szFileName);
+	ckcore::Directory::Create(DirPath);
 
-	lstrcat(szFileName,szDate);
-
+	// Construct the file name.
 #ifdef UNICODE
 	lstrcat(szFileName,_T("_u"));
 #else
@@ -90,25 +60,58 @@ void CLogDlg::InitializeLogFile()
 #endif
 	lstrcat(szFileName,_T(".log"));
 
-	if (fs_fileexists(szFileName))
+	// Append the file name and return.
+	return DirPath + szFileName;
+}
+
+ckcore::Path CLogDlg::GetLogDirPath()
+{
+	TCHAR szDirPath[MAX_PATH];
+
+#ifdef PORTABLE
+	GetModuleFileName(NULL,szDirPath,MAX_PATH - 1);
+	ExtractFilePath(szDirPath);
+
+	lstrcat(szDirPath,_T("Logs\\"));
+#else
+#ifdef UNICODE
+	if (SUCCEEDED(SHGetFolderPath(m_hWnd,CSIDL_APPDATA | CSIDL_FLAG_CREATE,NULL,
+		SHGFP_TYPE_CURRENT,szDirPath)))
+#else	// Win 9x.
+	if (SUCCEEDED(SHGetSpecialFolderPath(m_hWnd,szDirPath,CSIDL_APPDATA,true)))
+#endif
 	{
-		m_hLogFile = fs_open(szFileName,_T("a"));
-		if (m_hLogFile != NULL)
+		IncludeTrailingBackslash(szDirPath);
+		lstrcat(szDirPath,_T("InfraRecorder\\Logs\\"));
+	}
+	else
+	{
+		GetModuleFileName(NULL,szDirPath,MAX_PATH - 1);
+		ExtractFilePath(szDirPath);
+	}
+#endif
+
+	return ckcore::Path(szDirPath);
+}
+
+void CLogDlg::InitializeLogFile()
+{
+	if (m_LogFile.Exist())
+	{
+		if (m_LogFile.Open(ckcore::FileBase::ckOPEN_READWRITE))
 		{
-			fs_seek(m_hLogFile,0,FILE_END);
-			fs_write(_T("\r\n"),sizeof(TCHAR) << 1,m_hLogFile);
+			m_LogFile.Seek(0,ckcore::FileBase::ckFILE_END);
+			m_LogFile.Write(ckT("\r\n"),sizeof(ckcore::tchar) << 1);
 		}
 	}
 	else
 	{
-		m_hLogFile = fs_open(szFileName,_T("w"));
-
-#ifdef UNICODE
-		// Write byte order mark.
-		if (m_hLogFile != NULL)
+		if (m_LogFile.Open(ckcore::FileBase::ckOPEN_WRITE))
 		{
+#ifdef UNICODE
+			// Write byte order mark.
 			unsigned short usBOM = BOM_UTF32BE;
-			fs_write(&usBOM,2,m_hLogFile);
+			m_LogFile.Write(&usBOM,2);
 		}
 #endif
 	}
@@ -159,7 +162,7 @@ void CLogDlg::Show()
 	m_LogEdit.LineScroll(m_LogEdit.GetLineCount());
 }
 
-void CLogDlg::AddString(const TCHAR *szString,...)
+void CLogDlg::Print(const TCHAR *szString,...)
 {
 	if (g_GlobalSettings.m_bLog && IsWindow())
 	{
@@ -175,12 +178,12 @@ void CLogDlg::AddString(const TCHAR *szString,...)
 		m_LogEdit.AppendText(m_szLineBuffer);
 
 		// Write to the log file.
-		if (m_hLogFile != NULL)
-			fs_write(m_szLineBuffer,lstrlen(m_szLineBuffer) * sizeof(TCHAR),m_hLogFile);
+		if (m_LogFile.Test())
+			m_LogFile.Write(m_szLineBuffer,lstrlen(m_szLineBuffer) * sizeof(TCHAR));
 	}
 }
 
-void CLogDlg::AddLine(const TCHAR *szLine,...)
+void CLogDlg::PrintLine(const TCHAR *szLine,...)
 {
 	if (g_GlobalSettings.m_bLog && IsWindow())
 	{
@@ -197,18 +200,18 @@ void CLogDlg::AddLine(const TCHAR *szLine,...)
 		m_LogEdit.AppendText(_T("\r\n"));
 
 		// Write to the log file.
-		if (m_hLogFile != NULL)
+		if (m_LogFile.Test())
 		{
-			fs_write(m_szLineBuffer,lstrlen(m_szLineBuffer) * sizeof(TCHAR),m_hLogFile);
-			fs_write(_T("\r\n"),2 * sizeof(TCHAR),m_hLogFile);
+			m_LogFile.Write(m_szLineBuffer,lstrlen(m_szLineBuffer) * sizeof(TCHAR));
+			m_LogFile.Write(ckT("\r\n"),2 * sizeof(ckcore::tchar));
 		}
 	}
 }
 
 bool CLogDlg::SaveLog(const TCHAR *szFileName)
 {
-	HANDLE hFile = fs_open(szFileName,_T("w"));
-	if (hFile == INVALID_HANDLE_VALUE)
+	ckcore::File File(szFileName);
+	if (!File.Open(ckcore::FileBase::ckOPEN_WRITE))
 		return false;
 
 	// Obtain buffer handle.
@@ -227,7 +230,11 @@ bool CLogDlg::SaveLog(const TCHAR *szFileName)
 	if (bIsUnicode)
 	{
 		unsigned short usBOM = BOM_UTF32BE;
-		fs_write(&usBOM,2,hFile);
+		if (File.Write(&usBOM,2) == -1)
+		{
+			File.Remove();
+			return false;
+		}
 	}
 #endif
 
@@ -236,16 +243,23 @@ bool CLogDlg::SaveLog(const TCHAR *szFileName)
 
 	while (uiRemaining > LOG_WRITEBUFFER_SIZE)
 	{
-		fs_write(pBuffer,LOG_WRITEBUFFER_SIZE,hFile);
+		if (File.Write(pBuffer,LOG_WRITEBUFFER_SIZE) == -1)
+		{
+			File.Remove();
+			return false;
+		}
+
 		uiRemaining -= LOG_WRITEBUFFER_SIZE;
 		pBuffer += LOG_WRITEBUFFER_SIZE;
 	}
 
-	fs_write(pBuffer,uiRemaining,hFile);
+	if (File.Write(pBuffer,uiRemaining) == -1)
+	{
+		File.Remove();
+		return false;
+	}
 
 	LocalUnlock(hBuffer);
-
-	fs_close(hFile);
 	return true;
 }
 
@@ -295,18 +309,18 @@ LRESULT CLogDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandl
 				unsigned char *pBuffer;
 				VerQueryValue(pBlock,szStrBuffer,(LPVOID *)&pBuffer,(unsigned int *)&ulDataSize);
 
-				AddString(_T("InfraRecorder version %s"),(TCHAR *)pBuffer);
+				Print(_T("InfraRecorder version %s"),(TCHAR *)pBuffer);
 			}
 
 			delete [] pBlock;
 		}
 
 #ifdef _M_IA64
-		AddLine(_T(" (IA64)"));
+		PrintLine(_T(" (IA64)"));
 #elif defined _M_X64
-		AddLine(_T(" (x64)"));
+		PrintLine(_T(" (x64)"));
 #else
-		AddLine(_T(" (x86)"));
+		PrintLine(_T(" (x86)"));
 #endif
 
 		// Date and time.
@@ -316,10 +330,10 @@ LRESULT CLogDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandl
 		GetDateFormat(LOCALE_USER_DEFAULT,0,&st,_T("dddd, MMMM dd yyyy "),szDate,64);
 		TCHAR szDateTime[128];
 		lsprintf(szDateTime,_T("Started: %s%.2d:%.2d:%.2d."),szDate,st.wHour,st.wMinute,st.wSecond);
-		AddLine(szDateTime);
+		PrintLine(szDateTime);
 
 		// Windows version.
-		AddLine(_T("Versions: MSW = %d.%d, IE = %d.%d, CC = %d.%d."),
+		PrintLine(_T("Versions: MSW = %d.%d, IE = %d.%d, CC = %d.%d."),
 			g_WinVer.m_ulMajorVersion,g_WinVer.m_ulMinorVersion,
 			g_WinVer.m_ulMajorIEVersion,g_WinVer.m_ulMinorIEVersion,
 			g_WinVer.m_ulMajorCCVersion,g_WinVer.m_ulMinorCCVersion);
@@ -353,10 +367,9 @@ LRESULT CLogDlg::OnSaveAs(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 
 LRESULT CLogDlg::OnFiles(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
-	TCHAR szPathName[MAX_PATH];
-	GetLogPath(szPathName);
+	ckcore::Path Path = GetLogDirPath();
 
-	ShellExecute(HWND_DESKTOP,_T("open"),_T("explorer.exe"),szPathName,NULL,SW_SHOWDEFAULT);
+	ShellExecute(HWND_DESKTOP,_T("open"),_T("explorer.exe"),Path.Name().c_str(),NULL,SW_SHOWDEFAULT);
 	return 0;
 }
 

@@ -1,24 +1,24 @@
 /*
- * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
- *
- * This program is free software; you can redistribute it and/or modify
+ * InfraRecorder - CD/DVD burning software
+ * Copyright (C) 2006-2008 Christian Kindahl
+ * 
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "stdafx.h"
+#include <ckcore/directory.hh>
 #include "TempManager.h"
-#include "../../Common/FileManager.h"
 #include "Settings.h"
 
 CTempManager g_TempManager;
@@ -47,17 +47,19 @@ void CTempManager::AddObject(const TCHAR *szFileName)
 void CTempManager::CleanUp()
 {
 	// Remove the empty directory (if created).
-	if (fs_directoryexists(m_szEmptyDir))
-		fs_deletedir(m_szEmptyDir);
+	ckcore::Directory::Remove(m_szEmptyDir);
 	m_szEmptyDir[0] = '\0';
 
 	// Remove any files.
 	for (unsigned int i = 0; i < m_szFileNames.size(); i++)
     {
-		if (fs_fileexists(m_szFileNames[i].c_str()))
-			fs_deletefile(m_szFileNames[i].c_str());
-        else if (fs_directoryexists(m_szFileNames[i].c_str()))
-			fs_deletedir(m_szFileNames[i].c_str());
+		ckcore::File File(m_szFileNames[i].c_str());
+		ckcore::Directory Directory(m_szFileNames[i].c_str());
+
+		if (File.Exist())
+			File.Remove();
+		else if (Directory.Exist())
+			Directory.Remove();
 	}
 
 	m_szFileNames.clear();
@@ -66,7 +68,12 @@ void CTempManager::CleanUp()
 const TCHAR *CTempManager::GetEmtpyDirectory()
 {
 	if (m_szEmptyDir[0] == '\0')
-		fs_createtemppath(g_GlobalSettings.m_szTempPath,_T("irEmpty"),m_szEmptyDir);
+	{
+		ckcore::Directory TempDir = ckcore::Directory::Temp();
+		TempDir.Create();
+
+		lstrcpy(m_szEmptyDir,TempDir.Name().c_str());
+	}
 
 	return m_szEmptyDir;
 }

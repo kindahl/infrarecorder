@@ -1,19 +1,19 @@
 /*
- * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
- *
- * This program is free software; you can redistribute it and/or modify
+ * InfraRecorder - CD/DVD burning software
+ * Copyright (C) 2006-2008 Christian Kindahl
+ * 
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "stdafx.h"
@@ -43,12 +43,12 @@ bool CCore2Device::Open(CCore2DeviceAddress *pAddress)
 	if (m_DriverSPTI.Open(pAddress->m_cDriveLetter))
 	{
 		m_iDeviceStatus = DS_OPEN_SPTI;
-		g_LogDlg.AddLine(_T("  Opened device '%C' using SPTI."),pAddress->m_cDriveLetter);
+		g_LogDlg.PrintLine(_T("  Opened device '%C' using SPTI."),pAddress->m_cDriveLetter);
 	}
 	else if (m_DriverASPI.Open(pAddress->m_iBus,pAddress->m_iTarget,pAddress->m_iLun))
 	{
 		m_iDeviceStatus = DS_OPEN_ASPI;
-		g_LogDlg.AddLine(_T("  Opened device [%d,%d,%d] using ASPI."),pAddress->m_iBus,pAddress->m_iTarget,pAddress->m_iLun);
+		g_LogDlg.PrintLine(_T("  Opened device [%d,%d,%d] using ASPI."),pAddress->m_iBus,pAddress->m_iTarget,pAddress->m_iLun);
 	}
 	else
 		m_iDeviceStatus = DS_CLOSED;

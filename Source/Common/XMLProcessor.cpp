@@ -1,24 +1,23 @@
 /*
- * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
- *
- * This program is free software; you can redistribute it and/or modify
+ * InfraRecorder - CD/DVD burning software
+ * Copyright (C) 2006-2008 Christian Kindahl
+ * 
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "stdafx.h"
 #include "XMLProcessor.h"
-#include "FileManager.h"
 #include "StringConv.h"
 
 #ifdef UNICODE
@@ -48,18 +47,22 @@ CXMLProcessor::~CXMLProcessor()
 
 void CXMLProcessor::DumpBuffer()
 {
-	HANDLE hTemp = fs_open(_T("xml_buffer_dump.txt"),_T("wb"));
-		fs_write(m_ucBuffer,sizeof(m_ucBuffer),hTemp);
-	fs_close(hTemp);
+	ckcore::File File(_T("xml_buffer_dump.txt"));
+	if (File.Open(ckcore::FileBase::ckOPEN_WRITE))
+		File.Write(m_ucBuffer,sizeof(m_ucBuffer));
 }
 
-bool CXMLProcessor::ReadNext(TCHAR &c)
+bool CXMLProcessor::ReadNext(ckcore::File &File,TCHAR &c)
 {
 	if (m_ulBufferPos == m_ulBufferSize)
 	{
 		memset(m_ucBuffer,0,sizeof(m_ucBuffer));
 
-		m_ulBufferSize = fs_read(m_ucBuffer,sizeof(m_ucBuffer),m_hFile);
+		ckcore::tint64 iRead = File.Read(m_ucBuffer,sizeof(m_ucBuffer));
+		if (iRead == -1)
+			return false;
+
+		m_ulBufferSize = (unsigned long)iRead;
 		m_ulBufferSize /= sizeof(TCHAR);
 		m_ulBufferPos = 0;
 
@@ -90,10 +93,10 @@ void CXMLProcessor::ReadBack()
 	Reads the current tag's attributes. It returns false if the element is empty
 	and true if it's not. 
 */
-bool CXMLProcessor::ReadTagAttr(CXMLElement *pElement)
+bool CXMLProcessor::ReadTagAttr(ckcore::File &File,CXMLElement *pElement)
 {
 	TCHAR uc;
-	if (!ReadNext(uc))
+	if (!ReadNext(File,uc))
 		return false;
 
 	CXMLAttribute *pAttr = new CXMLAttribute();
@@ -103,7 +106,7 @@ bool CXMLProcessor::ReadTagAttr(CXMLElement *pElement)
 		// Check if this is an empty element.
 		if (uc == '/')
 		{
-			if (!ReadNext(uc))
+			if (!ReadNext(File,uc))
 			{
 				delete pAttr;
 				return false;
@@ -125,15 +128,15 @@ bool CXMLProcessor::ReadTagAttr(CXMLElement *pElement)
 			pAttr->m_szName.Append('\0');
 
 			// Skip the first ".
-			ReadNext(uc);
+			ReadNext(File,uc);
 
-			ReadNext(uc);
+			ReadNext(File,uc);
 			while (uc != '"')
 			{
 				pAttr->m_szValue.Append(uc);
 				pElement->m_ulAttrLength++;
 
-				if (!ReadNext(uc))
+				if (!ReadNext(File,uc))
 					break;
 			}
 
@@ -152,7 +155,7 @@ bool CXMLProcessor::ReadTagAttr(CXMLElement *pElement)
 			}
 		}
 
-		if (!ReadNext(uc))
+		if (!ReadNext(File,uc))
 		{
 			delete pAttr;
 			return false;
@@ -169,10 +172,10 @@ bool CXMLProcessor::ReadTagAttr(CXMLElement *pElement)
 	Reads the next tag in the file. It returns false if the element is empty
 	and true if it's not.
 */
-bool CXMLProcessor::ReadNextTag(CXMLElement *pElement)
+bool CXMLProcessor::ReadNextTag(ckcore::File &File,CXMLElement *pElement)
 {
 	TCHAR uc;
-	if (!ReadNext(uc))
+	if (!ReadNext(File,uc))
 		return false;
 
 	bool bResult = true;
@@ -181,12 +184,12 @@ bool CXMLProcessor::ReadNextTag(CXMLElement *pElement)
 	{
 		if (uc == ' ')
 		{
-			bResult = ReadTagAttr(pElement);
+			bResult = ReadTagAttr(File,pElement);
 			break;
 		}
 
 		pElement->m_szName.Append(uc);
-		if (!ReadNext(uc))
+		if (!ReadNext(File,uc))
 			return false;
 	}
 
@@ -199,18 +202,19 @@ bool CXMLProcessor::ReadNextTag(CXMLElement *pElement)
 	-------------------
 	Loads the specified XML into a tree structure in memory. Varius return values.
 */
-int CXMLProcessor::Load(const TCHAR *szFileName)
+int CXMLProcessor::Load(const TCHAR *szFullPath)
 {
 	// Open the file.
-	m_hFile = fs_open(szFileName,_T("rb"));
-	if (m_hFile == INVALID_HANDLE_VALUE)
+	ckcore::File File(szFullPath);
+	if (!File.Open(ckcore::FileBase::ckOPEN_READ))
 		return XMLRES_FILEERROR;
 
 	// If the application is in an unicode environment we need to check what
 	// byte-order us used.
 #ifdef UNICODE
 	unsigned short usBOM = 0;
-	fs_read(&usBOM,2,m_hFile);
+	if (File.Read(&usBOM,2) == -1)
+		return XMLRES_FILEERROR;
 
 	switch (usBOM)
 	{
@@ -225,7 +229,9 @@ int CXMLProcessor::Load(const TCHAR *szFileName)
 
 		default:
 			// If no BOM is found the file pointer has to be re-moved to the beginning.
-			fs_seek(m_hFile,0,FILE_BEGIN);
+			if (File.Seek(0,ckcore::FileBase::ckFILE_BEGIN) == -1)
+				return XMLRES_FILEERROR;
+
 			break;
 	};
 #endif
@@ -237,7 +243,7 @@ int CXMLProcessor::Load(const TCHAR *szFileName)
 	// Set the current child to the root.
 	m_pCurrent = m_pRoot;
 
-	m_iRemainBytes = fs_filesize(m_hFile);
+	m_iRemainBytes = File.Size();
 
 	unsigned int uiDataPos = 0;
 
@@ -246,13 +252,13 @@ int CXMLProcessor::Load(const TCHAR *szFileName)
 	while (m_iRemainBytes)
 	{
 		TCHAR uc;
-		if (!ReadNext(uc))
+		if (!ReadNext(File,uc))
 			break;
 
 		// We have found the beginning of a tag.
 		if (uc == '<')
 		{
-			if (!ReadNext(uc))
+			if (!ReadNext(File,uc))
 				break;
 
 			// Check if we have reached the end of a section.
@@ -260,13 +266,13 @@ int CXMLProcessor::Load(const TCHAR *szFileName)
 			{
 				CCustomString szTemp(XML_NAMELENGTH);
 				
-				if (!ReadNext(uc))
+				if (!ReadNext(File,uc))
 					break;
 
 				while (uc != '>')
 				{
 					szTemp.Append(uc);
-					if (!ReadNext(uc))
+					if (!ReadNext(File,uc))
 						break;
 				}
 
@@ -274,11 +280,6 @@ int CXMLProcessor::Load(const TCHAR *szFileName)
 
 				if (lstrcmp(pCurElem->m_szName,szTemp))
 				{
-					// Debug messages.
-					//MessageBox(NULL,_T("The tag terminator does not match the creator."),_T("Error"),MB_OK);
-					//MessageBox(NULL,pCurElem->m_szName,szTemp,MB_OK);
-
-					fs_close(m_hFile);
 					return XMLRES_BADSYNC;
 				}
 				else
@@ -297,12 +298,12 @@ int CXMLProcessor::Load(const TCHAR *szFileName)
 			else if (uc == '?')	// Check if we have reached a processing unstruction.
 			{
 				TCHAR cTemp;
-				if (!ReadNext(cTemp))
+				if (!ReadNext(File,cTemp))
 					break;
 
 				while (cTemp != '>')
 				{
-					if (!ReadNext(cTemp))
+					if (!ReadNext(File,cTemp))
 						break;
 				}
 			}
@@ -320,7 +321,7 @@ int CXMLProcessor::Load(const TCHAR *szFileName)
 				CXMLElement *pNewElem = new CXMLElement();	
 				pNewElem->m_pParent = pCurElem;
 
-				bHandleData = ReadNextTag(pNewElem);
+				bHandleData = ReadNextTag(File,pNewElem);
 
 				if (pCurElem != NULL)
 					pCurElem->m_Children.push_back(pNewElem);
@@ -340,11 +341,10 @@ int CXMLProcessor::Load(const TCHAR *szFileName)
 		}
 	}
 
-	fs_close(m_hFile);
 	return XMLRES_OK;
 }
 
-void CXMLProcessor::SaveEntity(unsigned int uiIndent,CXMLElement *pElement)
+void CXMLProcessor::SaveEntity(ckcore::File &File,unsigned int uiIndent,CXMLElement *pElement)
 {
 	// If the element contains no information we skip it.
 	if (pElement->m_Children.size() == 0 &&
@@ -358,12 +358,6 @@ void CXMLProcessor::SaveEntity(unsigned int uiIndent,CXMLElement *pElement)
 	// The length of the complete attributes string when printed to the buffer.
 	unsigned long ulAttrLength = pElement->m_ulAttrLength +
 		(unsigned long)pElement->m_Attributes.size() * 4;
-
-	// FIXME: Make 32 a constant definition.
-	//TCHAR *szOutBuf = new TCHAR[pElement->m_szName.Length() + 32 + pElement->m_szAttr.Length() + pElement->m_szData.Length()];
-	
-	/*CCustomString OutBuf(pElement->m_szName.Length() + 32 + ulAttrLength +
-		pElement->m_szData.Length());*/
 	
 	// The epsilon value compensates for some <, > and / characters.
 	TCHAR *szOutBuf = new TCHAR[
@@ -411,7 +405,7 @@ void CXMLProcessor::SaveEntity(unsigned int uiIndent,CXMLElement *pElement)
 	}
 
 	// Write to the file.
-	fs_write(szOutBuf,lstrlen(szOutBuf) * sizeof(TCHAR),m_hFile);
+	File.Write(szOutBuf,lstrlen(szOutBuf) * sizeof(TCHAR));
 
 	// Write the data.
 	if (pElement->m_szData[0] != '\0')
@@ -423,12 +417,12 @@ void CXMLProcessor::SaveEntity(unsigned int uiIndent,CXMLElement *pElement)
 			lstrcat(szOutBuf,_T("\r\n"));
 		// ...
 
-		fs_write(szOutBuf,lstrlen(szOutBuf) * sizeof(TCHAR),m_hFile);
+		File.Write(szOutBuf,lstrlen(szOutBuf) * sizeof(TCHAR));
 	}
 
 	// Traverse the children.
 	for (i = 0; i < pElement->m_Children.size(); i++)
-		SaveEntity(uiIndent + 1,pElement->m_Children[i]);
+		SaveEntity(File,uiIndent + 1,pElement->m_Children[i]);
 
 	// Re-indent if necessary.
 	if (pElement->m_Children.size() != 0)
@@ -452,7 +446,7 @@ void CXMLProcessor::SaveEntity(unsigned int uiIndent,CXMLElement *pElement)
 		lstrcat(szOutBuf,pElement->m_szName);
 		lstrcat(szOutBuf,_T(">\r\n"));
 
-		fs_write(szOutBuf,lstrlen(szOutBuf) * sizeof(TCHAR),m_hFile);
+		File.Write(szOutBuf,lstrlen(szOutBuf) * sizeof(TCHAR));
 	}
 
 	delete [] szOutBuf;
@@ -464,18 +458,22 @@ void CXMLProcessor::SaveEntity(unsigned int uiIndent,CXMLElement *pElement)
 	Saves the current loaded XML-structure to a file with the specified filename.
 	Various return values.
 */
-int CXMLProcessor::Save(const TCHAR *szFileName)
+int CXMLProcessor::Save(const TCHAR *szFullPath)
 {
 	// Open the file.
-	m_hFile = fs_open(szFileName,_T("wb"));
-	if (m_hFile == NULL)
+	ckcore::File File(szFullPath);
+	if (!File.Open(ckcore::FileBase::ckOPEN_WRITE))
 		return XMLRES_FILEERROR;
 
 	// Write byte-order mark.
 #ifdef UNICODE
 #ifdef XML_SAVE_BOM
 	unsigned short usBOM = BOM_UTF32BE;
-	fs_write(&usBOM,2,m_hFile);
+	if (File.Write(&usBOM,2) == -1)
+	{
+		File.Remove();
+		return XMLRES_FILEERROR;
+	}
 #endif
 #endif
 
@@ -484,15 +482,22 @@ int CXMLProcessor::Save(const TCHAR *szFileName)
 	char szTemp[70];
 	sprintf(szTemp,m_szXMLHeader,GetACP());
 
-	fs_write((void *)szTemp,(unsigned long)strlen(szTemp),m_hFile);
+	if (File.Write((void *)szTemp,(unsigned long)strlen(szTemp)) == -1)
+	{
+		File.Remove();
+		return XMLRES_FILEERROR;
+	}
 #else
-	fs_write((void *)m_szXMLHeader,lstrlen(m_szXMLHeader) * sizeof(TCHAR),m_hFile);
+	if (File.Write((void *)m_szXMLHeader,lstrlen(m_szXMLHeader) * sizeof(TCHAR)) == -1)
+	{
+		File.Remove();
+		return XMLRES_FILEERROR;
+	}
 #endif
 
 	for (unsigned int i = 0; i < m_pRoot->m_Children.size(); i++)
-		SaveEntity(0,m_pRoot->m_Children[i]);
+		SaveEntity(File,0,m_pRoot->m_Children[i]);
 
-	fs_close(m_hFile);
 	return XMLRES_OK;
 }
 

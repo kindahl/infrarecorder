@@ -1,19 +1,19 @@
 /*
- * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
- *
- * This program is free software; you can redistribute it and/or modify
+ * InfraRecorder - CD/DVD burning software
+ * Copyright (C) 2006-2008 Christian Kindahl
+ * 
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "stdafx.h"
@@ -86,7 +86,7 @@ bool CCore2Info::ReadTrackInformation(CCore2Device *pDevice,eTrackInfoType InfoT
 	// Check if we received to much data.
 	unsigned short usDataLength = ((unsigned short)ucBuffer[0] << 8) | ucBuffer[1];
 	if (usDataLength > (sizeof(ucBuffer) - 2))
-		g_LogDlg.AddLine(_T("  Warning: CCore2::ReadTrackInformation received more track information than it could handle."));
+		g_LogDlg.PrintLine(_T("  Warning: CCore2::ReadTrackInformation received more track information than it could handle."));
 
 	pTrackInfo->m_ucFlags = (ucBuffer[6] & 0xF0) | ((ucBuffer[5] >> 2) & 0x0C) | (ucBuffer[7] & 0x03);
 	pTrackInfo->m_ucLJRS = (ucBuffer[5] >> 6) & 0x03;
@@ -301,7 +301,7 @@ bool CCore2Info::ReadSI(CCore2Device *pDevice,unsigned char &ucFirstSessNumber,
 bool CCore2Info::GetTotalDiscCapacity(CCore2Device *pDevice,unsigned __int64 &uiUsedBytes,
 									  unsigned __int64 &uiFreeBytes)
 {
-	g_LogDlg.AddLine(_T("CCore2Info::GetTotalDiscCapacity"));
+	g_LogDlg.PrintLine(_T("CCore2Info::GetTotalDiscCapacity"));
 
 	uiUsedBytes = 0;
 	uiFreeBytes = 0;
@@ -322,7 +322,7 @@ bool CCore2Info::GetTotalDiscCapacity(CCore2Device *pDevice,unsigned __int64 &ui
 		return false;
 
 	unsigned short usProfile = ucBuffer[6] << 8 | ucBuffer[7];
-	g_LogDlg.AddLine(_T("  Current profile: 0x%.4X."),usProfile);
+	g_LogDlg.PrintLine(_T("  Current profile: 0x%.4X."),usProfile);
 
 	bool bReadOnly = true;
 	switch (usProfile)
@@ -358,11 +358,11 @@ bool CCore2Info::GetTotalDiscCapacity(CCore2Device *pDevice,unsigned __int64 &ui
 		return false;
 
 	unsigned char ucCapListLen = ucBuffer[3];
-	g_LogDlg.AddLine(_T("  Capacity list length: %d bytes."),ucCapListLen);
+	g_LogDlg.PrintLine(_T("  Capacity list length: %d bytes."),ucCapListLen);
 
 	if (ucCapListLen % 8 != 0 || ucCapListLen == 0)
 	{
-		g_LogDlg.AddLine(_T("  Error: Invalid capacity list length."));
+		g_LogDlg.PrintLine(_T("  Error: Invalid capacity list length."));
 		return false;
 	}
 
@@ -378,7 +378,7 @@ bool CCore2Info::GetTotalDiscCapacity(CCore2Device *pDevice,unsigned __int64 &ui
 
 	if ((ucBuffer[8] & 0x03) == 0x03)	// No media present or unknown capacity.
 	{
-		g_LogDlg.AddLine(_T("  No media present."));
+		g_LogDlg.PrintLine(_T("  No media present."));
 		return false;
 	}
 

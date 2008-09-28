@@ -1,20 +1,21 @@
 /*
- * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
- *
- * This program is free software; you can redistribute it and/or modify
+ * InfraRecorder - CD/DVD burning software
+ * Copyright (C) 2006-2008 Christian Kindahl
+ * 
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 #include "stdafx.h"
 #include "Core2Read.h"
 #include "Core2.h"
@@ -23,7 +24,6 @@
 #include "LogDlg.h"
 #include "StringTable.h"
 #include "LangUtil.h"
-#include "../../Common/FileManager.h"
 
 namespace Core2ReadFunction
 {
@@ -43,7 +43,7 @@ namespace Core2ReadFunction
 		memset(ucCdb,0,sizeof(ucCdb));
 
 		if (ulBlockCount > 0xFFFFFF)
-			g_LogDlg.AddLine(_T("  Warning: Requested block count to large, trunkated the number of block requested to read."));
+			g_LogDlg.PrintLine(_T("  Warning: Requested block count to large, trunkated the number of block requested to read."));
 
 		ucCdb[ 0] = SCSI_READ_CD;
 		ucCdb[ 1] = 0;		// Return all types of sectors.
@@ -74,15 +74,9 @@ namespace Core2ReadFunction
 		return true;
 	}
 
-	CReadUserData::CReadUserData(CCore2Device *pDevice,/*const TCHAR *szFilePath*/COutStream *pOutStream) :
+	CReadUserData::CReadUserData(CCore2Device *pDevice,ckcore::OutStream *pOutStream) :
 		CReadFunction(pDevice),m_pOutStream(pOutStream)
 	{
-		// FIXME: Generate a temporary file name.
-		// Prepare the image file.
-		/*m_hFile = fs_open(szFilePath,_T("wb"));
-		if (m_hFile == NULL)
-			g_LogDlg.AddLine(_T("  Error: Unable to open the output file: \"%s\"."),szFilePath);*/
-
 		// Get the block size in bytes (the frame only contains the user data in this case).
 		CCore2Info Core2Info;
 		unsigned long ulBlockAddress = 0;
@@ -90,19 +84,14 @@ namespace Core2ReadFunction
 		if (!Core2Info.ReadCapacity(pDevice,ulBlockAddress,m_ulFrameSize))
 		{
 			m_ulFrameSize = 2048;
-			g_LogDlg.AddLine(_T("  Error: Unable to obtain disc block information, impossible to continue."));
+			g_LogDlg.PrintLine(_T("  Error: Unable to obtain disc block information, impossible to continue."));
 		}
 
-		g_LogDlg.AddLine(_T("  Block address: %u, block length: %u."),ulBlockAddress,m_ulFrameSize);
+		g_LogDlg.PrintLine(_T("  Block address: %u, block length: %u."),ulBlockAddress,m_ulFrameSize);
 	}
 
 	CReadUserData::~CReadUserData()
 	{
-		/*if (m_hFile != NULL)
-		{
-			fs_close(m_hFile);
-			m_hFile = NULL;
-		}*/
 	}
 
 	bool CReadUserData::Read(unsigned char *pBuffer,unsigned long ulAddress,
@@ -113,17 +102,7 @@ namespace Core2ReadFunction
 
 	bool CReadUserData::Process(unsigned char *pBuffer,unsigned long ulBlockCount)
 	{
-		/*if (m_hFile == NULL)
-		{
-			g_LogDlg.AddLine(_T("  Error: Unable to write to the output file."));
-			return false;
-		}*/
-
-		//fs_write(pBuffer,ulBlockCount * m_ulFrameSize,m_hFile);
-		unsigned long ulDummy;
-		m_pOutStream->Write(pBuffer,ulBlockCount * m_ulFrameSize,&ulDummy);
-
-		return true;
+		return m_pOutStream->Write(pBuffer,ulBlockCount * m_ulFrameSize) != 1;
 	}
 
 	unsigned long CReadUserData::GetFrameSize()
@@ -243,7 +222,7 @@ bool CCore2Read::RetryReadBlock(CCore2Device *pDevice,CAdvancedProgress *pProgre
 				i + 1,CORE2_READ_RETRYCOUNT);
 
 			// Check if the operation has been cancelled.
-			if (pProgress->IsCanceled())
+			if (pProgress->Cancelled())
 				return false;
 		}
 
@@ -278,26 +257,26 @@ bool CCore2Read::ReadData(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 						  Core2ReadFunction::CReadFunction *pReadFunction,unsigned long ulStartBlock,
 						  unsigned long ulNumBlocks,bool bIgnoreErr)
 {
-	//g_LogDlg.AddLine(_T("CCore2Read::ReadData"));
+	//g_LogDlg.PrintLine(_T("CCore2Read::ReadData"));
 
 	// Make sure that the device supports this operation.
 	bool bSupportFeature = false;
 	if (!g_Core2.GetFeatureSupport(pDevice,FEATURE_MULTIREAD,bSupportFeature))
-		g_LogDlg.AddLine(_T("  Warning: Unable to check device support for feature 0x%.4X."),FEATURE_MULTIREAD);
+		g_LogDlg.PrintLine(_T("  Warning: Unable to check device support for feature 0x%.4X."),FEATURE_MULTIREAD);
 	if (!bSupportFeature)
 	{
-		g_LogDlg.AddLine(_T("  Error: The selected device does not support this kind of operation."));
+		g_LogDlg.PrintLine(_T("  Error: The selected device does not support this kind of operation."));
 		return false;
 	}
 
 	if (!g_Core2.GetFeatureSupport(pDevice,FEATURE_CD_READ,bSupportFeature))
-		g_LogDlg.AddLine(_T("  Warning: Unable to check device support for feature 0x%.4X."),FEATURE_CD_READ);
+		g_LogDlg.PrintLine(_T("  Warning: Unable to check device support for feature 0x%.4X."),FEATURE_CD_READ);
 	if (!bSupportFeature)
 	{
 		if (pProgress != NULL)
-			pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,lngGetString(FAILURE_NOMEDIA));
+			pProgress->Notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_NOMEDIA));
 
-		g_LogDlg.AddLine(_T("  Error: The selected device does not support this kind of operation."));
+		g_LogDlg.PrintLine(_T("  Error: The selected device does not support this kind of operation."));
 		return false;
 	}
 
@@ -306,7 +285,7 @@ bool CCore2Read::ReadData(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 	g_Core2.GetProfile(pDevice,usProfile);
 	if (usProfile == PROFILE_NONE)
 	{
-		g_LogDlg.AddLine(_T("  Error: No disc inserted."));
+		g_LogDlg.PrintLine(_T("  Error: No disc inserted."));
 		return false;
 	}
 
@@ -339,7 +318,7 @@ bool CCore2Read::ReadData(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 		}
 
 		// Check if the operation has been cancelled.
-		if (pProgress != NULL && pProgress->IsCanceled())
+		if (pProgress != NULL && pProgress->Cancelled())
 		{
 			delete [] pReadBuffer;
 			return false;
@@ -347,16 +326,16 @@ bool CCore2Read::ReadData(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 
 		if (!pReadFunction->Read(pReadBuffer,l,ulReadCount))
 		{
-			g_LogDlg.AddLine(_T("  Warning: Failed to read sector range %u-%u"),
+			g_LogDlg.PrintLine(_T("  Warning: Failed to read sector range %u-%u"),
 				l,l + ulReadCount);
 			if (pProgress != NULL)
-				pProgress->AddLogEntry(CAdvancedProgress::LT_WARNING,lngGetString(FAILURE_READSOURCEDISC),l);
+				pProgress->Notify(ckcore::Progress::ckWARNING,lngGetString(FAILURE_READSOURCEDISC),l);
 
 			// Read the sectors in the failed sector range one by one.
 			for (unsigned int j = 0; j < ulReadCount; j++)
 			{
 				// Check if the operation has been cancelled.
-				if (pProgress != NULL && pProgress->IsCanceled())
+				if (pProgress != NULL && pProgress->Cancelled())
 				{
 					delete [] pReadBuffer;
 					return false;
@@ -364,27 +343,27 @@ bool CCore2Read::ReadData(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 
 				if (!RetryReadBlock(pDevice,pProgress,pReadFunction,pReadBuffer + j * pReadFunction->GetFrameSize(),l + j))
 				{
-					g_LogDlg.AddLine(_T("    Retry on sector %u failed."),l+j);
+					g_LogDlg.PrintLine(_T("    Retry on sector %u failed."),l+j);
 
 					// Check if we're allowed to ignore this error.
 					if (!bIgnoreErr)
 					{
 						if (pProgress != NULL)
-							pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,lngGetString(ERROR_SECTOR),l + j);	
+							pProgress->Notify(ckcore::Progress::ckERROR,lngGetString(ERROR_SECTOR),l + j);	
 
 						delete [] pReadBuffer;
 						return false;
 					}
 
 					if (pProgress != NULL)
-						pProgress->AddLogEntry(CAdvancedProgress::LT_WARNING,lngGetString(ERROR_SECTOR),l + j);	
+						pProgress->Notify(ckcore::Progress::ckWARNING,lngGetString(ERROR_SECTOR),l + j);	
 				}
 			}
 		}
 
 		if (!pReadFunction->Process(pReadBuffer,ulReadCount))
 		{
-			g_LogDlg.AddLine(_T("  Error: Unable to process read data."));
+			g_LogDlg.PrintLine(_T("  Error: Unable to process read data."));
 
 			delete [] pReadBuffer;
 			return false;

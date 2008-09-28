@@ -1,24 +1,25 @@
 /*
- * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
- *
- * This program is free software; you can redistribute it and/or modify
+ * InfraRecorder - CD/DVD burning software
+ * Copyright (C) 2006-2008 Christian Kindahl
+ * 
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "stdafx.h"
+#include <ckcore/directory.hh>
+#include <ckcore/path.hh>
 #include "CodecManager.h"
-#include "DirLister.h"
 
 CCodec::CCodec()
 {
@@ -122,19 +123,19 @@ bool CCodecManager::LoadCodec(const TCHAR *szFileName)
 
 bool CCodecManager::LoadCodecs(const TCHAR *szCodecPath)
 {
-	CDirLister DirLister;
-	DirLister.ListDirectory(szCodecPath,_T("*.irc"));
+	ckcore::Path CodecPath = szCodecPath;
 
-	TCHAR szFileName[MAX_PATH];
-
-	// Scan the directory for codecs.
-	for (unsigned int i = 0; i < DirLister.m_FileList.size(); i++)
+	ckcore::Directory CodecDir(CodecPath);
+	ckcore::Directory::Iterator itDir;
+	for (itDir = CodecDir.Begin(); itDir != CodecDir.End(); itDir++)
 	{
-		lstrcpy(szFileName,szCodecPath);
-		lstrcat(szFileName,DirLister.m_FileList[i].FileData.cFileName);
+		ckcore::Path PluginPath = CodecPath + (*itDir).c_str();
 
-		if (!LoadCodec(szFileName))
-			return false;
+		if (!lstrcmpi(PluginPath.ExtName().c_str(),ckT("irc")))
+		{
+			if (!LoadCodec(PluginPath.Name().c_str()))
+				return false;
+		}
 	}
 
 	m_bIsLoaded = true;

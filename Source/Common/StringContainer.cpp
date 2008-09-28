@@ -1,24 +1,23 @@
 /*
- * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
- *
- * This program is free software; you can redistribute it and/or modify
+ * InfraRecorder - CD/DVD burning software
+ * Copyright (C) 2006-2008 Christian Kindahl
+ * 
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "stdafx.h"
 #include "StringContainer.h"
-#include "FileManager.h"
 #include "CustomString.h"
 
 CStringContainer::CStringContainer()
@@ -34,13 +33,17 @@ CStringContainer::~CStringContainer()
 	m_szStrings.clear();
 }
 
-bool CStringContainer::ReadNext(HANDLE hFile,TCHAR &c)
+bool CStringContainer::ReadNext(ckcore::File &File,TCHAR &c)
 {
 	if (m_ulBufferPos == m_ulBufferSize)
 	{
 		memset(m_ucBuffer,0,sizeof(m_ucBuffer));
 
-		m_ulBufferSize = fs_read(m_ucBuffer,sizeof(m_ucBuffer),hFile);
+		ckcore::tint64 iRead = File.Read(m_ucBuffer,sizeof(m_ucBuffer));
+		if (iRead == -1)
+			return false;
+
+		m_ulBufferSize = (unsigned long)iRead;
 		m_ulBufferSize /= sizeof(TCHAR);
 		m_ulBufferPos = 0;
 
@@ -62,14 +65,15 @@ bool CStringContainer::ReadNext(HANDLE hFile,TCHAR &c)
 */
 int CStringContainer::SaveToFile(const TCHAR *szFileName,bool bCRLF)
 {
-	HANDLE hFile = fs_open(szFileName,TEXT("wb"));
-	if (!hFile)
+	ckcore::File File(szFileName);
+	if (!File.Open(ckcore::FileBase::ckOPEN_WRITE))
 		return SCRES_FAIL;
 
 	// Write byte order mark.
 #ifdef UNICODE
 	unsigned short usBOM = BOM_UTF32BE;
-	fs_write(&usBOM,2,hFile);
+	if (File.Write(&usBOM,2) == -1)
+		return SCRES_FAIL;
 #endif
 
 	// Find the longest string.
@@ -92,25 +96,28 @@ int CStringContainer::SaveToFile(const TCHAR *szFileName,bool bCRLF)
 		else
 			lstrcat(szBuffer,TEXT("\n"));
 
-		fs_write((void *)szBuffer,lstrlen(szBuffer) * sizeof(TCHAR),hFile);
+		if (File.Write((void *)szBuffer,lstrlen(szBuffer) * sizeof(TCHAR)) == -1)
+		{
+			delete [] szBuffer;
+			return SCRES_FAIL;
+		}
 	}
 
 	delete [] szBuffer;
-
-	fs_close(hFile);
 	return SCRES_OK;
 }
 
 int CStringContainer::LoadFromFile(const TCHAR *szFileName)
 {
-	HANDLE hFile = fs_open(szFileName,TEXT("rb"));
-	if (!hFile)
+	ckcore::File File(szFileName);
+	if (!File.Open(ckcore::FileBase::ckOPEN_READ))
 		return SCRES_FAIL;
 
 	// Read byte order mark.
 #ifdef UNICODE
 	unsigned short usBOM = 0;
-	fs_read(&usBOM,2,hFile);
+	if (File.Read(&usBOM,2) == -1)
+		return SCRES_FAIL;
 
 	switch (usBOM)
 	{
@@ -125,19 +132,21 @@ int CStringContainer::LoadFromFile(const TCHAR *szFileName)
 
 		default:
 			// If no BOM is found the file pointer has to be re-moved to the beginning.
-			fs_seek(hFile,0,FILE_BEGIN);
+			if (File.Seek(0,ckcore::FileBase::ckFILE_BEGIN) == -1)
+				return SCRES_FAIL;
+
 			break;
 	};
 #endif
 
 	// Read the file data.
 	CCustomString Buffer(256);
-	m_iRemainBytes = fs_filesize(hFile);
+	m_iRemainBytes = File.Size();
 
 	while (m_iRemainBytes)
 	{
 		TCHAR uc;
-		if (!ReadNext(hFile,uc))
+		if (!ReadNext(File,uc))
 			break;
 
 		if (uc == '\r')
@@ -155,7 +164,6 @@ int CStringContainer::LoadFromFile(const TCHAR *szFileName)
 		Buffer.Append(uc);
 	}
 
-	fs_close(hFile);
 	return SCRES_OK;
 }
 
@@ -172,13 +180,17 @@ CStringContainerA::~CStringContainerA()
 	m_szStrings.clear();
 }
 
-bool CStringContainerA::ReadNext(HANDLE hFile,char &c)
+bool CStringContainerA::ReadNext(ckcore::File &File,char &c)
 {
 	if (m_ulBufferPos == m_ulBufferSize)
 	{
 		memset(m_ucBuffer,0,sizeof(m_ucBuffer));
 
-		m_ulBufferSize = fs_read(m_ucBuffer,sizeof(m_ucBuffer),hFile);
+		ckcore::tint64 iRead = File.Read(m_ucBuffer,sizeof(m_ucBuffer));
+		if (iRead == -1)
+			return false;
+
+		m_ulBufferSize = (unsigned long)iRead;
 		m_ulBufferPos = 0;
 
 		if (m_ulBufferSize == 0)
@@ -199,8 +211,8 @@ bool CStringContainerA::ReadNext(HANDLE hFile,char &c)
 */
 int CStringContainerA::SaveToFile(const TCHAR *szFileName,bool bCRLF)
 {
-	HANDLE hFile = fs_open(szFileName,TEXT("wb"));
-	if (!hFile)
+	ckcore::File File(szFileName);
+	if (!File.Open(ckcore::FileBase::ckOPEN_WRITE))
 		return SCRES_FAIL;
 
 	// Find the longest string.
@@ -223,29 +235,31 @@ int CStringContainerA::SaveToFile(const TCHAR *szFileName,bool bCRLF)
 		else
 			strcat(szBuffer,"\n");
 
-		fs_write((void *)szBuffer,(unsigned long)strlen(szBuffer),hFile);
+		if (File.Write((void *)szBuffer,(unsigned long)strlen(szBuffer)) == -1)
+		{
+			delete [] szBuffer;
+			return SCRES_FAIL;
+		}
 	}
 
 	delete [] szBuffer;
-
-	fs_close(hFile);
 	return SCRES_OK;
 }
 
 int CStringContainerA::LoadFromFile(const TCHAR *szFileName)
 {
-	HANDLE hFile = fs_open(szFileName,TEXT("rb"));
-	if (!hFile)
+	ckcore::File File(szFileName);
+	if (!File.Open(ckcore::FileBase::ckOPEN_READ))
 		return SCRES_FAIL;
 
 	// Read the file data.
 	CCustomStringA Buffer(256);
-	m_iRemainBytes = fs_filesize(hFile);
+	m_iRemainBytes = File.Size();
 
 	while (m_iRemainBytes)
 	{
 		char uc;
-		if (!ReadNext(hFile,uc))
+		if (!ReadNext(File,uc))
 			break;
 
 		if (uc == '\r')
@@ -263,6 +277,5 @@ int CStringContainerA::LoadFromFile(const TCHAR *szFileName)
 		Buffer.Append(uc);
 	}
 
-	fs_close(hFile);
 	return SCRES_OK;
 }

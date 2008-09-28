@@ -1,19 +1,19 @@
 /*
- * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
- *
- * This program is free software; you can redistribute it and/or modify
+ * InfraRecorder - CD/DVD burning software
+ * Copyright (C) 2006-2008 Christian Kindahl
+ * 
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "stdafx.h"
@@ -71,11 +71,11 @@ bool CImportSessionDlg::Translate()
 
 bool CImportSessionDlg::UpdateDiscInfo(CCore2Device *pDevice)
 {
-	g_LogDlg.AddLine(_T("CImportSessionDlg::UpdateDiscInfo"));
+	g_LogDlg.PrintLine(_T("CImportSessionDlg::UpdateDiscInfo"));
 
 	if (pDevice == NULL)
 	{
-		g_LogDlg.AddLine(_T("  Error: No device specified."));
+		g_LogDlg.PrintLine(_T("  Error: No device specified."));
 		return false;
 	}
 
@@ -85,7 +85,7 @@ bool CImportSessionDlg::UpdateDiscInfo(CCore2Device *pDevice)
 	CCore2Info Info;
 	if (Info.ReadTOC(pDevice,ucFirstTrackNumber,ucLastTrackNumber,Tracks))
 	{
-		g_LogDlg.AddLine(_T("  First and last disc track number: %d, %d."),
+		g_LogDlg.PrintLine(_T("  First and last disc track number: %d, %d."),
 			ucFirstTrackNumber,ucLastTrackNumber);
 
 		// Iterate through all tracks.
@@ -96,7 +96,7 @@ bool CImportSessionDlg::UpdateDiscInfo(CCore2Device *pDevice)
 		{
 			if (!Info.ReadTrackInformation(pDevice,CCore2Info::TIT_LBA,itTrack->m_ulTrackAddr,&TrackInfo))
 			{
-				g_LogDlg.AddLine(_T("  Error: Unable to read information about track %d."),itTrack->m_ucTrackNumber);
+				g_LogDlg.PrintLine(_T("  Error: Unable to read information about track %d."),itTrack->m_ucTrackNumber);
 				return false;
 			}
 
@@ -109,7 +109,7 @@ bool CImportSessionDlg::UpdateDiscInfo(CCore2Device *pDevice)
 	}
 	else
 	{
-		g_LogDlg.AddLine(_T("  Error: Unable to read TOC information to validate selected track."));
+		g_LogDlg.PrintLine(_T("  Error: Unable to read TOC information to validate selected track."));
 		return false;
 	}
 

@@ -1,58 +1,53 @@
 /*
- * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
- *
- * This program is free software; you can redistribute it and/or modify
+ * InfraRecorder - CD/DVD burning software
+ * Copyright (C) 2006-2008 Christian Kindahl
+ * 
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "stdafx.h"
 #ifndef UNICODE
 #include <stdio.h>
 #endif
+#include <ckcore/file.hh>
 #include "AudioUtil.h"
-#include "../../Common/FileManager.h"
 #include "../../Common/StringUtil.h"
 
 bool IsWave(const TCHAR *szFileName)
 {
-	HANDLE hFile = fs_open(szFileName,_T("rb"));
-	if (hFile == INVALID_HANDLE_VALUE)
+	ckcore::File File(szFileName);
+	if (!File.Open(ckcore::FileBase::ckOPEN_READ))
 		return false;
 
 	// Validate ID.
 	char szBuffer[4];
-	fs_read(szBuffer,4,hFile);
+	if (File.Read(szBuffer,4) == -1)
+		return false;
 
 	if (strncmp(szBuffer,"RIFF",4))
-	{
-		fs_close(hFile);
 		return false;
-	}
 
 	// Ignore size.
-	fs_seek(hFile,4,FILE_CURRENT);
+	File.Seek(4,ckcore::FileBase::ckFILE_CURRENT);
 
 	// Validate type.
-	fs_read(szBuffer,4,hFile);
+	if (File.Read(szBuffer,4) == -1)
+		return false;
 
 	if (strncmp(szBuffer,"WAVE",4))
-	{
-		fs_close(hFile);
 		return false;
-	}
 
-	fs_close(hFile);
 	return true;
 }
 

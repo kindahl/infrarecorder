@@ -1,19 +1,19 @@
 /*
- * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
- *
- * This program is free software; you can redistribute it and/or modify
+ * InfraRecorder - CD/DVD burning software
+ * Copyright (C) 2006-2008 Christian Kindahl
+ * 
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "stdafx.h"
@@ -44,7 +44,7 @@ bool CCore2DriverASPI::LoadDriver()
 	m_hDllInstance = LoadLibrary(_T("wnaspi32.dll"));
 	if (m_hDllInstance == NULL)
 	{
-		g_LogDlg.AddLine(_T("  Error: Unable to load ASPI driver, wnaspi32.dll could not be loaded."));
+		g_LogDlg.PrintLine(_T("  Error: Unable to load ASPI driver, wnaspi32.dll could not be loaded."));
 		return false;
 	}
 
@@ -59,7 +59,7 @@ bool CCore2DriverASPI::LoadDriver()
 	unsigned long ulStatusCode = (GetASPI32SupportInfo() & 0xFF00) >> 8;
 	if (ulStatusCode != SS_COMP && ulStatusCode != SS_NO_ADAPTERS)
 	{
-		g_LogDlg.AddLine(_T("  Error: Unable to load ASPI driver, status code 0x%.2X."),ulStatusCode);
+		g_LogDlg.PrintLine(_T("  Error: Unable to load ASPI driver, status code 0x%.2X."),ulStatusCode);
 		return false;
 	}
 
@@ -99,7 +99,7 @@ bool CCore2DriverASPI::Open(int iBus,int iTarget,int iLun)
 	/*unsigned long ulResult = GetASPI32SupportInfo();
 	if ((ulResult & 0xFF00) >> 8 != SS_COMP)
 	{
-		g_LogDlg.AddLine(_T("  Error: Unable to open ASPI device, GetASPI32SupportInfo() returned 0x%X."),ulResult);
+		g_LogDlg.PrintLine(_T("  Error: Unable to open ASPI device, GetASPI32SupportInfo() returned 0x%X."),ulResult);
 		return false;
 	}
 
@@ -115,11 +115,11 @@ bool CCore2DriverASPI::Open(int iBus,int iTarget,int iLun)
 		SendASPI32Command((LPSRB)&srbInquiry);
 		if (srbInquiry.SRB_Status != SS_COMP)
 		{
-			g_LogDlg.AddLine(_T("  Warning: Unable query host adapter %d."),ucHa);
+			g_LogDlg.PrintLine(_T("  Warning: Unable query host adapter %d."),ucHa);
 			continue;
 		}
 
-		g_LogDlg.AddLine(_T("  Found host adapter: %d."),ucHa);
+		g_LogDlg.PrintLine(_T("  Found host adapter: %d."),ucHa);
 	}*/
 
 	return true;
@@ -193,37 +193,37 @@ bool CCore2DriverASPI::Transport(unsigned char *pCdb,unsigned char ucCdbLength,
 
 	if (srbCommand.SRB_Status != SS_COMP)
 	{
-		g_LogDlg.AddLine(_T("  SendASPI32Command failed, status: 0x%.2X, last error: %d."),
+		g_LogDlg.PrintLine(_T("  SendASPI32Command failed, status: 0x%.2X, last error: %d."),
 			srbCommand.SRB_Status,GetLastError());
 		return false;
 	}
 
 	if (srbCommand.SRB_TargStat != SCSISTAT_GOOD)
 	{
-		g_LogDlg.AddLine(_T("  Error: SCSI command failed, returned: 0x%.2X."),srbCommand.SRB_TargStat);
+		g_LogDlg.PrintLine(_T("  Error: SCSI command failed, returned: 0x%.2X."),srbCommand.SRB_TargStat);
 
 		// Dump CDB.
-		g_LogDlg.AddString(_T("  CDB:\t"));
+		g_LogDlg.Print(_T("  CDB:\t"));
 		for (unsigned int i = 0; i < ucCdbLength; i++)
 		{
 			if (i == 0)
-				g_LogDlg.AddString(_T("0x%.2X"),pCdb[i]);
+				g_LogDlg.Print(_T("0x%.2X"),pCdb[i]);
 			else
-				g_LogDlg.AddString(_T(",0x%.2X"),pCdb[i]);
+				g_LogDlg.Print(_T(",0x%.2X"),pCdb[i]);
 		}
 
-		g_LogDlg.AddLine(_T(""));
+		g_LogDlg.PrintLine(_T(""));
 
 		// Dump sense information.
-		g_LogDlg.AddLine(_T("  Sense:\t0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X"),
+		g_LogDlg.PrintLine(_T("  Sense:\t0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X"),
 			srbCommand.SenseArea[0],srbCommand.SenseArea[1],srbCommand.SenseArea[2],srbCommand.SenseArea[3],
 			srbCommand.SenseArea[4],srbCommand.SenseArea[5],srbCommand.SenseArea[6],srbCommand.SenseArea[7]);
 
-		g_LogDlg.AddLine(_T("  \t0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X"),
+		g_LogDlg.PrintLine(_T("  \t0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X"),
 			srbCommand.SenseArea[ 8],srbCommand.SenseArea[ 9],srbCommand.SenseArea[10],srbCommand.SenseArea[11],
 			srbCommand.SenseArea[12],srbCommand.SenseArea[13],srbCommand.SenseArea[14],srbCommand.SenseArea[15]);
 
-		g_LogDlg.AddLine(_T("  \t0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X"),
+		g_LogDlg.PrintLine(_T("  \t0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X"),
 			srbCommand.SenseArea[16],srbCommand.SenseArea[17],srbCommand.SenseArea[18],srbCommand.SenseArea[19],
 			srbCommand.SenseArea[20],srbCommand.SenseArea[21],srbCommand.SenseArea[22],srbCommand.SenseArea[23]);
 
@@ -231,7 +231,7 @@ bool CCore2DriverASPI::Transport(unsigned char *pCdb,unsigned char ucCdbLength,
 	}
 
 /*#ifdef _DEBUG
-	g_LogDlg.AddLine(_T("DEBUG: Command 0x%.2X returned %d bytes of data."),pCdb[0],ulReturned);
+	g_LogDlg.PrintLine(_T("DEBUG: Command 0x%.2X returned %d bytes of data."),pCdb[0],ulReturned);
 #endif*/
 
 	return true;
@@ -298,13 +298,13 @@ bool CCore2DriverASPI::TransportWithSense(unsigned char *pCdb,unsigned char ucCd
 
 	/*if (srbCommand.SRB_Status != SS_COMP)
 	{
-		g_LogDlg.AddLine(_T("  SendASPI32Command failed, status: 0x%.2X, last error: %d."),
+		g_LogDlg.PrintLine(_T("  SendASPI32Command failed, status: 0x%.2X, last error: %d."),
 			srbCommand.SRB_Status,GetLastError());
 		return false;
 	}*/
 
 /*#ifdef _DEBUG
-	g_LogDlg.AddLine(_T("DEBUG: Command 0x%.2X returned %d bytes of data."),pCdb[0],ulReturned);
+	g_LogDlg.PrintLine(_T("DEBUG: Command 0x%.2X returned %d bytes of data."),pCdb[0],ulReturned);
 #endif*/
 
 	memcpy(pSense,srbCommand.SenseArea,24);
