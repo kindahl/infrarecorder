@@ -141,7 +141,12 @@ public:
 		// Path to cdrtools.
 		GetModuleFileName(NULL,m_szCDRToolsPath,MAX_PATH - 1);
 		ExtractFilePath(m_szCDRToolsPath);
+
+#ifdef CDRKIT
+		lstrcat(m_szCDRToolsPath,_T("cdrkit\\"));
+#else
 		lstrcat(m_szCDRToolsPath,_T("cdrtools\\"));
+#endif
 
 		// Cygwin version of the path.
 		GetCygwinFileName(m_szCDRToolsPath,m_szCDRToolsPathCyg);

@@ -150,7 +150,7 @@ void CReadOptionsPage::UpdateSpeeds()
 						m_ReadSpeedCombo.AddString(szBuffer);
 						m_ReadSpeedCombo.SetItemData(m_ReadSpeedCombo.GetCount() - 1,Speeds[i]);
 						// It would be nice if one could ppass floating point numbers as
-						// write speed to cdrecord!
+						// write speed to cdrecord/wodim!
 					}
 				}
 			}

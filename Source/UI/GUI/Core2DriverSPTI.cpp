@@ -50,7 +50,7 @@ CCore2DriverSPTI::~CCore2DriverSPTI()
 }
 
 bool CCore2DriverSPTI::GetDriveLetter(int iBus,int iTarget,int iLun,
-											 TCHAR &cDriveLetter)
+									  TCHAR &cDriveLetter)
 {
 	unsigned long ulDummy;
 	SCSI_ADDRESS DeviceAddress;
@@ -156,6 +156,38 @@ bool CCore2DriverSPTI::GetDriveLetter(TCHAR *szVendor,TCHAR *szIdentification,
 	}
 
 	return false;
+}
+
+bool CCore2DriverSPTI::GetDriveAddress(TCHAR cDriveLetter,
+									   int &iBus,int &iTarget,int &iLun)
+{
+	unsigned long ulDummy;
+	SCSI_ADDRESS DeviceAddress;
+
+	CCore2DriverSPTI Device;
+
+	// For some reason it's not possible to log when this function is called. The
+	// AppendText function in CEdit never returns. Is the behaviour related to
+	// thread-safety?
+	Device.m_bLog = false;
+
+	if (!Device.Open(cDriveLetter))
+		return false;
+
+	memset(&DeviceAddress,0,sizeof(SCSI_ADDRESS));
+	if (!DeviceIoControl(Device.m_hDevice,IOCTL_SCSI_GET_ADDRESS,NULL,0,&DeviceAddress,sizeof(SCSI_ADDRESS),&ulDummy,FALSE))
+	{
+		Device.Close();
+		return false;
+	}
+
+	Device.Close();
+
+	iBus = DeviceAddress.PortNumber;
+	iTarget = DeviceAddress.TargetId;
+	iLun = DeviceAddress.Lun;
+
+	return true;
 }
 
 bool CCore2DriverSPTI::Open(TCHAR cDriveLetter)

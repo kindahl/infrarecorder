@@ -252,7 +252,7 @@ bool CCopyDiscGeneralPage::InitRecorderMedia()
 		// Maximum write speed.
 		m_WriteSpeedCombo.ResetContent();
 		m_WriteSpeedCombo.AddString(lngGetString(MISC_MAXIMUM));
-		m_WriteSpeedCombo.SetItemData(0,/*0xFFFFFFFF*/-1);
+		m_WriteSpeedCombo.SetItemData(0,-1);
 		m_WriteSpeedCombo.SetCurSel(0);
 
 		// Other supported write speeds.
@@ -267,7 +267,7 @@ bool CCopyDiscGeneralPage::InitRecorderMedia()
 			m_WriteSpeedCombo.SetItemData(m_WriteSpeedCombo.GetCount() - 1,
 				/*Speeds[i]*/(int)GetDispSpeed(usProfile,Speeds[i]));
 			// It would be nice if one could ppass floating point numbers as
-			// write speed to cdrecord!
+			// write speed to cdrecord/wodim!
 		}
 
 		// Write modes.

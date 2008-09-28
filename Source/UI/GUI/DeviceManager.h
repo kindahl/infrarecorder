@@ -175,6 +175,7 @@ private:
 	void LoadCapParseDoes(const char *szBuffer,tDeviceCap *pDeviceCap);
 
 	void ScanBusOutput(const char *szBuffer);
+	void DevicesOutput(const char *szBuffer);
 	void LoadCapOutput(const char *szBuffer);
 	void LoadExInfoOutput(const char *szBuffer);
 	void VerifyBusOutput(const char *szBuffer);
@@ -184,6 +185,7 @@ private:
 	enum eMode
 	{
 		MODE_SCANBUS = 0,
+		MODE_DEVICES,
 		MODE_LOADCAP,
 		MODE_LOADEXINFO,
 		MODE_VERIFYBUS

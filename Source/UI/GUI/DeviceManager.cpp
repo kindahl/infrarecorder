@@ -18,12 +18,14 @@
 
 #include "stdafx.h"
 #include <ckcore/directory.hh>
+#include "../../Common/XMLProcessor.h"
 #include "DeviceManager.h"
 #include "Settings.h"
 #include "cdrtoolsParseStrings.h"
-#include "../../Common/XMLProcessor.h"
 #include "StringTable.h"
 #include "LangUtil.h"
+#include "LogDlg.h"
+#include "Core.h"
 #include "DriveLetterDlg.h"
 #include "SCSI.h"
 
@@ -197,6 +199,66 @@ void CDeviceManager::ScanBusOutput(const char *szBuffer)
 			if (!bFoundDriveLetter)
 				m_uiDeviceInfoCount--;
 		}
+	}
+}
+
+void CDeviceManager::DevicesOutput(const char *szBuffer)
+{
+	if (szBuffer[0] == ' ')
+	{
+		szBuffer += 4;
+
+		// Add a new entry to the device list.
+		tDeviceInfo *pDeviceInfo = &m_DeviceInfo[m_uiDeviceInfoCount++];
+		memset(pDeviceInfo,0,sizeof(tDeviceInfo));
+
+		char cDriveLetter = NULL;
+		char szInfo[CONSOLEPIPE_MAX_LINE_SIZE];
+
+		sscanf(szBuffer,"dev='%c:'\t%[^\0]",&cDriveLetter,szInfo);
+		char *pInfo = szInfo + 9;
+
+		pDeviceInfo->Address.m_cDriveLetter = cDriveLetter;
+
+		// Convert the information to UTF-16 if necessary.
+		TCHAR szAutoInfo[CONSOLEPIPE_MAX_LINE_SIZE];
+#ifdef UNICODE
+		AnsiToUnicode(szAutoInfo,pInfo,sizeof(szAutoInfo) / sizeof(TCHAR));
+#else
+		strcpy(szAutoInfo,pInfo);
+#endif
+
+		TCHAR szSkip[68];
+		lsscanf(szAutoInfo,_T("'%[^']' '%[^']' '%[^']' %[^\0]"),
+			pDeviceInfo->szVendor,
+			pDeviceInfo->szIdentification,
+			pDeviceInfo->szRevision,
+			szSkip);
+
+		// Remove unnecesary white-spaces.
+		TrimRight(pDeviceInfo->szVendor);
+		TrimRight(pDeviceInfo->szIdentification);
+		TrimRight(pDeviceInfo->szRevision);
+
+		pDeviceInfo->bRemovable = true;
+		pDeviceInfo->iType = DEVICEMANAGER_TYPE_CDROM;
+
+		// Get the device address.
+		if (!CCore2DriverSPTI::GetDriveAddress(pDeviceInfo->Address.m_cDriveLetter,
+			pDeviceInfo->Address.m_iBus,
+			pDeviceInfo->Address.m_iTarget,
+			pDeviceInfo->Address.m_iLun))
+		{
+			pDeviceInfo->Address.m_iBus = -1;
+			pDeviceInfo->Address.m_iTarget = -1;
+			pDeviceInfo->Address.m_iLun = -1;
+
+			g_LogDlg.PrintLine(_T("Error: Unable to obtain device address for %c:, the device can not be used."),
+				(char)pDeviceInfo->Address.m_cDriveLetter);
+
+			// If we can't find a drive letter, remove the device.
+			m_uiDeviceInfoCount--;
+		}			
 	}
 }
 
@@ -574,6 +636,10 @@ void CDeviceManager::FlushOutput(const char *szBuffer)
 			ScanBusOutput(szBuffer);
 			break;
 
+		case MODE_DEVICES:
+			DevicesOutput(szBuffer);
+			break;
+
 		case MODE_LOADCAP:
 			LoadCapOutput(szBuffer);
 			break;
@@ -595,15 +661,24 @@ void CDeviceManager::ProcessEnded()
 
 bool CDeviceManager::ScanBus()
 {
-	m_iMode = MODE_SCANBUS;
-
 	// Reset the device information counter.
 	m_uiDeviceInfoCount = 0;
 
+	// Prepare command line.
 	TCHAR szCommandLine[MAX_PATH];
 	lstrcpy(szCommandLine,_T("\""));
 	lstrcat(szCommandLine,g_GlobalSettings.m_szCDRToolsPath);
-	lstrcat(szCommandLine,_T("cdrecord.exe\" -scanbus"));
+	lstrcat(szCommandLine,_T(CORE_WRITEAPP));
+
+#ifdef CDRKIT_DEVICESCAN
+	m_iMode = MODE_DEVICES;
+
+	lstrcat(szCommandLine,_T("\" -devices"));
+#else
+	m_iMode = MODE_SCANBUS;
+
+	lstrcat(szCommandLine,_T("\" -scanbus"));
+#endif
 
 	if (!Launch(szCommandLine,true))
 		return false;
@@ -621,7 +696,8 @@ bool CDeviceManager::LoadCapabilities()
 	TCHAR szCommandLine[MAX_PATH];
 	lstrcpy(szCommandLine,_T("\""));
 	lstrcat(szCommandLine,g_GlobalSettings.m_szCDRToolsPath);
-	lstrcat(szCommandLine,_T("cdrecord.exe\" -prcap dev="));
+	lstrcat(szCommandLine,_T(CORE_WRITEAPP));
+	lstrcat(szCommandLine,_T("\" -prcap dev="));
 	int iDevEnd = lstrlen(szCommandLine);
 
 	for (unsigned int i = 0; i < GetDeviceCount(); i++)
@@ -661,7 +737,8 @@ bool CDeviceManager::LoadExInfo()
 	TCHAR szCommandLine[MAX_PATH];
 	lstrcpy(szCommandLine,_T("\""));
 	lstrcat(szCommandLine,g_GlobalSettings.m_szCDRToolsPath);
-	lstrcat(szCommandLine,_T("cdrecord.exe\" -checkdrive dev="));
+	lstrcat(szCommandLine,_T(CORE_WRITEAPP));
+	lstrcat(szCommandLine,_T("\" -checkdrive dev="));
 
 	int iDevEnd = lstrlen(szCommandLine);
 
@@ -761,14 +838,22 @@ void CDeviceManager::GetDeviceName(tDeviceInfo *pDeviceInfo,TCHAR *szDeviceName)
 
 void CDeviceManager::GetDeviceAddr(tDeviceInfo *pDeviceInfo,TCHAR *szDeviceAddr)
 {
+#ifdef CDRKIT_DEVICESCAN
+	lsprintf(szDeviceAddr,_T("%c:"),(char)pDeviceInfo->Address.m_cDriveLetter);
+#else
 	lsprintf(szDeviceAddr,_T("%d,%d,%d"),pDeviceInfo->Address.m_iBus,
 		pDeviceInfo->Address.m_iTarget,pDeviceInfo->Address.m_iLun);
+#endif
 }
 
 void CDeviceManager::GetDeviceAddrA(tDeviceInfo *pDeviceInfo,char *szDeviceAddr)
 {
+#ifdef CDRKIT_DEVICESCAN
+	sprintf(szDeviceAddr,"%c:",(char)pDeviceInfo->Address.m_cDriveLetter);
+#else
 	sprintf(szDeviceAddr,"%d,%d,%d",pDeviceInfo->Address.m_iBus,
 		pDeviceInfo->Address.m_iTarget,pDeviceInfo->Address.m_iLun);
+#endif
 }
 
 /*
@@ -1243,7 +1328,8 @@ bool CDeviceManager::VerifyConfiguration()
 	TCHAR szCommandLine[MAX_PATH];
 	lstrcpy(szCommandLine,_T("\""));
 	lstrcat(szCommandLine,g_GlobalSettings.m_szCDRToolsPath);
-	lstrcat(szCommandLine,_T("cdrecord.exe\" -scanbus"));
+	lstrcat(szCommandLine,_T(CORE_WRITEAPP));
+	lstrcat(szCommandLine,_T("\" -scanbus"));
 
 	if (!Launch(szCommandLine,true))
 		return false;

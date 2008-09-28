@@ -44,6 +44,7 @@ public:
 	static bool GetDriveLetter(int iBus,int iTarget,int iLun,TCHAR &cDriveLetter);
 	static bool GetDriveLetter(TCHAR *szVendor,TCHAR *szIdentification,
 		TCHAR *szRevision,TCHAR &cDriveLetter);
+	static bool GetDriveAddress(TCHAR cDriveLetter,int &iBus,int &iTarget,int &iLun);
 
 	bool Open(TCHAR cDriveLetter);
 	bool Close();

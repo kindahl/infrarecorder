@@ -18,10 +18,11 @@
 
 #include "stdafx.h"
 #include "../../Common/StringUtil.h"
-#include "Diagnostics.h"
+#include "cdrtoolsParseStrings.h"
 #include "LogDlg.h"
 #include "Settings.h"
-#include "cdrtoolsParseStrings.h"
+#include "Core.h"
+#include "Diagnostics.h"
 
 CDiagnostics g_Diagnostics;
 
@@ -63,7 +64,12 @@ bool CDiagnostics::DeviceScan()
 	TCHAR szCommandLine[MAX_PATH];
 	lstrcpy(szCommandLine,_T("\""));
 	lstrcat(szCommandLine,g_GlobalSettings.m_szCDRToolsPath);
-	lstrcat(szCommandLine,_T("cdrecord.exe\" -scanbus"));
+	lstrcat(szCommandLine,_T(CORE_WRITEAPP));
+#ifdef CDRKIT
+	lstrcat(szCommandLine,_T("\" -devices"));
+#else
+	lstrcat(szCommandLine,_T("\" -scanbus"));
+#endif
 
 	if (!Launch(szCommandLine,false))
 		return false;

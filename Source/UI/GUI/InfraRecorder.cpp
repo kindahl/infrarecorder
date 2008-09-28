@@ -217,7 +217,7 @@ INT_PTR ParseAndRun(LPTSTR lpstrCmdLine,int nCmdShow = SW_SHOWDEFAULT)
 	return Run(lpstrCmdLine,nCmdShow);
 }
 
-INT_PTR WINAPI _tWinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPTSTR lpstrCmdLine,int nCmdShow)
+/*INT_PTR*/int WINAPI _tWinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPTSTR lpstrCmdLine,int nCmdShow)
 {
 	HRESULT hRes = ::CoInitialize(NULL);
 	// If you are running on NT 4.0 or higher you can use the following call instead to 
@@ -293,7 +293,7 @@ INT_PTR WINAPI _tWinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPTSTR lpst
 	_Module.Term();
 	::CoUninitialize();
 
-	return nRet;
+	return (int)nRet;
 }
 
 void ProcessMessages()

@@ -32,6 +32,16 @@
 #define RESULT_OK					1
 #define RESULT_EXTERNALERROR		2
 
+#ifdef CDRKIT
+#define CORE_WRITEAPP				"wodim.exe"
+#define CORE_READAPP				"readom.exe"
+#define CORE_AUDIOAPP				"icedax.exe"
+#else
+#define CORE_WRITEAPP				"cdrecord.exe"
+#define CORE_READAPP				"readcd.exe"
+#define CORE_AUDIOAPP				"cdda2wav.exe"
+#endif
+
 class CCore : public CConsolePipe
 {
 private:

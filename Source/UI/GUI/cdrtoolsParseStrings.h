@@ -18,18 +18,25 @@
 
 #pragma once
 
-//#define CDRTOOLS_COPYRIGHT				"Cdrecord-Clone "
-//#define CDRTOOLS_COPYRIGHT_LENGTH			15
 #define CDRTOOLS_COPYRIGHT					"Cdrecord-ProDVD-Clone"
 #define CDRTOOLS_COPYRIGHT_LENGTH			21
 #define CDRTOOLS_SCSIBUS					"scsibus"
 #define CDRTOOLS_SCSIBUS_LENGTH				7
+#ifdef CDRKIT
+#define CDRTOOLS_ERROR						"wodim: "
+#define CDRTOOLS_ERROR_LENGTH				7
+#define CDRTOOLS_ERROR3						"readom: "
+#define CDRTOOLS_ERROR3_LENGTH				8
+#define CDRTOOLS_ERROR4						"icedax: "
+#define CDRTOOLS_ERROR4_LENGTH				8
+#else
 #define CDRTOOLS_ERROR						"cdrecord: "
 #define CDRTOOLS_ERROR_LENGTH				10
 #define CDRTOOLS_ERROR3						"readcd: "
 #define CDRTOOLS_ERROR3_LENGTH				8
 #define CDRTOOLS_ERROR4						"cdda2wav: "
 #define CDRTOOLS_ERROR4_LENGTH				10
+#endif
 #define CDRTOOLS_REMOVABLE					"Removable "
 #define CDRTOOLS_REMOVABLE_LENGTH			10
 #define CDRTOOLS_TYPE_CDROM					"CD-ROM"

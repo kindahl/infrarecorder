@@ -907,7 +907,8 @@ bool CCore::EjectDisc(tDeviceInfo *pDeviceInfo,bool bWaitForProcess)
 
 	CommandLine = _T("\"");
 	CommandLine += g_GlobalSettings.m_szCDRToolsPath;
-	CommandLine += _T("cdrecord.exe\" -eject dev=");
+	CommandLine += _T(CORE_WRITEAPP);
+	CommandLine += _T("\" -eject dev=");
 
 	TCHAR szDeviceAdr[32];
 	g_DeviceManager.GetDeviceAddr(pDeviceInfo,szDeviceAdr);
@@ -934,7 +935,8 @@ bool CCore::LoadDisc(tDeviceInfo *pDeviceInfo,bool bWaitForProcess)
 
 	CommandLine = _T("\"");
 	CommandLine += g_GlobalSettings.m_szCDRToolsPath;
-	CommandLine += _T("cdrecord.exe\" -load dev=");
+	CommandLine += _T(CORE_WRITEAPP);
+	CommandLine += _T("\" -load dev=");
 
 	TCHAR szDeviceAdr[32];
 	g_DeviceManager.GetDeviceAddr(pDeviceInfo,szDeviceAdr);
@@ -964,7 +966,8 @@ bool CCore::EraseDisc(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,CAdvancedP
 
 	CommandLine = _T("\"");
 	CommandLine += g_GlobalSettings.m_szCDRToolsPath;
-	CommandLine += _T("cdrecord.exe\" -v -blank=");
+	CommandLine += _T(CORE_WRITEAPP);
+	CommandLine += _T("\" -v -blank=");
 
 	switch (iMode)
 	{
@@ -1027,7 +1030,8 @@ bool CCore::FixateDisc(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,CAdvanced
 
 	CommandLine = _T("\"");
 	CommandLine += g_GlobalSettings.m_szCDRToolsPath;
-	CommandLine += _T("cdrecord.exe\" -v -fix dev=");
+	CommandLine += _T(CORE_WRITEAPP);
+	CommandLine += _T("\" -v -fix dev=");
 
 	TCHAR szBuffer[32];
 	g_DeviceManager.GetDeviceAddr(pDeviceInfo,szBuffer);
@@ -1089,7 +1093,8 @@ bool CCore::BurnImage(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 
 	CommandLine = _T("\"");
 	CommandLine += g_GlobalSettings.m_szCDRToolsPath;
-	CommandLine += _T("cdrecord.exe\" -v dev=");
+	CommandLine += _T(CORE_WRITEAPP);
+	CommandLine += _T("\" -v dev=");
 
 	TCHAR szBuffer[32];
 	g_DeviceManager.GetDeviceAddr(pDeviceInfo,szBuffer);
@@ -1324,7 +1329,8 @@ bool CCore::BurnTracks(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 
 	CommandLine = _T("\"");
 	CommandLine += g_GlobalSettings.m_szCDRToolsPath;
-	CommandLine += _T("cdrecord.exe\" -v dev=");
+	CommandLine += _T(CORE_WRITEAPP);
+	CommandLine += _T("\" -v dev=");
 
 	TCHAR szBuffer[32];
 	g_DeviceManager.GetDeviceAddr(pDeviceInfo,szBuffer);
@@ -1610,7 +1616,8 @@ bool CCore::ReadDataTrack(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,
 
 	CommandLine = _T("\"");
 	CommandLine += g_GlobalSettings.m_szCDRToolsPath;
-	CommandLine += _T("readcd.exe\" dev=");
+	CommandLine += _T(CORE_READAPP);
+	CommandLine += _T("\" dev=");
 
 	// Device address.
 	TCHAR szBuffer[64];
@@ -1674,7 +1681,8 @@ bool CCore::ReadAudioTrack(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress
 
 	CommandLine = _T("\"");
 	CommandLine += g_GlobalSettings.m_szCDRToolsPath;
-	CommandLine += _T("cdda2wav.exe\" -D ");
+	CommandLine += _T(CORE_AUDIOAPP);
+	CommandLine += _T("\" -D ");
 
 	// Device address.
 	TCHAR szBuffer[64];
@@ -1744,7 +1752,8 @@ bool CCore::ScanTrack(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,
 
 	CommandLine = _T("\"");
 	CommandLine += g_GlobalSettings.m_szCDRToolsPath;
-	CommandLine += _T("readcd.exe\" -c2scan dev=");
+	CommandLine += _T(CORE_READAPP);
+	CommandLine += _T("\" -c2scan dev=");
 
 	// Device address.
 	TCHAR szBuffer[64];
@@ -1824,7 +1833,8 @@ bool CCore::CopyDisc(tDeviceInfo *pSourceDeviceInfo,tDeviceInfo *pTargetDeviceIn
 	std::string CommandLine;
 	CommandLine.reserve(MAX_PATH);
 
-	CommandLine = "readcd.exe -v dev=";
+	CommandLine = CORE_READAPP;
+	CommandLine += " -v dev=";
 
 	// Source device.
 	char szBuffer[32];
@@ -1845,8 +1855,9 @@ bool CCore::CopyDisc(tDeviceInfo *pSourceDeviceInfo,tDeviceInfo *pTargetDeviceIn
 	// Redirection.
 	CommandLine += " f=- 2> NUL: | ";
 
-	// cdrecord.exe related.
-	CommandLine += "cdrecord.exe -v dev=";
+	// Write app related.
+	CommandLine += CORE_WRITEAPP;
+	CommandLine += " -v dev=";
 
 	g_DeviceManager.GetDeviceAddrA(pTargetDeviceInfo,szBuffer);
 	CommandLine += szBuffer;
@@ -2073,7 +2084,8 @@ bool CCore::ReadDisc(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,const
 
 	CommandLine = _T("\"");
 	CommandLine += g_GlobalSettings.m_szCDRToolsPath;
-	CommandLine += _T("readcd.exe\" dev=");
+	CommandLine += _T(CORE_READAPP);
+	CommandLine += _T("\" dev=");
 
 	// Device address.
 	TCHAR szBuffer[64];
@@ -2184,10 +2196,11 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	tstring CommandLine;
 	CommandLine.reserve(MAX_PATH);
 
-	// cdrecord part of the command line.
+	// Write application part of the command line.
 	CommandLine = _T("\"");
 	CommandLine += g_GlobalSettings.m_szCDRToolsPath;
-	CommandLine += _T("cdrecord.exe\" -v dev=");
+	CommandLine += _T(CORE_WRITEAPP);
+	CommandLine += _T("\" -v dev=");
 
 	TCHAR szBuffer[64];
 	g_DeviceManager.GetDeviceAddr(pDeviceInfo,szBuffer);
