@@ -7,8 +7,8 @@ In order to compile InfraRecorder you will need the following libraries:
  2. ckCore: http://code.kindahl.com
  3. ckFileSystem: http://code.kindahl.com
 
-InfraRecorder uses cdrtools, sources can be found at:
-http://cdrecord.berlios.de/old/private/cdrecord.html
+InfraRecorder uses cdrkit, sources can be found at:
+http://www.cdrkit.org
 
 Many of the graphics used in InfraRecorder is derivative work based on icons
 in the Tango Desktop Project (http://tango.freedesktop.org). My derivative work

@@ -179,6 +179,7 @@ private:
 	void LoadCapOutput(const char *szBuffer);
 	void LoadExInfoOutput(const char *szBuffer);
 	void VerifyBusOutput(const char *szBuffer);
+	void VerifyDevicesOutput(const char *szBuffer);
 
 	bool GetConfigPath(TCHAR *szConfigPath);
 
@@ -188,7 +189,8 @@ private:
 		MODE_DEVICES,
 		MODE_LOADCAP,
 		MODE_LOADEXINFO,
-		MODE_VERIFYBUS
+		MODE_VERIFYBUS,
+		MODE_VERIFYDEVICES
 	};
 
 public:

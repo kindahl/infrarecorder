@@ -24,7 +24,6 @@
 #include "cdrtoolsParseStrings.h"
 #include "StringTable.h"
 #include "LangUtil.h"
-#include "LogDlg.h"
 #include "Core.h"
 #include "DriveLetterDlg.h"
 #include "SCSI.h"
@@ -204,6 +203,10 @@ void CDeviceManager::ScanBusOutput(const char *szBuffer)
 
 void CDeviceManager::DevicesOutput(const char *szBuffer)
 {
+	// Make sure that we have capacity for adding more devices.
+	if (m_uiVeriCounter >= DEVICEMANAGER_MAXDEVICES)
+		return;
+
 	if (szBuffer[0] == ' ')
 	{
 		szBuffer += 4;
@@ -253,12 +256,9 @@ void CDeviceManager::DevicesOutput(const char *szBuffer)
 			pDeviceInfo->Address.m_iTarget = -1;
 			pDeviceInfo->Address.m_iLun = -1;
 
-			g_LogDlg.PrintLine(_T("Error: Unable to obtain device address for %c:, the device can not be used."),
-				(char)pDeviceInfo->Address.m_cDriveLetter);
-
 			// If we can't find a drive letter, remove the device.
-			m_uiDeviceInfoCount--;
-		}			
+			//m_uiDeviceInfoCount--;
+		}
 	}
 }
 
@@ -624,6 +624,67 @@ void CDeviceManager::VerifyBusOutput(const char *szBuffer)
 	}
 }
 
+void CDeviceManager::VerifyDevicesOutput(const char *szBuffer)
+{
+	// Make sure that we have capacity for adding more devices.
+	if (m_uiVeriCounter >= DEVICEMANAGER_MAXDEVICES)
+		return;
+
+	if (szBuffer[0] == ' ')
+	{
+		szBuffer += 4;
+
+		char cDriveLetter = NULL;
+		char szInfo[CONSOLEPIPE_MAX_LINE_SIZE];
+
+		sscanf(szBuffer,"dev='%c:'\t%[^\0]",&cDriveLetter,szInfo);
+		char *pInfo = szInfo + 9;
+
+		// Convert the information to UTF-16 if necessary.
+		TCHAR szAutoInfo[CONSOLEPIPE_MAX_LINE_SIZE];
+#ifdef UNICODE
+		AnsiToUnicode(szAutoInfo,pInfo,sizeof(szAutoInfo) / sizeof(TCHAR));
+#else
+		strcpy(szAutoInfo,pInfo);
+#endif
+
+		TCHAR szSkip[68],szVendor[9],szIdentification[17],szRevision[5];
+		lsscanf(szAutoInfo,_T("'%[^']' '%[^']' '%[^']' %[^\0]"),
+			szVendor,szIdentification,szRevision,szSkip);
+
+		// Remove unnecesary white-spaces.
+		TrimRight(szVendor);
+		TrimRight(szIdentification);
+		TrimRight(szRevision);
+
+		int iBus = -1,iTarget = -1,iLun = -1;
+
+		// Get the device address.
+		CCore2DriverSPTI::GetDriveAddress(cDriveLetter,iBus,iTarget,iLun);
+
+		// Verify the device bus information.
+		if ((m_DeviceInfo[m_uiVeriCounter].Address.m_iBus != iBus) ||
+			(m_DeviceInfo[m_uiVeriCounter].Address.m_iTarget != iTarget) ||
+			(m_DeviceInfo[m_uiVeriCounter].Address.m_iLun != iLun))
+		{
+			m_bVeriResult = false;
+			m_uiVeriCounter++;
+			return;
+		}
+
+		// Verify the device identification, in case a new device has been
+		// attached to the same address as a previous.
+		if (lstrcmp(szVendor,m_DeviceInfo[m_uiVeriCounter].szVendor) ||
+			lstrcmp(szIdentification,m_DeviceInfo[m_uiVeriCounter].szIdentification) ||
+			lstrcmp(szRevision,m_DeviceInfo[m_uiVeriCounter].szRevision))
+		{
+			m_bVeriResult = false;
+		}
+
+		m_uiVeriCounter++;
+	}
+}
+
 void CDeviceManager::FlushOutput(const char *szBuffer)
 {
 	// Always skip the copyright line.
@@ -650,6 +711,10 @@ void CDeviceManager::FlushOutput(const char *szBuffer)
 
 		case MODE_VERIFYBUS:
 			VerifyBusOutput(szBuffer);
+			break;
+
+		case MODE_VERIFYDEVICES:
+			VerifyDevicesOutput(szBuffer);
 			break;
 	}
 }
@@ -1319,8 +1384,6 @@ bool CDeviceManager::LoadConfiguration()
 
 bool CDeviceManager::VerifyConfiguration()
 {
-	m_iMode = MODE_VERIFYBUS;
-
 	// Reset the verification counter.
 	m_uiVeriCounter = 0;
 	m_bVeriResult = true;
@@ -1329,7 +1392,16 @@ bool CDeviceManager::VerifyConfiguration()
 	lstrcpy(szCommandLine,_T("\""));
 	lstrcat(szCommandLine,g_GlobalSettings.m_szCDRToolsPath);
 	lstrcat(szCommandLine,_T(CORE_WRITEAPP));
+
+#ifdef CDRKIT_DEVICESCAN
+	m_iMode = MODE_VERIFYDEVICES;
+
+	lstrcat(szCommandLine,_T("\" -devices"));
+#else
+	m_iMode = MODE_VERIFYBUS;
+
 	lstrcat(szCommandLine,_T("\" -scanbus"));
+#endif
 
 	if (!Launch(szCommandLine,true))
 		return false;

@@ -78,10 +78,18 @@ void CDevicesDlg::FillListView()
 
 		tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(i);
 
-		TCHAR szBuffer[64];
-		lsprintf(szBuffer,_T("[%d,%d,%d]"),pDeviceInfo->Address.m_iBus,
-			pDeviceInfo->Address.m_iTarget,pDeviceInfo->Address.m_iLun);
-		m_ListView.AddItem(iItemCount,0,szBuffer,0);
+		if (pDeviceInfo->Address.m_iBus == -1 || pDeviceInfo->Address.m_iTarget == -1 ||
+			pDeviceInfo->Address.m_iLun == -1)
+		{
+			m_ListView.AddItem(iItemCount,0,_T("[?,?,?]"),0);
+		}
+		else
+		{
+			TCHAR szBuffer[64];
+			lsprintf(szBuffer,_T("[%d,%d,%d]"),pDeviceInfo->Address.m_iBus,
+				pDeviceInfo->Address.m_iTarget,pDeviceInfo->Address.m_iLun);
+			m_ListView.AddItem(iItemCount,0,szBuffer,0);
+		}
 
 		m_ListView.AddItem(iItemCount,1,pDeviceInfo->szVendor,0);
 		m_ListView.AddItem(iItemCount,2,pDeviceInfo->szIdentification,0);
