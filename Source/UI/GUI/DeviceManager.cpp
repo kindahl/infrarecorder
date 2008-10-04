@@ -649,6 +649,8 @@ void CDeviceManager::VerifyDevicesOutput(const char *szBuffer)
 #endif
 
 		TCHAR szSkip[68],szVendor[9],szIdentification[17],szRevision[5];
+		szSkip[0] = szVendor[0] = szIdentification[0] = szRevision[0] = '\0';
+
 		lsscanf(szAutoInfo,_T("'%[^']' '%[^']' '%[^']' %[^\0]"),
 			szVendor,szIdentification,szRevision,szSkip);
 

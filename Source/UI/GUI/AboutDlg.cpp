@@ -214,7 +214,7 @@ LRESULT CAboutDlg::OnClose(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled
 
 LRESULT CAboutDlg::OnWebsite(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
-	::ShellExecute(m_hWnd,_T("open"),_T("http://infrarecorder.sf.net"),NULL,NULL,SW_SHOW);
+	::ShellExecute(m_hWnd,_T("open"),_T("http://infrarecorder.org"),NULL,NULL,SW_SHOW);
 	return 0;
 }
 

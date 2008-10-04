@@ -1070,6 +1070,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CustomButton.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\CustomComboBox.cpp"
 				>
 			</File>
@@ -1083,6 +1087,10 @@
 			</File>
 			<File
 				RelativePath=".\CustomHeaderCtrl.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\CustomMultiButton.cpp"
 				>
 			</File>
 			<File
@@ -1159,6 +1167,10 @@
 			</File>
 			<File
 				RelativePath=".\FixateDlg.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GradientStatic.cpp"
 				>
 			</File>
 			<File
@@ -1579,6 +1591,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CustomButton.h"
+				>
+			</File>
+			<File
 				RelativePath=".\CustomComboBox.h"
 				>
 			</File>
@@ -1592,6 +1608,10 @@
 			</File>
 			<File
 				RelativePath=".\CustomHeaderCtrl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CustomMultiButton.h"
 				>
 			</File>
 			<File
@@ -1668,6 +1688,10 @@
 			</File>
 			<File
 				RelativePath=".\FixateDlg.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GradientStatic.h"
 				>
 			</File>
 			<File
@@ -1888,7 +1912,63 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Resources\Wizard\FocusAudioDisc.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\Wizard\FocusCopyDisc.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\Wizard\FocusDataDisc.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\Wizard\FocusReadDisc.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\Wizard\FocusVideoDisc.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\Wizard\FocusWriteImage.bmp"
+				>
+			</File>
+			<File
 				RelativePath=".\Resources\Head.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\Wizard\HoverAudioDisc.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\Wizard\HoverCopyDisc.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\Wizard\HoverDataDisc.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\Wizard\HoverDataDiscCd.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\Wizard\HoverDataDiscDvd.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\Wizard\HoverReadDisc.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\Wizard\HoverVideoDisc.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\Wizard\HoverWriteImage.bmp"
 				>
 			</File>
 			<File
@@ -1900,7 +1980,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\LogoBorder.bmp"
+				RelativePath=".\Resources\Logo.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\LogoSmall.bmp"
 				>
 			</File>
 			<File
@@ -1929,6 +2013,30 @@
 			</File>
 			<File
 				RelativePath=".\Resources\Mixed.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\Wizard\NormalAudioDisc.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\Wizard\NormalCopyDisc.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\Wizard\NormalDataDisc.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\Wizard\NormalReadDisc.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\Wizard\NormalVideoDisc.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\Wizard\NormalWriteImage.bmp"
 				>
 			</File>
 			<File

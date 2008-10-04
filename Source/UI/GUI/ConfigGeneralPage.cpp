@@ -17,11 +17,11 @@
  */
 
 #include "stdafx.h"
-#include "ConfigGeneralPage.h"
 #include "StringTable.h"
 #include "Settings.h"
 #include "LangUtil.h"
 #include "Registry.h"
+#include "ConfigGeneralPage.h"
 
 CConfigGeneralPage::CConfigGeneralPage()
 {
@@ -272,6 +272,8 @@ bool CConfigGeneralPage::Translate()
 
 	if (pLNG->GetValuePtr(IDC_AUTORUNCHECK,szStrValue))
 		SetDlgItemText(IDC_AUTORUNCHECK,szStrValue);
+	if (pLNG->GetValuePtr(IDC_WIZARDCHECK,szStrValue))
+		SetDlgItemText(IDC_WIZARDCHECK,szStrValue);
 	if (pLNG->GetValuePtr(IDC_ASSOCIATECHECK,szStrValue))
 		SetDlgItemText(IDC_ASSOCIATECHECK,szStrValue);
 	if (pLNG->GetValuePtr(IDC_ASSOCIATEDISCIMAGECHECK,szStrValue))
@@ -294,6 +296,7 @@ bool CConfigGeneralPage::OnApply()
 {
 	// Remember the configuration.
 	g_GlobalSettings.m_bAutoRunCheck = IsDlgButtonChecked(IDC_AUTORUNCHECK) == TRUE;
+	g_GlobalSettings.m_bShowWizard = IsDlgButtonChecked(IDC_WIZARDCHECK) == TRUE;
 	g_GlobalSettings.m_bRememberShell = IsDlgButtonChecked(IDC_REMEMBERSHELLCHECK) == TRUE;
 
 	GetDlgItemText(IDC_SHELLFOLDEREDIT,g_DynamicSettings.m_szShellDir,MAX_PATH - 1);
@@ -347,6 +350,7 @@ LRESULT CConfigGeneralPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,B
 {
 	// Load configuration.
 	CheckDlgButton(IDC_AUTORUNCHECK,g_GlobalSettings.m_bAutoRunCheck);
+	CheckDlgButton(IDC_WIZARDCHECK,g_GlobalSettings.m_bShowWizard);
 	CheckDlgButton(IDC_REMEMBERSHELLCHECK,g_GlobalSettings.m_bRememberShell);
 
 	::SendMessage(GetDlgItem(IDC_SHELLFOLDEREDIT),EM_SETLIMITTEXT,MAX_PATH - 1,0);

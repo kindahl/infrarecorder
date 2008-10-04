@@ -18,8 +18,24 @@
 
 #pragma once
 #include "resource.h"
+#include "CustomButton.h"
+#include "CustomMultiButton.h"
+#include "GradientStatic.h"
+
 class CWizardDlg : public CDialogImpl<CWizardDlg>
 {
+private:
+	CCustomMultiButton m_DataButton;
+	CCustomButton m_AudioButton;
+	CCustomButton m_VideoButton;
+	CCustomButton m_ImageButton;
+	CCustomButton m_CopyButton;
+	CCustomButton m_ReadButton;
+
+	CGradientStatic m_GradientStatic;
+
+	bool Translate();
+
 public:
 	enum { IDD = IDD_WIZARDDLG };
 
@@ -31,10 +47,24 @@ public:
 
 		COMMAND_ID_HANDLER(IDOK,OnOK)
 		COMMAND_ID_HANDLER(IDCANCEL,OnCancel)
+		COMMAND_ID_HANDLER(IDC_DATABUTTON,OnAction)
+		COMMAND_ID_HANDLER(IDC_DATACDBUTTON,OnAction)
+		COMMAND_ID_HANDLER(IDC_DATADVDBUTTON,OnAction)
+		COMMAND_ID_HANDLER(IDC_AUDIOBUTTON,OnAction)
+		COMMAND_ID_HANDLER(IDC_VIDEOBUTTON,OnAction)
+		COMMAND_ID_HANDLER(IDC_IMAGEBUTTON,OnAction)
+		COMMAND_ID_HANDLER(IDC_COPYBUTTON,OnAction)
+		COMMAND_ID_HANDLER(IDC_READBUTTON,OnAction)
+
+		COMMAND_HANDLER(IDC_STARTUPCHECK, BN_CLICKED, OnStartupCheck)
+
+		REFLECT_NOTIFICATIONS()
 	END_MSG_MAP()
 
 	LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 
 	LRESULT OnOK(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
 	LRESULT OnCancel(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+	LRESULT OnAction(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+	LRESULT OnStartupCheck(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
 };

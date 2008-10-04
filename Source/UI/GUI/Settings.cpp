@@ -18,9 +18,9 @@
 
 #include "stdafx.h"
 #include <ckcore/directory.hh>
-#include "Settings.h"
 #include "MainFrm.h"
 #include "ToolBarManager.h"
+#include "Settings.h"
 
 CLanguageSettings g_LanguageSettings;
 CGlobalSettings g_GlobalSettings;
@@ -90,6 +90,7 @@ bool CGlobalSettings::Save(CXMLProcessor *pXML)
 		pXML->AddElement(_T("CodecWarning"),m_bCodecWarning);
 		pXML->AddElement(_T("FixateWarning"),m_bFixateWarning);
 		pXML->AddElement(_T("Smoke"),m_bSmoke);
+		pXML->AddElement(_T("Wizard"),m_bShowWizard);
 		pXML->AddElement(_T("GraceTime"),m_iGraceTime);
 		pXML->AddElement(_T("FIFO"),m_iFIFOSize);
 		if (m_iFIFOSize > FIFO_MAX)
@@ -139,6 +140,7 @@ bool CGlobalSettings::Load(CXMLProcessor *pXML)
 	pXML->GetSafeElementData(_T("CodecWarning"),&m_bCodecWarning);
 	pXML->GetSafeElementData(_T("FixateWarning"),&m_bFixateWarning);
 	pXML->GetSafeElementData(_T("Smoke"),&m_bSmoke);
+	pXML->GetSafeElementData(_T("Wizard"),&m_bShowWizard);
 	pXML->GetSafeElementData(_T("GraceTime"),&m_iGraceTime);
 	pXML->GetSafeElementData(_T("FIFO"),&m_iFIFOSize);
 

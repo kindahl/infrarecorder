@@ -95,6 +95,7 @@ public:
 	bool m_bCodecWarning;		// Display a warning when a codec failed to load.
 	bool m_bFixateWarning;		// Display a warning when trying to disable disc fixation.
 	bool m_bSmoke;
+	bool m_bShowWizard;
 	int m_iGraceTime;
 	int m_iFIFOSize;
 
@@ -123,6 +124,7 @@ public:
 		m_bCodecWarning = true;
 		m_bFixateWarning = true;
 		m_bSmoke = true;
+		m_bShowWizard = true;
 		m_iGraceTime = 5;			// Five seconds by default.
 		m_iFIFOSize = 4;			// 4 MiB by default.
 

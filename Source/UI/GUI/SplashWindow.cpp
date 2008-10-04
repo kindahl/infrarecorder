@@ -17,10 +17,10 @@
  */
 
 #include "stdafx.h"
-#include "SplashWindow.h"
-#include "InfraRecorder.h"
 #include "resource.h"
 #include "../../Common/GraphUtil.h"
+#include "InfraRecorder.h"
+#include "SplashWindow.h"
 
 CSplashWindow::CSplashWindow()
 {
