@@ -21,6 +21,14 @@
 class CActionManager
 {
 private:
+	class CEraseParam
+	{
+	public:
+		bool m_bNotifyCompleted;
+
+		CEraseParam(bool bNotifyCompleted) : m_bNotifyCompleted(bNotifyCompleted) {}
+	};
+
 	static DWORD WINAPI BurnCompilationThread(LPVOID lpThreadParameter);
 	static DWORD WINAPI CreateImageThread(LPVOID lpThreadParameter);
 	static DWORD WINAPI CopyDiscOnFlyThread(LPVOID lpThreadParameter);

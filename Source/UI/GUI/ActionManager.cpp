@@ -52,8 +52,7 @@ CActionManager::~CActionManager()
 
 DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 {
-	int iProjectType = g_ProjectManager.GetProjectType();
-	int iResult = 0;
+	int iProjectType = g_ProjectManager.GetProjectType(),iResult = 0;
 	ckcore::File ImageFile = ckcore::File::Temp();
 
 	// Make sure that the disc will not be ejected before beeing verified.
@@ -516,8 +515,7 @@ void CActionManager::QuickErase(INT_PTR iRecorder)
 
 			// Create the new erase thread.
 			unsigned long ulThreadID = 0;
-			bool bNotifyCompleted = false;
-			HANDLE hThread = ::CreateThread(NULL,0,EraseThread,&bNotifyCompleted,0,&ulThreadID);
+			HANDLE hThread = ::CreateThread(NULL,0,EraseThread,new CEraseParam(false),0,&ulThreadID);
 
 			// Wait for the thread to finish.
 			while (true)
@@ -642,87 +640,7 @@ INT_PTR CActionManager::BurnCompilation(HWND hWndParent,bool bAppMode)
 		ProcessMessages();
 
 		if (bErase)
-		{
-			/*CCore2Device Device;
-			if (Device.Open(&pDeviceInfo->Address))
-			{
-				// Get current profile.
-				unsigned short usProfile = PROFILE_NONE;
-				if (g_Core2.GetProfile(&Device,usProfile))
-				{
-					int iMode = g_EraseSettings.m_iMode;
-					bool bForce = g_EraseSettings.m_bForce;
-					bool bEject = g_EraseSettings.m_bEject;
-					bool bSimulate = g_EraseSettings.m_bSimulate;
-
-					switch (usProfile)
-					{
-						case PROFILE_DVDPLUSRW:
-						case PROFILE_DVDPLUSRW_DL:
-							g_EraseSettings.m_iMode = CCore2::ERASE_FORMAT_QUICK;
-							break;
-
-						case PROFILE_DVDRAM:
-							g_EraseSettings.m_iMode = CCore2::ERASE_FORMAT_FULL;
-							break;
-
-						//case PROFILE_CDRW:
-						//case PROFILE_DVDMINUSRW_RESTOV:
-						//case PROFILE_DVDMINUSRW_SEQ:
-						default:
-							g_EraseSettings.m_iMode = CCore2::ERASE_BLANK_MINIMAL;
-							break;
-					}
-
-					g_EraseSettings.m_iMode = CCore2::ERASE_BLANK_MINIMAL;
-					g_EraseSettings.m_bForce = true;
-					g_EraseSettings.m_bEject = false;
-					g_EraseSettings.m_bSimulate = false;
-					g_EraseSettings.m_iRecorder = g_BurnImageSettings.m_iRecorder;
-					g_EraseSettings.m_uiSpeed = 0xFFFFFFFF;	// Maximum.
-
-					g_ProgressDlg.SetWindowText(lngGetString(STITLE_ERASE));
-					g_ProgressDlg.SetStatus(lngGetString(PROGRESS_INIT));
-
-					// Set the device information.
-					TCHAR szDeviceName[128];
-					g_DeviceManager.GetDeviceName(pDeviceInfo,szDeviceName);
-					g_ProgressDlg.SetDevice(szDeviceName);
-
-					// Create the new erase thread.
-					unsigned long ulThreadID = 0;
-					bool bNotifyCompleted = false;
-					HANDLE hThread = ::CreateThread(NULL,0,EraseThread,&bNotifyCompleted,0,&ulThreadID);
-
-					// Wait for the thread to finish.
-					while (true)
-					{
-						if (WaitForSingleObject(hThread,100) == WAIT_TIMEOUT)
-						{
-							ProcessMessages();
-							Sleep(100);
-						}
-						else
-						{
-							break;
-						}
-					}
-
-					::CloseHandle(hThread);
-
-					g_ProgressDlg.Reset();
-					g_ProgressDlg.AllowCancel(true);
-
-					// Restore settings.
-					g_EraseSettings.m_iMode = iMode;
-					g_EraseSettings.m_bForce = bForce;
-					g_EraseSettings.m_bEject = bEject;
-					g_EraseSettings.m_bSimulate = bSimulate;
-				}
-			}*/
-
 			QuickErase(g_BurnImageSettings.m_iRecorder);
-		}
 
 		// Create the new thread.
 		unsigned long ulThreadID = 0;
@@ -1050,7 +968,7 @@ DWORD WINAPI CActionManager::CopyDiscThread(LPVOID lpThreadParameter)
 
 DWORD WINAPI CActionManager::EraseThread(LPVOID lpThreadParameter)
 {
-	bool *pNotifyCompleted = (bool *)lpThreadParameter;
+	std::auto_ptr<CEraseParam> Param((CEraseParam *)lpThreadParameter);
 
 	// Get device information.
 	tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(g_EraseSettings.m_iRecorder);
@@ -1076,7 +994,7 @@ DWORD WINAPI CActionManager::EraseThread(LPVOID lpThreadParameter)
 
 	g_ProgressDlg.SetProgress(100);
 
-	if (*pNotifyCompleted)
+	if (Param->m_bNotifyCompleted)
 		g_ProgressDlg.NotifyComplteted();
 
 	if (bResult)
@@ -1282,8 +1200,7 @@ INT_PTR CActionManager::Erase(HWND hWndParent,bool bAppMode)
 
 		// Create the new thread.
 		unsigned long ulThreadID = 0;
-		bool bNotifyCompleted = true;
-		HANDLE hThread = ::CreateThread(NULL,0,EraseThread,&bNotifyCompleted,0,&ulThreadID);
+		HANDLE hThread = ::CreateThread(NULL,0,EraseThread,new CEraseParam(true),0,&ulThreadID);
 
 		// Run the message loop if we're in application mode.
 		if (bAppMode)
