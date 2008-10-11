@@ -11,11 +11,12 @@ In order to compile InfraRecorder you will need the following libraries:
  1. WTL: http://wtl.sourceforge.net
  2. ckCore: http://code.kindahl.com
  3. ckFileSystem: http://code.kindahl.com
+ 4. libpng: http://www.libpng.org
 
 InfraRecorder uses cdrkit, sources can be found at:
 http://www.cdrkit.org
 
-The graphics used in InfraRecorder are not covered by GPL. The official
+The graphics used in InfraRecorder are NOT covered by GPL. The official
 InfraRecorder logo (the logo used in official InfraRecorder binaries), and all
 other graphics using it are licensed under the Creative Commons
 Attribution-Noncommercial-No Derivative Works license
@@ -25,8 +26,13 @@ condition:
  * The work may not be used in derivative software or in the purpose of
    promoting derivative software.
 
-Most of the remaining graphics are derivative work based on icons in the Tango
-Desktop Project (http://tango.freedesktop.org). The derivative work is
-therefore also available for others to use under the Creative Commons
+Apart from the graphics using the official InfraRecorder logo the above
+license also applies to all graphics that are not derivative works of graphics
+created by the Tango Desktop Project. Example of this kind of graphics are the
+button graphics used in the welcome screen.
+
+The remaining graphics that are derivative work based on icons in the Tango
+Desktop Project (http://tango.freedesktop.org) is available under the same
+license as the Tangoe Desktop Project graphics. That is the Creative Commons
 Attribution Share-Alike license
 (http://creativecommons.org/licenses/by-sa/2.5/).

@@ -17,6 +17,7 @@
  */
 
 #pragma once
+#include "PngFile.h"
 
 class CCustomMultiButton : public CWindowImpl<CCustomMultiButton,CButton>,
 	public COwnerDraw<CCustomMultiButton>
@@ -41,19 +42,24 @@ private:
 	long m_lCtrlMainId;
 	long m_lCtrlSub1Id;
 	long m_lCtrlSub2Id;
-	CBitmap m_NormalBitmap;
-	CBitmap m_HoverMainBitmap;
-	CBitmap m_HoverSub1Bitmap;
-	CBitmap m_HoverSub2Bitmap;
-	CBitmap m_FocusBitmap;
+	int m_iCoverLeft;
+	int m_iCoverTop;
+
+	CPngFile m_CoverImage;
+	CPngFile m_NormalImage;
+	CPngFile m_FocusImage;
+	CPngFile m_HoverImage;
+	CPngFile m_HoverSub1Image;
+	CPngFile m_HoverSub2Image;
+	CPngFile m_HoverFocusImage;
+	CPngFile m_HoverFocusSub1Image;
+	CPngFile m_HoverFocusSub2Image;
 
 public:
 	DECLARE_WND_CLASS(_T("ckMultiButton"));
 
 	CCustomMultiButton(long lCtrlMainId,long lCtrlSub1Id,long lCtrlSub2Id,
-		ATL::_U_STRINGorID NormalBitmap,ATL::_U_STRINGorID HoverMainBitmap,
-		ATL::_U_STRINGorID HoverSub1Bitmap,ATL::_U_STRINGorID HoverSub2Bitmap,
-		ATL::_U_STRINGorID FocusBitmap);
+		unsigned short usCoverPng,int iCoverLeft,int iCoverRight);
 	~CCustomMultiButton();
 
 	BEGIN_MSG_MAP(CCustomMultiButton)

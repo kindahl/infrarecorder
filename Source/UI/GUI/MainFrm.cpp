@@ -43,12 +43,10 @@
 #include "Core2Stream.h"
 #include "ProjectDropSource.h"
 #include "FilesDataObject.h"
-// FIXME:
-#include "WizardDlg.h"
 
 CMainFrame g_MainFrame;
 
-CMainFrame::CMainFrame()
+CMainFrame::CMainFrame() : m_pShellListView(NULL),m_bWelcomePane(false)
 {
 	m_iDefaultProjType = PROJECTTYPE_DATA;
 	m_bDefaultProjDataDVD = false;		// CD project by default.
@@ -220,14 +218,32 @@ void CMainFrame::InitializeMainView()
 
 	UpdateLayout();
 
-	m_SpaceMeterView.SetSplitterPane(SPLIT_PANE_BOTTOM,m_SpaceMeter);
-	m_SpaceMeterView.SetSplitterPane(SPLIT_PANE_TOP,m_MainView);
+	//m_SpaceMeterView.SetSplitterPane(SPLIT_PANE_BOTTOM,m_SpaceMeter);
+	//m_SpaceMeterView.SetSplitterPane(SPLIT_PANE_TOP,m_MainView);
+
+	// FIXME:
+	m_WelcomePane.Create(m_SpaceMeterView,rcDefault,NULL,
+		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_TABSTOP,
+		WS_EX_CLIENTEDGE);
 
 	// Update the splitter origins.
 	RECT rcClient;
 	::GetClientRect(m_hWndClient,&rcClient);
-	
-	m_SpaceMeterView.SetSplitterPos(rcClient.bottom - rcClient.top - MAINFRAME_SPACEMETER_HEIGHT);
+
+	if (g_GlobalSettings.m_bShowWizard)
+	{
+		m_bWelcomePane = true;
+
+		m_SpaceMeterView.SetSplitterPane(SPLIT_PANE_TOP,m_WelcomePane);
+		m_SpaceMeterView.SetSinglePaneMode(SPLIT_PANE_TOP);
+	}
+	else
+	{
+		m_SpaceMeterView.SetSplitterPane(SPLIT_PANE_BOTTOM,m_SpaceMeter);
+		m_SpaceMeterView.SetSplitterPane(SPLIT_PANE_TOP,m_MainView);
+		m_SpaceMeterView.SetSplitterPos(rcClient.bottom - rcClient.top - MAINFRAME_SPACEMETER_HEIGHT);
+	}
+
 	m_MainView.SetSplitterPos((rcClient.bottom - rcClient.top - MAINFRAME_SPACEMETER_HEIGHT)/2);
 }
 
@@ -1160,8 +1176,11 @@ LRESULT CMainFrame::OnDestroy(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandl
 	g_SettingsManager.Save();
 
 	// Destroy the m_pShellView object.
-	m_ShellListViewContainer.SetClient(NULL);
-	delete m_pShellListView;
+	if (m_pShellListView != NULL)
+	{
+		m_ShellListViewContainer.SetClient(NULL);
+		delete m_pShellListView;
+	}
 
 	// Deregister the directory monitor.
 	m_DirectoryMonitor.Deregister();
@@ -1197,7 +1216,7 @@ LRESULT CMainFrame::OnClose(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled
 	}
 
 	// Remember the current window position and size.
-	if (IsWindowVisible() && !IsIconic() && !IsZoomed())
+	if (IsWindowVisible() && !IsIconic() && !IsZoomed() && !m_bWelcomePane)
 		GetWindowRect(&g_DynamicSettings.m_rcWindow);
 
 	g_DynamicSettings.m_bWinMaximized = IsZoomed() == TRUE;
@@ -2511,6 +2530,9 @@ LRESULT CMainFrame::OnNewProjectDataCD(WORD wNotifyCode,WORD wID,HWND hWndCtl,BO
 	if (!SaveProjectPrompt())
 		return 0;
 
+	// Disable the welcome screen if active.
+	ShowWelcomePane(false);
+
 	SetTitleNormal();
 	m_szProjectFile[0] = '\0';
 
@@ -2522,6 +2544,9 @@ LRESULT CMainFrame::OnNewProjectDataCDMS(WORD wNotifyCode,WORD wID,HWND hWndCtl,
 {
 	if (!SaveProjectPrompt())
 		return 0;
+
+	// Disable the welcome screen if active.
+	ShowWelcomePane(false);
 
 	SetTitleNormal();
 	m_szProjectFile[0] = '\0';
@@ -2539,6 +2564,9 @@ LRESULT CMainFrame::OnNewProjectDataDVD(WORD wNotifyCode,WORD wID,HWND hWndCtl,B
 	if (!SaveProjectPrompt())
 		return 0;
 
+	// Disable the welcome screen if active.
+	ShowWelcomePane(false);
+
 	SetTitleNormal();
 	m_szProjectFile[0] = '\0';
 
@@ -2550,6 +2578,9 @@ LRESULT CMainFrame::OnNewProjectAudio(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOO
 {
 	if (!SaveProjectPrompt())
 		return 0;
+
+	// Disable the welcome screen if active.
+	ShowWelcomePane(false);
 
 	SetTitleNormal();
 	m_szProjectFile[0] = '\0';
@@ -2563,6 +2594,9 @@ LRESULT CMainFrame::OnNewProjectMixed(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOO
 	if (!SaveProjectPrompt())
 		return 0;
 
+	// Disable the welcome screen if active.
+	ShowWelcomePane(false);
+
 	SetTitleNormal();
 	m_szProjectFile[0] = '\0';
 
@@ -2574,6 +2608,9 @@ LRESULT CMainFrame::OnNewProjectDVDVideo(WORD wNotifyCode,WORD wID,HWND hWndCtl,
 {
 	if (!SaveProjectPrompt())
 		return 0;
+
+	// Disable the welcome screen if active.
+	ShowWelcomePane(false);
 
 	SetTitleNormal();
 	m_szProjectFile[0] = '\0';
@@ -2594,6 +2631,9 @@ LRESULT CMainFrame::OnFileOpen(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHan
 
 	if (FileDialog.DoModal() == IDOK)
 	{
+		// Disable the welcome screen if active.
+		ShowWelcomePane(false);
+
 		if (g_ProjectManager.LoadProject(FileDialog.m_szFileName))
 		{
 			// Update the view.

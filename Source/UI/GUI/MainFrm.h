@@ -34,6 +34,8 @@
 #include "ToolBarManager.h"
 #include "CustomToolBarCtrl.h"
 #include "MiniHtmlCtrl.h"
+#include "Settings.h"
+#include "WelcomePane.h"
 
 // HACK: Enable doublebuffering on XP systems.
 #if (_WIN32_WINNT < 0x501)
@@ -101,6 +103,7 @@ private:
 	CSplitterWindow m_ProjectView;
 	CSpaceMeter m_SpaceMeter;
 	CProjectTreeViewCtrl m_ProjectTreeView;
+	CWelcomePane m_WelcomePane;
 
 	CCustomContainer m_ProjectListViewContainer;
 	CLabelContainer m_ProjectTreeViewContainer;
@@ -129,6 +132,9 @@ private:
 
 	bool m_bEnableAutoRun;
 	bool EnableAutoRun(bool bEnable);
+
+	// Set to true if the welcome pane is currently active.
+	bool m_bWelcomePane;
 
 	HWND CreateToolBarCtrl();
 
@@ -207,15 +213,42 @@ public:
 		}
 
 		return FALSE;
-
-		// Original.
-		//return CFrameWindowImpl<CMainFrame>::PreTranslateMessage(pMsg);
 	}
 
 	virtual BOOL OnIdle()
 	{
 		UIUpdateToolBar();
 		return FALSE;
+	}
+
+	void ShowWelcomePane(bool bShow)
+	{
+		m_bWelcomePane = bShow;
+
+		if (bShow)
+		{
+			m_SpaceMeterView.SetSplitterPane(SPLIT_PANE_TOP,m_WelcomePane);
+			m_SpaceMeterView.SetSinglePaneMode(SPLIT_PANE_TOP);
+		}
+		else
+		{
+			m_SpaceMeterView.SetSinglePaneMode();
+			m_SpaceMeterView.SetSplitterPane(SPLIT_PANE_BOTTOM,m_SpaceMeter);
+			m_SpaceMeterView.SetSplitterPane(SPLIT_PANE_TOP,m_MainView);
+
+			// Setup splitters.
+			RECT rcClient;
+			::GetClientRect(m_hWndClient,&rcClient);
+
+			m_SpaceMeterView.SetSplitterPos(rcClient.bottom - rcClient.top - MAINFRAME_SPACEMETER_HEIGHT);
+			m_MainView.SetSplitterPos((rcClient.bottom - rcClient.top - MAINFRAME_SPACEMETER_HEIGHT)/2);
+
+			int iSplitterPos = (rcClient.right - rcClient.left) / 4;
+			m_ExplorerView.SetSplitterPos(iSplitterPos);
+			m_ProjectView.SetSplitterPos(iSplitterPos);
+
+			SetWindowPos(HWND_TOP,&g_DynamicSettings.m_rcWindow,0);
+		}
 	}
 
 	BEGIN_UPDATE_UI_MAP(CMainFrame)

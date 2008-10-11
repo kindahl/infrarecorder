@@ -21,20 +21,20 @@
 #include "CustomMultiButton.h"
 
 CCustomMultiButton::CCustomMultiButton(long lCtrlMainId,long lCtrlSub1Id,long lCtrlSub2Id,
-									   ATL::_U_STRINGorID NormalBitmap,
-									   ATL::_U_STRINGorID HoverMainBitmap,
-									   ATL::_U_STRINGorID HoverSub1Bitmap,
-									   ATL::_U_STRINGorID HoverSub2Bitmap,
-								       ATL::_U_STRINGorID FocusBitmap) :
+									   unsigned short usCoverPng,int iCoverLeft,int iCoverRight) :
 	m_lCtrlMainId(lCtrlMainId),m_lCtrlSub1Id(lCtrlSub1Id),m_lCtrlSub2Id(lCtrlSub2Id),
-	m_State(STATE_NORMAL)
+	m_State(STATE_NORMAL),m_iCoverLeft(iCoverLeft),m_iCoverTop(iCoverRight)
 {
-	// Load the bitmaps.
-	m_NormalBitmap.LoadBitmap(NormalBitmap);
-	m_HoverMainBitmap.LoadBitmap(HoverMainBitmap);
-	m_HoverSub1Bitmap.LoadBitmap(HoverSub1Bitmap);
-	m_HoverSub2Bitmap.LoadBitmap(HoverSub2Bitmap);
-	m_FocusBitmap.LoadBitmap(FocusBitmap);
+	// Load the images.
+	m_CoverImage.Open(usCoverPng);
+	m_NormalImage.Open(IDR_MBUTTONNPNG);
+	m_FocusImage.Open(IDR_MBUTTONFPNG);
+	m_HoverImage.Open(IDR_MBUTTONHPNG);
+	m_HoverSub1Image.Open(IDR_MBUTTONHS1PNG);
+	m_HoverSub2Image.Open(IDR_MBUTTONHS2PNG);
+	m_HoverFocusImage.Open(IDR_MBUTTONFPNG);
+	m_HoverFocusSub1Image.Open(IDR_MBUTTONHFS1PNG);
+	m_HoverFocusSub2Image.Open(IDR_MBUTTONHFS2PNG);
 }
 
 CCustomMultiButton::~CCustomMultiButton()
@@ -54,17 +54,22 @@ LRESULT CCustomMultiButton::OnMouseMove(UINT uMsg,WPARAM wParam,LPARAM lParam,BO
 	int iPosX = GET_X_LPARAM(lParam); 
 	int iPosY = GET_Y_LPARAM(lParam);
 
+	eState NewState;
 	if (iPosX < SPLITTER_X)
-		m_State = STATE_HOTMAIN;
+		NewState = STATE_HOTMAIN;
 	else if (iPosY < SPLITTER_Y)
-		m_State = STATE_HOTSUB1;
+		NewState = STATE_HOTSUB1;
 	else
-		m_State = STATE_HOTSUB2;
+		NewState = STATE_HOTSUB2;
 
-	RECT rcClient;
-	GetClientRect(&rcClient);
-	InvalidateRect(&rcClient);
+	if (NewState != m_State)
+	{
+		RECT rcClient;
+		GetClientRect(&rcClient);
+		InvalidateRect(&rcClient);
+	}
 
+	m_State = NewState;
 	return 0;
 }
 
@@ -131,45 +136,40 @@ void CCustomMultiButton::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 
 	RECT rcClient;
 	GetClientRect(&rcClient);
+	FillRect(dc,&rcClient,GetSysColorBrush(COLOR_WINDOW));
 
-	HDC hMemDC = CreateCompatibleDC(dc);
-	HBITMAP hOldBitmap = NULL;
-	
 	switch (m_State)
 	{
 		case STATE_NORMAL:
 			if (lpDrawItemStruct->itemState & ODS_FOCUS)
-				hOldBitmap = (HBITMAP)SelectObject(hMemDC,m_FocusBitmap);
+				m_FocusImage.Draw(dc,0,0,rcClient.right,rcClient.bottom);
 			else
-				hOldBitmap = (HBITMAP)SelectObject(hMemDC,m_NormalBitmap);
+				m_NormalImage.Draw(dc,0,0,rcClient.right,rcClient.bottom);
 			break;
 
 		case STATE_HOTMAIN:
 			if (lpDrawItemStruct->itemState & ODS_FOCUS)
-				hOldBitmap = (HBITMAP)SelectObject(hMemDC,m_FocusBitmap);
+				m_HoverFocusImage.Draw(dc,0,0,rcClient.right,rcClient.bottom);
 			else
-				hOldBitmap = (HBITMAP)SelectObject(hMemDC,m_HoverMainBitmap);
+				m_HoverImage.Draw(dc,0,0,rcClient.right,rcClient.bottom);
 			break;
 
 		case STATE_HOTSUB1:
 			if (lpDrawItemStruct->itemState & ODS_FOCUS)
-				hOldBitmap = (HBITMAP)SelectObject(hMemDC,m_FocusBitmap);
+				m_HoverFocusSub1Image.Draw(dc,0,0,rcClient.right,rcClient.bottom);
 			else
-				hOldBitmap = (HBITMAP)SelectObject(hMemDC,m_HoverSub1Bitmap);
+				m_HoverSub1Image.Draw(dc,0,0,rcClient.right,rcClient.bottom);
 			break;
 
 		case STATE_HOTSUB2:
 			if (lpDrawItemStruct->itemState & ODS_FOCUS)
-				hOldBitmap = (HBITMAP)SelectObject(hMemDC,m_FocusBitmap);
+				m_HoverFocusSub2Image.Draw(dc,0,0,rcClient.right,rcClient.bottom);
 			else
-				hOldBitmap = (HBITMAP)SelectObject(hMemDC,m_HoverSub2Bitmap);
+				m_HoverSub2Image.Draw(dc,0,0,rcClient.right,rcClient.bottom);
 			break;
 	}
 
-	BitBlt(dc,0,0,rcClient.right,rcClient.bottom,hMemDC,0,0,SRCCOPY);
-
-	SelectObject(hMemDC,hOldBitmap);
+	m_CoverImage.Draw(dc,m_iCoverLeft,m_iCoverTop,rcClient.right,rcClient.bottom);
 
 	ReleaseDC(dc);
-	ReleaseDC(hMemDC);
 }

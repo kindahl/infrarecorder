@@ -167,7 +167,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="htmlhelp.lib winmm.lib ckcored.lib ckfilesystemd.lib"
+				AdditionalDependencies="htmlhelp.lib winmm.lib ckcored.lib ckfilesystemd.lib libpng.lib zlib.lib"
 				OutputFile="../../../Binary64/$(ProjectName).exe"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
@@ -1218,6 +1218,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PngFile.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\ProgressDlg.cpp"
 				>
 			</File>
@@ -1442,11 +1446,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\WinVer.cpp"
+				RelativePath=".\WelcomePane.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\WizardDlg.cpp"
+				RelativePath=".\WinVer.cpp"
 				>
 			</File>
 		</Filter>
@@ -1739,6 +1743,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PngFile.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ProgressDlg.h"
 				>
 			</File>
@@ -1887,11 +1895,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\WinVer.h"
+				RelativePath=".\WelcomePane.h"
 				>
 			</File>
 			<File
-				RelativePath=".\WizardDlg.h"
+				RelativePath=".\WinVer.h"
 				>
 			</File>
 		</Filter>
@@ -1904,7 +1912,35 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Resources\Wizard\AudioDisc.png"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\Buttons\ButtonFocus.png"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\Buttons\ButtonHover.png"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\Buttons\ButtonHoverFocus.png"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\Buttons\ButtonNormal.png"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\Wizard\CopyDisc.png"
+				>
+			</File>
+			<File
 				RelativePath=".\Resources\Data.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\Wizard\DataDisc.png"
 				>
 			</File>
 			<File
@@ -1912,63 +1948,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\Wizard\FocusAudioDisc.bmp"
-				>
-			</File>
-			<File
-				RelativePath=".\Resources\Wizard\FocusCopyDisc.bmp"
-				>
-			</File>
-			<File
-				RelativePath=".\Resources\Wizard\FocusDataDisc.bmp"
-				>
-			</File>
-			<File
-				RelativePath=".\Resources\Wizard\FocusReadDisc.bmp"
-				>
-			</File>
-			<File
-				RelativePath=".\Resources\Wizard\FocusVideoDisc.bmp"
-				>
-			</File>
-			<File
-				RelativePath=".\Resources\Wizard\FocusWriteImage.bmp"
-				>
-			</File>
-			<File
 				RelativePath=".\Resources\Head.bmp"
-				>
-			</File>
-			<File
-				RelativePath=".\Resources\Wizard\HoverAudioDisc.bmp"
-				>
-			</File>
-			<File
-				RelativePath=".\Resources\Wizard\HoverCopyDisc.bmp"
-				>
-			</File>
-			<File
-				RelativePath=".\Resources\Wizard\HoverDataDisc.bmp"
-				>
-			</File>
-			<File
-				RelativePath=".\Resources\Wizard\HoverDataDiscCd.bmp"
-				>
-			</File>
-			<File
-				RelativePath=".\Resources\Wizard\HoverDataDiscDvd.bmp"
-				>
-			</File>
-			<File
-				RelativePath=".\Resources\Wizard\HoverReadDisc.bmp"
-				>
-			</File>
-			<File
-				RelativePath=".\Resources\Wizard\HoverVideoDisc.bmp"
-				>
-			</File>
-			<File
-				RelativePath=".\Resources\Wizard\HoverWriteImage.bmp"
 				>
 			</File>
 			<File
@@ -2016,27 +1996,35 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\Wizard\NormalAudioDisc.bmp"
+				RelativePath=".\Resources\Buttons\MultiButtonFocus.png"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\Wizard\NormalCopyDisc.bmp"
+				RelativePath=".\Resources\Buttons\MultiButtonHover.png"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\Wizard\NormalDataDisc.bmp"
+				RelativePath=".\Resources\Buttons\MultiButtonHoverFocus.png"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\Wizard\NormalReadDisc.bmp"
+				RelativePath=".\Resources\Buttons\MultiButtonHoverFocusSpecific1.png"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\Wizard\NormalVideoDisc.bmp"
+				RelativePath=".\Resources\Buttons\MultiButtonHoverFocusSpecific2.png"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\Wizard\NormalWriteImage.bmp"
+				RelativePath=".\Resources\Buttons\MultiButtonHoverSpecific1.png"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\Buttons\MultiButtonHoverSpecific2.png"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\Buttons\MultiButtonNormal.png"
 				>
 			</File>
 			<File
@@ -2045,6 +2033,10 @@
 			</File>
 			<File
 				RelativePath=".\Resources\Project.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\Wizard\ReadDisc.png"
 				>
 			</File>
 			<File
@@ -2072,11 +2064,23 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Resources\Wizard\VideoDisc.png"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\WelcomeLogo.png"
+				>
+			</File>
+			<File
 				RelativePath=".\Resources\WizardMainHeader.bmp"
 				>
 			</File>
 			<File
 				RelativePath=".\Resources\WizardMainWatermark.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\Wizard\WriteImage.png"
 				>
 			</File>
 		</Filter>

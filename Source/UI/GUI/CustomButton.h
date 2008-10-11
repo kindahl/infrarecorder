@@ -17,6 +17,7 @@
  */
 
 #pragma once
+#include "PngFile.h"
 
 class CCustomButton : public CWindowImpl<CCustomButton,CButton>,
 	public COwnerDraw<CCustomButton>
@@ -30,16 +31,19 @@ private:
 	};
 
 	eState m_State;
+	int m_iCoverLeft;
+	int m_iCoverTop;
 
-	CBitmap m_NormalBitmap;
-	CBitmap m_HoverBitmap;
-	CBitmap m_FocusBitmap;
+	CPngFile m_CoverImage;
+	CPngFile m_NormalImage;
+	CPngFile m_FocusImage;
+	CPngFile m_HoverImage;
+	CPngFile m_HoverFocusImage;
 
 public:
 	DECLARE_WND_CLASS(_T("ckButton"));
 
-	CCustomButton(ATL::_U_STRINGorID NormalBitmap,
-		ATL::_U_STRINGorID HoverBitmap,ATL::_U_STRINGorID FocusBitmap);
+	CCustomButton(unsigned short usCoverPng,int iCoverLeft,int iCoverRight);
 	~CCustomButton();
 
 	BEGIN_MSG_MAP(CCustomButton)

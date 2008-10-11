@@ -70,30 +70,27 @@
 #define IDB_MAINLARGEBITMAP_            250
 #define IDD_PROPPAGE_PROJECTPROPUDF     250
 #define IDB_PANECLOSEBITMAP             251
-#define IDD_WIZARDDLG                   254
-#define IDB_NORMALAUDIODISCBITMAP       255
-#define IDB_HOVERAUDIODISCBITMAP        257
-#define IDB_FOCUSAUDIODISCBITMAP        258
-#define IDB_NORMALVIDEODISCBITMAP       259
-#define IDB_HOVERVIDEODISCBITMAP        260
-#define IDB_FOCUSVIDEODISCBITMAP        261
-#define IDB_NORMALWRITEIMAGEBITMAP      262
-#define IDB_HOVERWRITEIMAGEBITMAP       263
-#define IDB_FOCUSWRITEIMAGEBITMAP       264
-#define IDB_NORMALCOPYDISCBITMAP        265
-#define IDB_HOVERCOPYDISCBITMAP         266
-#define IDB_FOCUSCOPYDISCBITMAP         267
-#define IDB_NORMALREADDISCBITMAP        268
-#define IDB_HOVERREADDISCBITMAP         269
-#define IDB_FOCUSREADDISCBITMAP         270
-#define IDB_NORMALDATADISCBITMAP        271
-#define IDB_HOVERDATADISCBITMAP         272
-#define IDB_HOVERDATADISCCDBITMAP       273
-#define IDB_HOVERDATADISCDVDBITMAP      274
 #define IDB_BITMAP1                     275
-#define IDB_FOCUSDATADISCBITMAP         275
-#define IDB_LOGOBITMAP                  276
 #define IDB_LOGOSMALLBITMAP             277
+#define IDR_WELCOMELOGOPNG              278
+#define IDR_BUTTONFPNG                  279
+#define IDR_BUTTONHPNG                  280
+#define IDR_BUTTONHFPNG                 281
+#define IDR_BUTTONNPNG                  282
+#define IDR_MBUTTONFPNG                 283
+#define IDR_MBUTTONHPNG                 284
+#define IDR_MBUTTONHFPNG                285
+#define IDR_MBUTTONHFS1PNG              286
+#define IDR_MBUTTONHFS2PNG              287
+#define IDR_MBUTTONHS1PNG               288
+#define IDR_MBUTTONHS2PNG               289
+#define IDR_MBUTTONNPNG                 290
+#define IDR_WIZARDAUDIOPNG              291
+#define IDR_WIZARDCOPYPNG               292
+#define IDR_WIZARDDATAPNG               293
+#define IDR_WIZARDREADPNG               294
+#define IDR_WIZARDVIDEOPNG              295
+#define IDR_WIZARDWRITEPNG              296
 #define IDC_TOTALPROGRESS               1000
 #define IDC_TOTALSTATIC                 1001
 #define IDC_MESSAGELIST                 1004
@@ -122,7 +119,6 @@
 #define IDC_DIAGNOSTICSBUTTON           1018
 #define IDC_YESALLBUTTON                1018
 #define IDC_WEBSITEBUTTON               1018
-#define IDC_AUDIOBUTTON                 1018
 #define ID_SAVEASBUTTON                 1019
 #define IDC_DEVICELIST                  1020
 #define IDC_INFOSTATIC                  1021
@@ -296,7 +292,6 @@
 #define IDC_VERIFYCHECK                 1197
 #define IDC_SMOKECHECK                  1197
 #define IDC_DEEPDIRCHECK                1197
-#define IDC_STARTUPCHECK                1197
 #define IDC_DRIVELETTERCOMBO            1198
 #define IDC_DRIVECOMBO                  1198
 #define IDC_SPEEDCOMBO                  1199
@@ -306,7 +301,6 @@
 #define IDC_NOBUTTON                    1203
 #define IDC_BUTTON2                     1204
 #define IDC_NOALLBUTTON                 1204
-#define IDC_VIDEOBUTTON                 1204
 #define IDC_REPLACEINFOSTATIC           1206
 #define IDC_OLDSIZESTATIC               1207
 #define IDC_OLDDATESTATIC               1208
@@ -319,13 +313,8 @@
 #define IDC_VERSIONCOMBO                1212
 #define IDC_PARTACCESSSTATIC            1214
 #define IDC_ASSOCIATEDISCIMAGECHECK     1215
-#define IDC_DATABUTTON                  1216
-#define IDC_IMAGEBUTTON                 1217
-#define IDC_COPYBUTTON                  1218
-#define IDC_READBUTTON                  1219
 #define IDC_DATACDBUTTON                1220
 #define IDC_DATADVDBUTTON               1221
-#define IDC_GRADIENTSTATIC              1222
 #define IDC_IDC_WHITESTATIC             1223
 #define IDC_WIZARDCHECK                 1224
 #define IDC_BUTTON3                     1225
@@ -396,7 +385,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        278
+#define _APS_NEXT_RESOURCE_VALUE        297
 #define _APS_NEXT_COMMAND_VALUE         32843
 #define _APS_NEXT_CONTROL_VALUE         1226
 #define _APS_NEXT_SYMED_VALUE           101

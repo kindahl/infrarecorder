@@ -29,7 +29,6 @@
 #include "ActionManager.h"
 #include "TempManager.h"
 #include "InfoDlg.h"
-#include "WizardDlg.h"
 #include "InfraRecorder.h"
 
 CAppModule _Module;
@@ -101,7 +100,18 @@ int Run(LPTSTR lpstrCmdLine = NULL,int nCmdShow = SW_SHOWDEFAULT)
 		g_DynamicSettings.m_rcWindow.top != -1 &&
 		g_DynamicSettings.m_rcWindow.bottom != -1)
 	{
-		g_MainFrame.SetWindowPos(HWND_TOP,&g_DynamicSettings.m_rcWindow,0);
+		if (g_GlobalSettings.m_bShowWizard)
+		{
+			RECT rcWindow = g_DynamicSettings.m_rcWindow;
+			rcWindow.right = rcWindow.left + 500;
+			rcWindow.bottom = rcWindow.top + 400;
+
+			g_MainFrame.SetWindowPos(HWND_TOP,&rcWindow,0);
+		}
+		else
+		{
+			g_MainFrame.SetWindowPos(HWND_TOP,&g_DynamicSettings.m_rcWindow,0);
+		}
 	}
 	else
 	{
@@ -109,13 +119,6 @@ int Run(LPTSTR lpstrCmdLine = NULL,int nCmdShow = SW_SHOWDEFAULT)
 	}
 
 	g_MainFrame.ShowWindow(g_DynamicSettings.m_bWinMaximized ? SW_SHOWMAXIMIZED : nCmdShow);
-
-	// Display the welcome screen.
-	if (g_GlobalSettings.m_bShowWizard)
-	{
-		CWizardDlg WizardDlg;
-		WizardDlg.DoModal();
-	}
 
 	int nRet = MainLoop.Run();
 		_Module.RemoveMessageLoop();

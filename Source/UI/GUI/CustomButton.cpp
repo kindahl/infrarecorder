@@ -20,15 +20,15 @@
 #include "resource.h"
 #include "CustomButton.h"
 
-CCustomButton::CCustomButton(ATL::_U_STRINGorID NormalBitmap,
-							 ATL::_U_STRINGorID HoverBitmap,
-							 ATL::_U_STRINGorID FocusBitmap) :
-	m_State(STATE_NORMAL)
+CCustomButton::CCustomButton(unsigned short usCoverPng,int iCoverLeft,int iCoverRight) :
+	m_State(STATE_NORMAL),m_iCoverLeft(iCoverLeft),m_iCoverTop(iCoverRight)
 {
-	// Load the bitmaps.
-	m_NormalBitmap.LoadBitmap(NormalBitmap);
-	m_HoverBitmap.LoadBitmap(HoverBitmap);
-	m_FocusBitmap.LoadBitmap(FocusBitmap);
+	// Load the images.
+	m_CoverImage.Open(usCoverPng);
+	m_NormalImage.Open(IDR_BUTTONNPNG);
+	m_FocusImage.Open(IDR_BUTTONFPNG);
+	m_HoverImage.Open(IDR_BUTTONHPNG);
+	m_HoverFocusImage.Open(IDR_BUTTONHFPNG);
 }
 
 CCustomButton::~CCustomButton()
@@ -107,31 +107,27 @@ void CCustomButton::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 	RECT rcClient;
 	GetClientRect(&rcClient);
 
-	HDC hMemDC = CreateCompatibleDC(dc);
-	HBITMAP hOldBitmap = NULL;
-	
+	FillRect(dc,&rcClient,GetSysColorBrush(COLOR_WINDOW));
+
 	switch (m_State)
 	{
 		case STATE_NORMAL:
 			if (lpDrawItemStruct->itemState & ODS_FOCUS)
-				hOldBitmap = (HBITMAP)SelectObject(hMemDC,m_FocusBitmap);
+				m_FocusImage.Draw(dc,0,0,rcClient.right,rcClient.bottom);
 			else
-				hOldBitmap = (HBITMAP)SelectObject(hMemDC,m_NormalBitmap);
+				m_NormalImage.Draw(dc,0,0,rcClient.right,rcClient.bottom);
 			break;
 
 		case STATE_HOT:
 		case STATE_DOWN:
 			if (lpDrawItemStruct->itemState & ODS_FOCUS)
-				hOldBitmap = (HBITMAP)SelectObject(hMemDC,m_FocusBitmap);
+				m_HoverFocusImage.Draw(dc,0,0,rcClient.right,rcClient.bottom);
 			else
-				hOldBitmap = (HBITMAP)SelectObject(hMemDC,m_HoverBitmap);
+				m_HoverImage.Draw(dc,0,0,rcClient.right,rcClient.bottom);
 			break;
 	}
 
-	BitBlt(dc,0,0,rcClient.right,rcClient.bottom,hMemDC,0,0,SRCCOPY);
-
-	SelectObject(hMemDC,hOldBitmap);
+	m_CoverImage.Draw(dc,m_iCoverLeft,m_iCoverTop,rcClient.right,rcClient.bottom);
 
 	ReleaseDC(dc);
-	ReleaseDC(hMemDC);
 }
