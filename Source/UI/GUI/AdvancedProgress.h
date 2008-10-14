@@ -41,6 +41,8 @@ public:
 	virtual void AllowReload() = 0;
 	virtual void AllowCancel(bool bAllow) = 0;
 
+	virtual bool RequestNextDisc() = 0;
+
 	// Starts the smoke effect.
 	virtual void StartSmoke() = 0;
 };

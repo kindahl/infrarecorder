@@ -34,6 +34,7 @@ private:
 	CComboBox m_RecorderCombo;
 	CComboBox m_WriteSpeedCombo;
 	CComboBox m_WriteMethodCombo;
+	CComboBox m_NumCopiesCombo;
 	CCore2Device m_CurDevice;
 
 	enum

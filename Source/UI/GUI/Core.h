@@ -25,7 +25,7 @@
 #include "AdvancedProgress.h"
 
 #define CORE_IGNORE_ERRORINFOMESSAGES		// Should we ignore error information message (copyright etc.)?
-#define CORE_PRINT_UNSUPERRORMESSAGES		// Should we print unhandled/unsupported messages to the log window?
+//#define CORE_PRINT_UNSUPERRORMESSAGES		// Should we print unhandled/unsupported messages to the log window?
 #define CORE_DVD_SUPPORT					// Is DVD recording supported in this version?
 
 #define RESULT_INTERNALERROR		0
@@ -69,9 +69,16 @@ private:
 	// application.
 	CAdvancedProgress *m_pProgress;
 
+	// Used for creating multiple copies (when recording a disc image).
+	long m_lNumCopies;
+	tstring m_LastCmdLine;
+	bool m_bLastWaitForProcess;
+
 	void Initialize(int iMode,CAdvancedProgress *pProgress = NULL);
+	void Reinitialize();
 	void CreateBatchFile(const char *szChangeDir,const char *szCommandLine,TCHAR *szBatchPath);
 	bool SafeLaunch(tstring &CommandLine,bool bWaitForProcess);
+	bool Relaunch();
 
 	bool CheckGraceTime(const char *szBuffer);
 	bool CheckProgress(const char *szBuffer);
@@ -108,6 +115,7 @@ private:
 	};
 
 	static DWORD WINAPI CreateCompImageThread(LPVOID lpThreadParameter);
+	static DWORD WINAPI NextCopyThread(LPVOID lpThreadParameter);
 
 	bool BurnImage(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 		tDeviceInfoEx *pDeviceInfoEx,CAdvancedProgress *pProgress,

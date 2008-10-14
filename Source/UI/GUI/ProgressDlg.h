@@ -82,6 +82,8 @@ public:
 
 	void Reset();
 
+	bool RequestNextDisc();
+
 	void StartSmoke();
 
 	BEGIN_MSG_MAP(CProgressDlg)

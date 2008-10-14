@@ -216,6 +216,11 @@ void CSimpleProgressDlg::Reset()
 	m_bCancelled = false;
 }
 
+bool CSimpleProgressDlg::RequestNextDisc()
+{
+	return lngMessageBox(m_hWnd,INFO_NEXTCOPY,GENERAL_INFORMATION,MB_OKCANCEL | MB_ICONINFORMATION) == IDOK;
+}
+
 void CSimpleProgressDlg::StartSmoke()
 {
 	SMOKE_START

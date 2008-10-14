@@ -79,6 +79,18 @@ void CCore::Initialize(int iMode,CAdvancedProgress *pProgress)
 	// Remove all previous track information.
 	m_TrackSize.clear();
 	m_uiCurrentTrack = 0;
+
+	m_lNumCopies = 1;
+}
+
+void CCore::Reinitialize()
+{
+	m_bGraceTimeDone = false;
+	m_bErrorPathMode = true;			// By default we're looking for a cygwin path before error messages.
+
+	m_uiCDRToolsPathLen = lstrlen(g_GlobalSettings.m_szCDRToolsPathCyg);
+
+	m_uiCurrentTrack = 0;
 }
 
 void CCore::CreateBatchFile(const char *szChangeDir,const char *szCommandLine,TCHAR *szBatchPath)
@@ -103,6 +115,12 @@ void CCore::CreateBatchFile(const char *szChangeDir,const char *szCommandLine,TC
 
 bool CCore::SafeLaunch(tstring &CommandLine,bool bWaitForProcess)
 {
+	if (m_lNumCopies > 0)
+		m_lNumCopies--;
+
+	m_LastCmdLine = CommandLine;
+	m_bLastWaitForProcess = bWaitForProcess;
+
 	// If the command line is longer than 260 characters we need to take special
 	// actions since all (only Windows 2000?) Windows versions older than XP are
 	// limited to MAX_PATH. Windows XP supports 32K character command lines.
@@ -165,6 +183,28 @@ bool CCore::SafeLaunch(tstring &CommandLine,bool bWaitForProcess)
 	}
 
 	return Launch((TCHAR *)CommandLine.c_str(),bWaitForProcess);
+}
+
+bool CCore::Relaunch()
+{
+	if (m_lNumCopies <= 0 || m_LastCmdLine.size() == 0)
+		return false;
+
+	if (!m_pProgress->RequestNextDisc())
+		return false;
+
+	// Launch the process from a separate thread since the current thread belongs
+	// to the previous process.
+	unsigned long ulThreadID = 0;
+	HANDLE hThread = ::CreateThread(NULL,0,NextCopyThread,this,0,&ulThreadID);
+
+	if (hThread != NULL)
+	{
+		::CloseHandle(hThread);
+		return true;
+	}
+	
+	return false;
 }
 
 bool CCore::CheckGraceTime(const char *szBuffer)
@@ -860,7 +900,7 @@ void CCore::ProcessEnded()
 
 		case MODE_ERASE:
 		case MODE_FIXATE:
-		case MODE_BURNIMAGE:
+		//case MODE_BURNIMAGE:
 		case MODE_READDATATRACK:
 		case MODE_READAUDIOTRACK:
 		case MODE_SCANTRACK:
@@ -870,7 +910,15 @@ void CCore::ProcessEnded()
 			m_pProgress->NotifyComplteted();
 			break;
 
-		case MODE_BURNIMAGEEX:
+		case MODE_BURNIMAGE:
+			m_pProgress->SetProgress(100);
+			m_pProgress->SetStatus(lngGetString(PROGRESS_DONE));
+
+			if (m_lNumCopies <= 0 || !Relaunch())
+				m_pProgress->NotifyComplteted();
+			break;
+
+		//case MODE_BURNIMAGEEX:
 		case MODE_READDATATRACKEX:
 		case MODE_READAUDIOTRACKEX:
 		case MODE_SCANTRACKEX:
@@ -884,6 +932,22 @@ void CCore::ProcessEnded()
 				m_pProgress->SetProgress(100);
 				m_pProgress->SetStatus(lngGetString(PROGRESS_DONE));
 				m_pProgress->NotifyComplteted();
+			}
+			break;
+
+		case MODE_BURNIMAGEEX:
+			if (m_lNumCopies <= 0 || !Relaunch())
+			{
+				if (m_bOperationRes)
+				{
+					m_pProgress->SetProgress(0);
+				}
+				else
+				{
+					m_pProgress->SetProgress(100);
+					m_pProgress->SetStatus(lngGetString(PROGRESS_DONE));
+					m_pProgress->NotifyComplteted();
+				}
 			}
 			break;
 	};
@@ -1082,6 +1146,9 @@ bool CCore::BurnImage(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 
 	// Initialize this object.
 	Initialize(MODE_BURNIMAGE,pProgress);
+
+	// For creating multiple copies.
+	m_lNumCopies = g_BurnImageSettings.m_lNumCopies;
 
 	// We need to specify the total size that we should record.
 	m_uiProcessedSize = 0;
@@ -2135,6 +2202,24 @@ DWORD WINAPI CCore::CreateCompImageThread(LPVOID lpThreadParameter)
 	return 0;
 }
 
+DWORD WINAPI CCore::NextCopyThread(LPVOID lpThreadParameter)
+{
+	CCore *pCore = (CCore *)lpThreadParameter;
+	pCore->Reinitialize();
+
+	pCore->m_uiProcessedSize = 0;
+	pCore->m_pProgress->SetProgress(0);
+
+	TCHAR szBuffer[128];
+	lsprintf(szBuffer,lngGetString(INFO_CREATECOPY),
+		g_BurnImageSettings.m_lNumCopies - pCore->m_lNumCopies + 1,
+		g_BurnImageSettings.m_lNumCopies);
+	pCore->m_pProgress->Notify(ckcore::Progress::ckINFORMATION,szBuffer);
+
+	pCore->SafeLaunch(pCore->m_LastCmdLine,pCore->m_bLastWaitForProcess);
+	return 0;
+}
+
 /*
 	CCore::BurnCompilation
 	----------------------
@@ -2409,7 +2494,8 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	HANDLE hThread = ::CreateThread(NULL,0,CreateCompImageThread,&CompImageParams,0,&ulThreadID);
 	::CloseHandle(hThread);
 
-	return Launch((TCHAR *)CommandLine.c_str(),true);
+	//return Launch((TCHAR *)CommandLine.c_str(),true);
+	return SafeLaunch(CommandLine,true);
 }
 
 bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,

@@ -318,6 +318,9 @@
 #define IDC_IDC_WHITESTATIC             1223
 #define IDC_WIZARDCHECK                 1224
 #define IDC_BUTTON3                     1225
+#define IDC_NUMCOPIESSTATIC             1226
+#define IDC_COMBO1                      1228
+#define IDC_NUMCOPIESCOMBO              1228
 #define IDC_PROJECTTREEVIEW             10001
 #define IDC_PROJECTLISTVIEW             10002
 #define IDC_SHELLTREEVIEW               10003
@@ -387,7 +390,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        297
 #define _APS_NEXT_COMMAND_VALUE         32843
-#define _APS_NEXT_CONTROL_VALUE         1226
+#define _APS_NEXT_CONTROL_VALUE         1229
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

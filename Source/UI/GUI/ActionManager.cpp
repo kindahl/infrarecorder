@@ -165,7 +165,7 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 	}
 
 	// Start the burn process.
-	g_ProgressDlg.SetStatus(lngGetString(PROGRESS_INIT));
+	/*g_ProgressDlg.SetStatus(lngGetString(PROGRESS_INIT));
 	switch (iProjectType)
 	{
 		case PROJECTTYPE_DATA:
@@ -361,9 +361,6 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 			// We need to reload the drive media.
 			g_ProgressDlg.SetStatus(lngGetString(PROGRESS_RELOADMEDIA));
 
-			//g_Core.EjectDisc(pDeviceInfo,true);
-			//g_Core.LoadDisc(pDeviceInfo,true);
-
 			CCore2Device Device;
 			Device.Open(&pDeviceInfo->Address);
 
@@ -397,7 +394,282 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 		// Eject the disc if requested.
 		if (bEject)
 			g_Core.EjectDisc(pDeviceInfo,false);
+	}*/
+
+	// =======================================================================
+
+	// Start the burn process.
+	for (long i = 0; i < g_BurnImageSettings.m_lNumCopies; i++)
+	{
+		bool bLast = i == (g_BurnImageSettings.m_lNumCopies - 1);
+		g_ProgressDlg.SetStatus(lngGetString(PROGRESS_INIT));
+		switch (iProjectType)
+		{
+			case PROJECTTYPE_DATA:
+				if (g_BurnImageSettings.m_bOnFly)
+				{
+					// Try to estimate the file system size before burning the compilation.
+					unsigned __int64 uiDataSize = 0;
+					g_ProgressDlg.SetStatus(lngGetString(PROGRESS_ESTIMAGESIZE));
+
+					ckfilesystem::FileComparator FileComp(g_ProjectSettings.m_iFileSystem == FILESYSTEM_DVDVIDEO);
+					ckfilesystem::FileSet Files(FileComp);
+
+					g_TreeManager.GetPathList(Files,g_TreeManager.GetRootNode());
+
+					iResult = g_Core2.EstimateImageSize(Files,g_ProgressDlg,uiDataSize);
+
+					g_ProgressDlg.SetProgress(100);
+
+					if (iResult == RESULT_OK)
+					{
+						// Reset the status.
+						g_ProgressDlg.SetStatus(lngGetString(PROGRESS_INIT));
+
+						if (g_BurnImageSettings.m_bVerify || !bLast)
+						{
+							iResult = (int)g_Core.BurnCompilationEx(pDeviceInfo,pDeviceCap,pDeviceInfoEx,&g_ProgressDlg,g_ProgressDlg,Files,
+								AudioTracks,NULL,g_ProjectSettings.m_iIsoFormat,uiDataSize);
+						}
+						else
+						{
+							iResult = (int)g_Core.BurnCompilation(pDeviceInfo,pDeviceCap,pDeviceInfoEx,&g_ProgressDlg,g_ProgressDlg,Files,
+								AudioTracks,NULL,g_ProjectSettings.m_iIsoFormat,uiDataSize);
+						}
+					}
+					else if (iResult == RESULT_FAIL)
+					{
+						g_ProgressDlg.Notify(ckcore::Progress::ckERROR,lngGetString(ERROR_ESTIMAGESIZE));
+					}
+				}
+				else
+				{
+					if (g_BurnImageSettings.m_bVerify || !bLast)
+					{
+						iResult = (int)g_Core.BurnTracksEx(pDeviceInfo,pDeviceCap,pDeviceInfoEx,&g_ProgressDlg,ImageFile.Name().c_str(),
+							AudioTracks,NULL,g_ProjectSettings.m_iIsoFormat);
+					}
+					else
+					{
+						iResult = (int)g_Core.BurnTracks(pDeviceInfo,pDeviceCap,pDeviceInfoEx,&g_ProgressDlg,ImageFile.Name().c_str(),
+							AudioTracks,NULL,g_ProjectSettings.m_iIsoFormat);
+					}
+				}
+				break;
+
+			case PROJECTTYPE_MIXED:
+				// Save CD-Text information.
+				if (AudioTracks.size() > 0)
+				{
+					// Check if any audio information has been edited.
+					if (g_TreeManager.HasExtraAudioData(g_ProjectManager.GetMixAudioRootNode()))
+					{
+						ckcore::File AudioTextFile = ckcore::File::Temp();
+
+						if (g_ProjectManager.SaveCDText(AudioTextFile.Name().c_str()))
+							pAudioText = AudioTextFile.Name().c_str();
+						else
+							lngMessageBox(HWND_DESKTOP,FAILURE_CREATECDTEXT,GENERAL_ERROR,MB_OK | MB_ICONERROR);
+					}
+				}
+
+				if (g_BurnImageSettings.m_bOnFly)
+				{
+					// Try to estimate the file system size before burning the compilation.
+					unsigned __int64 uiDataSize = 0;
+					g_ProgressDlg.SetStatus(lngGetString(PROGRESS_ESTIMAGESIZE));
+
+					ckfilesystem::FileComparator FileComp(g_ProjectSettings.m_iFileSystem == FILESYSTEM_DVDVIDEO);
+					ckfilesystem::FileSet Files(FileComp);
+
+					g_TreeManager.GetPathList(Files,g_ProjectManager.GetMixDataRootNode(),
+						lstrlen(g_ProjectManager.GetMixDataRootNode()->pItemData->GetFileName()) + 1);
+
+					iResult = g_Core2.EstimateImageSize(Files,g_ProgressDlg,uiDataSize);
+
+					g_ProgressDlg.SetProgress(100);
+
+					if (iResult == RESULT_OK)
+					{
+						// Reset the status.
+						g_ProgressDlg.SetStatus(lngGetString(PROGRESS_INIT));
+
+						if (g_BurnImageSettings.m_bVerify || !bLast)
+						{
+							iResult = (int)g_Core.BurnCompilationEx(pDeviceInfo,pDeviceCap,pDeviceInfoEx,&g_ProgressDlg,g_ProgressDlg,Files,
+								AudioTracks,pAudioText,g_ProjectSettings.m_iIsoFormat,uiDataSize);
+						}
+						else
+						{
+							iResult = (int)g_Core.BurnCompilation(pDeviceInfo,pDeviceCap,pDeviceInfoEx,&g_ProgressDlg,g_ProgressDlg,Files,
+								AudioTracks,pAudioText,g_ProjectSettings.m_iIsoFormat,uiDataSize);
+						}
+					}
+					else if (iResult == RESULT_FAIL)
+					{
+						g_ProgressDlg.Notify(ckcore::Progress::ckERROR,lngGetString(ERROR_ESTIMAGESIZE));
+					}
+				}
+				else
+				{
+					if (g_BurnImageSettings.m_bVerify || !bLast)
+					{
+						iResult = (int)g_Core.BurnTracksEx(pDeviceInfo,pDeviceCap,pDeviceInfoEx,&g_ProgressDlg,ImageFile.Name().c_str(),
+							AudioTracks,pAudioText,g_ProjectSettings.m_iIsoFormat);
+					}
+					else
+					{
+						iResult = (int)g_Core.BurnTracks(pDeviceInfo,pDeviceCap,pDeviceInfoEx,&g_ProgressDlg,ImageFile.Name().c_str(),
+							AudioTracks,pAudioText,g_ProjectSettings.m_iIsoFormat);
+					}
+				}
+				break;
+
+			case PROJECTTYPE_AUDIO:
+				// Save CD-Text information.
+				if (AudioTracks.size() > 0)
+				{
+					// Check if any audio information has been edited.
+					if (g_TreeManager.HasExtraAudioData(g_TreeManager.GetRootNode()))
+					{
+						ckcore::File AudioTextFile = ckcore::File::Temp();
+
+						if (g_ProjectManager.SaveCDText(AudioTextFile.Name().c_str()))
+							pAudioText = AudioTextFile.Name().c_str();
+						else
+							lngMessageBox(HWND_DESKTOP,FAILURE_CREATECDTEXT,GENERAL_ERROR,MB_OK | MB_ICONERROR);
+					}
+				}
+
+				if (bLast)
+				{
+					iResult = (int)g_Core.BurnTracks(pDeviceInfo,pDeviceCap,pDeviceInfoEx,&g_ProgressDlg,NULL,
+						AudioTracks,pAudioText,0);
+				}
+				else
+				{
+					iResult = (int)g_Core.BurnTracksEx(pDeviceInfo,pDeviceCap,pDeviceInfoEx,&g_ProgressDlg,NULL,
+						AudioTracks,pAudioText,0);
+				}
+				break;
+		};
+
+		// Handle the result.
+		if (!iResult)
+		{
+			g_ProgressDlg.SetStatus(lngGetString(PROGRESS_CANCELED));
+			g_ProgressDlg.Notify(ckcore::Progress::ckWARNING,lngGetString(PROGRESS_CANCELED));
+			g_ProgressDlg.NotifyComplteted();
+
+			lngMessageBox(HWND_DESKTOP,FAILURE_CDRTOOLS,GENERAL_ERROR,MB_OK | MB_ICONERROR);
+			return 0;
+		}
+		else if (iResult == RESULT_OK)
+		{
+			// If the recording was successfull, verify the disc.
+			if (g_BurnImageSettings.m_bVerify)
+			{
+				// We need to reload the drive media.
+				g_ProgressDlg.SetStatus(lngGetString(PROGRESS_RELOADMEDIA));
+
+				CCore2Device Device;
+				Device.Open(&pDeviceInfo->Address);
+
+				g_Core2.StartStopUnit(&Device,CCore2::LOADMEDIA_EJECT,false);
+				if (!g_Core2.StartStopUnit(&Device,CCore2::LOADMEDIA_LOAD,false))
+					lngMessageBox(g_ProgressDlg,INFO_RELOAD,GENERAL_INFORMATION,MB_OK | MB_ICONINFORMATION);
+
+				// Set the device information.
+				TCHAR szDeviceName[128];
+				g_DeviceManager.GetDeviceName(pDeviceInfo,szDeviceName);
+
+				g_ProgressDlg.SetDevice(szDeviceName);
+				g_ProgressDlg.SetStatus(lngGetString(PROGRESS_INIT));
+				g_ProgressDlg.SetWindowText(lngGetString(STITLE_VERIFYDISC));
+
+				// Get the device drive letter.
+				TCHAR szDriveLetter[3];
+				szDriveLetter[0] = pDeviceInfo->Address.m_cDriveLetter;
+				szDriveLetter[1] = ':';
+				szDriveLetter[2] = '\0';
+
+				// Validate the project files.
+				g_ProjectManager.VerifyCompilation(&g_ProgressDlg,szDriveLetter,FilePathMap);
+
+				// We're done.
+				g_ProgressDlg.SetProgress(100);
+				g_ProgressDlg.SetStatus(lngGetString(PROGRESS_DONE));
+				g_ProgressDlg.NotifyComplteted();
+			}
+
+			// Eject the disc if requested.
+			if (bEject)
+				g_Core.EjectDisc(pDeviceInfo,false);
+		}
+
+		if (!bLast)
+		{
+			g_ProgressDlg.SetProgress(0);
+
+			if (!g_ProgressDlg.RequestNextDisc())
+			{
+				g_ProgressDlg.NotifyComplteted();
+				break;
+			}
+
+			TCHAR szBuffer[128];
+			lsprintf(szBuffer,lngGetString(INFO_CREATECOPY),
+				i + 2,
+				g_BurnImageSettings.m_lNumCopies);
+			g_ProgressDlg.Notify(ckcore::Progress::ckINFORMATION,szBuffer);
+		}
 	}
+
+	// Remove temporary data.
+	switch (iProjectType)
+	{
+		case PROJECTTYPE_DATA:
+			if (!g_BurnImageSettings.m_bOnFly)
+				ImageFile.Remove();
+			break;
+
+		case PROJECTTYPE_MIXED:
+			if (!g_BurnImageSettings.m_bOnFly)
+				ImageFile.Remove();
+
+			// Remove any temporary tracks.
+			for (unsigned int i = 0; i < TempTracks.size(); i++)
+			{
+				ckcore::File::Remove(TempTracks[i]);
+
+				std::vector <TCHAR *>::iterator itObject = TempTracks.begin() + i;
+				delete [] *itObject;
+			}
+
+			TempTracks.clear();
+
+			// Remove the CD-Text file.
+			if (pAudioText != NULL)
+				ckcore::File::Remove(pAudioText);
+			break;
+
+		case PROJECTTYPE_AUDIO:
+			// Remove any temporary tracks.
+			for (unsigned int i = 0; i < TempTracks.size(); i++)
+			{
+				ckcore::File::Remove(TempTracks[i]);
+
+				std::vector <TCHAR *>::iterator itObject = TempTracks.begin() + i;
+				delete [] *itObject;
+			}
+
+			TempTracks.clear();
+
+			// Remove the CD-Text file.
+			if (pAudioText != NULL)
+				ckcore::File::Remove(pAudioText);
+			break;
+	};
 
 	return 0;
 }

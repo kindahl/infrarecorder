@@ -102,6 +102,15 @@ bool CBurnImageGeneralPage::Translate()
 		if (iStaticRight > iMaxStaticRight)
 			iMaxStaticRight = iStaticRight;
 	}
+	if (pLNG->GetValuePtr(IDC_NUMCOPIESSTATIC,szStrValue))
+	{
+		SetDlgItemText(IDC_NUMCOPIESSTATIC,szStrValue);
+
+		// Update the static width if necessary.
+		int iStaticRight = UpdateStaticWidth(m_hWnd,IDC_NUMCOPIESSTATIC,szStrValue);
+		if (iStaticRight > iMaxStaticRight)
+			iMaxStaticRight = iStaticRight;
+	}
 	if (pLNG->GetValuePtr(IDC_EJECTCHECK,szStrValue))
 		SetDlgItemText(IDC_EJECTCHECK,szStrValue);
 	if (pLNG->GetValuePtr(IDC_SIMULATECHECK,szStrValue))
@@ -403,6 +412,17 @@ void CBurnImageGeneralPage::CheckRecorderMedia()
 
 bool CBurnImageGeneralPage::OnApply()
 {
+	// Verify the number of copies.
+	TCHAR szNumCopies[64];
+	m_NumCopiesCombo.GetWindowText(szNumCopies,sizeof(szNumCopies) / sizeof(TCHAR) -1);
+
+	long lNumCopies = 1;
+	if (lsscanf(szNumCopies,_T("%d"),&lNumCopies) != 1 || lNumCopies < 1)
+	{
+		lngMessageBox(m_hWnd,ERROR_NUMCOPIES,GENERAL_ERROR,MB_OK | MB_ICONERROR);
+		return false;
+	}
+
 	// Remember the configuration.
 	g_BurnImageSettings.m_bOnFly = IsDlgButtonChecked(IDC_ONFLYCHECK) == TRUE;
 	g_BurnImageSettings.m_bVerify = IsDlgButtonChecked(IDC_VERIFYCHECK) == TRUE;
@@ -432,6 +452,8 @@ bool CBurnImageGeneralPage::OnApply()
 	else if (!lstrcmp(szBuffer,lngGetString(WRITEMODE_RAW96P)))
 		g_BurnImageSettings.m_iWriteMethod = WRITEMETHOD_RAW96P;
 
+	g_BurnImageSettings.m_lNumCopies = lNumCopies;
+
 	return true;
 }
 
@@ -452,6 +474,7 @@ LRESULT CBurnImageGeneralPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lPara
 	m_RecorderCombo = GetDlgItem(IDC_RECORDERCOMBO);
 	m_WriteSpeedCombo = GetDlgItem(IDC_WRITESPEEDCOMBO);
 	m_WriteMethodCombo = GetDlgItem(IDC_WRITEMETHODCOMBO);
+	m_NumCopiesCombo = GetDlgItem(IDC_NUMCOPIESCOMBO);
 
 	// Set the refresh button icon.
 	InitRefreshButton();
@@ -532,6 +555,15 @@ LRESULT CBurnImageGeneralPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lPara
 
 	if (!m_bEnableVerify)
 		::EnableWindow(GetDlgItem(IDC_VERIFYCHECK),FALSE);
+
+	// Fill number of copies combo box.
+	TCHAR szBuffer[64];
+	for (int i = 1; i <= 10; i++)
+	{
+		lsprintf(szBuffer,_T("%d"),i);
+		m_NumCopiesCombo.AddString(szBuffer);
+	}
+	m_NumCopiesCombo.SetCurSel(0);
 
 	return TRUE;
 }

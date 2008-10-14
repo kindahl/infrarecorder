@@ -17,9 +17,9 @@
  */
 
 #include "stdafx.h"
-#include "ConsolePipe.h"
 #include "Settings.h"
 #include "LogDlg.h"
+#include "ConsolePipe.h"
 
 /*
 	Documentation:
@@ -87,6 +87,9 @@ bool CConsolePipe::CreateProcess(TCHAR *szCommandLine,HANDLE hStdIn,
 */
 bool CConsolePipe::Launch(TCHAR *szCommandLine,bool bWaitForProcess)
 {
+	while (m_bRunning)
+		Sleep(200);
+
 	g_LogDlg.PrintLine(_T("CConsolePipe::Launch"));
 
 	HANDLE hOutputReadTemp,hOutputWrite;
@@ -205,6 +208,8 @@ bool CConsolePipe::Launch(TCHAR *szCommandLine,bool bWaitForProcess)
 	if (bWaitForProcess)
 		WaitForSingleObject(m_hThread,INFINITE);
 
+	// Not when the process started correcly, we want to keep the mutex.
+	//Lock.Disable();
 	return true;
 }
 

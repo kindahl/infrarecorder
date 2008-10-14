@@ -106,9 +106,15 @@ void CProgressDlg::SetProgress(unsigned char ucPercent)
 	else if (ucPercent > 100)
 		ucPercent = 100;
 
+	// Make sure that the progress does not go in the wrong direction.
+	if (ucPercent < m_ucPercent && ucPercent != 0)
+		return;
+
 	// Only redraw when we have to.
 	if (m_ucPercent != ucPercent)
 	{
+		m_ucPercent = ucPercent;
+
 		SendDlgItemMessage(IDC_TOTALPROGRESS,PBM_SETPOS,(WPARAM)ucPercent,0);
 
 		TCHAR szProgress[32];
@@ -287,6 +293,11 @@ void CProgressDlg::Reset()
 {
 	m_bRealMode = false;
 	m_bCancelled = false;
+}
+
+bool CProgressDlg::RequestNextDisc()
+{
+	return lngMessageBox(m_hWnd,INFO_NEXTCOPY,GENERAL_INFORMATION,MB_OKCANCEL | MB_ICONINFORMATION) == IDOK;
 }
 
 void CProgressDlg::StartSmoke()

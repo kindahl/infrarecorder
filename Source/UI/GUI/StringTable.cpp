@@ -392,5 +392,10 @@ TCHAR *g_szStringTable[] = {
 	_T("mode"),
 	_T("The inserted disc does not appear to be empty, do you want to erase it first?"),
 	_T("Multi-session discs require an ISO9660 file system (without any additional file systems). Do you want InfraRecorder to change your project to use this file system and continue?"),
-	_T("Verifying Disc")
+	_T("Verifying Disc"),
+
+	// Add version 0.46.
+	_T("Invalid number of copies. Please specify a number larger than zero."),
+	_T("Please insert a new blank disc to create another copy."),
+	_T("Creating copy %d of %d.")
 };

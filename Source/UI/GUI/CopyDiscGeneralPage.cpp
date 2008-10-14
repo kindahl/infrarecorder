@@ -404,6 +404,7 @@ bool CCopyDiscGeneralPage::OnApply()
 	else if (!lstrcmp(szBuffer,lngGetString(WRITEMODE_RAW96P)))
 		g_BurnImageSettings.m_iWriteMethod = WRITEMETHOD_RAW96P;
 
+	g_BurnImageSettings.m_lNumCopies = 1;
 	return true;
 }
 

@@ -269,6 +269,7 @@ public:
 	UINT_PTR m_iRecorder;
 	int m_iWriteMethod;
 	INT_PTR m_uiWriteSpeed;	// Multiple of the audio speed. -1 = maximum speed.
+	long m_lNumCopies;
 
 	CBurnImageSettings()
 	{
@@ -279,6 +280,9 @@ public:
 		m_bBUP = true;
 		m_bPadTracks = true;
 		m_bFixate = true;
+
+		// For internal use only, should never be saved.
+		m_lNumCopies = 1;
 	}
 
 	bool Save(CXMLProcessor *pXML);
