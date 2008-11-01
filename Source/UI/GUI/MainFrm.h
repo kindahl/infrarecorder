@@ -247,7 +247,25 @@ public:
 			m_ExplorerView.SetSplitterPos(iSplitterPos);
 			m_ProjectView.SetSplitterPos(iSplitterPos);
 
-			SetWindowPos(HWND_TOP,&g_DynamicSettings.m_rcWindow,0);
+			// Load the last used window position and size.
+			if (g_DynamicSettings.m_rcWindow.left != -1 &&
+				g_DynamicSettings.m_rcWindow.right != -1 &&
+				g_DynamicSettings.m_rcWindow.top != -1 &&
+				g_DynamicSettings.m_rcWindow.bottom != -1)
+			{
+				SetWindowPos(HWND_TOP,&g_DynamicSettings.m_rcWindow,0);
+			}
+			else
+			{
+				GetWindowRect(&g_DynamicSettings.m_rcWindow);
+
+				g_DynamicSettings.m_rcWindow.right += 300;
+				g_DynamicSettings.m_rcWindow.bottom += 200;
+
+				SetWindowPos(HWND_TOP,&g_DynamicSettings.m_rcWindow,0);
+
+				//CenterWindow();
+			}
 		}
 	}
 

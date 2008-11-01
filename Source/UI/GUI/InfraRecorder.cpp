@@ -115,6 +115,15 @@ int Run(LPTSTR lpstrCmdLine = NULL,int nCmdShow = SW_SHOWDEFAULT)
 	}
 	else
 	{
+		if (g_GlobalSettings.m_bShowWizard)
+		{
+			RECT rcWindow = g_DynamicSettings.m_rcWindow;
+			rcWindow.right = rcWindow.left + 500;
+			rcWindow.bottom = rcWindow.top + 400;
+
+			g_MainFrame.SetWindowPos(HWND_TOP,&rcWindow,0);
+		}
+
 		g_MainFrame.CenterWindow();
 	}
 
