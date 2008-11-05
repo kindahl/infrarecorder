@@ -28,11 +28,11 @@ condition:
 
 Apart from the graphics using the official InfraRecorder logo the above
 license also applies to all graphics that are not derivative works of graphics
-created by the Tango Desktop Project. Example of this kind of graphics are the
+created by the Tango Desktop Project. Examples of this kind of graphics are the
 button graphics used in the welcome screen.
 
 The remaining graphics that are derivative work based on icons in the Tango
 Desktop Project (http://tango.freedesktop.org) is available under the same
-license as the Tangoe Desktop Project graphics. That is the Creative Commons
+license as the Tango Desktop Project graphics. That is the Creative Commons
 Attribution Share-Alike license
 (http://creativecommons.org/licenses/by-sa/2.5/).
