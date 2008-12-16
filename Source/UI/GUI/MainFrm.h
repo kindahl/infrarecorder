@@ -247,24 +247,28 @@ public:
 			m_ExplorerView.SetSplitterPos(iSplitterPos);
 			m_ProjectView.SetSplitterPos(iSplitterPos);
 
-			// Load the last used window position and size.
-			if (g_DynamicSettings.m_rcWindow.left != -1 &&
-				g_DynamicSettings.m_rcWindow.right != -1 &&
-				g_DynamicSettings.m_rcWindow.top != -1 &&
-				g_DynamicSettings.m_rcWindow.bottom != -1)
+			WINDOWPLACEMENT wp;
+			GetWindowPlacement(&wp);
+
+			if (wp.showCmd != SW_MAXIMIZE)
 			{
-				SetWindowPos(HWND_TOP,&g_DynamicSettings.m_rcWindow,0);
-			}
-			else
-			{
-				GetWindowRect(&g_DynamicSettings.m_rcWindow);
+				// Load the last used window position and size.
+				if (g_DynamicSettings.m_rcWindow.left != -1 &&
+					g_DynamicSettings.m_rcWindow.right != -1 &&
+					g_DynamicSettings.m_rcWindow.top != -1 &&
+					g_DynamicSettings.m_rcWindow.bottom != -1)
+				{
+					SetWindowPos(HWND_TOP,&g_DynamicSettings.m_rcWindow,0);
+				}
+				else
+				{
+					GetWindowRect(&g_DynamicSettings.m_rcWindow);
 
-				g_DynamicSettings.m_rcWindow.right += 300;
-				g_DynamicSettings.m_rcWindow.bottom += 200;
+					g_DynamicSettings.m_rcWindow.right += 300;
+					g_DynamicSettings.m_rcWindow.bottom += 200;
 
-				SetWindowPos(HWND_TOP,&g_DynamicSettings.m_rcWindow,0);
-
-				//CenterWindow();
+					SetWindowPos(HWND_TOP,&g_DynamicSettings.m_rcWindow,0);
+				}
 			}
 		}
 	}

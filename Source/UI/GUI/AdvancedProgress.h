@@ -30,7 +30,7 @@ protected:
 
 public:
 	// Called when the operation is complteted.
-	virtual void NotifyComplteted() = 0;
+	virtual void NotifyCompleted() = 0;
 
 	// Should be set to true when a real writing process is started.
 	virtual void SetRealMode(bool bRealMode) = 0;

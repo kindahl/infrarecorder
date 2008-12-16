@@ -593,7 +593,7 @@ unsigned long WINAPI CTracksDlg::ReadTrackThread(LPVOID lpThreadParameter)
 
 				g_ProgressDlg.SetProgress(100);
 				g_ProgressDlg.SetStatus(lngGetString(PROGRESS_DONE));
-				g_ProgressDlg.NotifyComplteted();
+				g_ProgressDlg.NotifyCompleted();
 
 				if (bResult)
 				{
@@ -626,7 +626,7 @@ unsigned long WINAPI CTracksDlg::ReadTrackThread(LPVOID lpThreadParameter)
 						ckcore::File::Remove(szFilePath);
 
 					g_ProgressDlg.SetStatus(lngGetString(PROGRESS_DONE));
-					g_ProgressDlg.NotifyComplteted();
+					g_ProgressDlg.NotifyCompleted();
 				}
 				else
 				{
@@ -653,7 +653,7 @@ unsigned long WINAPI CTracksDlg::ReadTrackThread(LPVOID lpThreadParameter)
 
 					g_ProgressDlg.SetProgress(100);
 					g_ProgressDlg.SetStatus(lngGetString(PROGRESS_DONE));
-					g_ProgressDlg.NotifyComplteted();
+					g_ProgressDlg.NotifyCompleted();
 					return 0;
 				}
 			}
@@ -681,7 +681,7 @@ unsigned long WINAPI CTracksDlg::ReadTrackThread(LPVOID lpThreadParameter)
 				// Check if the encoding has been canceled.
 				if (g_ProgressDlg.Cancelled())
 				{
-					g_ProgressDlg.NotifyComplteted();
+					g_ProgressDlg.NotifyCompleted();
 					return 0;
 				}
 			}

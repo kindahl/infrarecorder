@@ -96,7 +96,7 @@ void CCore::Reinitialize()
 void CCore::CreateBatchFile(const char *szChangeDir,const char *szCommandLine,TCHAR *szBatchPath)
 {
 	// FIXME: This is not very nice.
-	ckcore::File BatchFile = ckcore::File::Temp();
+	ckcore::File BatchFile = ckcore::File::Temp(g_GlobalSettings.m_szTempPath);
 	lstrcpy(szBatchPath,BatchFile.Name().c_str());
 
 	// Delete the generated temporary file since we need a batch file.
@@ -907,7 +907,7 @@ void CCore::ProcessEnded()
 		case MODE_READDISC:
 			m_pProgress->SetProgress(100);
 			m_pProgress->SetStatus(lngGetString(PROGRESS_DONE));
-			m_pProgress->NotifyComplteted();
+			m_pProgress->NotifyCompleted();
 			break;
 
 		case MODE_BURNIMAGE:
@@ -915,7 +915,7 @@ void CCore::ProcessEnded()
 			m_pProgress->SetStatus(lngGetString(PROGRESS_DONE));
 
 			if (m_lNumCopies <= 0 || !Relaunch())
-				m_pProgress->NotifyComplteted();
+				m_pProgress->NotifyCompleted();
 			break;
 
 		//case MODE_BURNIMAGEEX:
@@ -931,7 +931,7 @@ void CCore::ProcessEnded()
 			{
 				m_pProgress->SetProgress(100);
 				m_pProgress->SetStatus(lngGetString(PROGRESS_DONE));
-				m_pProgress->NotifyComplteted();
+				m_pProgress->NotifyCompleted();
 			}
 			break;
 
@@ -946,7 +946,7 @@ void CCore::ProcessEnded()
 				{
 					m_pProgress->SetProgress(100);
 					m_pProgress->SetStatus(lngGetString(PROGRESS_DONE));
-					m_pProgress->NotifyComplteted();
+					m_pProgress->NotifyCompleted();
 				}
 			}
 			break;

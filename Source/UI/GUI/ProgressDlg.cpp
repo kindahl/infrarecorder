@@ -250,7 +250,7 @@ void CProgressDlg::SetDevice(const TCHAR *szDevice)
 	SetDlgItemText(IDC_DEVICESTATIC,szDeviceStr);
 }
 
-void CProgressDlg::NotifyComplteted()
+void CProgressDlg::NotifyCompleted()
 {
 	::EnableWindow(GetDlgItem(IDOK),true);
 	SendMessage(WM_NEXTDLGCTL,(WPARAM)GetDlgItem(IDOK).m_hWnd,0);	// Change default focus to the OK button.

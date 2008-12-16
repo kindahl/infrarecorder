@@ -61,7 +61,7 @@ public:
 
 	void SetDevice(const TCHAR *szDevice);
 
-	void NotifyComplteted();
+	void NotifyCompleted();
 
 	void AllowReload();
 	void AllowCancel(bool bAllow);

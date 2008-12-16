@@ -74,7 +74,7 @@ public:
 
 	void SetDevice(const TCHAR *szDevice);
 
-	void NotifyComplteted();
+	void NotifyCompleted();
 
 	void SetBuffer(int iPercent);
 	void AllowReload();
