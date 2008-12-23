@@ -341,13 +341,13 @@ BEGIN
     GROUPBOX        "Explorer folder",IDC_SHELLFOLDERGROUPSTATIC,7,56,233,60
     LTEXT           "Enter the folder that you want to be the default folder in the explorer view part of the program.",IDC_SHELLFOLDERINFOSTATIC,14,66,218,18
     EDITTEXT        IDC_SHELLFOLDEREDIT,14,85,201,13,ES_AUTOHSCROLL
-    PUSHBUTTON      "...",IDC_SHELLFOLDERBROWSEBUTTON,220,72,14,13
+    PUSHBUTTON      "...",IDC_SHELLFOLDERBROWSEBUTTON,220,85,14,13
     CONTROL         "Associate InfraRecorder with .irp (InfraRecorder Project) files",IDC_ASSOCIATECHECK,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,32,233,10
     GROUPBOX        "Temporary folder",IDC_TEMPFOLDERGROUPSTATIC,7,119,233,49
     LTEXT           "The folder specified below will be used when data has to be temporarily stored on your harddrive.",IDC_TEMPFOLDERINFOSTATIC,14,129,218,18
     EDITTEXT        IDC_TEMPFOLDEREDIT,14,149,201,13,ES_AUTOHSCROLL
-    PUSHBUTTON      "...",IDC_TEMPFOLDERBROWSEBUTTON,220,136,14,13
+    PUSHBUTTON      "...",IDC_TEMPFOLDERBROWSEBUTTON,220,149,14,13
     CONTROL         "Associate InfraRecorder with disc images (.iso, .img and .cue)",IDC_ASSOCIATEDISCIMAGECHECK,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,45,233,10
     CONTROL         "Display welcome screen at startup",IDC_WIZARDCHECK,
@@ -701,8 +701,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,46,2,0
- PRODUCTVERSION 0,46,2,0
+ FILEVERSION 0,47,0,0
+ PRODUCTVERSION 0,47,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -717,13 +717,14 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
+            VALUE "CompanyName", "Christian Kindahl"
             VALUE "FileDescription", "InfraRecorder"
-            VALUE "FileVersion", "0.46.2.0"
+            VALUE "FileVersion", "0.47.0.0"
             VALUE "InternalName", "InfraRecorder"
             VALUE "LegalCopyright", "Copyright © 2006-2008 Christian Kindahl"
             VALUE "OriginalFilename", "InfraRecorder.exe"
             VALUE "ProductName", "InfraRecorder"
-            VALUE "ProductVersion", "0.46.2.0"
+            VALUE "ProductVersion", "0.47.0.0"
         END
     END
     BLOCK "VarFileInfo"
