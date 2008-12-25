@@ -43,12 +43,12 @@ bool CCore2Device::Open(CCore2DeviceAddress *pAddress)
 	if (m_DriverSPTI.Open(pAddress->m_cDriveLetter))
 	{
 		m_iDeviceStatus = DS_OPEN_SPTI;
-		g_LogDlg.PrintLine(_T("  Opened device '%C' using SPTI."),pAddress->m_cDriveLetter);
+		g_LogDlg.print_line(_T("  Opened device '%C' using SPTI."),pAddress->m_cDriveLetter);
 	}
 	else if (m_DriverASPI.Open(pAddress->m_iBus,pAddress->m_iTarget,pAddress->m_iLun))
 	{
 		m_iDeviceStatus = DS_OPEN_ASPI;
-		g_LogDlg.PrintLine(_T("  Opened device [%d,%d,%d] using ASPI."),pAddress->m_iBus,pAddress->m_iTarget,pAddress->m_iLun);
+		g_LogDlg.print_line(_T("  Opened device [%d,%d,%d] using ASPI."),pAddress->m_iBus,pAddress->m_iTarget,pAddress->m_iLun);
 	}
 	else
 		m_iDeviceStatus = DS_CLOSED;

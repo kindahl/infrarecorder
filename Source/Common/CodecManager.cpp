@@ -127,13 +127,13 @@ bool CCodecManager::LoadCodecs(const TCHAR *szCodecPath)
 
 	ckcore::Directory CodecDir(CodecPath);
 	ckcore::Directory::Iterator itDir;
-	for (itDir = CodecDir.Begin(); itDir != CodecDir.End(); itDir++)
+	for (itDir = CodecDir.begin(); itDir != CodecDir.end(); itDir++)
 	{
 		ckcore::Path PluginPath = CodecPath + (*itDir).c_str();
 
-		if (!lstrcmpi(PluginPath.ExtName().c_str(),ckT("irc")))
+		if (!lstrcmpi(PluginPath.ext_name().c_str(),ckT("irc")))
 		{
-			if (!LoadCodec(PluginPath.Name().c_str()))
+			if (!LoadCodec(PluginPath.name().c_str()))
 				return false;
 		}
 	}

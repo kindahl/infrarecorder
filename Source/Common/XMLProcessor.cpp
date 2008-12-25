@@ -48,8 +48,8 @@ CXMLProcessor::~CXMLProcessor()
 void CXMLProcessor::DumpBuffer()
 {
 	ckcore::File File(_T("xml_buffer_dump.txt"));
-	if (File.Open(ckcore::FileBase::ckOPEN_WRITE))
-		File.Write(m_ucBuffer,sizeof(m_ucBuffer));
+	if (File.open(ckcore::FileBase::ckOPEN_WRITE))
+		File.write(m_ucBuffer,sizeof(m_ucBuffer));
 }
 
 bool CXMLProcessor::ReadNext(ckcore::File &File,TCHAR &c)
@@ -58,7 +58,7 @@ bool CXMLProcessor::ReadNext(ckcore::File &File,TCHAR &c)
 	{
 		memset(m_ucBuffer,0,sizeof(m_ucBuffer));
 
-		ckcore::tint64 iRead = File.Read(m_ucBuffer,sizeof(m_ucBuffer));
+		ckcore::tint64 iRead = File.read(m_ucBuffer,sizeof(m_ucBuffer));
 		if (iRead == -1)
 			return false;
 
@@ -206,14 +206,14 @@ int CXMLProcessor::Load(const TCHAR *szFullPath)
 {
 	// Open the file.
 	ckcore::File File(szFullPath);
-	if (!File.Open(ckcore::FileBase::ckOPEN_READ))
+	if (!File.open(ckcore::FileBase::ckOPEN_READ))
 		return XMLRES_FILEERROR;
 
 	// If the application is in an unicode environment we need to check what
 	// byte-order us used.
 #ifdef UNICODE
 	unsigned short usBOM = 0;
-	if (File.Read(&usBOM,2) == -1)
+	if (File.read(&usBOM,2) == -1)
 		return XMLRES_FILEERROR;
 
 	switch (usBOM)
@@ -229,7 +229,7 @@ int CXMLProcessor::Load(const TCHAR *szFullPath)
 
 		default:
 			// If no BOM is found the file pointer has to be re-moved to the beginning.
-			if (File.Seek(0,ckcore::FileBase::ckFILE_BEGIN) == -1)
+			if (File.seek(0,ckcore::FileBase::ckFILE_BEGIN) == -1)
 				return XMLRES_FILEERROR;
 
 			break;
@@ -243,7 +243,7 @@ int CXMLProcessor::Load(const TCHAR *szFullPath)
 	// Set the current child to the root.
 	m_pCurrent = m_pRoot;
 
-	m_iRemainBytes = File.Size();
+	m_iRemainBytes = File.size();
 
 	unsigned int uiDataPos = 0;
 
@@ -405,7 +405,7 @@ void CXMLProcessor::SaveEntity(ckcore::File &File,unsigned int uiIndent,CXMLElem
 	}
 
 	// Write to the file.
-	File.Write(szOutBuf,lstrlen(szOutBuf) * sizeof(TCHAR));
+	File.write(szOutBuf,lstrlen(szOutBuf) * sizeof(TCHAR));
 
 	// Write the data.
 	if (pElement->m_szData[0] != '\0')
@@ -417,7 +417,7 @@ void CXMLProcessor::SaveEntity(ckcore::File &File,unsigned int uiIndent,CXMLElem
 			lstrcat(szOutBuf,_T("\r\n"));
 		// ...
 
-		File.Write(szOutBuf,lstrlen(szOutBuf) * sizeof(TCHAR));
+		File.write(szOutBuf,lstrlen(szOutBuf) * sizeof(TCHAR));
 	}
 
 	// Traverse the children.
@@ -446,7 +446,7 @@ void CXMLProcessor::SaveEntity(ckcore::File &File,unsigned int uiIndent,CXMLElem
 		lstrcat(szOutBuf,pElement->m_szName);
 		lstrcat(szOutBuf,_T(">\r\n"));
 
-		File.Write(szOutBuf,lstrlen(szOutBuf) * sizeof(TCHAR));
+		File.write(szOutBuf,lstrlen(szOutBuf) * sizeof(TCHAR));
 	}
 
 	delete [] szOutBuf;
@@ -462,16 +462,16 @@ int CXMLProcessor::Save(const TCHAR *szFullPath)
 {
 	// Open the file.
 	ckcore::File File(szFullPath);
-	if (!File.Open(ckcore::FileBase::ckOPEN_WRITE))
+	if (!File.open(ckcore::FileBase::ckOPEN_WRITE))
 		return XMLRES_FILEERROR;
 
 	// Write byte-order mark.
 #ifdef UNICODE
 #ifdef XML_SAVE_BOM
 	unsigned short usBOM = BOM_UTF32BE;
-	if (File.Write(&usBOM,2) == -1)
+	if (File.write(&usBOM,2) == -1)
 	{
-		File.Remove();
+		File.remove();
 		return XMLRES_FILEERROR;
 	}
 #endif
@@ -488,9 +488,9 @@ int CXMLProcessor::Save(const TCHAR *szFullPath)
 		return XMLRES_FILEERROR;
 	}
 #else
-	if (File.Write((void *)m_szXMLHeader,lstrlen(m_szXMLHeader) * sizeof(TCHAR)) == -1)
+	if (File.write((void *)m_szXMLHeader,lstrlen(m_szXMLHeader) * sizeof(TCHAR)) == -1)
 	{
-		File.Remove();
+		File.remove();
 		return XMLRES_FILEERROR;
 	}
 #endif

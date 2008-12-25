@@ -56,7 +56,7 @@ bool CLNGProcessor::ReadNext(TCHAR &c)
 	{
 		memset(m_ucBuffer,0,sizeof(m_ucBuffer));
 
-		ckcore::tint64 iRead = m_File.Read(m_ucBuffer,sizeof(m_ucBuffer));
+		ckcore::tint64 iRead = m_File.read(m_ucBuffer,sizeof(m_ucBuffer));
 		if (iRead == -1)
 			return false;
 
@@ -93,14 +93,14 @@ void CLNGProcessor::ReadBack()
 int CLNGProcessor::Load()
 {
 	// Open the file.
-	if (!m_File.Open(ckcore::FileBase::ckOPEN_READ))
+	if (!m_File.open(ckcore::FileBase::ckOPEN_READ))
 		return LNGRES_FILEERROR;
 
 	// If the application is in an unicode environment we need to check what
 	// byte-order us used.
 #ifdef UNICODE
 	unsigned short usBOM = 0;
-	if (m_File.Read(&usBOM,2) == -1)
+	if (m_File.read(&usBOM,2) == -1)
 		return LNGRES_FILEERROR;
 
 	switch (usBOM)
@@ -116,7 +116,7 @@ int CLNGProcessor::Load()
 
 		default:
 			// If no BOM is found the file pointer has to be re-moved to the beginning.
-			if (m_File.Seek(0,ckcore::FileBase::ckFILE_BEGIN) == -1)
+			if (m_File.seek(0,ckcore::FileBase::ckFILE_BEGIN) == -1)
 				return LNGRES_FILEERROR;
 
 			break;
@@ -134,7 +134,7 @@ int CLNGProcessor::Load()
 
 	CCustomString szNameBuffer(11);
 
-	m_iRemainBytes = m_File.Size() - m_File.Tell();
+	m_iRemainBytes = m_File.size() - m_File.tell();
 
 	bool bBreak = false;
 

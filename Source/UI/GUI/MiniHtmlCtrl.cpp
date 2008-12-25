@@ -100,18 +100,18 @@ bool CMiniHtmlCtrl::Load(const TCHAR *szFileName)
 	Close();
 
 	ckcore::File File(szFileName);
-	if (!File.Open(ckcore::FileBase::ckOPEN_READ))
+	if (!File.open(ckcore::FileBase::ckOPEN_READ))
 		return false;
 
 	// Make sure that the file is not too large.
-	if (File.Size() > 0xFFFFFFFF)
+	if (File.size() > 0xFFFFFFFF)
 		return false;
 
 	// If the application is in an unicode environment we need to check what
 	// byte-order us used.
 #ifdef UNICODE
 	unsigned short usBOM = 0;
-	if (File.Read(&usBOM,2) == -1)
+	if (File.read(&usBOM,2) == -1)
 		return false;
 
 	switch (usBOM)
@@ -127,16 +127,16 @@ bool CMiniHtmlCtrl::Load(const TCHAR *szFileName)
 
 		default:
 			// If no BOM is found the file pointer has to be re-moved to the beginning.
-			File.Seek(0,ckcore::FileBase::ckFILE_BEGIN);
+			File.seek(0,ckcore::FileBase::ckFILE_BEGIN);
 			break;
 	};
 #endif
 
-	unsigned long ulFileSize = (unsigned long)File.Size() - (unsigned long)File.Tell();
+	unsigned long ulFileSize = (unsigned long)File.size() - (unsigned long)File.tell();
 	m_ulDocLength = ulFileSize / sizeof(TCHAR);
 
 	m_pDocBuffer = new TCHAR[m_ulDocLength + 1];
-	if (File.Read(m_pDocBuffer,ulFileSize) == -1)
+	if (File.read(m_pDocBuffer,ulFileSize) == -1)
 		return false;
 
 	m_pDocBuffer[m_ulDocLength] = '\0';

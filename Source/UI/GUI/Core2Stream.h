@@ -44,7 +44,7 @@ private:
 			m_ulBufferSize = ulBufferSize;
 		}
 
-		ckcore::tint64 Write(void *pBuffer,ckcore::tuint32 uiCount)
+		ckcore::tint64 write(void *pBuffer,ckcore::tuint32 uiCount)
 		{
 			if (m_pBuffer == NULL)
 				return -1;
@@ -90,8 +90,8 @@ public:
 	~CCore2InStream();
 
 	// ckCore::InStream.
-	ckcore::tint64 Read(void *pBuffer,ckcore::tuint32 uiCount);
-	ckcore::tint64 Size();
-	bool End();
-	bool Seek(ckcore::tuint32 uiDistnace,ckcore::InStream::StreamWhence Whence);
+	ckcore::tint64 read(void *pBuffer,ckcore::tuint32 uiCount);
+	ckcore::tint64 size();
+	bool end();
+	bool seek(ckcore::tuint32 uiDistnace,ckcore::InStream::StreamWhence Whence);
 };

@@ -112,7 +112,7 @@ unsigned int CCDText::ReadPacket(ckcore::File &File,unsigned long ulPID,
 	unsigned char ucBlockNumber = (unsigned char)(ulBlockInfo & 0x70) >> 4;
 	unsigned char ucCharPos = (unsigned char)(ulBlockInfo & 0x0F);
 
-	if (File.Read(m_szBuffer + m_uiBufferPos,12) == -1)
+	if (File.read(m_szBuffer + m_uiBufferPos,12) == -1)
 		return false;
 
 	// Debug information.
@@ -180,25 +180,25 @@ bool CCDText::ReadFile(const TCHAR *szFileName)
 	Reset();
 
 	ckcore::File File(szFileName);
-	if (!File.Open(ckcore::FileBase::ckOPEN_READ))
+	if (!File.open(ckcore::FileBase::ckOPEN_READ))
 		return false;
 
 	// Make sure that the file is not too large.
-	ckcore::tint64 iFileSize = File.Size();
+	ckcore::tint64 iFileSize = File.size();
 	if (iFileSize > 0xFFFFFFFF)
 		return false;
 
-	unsigned int uiDataSize = (unsigned int)File.Size();
+	unsigned int uiDataSize = (unsigned int)File.size();
 
 	// Try to find a signature.
 	unsigned long ulSignature = 0;
-	if (File.Read(&ulSignature,4) == -1)
+	if (File.read(&ulSignature,4) == -1)
 		return false;
 
 	if (ulSignature == CDTEXT_SIGNATURE)
 		uiDataSize -= 4;
 	else
-		File.Seek(0,ckcore::FileBase::ckFILE_BEGIN);
+		File.seek(0,ckcore::FileBase::ckFILE_BEGIN);
 
 	unsigned int uiNumPackets = uiDataSize/18;
 
@@ -206,7 +206,7 @@ bool CCDText::ReadFile(const TCHAR *szFileName)
 	{
 		// Read header.
 		unsigned long ulHeader = 0;
-		if (File.Read(&ulHeader,sizeof(unsigned long)) == -1)
+		if (File.read(&ulHeader,sizeof(unsigned long)) == -1)
 			return false;
 
 		// The first three bytes of the header is the Pack Type Indicator (PID),
@@ -214,7 +214,7 @@ bool CCDText::ReadFile(const TCHAR *szFileName)
 		ReadPacket(File,ulHeader & 0xFFFFFF,(ulHeader & 0xFF000000) >> 24);
 
 		// Skip the CRC-field.
-		if (File.Seek(2,ckcore::FileBase::ckFILE_CURRENT) == -1)
+		if (File.seek(2,ckcore::FileBase::ckFILE_CURRENT) == -1)
 			return false;
 	}
 
@@ -258,7 +258,7 @@ unsigned int CCDText::WriteText(ckcore::File &File,unsigned char ucType,unsigned
 			ucBuffer[17] = (usCRC & 0xFF);
 
 			// Write.
-			File.Write(ucBuffer,18);
+			File.write(ucBuffer,18);
 
 			m_uiBufferPos = 0;
 
@@ -307,7 +307,7 @@ void CCDText::FlushText(ckcore::File &File,unsigned char ucType,unsigned int uiC
 		ucBuffer[17] = (usCRC & 0xFF);
 
 		// Flush.
-		File.Write(ucBuffer,18);
+		File.write(ucBuffer,18);
 
 		m_uiBufferPos = 0;
 	}
@@ -316,7 +316,7 @@ void CCDText::FlushText(ckcore::File &File,unsigned char ucType,unsigned int uiC
 bool CCDText::WriteFile(const TCHAR *szFileName)
 {
 	ckcore::File File(szFileName);
-	if (!File.Open(ckcore::FileBase::ckOPEN_WRITE))
+	if (!File.open(ckcore::FileBase::ckOPEN_WRITE))
 		return false;
 
 #ifdef CDTEXT_SAVESIGNATURE
@@ -370,13 +370,13 @@ bool CCDText::WriteFileEx(const TCHAR *szFileName,const TCHAR *szAlbumName,
 						  const TCHAR *szArtistName,std::vector<CItemData *> &Tracks)
 {
 	ckcore::File File(szFileName);
-	if (!File.Open(ckcore::FileBase::ckOPEN_WRITE))
+	if (!File.open(ckcore::FileBase::ckOPEN_WRITE))
 		return false;
 
 #ifdef CDTEXT_SAVESIGNATURE
 	// Write a signature.
 	unsigned long ulSignature = CDTEXT_SIGNATURE;
-	if (File.Write(&ulSignature,4) == -1)
+	if (File.write(&ulSignature,4) == -1)
 		return false;
 #endif
 

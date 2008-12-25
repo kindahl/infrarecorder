@@ -58,8 +58,8 @@ public:
 	~CLogDlg();
 
 	void Show();
-	void Print(const TCHAR *szString,...);
-	void PrintLine(const TCHAR *szLine,...);
+	void print(const TCHAR *szString,...);
+	void print_line(const TCHAR *szLine,...);
 
 	// Resize maps.
 	BEGIN_DLGRESIZE_MAP(CLogDlg)

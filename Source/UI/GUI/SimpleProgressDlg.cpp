@@ -99,7 +99,7 @@ void CSimpleProgressDlg::SetRealMode(bool bRealMode)
 	m_bRealMode = bRealMode;
 }
 
-void CSimpleProgressDlg::SetStatus(const TCHAR *szStatus,...)
+void CSimpleProgressDlg::set_status(const TCHAR *szStatus,...)
 {
 	// Prepare the string.
 	TCHAR szStatusStr[256];
@@ -124,7 +124,7 @@ void CSimpleProgressDlg::SetStatus(const TCHAR *szStatus,...)
 	SetDlgItemText(IDC_STATUSSTATIC,m_szStringBuffer);
 }
 
-void CSimpleProgressDlg::Notify(ckcore::Progress::MessageType Type,const TCHAR *szMessage,...)
+void CSimpleProgressDlg::notify(ckcore::Progress::MessageType Type,const TCHAR *szMessage,...)
 {
 	int iItemIndex = m_ListView.GetItemCount();
 
@@ -171,7 +171,7 @@ void CSimpleProgressDlg::Notify(ckcore::Progress::MessageType Type,const TCHAR *
 	m_ListView.EnsureVisible(iItemIndex,false);
 }
 
-bool CSimpleProgressDlg::Cancelled()
+bool CSimpleProgressDlg::cancelled()
 {
 	return m_bCancelled;
 }
@@ -193,8 +193,8 @@ void CSimpleProgressDlg::NotifyCompleted()
 
 	if (m_bCancelled)
 	{
-		SetStatus(lngGetString(PROGRESS_CANCELED));
-		Notify(ckcore::Progress::ckWARNING,lngGetString(PROGRESS_CANCELED));
+		set_status(lngGetString(PROGRESS_CANCELED));
+		notify(ckcore::Progress::ckWARNING,lngGetString(PROGRESS_CANCELED));
 	}
 
 	SMOKE_STOP

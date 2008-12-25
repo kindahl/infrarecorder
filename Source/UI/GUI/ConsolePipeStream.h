@@ -29,5 +29,5 @@ public:
 	COutConsolePipeStream(CConsolePipe &ConsolePipe);
 	~COutConsolePipeStream();
 
-	ckcore::tint64 Write(void *pBuffer,ckcore::tuint32 uiCount);
+	ckcore::tint64 write(void *pBuffer,ckcore::tuint32 uiCount);
 };

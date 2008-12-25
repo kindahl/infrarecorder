@@ -2858,7 +2858,7 @@ LRESULT CMainFrame::OnActionsDiscInfo(UINT uNotifyCode,int nID,CWindow wnd)
 
 LRESULT CMainFrame::OnActionsImportsession(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
-	g_LogDlg.PrintLine(_T("CMainFrame::OnActionsImportsession"));
+	g_LogDlg.print_line(_T("CMainFrame::OnActionsImportsession"));
 
 	// We can only import to projects containing a data track.
 	CProjectNode *pDataRootNode = NULL;
@@ -2894,7 +2894,7 @@ LRESULT CMainFrame::OnActionsImportsession(WORD wNotifyCode,WORD wID,HWND hWndCt
 		// Make sure a valid track was selected.
 		if (ImportSessionDlg.m_pSelTrackData == NULL)
 		{
-			g_LogDlg.PrintLine(_T("  Error: Invalid track selection in import session dialog."));
+			g_LogDlg.print_line(_T("  Error: Invalid track selection in import session dialog."));
 			return 0;
 		}
 
@@ -2904,7 +2904,7 @@ LRESULT CMainFrame::OnActionsImportsession(WORD wNotifyCode,WORD wID,HWND hWndCt
 		CCore2Device Device;
 		if (!Device.Open(&pDeviceInfo->Address))
 		{
-			g_LogDlg.PrintLine(_T("  Error: Failed to open device when trying to import session."));
+			g_LogDlg.print_line(_T("  Error: Failed to open device when trying to import session."));
 			return 0;
 		}
 		
@@ -2912,7 +2912,7 @@ LRESULT CMainFrame::OnActionsImportsession(WORD wNotifyCode,WORD wID,HWND hWndCt
 		CCore2TrackInfo TrackInfo;
 		if (!Info.ReadTrackInformation(&Device,CCore2Info::TIT_TRACK,0xFF,&TrackInfo))
 		{
-			g_LogDlg.PrintLine(_T("  Error: Failed to read track information when trying to import session."));
+			g_LogDlg.print_line(_T("  Error: Failed to read track information when trying to import session."));
 			return 0;
 		}
 
@@ -2921,10 +2921,10 @@ LRESULT CMainFrame::OnActionsImportsession(WORD wNotifyCode,WORD wID,HWND hWndCt
 			ImportSessionDlg.m_pSelTrackData->m_ulTrackAddr + ImportSessionDlg.m_pSelTrackData->m_ulTrackLen);
 
 		ckfilesystem::Iso9660Reader Reader(g_LogDlg);
-		Reader.Read(InStream,ImportSessionDlg.m_pSelTrackData->m_ulTrackAddr);
+		Reader.read(InStream,ImportSessionDlg.m_pSelTrackData->m_ulTrackAddr);
 		//Reader.PrintTree();
 
-		g_TreeManager.ImportIso9660Tree(Reader.GetRoot(),pDataRootNode);
+		g_TreeManager.ImportIso9660Tree(Reader.get_root(),pDataRootNode);
 		g_TreeManager.Refresh();
 
 		// Update the space meter.
@@ -2938,7 +2938,7 @@ LRESULT CMainFrame::OnActionsImportsession(WORD wNotifyCode,WORD wID,HWND hWndCt
 		g_ProjectSettings.m_uiDeviceIndex = ImportSessionDlg.m_uiDeviceIndex;
 		g_ProjectSettings.m_iIsoFormat = 1;	// Mode 2 (multi-session)
 
-		g_LogDlg.PrintLine(_T("  Imported session: %I64d-%I64d, %I64d."),
+		g_LogDlg.print_line(_T("  Imported session: %I64d-%I64d, %I64d."),
 			g_ProjectSettings.m_uiImportTrackAddr,
 			g_ProjectSettings.m_uiImportTrackAddr + g_ProjectSettings.m_uiImportTrackLen,
 			g_ProjectSettings.m_uiNextWritableAddr);

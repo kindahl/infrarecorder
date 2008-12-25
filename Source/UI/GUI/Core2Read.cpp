@@ -43,7 +43,7 @@ namespace Core2ReadFunction
 		memset(ucCdb,0,sizeof(ucCdb));
 
 		if (ulBlockCount > 0xFFFFFF)
-			g_LogDlg.PrintLine(_T("  Warning: Requested block count to large, trunkated the number of block requested to read."));
+			g_LogDlg.print_line(_T("  Warning: Requested block count to large, trunkated the number of block requested to read."));
 
 		ucCdb[ 0] = SCSI_READ_CD;
 		ucCdb[ 1] = 0;		// Return all types of sectors.
@@ -84,10 +84,10 @@ namespace Core2ReadFunction
 		if (!Core2Info.ReadCapacity(pDevice,ulBlockAddress,m_ulFrameSize))
 		{
 			m_ulFrameSize = 2048;
-			g_LogDlg.PrintLine(_T("  Error: Unable to obtain disc block information, impossible to continue."));
+			g_LogDlg.print_line(_T("  Error: Unable to obtain disc block information, impossible to continue."));
 		}
 
-		g_LogDlg.PrintLine(_T("  Block address: %u, block length: %u."),ulBlockAddress,m_ulFrameSize);
+		g_LogDlg.print_line(_T("  Block address: %u, block length: %u."),ulBlockAddress,m_ulFrameSize);
 	}
 
 	CReadUserData::~CReadUserData()
@@ -102,7 +102,7 @@ namespace Core2ReadFunction
 
 	bool CReadUserData::Process(unsigned char *pBuffer,unsigned long ulBlockCount)
 	{
-		return m_pOutStream->Write(pBuffer,ulBlockCount * m_ulFrameSize) != 1;
+		return m_pOutStream->write(pBuffer,ulBlockCount * m_ulFrameSize) != 1;
 	}
 
 	unsigned long CReadUserData::GetFrameSize()
@@ -218,11 +218,11 @@ bool CCore2Read::RetryReadBlock(CCore2Device *pDevice,CAdvancedProgress *pProgre
 	{
 		if (pProgress != NULL)
 		{
-			pProgress->SetStatus(lngGetString(STATUS_REREADSECTOR),ulAddress,
+			pProgress->set_status(lngGetString(STATUS_REREADSECTOR),ulAddress,
 				i + 1,CORE2_READ_RETRYCOUNT);
 
 			// Check if the operation has been cancelled.
-			if (pProgress->Cancelled())
+			if (pProgress->cancelled())
 				return false;
 		}
 
@@ -257,26 +257,26 @@ bool CCore2Read::ReadData(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 						  Core2ReadFunction::CReadFunction *pReadFunction,unsigned long ulStartBlock,
 						  unsigned long ulNumBlocks,bool bIgnoreErr)
 {
-	//g_LogDlg.PrintLine(_T("CCore2Read::ReadData"));
+	//g_LogDlg.print_line(_T("CCore2Read::ReadData"));
 
 	// Make sure that the device supports this operation.
 	bool bSupportFeature = false;
 	if (!g_Core2.GetFeatureSupport(pDevice,FEATURE_MULTIREAD,bSupportFeature))
-		g_LogDlg.PrintLine(_T("  Warning: Unable to check device support for feature 0x%.4X."),FEATURE_MULTIREAD);
+		g_LogDlg.print_line(_T("  Warning: Unable to check device support for feature 0x%.4X."),FEATURE_MULTIREAD);
 	if (!bSupportFeature)
 	{
-		g_LogDlg.PrintLine(_T("  Error: The selected device does not support this kind of operation."));
+		g_LogDlg.print_line(_T("  Error: The selected device does not support this kind of operation."));
 		return false;
 	}
 
 	if (!g_Core2.GetFeatureSupport(pDevice,FEATURE_CD_READ,bSupportFeature))
-		g_LogDlg.PrintLine(_T("  Warning: Unable to check device support for feature 0x%.4X."),FEATURE_CD_READ);
+		g_LogDlg.print_line(_T("  Warning: Unable to check device support for feature 0x%.4X."),FEATURE_CD_READ);
 	if (!bSupportFeature)
 	{
 		if (pProgress != NULL)
-			pProgress->Notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_NOMEDIA));
+			pProgress->notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_NOMEDIA));
 
-		g_LogDlg.PrintLine(_T("  Error: The selected device does not support this kind of operation."));
+		g_LogDlg.print_line(_T("  Error: The selected device does not support this kind of operation."));
 		return false;
 	}
 
@@ -285,7 +285,7 @@ bool CCore2Read::ReadData(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 	g_Core2.GetProfile(pDevice,usProfile);
 	if (usProfile == PROFILE_NONE)
 	{
-		g_LogDlg.PrintLine(_T("  Error: No disc inserted."));
+		g_LogDlg.print_line(_T("  Error: No disc inserted."));
 		return false;
 	}
 
@@ -309,7 +309,7 @@ bool CCore2Read::ReadData(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 		{
 			if (pProgress != NULL)
 			{
-				pProgress->SetStatus(lngGetString(STATUS_READTRACK2),
+				pProgress->set_status(lngGetString(STATUS_READTRACK2),
 					GetDispSpeedSEC(usProfile,ulWritten));
 			}
 
@@ -318,7 +318,7 @@ bool CCore2Read::ReadData(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 		}
 
 		// Check if the operation has been cancelled.
-		if (pProgress != NULL && pProgress->Cancelled())
+		if (pProgress != NULL && pProgress->cancelled())
 		{
 			delete [] pReadBuffer;
 			return false;
@@ -326,16 +326,16 @@ bool CCore2Read::ReadData(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 
 		if (!pReadFunction->Read(pReadBuffer,l,ulReadCount))
 		{
-			g_LogDlg.PrintLine(_T("  Warning: Failed to read sector range %u-%u"),
+			g_LogDlg.print_line(_T("  Warning: Failed to read sector range %u-%u"),
 				l,l + ulReadCount);
 			if (pProgress != NULL)
-				pProgress->Notify(ckcore::Progress::ckWARNING,lngGetString(FAILURE_READSOURCEDISC),l);
+				pProgress->notify(ckcore::Progress::ckWARNING,lngGetString(FAILURE_READSOURCEDISC),l);
 
 			// Read the sectors in the failed sector range one by one.
 			for (unsigned int j = 0; j < ulReadCount; j++)
 			{
 				// Check if the operation has been cancelled.
-				if (pProgress != NULL && pProgress->Cancelled())
+				if (pProgress != NULL && pProgress->cancelled())
 				{
 					delete [] pReadBuffer;
 					return false;
@@ -343,34 +343,34 @@ bool CCore2Read::ReadData(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 
 				if (!RetryReadBlock(pDevice,pProgress,pReadFunction,pReadBuffer + j * pReadFunction->GetFrameSize(),l + j))
 				{
-					g_LogDlg.PrintLine(_T("    Retry on sector %u failed."),l+j);
+					g_LogDlg.print_line(_T("    Retry on sector %u failed."),l+j);
 
 					// Check if we're allowed to ignore this error.
 					if (!bIgnoreErr)
 					{
 						if (pProgress != NULL)
-							pProgress->Notify(ckcore::Progress::ckERROR,lngGetString(ERROR_SECTOR),l + j);	
+							pProgress->notify(ckcore::Progress::ckERROR,lngGetString(ERROR_SECTOR),l + j);	
 
 						delete [] pReadBuffer;
 						return false;
 					}
 
 					if (pProgress != NULL)
-						pProgress->Notify(ckcore::Progress::ckWARNING,lngGetString(ERROR_SECTOR),l + j);	
+						pProgress->notify(ckcore::Progress::ckWARNING,lngGetString(ERROR_SECTOR),l + j);	
 				}
 			}
 		}
 
 		if (!pReadFunction->Process(pReadBuffer,ulReadCount))
 		{
-			g_LogDlg.PrintLine(_T("  Error: Unable to process read data."));
+			g_LogDlg.print_line(_T("  Error: Unable to process read data."));
 
 			delete [] pReadBuffer;
 			return false;
 		}
 
 		if (pProgress != NULL)
-			pProgress->SetProgress((int)(((double)l/ulEndBlock) * 100));
+			pProgress->set_progress((int)(((double)l/ulEndBlock) * 100));
 		ulWritten += ulReadCount;
 	}
 

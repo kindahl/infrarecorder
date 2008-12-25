@@ -50,7 +50,7 @@ ckcore::Path CLogDlg::GetLogFullPath()
 	ckcore::Path DirPath = GetLogDirPath();
 	
 	// Create the file path if it doesn't exist.
-	ckcore::Directory::Create(DirPath);
+	ckcore::Directory::create(DirPath);
 
 	// Construct the file name.
 #ifdef UNICODE
@@ -96,22 +96,22 @@ ckcore::Path CLogDlg::GetLogDirPath()
 
 void CLogDlg::InitializeLogFile()
 {
-	if (m_LogFile.Exist())
+	if (m_LogFile.exist())
 	{
-		if (m_LogFile.Open(ckcore::FileBase::ckOPEN_READWRITE))
+		if (m_LogFile.open(ckcore::FileBase::ckOPEN_READWRITE))
 		{
-			m_LogFile.Seek(0,ckcore::FileBase::ckFILE_END);
-			m_LogFile.Write(ckT("\r\n"),sizeof(ckcore::tchar) << 1);
+			m_LogFile.seek(0,ckcore::FileBase::ckFILE_END);
+			m_LogFile.write(ckT("\r\n"),sizeof(ckcore::tchar) << 1);
 		}
 	}
 	else
 	{
-		if (m_LogFile.Open(ckcore::FileBase::ckOPEN_WRITE))
+		if (m_LogFile.open(ckcore::FileBase::ckOPEN_WRITE))
 		{
 #ifdef UNICODE
 			// Write byte order mark.
 			unsigned short usBOM = BOM_UTF32BE;
-			m_LogFile.Write(&usBOM,2);
+			m_LogFile.write(&usBOM,2);
 		}
 #endif
 	}
@@ -162,7 +162,7 @@ void CLogDlg::Show()
 	m_LogEdit.LineScroll(m_LogEdit.GetLineCount());
 }
 
-void CLogDlg::Print(const TCHAR *szString,...)
+void CLogDlg::print(const TCHAR *szString,...)
 {
 	if (g_GlobalSettings.m_bLog && IsWindow())
 	{
@@ -178,12 +178,12 @@ void CLogDlg::Print(const TCHAR *szString,...)
 		m_LogEdit.AppendText(m_szLineBuffer);
 
 		// Write to the log file.
-		if (m_LogFile.Test())
-			m_LogFile.Write(m_szLineBuffer,lstrlen(m_szLineBuffer) * sizeof(TCHAR));
+		if (m_LogFile.test())
+			m_LogFile.write(m_szLineBuffer,lstrlen(m_szLineBuffer) * sizeof(TCHAR));
 	}
 }
 
-void CLogDlg::PrintLine(const TCHAR *szLine,...)
+void CLogDlg::print_line(const TCHAR *szLine,...)
 {
 	if (g_GlobalSettings.m_bLog && IsWindow())
 	{
@@ -200,10 +200,10 @@ void CLogDlg::PrintLine(const TCHAR *szLine,...)
 		m_LogEdit.AppendText(_T("\r\n"));
 
 		// Write to the log file.
-		if (m_LogFile.Test())
+		if (m_LogFile.test())
 		{
-			m_LogFile.Write(m_szLineBuffer,lstrlen(m_szLineBuffer) * sizeof(TCHAR));
-			m_LogFile.Write(ckT("\r\n"),2 * sizeof(ckcore::tchar));
+			m_LogFile.write(m_szLineBuffer,lstrlen(m_szLineBuffer) * sizeof(TCHAR));
+			m_LogFile.write(ckT("\r\n"),2 * sizeof(ckcore::tchar));
 		}
 	}
 }
@@ -211,7 +211,7 @@ void CLogDlg::PrintLine(const TCHAR *szLine,...)
 bool CLogDlg::SaveLog(const TCHAR *szFileName)
 {
 	ckcore::File File(szFileName);
-	if (!File.Open(ckcore::FileBase::ckOPEN_WRITE))
+	if (!File.open(ckcore::FileBase::ckOPEN_WRITE))
 		return false;
 
 	// Obtain buffer handle.
@@ -230,9 +230,9 @@ bool CLogDlg::SaveLog(const TCHAR *szFileName)
 	if (bIsUnicode)
 	{
 		unsigned short usBOM = BOM_UTF32BE;
-		if (File.Write(&usBOM,2) == -1)
+		if (File.write(&usBOM,2) == -1)
 		{
-			File.Remove();
+			File.remove();
 			return false;
 		}
 	}
@@ -243,9 +243,9 @@ bool CLogDlg::SaveLog(const TCHAR *szFileName)
 
 	while (uiRemaining > LOG_WRITEBUFFER_SIZE)
 	{
-		if (File.Write(pBuffer,LOG_WRITEBUFFER_SIZE) == -1)
+		if (File.write(pBuffer,LOG_WRITEBUFFER_SIZE) == -1)
 		{
-			File.Remove();
+			File.remove();
 			return false;
 		}
 
@@ -253,9 +253,9 @@ bool CLogDlg::SaveLog(const TCHAR *szFileName)
 		pBuffer += LOG_WRITEBUFFER_SIZE;
 	}
 
-	if (File.Write(pBuffer,uiRemaining) == -1)
+	if (File.write(pBuffer,uiRemaining) == -1)
 	{
-		File.Remove();
+		File.remove();
 		return false;
 	}
 
@@ -309,18 +309,18 @@ LRESULT CLogDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandl
 				unsigned char *pBuffer;
 				VerQueryValue(pBlock,szStrBuffer,(LPVOID *)&pBuffer,(unsigned int *)&ulDataSize);
 
-				Print(_T("InfraRecorder version %s"),(TCHAR *)pBuffer);
+				print(_T("InfraRecorder version %s"),(TCHAR *)pBuffer);
 			}
 
 			delete [] pBlock;
 		}
 
 #ifdef _M_IA64
-		PrintLine(_T(" (IA64)"));
+		print_line(_T(" (IA64)"));
 #elif defined _M_X64
-		PrintLine(_T(" (x64)"));
+		print_line(_T(" (x64)"));
 #else
-		PrintLine(_T(" (x86)"));
+		print_line(_T(" (x86)"));
 #endif
 
 		// Date and time.
@@ -330,10 +330,10 @@ LRESULT CLogDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandl
 		GetDateFormat(LOCALE_USER_DEFAULT,0,&st,_T("dddd, MMMM dd yyyy "),szDate,64);
 		TCHAR szDateTime[128];
 		lsprintf(szDateTime,_T("Started: %s%.2d:%.2d:%.2d."),szDate,st.wHour,st.wMinute,st.wSecond);
-		PrintLine(szDateTime);
+		print_line(szDateTime);
 
 		// Windows version.
-		PrintLine(_T("Versions: MSW = %d.%d, IE = %d.%d, CC = %d.%d."),
+		print_line(_T("Versions: MSW = %d.%d, IE = %d.%d, CC = %d.%d."),
 			g_WinVer.m_ulMajorVersion,g_WinVer.m_ulMinorVersion,
 			g_WinVer.m_ulMajorIEVersion,g_WinVer.m_ulMinorIEVersion,
 			g_WinVer.m_ulMajorCCVersion,g_WinVer.m_ulMinorCCVersion);
@@ -369,7 +369,7 @@ LRESULT CLogDlg::OnFiles(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
 	ckcore::Path Path = GetLogDirPath();
 
-	ShellExecute(HWND_DESKTOP,_T("open"),_T("explorer.exe"),Path.Name().c_str(),NULL,SW_SHOWDEFAULT);
+	ShellExecute(HWND_DESKTOP,_T("open"),_T("explorer.exe"),Path.name().c_str(),NULL,SW_SHOWDEFAULT);
 	return 0;
 }
 

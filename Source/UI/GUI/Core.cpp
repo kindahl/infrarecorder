@@ -96,11 +96,11 @@ void CCore::Reinitialize()
 void CCore::CreateBatchFile(const char *szChangeDir,const char *szCommandLine,TCHAR *szBatchPath)
 {
 	// FIXME: This is not very nice.
-	ckcore::File BatchFile = ckcore::File::Temp(g_GlobalSettings.m_szTempPath);
-	lstrcpy(szBatchPath,BatchFile.Name().c_str());
+	ckcore::File BatchFile = ckcore::File::temp(g_GlobalSettings.m_szTempPath);
+	lstrcpy(szBatchPath,BatchFile.name().c_str());
 
 	// Delete the generated temporary file since we need a batch file.
-	ckcore::File::Remove(szBatchPath);
+	ckcore::File::remove(szBatchPath);
 
 	ChangeFileExt(szBatchPath,_T(".bat"));
 
@@ -140,7 +140,7 @@ bool CCore::SafeLaunch(tstring &CommandLine,bool bWaitForProcess)
 			}
 
 			if (g_GlobalSettings.m_bLog)
-				g_LogDlg.PrintLine(_T("  Warning: The command line is %d characters long. Trying to execute through shell."),CommandLine.length());
+				g_LogDlg.print_line(_T("  Warning: The command line is %d characters long. Trying to execute through shell."),CommandLine.length());
 
 			TCHAR szBatchPath[MAX_PATH];
 #ifdef UNICODE
@@ -163,7 +163,7 @@ bool CCore::SafeLaunch(tstring &CommandLine,bool bWaitForProcess)
 			if (bWaitForProcess)
 			{
 				bool bResult = Launch(szBatchCmdLine,bWaitForProcess);
-					ckcore::File::Remove(szBatchPath);
+					ckcore::File::remove(szBatchPath);
 				return bResult;
 			}
 			else
@@ -233,7 +233,7 @@ bool CCore::CheckGraceTime(const char *szBuffer)
 		m_bDummyMode = szMode[0] == 'd';
 
 		// Update the status.
-		m_pProgress->SetStatus(lngGetString(PROGRESS_GRACETIME),iTimer);
+		m_pProgress->set_status(lngGetString(PROGRESS_GRACETIME),iTimer);
 
 		return true;
 	}
@@ -260,15 +260,15 @@ void CCore::ErrorOutputCDRECORD(const char *szBuffer)
 	if (m_pProgress != NULL)
 	{
 		if (!strncmp(szBuffer,CDRTOOLS_NOMEDIA,CDRTOOLS_NOMEDIA_LENGTH))
-			m_pProgress->Notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_NOMEDIA));
+			m_pProgress->notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_NOMEDIA));
 		else if (!strncmp(szBuffer,CDRTOOLS_BLANKERROR,CDRTOOLS_BLANKERROR_LENGTH))
-			m_pProgress->Notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_ERASE));
+			m_pProgress->notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_ERASE));
 		else if (!strncmp(szBuffer,CDRTOOLS_BLANKUNSUP,CDRTOOLS_BLANKUNSUP_LENGTH))
-			m_pProgress->Notify(ckcore::Progress::ckINFORMATION,lngGetString(INFO_UNSUPERASEMODE));
+			m_pProgress->notify(ckcore::Progress::ckINFORMATION,lngGetString(INFO_UNSUPERASEMODE));
 		else if (!strncmp(szBuffer,CDRTOOLS_BLANKRETRY,CDRTOOLS_BLANKRETRY_LENGTH))
-			m_pProgress->Notify(ckcore::Progress::ckINFORMATION,lngGetString(INFO_ERASERETRY));
+			m_pProgress->notify(ckcore::Progress::ckINFORMATION,lngGetString(INFO_ERASERETRY));
 		else if (!strncmp(szBuffer,CDRTOOLS_NODISC,CDRTOOLS_NODISC_LENGTH))
-			m_pProgress->Notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_NOMEDIA));
+			m_pProgress->notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_NOMEDIA));
 		else if (!strncmp(szBuffer,CDRTOOLS_BADAUDIOCODING,CDRTOOLS_BADAUDIOCODING_LENGTH))
 		{
 			TCHAR szMessage[MAX_PATH + 128];
@@ -282,7 +282,7 @@ void CCore::ErrorOutputCDRECORD(const char *szBuffer)
 			lstrcat(szMessage,szBuffer + CDRTOOLS_BADAUDIOCODING_LENGTH + 10);
 #endif
 
-			m_pProgress->Notify(ckcore::Progress::ckERROR,szMessage);
+			m_pProgress->notify(ckcore::Progress::ckERROR,szMessage);
 		}
 		else if (!strncmp(szBuffer,CDRTOOLS_UNSUPPORTED,CDRTOOLS_UNSUPPORTED_LENGTH))
 		{
@@ -293,47 +293,47 @@ void CCore::ErrorOutputCDRECORD(const char *szBuffer)
 				int iSectorSize = 0;
 				sscanf(pBuffer,"sector size %ld for %*[^\0]",&iSectorSize);
 
-				m_pProgress->Notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_BADSECTORSIZE),iSectorSize);
+				m_pProgress->notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_BADSECTORSIZE),iSectorSize);
 			}
 		}
 		else if (!strncmp(szBuffer,CDRTOOLS_WRITEERROR,CDRTOOLS_WRITEERROR_LENGTH))
 		{
-			m_pProgress->Notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_WRITE));
+			m_pProgress->notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_WRITE));
 		}
 #ifndef CORE_DVD_SUPPORT
 		else if (!strncmp(szBuffer,CDRTOOLS_FOUNDDVDMEDIA,CDRTOOLS_FOUNDDVDMEDIA_LENGTH))
 		{
-			m_pProgress->Notify(ckcore::Progress::ckWARNING,lngGetString(FAILURE_DVDSUPPORT));
+			m_pProgress->notify(ckcore::Progress::ckWARNING,lngGetString(FAILURE_DVDSUPPORT));
 		}
 #endif
 		else if (!strncmp(szBuffer,CDRTOOLS_OPENSESSION,CDRTOOLS_OPENSESSION_LENGTH))
 		{
-			m_pProgress->Notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_OPENSESSION));
+			m_pProgress->notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_OPENSESSION));
 		}
 		else if (!strncmp(szBuffer,CDRTOOLS_WARNINGCAP,CDRTOOLS_WARNINGCAP_LENGTH))	// "WARNING:" Prefix.
 		{
 			char *pBuffer = (char *)szBuffer + CDRTOOLS_WARNINGCAP_LENGTH + 1;
 
 			if (!strncmp(pBuffer,CDRTOOLS_DISCSPACEWARNING,CDRTOOLS_DISCSPACEWARNING_LENGTH))
-				m_pProgress->Notify(ckcore::Progress::ckWARNING,lngGetString(WARNING_DISCSIZE));
+				m_pProgress->notify(ckcore::Progress::ckWARNING,lngGetString(WARNING_DISCSIZE));
 		}
 		else if (!strncmp(szBuffer,CDRTOOLS_ERRORLEADIN,CDRTOOLS_ERRORLEADIN_LENGTH))
 		{
-			m_pProgress->Notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_WRITELEADIN));
+			m_pProgress->notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_WRITELEADIN));
 
 			// When called from BurnTracks/BurnCompilation we need to flag the operation as failed.
 			m_bOperationRes = false;
 		}
 		else if (!strncmp(szBuffer,CDRTOOLS_ERRORINITDRIVE,CDRTOOLS_ERRORINITDRIVE_LENGTH))
 		{
-			m_pProgress->Notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_INITDRIVE));
+			m_pProgress->notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_INITDRIVE));
 
 			// When called from BurnTracks/BurnCompilation we need to flag the operation as failed.
 			m_bOperationRes = false;
 		}
 		else if (!strncmp(szBuffer,CDRTOOLS_DVDRWDUMMY,CDRTOOLS_DVDRWDUMMY_LENGTH))
 		{
-			m_pProgress->Notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_DVDRWDUMMY));
+			m_pProgress->notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_DVDRWDUMMY));
 
 			// When called from BurnTracks/BurnCompilation we need to flag the operation as failed.
 			m_bOperationRes = false;
@@ -358,9 +358,9 @@ void CCore::ErrorOutputCDRECORD(const char *szBuffer)
 	#ifdef UNICODE
 			TCHAR szWideBuffer[CONSOLEPIPE_MAX_LINE_SIZE];
 			AnsiToUnicode(szWideBuffer,szBuffer,sizeof(szWideBuffer) / sizeof(wchar_t));
-			m_pProgress->Notify(ckcore::Progress::ckEXTERNAL,szWideBuffer);
+			m_pProgress->notify(ckcore::Progress::ckEXTERNAL,szWideBuffer);
 	#else
-			m_pProgress->Notify(ckcore::Progress::ckEXTERNALB,szBuffer);
+			m_pProgress->notify(ckcore::Progress::ckEXTERNALB,szBuffer);
 	#endif
 		}
 #endif
@@ -379,14 +379,14 @@ void CCore::ErrorOutputREADCD(const char *szBuffer)
 			{
 				unsigned long ulSector = atoi(pBuffer + CDRTOOLS_SECTORERROR_LENGTH + 1);
 	
-				m_pProgress->Notify(ckcore::Progress::ckWARNING,lngGetString(ERROR_SECTOR),ulSector);
+				m_pProgress->notify(ckcore::Progress::ckWARNING,lngGetString(ERROR_SECTOR),ulSector);
 			}
 		}
 		else if (!strncmp(szBuffer,CDRTOOLS_RETRYSECTOR,CDRTOOLS_RETRYSECTOR_LENGTH))
 		{
 			unsigned long ulSector = atoi(szBuffer + CDRTOOLS_RETRYSECTOR_LENGTH + 1);
 
-			m_pProgress->Notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_READSOURCEDISC),ulSector);
+			m_pProgress->notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_READSOURCEDISC),ulSector);
 		}
 #ifdef CORE_PRINT_UNSUPERRORMESSAGES
 		else
@@ -394,9 +394,9 @@ void CCore::ErrorOutputREADCD(const char *szBuffer)
 #ifdef UNICODE
 			TCHAR szWideBuffer[CONSOLEPIPE_MAX_LINE_SIZE];
 			AnsiToUnicode(szWideBuffer,szBuffer,sizeof(szWideBuffer) / sizeof(wchar_t));
-			m_pProgress->Notify(ckcore::Progress::ckEXTERNAL,szWideBuffer);
+			m_pProgress->notify(ckcore::Progress::ckEXTERNAL,szWideBuffer);
 #else
-			m_pProgress->Notify(ckcore::Progress::ckEXTERNAL,szBuffer);
+			m_pProgress->notify(ckcore::Progress::ckEXTERNAL,szBuffer);
 #endif
 		}
 #endif
@@ -415,7 +415,7 @@ void CCore::EraseOutput(const char *szBuffer)
 		char *pBuffer = (char *)szBuffer + 42;
 
 		if (!strncmp(pBuffer,CDRTOOLS_BLANK,CDRTOOLS_BLANK_LENGTH))
-			m_pProgress->Notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_UNSUPRW));
+			m_pProgress->notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_UNSUPRW));
 	}
 	else if (CheckGraceTime(szBuffer))
 	{
@@ -423,12 +423,12 @@ void CCore::EraseOutput(const char *szBuffer)
 	}
 	else if (!strncmp(szBuffer,CDRTOOLS_BLANKTIME,CDRTOOLS_BLANKTIME_LENGTH))
 	{
-		m_pProgress->Notify(ckcore::Progress::ckINFORMATION,lngGetString(SUCCESS_ERASE));
+		m_pProgress->notify(ckcore::Progress::ckINFORMATION,lngGetString(SUCCESS_ERASE));
 	}
 	else if (!strncmp(szBuffer,CDRTOOLS_RELOADDRIVE,CDRTOOLS_RELOADDRIVE_LENGTH))
 	{
-		m_pProgress->Notify(ckcore::Progress::ckWARNING,lngGetString(FAILURE_LOADDRIVE));
-		m_pProgress->SetStatus(lngGetString(ERROR_RELOADDRIVE));
+		m_pProgress->notify(ckcore::Progress::ckWARNING,lngGetString(FAILURE_LOADDRIVE));
+		m_pProgress->set_status(lngGetString(ERROR_RELOADDRIVE));
 
 		// Enable the reload button.
 		m_pProgress->AllowReload();
@@ -443,12 +443,12 @@ void CCore::FixateOutput(const char *szBuffer)
 	}
 	else if (!strncmp(szBuffer,CDRTOOLS_FIXATETIME,CDRTOOLS_FIXATETIME_LENGTH))
 	{
-		m_pProgress->Notify(ckcore::Progress::ckINFORMATION,lngGetString(SUCCESS_FIXATE));
+		m_pProgress->notify(ckcore::Progress::ckINFORMATION,lngGetString(SUCCESS_FIXATE));
 	}
 	else if (!strncmp(szBuffer,CDRTOOLS_RELOADDRIVE,CDRTOOLS_RELOADDRIVE_LENGTH))
 	{
-		m_pProgress->Notify(ckcore::Progress::ckWARNING,lngGetString(FAILURE_LOADDRIVE));
-		m_pProgress->SetStatus(lngGetString(ERROR_RELOADDRIVE));
+		m_pProgress->notify(ckcore::Progress::ckWARNING,lngGetString(FAILURE_LOADDRIVE));
+		m_pProgress->set_status(lngGetString(ERROR_RELOADDRIVE));
 
 		// Enable the reload button.
 		m_pProgress->AllowReload();
@@ -471,34 +471,34 @@ void CCore::BurnImageOutput(const char *szBuffer)
 
 		TCHAR szStatus[64];
 		lsnprintf_s(szStatus,64,lngGetString(STATUS_WRITEPREGAP),iTrack,lPos);
-		m_pProgress->SetStatus(szStatus);
+		m_pProgress->set_status(szStatus);
 	}
 	else if (!strncmp(szBuffer,CDRTOOLS_FILLFIFO,CDRTOOLS_FILLFIFO_LENGTH))
 	{
-		m_pProgress->SetStatus(lngGetString(STATUS_FILLBUFFER));
+		m_pProgress->set_status(lngGetString(STATUS_FILLBUFFER));
 	}
 	else if (!strncmp(szBuffer,CDRTOOLS_WRITETIME,CDRTOOLS_WRITETIME_LENGTH))
 	{
 		// Only display the error message if no error occured.
 		if (m_bOperationRes)
-			m_pProgress->Notify(ckcore::Progress::ckINFORMATION,lngGetString(SUCCESS_WRITE));
+			m_pProgress->notify(ckcore::Progress::ckINFORMATION,lngGetString(SUCCESS_WRITE));
 	}
 	else if (!strncmp(szBuffer,CDRTOOLS_FIXATE,CDRTOOLS_FIXATE_LENGTH))
 	{
-		m_pProgress->SetStatus(lngGetString(STATUS_FIXATE));
+		m_pProgress->set_status(lngGetString(STATUS_FIXATE));
 	}
 	else if (!strncmp(szBuffer,CDRTOOLS_FIXATETIME,CDRTOOLS_FIXATETIME_LENGTH))
 	{
-		m_pProgress->Notify(ckcore::Progress::ckINFORMATION,lngGetString(SUCCESS_FIXATE));
+		m_pProgress->notify(ckcore::Progress::ckINFORMATION,lngGetString(SUCCESS_FIXATE));
 	}
 	else if (!strncmp(szBuffer,CDRTOOLS_WARNINGCAP,CDRTOOLS_WARNINGCAP_LENGTH))
 	{
-		m_pProgress->Notify(ckcore::Progress::ckWARNING,lngGetString(WARNING_FIXATE));
+		m_pProgress->notify(ckcore::Progress::ckWARNING,lngGetString(WARNING_FIXATE));
 	}
 	else if (!strncmp(szBuffer,CDRTOOLS_RELOADDRIVE,CDRTOOLS_RELOADDRIVE_LENGTH))
 	{
-		m_pProgress->Notify(ckcore::Progress::ckWARNING,lngGetString(FAILURE_LOADDRIVE));
-		m_pProgress->SetStatus(lngGetString(ERROR_RELOADDRIVE));
+		m_pProgress->notify(ckcore::Progress::ckWARNING,lngGetString(FAILURE_LOADDRIVE));
+		m_pProgress->set_status(lngGetString(ERROR_RELOADDRIVE));
 
 		// Enable the reload button.
 		m_pProgress->AllowReload();
@@ -509,8 +509,8 @@ void CCore::ReadDataTrackOutput(const char *szBuffer)
 {
 	if (!strncmp(szBuffer,CDRTOOLS_END,CDRTOOLS_END_LENGTH))
 	{
-		m_pProgress->Notify(ckcore::Progress::ckINFORMATION,lngGetString(PROGRESS_BEGINREADTRACK),m_TrackSize[1]);
-		m_pProgress->SetStatus(lngGetString(STATUS_READTRACK));
+		m_pProgress->notify(ckcore::Progress::ckINFORMATION,lngGetString(PROGRESS_BEGINREADTRACK),m_TrackSize[1]);
+		m_pProgress->set_status(lngGetString(STATUS_READTRACK));
 	}
 	else if (!strncmp(szBuffer,CDRTOOLS_ADDRESS,CDRTOOLS_ADDRESS_LENGTH))
 	{
@@ -518,11 +518,11 @@ void CCore::ReadDataTrackOutput(const char *szBuffer)
 		unsigned __int64 uiCount = 0;
 
 		if (sscanf(szBuffer,"addr: %8ld cnt: %ld",&uiAddress,&uiCount) == 2)
-			m_pProgress->SetProgress((int)(((double)(uiAddress - m_TrackSize[0])/m_uiTotalSize) * 100));
+			m_pProgress->set_progress((int)(((double)(uiAddress - m_TrackSize[0])/m_uiTotalSize) * 100));
 	}
 	else if (!strncmp(szBuffer,CDRTOOLS_TOTALTIME,CDRTOOLS_TOTALTIME_LENGTH))
 	{
-		m_pProgress->Notify(ckcore::Progress::ckINFORMATION,lngGetString(SUCCESS_READTRACK),m_TrackSize[1]);
+		m_pProgress->notify(ckcore::Progress::ckINFORMATION,lngGetString(SUCCESS_READTRACK),m_TrackSize[1]);
 		m_bOperationRes = true;			// Success.
 	}
 }
@@ -531,8 +531,8 @@ void CCore::ReadAudioTrackOutput(const char *szBuffer)
 {
 	if (!strncmp(szBuffer,CDRTOOLS_PERCENTDONE,CDRTOOLS_PERCENTDONE_LENGTH))
 	{
-		m_pProgress->Notify(ckcore::Progress::ckINFORMATION,lngGetString(PROGRESS_BEGINREADTRACK),m_uiTotalSize);
-		m_pProgress->SetStatus(lngGetString(STATUS_READTRACK));
+		m_pProgress->notify(ckcore::Progress::ckINFORMATION,lngGetString(PROGRESS_BEGINREADTRACK),m_uiTotalSize);
+		m_pProgress->set_status(lngGetString(STATUS_READTRACK));
 
 		m_iStatusMode = SMODE_AUDIOPROGRESS;
 	}
@@ -542,8 +542,8 @@ void CCore::ScanTrackOutput(const char *szBuffer)
 {
 	if (!strncmp(szBuffer,CDRTOOLS_END,CDRTOOLS_END_LENGTH))
 	{
-		m_pProgress->Notify(ckcore::Progress::ckINFORMATION,lngGetString(PROGRESS_BEGINSCANTRACK),m_TrackSize[1]);
-		m_pProgress->SetStatus(lngGetString(STATUS_SCANTRACK));
+		m_pProgress->notify(ckcore::Progress::ckINFORMATION,lngGetString(PROGRESS_BEGINSCANTRACK),m_TrackSize[1]);
+		m_pProgress->set_status(lngGetString(STATUS_SCANTRACK));
 	}
 	else if (!strncmp(szBuffer,CDRTOOLS_ADDRESS,CDRTOOLS_ADDRESS_LENGTH))
 	{
@@ -551,11 +551,11 @@ void CCore::ScanTrackOutput(const char *szBuffer)
 		unsigned __int64 uiCount = 0;
 
 		if (sscanf(szBuffer,"addr: %8ld cnt: %ld",&uiAddress,&uiCount) == 2)
-			m_pProgress->SetProgress((int)(((double)(uiAddress - m_TrackSize[0])/m_uiTotalSize) * 100));
+			m_pProgress->set_progress((int)(((double)(uiAddress - m_TrackSize[0])/m_uiTotalSize) * 100));
 	}
 	else if (!strncmp(szBuffer,CDRTOOLS_TOTALTIME,CDRTOOLS_TOTALTIME_LENGTH))
 	{
-		m_pProgress->Notify(ckcore::Progress::ckINFORMATION,lngGetString(SUCCESS_SCANTRACK),m_TrackSize[1]);
+		m_pProgress->notify(ckcore::Progress::ckINFORMATION,lngGetString(SUCCESS_SCANTRACK),m_TrackSize[1]);
 		m_bOperationRes = true;			// Success.
 	}
 	else if (!strncmp(szBuffer,CDRTOOLS_C2ERRORS,CDRTOOLS_C2ERRORS_LENGTH))
@@ -569,7 +569,7 @@ void CCore::ScanTrackOutput(const char *szBuffer)
 
 			if (sscanf(pBuffer + 7,"%ld bytes in %d sectors on disk",&ulBytes,&ulSectors) == 2)
 			{
-				m_pProgress->Notify(ulSectors > 0 ? ckcore::Progress::ckWARNING : ckcore::Progress::ckINFORMATION,
+				m_pProgress->notify(ulSectors > 0 ? ckcore::Progress::ckWARNING : ckcore::Progress::ckINFORMATION,
 					lngGetString(STATUS_C2TOTAL),ulBytes,ulBytes);
 			}
 		}
@@ -577,7 +577,7 @@ void CCore::ScanTrackOutput(const char *szBuffer)
 		{
 			float fRate = (float)atof(pBuffer + 6);
 
-			m_pProgress->Notify(fRate > 0 ? ckcore::Progress::ckWARNING : ckcore::Progress::ckINFORMATION,
+			m_pProgress->notify(fRate > 0 ? ckcore::Progress::ckWARNING : ckcore::Progress::ckINFORMATION,
 				lngGetString(STATUS_C2RATE),fRate);
 		}
 	}
@@ -587,8 +587,8 @@ void CCore::ReadDiscOutput(const char *szBuffer)
 {
 	if (!strncmp(szBuffer,CDRTOOLS_END,CDRTOOLS_END_LENGTH))
 	{
-		m_pProgress->Notify(ckcore::Progress::ckINFORMATION,lngGetString(PROGRESS_BEGINREADDISC));
-		m_pProgress->SetStatus(lngGetString(STATUS_READDISC));
+		m_pProgress->notify(ckcore::Progress::ckINFORMATION,lngGetString(PROGRESS_BEGINREADDISC));
+		m_pProgress->set_status(lngGetString(STATUS_READDISC));
 
 		// Update the total number of sectors to process.
 		m_uiTotalSize = atoi(szBuffer + CDRTOOLS_END_LENGTH);
@@ -603,11 +603,11 @@ void CCore::ReadDiscOutput(const char *szBuffer)
 		unsigned __int64 uiCount = 0;
 
 		if (sscanf(szBuffer,"addr: %8ld cnt: %ld",&uiAddress,&uiCount) == 2)
-			m_pProgress->SetProgress((int)(((double)uiAddress/m_uiTotalSize) * 100));
+			m_pProgress->set_progress((int)(((double)uiAddress/m_uiTotalSize) * 100));
 	}
 	else if (!strncmp(szBuffer,CDRTOOLS_TOTALTIME,CDRTOOLS_TOTALTIME_LENGTH))
 	{
-		m_pProgress->Notify(ckcore::Progress::ckINFORMATION,lngGetString(SUCCESS_READDISC));
+		m_pProgress->notify(ckcore::Progress::ckINFORMATION,lngGetString(SUCCESS_READDISC));
 
 		m_bOperationRes = true;			// Success.
 	}
@@ -618,13 +618,13 @@ void CCore::FlushOutput(const char *szBuffer)
 	// Write to the log.
 	if (g_GlobalSettings.m_bLog && m_iStatusMode == SMODE_DEFAULT)
 	{
-		g_LogDlg.Print(_T("   > "));
+		g_LogDlg.print(_T("   > "));
 #ifdef UNICODE
 		TCHAR szWideBuffer[CONSOLEPIPE_MAX_LINE_SIZE];
 		AnsiToUnicode(szWideBuffer,szBuffer,sizeof(szWideBuffer) / sizeof(wchar_t));
-		g_LogDlg.PrintLine(szWideBuffer);
+		g_LogDlg.print_line(szWideBuffer);
 #else
-		g_LogDlg.PrintLine(szBuffer);
+		g_LogDlg.print_line(szBuffer);
 #endif
 	}
 
@@ -682,7 +682,7 @@ void CCore::FlushOutput(const char *szBuffer)
 		sscanf(szBuffer,"\b\b\b\b\b\b\b\b\b\b\b\b\b%4d seconds",&iTimer);
 
 		// Update the status.
-		m_pProgress->SetStatus(lngGetString(PROGRESS_GRACETIME),iTimer);
+		m_pProgress->set_status(lngGetString(PROGRESS_GRACETIME),iTimer);
 
 		// Leave grace time mode if the timer is 0.
 		if (iTimer == 0)
@@ -697,22 +697,22 @@ void CCore::FlushOutput(const char *szBuffer)
 			switch (m_iMode)
 			{
 				case MODE_ERASE:
-					m_pProgress->Notify(ckcore::Progress::ckINFORMATION,lngGetString(PROGRESS_BEGINERASE),
+					m_pProgress->notify(ckcore::Progress::ckINFORMATION,lngGetString(PROGRESS_BEGINERASE),
 						m_bDummyMode ? lngGetString(WRITEMODE_SIMULATION) : lngGetString(WRITEMODE_REAL));
-					m_pProgress->SetStatus(lngGetString(STATUS_ERASE));
+					m_pProgress->set_status(lngGetString(STATUS_ERASE));
 					break;
 
 				case MODE_FIXATE:
-					m_pProgress->Notify(ckcore::Progress::ckINFORMATION,lngGetString(PROGRESS_BEGINFIXATE),
+					m_pProgress->notify(ckcore::Progress::ckINFORMATION,lngGetString(PROGRESS_BEGINFIXATE),
 						m_bDummyMode ? lngGetString(WRITEMODE_SIMULATION) : lngGetString(WRITEMODE_REAL));
-					m_pProgress->SetStatus(lngGetString(STATUS_FIXATE));
+					m_pProgress->set_status(lngGetString(STATUS_FIXATE));
 					break;
 
 				case MODE_BURNIMAGE:
 				case MODE_BURNIMAGEEX:
-					m_pProgress->Notify(ckcore::Progress::ckINFORMATION,lngGetString(PROGRESS_BEGINWRITE),
+					m_pProgress->notify(ckcore::Progress::ckINFORMATION,lngGetString(PROGRESS_BEGINWRITE),
 						m_bDummyMode ? lngGetString(WRITEMODE_SIMULATION) : lngGetString(WRITEMODE_REAL));
-					m_pProgress->SetStatus(lngGetString(STATUS_WRITEDATA));
+					m_pProgress->set_status(lngGetString(STATUS_WRITEDATA));
 					break;
 			};
 
@@ -733,8 +733,8 @@ void CCore::FlushOutput(const char *szBuffer)
 		// Change the mode to progress mode.
 		m_iStatusMode = SMODE_PROGRESS;
 
-		// Notify the status window that we're starting to write a new track.
-		m_pProgress->Notify(ckcore::Progress::ckINFORMATION,lngGetString(PROGRESS_BEGINTRACK),
+		// notify the status window that we're starting to write a new track.
+		m_pProgress->notify(ckcore::Progress::ckINFORMATION,lngGetString(PROGRESS_BEGINTRACK),
 			m_uiCurrentTrack + 1);
 
 		return;
@@ -813,9 +813,9 @@ void CCore::FlushOutput(const char *szBuffer)
 		fSpeed = (float)atof(pBuffer);
 
 		// Update the status.
-		m_pProgress->SetStatus(lngGetString(STATUS_WRITE),m_uiCurrentTrack + 1,(int)m_TrackSize.size(),fSpeed);
+		m_pProgress->set_status(lngGetString(STATUS_WRITE),m_uiCurrentTrack + 1,(int)m_TrackSize.size(),fSpeed);
 
-		m_pProgress->SetProgress((int)(((double)(iWritten + m_uiProcessedSize)/m_uiTotalSize) * 100));
+		m_pProgress->set_progress((int)(((double)(iWritten + m_uiProcessedSize)/m_uiTotalSize) * 100));
 		m_pProgress->SetBuffer(iBuffer);
 
 		// Check if we're done writing the track.
@@ -837,13 +837,13 @@ void CCore::FlushOutput(const char *szBuffer)
 	else if (m_iStatusMode == SMODE_AUDIOPROGRESS)
 	{
 		int iProgress = atoi(szBuffer);
-		m_pProgress->SetProgress(iProgress);
+		m_pProgress->set_progress(iProgress);
 
 		if (iProgress == 100)
 		{
 			m_iStatusMode = SMODE_DEFAULT;
 
-			m_pProgress->Notify(ckcore::Progress::ckINFORMATION,lngGetString(SUCCESS_READTRACK),m_uiTotalSize);
+			m_pProgress->notify(ckcore::Progress::ckINFORMATION,lngGetString(SUCCESS_READTRACK),m_uiTotalSize);
 			m_bOperationRes = true;		// Success.
 		}
 	}
@@ -891,7 +891,7 @@ void CCore::FlushOutput(const char *szBuffer)
 void CCore::ProcessEnded()
 {
 	if (g_GlobalSettings.m_bLog)
-		g_LogDlg.PrintLine(_T("CCore::ProcessEnded"));
+		g_LogDlg.print_line(_T("CCore::ProcessEnded"));
 
 	switch (m_iMode)
 	{
@@ -905,14 +905,14 @@ void CCore::ProcessEnded()
 		case MODE_READAUDIOTRACK:
 		case MODE_SCANTRACK:
 		case MODE_READDISC:
-			m_pProgress->SetProgress(100);
-			m_pProgress->SetStatus(lngGetString(PROGRESS_DONE));
+			m_pProgress->set_progress(100);
+			m_pProgress->set_status(lngGetString(PROGRESS_DONE));
 			m_pProgress->NotifyCompleted();
 			break;
 
 		case MODE_BURNIMAGE:
-			m_pProgress->SetProgress(100);
-			m_pProgress->SetStatus(lngGetString(PROGRESS_DONE));
+			m_pProgress->set_progress(100);
+			m_pProgress->set_status(lngGetString(PROGRESS_DONE));
 
 			if (m_lNumCopies <= 0 || !Relaunch())
 				m_pProgress->NotifyCompleted();
@@ -925,12 +925,12 @@ void CCore::ProcessEnded()
 		case MODE_READDISCEX:
 			if (m_bOperationRes)
 			{
-				m_pProgress->SetProgress(0);
+				m_pProgress->set_progress(0);
 			}
 			else
 			{
-				m_pProgress->SetProgress(100);
-				m_pProgress->SetStatus(lngGetString(PROGRESS_DONE));
+				m_pProgress->set_progress(100);
+				m_pProgress->set_status(lngGetString(PROGRESS_DONE));
 				m_pProgress->NotifyCompleted();
 			}
 			break;
@@ -940,12 +940,12 @@ void CCore::ProcessEnded()
 			{
 				if (m_bOperationRes)
 				{
-					m_pProgress->SetProgress(0);
+					m_pProgress->set_progress(0);
 				}
 				else
 				{
-					m_pProgress->SetProgress(100);
-					m_pProgress->SetStatus(lngGetString(PROGRESS_DONE));
+					m_pProgress->set_progress(100);
+					m_pProgress->set_status(lngGetString(PROGRESS_DONE));
 					m_pProgress->NotifyCompleted();
 				}
 			}
@@ -958,8 +958,8 @@ bool CCore::EjectDisc(tDeviceInfo *pDeviceInfo,bool bWaitForProcess)
 	// Initialize log.
 	if (g_GlobalSettings.m_bLog)
 	{
-		g_LogDlg.PrintLine(_T("CCore::EjectDisc"));
-		g_LogDlg.PrintLine(_T("  [%d,%d,%d] %s %s %s"),pDeviceInfo->Address.m_iBus,pDeviceInfo->Address.m_iTarget,
+		g_LogDlg.print_line(_T("CCore::EjectDisc"));
+		g_LogDlg.print_line(_T("  [%d,%d,%d] %s %s %s"),pDeviceInfo->Address.m_iBus,pDeviceInfo->Address.m_iTarget,
 			pDeviceInfo->Address.m_iLun,pDeviceInfo->szVendor,pDeviceInfo->szIdentification,pDeviceInfo->szRevision);
 	}
 
@@ -986,8 +986,8 @@ bool CCore::LoadDisc(tDeviceInfo *pDeviceInfo,bool bWaitForProcess)
 	// Initialize log.
 	if (g_GlobalSettings.m_bLog)
 	{
-		g_LogDlg.PrintLine(_T("CCore::LoadDisc"));
-		g_LogDlg.PrintLine(_T("  [%d,%d,%d] %s %s %s"),pDeviceInfo->Address.m_iBus,pDeviceInfo->Address.m_iTarget,
+		g_LogDlg.print_line(_T("CCore::LoadDisc"));
+		g_LogDlg.print_line(_T("  [%d,%d,%d] %s %s %s"),pDeviceInfo->Address.m_iBus,pDeviceInfo->Address.m_iTarget,
 			pDeviceInfo->Address.m_iLun,pDeviceInfo->szVendor,pDeviceInfo->szIdentification,pDeviceInfo->szRevision);
 	}
 
@@ -1015,10 +1015,10 @@ bool CCore::EraseDisc(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,CAdvancedP
 	// Initialize log.
 	if (g_GlobalSettings.m_bLog)
 	{
-		g_LogDlg.PrintLine(_T("CCore::EraseDisc"));
-		g_LogDlg.PrintLine(_T("  [%d,%d,%d] %s %s %s"),pDeviceInfo->Address.m_iBus,pDeviceInfo->Address.m_iTarget,
+		g_LogDlg.print_line(_T("CCore::EraseDisc"));
+		g_LogDlg.print_line(_T("  [%d,%d,%d] %s %s %s"),pDeviceInfo->Address.m_iBus,pDeviceInfo->Address.m_iTarget,
 			pDeviceInfo->Address.m_iLun,pDeviceInfo->szVendor,pDeviceInfo->szIdentification,pDeviceInfo->szRevision);
-		g_LogDlg.PrintLine(_T("  Mode = %d, Force = %d, Eject = %d, Simulate = %d."),
+		g_LogDlg.print_line(_T("  Mode = %d, Force = %d, Eject = %d, Simulate = %d."),
 			iMode,(int)bForce,(int)bEject,(int)bSimulate);
 	}
 
@@ -1080,10 +1080,10 @@ bool CCore::FixateDisc(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,CAdvanced
 	// Initialize log.
 	if (g_GlobalSettings.m_bLog)
 	{
-		g_LogDlg.PrintLine(_T("CCore::FixateDisc"));
-		g_LogDlg.PrintLine(_T("  [%d,%d,%d] %s %s %s"),pDeviceInfo->Address.m_iBus,pDeviceInfo->Address.m_iTarget,
+		g_LogDlg.print_line(_T("CCore::FixateDisc"));
+		g_LogDlg.print_line(_T("  [%d,%d,%d] %s %s %s"),pDeviceInfo->Address.m_iBus,pDeviceInfo->Address.m_iTarget,
 			pDeviceInfo->Address.m_iLun,pDeviceInfo->szVendor,pDeviceInfo->szIdentification,pDeviceInfo->szRevision);
-		g_LogDlg.PrintLine(_T("  Eject = %d, Simulate = %d."),(int)bEject,(int)bSimulate);
+		g_LogDlg.print_line(_T("  Eject = %d, Simulate = %d."),(int)bEject,(int)bSimulate);
 	}
 
 	// Initialize this object.
@@ -1123,11 +1123,11 @@ bool CCore::BurnImage(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	// Initialize log.
 	if (g_GlobalSettings.m_bLog)
 	{
-		g_LogDlg.PrintLine(_T("CCore::BurnImage"));
-		g_LogDlg.PrintLine(_T("  [%d,%d,%d] %s %s %s"),pDeviceInfo->Address.m_iBus,pDeviceInfo->Address.m_iTarget,
+		g_LogDlg.print_line(_T("CCore::BurnImage"));
+		g_LogDlg.print_line(_T("  [%d,%d,%d] %s %s %s"),pDeviceInfo->Address.m_iBus,pDeviceInfo->Address.m_iTarget,
 			pDeviceInfo->Address.m_iLun,pDeviceInfo->szVendor,pDeviceInfo->szIdentification,pDeviceInfo->szRevision);
-		g_LogDlg.PrintLine(_T("  File = %s."),szFileName);
-		g_LogDlg.PrintLine(_T("  Eject = %d, Simulate = %d, BUP = %d, Pad tracks = %d, Fixate = %d, Overburn = %d, Swab = %d, Ignore size = %d, Immed = %d, Audio master = %d, Forcespeed = %d, VariRec (enabled) = %d, VariRec (value) = %d, Clone = %d."),
+		g_LogDlg.print_line(_T("  File = %s."),szFileName);
+		g_LogDlg.print_line(_T("  Eject = %d, Simulate = %d, BUP = %d, Pad tracks = %d, Fixate = %d, Overburn = %d, Swab = %d, Ignore size = %d, Immed = %d, Audio master = %d, Forcespeed = %d, VariRec (enabled) = %d, VariRec (value) = %d, Clone = %d."),
 			(int)g_BurnImageSettings.m_bEject,
 			(int)g_BurnImageSettings.m_bSimulate,
 			(int)g_BurnImageSettings.m_bBUP,
@@ -1152,7 +1152,7 @@ bool CCore::BurnImage(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 
 	// We need to specify the total size that we should record.
 	m_uiProcessedSize = 0;
-	m_uiTotalSize = ckcore::File::Size(szFileName) / (1024 * 1024);		// MB.
+	m_uiTotalSize = ckcore::File::size(szFileName) / (1024 * 1024);		// MB.
 	m_TrackSize.push_back(m_uiTotalSize);
 
 	tstring CommandLine;
@@ -1342,14 +1342,14 @@ bool CCore::BurnTracks(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	// Initialize log.
 	if (g_GlobalSettings.m_bLog)
 	{
-		g_LogDlg.PrintLine(_T("CCore::BurnTracks"));
-		g_LogDlg.PrintLine(_T("  [%d,%d,%d] %s %s %s"),pDeviceInfo->Address.m_iBus,pDeviceInfo->Address.m_iTarget,
+		g_LogDlg.print_line(_T("CCore::BurnTracks"));
+		g_LogDlg.print_line(_T("  [%d,%d,%d] %s %s %s"),pDeviceInfo->Address.m_iBus,pDeviceInfo->Address.m_iTarget,
 			pDeviceInfo->Address.m_iLun,pDeviceInfo->szVendor,pDeviceInfo->szIdentification,pDeviceInfo->szRevision);
 
 		if (szDataTrack != NULL)
-			g_LogDlg.PrintLine(_T("  File = %s."),szDataTrack);
+			g_LogDlg.print_line(_T("  File = %s."),szDataTrack);
 
-		g_LogDlg.PrintLine(_T("  Eject = %d, Simulate = %d, BUP = %d, Pad tracks = %d, Fixate = %d, Method = %d, Overburn = %d, Swab = %d, Ignore size = %d, Immed = %d, Audio master = %d, Forcespeed = %d, VariRec (enabled) = %d, VariRec (value) = %d, Mode = %d."),
+		g_LogDlg.print_line(_T("  Eject = %d, Simulate = %d, BUP = %d, Pad tracks = %d, Fixate = %d, Method = %d, Overburn = %d, Swab = %d, Ignore size = %d, Immed = %d, Audio master = %d, Forcespeed = %d, VariRec (enabled) = %d, VariRec (value) = %d, Mode = %d."),
 			(int)g_BurnImageSettings.m_bEject,
 			(int)g_BurnImageSettings.m_bSimulate,
 			(int)g_BurnImageSettings.m_bBUP,
@@ -1375,7 +1375,7 @@ bool CCore::BurnTracks(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 
 	if (szDataTrack != NULL)
 	{
-		m_uiTotalSize = ckcore::File::Size(szDataTrack) / (1024 * 1024);		// MB.
+		m_uiTotalSize = ckcore::File::size(szDataTrack) / (1024 * 1024);		// MB.
 		m_TrackSize.push_back(m_uiTotalSize);
 	}
 	else
@@ -1385,7 +1385,7 @@ bool CCore::BurnTracks(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 
 	for (unsigned int i = 0; i < AudioTracks.size(); i++)
 	{
-		unsigned __int64 uiTrackSize = ckcore::File::Size(AudioTracks[i]) / (1024 * 1024);
+		unsigned __int64 uiTrackSize = ckcore::File::size(AudioTracks[i]) / (1024 * 1024);
 		m_TrackSize.push_back(uiTrackSize);
 
 		m_uiTotalSize += uiTrackSize;
@@ -1662,11 +1662,11 @@ bool CCore::ReadDataTrack(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,
 	// Initialize log.
 	if (g_GlobalSettings.m_bLog)
 	{
-		g_LogDlg.PrintLine(_T("CCore::ReadDataTrack"));
-		g_LogDlg.PrintLine(_T("  File = %s."),szFileName);
-		g_LogDlg.PrintLine(_T("  [%d,%d,%d] %s %s %s"),pDeviceInfo->Address.m_iBus,pDeviceInfo->Address.m_iTarget,
+		g_LogDlg.print_line(_T("CCore::ReadDataTrack"));
+		g_LogDlg.print_line(_T("  File = %s."),szFileName);
+		g_LogDlg.print_line(_T("  [%d,%d,%d] %s %s %s"),pDeviceInfo->Address.m_iBus,pDeviceInfo->Address.m_iTarget,
 			pDeviceInfo->Address.m_iLun,pDeviceInfo->szVendor,pDeviceInfo->szIdentification,pDeviceInfo->szRevision);
-		g_LogDlg.PrintLine(_T("  Start = %d, End = %d."),ulStartSector,ulEndSector);
+		g_LogDlg.print_line(_T("  Start = %d, End = %d."),ulStartSector,ulEndSector);
 	}
 
 	// Initialize this object.
@@ -1731,9 +1731,9 @@ bool CCore::ReadAudioTrack(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress
 	// Initialize log.
 	if (g_GlobalSettings.m_bLog)
 	{
-		g_LogDlg.PrintLine(_T("CCore::ReadAudioTrack"));
-		g_LogDlg.PrintLine(_T("  File = %s."),szFileName);
-		g_LogDlg.PrintLine(_T("  [%d,%d,%d] %s %s %s"),pDeviceInfo->Address.m_iBus,pDeviceInfo->Address.m_iTarget,
+		g_LogDlg.print_line(_T("CCore::ReadAudioTrack"));
+		g_LogDlg.print_line(_T("  File = %s."),szFileName);
+		g_LogDlg.print_line(_T("  [%d,%d,%d] %s %s %s"),pDeviceInfo->Address.m_iBus,pDeviceInfo->Address.m_iTarget,
 			pDeviceInfo->Address.m_iLun,pDeviceInfo->szVendor,pDeviceInfo->szIdentification,pDeviceInfo->szRevision);
 	}
 
@@ -1799,10 +1799,10 @@ bool CCore::ScanTrack(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,
 	// Initialize log.
 	if (g_GlobalSettings.m_bLog)
 	{
-		g_LogDlg.PrintLine(_T("CCore::ScanTrack"));
-		g_LogDlg.PrintLine(_T("  [%d,%d,%d] %s %s %s"),pDeviceInfo->Address.m_iBus,pDeviceInfo->Address.m_iTarget,
+		g_LogDlg.print_line(_T("CCore::ScanTrack"));
+		g_LogDlg.print_line(_T("  [%d,%d,%d] %s %s %s"),pDeviceInfo->Address.m_iBus,pDeviceInfo->Address.m_iTarget,
 			pDeviceInfo->Address.m_iLun,pDeviceInfo->szVendor,pDeviceInfo->szIdentification,pDeviceInfo->szRevision);
-		g_LogDlg.PrintLine(_T("  Start = %d, End = %d."),ulStartSector,ulEndSector);
+		g_LogDlg.print_line(_T("  Start = %d, End = %d."),ulStartSector,ulEndSector);
 	}
 
 	// Initialize this object.
@@ -1863,12 +1863,12 @@ bool CCore::CopyDisc(tDeviceInfo *pSourceDeviceInfo,tDeviceInfo *pTargetDeviceIn
 	// Initialize log.
 	if (g_GlobalSettings.m_bLog)
 	{
-		g_LogDlg.PrintLine(_T("CCore::CopyDisc"));
-		g_LogDlg.PrintLine(_T("  Source: [%d,%d,%d] %s %s %s"),pSourceDeviceInfo->Address.m_iBus,pSourceDeviceInfo->Address.m_iTarget,
+		g_LogDlg.print_line(_T("CCore::CopyDisc"));
+		g_LogDlg.print_line(_T("  Source: [%d,%d,%d] %s %s %s"),pSourceDeviceInfo->Address.m_iBus,pSourceDeviceInfo->Address.m_iTarget,
 			pSourceDeviceInfo->Address.m_iLun,pSourceDeviceInfo->szVendor,pSourceDeviceInfo->szIdentification,pSourceDeviceInfo->szRevision);
-		g_LogDlg.PrintLine(_T("  Target: [%d,%d,%d] %s %s %s"),pTargetDeviceInfo->Address.m_iBus,pTargetDeviceInfo->Address.m_iTarget,
+		g_LogDlg.print_line(_T("  Target: [%d,%d,%d] %s %s %s"),pTargetDeviceInfo->Address.m_iBus,pTargetDeviceInfo->Address.m_iTarget,
 			pTargetDeviceInfo->Address.m_iLun,pTargetDeviceInfo->szVendor,pTargetDeviceInfo->szIdentification,pTargetDeviceInfo->szRevision);
-		g_LogDlg.PrintLine(_T("  Eject = %d, Simulate = %d, BUP = %d, Pad tracks = %d, Fixate = %d, Overburn = %d, Swab = %d, Ignore size = %d, Immed = %d, Audio master = %d, Forcespeed = %d, VariRec (enabled) = %d, VariRec (value) = %d, Ignore read errors = %d."),
+		g_LogDlg.print_line(_T("  Eject = %d, Simulate = %d, BUP = %d, Pad tracks = %d, Fixate = %d, Overburn = %d, Swab = %d, Ignore size = %d, Immed = %d, Audio master = %d, Forcespeed = %d, VariRec (enabled) = %d, VariRec (value) = %d, Ignore read errors = %d."),
 			(int)g_BurnImageSettings.m_bEject,
 			(int)g_BurnImageSettings.m_bSimulate,
 			(int)g_BurnImageSettings.m_bBUP,
@@ -2111,7 +2111,7 @@ bool CCore::CopyDisc(tDeviceInfo *pSourceDeviceInfo,tDeviceInfo *pTargetDeviceIn
 	lstrcat(szBatchCmdLine,_T("\""));
 
 	bool bResult = Launch(szBatchCmdLine,true);
-		ckcore::File::Remove(szBatchPath);
+		ckcore::File::remove(szBatchPath);
 	return bResult;
 }
 
@@ -2129,11 +2129,11 @@ bool CCore::ReadDisc(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,const
 	// Initialize log.
 	if (g_GlobalSettings.m_bLog)
 	{
-		g_LogDlg.PrintLine(_T("CCore::ReadDisc"));
-		g_LogDlg.PrintLine(_T("  File = %s."),szFileName);
-		g_LogDlg.PrintLine(_T("  [%d,%d,%d] %s %s %s"),pDeviceInfo->Address.m_iBus,pDeviceInfo->Address.m_iTarget,
+		g_LogDlg.print_line(_T("CCore::ReadDisc"));
+		g_LogDlg.print_line(_T("  File = %s."),szFileName);
+		g_LogDlg.print_line(_T("  [%d,%d,%d] %s %s %s"),pDeviceInfo->Address.m_iBus,pDeviceInfo->Address.m_iTarget,
 			pDeviceInfo->Address.m_iLun,pDeviceInfo->szVendor,pDeviceInfo->szIdentification,pDeviceInfo->szRevision);
-		g_LogDlg.PrintLine(_T("  Ignore read errors = %d, Clone = %d, Speed = %d."),
+		g_LogDlg.print_line(_T("  Ignore read errors = %d, Clone = %d, Speed = %d."),
 			(int)g_ReadSettings.m_bIgnoreErr,
 			(int)g_ReadSettings.m_bClone,
 			g_ReadSettings.m_iReadSpeed);
@@ -2208,13 +2208,13 @@ DWORD WINAPI CCore::NextCopyThread(LPVOID lpThreadParameter)
 	pCore->Reinitialize();
 
 	pCore->m_uiProcessedSize = 0;
-	pCore->m_pProgress->SetProgress(0);
+	pCore->m_pProgress->set_progress(0);
 
 	TCHAR szBuffer[128];
 	lsprintf(szBuffer,lngGetString(INFO_CREATECOPY),
 		g_BurnImageSettings.m_lNumCopies - pCore->m_lNumCopies + 1,
 		g_BurnImageSettings.m_lNumCopies);
-	pCore->m_pProgress->Notify(ckcore::Progress::ckINFORMATION,szBuffer);
+	pCore->m_pProgress->notify(ckcore::Progress::ckINFORMATION,szBuffer);
 
 	pCore->SafeLaunch(pCore->m_LastCmdLine,pCore->m_bLastWaitForProcess);
 	return 0;
@@ -2236,10 +2236,10 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	// Initialize log.
 	if (g_GlobalSettings.m_bLog)
 	{
-		g_LogDlg.PrintLine(_T("CCore::BurnCompilation"));
-		g_LogDlg.PrintLine(_T("  [%d,%d,%d] %s %s %s"),pDeviceInfo->Address.m_iBus,pDeviceInfo->Address.m_iTarget,
+		g_LogDlg.print_line(_T("CCore::BurnCompilation"));
+		g_LogDlg.print_line(_T("  [%d,%d,%d] %s %s %s"),pDeviceInfo->Address.m_iBus,pDeviceInfo->Address.m_iTarget,
 			pDeviceInfo->Address.m_iLun,pDeviceInfo->szVendor,pDeviceInfo->szIdentification,pDeviceInfo->szRevision);
-		g_LogDlg.PrintLine(_T("  Eject = %d, Simulate = %d, BUP = %d, Pad tracks = %d, Fixate = %d, Overburn = %d, Swab = %d, Ignore size = %d, Immed = %d, Audio master = %d, Forcespeed = %d, VariRec (enabled) = %d, VariRec (value) = %d, Data bytes %I64d."),
+		g_LogDlg.print_line(_T("  Eject = %d, Simulate = %d, BUP = %d, Pad tracks = %d, Fixate = %d, Overburn = %d, Swab = %d, Ignore size = %d, Immed = %d, Audio master = %d, Forcespeed = %d, VariRec (enabled) = %d, VariRec (value) = %d, Data bytes %I64d."),
 			(int)g_BurnImageSettings.m_bEject,
 			(int)g_BurnImageSettings.m_bSimulate,
 			(int)g_BurnImageSettings.m_bBUP,
@@ -2271,7 +2271,7 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 
 	for (unsigned int i = 0; i < AudioTracks.size(); i++)
 	{
-		unsigned __int64 uiTrackSize = ckcore::File::Size(AudioTracks[i]) / (1024 * 1024);
+		unsigned __int64 uiTrackSize = ckcore::File::size(AudioTracks[i]) / (1024 * 1024);
 		m_TrackSize.push_back(uiTrackSize);
 
 		m_uiTotalSize += uiTrackSize;

@@ -466,7 +466,7 @@ bool CTracksDlg::EncodeTrack(const TCHAR *szFileName,CCodec *pEncoder)
 		lstrcpy(szNameBuffer,szFileName);
 		ExtractFileName(szNameBuffer);
 
-		g_ProgressDlg.Notify(ckcore::Progress::ckERROR,
+		g_ProgressDlg.notify(ckcore::Progress::ckERROR,
 			lngGetString(ERROR_NODECODER),szNameBuffer);
 		return false;
 	}
@@ -479,7 +479,7 @@ bool CTracksDlg::EncodeTrack(const TCHAR *szFileName,CCodec *pEncoder)
 	// Initialize the encoder.
 	if (!pEncoder->irc_encode_init(szTargetFile,iNumChannels,iSampleRate,iBitRate))
 	{
-		g_ProgressDlg.Notify(ckcore::Progress::ckERROR,lngGetString(ERROR_CODECINIT),
+		g_ProgressDlg.notify(ckcore::Progress::ckERROR,lngGetString(ERROR_CODECINIT),
 			pEncoder->irc_string(IRC_STR_ENCODER),
 			iNumChannels,iSampleRate,iBitRate,uiDuration);
 
@@ -505,13 +505,13 @@ bool CTracksDlg::EncodeTrack(const TCHAR *szFileName,CCodec *pEncoder)
 
 		if (pEncoder->irc_encode_process(pBuffer,iBytesRead) < 0)
 		{
-			g_ProgressDlg.Notify(ckcore::Progress::ckERROR,lngGetString(ERROR_ENCODEDATA));
+			g_ProgressDlg.notify(ckcore::Progress::ckERROR,lngGetString(ERROR_ENCODEDATA));
 			break;
 		}
 
 		// Update the progres bar.
 		int iPercent = (int)(((double)uiCurrentTime/uiDuration) * 100);
-		g_ProgressDlg.SetProgress(iPercent);
+		g_ProgressDlg.set_progress(iPercent);
 	}
 
 	// Free buffer memory.
@@ -519,7 +519,7 @@ bool CTracksDlg::EncodeTrack(const TCHAR *szFileName,CCodec *pEncoder)
 
 	// Flush.
 	pEncoder->irc_encode_flush();
-	g_ProgressDlg.SetProgress(100);
+	g_ProgressDlg.set_progress(100);
 
 	// Destroy the codecs.
 	pEncoder->irc_encode_exit();
@@ -527,7 +527,7 @@ bool CTracksDlg::EncodeTrack(const TCHAR *szFileName,CCodec *pEncoder)
 
 	ExtractFileName(szTargetFile);
 
-	g_ProgressDlg.Notify(ckcore::Progress::ckINFORMATION,
+	g_ProgressDlg.notify(ckcore::Progress::ckINFORMATION,
 		lngGetString(SUCCESS_ENCODETRACK),szTargetFile);
 
 	return true;
@@ -591,17 +591,17 @@ unsigned long WINAPI CTracksDlg::ReadTrackThread(LPVOID lpThreadParameter)
 				//if (!g_Core.ReadDataTrack(pDeviceInfo,&g_ProgressDlg,szFilePath,iItemIndex + 1,ulAddress,ulAddress + ulLength))
 				bool bResult = g_Core2.ReadDataTrack(&Device,&g_ProgressDlg,iItemIndex + 1,true,szFilePath);
 
-				g_ProgressDlg.SetProgress(100);
-				g_ProgressDlg.SetStatus(lngGetString(PROGRESS_DONE));
+				g_ProgressDlg.set_progress(100);
+				g_ProgressDlg.set_status(lngGetString(PROGRESS_DONE));
 				g_ProgressDlg.NotifyCompleted();
 
 				if (bResult)
 				{
-					g_ProgressDlg.SetStatus(lngGetString(PROGRESS_DONE));
+					g_ProgressDlg.set_status(lngGetString(PROGRESS_DONE));
 				}
 				else
 				{
-					ckcore::File::Remove(szFilePath);
+					ckcore::File::remove(szFilePath);
 					return 0;
 				}
 			}
@@ -611,7 +611,7 @@ unsigned long WINAPI CTracksDlg::ReadTrackThread(LPVOID lpThreadParameter)
 				{
 					if (g_Core.ReadAudioTrackEx(pDeviceInfo,&g_ProgressDlg,szFilePath,iItemIndex + 1) != RESULT_OK)
 					{
-						ckcore::File::Remove(szFilePath);
+						ckcore::File::remove(szFilePath);
 						return 0;
 					}
 
@@ -620,19 +620,19 @@ unsigned long WINAPI CTracksDlg::ReadTrackThread(LPVOID lpThreadParameter)
 					lsnprintf_s(szStatus,256,lngGetString(PROGRESS_ENCODETRACK),
 						pTracksDlg->m_pEncoder->irc_string(IRC_STR_ENCODER));
 
-					g_ProgressDlg.SetStatus(szStatus);
+					g_ProgressDlg.set_status(szStatus);
 
 					if (EncodeTrack(szFilePath,pTracksDlg->m_pEncoder))
-						ckcore::File::Remove(szFilePath);
+						ckcore::File::remove(szFilePath);
 
-					g_ProgressDlg.SetStatus(lngGetString(PROGRESS_DONE));
+					g_ProgressDlg.set_status(lngGetString(PROGRESS_DONE));
 					g_ProgressDlg.NotifyCompleted();
 				}
 				else
 				{
 					if (!g_Core.ReadAudioTrack(pDeviceInfo,&g_ProgressDlg,szFilePath,iItemIndex + 1))
 					{
-						ckcore::File::Remove(szFilePath);
+						ckcore::File::remove(szFilePath);
 						return 0;
 					}
 				}
@@ -645,14 +645,14 @@ unsigned long WINAPI CTracksDlg::ReadTrackThread(LPVOID lpThreadParameter)
 				//if (g_Core.ReadDataTrackEx(pDeviceInfo,&g_ProgressDlg,szFilePath,iItemIndex + 1,ulAddress,ulAddress + ulLength) != RESULT_OK)
 				if (g_Core2.ReadDataTrack(&Device,&g_ProgressDlg,iItemIndex + 1,true,szFilePath))
 				{
-					g_ProgressDlg.SetProgress(0);
+					g_ProgressDlg.set_progress(0);
 				}
 				else
 				{
-					ckcore::File::Remove(szFilePath);
+					ckcore::File::remove(szFilePath);
 
-					g_ProgressDlg.SetProgress(100);
-					g_ProgressDlg.SetStatus(lngGetString(PROGRESS_DONE));
+					g_ProgressDlg.set_progress(100);
+					g_ProgressDlg.set_status(lngGetString(PROGRESS_DONE));
 					g_ProgressDlg.NotifyCompleted();
 					return 0;
 				}
@@ -661,7 +661,7 @@ unsigned long WINAPI CTracksDlg::ReadTrackThread(LPVOID lpThreadParameter)
 			{
 				if (g_Core.ReadAudioTrackEx(pDeviceInfo,&g_ProgressDlg,szFilePath,iItemIndex + 1) != RESULT_OK)
 				{
-					ckcore::File::Remove(szFilePath);
+					ckcore::File::remove(szFilePath);
 					return 0;
 				}
 
@@ -672,14 +672,14 @@ unsigned long WINAPI CTracksDlg::ReadTrackThread(LPVOID lpThreadParameter)
 					lsnprintf_s(szStatus,256,lngGetString(PROGRESS_ENCODETRACK),
 						pTracksDlg->m_pEncoder->irc_string(IRC_STR_ENCODER));
 
-					g_ProgressDlg.SetStatus(szStatus);
+					g_ProgressDlg.set_status(szStatus);
 
 					if (EncodeTrack(szFilePath,pTracksDlg->m_pEncoder))
-						ckcore::File::Remove(szFilePath);
+						ckcore::File::remove(szFilePath);
 				}
 
 				// Check if the encoding has been canceled.
-				if (g_ProgressDlg.Cancelled())
+				if (g_ProgressDlg.cancelled())
 				{
 					g_ProgressDlg.NotifyCompleted();
 					return 0;
@@ -768,7 +768,7 @@ LRESULT CTracksDlg::OnReadTrack(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHa
 		g_DeviceManager.GetDeviceName(pDeviceInfo,szDeviceName);
 
 		g_ProgressDlg.SetDevice(szDeviceName);
-		g_ProgressDlg.SetStatus(lngGetString(PROGRESS_INIT));
+		g_ProgressDlg.set_status(lngGetString(PROGRESS_INIT));
 
 		lstrcpy(m_szFolderPath,g_SaveTracksSettings.m_szTarget);
 		m_pEncoder = SaveTracksDlg.GetEncoder();
@@ -807,7 +807,7 @@ LRESULT CTracksDlg::OnVerifyTrack(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &b
 	g_DeviceManager.GetDeviceName(pDeviceInfo,szDeviceName);
 
 	g_ProgressDlg.SetDevice(szDeviceName);
-	g_ProgressDlg.SetStatus(lngGetString(PROGRESS_INIT));
+	g_ProgressDlg.set_status(lngGetString(PROGRESS_INIT));
 
 	// Create the new thread.
 	unsigned long ulThreadID = 0;

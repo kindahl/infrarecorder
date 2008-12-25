@@ -99,7 +99,7 @@ void CProgressDlg::SetRealMode(bool bRealMode)
 	m_bRealMode = bRealMode;
 }
 
-void CProgressDlg::SetProgress(unsigned char ucPercent)
+void CProgressDlg::set_progress(unsigned char ucPercent)
 {
 	if (ucPercent < 0)
 		ucPercent = 0;
@@ -137,7 +137,7 @@ void CProgressDlg::SetProgress(unsigned char ucPercent)
 	}
 }
 
-void CProgressDlg::SetMarquee(bool bEnable)
+void CProgressDlg::set_marquee(bool bEnable)
 {
 	// Only supported in Windows XP and newer (common controls version 6).
 	if (g_WinVer.m_ulMajorCCVersion >= 6)
@@ -159,7 +159,7 @@ void CProgressDlg::SetMarquee(bool bEnable)
 	}
 }
 
-void CProgressDlg::SetStatus(const TCHAR *szStatus,...)
+void CProgressDlg::set_status(const TCHAR *szStatus,...)
 {
 	// Prepare the string.
 	TCHAR szStatusStr[256];
@@ -184,7 +184,7 @@ void CProgressDlg::SetStatus(const TCHAR *szStatus,...)
 	m_StatusStatic.SetWindowText(m_szStringBuffer);
 }
 
-void CProgressDlg::Notify(ckcore::Progress::MessageType Type,const TCHAR *szMessage,...)
+void CProgressDlg::notify(ckcore::Progress::MessageType Type,const TCHAR *szMessage,...)
 {
 	int iItemIndex = m_ListView.GetItemCount();
 
@@ -231,7 +231,7 @@ void CProgressDlg::Notify(ckcore::Progress::MessageType Type,const TCHAR *szMess
 	m_ListView.EnsureVisible(iItemIndex,false);
 }
 
-bool CProgressDlg::Cancelled()
+bool CProgressDlg::cancelled()
 {
 	return m_bCancelled;
 }
@@ -258,8 +258,8 @@ void CProgressDlg::NotifyCompleted()
 
 	if (m_bCancelled)
 	{
-		SetStatus(lngGetString(PROGRESS_CANCELED));
-		Notify(ckcore::Progress::ckWARNING,lngGetString(PROGRESS_CANCELED));
+		set_status(lngGetString(PROGRESS_CANCELED));
+		notify(ckcore::Progress::ckWARNING,lngGetString(PROGRESS_CANCELED));
 	}
 
 	// Restore the window title.
@@ -335,7 +335,7 @@ LRESULT CProgressDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &b
 	// Disable the OK button.
 	::EnableWindow(GetDlgItem(IDOK),false);
 
-	SetProgress(0);
+	set_progress(0);
 
 	// Translate the window.
 	Translate();

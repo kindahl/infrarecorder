@@ -40,26 +40,26 @@ void CDiagnostics::FlushOutput(const char *szBuffer)
 	if (!strncmp(szBuffer,CDRTOOLS_COPYRIGHT,CDRTOOLS_COPYRIGHT_LENGTH))
 		return;
 
-	g_LogDlg.Print(_T("   > "));
+	g_LogDlg.print(_T("   > "));
 
 #ifdef UNICODE
 		TCHAR szWideBuffer[CONSOLEPIPE_MAX_LINE_SIZE];
 		AnsiToUnicode(szWideBuffer,szBuffer,sizeof(szWideBuffer) / sizeof(wchar_t));
-		g_LogDlg.PrintLine(szWideBuffer);
+		g_LogDlg.print_line(szWideBuffer);
 #else
-		g_LogDlg.PrintLine(szBuffer);
+		g_LogDlg.print_line(szBuffer);
 #endif
 }
 
 void CDiagnostics::ProcessEnded()
 {
-	g_LogDlg.PrintLine(_T("CDiagnostics::ProcessEnded"));
-	g_LogDlg.PrintLine(_T(""));
+	g_LogDlg.print_line(_T("CDiagnostics::ProcessEnded"));
+	g_LogDlg.print_line(_T(""));
 }
 
 bool CDiagnostics::DeviceScan()
 {
-	g_LogDlg.PrintLine(_T("CDiagnostics::DeviceScan"));
+	g_LogDlg.print_line(_T("CDiagnostics::DeviceScan"));
 
 	TCHAR szCommandLine[MAX_PATH];
 	lstrcpy(szCommandLine,_T("\""));

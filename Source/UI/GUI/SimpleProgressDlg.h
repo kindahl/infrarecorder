@@ -55,9 +55,9 @@ public:
 	void SetRealMode(bool bRealMode);
 
 	// ckcore::Progress.
-	void SetStatus(const TCHAR *szStatus,...);
-	void Notify(ckcore::Progress::MessageType Type,const TCHAR *szMessage,...);
-	bool Cancelled();
+	void set_status(const TCHAR *szStatus,...);
+	void notify(ckcore::Progress::MessageType Type,const TCHAR *szMessage,...);
+	bool cancelled();
 
 	void SetDevice(const TCHAR *szDevice);
 

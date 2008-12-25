@@ -196,14 +196,14 @@ LRESULT CConfirmFileReplaceDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lPar
 		}
 
 		// Set new size.
-		FormatBytes(szTempBuffer,ckcore::File::Size(m_szNewFullPath));
+		FormatBytes(szTempBuffer,ckcore::File::size(m_szNewFullPath));
 		::SetWindowText(GetDlgItem(IDC_NEWSIZESTATIC),szTempBuffer);
 
 		// Set new date.
 		unsigned short usFileDate = 0,usFileTime = 0;
 
 		struct tm AccessTime,ModifyTime,CreateTime;
-		ckcore::File::Time(m_szNewFullPath,AccessTime,ModifyTime,CreateTime);
+		ckcore::File::time(m_szNewFullPath,AccessTime,ModifyTime,CreateTime);
 		ckcore::convert::tm_to_dostime(ModifyTime,usFileDate,usFileTime);
 
 		::DosDateTimeToFileTime(usFileDate,usFileTime,&ft);

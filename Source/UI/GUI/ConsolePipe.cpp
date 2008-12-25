@@ -49,8 +49,8 @@ CConsolePipe::~CConsolePipe()
 bool CConsolePipe::CreateProcess(TCHAR *szCommandLine,HANDLE hStdIn,
 								 HANDLE hStdOut,HANDLE hStdErr)
 {
-	g_LogDlg.PrintLine(_T("CConsolePipe::CreateProcess"));
-	g_LogDlg.PrintLine(_T("  Command line = %s."),szCommandLine);
+	g_LogDlg.print_line(_T("CConsolePipe::CreateProcess"));
+	g_LogDlg.print_line(_T("  Command line = %s."),szCommandLine);
 
 	PROCESS_INFORMATION pi;
 	STARTUPINFO si;
@@ -65,7 +65,7 @@ bool CConsolePipe::CreateProcess(TCHAR *szCommandLine,HANDLE hStdIn,
 
 	if (!::CreateProcess(NULL,szCommandLine,NULL,NULL,true,CREATE_NEW_CONSOLE,NULL,NULL,&si,&pi))
 	{
-		g_LogDlg.PrintLine(_T("  Error: CreateProcess failed, last error = %d."),
+		g_LogDlg.print_line(_T("  Error: CreateProcess failed, last error = %d."),
 			(int)GetLastError());
 		return false;
 	}
@@ -90,7 +90,7 @@ bool CConsolePipe::Launch(TCHAR *szCommandLine,bool bWaitForProcess)
 	while (m_bRunning)
 		Sleep(200);
 
-	g_LogDlg.PrintLine(_T("CConsolePipe::Launch"));
+	g_LogDlg.print_line(_T("CConsolePipe::Launch"));
 
 	HANDLE hOutputReadTemp,hOutputWrite;
 	HANDLE hInputWriteTemp,hInputRead;
@@ -109,7 +109,7 @@ bool CConsolePipe::Launch(TCHAR *szCommandLine,bool bWaitForProcess)
 	// Create the child output pipe.
 	if (!::CreatePipe(&hOutputReadTemp,&hOutputWrite,&sa,0))
 	{
-		g_LogDlg.PrintLine(_T("  Error: CreatePipe failed, last error = %d."),(int)GetLastError());
+		g_LogDlg.print_line(_T("  Error: CreatePipe failed, last error = %d."),(int)GetLastError());
 		return false;
 	}
 
@@ -121,7 +121,7 @@ bool CConsolePipe::Launch(TCHAR *szCommandLine,bool bWaitForProcess)
 		::CloseHandle(hOutputReadTemp);
 		::CloseHandle(hOutputWrite);
 
-		g_LogDlg.PrintLine(_T("  Error: DuplicateHandle failed, last error = %d."),(int)GetLastError());
+		g_LogDlg.print_line(_T("  Error: DuplicateHandle failed, last error = %d."),(int)GetLastError());
 		return false;
 	}
 
@@ -132,7 +132,7 @@ bool CConsolePipe::Launch(TCHAR *szCommandLine,bool bWaitForProcess)
 		::CloseHandle(hOutputWrite);
 		::CloseHandle(hErrorWrite);
 
-		g_LogDlg.PrintLine(_T("  Error: CreatePipe failed, last error = %d."),(int)GetLastError());
+		g_LogDlg.print_line(_T("  Error: CreatePipe failed, last error = %d."),(int)GetLastError());
 		return false;
 	}
 
@@ -148,7 +148,7 @@ bool CConsolePipe::Launch(TCHAR *szCommandLine,bool bWaitForProcess)
 		::CloseHandle(hInputWriteTemp);
 		::CloseHandle(hInputRead);
 
-		g_LogDlg.PrintLine(_T("  Error: DuplicateHandle failed, last error = %d."),(int)GetLastError());
+		g_LogDlg.print_line(_T("  Error: DuplicateHandle failed, last error = %d."),(int)GetLastError());
 		return false;
 	}
 
@@ -163,7 +163,7 @@ bool CConsolePipe::Launch(TCHAR *szCommandLine,bool bWaitForProcess)
 
 		::CloseHandle(m_hStdOut);
 
-		g_LogDlg.PrintLine(_T("  Error: DuplicateHandle failed, last error = %d."),(int)GetLastError());
+		g_LogDlg.print_line(_T("  Error: DuplicateHandle failed, last error = %d."),(int)GetLastError());
 		return false;
 	}
 
@@ -195,7 +195,7 @@ bool CConsolePipe::Launch(TCHAR *szCommandLine,bool bWaitForProcess)
 	{
 		CleanUp();
 
-		g_LogDlg.PrintLine(_T("  Error: CreateThread failed, last error = %d."),(int)GetLastError());
+		g_LogDlg.print_line(_T("  Error: CreateThread failed, last error = %d."),(int)GetLastError());
 		return false;
 	}
 

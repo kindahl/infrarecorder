@@ -132,11 +132,11 @@ CItemData *CProjectManager::CFileTransaction::
 
 	// File time.
 	struct tm AccessTime,ModifyTime,CreateTime;
-	ckcore::File::Time(szFullPath,AccessTime,ModifyTime,CreateTime);
+	ckcore::File::time(szFullPath,AccessTime,ModifyTime,CreateTime);
 	ckcore::convert::tm_to_dostime(ModifyTime,pItemData->usFileDate,pItemData->usFileTime);
 
 	// File size.
-	pItemData->uiSize = ckcore::File::Size(szFullPath);
+	pItemData->uiSize = ckcore::File::size(szFullPath);
 
 	pParentNode->m_Files.push_back(pItemData);
 
@@ -232,7 +232,7 @@ CProjectNode *CProjectManager::CFileTransaction::
 
 	// Directory time.
 	struct tm AccessTime,ModifyTime,CreateTime;
-	ckcore::Directory::Time(szFullPath,AccessTime,ModifyTime,CreateTime);
+	ckcore::Directory::time(szFullPath,AccessTime,ModifyTime,CreateTime);
 	ckcore::convert::tm_to_dostime(ModifyTime,pNode->pItemData->usFileDate,
 								   pNode->pItemData->usFileTime);
 
@@ -412,7 +412,7 @@ bool CProjectManager::CFileTransaction::
 	AddFile(const TCHAR *szFullPath,CProjectNode *pTargetNode)
 {
 	// Check if we're realing with a folder.
-	if (ckcore::Directory::Exist(szFullPath))
+	if (ckcore::Directory::exist(szFullPath))
 	{
 		// We can't add folder to an audio disc.
 		if (g_ProjectManager.m_iViewType != PROJECTVIEWTYPE_DATA)
@@ -1813,7 +1813,7 @@ bool CProjectManager::DecodeAudioTrack(const TCHAR *szFullPath,const TCHAR *szFu
 		lstrcpy(szNameBuffer,szFullPath);
 		ExtractFileName(szNameBuffer);
 
-		pProgress->Notify(ckcore::Progress::ckERROR,lngGetString(ERROR_NODECODER),szNameBuffer);
+		pProgress->notify(ckcore::Progress::ckERROR,lngGetString(ERROR_NODECODER),szNameBuffer);
 		return false;
 	}
 
@@ -1834,7 +1834,7 @@ bool CProjectManager::DecodeAudioTrack(const TCHAR *szFullPath,const TCHAR *szFu
 
 	if (pEncoder == NULL)
 	{
-		pProgress->Notify(ckcore::Progress::ckERROR,lngGetString(ERROR_WAVECODEC));
+		pProgress->notify(ckcore::Progress::ckERROR,lngGetString(ERROR_WAVECODEC));
 
 		pDecoder->irc_decode_exit();
 		return false;
@@ -1843,7 +1843,7 @@ bool CProjectManager::DecodeAudioTrack(const TCHAR *szFullPath,const TCHAR *szFu
 	// Initialize the encoder.
 	if (!pEncoder->irc_encode_init(szFullTempPath,iNumChannels,iSampleRate,iBitRate))
 	{
-		pProgress->Notify(ckcore::Progress::ckERROR,lngGetString(ERROR_CODECINIT),
+		pProgress->notify(ckcore::Progress::ckERROR,lngGetString(ERROR_CODECINIT),
 			pEncoder->irc_string(IRC_STR_ENCODER),
 			iNumChannels,iSampleRate,iBitRate,uiDuration);
 
@@ -1870,13 +1870,13 @@ bool CProjectManager::DecodeAudioTrack(const TCHAR *szFullPath,const TCHAR *szFu
 
 		if (pEncoder->irc_encode_process(pBuffer,iBytesRead) < 0)
 		{
-			pProgress->Notify(ckcore::Progress::ckERROR,lngGetString(ERROR_ENCODEDATA));
+			pProgress->notify(ckcore::Progress::ckERROR,lngGetString(ERROR_ENCODEDATA));
 			break;
 		}
 
 		// Update the progres bar.
 		int iPercent = (int)(((double)uiCurrentTime/uiDuration) * 100);
-		pProgress->SetProgress(iPercent);
+		pProgress->set_progress(iPercent);
 	}
 
 	// Free buffer memory.
@@ -1884,7 +1884,7 @@ bool CProjectManager::DecodeAudioTrack(const TCHAR *szFullPath,const TCHAR *szFu
 
 	// Flush.
 	pEncoder->irc_encode_flush();
-	pProgress->SetProgress(100);
+	pProgress->set_progress(100);
 
 	// Destroy the codecs.
 	pEncoder->irc_encode_exit();
@@ -1894,7 +1894,7 @@ bool CProjectManager::DecodeAudioTrack(const TCHAR *szFullPath,const TCHAR *szFu
 	lstrcpy(szNameBuffer,szFullPath);
 	ExtractFileName(szNameBuffer);
 
-	pProgress->Notify(ckcore::Progress::ckINFORMATION,
+	pProgress->notify(ckcore::Progress::ckINFORMATION,
 		lngGetString(SUCCESS_DECODETRACK),szNameBuffer);
 
 	return true;
@@ -1923,7 +1923,7 @@ bool CProjectManager::DecodeAudioTracks(std::vector<TCHAR *> &AudioTracks,
 	for (unsigned int i = 0; i < AudioTracks.size(); i++)
 	{
 		// Return if the user has canceled the operaiton.
-		if (pProgress->Cancelled())
+		if (pProgress->cancelled())
 			return false;
 
 		// If the track isn't a wave file it needs to be decoded.
@@ -2030,46 +2030,46 @@ bool CProjectManager::VerifyLocalFiles(CProjectNode *pNode,std::vector<CProjectN
 		lstrcat(szFileNameBuffer,pItemData->GetFileName());
 
 		lsnprintf_s(szStatus,MAX_PATH + 32,lngGetString(STATUS_VERIFY),szFileNameBuffer);
-		pProgress->SetStatus(szStatus);
+		pProgress->set_status(szStatus);
 
 		// Calculate CRC of file on the hard drive.
 		ckcore::FileInStream FileStream1(pItemData->szFullPath);
-		if (!FileStream1.Open())
+		if (!FileStream1.open())
 			return false;
 
-		FileCrcStream.Reset();
+		FileCrcStream.reset();
 		if (!ckcore::stream::copy(FileStream1,FileCrcStream,FileProgresser))
 			return false;
 
-		FileStream1.Close();
-		unsigned long ulGoodCrc = FileCrcStream.Checksum();
+		FileStream1.close();
+		unsigned long ulGoodCrc = FileCrcStream.checksum();
 
 		// Calculate CRC of the file on the disc.
 		FileName = szDriveLetter;
 		FileName.append(FilePathMap[szFileNameBuffer + 2]);
 
 		ckcore::FileInStream FileStream2(FileName.c_str());
-		if (!FileStream2.Open())
+		if (!FileStream2.open())
 			return false;
 
-		FileCrcStream.Reset();
+		FileCrcStream.reset();
 		if (!ckcore::stream::copy(FileStream2,FileCrcStream,FileProgresser))
 			return false;
 
-		FileStream2.Close();
-		unsigned long ulTestCrc = FileCrcStream.Checksum();
+		FileStream2.close();
+		unsigned long ulTestCrc = FileCrcStream.checksum();
 
 		// Compare the CRC of the file on the disc to the one on the harddrive.
 		if (ulTestCrc != ulGoodCrc)
 		{
 			if (ulTestCrc == 0)
 			{
-				pProgress->Notify(ckcore::Progress::ckERROR,
+				pProgress->notify(ckcore::Progress::ckERROR,
 					lngGetString(FAILURE_VERIFYNOFILE),FileName.c_str() + 3);
 			}
 			else
 			{
-				pProgress->Notify(ckcore::Progress::ckERROR,
+				pProgress->notify(ckcore::Progress::ckERROR,
 					lngGetString(FAILURE_VERIFYREADERROR),/*szFileNameBuffer*/FileName.c_str(),ulTestCrc,ulGoodCrc);
 			}
 
@@ -2107,7 +2107,7 @@ bool CProjectManager::VerifyCompilation(CAdvancedProgress *pProgress,const TCHAR
 			break;
 	}
 
-	pProgress->Notify(ckcore::Progress::ckINFORMATION,lngGetString(PROGRESS_BEGINVERIFY));
+	pProgress->notify(ckcore::Progress::ckINFORMATION,lngGetString(PROGRESS_BEGINVERIFY));
 
 	// It's important the the first two characters contain <drive letter>:.
 	TCHAR szFileNameBuffer[MAX_PATH];
@@ -2133,12 +2133,12 @@ bool CProjectManager::VerifyCompilation(CAdvancedProgress *pProgress,const TCHAR
 	// Display the final message.
 	if (uiFailCount == 0)
 	{
-		pProgress->Notify(ckcore::Progress::ckINFORMATION,
+		pProgress->notify(ckcore::Progress::ckINFORMATION,
 			lngGetString(SUCCESS_VERIFY));
 	}
 	else
 	{
-		pProgress->Notify(ckcore::Progress::ckINFORMATION,
+		pProgress->notify(ckcore::Progress::ckINFORMATION,
 			lngGetString(FAILURE_VERIFY),uiFailCount);
 	}
 

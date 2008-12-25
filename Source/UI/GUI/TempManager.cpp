@@ -47,7 +47,7 @@ void CTempManager::AddObject(const TCHAR *szFileName)
 void CTempManager::CleanUp()
 {
 	// Remove the empty directory (if created).
-	ckcore::Directory::Remove(m_szEmptyDir);
+	ckcore::Directory::remove(m_szEmptyDir);
 	m_szEmptyDir[0] = '\0';
 
 	// Remove any files.
@@ -56,10 +56,10 @@ void CTempManager::CleanUp()
 		ckcore::File File(m_szFileNames[i].c_str());
 		ckcore::Directory Directory(m_szFileNames[i].c_str());
 
-		if (File.Exist())
-			File.Remove();
-		else if (Directory.Exist())
-			Directory.Remove();
+		if (File.exist())
+			File.remove();
+		else if (Directory.exist())
+			Directory.remove();
 	}
 
 	m_szFileNames.clear();
@@ -69,10 +69,10 @@ const TCHAR *CTempManager::GetEmtpyDirectory()
 {
 	if (m_szEmptyDir[0] == '\0')
 	{
-		ckcore::Directory TempDir = ckcore::Directory::Temp();
-		TempDir.Create();
+		ckcore::Directory TempDir = ckcore::Directory::temp();
+		TempDir.create();
 
-		lstrcpy(m_szEmptyDir,TempDir.Name().c_str());
+		lstrcpy(m_szEmptyDir,TempDir.name().c_str());
 	}
 
 	return m_szEmptyDir;

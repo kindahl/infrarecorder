@@ -27,22 +27,22 @@
 bool IsWave(const TCHAR *szFileName)
 {
 	ckcore::File File(szFileName);
-	if (!File.Open(ckcore::FileBase::ckOPEN_READ))
+	if (!File.open(ckcore::FileBase::ckOPEN_READ))
 		return false;
 
 	// Validate ID.
 	char szBuffer[4];
-	if (File.Read(szBuffer,4) == -1)
+	if (File.read(szBuffer,4) == -1)
 		return false;
 
 	if (strncmp(szBuffer,"RIFF",4))
 		return false;
 
 	// Ignore size.
-	File.Seek(4,ckcore::FileBase::ckFILE_CURRENT);
+	File.seek(4,ckcore::FileBase::ckFILE_CURRENT);
 
 	// Validate type.
-	if (File.Read(szBuffer,4) == -1)
+	if (File.read(szBuffer,4) == -1)
 		return false;
 
 	if (strncmp(szBuffer,"WAVE",4))

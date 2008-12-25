@@ -63,7 +63,7 @@ bool CLanguageSettings::Load(CXMLProcessor *pXML)
 	lstrcat(szFullPath,_T("Languages\\"));
 	lstrcat(szFullPath,m_szLanguageFile);
 
-	if (ckcore::File::Exist(szFullPath))
+	if (ckcore::File::exist(szFullPath))
 	{
 		m_pLNGProcessor = new CLNGProcessor(szFullPath);
 		m_pLNGProcessor->Load();
@@ -146,13 +146,13 @@ bool CGlobalSettings::Load(CXMLProcessor *pXML)
 
 	// Temporary folder.
 	pXML->GetSafeElementData(_T("TempPath"),m_szTempPath,MAX_PATH - 1);
-	if (!ckcore::Directory::Exist(m_szTempPath))
+	if (!ckcore::Directory::exist(m_szTempPath))
 	{
 		// If the folder does not exist, create it.
 		if (m_szTempPath == NULL || lstrlen(m_szTempPath) < 3 || m_szTempPath[1] != ':')
 		{
 			IncludeTrailingBackslash(m_szTempPath);
-			ckcore::Directory::Create(m_szTempPath);
+			ckcore::Directory::create(m_szTempPath);
 		}
 		else
 		{

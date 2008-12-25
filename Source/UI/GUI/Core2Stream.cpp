@@ -78,7 +78,7 @@ bool CCore2InStream::FillBuffer()
 	unsigned long ulNumFrames = GetSafeFrameReadCount();
 	if (!m_Read.ReadData(m_pDevice,NULL,&m_ReadFunc,m_ulCurBlock,ulNumFrames,false))
 	{
-		m_pLog->PrintLine(_T("  Error: Unable to read user data from disc (%u, %u)."),
+		m_pLog->print_line(_T("  Error: Unable to read user data from disc (%u, %u)."),
 			m_ulCurBlock,ulNumFrames);
 		return false;
 	}
@@ -91,9 +91,9 @@ bool CCore2InStream::FillBuffer()
 	return true;
 }
 
-ckcore::tint64 CCore2InStream::Read(void *pBuffer,ckcore::tuint32 uiCount)
+ckcore::tint64 CCore2InStream::read(void *pBuffer,ckcore::tuint32 uiCount)
 {
-	if (End())
+	if (end())
 		return -1;	// W00t? This was discovered when switching to ckcore.
 
 	ckcore::tint64 iResult = 0;
@@ -116,7 +116,7 @@ ckcore::tint64 CCore2InStream::Read(void *pBuffer,ckcore::tuint32 uiCount)
 
 		unsigned long ulRemain = uiCount - ulInBuffer;
 
-		if (End())
+		if (end())
 			return ulInBuffer;
 
 		// Check if we can read more from the CD.
@@ -145,17 +145,17 @@ ckcore::tint64 CCore2InStream::Read(void *pBuffer,ckcore::tuint32 uiCount)
 	return iResult;
 }
 
-ckcore::tint64 CCore2InStream::Size()
+ckcore::tint64 CCore2InStream::size()
 {
 	return -1;
 }
 
-bool CCore2InStream::End()
+bool CCore2InStream::end()
 {
 	return m_ulCurBlock >= m_ulEndBlock && m_ulBufferPos >= m_ulBufferData;
 }
 
-bool CCore2InStream::Seek(ckcore::tuint32 uiDistance,ckcore::InStream::StreamWhence Whence)
+bool CCore2InStream::seek(ckcore::tuint32 uiDistance,ckcore::InStream::StreamWhence Whence)
 {
 	if (Whence == ckcore::InStream::ckSTREAM_BEGIN)
 	{

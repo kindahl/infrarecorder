@@ -27,7 +27,7 @@ COutConsolePipeStream::~COutConsolePipeStream()
 {
 }
 
-ckcore::tint64 COutConsolePipeStream::Write(void *pBuffer,ckcore::tuint32 uiCount)
+ckcore::tint64 COutConsolePipeStream::write(void *pBuffer,ckcore::tuint32 uiCount)
 {
 	return m_ConsolePipe.WriteInput((const char *)pBuffer,uiCount);
 }

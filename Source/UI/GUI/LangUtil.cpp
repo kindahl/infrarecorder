@@ -75,29 +75,29 @@ void lngTranslateTables()
 		{
 			TCHAR *szStrValue;
 			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckfilesystem::StringTable::WARNING_FSDIRLEVEL,szStrValue))
-				ckfilesystem::StringTable::Instance().SetString(ckfilesystem::StringTable::WARNING_FSDIRLEVEL,szStrValue);
+				ckfilesystem::StringTable::instance().set_string(ckfilesystem::StringTable::WARNING_FSDIRLEVEL,szStrValue);
 			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckfilesystem::StringTable::WARNING_SKIPFILE,szStrValue))
-				ckfilesystem::StringTable::Instance().SetString(ckfilesystem::StringTable::WARNING_SKIPFILE,szStrValue);
+				ckfilesystem::StringTable::instance().set_string(ckfilesystem::StringTable::WARNING_SKIPFILE,szStrValue);
 			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckfilesystem::StringTable::WARNING_SKIP4GFILE,szStrValue))
-				ckfilesystem::StringTable::Instance().SetString(ckfilesystem::StringTable::WARNING_SKIP4GFILE,szStrValue);
+				ckfilesystem::StringTable::instance().set_string(ckfilesystem::StringTable::WARNING_SKIP4GFILE,szStrValue);
 			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckfilesystem::StringTable::WARNING_SKIP4GFILEISO,szStrValue))
-				ckfilesystem::StringTable::Instance().SetString(ckfilesystem::StringTable::WARNING_SKIP4GFILEISO,szStrValue);
+				ckfilesystem::StringTable::instance().set_string(ckfilesystem::StringTable::WARNING_SKIP4GFILEISO,szStrValue);
 			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckfilesystem::StringTable::ERROR_PATHTABLESIZE,szStrValue))
-				ckfilesystem::StringTable::Instance().SetString(ckfilesystem::StringTable::ERROR_PATHTABLESIZE,szStrValue);
+				ckfilesystem::StringTable::instance().set_string(ckfilesystem::StringTable::ERROR_PATHTABLESIZE,szStrValue);
 			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckfilesystem::StringTable::ERROR_OPENWRITE,szStrValue))
-				ckfilesystem::StringTable::Instance().SetString(ckfilesystem::StringTable::ERROR_OPENWRITE,szStrValue);
+				ckfilesystem::StringTable::instance().set_string(ckfilesystem::StringTable::ERROR_OPENWRITE,szStrValue);
 			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckfilesystem::StringTable::ERROR_OPENREAD,szStrValue))
-				ckfilesystem::StringTable::Instance().SetString(ckfilesystem::StringTable::ERROR_OPENREAD,szStrValue);
+				ckfilesystem::StringTable::instance().set_string(ckfilesystem::StringTable::ERROR_OPENREAD,szStrValue);
 			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckfilesystem::StringTable::STATUS_BUILDTREE,szStrValue))
-				ckfilesystem::StringTable::Instance().SetString(ckfilesystem::StringTable::STATUS_BUILDTREE,szStrValue);
+				ckfilesystem::StringTable::instance().set_string(ckfilesystem::StringTable::STATUS_BUILDTREE,szStrValue);
 			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckfilesystem::StringTable::STATUS_WRITEDATA,szStrValue))
-				ckfilesystem::StringTable::Instance().SetString(ckfilesystem::StringTable::STATUS_WRITEDATA,szStrValue);
+				ckfilesystem::StringTable::instance().set_string(ckfilesystem::StringTable::STATUS_WRITEDATA,szStrValue);
 			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckfilesystem::StringTable::STATUS_WRITEISOTABLE,szStrValue))
-				ckfilesystem::StringTable::Instance().SetString(ckfilesystem::StringTable::STATUS_WRITEISOTABLE,szStrValue);
+				ckfilesystem::StringTable::instance().set_string(ckfilesystem::StringTable::STATUS_WRITEISOTABLE,szStrValue);
 			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckfilesystem::StringTable::STATUS_WRITEJOLIETTABLE,szStrValue))
-				ckfilesystem::StringTable::Instance().SetString(ckfilesystem::StringTable::STATUS_WRITEJOLIETTABLE,szStrValue);
+				ckfilesystem::StringTable::instance().set_string(ckfilesystem::StringTable::STATUS_WRITEJOLIETTABLE,szStrValue);
 			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckfilesystem::StringTable::STATUS_WRITEDIRENTRIES,szStrValue))
-				ckfilesystem::StringTable::Instance().SetString(ckfilesystem::StringTable::STATUS_WRITEDIRENTRIES,szStrValue);
+				ckfilesystem::StringTable::instance().set_string(ckfilesystem::StringTable::STATUS_WRITEDIRENTRIES,szStrValue);
 		}
 	}
 }

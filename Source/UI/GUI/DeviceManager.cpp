@@ -1008,7 +1008,7 @@ bool CDeviceManager::GetConfigPath(TCHAR *szConfigPath)
 	lstrcat(szConfigPath,_T("InfraRecorder\\"));
 
 	// Create the file path if it doesn't exist.
-	ckcore::Directory::Create(szConfigPath);
+	ckcore::Directory::create(szConfigPath);
 #endif
 
 	lstrcat(szConfigPath,_T("Devices.xml"));
