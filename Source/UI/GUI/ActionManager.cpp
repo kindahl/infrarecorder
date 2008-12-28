@@ -17,7 +17,7 @@
  */
 
 #include "stdafx.h"
-#include <ckfilesystem/discimagewriter.hh>
+#include <ckfilesystem/filesystemwriter.hh>
 #include <ckfilesystem/sectorstream.hh>
 #include "Settings.h"
 #include "Core.h"

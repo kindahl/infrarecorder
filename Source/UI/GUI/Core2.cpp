@@ -19,7 +19,7 @@
 #include "stdafx.h"
 #include <ckcore/filestream.hh>
 #include <ckcore/nullstream.hh>
-#include <ckfilesystem/discimagewriter.hh>
+#include <ckfilesystem/filesystemwriter.hh>
 #include "Core2.h"
 #include "Core2Format.h"
 #include "Core2Blank.h"
@@ -1087,27 +1087,27 @@ bool CCore2::ReadFullTOC(CCore2Device *pDevice,const TCHAR *szFileName)
 int CCore2::CreateImage(ckcore::OutStream &OutStream,ckfilesystem::FileSet &Files,
 						ckcore::Progress &Progress,std::map<tstring,tstring> *pFilePathMap)
 {
-	ckfilesystem::DiscImageWriter::FileSystem FileSystem;
+	ckfilesystem::FileSystem::Type FileSysType;
 	switch (g_ProjectSettings.m_iFileSystem)
 	{
 		case FILESYSTEM_ISO9660:
-			FileSystem = g_ProjectSettings.m_bJoliet ?
-				ckfilesystem::DiscImageWriter::FS_ISO9660_JOLIET :
-				ckfilesystem::DiscImageWriter::FS_ISO9660;
+			FileSysType = g_ProjectSettings.m_bJoliet ?
+				ckfilesystem::FileSystem::TYPE_ISO9660_JOLIET :
+				ckfilesystem::FileSystem::TYPE_ISO9660;
 			break;
 				
 		case FILESYSTEM_ISO9660_UDF:
-			FileSystem = g_ProjectSettings.m_bJoliet ?
-				ckfilesystem::DiscImageWriter::FS_ISO9660_UDF_JOLIET : 
-				ckfilesystem::DiscImageWriter::FS_ISO9660_UDF;
+			FileSysType = g_ProjectSettings.m_bJoliet ?
+				ckfilesystem::FileSystem::TYPE_ISO9660_UDF_JOLIET : 
+				ckfilesystem::FileSystem::TYPE_ISO9660_UDF;
 				break;
 
 		case FILESYSTEM_DVDVIDEO:
-			FileSystem = ckfilesystem::DiscImageWriter::FS_DVDVIDEO;
+			FileSysType = ckfilesystem::FileSystem::TYPE_DVDVIDEO;
 			break;
 
 		case FILESYSTEM_UDF:
-			FileSystem = ckfilesystem::DiscImageWriter::FS_UDF;			
+			FileSysType = ckfilesystem::FileSystem::TYPE_UDF;			
 			break;
 	}
 
@@ -1131,18 +1131,18 @@ int CCore2::CreateImage(ckcore::OutStream &OutStream,ckfilesystem::FileSet &File
 			break;
 	}
 
-	ckfilesystem::DiscImageWriter DiscImageWriter(g_LogDlg,FileSystem);
+	ckfilesystem::FileSystem FileSys(FileSysType,Files);
 
-	DiscImageWriter.set_long_joliet_names(g_ProjectSettings.m_bJolietLongNames);
-	DiscImageWriter.set_interchange_level(InterchangeLevel);
-	DiscImageWriter.set_include_file_ver_info(!g_ProjectSettings.m_bOmitVerNum);
-	DiscImageWriter.set_relax_max_dir_level(g_ProjectSettings.m_bDeepDirs);
+	FileSys.set_long_joliet_names(g_ProjectSettings.m_bJolietLongNames);
+	FileSys.set_interchange_level(InterchangeLevel);
+	FileSys.set_include_file_ver_info(!g_ProjectSettings.m_bOmitVerNum);
+	FileSys.set_relax_max_dir_level(g_ProjectSettings.m_bDeepDirs);
 
-	DiscImageWriter.set_volume_label(g_ProjectSettings.m_szLabel);
-	DiscImageWriter.set_text_fields(g_ProjectSettings.m_szSystem,
+	FileSys.set_volume_label(g_ProjectSettings.m_szLabel);
+	FileSys.set_text_fields(g_ProjectSettings.m_szSystem,
 		g_ProjectSettings.m_szVolumeSet,g_ProjectSettings.m_szPublisher,
 		g_ProjectSettings.m_szPreparer);
-	DiscImageWriter.set_file_fields(g_ProjectSettings.m_szCopyright,
+	FileSys.set_file_fields(g_ProjectSettings.m_szCopyright,
 		g_ProjectSettings.m_szAbstract,g_ProjectSettings.m_szBibliographic);
 
 	std::list<CProjectBootImage *>::const_iterator itBootImage;
@@ -1152,17 +1152,17 @@ int CCore2::CreateImage(ckcore::OutStream &OutStream,ckfilesystem::FileSet &File
 		switch ((*itBootImage)->m_iEmulation)
 		{
 			case PROJECTBI_BOOTEMU_NONE:
-				DiscImageWriter.add_boot_image_no_emu((*itBootImage)->m_FullPath.c_str(),
+				FileSys.add_boot_image_no_emu((*itBootImage)->m_FullPath.c_str(),
 					!(*itBootImage)->m_bNoBoot,(*itBootImage)->m_iLoadSegment,(*itBootImage)->m_iLoadSize);
 				break;
 
 			case PROJECTBI_BOOTEMU_FLOPPY:
-				DiscImageWriter.add_boot_image_floppy((*itBootImage)->m_FullPath.c_str(),
+				FileSys.add_boot_image_floppy((*itBootImage)->m_FullPath.c_str(),
 					!(*itBootImage)->m_bNoBoot);
 				break;
 
 			case PROJECTBI_BOOTEMU_HARDDISK:
-				DiscImageWriter.add_boot_image_hard_disk((*itBootImage)->m_FullPath.c_str(),
+				FileSys.add_boot_image_hard_disk((*itBootImage)->m_FullPath.c_str(),
 					!(*itBootImage)->m_bNoBoot);
 				break;
 		}
@@ -1172,8 +1172,13 @@ int CCore2::CreateImage(ckcore::OutStream &OutStream,ckfilesystem::FileSet &File
 	if (g_ProjectSettings.m_bMultiSession)
 		ulSectorOffset = (unsigned long)g_ProjectSettings.m_uiNextWritableAddr;
 
-	ckfilesystem::SectorOutStream OutSecStream(OutStream);
-	return DiscImageWriter.create(OutSecStream,Files,Progress,ulSectorOffset,pFilePathMap);
+	ckfilesystem::FileSystemWriter FileSysWriter(g_LogDlg,FileSys);
+	int iResult = FileSysWriter.write(OutStream,Progress,ulSectorOffset);
+
+	if (pFilePathMap != NULL)
+		FileSysWriter.file_path_map(*pFilePathMap);
+
+	return iResult;
 }
 
 /*

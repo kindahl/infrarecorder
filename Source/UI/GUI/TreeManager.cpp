@@ -1790,7 +1790,7 @@ void CTreeManager::ImportLocalIso9660Tree(ckfilesystem::Iso9660TreeNode *pLocalI
 				lstrcat(szFilePath,_T("/"));
 				pCurNode->pItemData->EndEditFilePath();
 
-				iso_make_dosdatetime((*itIsoNode)->rec_timestamp_,
+				ckfilesystem::Iso9660::make_dosdatetime((*itIsoNode)->rec_timestamp_,
 					pCurNode->pItemData->usFileDate,
 					pCurNode->pItemData->usFileTime);
 
@@ -1837,7 +1837,8 @@ void CTreeManager::ImportLocalIso9660Tree(ckfilesystem::Iso9660TreeNode *pLocalI
 			lstrcat(szFilePath,_T("/"));
 			pItemData->EndEditFilePath();
 
-			iso_make_dosdatetime((*itIsoNode)->rec_timestamp_,pItemData->usFileDate,pItemData->usFileTime);
+			ckfilesystem::Iso9660::make_dosdatetime((*itIsoNode)->rec_timestamp_,
+													pItemData->usFileDate,pItemData->usFileTime);
 
 			// Add ISO9660 data.
 			CItemData::CIso9660Data *pIsoData = pItemData->GetIsoData();

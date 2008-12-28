@@ -19,7 +19,7 @@
 #pragma once
 #include <vector>
 #include <ckcore/crcstream.hh>
-#include <ckfilesystem/discimagehelper.hh>
+#include <ckfilesystem/filesystemhelper.hh>
 #include "../../Common/XMLProcessor.h"
 #include "SpaceMeter.h"
 #include "TreeManager.h"
