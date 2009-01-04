@@ -4,6 +4,7 @@
 	Version="8,00"
 	Name="irLame"
 	ProjectGUID="{E595EE31-3670-4F99-AAC0-C06B2B5D02E9}"
+	RootNamespace="irLame"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -634,18 +635,6 @@
 				RelativePath="..\..\Common\StringUtil.h"
 				>
 			</File>
-			<Filter
-				Name="Windows"
-				>
-				<File
-					RelativePath="..\..\Common\Windows\Win32FileManager.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\Common\Windows\Win32FileManager.h"
-					>
-				</File>
-			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

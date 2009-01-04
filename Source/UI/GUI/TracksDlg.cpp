@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2008 Christian Kindahl
+ * Copyright (C) 2006-2009 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -759,7 +759,7 @@ LRESULT CTracksDlg::OnReadTrack(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHa
 		g_ProgressDlg.ShowWindow(true);
 		g_ProgressDlg.SetWindowText(lngGetString(STITLE_READTRACK));
 		g_ProgressDlg.Reset();
-		g_ProgressDlg.AttachConsolePipe(&g_Core);
+		g_ProgressDlg.AttachProcess(&g_Core);
 		g_ProgressDlg.AttachHost(m_hWnd);
 		ProcessMessages();
 
@@ -798,7 +798,7 @@ LRESULT CTracksDlg::OnVerifyTrack(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &b
 	g_ProgressDlg.ShowWindow(true);
 	g_ProgressDlg.SetWindowText(lngGetString(STITLE_SCANTRACK));
 	g_ProgressDlg.Reset();
-	g_ProgressDlg.AttachConsolePipe(&g_Core);
+	g_ProgressDlg.AttachProcess(&g_Core);
 	g_ProgressDlg.AttachHost(m_hWnd);
 	ProcessMessages();
 

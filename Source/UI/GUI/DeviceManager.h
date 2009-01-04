@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2008 Christian Kindahl
+ * Copyright (C) 2006-2009 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,11 +17,12 @@
  */
 
 #pragma once
-#include "ConsolePipe.h"
+#include <ckcore/process.hh>
 #include "Core2Device.h"
 
 #define DEVICEMANAGER_MAXDEVICES			128
 #define DEVICEMANAGER_MAXWRITESPEEDS		128
+#define DEVICEMANAGER_MAXLINESIZE			1024
 
 // Device types (scsitransp.c).
 #define DEVICEMANAGER_TYPE_UNKNOWN			-1
@@ -115,8 +116,8 @@ typedef struct
 
 typedef struct
 {
-	char szWriteFlags[CONSOLEPIPE_MAX_LINE_SIZE];
-	char szWriteModes[CONSOLEPIPE_MAX_LINE_SIZE];
+	char szWriteFlags[DEVICEMANAGER_MAXLINESIZE];
+	char szWriteModes[DEVICEMANAGER_MAXLINESIZE];
 } tDeviceInfoEx;
 
 typedef struct
@@ -149,7 +150,7 @@ typedef struct
 #endif
 } tDeviceCap;
 
-class CDeviceManager : public CConsolePipe
+class CDeviceManager : public ckcore::Process
 {
 private:
 	int m_iMode;
@@ -168,9 +169,9 @@ private:
 
 	int GetDeviceType(const TCHAR *szTypeString);
 
-	// Inherited.
-	void FlushOutput(const char *szBuffer);
-	void ProcessEnded();
+	// Events.
+	void event_output(const std::string &block);
+	void event_finished();
 
 	void LoadCapParseDoes(const char *szBuffer,tDeviceCap *pDeviceCap);
 

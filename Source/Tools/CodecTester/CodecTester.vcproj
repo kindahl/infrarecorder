@@ -4,6 +4,7 @@
 	Version="8,00"
 	Name="CodecTester"
 	ProjectGUID="{662C79E3-70D3-4F83-BAAF-EC663B93BAFD}"
+	RootNamespace="CodecTester"
 	>
 	<Platforms>
 		<Platform
@@ -486,26 +487,6 @@
 				RelativePath="..\..\Common\StringUtil.h"
 				>
 			</File>
-			<Filter
-				Name="Windows"
-				>
-				<File
-					RelativePath="..\..\Common\Windows\Win32DirLister.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\Common\Windows\Win32DirLister.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\Common\Windows\Win32FileManager.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\Common\Windows\Win32FileManager.h"
-					>
-				</File>
-			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

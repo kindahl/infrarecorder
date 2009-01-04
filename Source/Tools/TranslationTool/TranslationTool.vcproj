@@ -507,18 +507,6 @@
 				RelativePath="..\..\Common\XMLProcessor.h"
 				>
 			</File>
-			<Filter
-				Name="Windows"
-				>
-				<File
-					RelativePath="..\..\Common\Windows\Win32FileManager.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\Common\Windows\Win32FileManager.h"
-					>
-				</File>
-			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

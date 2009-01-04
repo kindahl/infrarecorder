@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2008 Christian Kindahl
+ * Copyright (C) 2006-2009 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -169,73 +169,18 @@ int LastDelimiterW(const wchar_t *szString,wchar_t cDelimiter)
 	return -1;
 }
 
-/*
-	UPDATE 2006-08-09
-	-----------------
-	Removed LastDelimiter*Ex version because they where not explicity needed.
-*/
-/*
-	LastDelimiterEx
-	---------------
-	Same as LastDelimiter but is case sensitive.
-*/
-/*int LastDelimiterEx(const TCHAR *szString,char cDelimiter)
-{    
-	int iLength = lstrlen(szString);
-
-	for (int i = iLength - 1; i >= 0; i--)
-	{
-		if (szString[i] == cDelimiter)
-			return i;
-	}
-
-	return -1;
-}*/
-
-/*
-	LastDelimiterExA
-	----------------
-	Same as LastDelimiterA but is case sensitive.
-*/
-/*int LastDelimiterExA(const char *szString,char cDelimiter)
-{    
-	int iLength = strlen(szString);
-
-	for (int i = iLength - 1; i >= 0; i--)
-	{
-		if (szString[i] == cDelimiter)
-			return i;
-	}
-
-	return -1;
-}*/
-
 int FirstDelimiter(const TCHAR *szString,TCHAR cDelimiter)
 {
 	int iLength = lstrlen(szString);
 
 	for (int i = 0; i < iLength; i++)
 	{
-		if (/*tolower(*/szString[i]/*)*/ == cDelimiter)
+		if (szString[i] == cDelimiter)
 			return i;    
 	}
 
 	return -1;
 }
-
-// UPDATE: 2008-04-13 works but is not needed.
-/*int FindInString(const TCHAR *szString1,const TCHAR *szString2)
-{
-	const TCHAR *szResult;
-
-#ifdef UNICODE
-	szResult = wcsstr(szString1,szString2);
-#else
-	szResult = strstr(szString1,szString2);
-#endif
-
-	return (szResult == NULL) ? -1 : (int)(szResult - szString1);
-}*/
 
 bool ExtractFilePath(TCHAR *szFileName)
 {

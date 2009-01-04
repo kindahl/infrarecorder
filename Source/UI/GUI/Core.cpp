@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2008 Christian Kindahl
+ * Copyright (C) 2006-2009 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,6 @@
 #include "LangUtil.h"
 #include "WinVer.h"
 #include "TempManager.h"
-#include "ConsolePipeStream.h"
 #include "Core2.h"
 #include "Core.h"
 
@@ -162,14 +161,23 @@ bool CCore::SafeLaunch(tstring &CommandLine,bool bWaitForProcess)
 
 			if (bWaitForProcess)
 			{
-				bool bResult = Launch(szBatchCmdLine,bWaitForProcess);
-					ckcore::File::remove(szBatchPath);
+				bool bResult = create(szBatchCmdLine);
+				ckcore::File::remove(szBatchPath);
+
+				if (bWaitForProcess)
+					wait();
+
 				return bResult;
 			}
 			else
 			{
 				g_TempManager.AddObject(szBatchPath);
-				return Launch(szBatchCmdLine,bWaitForProcess);
+				bool bResult = create(szBatchCmdLine);
+
+				if (bWaitForProcess)
+					wait();
+
+				return bResult;
 			}
 		}
 		// Windows XP supports maximum 32768 characters.
@@ -182,7 +190,12 @@ bool CCore::SafeLaunch(tstring &CommandLine,bool bWaitForProcess)
 		}
 	}
 
-	return Launch((TCHAR *)CommandLine.c_str(),bWaitForProcess);
+	bool bResult = create((TCHAR *)CommandLine.c_str());
+
+	if (bWaitForProcess)
+		wait();
+
+	return bResult;
 }
 
 bool CCore::Relaunch()
@@ -217,7 +230,7 @@ bool CCore::CheckGraceTime(const char *szBuffer)
 		// Sometimes the "Starting to write CD/DVD..." string will reappear after the
 		// grace time countdown. Because of that we only allow this delimiter change once.
 		if (!m_bGraceTimeDone)
-			m_cLineDelimiter = '.';
+			add_block_delim('.');
 
 		return true;
 	}
@@ -245,7 +258,7 @@ bool CCore::CheckProgress(const char *szBuffer)
 {
 	if (!strncmp(szBuffer,CDRTOOLS_STARTTRACK,CDRTOOLS_STARTTRACK_LENGTH))
 	{
-		m_cLineDelimiter = '.';
+		add_block_delim('.');
 
 		m_iStatusMode = SMODE_PREPROGRESS;
 
@@ -355,13 +368,8 @@ void CCore::ErrorOutputCDRECORD(const char *szBuffer)
 			return;
 		else
 		{
-	#ifdef UNICODE
-			TCHAR szWideBuffer[CONSOLEPIPE_MAX_LINE_SIZE];
-			AnsiToUnicode(szWideBuffer,szBuffer,sizeof(szWideBuffer) / sizeof(wchar_t));
-			m_pProgress->notify(ckcore::Progress::ckEXTERNAL,szWideBuffer);
-	#else
-			m_pProgress->notify(ckcore::Progress::ckEXTERNALB,szBuffer);
-	#endif
+			m_pProgress->notify(ckcore::Progress::ckEXTERNAL,
+								ckcore::string::ansi_to_auto<1024>(szBuffer)).c_str());
 		}
 #endif
 	}
@@ -391,13 +399,8 @@ void CCore::ErrorOutputREADCD(const char *szBuffer)
 #ifdef CORE_PRINT_UNSUPERRORMESSAGES
 		else
 		{
-#ifdef UNICODE
-			TCHAR szWideBuffer[CONSOLEPIPE_MAX_LINE_SIZE];
-			AnsiToUnicode(szWideBuffer,szBuffer,sizeof(szWideBuffer) / sizeof(wchar_t));
-			m_pProgress->notify(ckcore::Progress::ckEXTERNAL,szWideBuffer);
-#else
-			m_pProgress->notify(ckcore::Progress::ckEXTERNAL,szBuffer);
-#endif
+			m_pProgress->notify(ckcore::Progress::ckEXTERNAL,
+								ckcore::string::ansi_to_auto<1024>(szBuffer)).c_str());
 		}
 #endif
 	}
@@ -613,44 +616,38 @@ void CCore::ReadDiscOutput(const char *szBuffer)
 	}
 }
 
-void CCore::FlushOutput(const char *szBuffer)
+void CCore::event_output(const std::string &block)
 {
 	// Write to the log.
 	if (g_GlobalSettings.m_bLog && m_iStatusMode == SMODE_DEFAULT)
 	{
 		g_LogDlg.print(_T("   > "));
-#ifdef UNICODE
-		TCHAR szWideBuffer[CONSOLEPIPE_MAX_LINE_SIZE];
-		AnsiToUnicode(szWideBuffer,szBuffer,sizeof(szWideBuffer) / sizeof(wchar_t));
-		g_LogDlg.print_line(szWideBuffer);
-#else
-		g_LogDlg.print_line(szBuffer);
-#endif
+		g_LogDlg.print_line(ckcore::string::ansi_to_auto<1024>(block.c_str()).c_str());
 	}
 
 	// Always skip the copyright line.
-	if (!strncmp(szBuffer,CDRTOOLS_COPYRIGHT,CDRTOOLS_COPYRIGHT_LENGTH))
+	if (!strncmp(block.c_str(),CDRTOOLS_COPYRIGHT,CDRTOOLS_COPYRIGHT_LENGTH))
 		return;
 
 	// Check for a cygwin path.
 	if (m_bErrorPathMode)
 	{
-		if (!strncmp(szBuffer,CDRTOOLS_CYGWINPATH,CDRTOOLS_CYGWINPATH_LENGTH))
+		if (!strncmp(block.c_str(),CDRTOOLS_CYGWINPATH,CDRTOOLS_CYGWINPATH_LENGTH))
 		{
 			// An error message has been found.
-			if (!strncmp(szBuffer + m_uiCDRToolsPathLen,CDRTOOLS_ERROR,CDRTOOLS_ERROR_LENGTH))
+			if (!strncmp(block.c_str() + m_uiCDRToolsPathLen,CDRTOOLS_ERROR,CDRTOOLS_ERROR_LENGTH))
 			{
-				ErrorOutputCDRECORD(szBuffer + m_uiCDRToolsPathLen + CDRTOOLS_ERROR_LENGTH);
+				ErrorOutputCDRECORD(block.c_str() + m_uiCDRToolsPathLen + CDRTOOLS_ERROR_LENGTH);
 				return;
 			}
-			else if (!strncmp(szBuffer + m_uiCDRToolsPathLen,CDRTOOLS_ERROR3,CDRTOOLS_ERROR3_LENGTH))
+			else if (!strncmp(block.c_str() + m_uiCDRToolsPathLen,CDRTOOLS_ERROR3,CDRTOOLS_ERROR3_LENGTH))
 			{
-				ErrorOutputREADCD(szBuffer + m_uiCDRToolsPathLen + CDRTOOLS_ERROR3_LENGTH);
+				ErrorOutputREADCD(block.c_str() + m_uiCDRToolsPathLen + CDRTOOLS_ERROR3_LENGTH);
 				return;
 			}
-			else if (!strncmp(szBuffer + m_uiCDRToolsPathLen,CDRTOOLS_ERROR4,CDRTOOLS_ERROR4_LENGTH))
+			else if (!strncmp(block.c_str() + m_uiCDRToolsPathLen,CDRTOOLS_ERROR4,CDRTOOLS_ERROR4_LENGTH))
 			{
-				ErrorOutputCDDA2WAV(szBuffer + m_uiCDRToolsPathLen + CDRTOOLS_ERROR4_LENGTH);
+				ErrorOutputCDDA2WAV(block.c_str() + m_uiCDRToolsPathLen + CDRTOOLS_ERROR4_LENGTH);
 				return;
 			}
 		}
@@ -658,19 +655,19 @@ void CCore::FlushOutput(const char *szBuffer)
 	else
 	{
 		// An error message has been found.
-		if (!strncmp(szBuffer,CDRTOOLS_ERROR,CDRTOOLS_ERROR_LENGTH))
+		if (!strncmp(block.c_str(),CDRTOOLS_ERROR,CDRTOOLS_ERROR_LENGTH))
 		{
-			ErrorOutputCDRECORD(szBuffer + CDRTOOLS_ERROR_LENGTH);
+			ErrorOutputCDRECORD(block.c_str() + CDRTOOLS_ERROR_LENGTH);
 			return;
 		}
-		else if (!strncmp(szBuffer,CDRTOOLS_ERROR3,CDRTOOLS_ERROR3_LENGTH))
+		else if (!strncmp(block.c_str(),CDRTOOLS_ERROR3,CDRTOOLS_ERROR3_LENGTH))
 		{
-			ErrorOutputREADCD(szBuffer + CDRTOOLS_ERROR3_LENGTH);
+			ErrorOutputREADCD(block.c_str() + CDRTOOLS_ERROR3_LENGTH);
 			return;
 		}
-		else if (!strncmp(szBuffer,CDRTOOLS_ERROR4,CDRTOOLS_ERROR4_LENGTH))
+		else if (!strncmp(block.c_str(),CDRTOOLS_ERROR4,CDRTOOLS_ERROR4_LENGTH))
 		{
-			ErrorOutputCDDA2WAV(szBuffer + CDRTOOLS_ERROR4_LENGTH);
+			ErrorOutputCDDA2WAV(block.c_str() + CDRTOOLS_ERROR4_LENGTH);
 			return;
 		}
 	}
@@ -679,7 +676,7 @@ void CCore::FlushOutput(const char *szBuffer)
 	if (m_iStatusMode == SMODE_GRACETIME)
 	{
 		int iTimer = 0;
-		sscanf(szBuffer,"\b\b\b\b\b\b\b\b\b\b\b\b\b%4d seconds",&iTimer);
+		sscanf(block.c_str(),"\b\b\b\b\b\b\b\b\b\b\b\b\b%4d seconds",&iTimer);
 
 		// Update the status.
 		m_pProgress->set_status(lngGetString(PROGRESS_GRACETIME),iTimer);
@@ -691,7 +688,7 @@ void CCore::FlushOutput(const char *szBuffer)
 			m_bGraceTimeDone = true;
 
 			// We reset the line delimiter to the new line character.
-			m_cLineDelimiter = '\n';
+			remove_block_delim('.');
 
 			// Add a new message to the progress window (and update its staus).
 			switch (m_iMode)
@@ -728,7 +725,7 @@ void CCore::FlushOutput(const char *szBuffer)
 	else if (m_iStatusMode == SMODE_PREPROGRESS)
 	{
 		// Now we want to terminate the strings by the x (speed).
-		m_cLineDelimiter = 'x';
+		add_block_delim('x');
 
 		// Change the mode to progress mode.
 		m_iStatusMode = SMODE_PROGRESS;
@@ -747,7 +744,7 @@ void CCore::FlushOutput(const char *szBuffer)
 		__int64 iWritten = 0;
 		float fSpeed = 0.0f;
 
-		char *pBuffer = (char *)szBuffer;
+		char *pBuffer = (char *)block.c_str();
 		if (pBuffer[0] == '.')
 			*pBuffer++;
 
@@ -819,11 +816,11 @@ void CCore::FlushOutput(const char *szBuffer)
 		m_pProgress->SetBuffer(iBuffer);
 
 		// Check if we're done writing the track.
-		if (iWritten != 0 && iWritten == m_TrackSize[m_uiCurrentTrack/*iTrack - 1*/])
+		if (iWritten != 0 && iWritten == m_TrackSize[m_uiCurrentTrack])
 		{
 			m_uiCurrentTrack++;
 
-			m_cLineDelimiter = '\n';
+			remove_block_delim('x');
 
 			// Leave the progress mode.
 			m_iStatusMode = SMODE_DEFAULT;
@@ -836,7 +833,7 @@ void CCore::FlushOutput(const char *szBuffer)
 	}
 	else if (m_iStatusMode == SMODE_AUDIOPROGRESS)
 	{
-		int iProgress = atoi(szBuffer);
+		int iProgress = atoi(block.c_str());
 		m_pProgress->set_progress(iProgress);
 
 		if (iProgress == 100)
@@ -854,41 +851,41 @@ void CCore::FlushOutput(const char *szBuffer)
 			break;
 
 		case MODE_ERASE:
-			EraseOutput(szBuffer);
+			EraseOutput(block.c_str());
 			break;
 
 		case MODE_FIXATE:
-			FixateOutput(szBuffer);
+			FixateOutput(block.c_str());
 			break;
 
 		case MODE_BURNIMAGE:
 		case MODE_BURNIMAGEEX:
-			BurnImageOutput(szBuffer);
+			BurnImageOutput(block.c_str());
 			break;
 
 		case MODE_READDATATRACK:
 		case MODE_READDATATRACKEX:
-			ReadDataTrackOutput(szBuffer);
+			ReadDataTrackOutput(block.c_str());
 			break;
 
 		case MODE_READAUDIOTRACK:
 		case MODE_READAUDIOTRACKEX:
-			ReadAudioTrackOutput(szBuffer);
+			ReadAudioTrackOutput(block.c_str());
 			break;
 
 		case MODE_SCANTRACK:
 		case MODE_SCANTRACKEX:
-			ScanTrackOutput(szBuffer);
+			ScanTrackOutput(block.c_str());
 			break;
 
 		case MODE_READDISC:
 		case MODE_READDISCEX:
-			ReadDiscOutput(szBuffer);
+			ReadDiscOutput(block.c_str());
 			break;
 	};
 }
 
-void CCore::ProcessEnded()
+void CCore::event_finished()
 {
 	if (g_GlobalSettings.m_bLog)
 		g_LogDlg.print_line(_T("CCore::ProcessEnded"));
@@ -2110,8 +2107,9 @@ bool CCore::CopyDisc(tDeviceInfo *pSourceDeviceInfo,tDeviceInfo *pTargetDeviceIn
 	lstrcat(szBatchCmdLine,szBatchPath);
 	lstrcat(szBatchCmdLine,_T("\""));
 
-	bool bResult = Launch(szBatchCmdLine,true);
-		ckcore::File::remove(szBatchPath);
+	bool bResult = create(szBatchCmdLine);
+	wait();
+	ckcore::File::remove(szBatchPath);
 	return bResult;
 }
 
@@ -2196,8 +2194,7 @@ DWORD WINAPI CCore::CreateCompImageThread(LPVOID lpThreadParameter)
 {
 	CCompImageParams *pParams = (CCompImageParams *)lpThreadParameter;
 
-	COutConsolePipeStream OutStream(pParams->m_ConsolePipe);
-	g_Core2.CreateImage(OutStream,pParams->m_Files,pParams->m_Progress);
+	g_Core2.CreateImage(pParams->m_Process,pParams->m_Files,pParams->m_Progress);
 
 	return 0;
 }

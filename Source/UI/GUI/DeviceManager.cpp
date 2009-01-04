@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2008 Christian Kindahl
+ * Copyright (C) 2006-2009 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -98,7 +98,7 @@ void CDeviceManager::ScanBusOutput(const char *szBuffer)
 		int iBus,iTarget,iLun;
 		iBus = iTarget = iLun = 0;
 
-		char szMultiInfo[CONSOLEPIPE_MAX_LINE_SIZE];
+		char szMultiInfo[DEVICEMANAGER_MAXLINESIZE];
 		sscanf(szBuffer,"\t%d,%d,%d\t%*d) %[^\0]",
 			&iBus,&iTarget,&iLun,szMultiInfo);
 
@@ -127,7 +127,7 @@ void CDeviceManager::ScanBusOutput(const char *szBuffer)
 		pDeviceInfo->Address.m_iLun = iLun;
 
 		// Convert the information to UTF-16 if necessary.
-		TCHAR szInfo[CONSOLEPIPE_MAX_LINE_SIZE];
+		TCHAR szInfo[DEVICEMANAGER_MAXLINESIZE];
 #ifdef UNICODE
 		AnsiToUnicode(szInfo,szMultiInfo,sizeof(szInfo) / sizeof(wchar_t));
 #else
@@ -216,7 +216,7 @@ void CDeviceManager::DevicesOutput(const char *szBuffer)
 		memset(pDeviceInfo,0,sizeof(tDeviceInfo));
 
 		char cDriveLetter = NULL;
-		char szInfo[CONSOLEPIPE_MAX_LINE_SIZE];
+		char szInfo[DEVICEMANAGER_MAXLINESIZE];
 
 		sscanf(szBuffer,"dev='%c:'\t%[^\0]",&cDriveLetter,szInfo);
 		char *pInfo = szInfo + 9;
@@ -224,7 +224,7 @@ void CDeviceManager::DevicesOutput(const char *szBuffer)
 		pDeviceInfo->Address.m_cDriveLetter = cDriveLetter;
 
 		// Convert the information to UTF-16 if necessary.
-		TCHAR szAutoInfo[CONSOLEPIPE_MAX_LINE_SIZE];
+		TCHAR szAutoInfo[DEVICEMANAGER_MAXLINESIZE];
 #ifdef UNICODE
 		AnsiToUnicode(szAutoInfo,pInfo,sizeof(szAutoInfo) / sizeof(TCHAR));
 #else
@@ -562,7 +562,7 @@ void CDeviceManager::VerifyBusOutput(const char *szBuffer)
 		int iBus,iTarget,iLun;
 		iBus = iTarget = iLun = 0;
 
-		char szMultiInfo[CONSOLEPIPE_MAX_LINE_SIZE];
+		char szMultiInfo[DEVICEMANAGER_MAXLINESIZE];
 		sscanf(szBuffer,"\t%d,%d,%d\t%*d) %[^\0]",
 			&iBus,&iTarget,&iLun,szMultiInfo);
 
@@ -589,7 +589,7 @@ void CDeviceManager::VerifyBusOutput(const char *szBuffer)
 		}
 
 		// Convert the information to UTF-16 if necessary.
-		TCHAR szInfo[CONSOLEPIPE_MAX_LINE_SIZE];
+		TCHAR szInfo[DEVICEMANAGER_MAXLINESIZE];
 #ifdef UNICODE
 		AnsiToUnicode(szInfo,szMultiInfo,sizeof(szInfo) / sizeof(wchar_t));
 #else
@@ -635,13 +635,13 @@ void CDeviceManager::VerifyDevicesOutput(const char *szBuffer)
 		szBuffer += 4;
 
 		char cDriveLetter = NULL;
-		char szInfo[CONSOLEPIPE_MAX_LINE_SIZE];
+		char szInfo[DEVICEMANAGER_MAXLINESIZE];
 
 		sscanf(szBuffer,"dev='%c:'\t%[^\0]",&cDriveLetter,szInfo);
 		char *pInfo = szInfo + 9;
 
 		// Convert the information to UTF-16 if necessary.
-		TCHAR szAutoInfo[CONSOLEPIPE_MAX_LINE_SIZE];
+		TCHAR szAutoInfo[DEVICEMANAGER_MAXLINESIZE];
 #ifdef UNICODE
 		AnsiToUnicode(szAutoInfo,pInfo,sizeof(szAutoInfo) / sizeof(TCHAR));
 #else
@@ -687,41 +687,41 @@ void CDeviceManager::VerifyDevicesOutput(const char *szBuffer)
 	}
 }
 
-void CDeviceManager::FlushOutput(const char *szBuffer)
+void CDeviceManager::event_output(const std::string &block)
 {
 	// Always skip the copyright line.
-	if (!strncmp(szBuffer,CDRTOOLS_COPYRIGHT,CDRTOOLS_COPYRIGHT_LENGTH))
+	if (!strncmp(block.c_str(),CDRTOOLS_COPYRIGHT,CDRTOOLS_COPYRIGHT_LENGTH))
 		return;
 
 	switch (m_iMode)
 	{
 		case MODE_SCANBUS:
-			ScanBusOutput(szBuffer);
+			ScanBusOutput(block.c_str());
 			break;
 
 		case MODE_DEVICES:
-			DevicesOutput(szBuffer);
+			DevicesOutput(block.c_str());
 			break;
 
 		case MODE_LOADCAP:
-			LoadCapOutput(szBuffer);
+			LoadCapOutput(block.c_str());
 			break;
 
 		case MODE_LOADEXINFO:
-			LoadExInfoOutput(szBuffer);
+			LoadExInfoOutput(block.c_str());
 			break;
 
 		case MODE_VERIFYBUS:
-			VerifyBusOutput(szBuffer);
+			VerifyBusOutput(block.c_str());
 			break;
 
 		case MODE_VERIFYDEVICES:
-			VerifyDevicesOutput(szBuffer);
+			VerifyDevicesOutput(block.c_str());
 			break;
 	}
 }
 
-void CDeviceManager::ProcessEnded()
+void CDeviceManager::event_finished()
 {
 	// We don't care if the process has ended.
 }
@@ -747,9 +747,10 @@ bool CDeviceManager::ScanBus()
 	lstrcat(szCommandLine,_T("\" -scanbus"));
 #endif
 
-	if (!Launch(szCommandLine,true))
+	if (!create(szCommandLine))
 		return false;
 
+	wait();
 	return true;
 }
 
@@ -783,8 +784,10 @@ bool CDeviceManager::LoadCapabilities()
 			lstrcat(szCommandLine,szDeviceAdr);
 
 			// Launch the command line.
-			if (!Launch(szCommandLine,true))
+			if (!create(szCommandLine))
 				return false;
+
+			wait();
 		}
 
 		// Increase the counter.
@@ -825,8 +828,10 @@ bool CDeviceManager::LoadExInfo()
 			lstrcat(szCommandLine,szDeviceAdr);
 
 			// Launch the command line.
-			if (!Launch(szCommandLine,true))
+			if (!create(szCommandLine))
 				return false;
+
+			wait();
 		}
 
 		// Increase the counter.
@@ -1122,7 +1127,7 @@ bool CDeviceManager::SaveConfiguration()
 				{
 					XML.AddElement(_T("Extended"),_T(""),true);
 #ifdef UNICODE
-						TCHAR szBuffer[CONSOLEPIPE_MAX_LINE_SIZE];
+						TCHAR szBuffer[DEVICEMANAGER_MAXLINESIZE];
 
 						AnsiToUnicode(szBuffer,pDeviceInfoEx->szWriteFlags,sizeof(szBuffer) / sizeof(wchar_t));
 						XML.AddElement(_T("Flags"),szBuffer);
@@ -1360,12 +1365,12 @@ bool CDeviceManager::LoadConfiguration()
 			}
 
 #ifdef UNICODE
-			TCHAR szBuffer[CONSOLEPIPE_MAX_LINE_SIZE];
+			TCHAR szBuffer[DEVICEMANAGER_MAXLINESIZE];
 			
-			XML.GetSafeElementData(_T("Flags"),szBuffer,CONSOLEPIPE_MAX_LINE_SIZE);
+			XML.GetSafeElementData(_T("Flags"),szBuffer,DEVICEMANAGER_MAXLINESIZE);
 			UnicodeToAnsi(pDeviceInfoEx->szWriteFlags,szBuffer,sizeof(pDeviceInfoEx->szWriteFlags));
 
-			XML.GetSafeElementData(_T("Modes"),szBuffer,CONSOLEPIPE_MAX_LINE_SIZE);
+			XML.GetSafeElementData(_T("Modes"),szBuffer,DEVICEMANAGER_MAXLINESIZE);
 			UnicodeToAnsi(pDeviceInfoEx->szWriteModes,szBuffer,sizeof(pDeviceInfoEx->szWriteModes));
 #else
 			XML.GetSafeElementData(_T("Flags"),pDeviceInfoEx->szWriteFlags,CONSOLEPIPE_MAX_LINE_SIZE);
@@ -1405,8 +1410,9 @@ bool CDeviceManager::VerifyConfiguration()
 	lstrcat(szCommandLine,_T("\" -scanbus"));
 #endif
 
-	if (!Launch(szCommandLine,true))
+	if (!create(szCommandLine))
 		return false;
 
+	wait();
 	return m_bVeriResult;
 }

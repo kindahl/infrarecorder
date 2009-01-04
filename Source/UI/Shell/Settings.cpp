@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2008 Christian Kindahl
+ * Copyright (C) 2006-2009 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,8 +17,8 @@
  */
 
 #include "stdafx.h"
+#include <ckcore/file.hh>
 #include "Settings.h"
-#include "../../Common/FileManager.h"
 
 CLanguageSettings g_LanguageSettings;
 CGlobalSettings g_GlobalSettings;
@@ -40,10 +40,10 @@ bool CLanguageSettings::Load(CXMLProcessor *pXML)
 	lstrcat(szFullPath,_T("Languages\\"));
 	lstrcat(szFullPath,m_szLanguageFile);
 
-	if (fs_fileexists(szFullPath))
+	if (ckcore::File::exist(szFullPath))
 	{
-		m_pLNGProcessor = new CLNGProcessor();
-		m_pLNGProcessor->Load(szFullPath);
+		m_pLNGProcessor = new CLNGProcessor(szFullPath);
+		m_pLNGProcessor->Load();
 	}
 
 	pXML->LeaveElement();

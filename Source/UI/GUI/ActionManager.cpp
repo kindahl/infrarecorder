@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2008 Christian Kindahl
+ * Copyright (C) 2006-2009 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -907,7 +907,7 @@ INT_PTR CActionManager::BurnCompilation(HWND hWndParent,bool bAppMode)
 
 		g_ProgressDlg.ShowWindow(true);
 		g_ProgressDlg.Reset();
-		g_ProgressDlg.AttachConsolePipe(&g_Core);
+		g_ProgressDlg.AttachProcess(&g_Core);
 		g_ProgressDlg.AttachHost(hWndParent);
 		ProcessMessages();
 
@@ -957,7 +957,7 @@ INT_PTR CActionManager::CreateImage(HWND hWndParent,bool bAppMode)
 
 		g_ProgressDlg.ShowWindow(true);
 		g_ProgressDlg.Reset();
-		g_ProgressDlg.AttachConsolePipe(&g_Core);
+		g_ProgressDlg.AttachProcess(&g_Core);
 		g_ProgressDlg.AttachHost(hWndParent);
 		ProcessMessages();
 
@@ -1047,7 +1047,7 @@ INT_PTR CActionManager::BurnImageEx(HWND hWndParent,bool bAppMode,const TCHAR *s
 		g_ProgressDlg.ShowWindow(true);
 		//g_ProgressDlg.SetWindowText(lngGetString(STITLE_BURNIMAGE));
 		g_ProgressDlg.Reset();
-		g_ProgressDlg.AttachConsolePipe(&g_Core);
+		g_ProgressDlg.AttachProcess(&g_Core);
 		g_ProgressDlg.AttachHost(hWndParent);
 		ProcessMessages();
 
@@ -1335,7 +1335,7 @@ INT_PTR CActionManager::CopyDisc(HWND hWndParent,bool bAppMode)
 
 		g_ProgressDlg.ShowWindow(true);
 		g_ProgressDlg.Reset();
-		g_ProgressDlg.AttachConsolePipe(&g_Core);
+		g_ProgressDlg.AttachProcess(&g_Core);
 		g_ProgressDlg.AttachHost(hWndParent);
 		ProcessMessages();
 
@@ -1390,7 +1390,7 @@ INT_PTR CActionManager::CopyImage(HWND hWndParent,bool bAppMode)
 		g_ProgressDlg.ShowWindow(true);
 		g_ProgressDlg.SetWindowText(lngGetString(STITLE_CREATEIMAGE));
 		g_ProgressDlg.Reset();
-		g_ProgressDlg.AttachConsolePipe(&g_Core);
+		g_ProgressDlg.AttachProcess(&g_Core);
 		g_ProgressDlg.AttachHost(hWndParent);
 		ProcessMessages();
 
@@ -1459,7 +1459,7 @@ INT_PTR CActionManager::Erase(HWND hWndParent,bool bAppMode)
 		g_ProgressDlg.ShowWindow(true);
 		g_ProgressDlg.SetWindowText(lngGetString(STITLE_ERASE));
 		g_ProgressDlg.Reset();
-		g_ProgressDlg.AttachConsolePipe(&g_Core);
+		g_ProgressDlg.AttachProcess(&g_Core);
 		g_ProgressDlg.AttachHost(hWndParent);
 		ProcessMessages();
 
@@ -1518,7 +1518,7 @@ INT_PTR CActionManager::Fixate(HWND hWndParent,bool bAppMode)
 		g_SimpleProgressDlg.ShowWindow(true);
 		g_SimpleProgressDlg.SetWindowText(lngGetString(STITLE_FIXATE));
 		g_SimpleProgressDlg.Reset();
-		g_SimpleProgressDlg.AttachConsolePipe(&g_Core);
+		g_SimpleProgressDlg.AttachProcess(&g_Core);
 		g_SimpleProgressDlg.AttachHost(hWndParent);
 		ProcessMessages();
 
@@ -1573,7 +1573,7 @@ INT_PTR CActionManager::Fixate(HWND hWndParent,bool bAppMode)
 	g_ProgressDlg.ShowWindow(true);
 	g_ProgressDlg.SetWindowText(lngGetString(STITLE_BURNIMAGE));
 	g_ProgressDlg.Reset();
-	g_ProgressDlg.AttachConsolePipe(&g_Core);
+	g_ProgressDlg.AttachProcess(&g_Core);
 	g_ProgressDlg.AttachHost(hWndParent);
 	ProcessMessages();
 

@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2008 Christian Kindahl
+ * Copyright (C) 2006-2009 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ int g_iCapabilities = IRC_HAS_DECODER | IRC_HAS_ENCODER | IRC_HAS_CONFIG;
 
 // Version and about strings.
 TCHAR *g_szVersion = _T("0.42.1.0");
-TCHAR *g_szAbout = _T("InfraRecorder WMA Codec\n\nCopyright © 2006-2008 Christian Kindahl.");
+TCHAR *g_szAbout = _T("InfraRecorder WMA Codec\n\nCopyright © 2006-2009 Christian Kindahl.");
 TCHAR *g_szEncoder = _T("Windows Media Audio");
 TCHAR *g_szFileExt = _T(".wma");
 

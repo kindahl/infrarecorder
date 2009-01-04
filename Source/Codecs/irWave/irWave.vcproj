@@ -592,42 +592,6 @@
 				RelativePath="..\..\Common\StringUtil.h"
 				>
 			</File>
-			<Filter
-				Name="Windows"
-				>
-				<File
-					RelativePath="..\..\Common\Windows\Win32FileManager.cpp"
-					>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="2"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|x64"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="2"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="ReleaseA|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="2"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\..\Common\Windows\Win32FileManager.h"
-					>
-				</File>
-			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

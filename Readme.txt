@@ -1,5 +1,5 @@
 InfraRecorder
-Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
+Copyright (C) 2006-2009 Christian Kindahl, christian dot kindahl at gmail dot com
 
 This program is licensed under GPL (version 3), please see the file
 License.txt. Please note that the graphics used in InfraRecorder is not covered
@@ -13,8 +13,8 @@ In order to compile InfraRecorder you will need the following libraries:
  3. ckFileSystem: http://code.kindahl.com
  4. libpng: http://www.libpng.org
 
-InfraRecorder uses cdrkit, sources can be found at:
-http://www.cdrkit.org
+InfraRecorder uses cdrtools, sources can be found at:
+http://cdrecord.berlios.de/
 
 The graphics used in InfraRecorder are NOT covered by GPL. The official
 InfraRecorder logo (the logo used in official InfraRecorder binaries), and all

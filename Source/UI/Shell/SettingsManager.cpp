@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2008 Christian Kindahl
+ * Copyright (C) 2006-2009 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,10 +17,10 @@
  */
 
 #include "stdafx.h"
+#include <ckcore/directory.hh>
 #include "SettingsManager.h"
 #include "../../Common/StringUtil.h"
 #include "../../Common/XMLProcessor.h"
-#include "../../Common/FileManager.h"
 #include "StringTable.h"
 #include "LangUtil.h"
 
@@ -60,7 +60,7 @@ bool CSettingsManager::GetConfigPath(TCHAR *szConfigPath)
 	lstrcat(szConfigPath,_T("InfraRecorder\\"));
 
 	// Create the file path if it doesn't exist.
-	fs_createpath(szConfigPath);
+	ckcore::Directory::create(szConfigPath);
 #endif
 
 	lstrcat(szConfigPath,_T("Settings.xml"));

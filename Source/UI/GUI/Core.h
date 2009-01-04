@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2008 Christian Kindahl
+ * Copyright (C) 2006-2009 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +18,9 @@
 
 #pragma once
 #include <vector>
+#include <ckcore/process.hh>
 #include <ckfilesystem/fileset.hh>
 #include "../../Common/StringUtil.h"
-#include "ConsolePipe.h"
 #include "DeviceManager.h"
 #include "AdvancedProgress.h"
 
@@ -42,7 +42,7 @@
 #define CORE_AUDIOAPP				"cdda2wav.exe"
 #endif
 
-class CCore : public CConsolePipe
+class CCore : public ckcore::Process
 {
 private:
 	int m_iMode;
@@ -95,20 +95,20 @@ private:
 	void ScanTrackOutput(const char *szBuffer);
 	void ReadDiscOutput(const char *szBuffer);
 
-	// Inherited.
-	void FlushOutput(const char *szBuffer);
-	void ProcessEnded();
+	// Inherited events.
+	void event_output(const std::string &block);
+	void event_finished();
 
-	// Thead functions.
+	// Thread functions.
 	class CCompImageParams	// A pointer to a structure of this type should be passed as thead parameter for CreateCompImageThread.
 	{
 	public:
-		CConsolePipe &m_ConsolePipe;
+		ckcore::Process &m_Process;
 		ckcore::Progress &m_Progress;
 		ckfilesystem::FileSet &m_Files;
 
-		CCompImageParams(CConsolePipe &ConsolePipe,ckcore::Progress &Progress,
-			ckfilesystem::FileSet &Files) : m_ConsolePipe(ConsolePipe),
+		CCompImageParams(ckcore::Process &Process,ckcore::Progress &Progress,
+			ckfilesystem::FileSet &Files) : m_Process(Process),
 			m_Progress(Progress),m_Files(Files)
 		{
 		}

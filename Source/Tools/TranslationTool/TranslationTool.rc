@@ -141,7 +141,7 @@ BEGIN
             VALUE "FileDescription", "TranslationTool"
             VALUE "FileVersion", "1.0.0.1"
             VALUE "InternalName", "TranslationTool"
-            VALUE "LegalCopyright", "Copyright © 2006-2008 Christian Kindahl"
+            VALUE "LegalCopyright", "Copyright © 2006-2009 Christian Kindahl"
             VALUE "OriginalFilename", "TranslationTool.exe"
             VALUE "ProductName", "TranslationTool"
             VALUE "ProductVersion", "1.0.0.1"
@@ -278,8 +278,7 @@ END
 //
 // Generated from the TEXTINCLUDE 3 resource.
 //
-
-
+
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
 

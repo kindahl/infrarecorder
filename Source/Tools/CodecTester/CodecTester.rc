@@ -148,7 +148,7 @@ BEGIN
             VALUE "FileDescription", "CodecTester"
             VALUE "FileVersion", "0.4.0.3"
             VALUE "InternalName", "CodecTester"
-            VALUE "LegalCopyright", "Copyright © 2006-2008 Christian Kindahl"
+            VALUE "LegalCopyright", "Copyright © 2006-2009 Christian Kindahl"
             VALUE "OriginalFilename", "CodecTester.exe"
             VALUE "ProductName", "CodecTester"
             VALUE "ProductVersion", "0.4.0.3"
@@ -285,8 +285,7 @@ END
 //
 // Generated from the TEXTINCLUDE 3 resource.
 //
-
-
+
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
 

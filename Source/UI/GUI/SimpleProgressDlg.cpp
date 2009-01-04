@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2008 Christian Kindahl
+ * Copyright (C) 2006-2009 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@
 
 CSimpleProgressDlg g_SimpleProgressDlg;
 
-CSimpleProgressDlg::CSimpleProgressDlg() : m_bAppMode(false),
+CSimpleProgressDlg::CSimpleProgressDlg() : m_pProcess(NULL),m_bAppMode(false),
 	m_bRealMode(false),m_bCancelled(false),m_hWndHost(NULL)
 {
 	// Load the icons.
@@ -79,9 +79,9 @@ bool CSimpleProgressDlg::Translate()
 	return true;
 }
 
-void CSimpleProgressDlg::AttachConsolePipe(CConsolePipe *pConsolePipe)
+void CSimpleProgressDlg::AttachProcess(ckcore::Process *pProcess)
 {
-	m_pConsolePipe = pConsolePipe;
+	m_pProcess = pProcess;
 }
 
 void CSimpleProgressDlg::AttachHost(HWND hWndHost)
@@ -258,12 +258,9 @@ LRESULT CSimpleProgressDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,B
 
 LRESULT CSimpleProgressDlg::OnReload(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
-	/*TCHAR szTemp[25];
-	lsprintf(szTemp,_T("%d"),(int)m_pConsolePipe->WriteInput("\r\n",2));
-	MessageBox(szTemp);*/
-
 	// Send a CR-LF message to inform CD-tools that the drive has been reloaded.
-	m_pConsolePipe->WriteInput("\r\n",2);
+	if (m_pProcess != NULL)
+		m_pProcess->write("\r\n",2);
 
 	// Hide the reload button.
 	::ShowWindow(GetDlgItem(IDC_RELOADBUTTON),SW_HIDE);
@@ -302,7 +299,9 @@ LRESULT CSimpleProgressDlg::OnCancel(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL
 	}
 
 	m_bCancelled = true;
-	m_pConsolePipe->Kill();
+
+	if (m_pProcess != NULL)
+		m_pProcess->kill();
 
 	// Hide the reload button.
 	::ShowWindow(GetDlgItem(IDC_RELOADBUTTON),SW_HIDE);

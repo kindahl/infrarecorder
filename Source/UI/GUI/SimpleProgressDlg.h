@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2008 Christian Kindahl
+ * Copyright (C) 2006-2009 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,9 +17,9 @@
  */
 
 #pragma once
+#include <ckcore/process.hh>
 #include "resource.h"
 #include "AdvancedProgress.h"
-#include "ConsolePipe.h"
 #include "Effects.h"
 #include "WinVer.h"
 
@@ -30,7 +30,7 @@ private:
 	HIMAGELIST m_hListImageList;
 	CListViewCtrl m_ListView;
 
-	CConsolePipe *m_pConsolePipe;
+	ckcore::Process *m_pProcess;
 	bool m_bAppMode;
 	bool m_bRealMode;
 	bool m_bCancelled;
@@ -48,7 +48,7 @@ public:
 	virtual BOOL PreTranslateMessage(MSG *pMsg);
 	virtual BOOL OnIdle();
 
-	void AttachConsolePipe(CConsolePipe *pConsolePipe);
+	void AttachProcess(ckcore::Process *pProcess);
 	void AttachHost(HWND hWndHost);
 
 	void SetAppMode(bool bAppMode);

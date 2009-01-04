@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2008 Christian Kindahl
+ * Copyright (C) 2006-2009 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,24 +34,17 @@ CDiagnostics::~CDiagnostics()
 {
 }
 
-void CDiagnostics::FlushOutput(const char *szBuffer)
+void CDiagnostics::event_output(const std::string &block)
 {
 	// Always skip the copyright line.
-	if (!strncmp(szBuffer,CDRTOOLS_COPYRIGHT,CDRTOOLS_COPYRIGHT_LENGTH))
+	if (!strncmp(block.c_str(),CDRTOOLS_COPYRIGHT,CDRTOOLS_COPYRIGHT_LENGTH))
 		return;
 
 	g_LogDlg.print(_T("   > "));
-
-#ifdef UNICODE
-		TCHAR szWideBuffer[CONSOLEPIPE_MAX_LINE_SIZE];
-		AnsiToUnicode(szWideBuffer,szBuffer,sizeof(szWideBuffer) / sizeof(wchar_t));
-		g_LogDlg.print_line(szWideBuffer);
-#else
-		g_LogDlg.print_line(szBuffer);
-#endif
+	g_LogDlg.print_line(ckcore::string::ansi_to_auto<1024>(block.c_str()).c_str());
 }
 
-void CDiagnostics::ProcessEnded()
+void CDiagnostics::event_finished()
 {
 	g_LogDlg.print_line(_T("CDiagnostics::ProcessEnded"));
 	g_LogDlg.print_line(_T(""));
@@ -71,7 +64,7 @@ bool CDiagnostics::DeviceScan()
 	lstrcat(szCommandLine,_T("\" -scanbus"));
 #endif
 
-	if (!Launch(szCommandLine,false))
+	if (!create(szCommandLine))
 		return false;
 
 	return true;

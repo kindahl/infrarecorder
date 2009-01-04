@@ -79,6 +79,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
+				AdditionalDependencies="ckcored.lib"
 				OutputFile="../../../Binary32/irShell.dll"
 				LinkIncremental="2"
 				ModuleDefinitionFile=".\irShell.def"
@@ -175,6 +176,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
+				AdditionalDependencies="ckcored.lib"
 				OutputFile="../../../Binary64/irShell.dll"
 				LinkIncremental="2"
 				ModuleDefinitionFile=".\irShell.def"
@@ -268,6 +270,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
+				AdditionalDependencies="ckcore.lib"
 				OutputFile="../../../Binary32/irShell.dll"
 				LinkIncremental="1"
 				ModuleDefinitionFile=".\irShell.def"
@@ -363,197 +366,8 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
+				AdditionalDependencies="ckcore.lib"
 				OutputFile="../../../Binary64/irShell.dll"
-				LinkIncremental="1"
-				ModuleDefinitionFile=".\irShell.def"
-				GenerateDebugInformation="true"
-				SubSystem="2"
-				OptimizeReferences="2"
-				EnableCOMDATFolding="2"
-				ImportLibrary="$(OutDir)/irShell.lib"
-				TargetMachine="17"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-				Description="Performing registration"
-				CommandLine="regsvr32 /s /c &quot;$(TargetPath)&quot;"
-			/>
-		</Configuration>
-		<Configuration
-			Name="ReleaseA|Win32"
-			OutputDirectory="ReleaseA"
-			IntermediateDirectory="ReleaseA"
-			ConfigurationType="2"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
-			UseOfATL="1"
-			ATLMinimizesCRunTimeLibraryUsage="false"
-			CharacterSet="2"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-				PreprocessorDefinitions="NDEBUG"
-				MkTypLibCompatible="false"
-				TargetEnvironment="1"
-				GenerateStublessProxies="true"
-				TypeLibraryName="$(IntDir)/irShell.tlb"
-				HeaderFileName="irShell.h"
-				DLLDataFileName=""
-				InterfaceIdentifierFileName="irShell_i.c"
-				ProxyFileName="irShell_p.c"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_USRDLL;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS;_ATL_NO_UUIDOF"
-				RuntimeLibrary="0"
-				UsePrecompiledHeader="2"
-				WarningLevel="3"
-				Detect64BitPortabilityProblems="true"
-				DebugInformationFormat="3"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="NDEBUG"
-				Culture="1053"
-				AdditionalIncludeDirectories="$(IntDir)"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				IgnoreImportLibrary="true"
-				OutputFile="../../../BinaryA/irShell.dll"
-				LinkIncremental="1"
-				ModuleDefinitionFile=".\irShell.def"
-				GenerateDebugInformation="true"
-				SubSystem="2"
-				OptimizeReferences="2"
-				EnableCOMDATFolding="2"
-				ImportLibrary="$(OutDir)/irShell.lib"
-				TargetMachine="1"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-				Description="Performing registration"
-				CommandLine="regsvr32 /s /c &quot;$(TargetPath)&quot;"
-			/>
-		</Configuration>
-		<Configuration
-			Name="ReleaseA|x64"
-			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
-			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
-			ConfigurationType="2"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
-			UseOfATL="1"
-			ATLMinimizesCRunTimeLibraryUsage="false"
-			CharacterSet="2"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-				PreprocessorDefinitions="NDEBUG"
-				MkTypLibCompatible="false"
-				TargetEnvironment="3"
-				GenerateStublessProxies="true"
-				TypeLibraryName="$(IntDir)/irShell.tlb"
-				HeaderFileName="irShell.h"
-				DLLDataFileName=""
-				InterfaceIdentifierFileName="irShell_i.c"
-				ProxyFileName="irShell_p.c"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_USRDLL;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS;_ATL_NO_UUIDOF"
-				RuntimeLibrary="0"
-				UsePrecompiledHeader="2"
-				WarningLevel="3"
-				Detect64BitPortabilityProblems="true"
-				DebugInformationFormat="3"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="NDEBUG"
-				Culture="1053"
-				AdditionalIncludeDirectories="$(IntDir)"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				IgnoreImportLibrary="true"
-				OutputFile="../../../BinaryA/irShell.dll"
 				LinkIncremental="1"
 				ModuleDefinitionFile=".\irShell.def"
 				GenerateDebugInformation="true"
@@ -648,7 +462,8 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				OutputFile="../../../BinaryP/irShell.dll"
+				AdditionalDependencies="ckcore.lib"
+				OutputFile="../../../Binary32P/irShell.dll"
 				LinkIncremental="1"
 				ModuleDefinitionFile=".\irShell.def"
 				GenerateDebugInformation="true"
@@ -743,7 +558,8 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				OutputFile="../../../BinaryP/irShell.dll"
+				AdditionalDependencies="ckcore.lib"
+				OutputFile="../../../Binary64P/irShell.dll"
 				LinkIncremental="1"
 				ModuleDefinitionFile=".\irShell.def"
 				GenerateDebugInformation="true"
@@ -846,22 +662,6 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="ReleaseA|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="ReleaseA|x64"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -990,22 +790,6 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="ReleaseA|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="ReleaseA|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
 					Name="ReleaseP|Win32"
 					>
 					<Tool
@@ -1058,18 +842,6 @@
 				RelativePath="..\..\Common\XMLProcessor.h"
 				>
 			</File>
-			<Filter
-				Name="Windows"
-				>
-				<File
-					RelativePath="..\..\Common\Windows\Win32FileManager.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\Common\Windows\Win32FileManager.h"
-					>
-				</File>
-			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

@@ -636,14 +636,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\ConsolePipe.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ConsolePipeStream.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\CopyDiscDlg.cpp"
 				>
 			</File>
@@ -1122,14 +1114,6 @@
 			</File>
 			<File
 				RelativePath=".\ConfirmFileReplaceDlg.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ConsolePipe.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ConsolePipeStream.h"
 				>
 			</File>
 			<File

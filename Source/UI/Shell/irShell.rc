@@ -52,8 +52,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,46,0,0
- PRODUCTVERSION 0,46,0,0
+ FILEVERSION 0,47,0,0
+ PRODUCTVERSION 0,47,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -69,12 +69,12 @@ BEGIN
         BLOCK "040904b0"
         BEGIN
             VALUE "FileDescription", "InfraRecorder shell extension."
-            VALUE "FileVersion", "0.46.0.0"
+            VALUE "FileVersion", "0.47.0.0"
             VALUE "InternalName", "irShell.dll"
-            VALUE "LegalCopyright", "Copyright © 2006-2008 Christian Kindahl"
+            VALUE "LegalCopyright", "Copyright © 2006-2009 Christian Kindahl"
             VALUE "OriginalFilename", "irShell.dll"
             VALUE "ProductName", "irShell"
-            VALUE "ProductVersion", "0.46.0.0"
+            VALUE "ProductVersion", "0.47.0.0"
         END
     END
     BLOCK "VarFileInfo"
