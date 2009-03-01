@@ -98,15 +98,15 @@ void CLogDlg::InitializeLogFile()
 {
 	if (m_LogFile.exist())
 	{
-		if (m_LogFile.open(ckcore::FileBase::ckOPEN_READWRITE))
+		if (m_LogFile.open(ckcore::File::ckOPEN_READWRITE))
 		{
-			m_LogFile.seek(0,ckcore::FileBase::ckFILE_END);
+			m_LogFile.seek(0,ckcore::File::ckFILE_END);
 			m_LogFile.write(ckT("\r\n"),sizeof(ckcore::tchar) << 1);
 		}
 	}
 	else
 	{
-		if (m_LogFile.open(ckcore::FileBase::ckOPEN_WRITE))
+		if (m_LogFile.open(ckcore::File::ckOPEN_WRITE))
 		{
 #ifdef UNICODE
 			// Write byte order mark.
@@ -211,7 +211,7 @@ void CLogDlg::print_line(const TCHAR *szLine,...)
 bool CLogDlg::SaveLog(const TCHAR *szFileName)
 {
 	ckcore::File File(szFileName);
-	if (!File.open(ckcore::FileBase::ckOPEN_WRITE))
+	if (!File.open(ckcore::File::ckOPEN_WRITE))
 		return false;
 
 	// Obtain buffer handle.

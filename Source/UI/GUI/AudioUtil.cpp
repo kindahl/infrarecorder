@@ -27,7 +27,7 @@
 bool IsWave(const TCHAR *szFileName)
 {
 	ckcore::File File(szFileName);
-	if (!File.open(ckcore::FileBase::ckOPEN_READ))
+	if (!File.open(ckcore::File::ckOPEN_READ))
 		return false;
 
 	// Validate ID.
@@ -39,7 +39,7 @@ bool IsWave(const TCHAR *szFileName)
 		return false;
 
 	// Ignore size.
-	File.seek(4,ckcore::FileBase::ckFILE_CURRENT);
+	File.seek(4,ckcore::File::ckFILE_CURRENT);
 
 	// Validate type.
 	if (File.read(szBuffer,4) == -1)

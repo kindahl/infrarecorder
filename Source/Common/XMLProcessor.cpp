@@ -48,7 +48,7 @@ CXMLProcessor::~CXMLProcessor()
 void CXMLProcessor::DumpBuffer()
 {
 	ckcore::File File(_T("xml_buffer_dump.txt"));
-	if (File.open(ckcore::FileBase::ckOPEN_WRITE))
+	if (File.open(ckcore::File::ckOPEN_WRITE))
 		File.write(m_ucBuffer,sizeof(m_ucBuffer));
 }
 
@@ -206,7 +206,7 @@ int CXMLProcessor::Load(const TCHAR *szFullPath)
 {
 	// Open the file.
 	ckcore::File File(szFullPath);
-	if (!File.open(ckcore::FileBase::ckOPEN_READ))
+	if (!File.open(ckcore::File::ckOPEN_READ))
 		return XMLRES_FILEERROR;
 
 	// If the application is in an unicode environment we need to check what
@@ -229,7 +229,7 @@ int CXMLProcessor::Load(const TCHAR *szFullPath)
 
 		default:
 			// If no BOM is found the file pointer has to be re-moved to the beginning.
-			if (File.seek(0,ckcore::FileBase::ckFILE_BEGIN) == -1)
+			if (File.seek(0,ckcore::File::ckFILE_BEGIN) == -1)
 				return XMLRES_FILEERROR;
 
 			break;
@@ -462,7 +462,7 @@ int CXMLProcessor::Save(const TCHAR *szFullPath)
 {
 	// Open the file.
 	ckcore::File File(szFullPath);
-	if (!File.open(ckcore::FileBase::ckOPEN_WRITE))
+	if (!File.open(ckcore::File::ckOPEN_WRITE))
 		return XMLRES_FILEERROR;
 
 	// Write byte-order mark.

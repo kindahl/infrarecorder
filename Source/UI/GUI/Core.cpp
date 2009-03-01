@@ -1179,15 +1179,18 @@ bool CCore::BurnImage(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	}
 
 	// Eject.
-	if (pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_TESTWRITING)
+	if (pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_EJECTCDSS)
 	{
 		if (g_BurnImageSettings.m_bEject)
 			CommandLine += _T(" -eject");
 	}
 
 	// Simulation.
-	if (g_BurnImageSettings.m_bSimulate)
-		CommandLine += _T(" -dummy");
+	if (pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_TESTWRITING)
+	{
+		if (g_BurnImageSettings.m_bSimulate)
+			CommandLine += _T(" -dummy");
+	}
 
 	// Write method.
 	switch (g_BurnImageSettings.m_iWriteMethod)

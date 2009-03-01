@@ -93,7 +93,7 @@ void CLNGProcessor::ReadBack()
 int CLNGProcessor::Load()
 {
 	// Open the file.
-	if (!m_File.open(ckcore::FileBase::ckOPEN_READ))
+	if (!m_File.open(ckcore::File::ckOPEN_READ))
 		return LNGRES_FILEERROR;
 
 	// If the application is in an unicode environment we need to check what
@@ -116,7 +116,7 @@ int CLNGProcessor::Load()
 
 		default:
 			// If no BOM is found the file pointer has to be re-moved to the beginning.
-			if (m_File.seek(0,ckcore::FileBase::ckFILE_BEGIN) == -1)
+			if (m_File.seek(0,ckcore::File::ckFILE_BEGIN) == -1)
 				return LNGRES_FILEERROR;
 
 			break;

@@ -1068,7 +1068,7 @@ bool CCore2::ReadFullTOC(CCore2Device *pDevice,const TCHAR *szFileName)
 
 	// Save the data to the specified file name.
 	ckcore::File File(szFileName);
-	if (!File.open(ckcore::FileBase::ckOPEN_WRITE))
+	if (!File.open(ckcore::File::ckOPEN_WRITE))
 	{
 		g_LogDlg.print_line(_T("  Error: Unable to open file \"%s\" for writing."),szFileName);
 		return false;

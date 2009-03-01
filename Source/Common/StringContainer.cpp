@@ -66,7 +66,7 @@ bool CStringContainer::ReadNext(ckcore::File &File,TCHAR &c)
 int CStringContainer::SaveToFile(const TCHAR *szFileName,bool bCRLF)
 {
 	ckcore::File File(szFileName);
-	if (!File.open(ckcore::FileBase::ckOPEN_WRITE))
+	if (!File.open(ckcore::File::ckOPEN_WRITE))
 		return SCRES_FAIL;
 
 	// Write byte order mark.
@@ -110,7 +110,7 @@ int CStringContainer::SaveToFile(const TCHAR *szFileName,bool bCRLF)
 int CStringContainer::LoadFromFile(const TCHAR *szFileName)
 {
 	ckcore::File File(szFileName);
-	if (!File.open(ckcore::FileBase::ckOPEN_READ))
+	if (!File.open(ckcore::File::ckOPEN_READ))
 		return SCRES_FAIL;
 
 	// Read byte order mark.
@@ -132,7 +132,7 @@ int CStringContainer::LoadFromFile(const TCHAR *szFileName)
 
 		default:
 			// If no BOM is found the file pointer has to be re-moved to the beginning.
-			if (File.seek(0,ckcore::FileBase::ckFILE_BEGIN) == -1)
+			if (File.seek(0,ckcore::File::ckFILE_BEGIN) == -1)
 				return SCRES_FAIL;
 
 			break;
@@ -212,7 +212,7 @@ bool CStringContainerA::ReadNext(ckcore::File &File,char &c)
 int CStringContainerA::SaveToFile(const TCHAR *szFileName,bool bCRLF)
 {
 	ckcore::File File(szFileName);
-	if (!File.open(ckcore::FileBase::ckOPEN_WRITE))
+	if (!File.open(ckcore::File::ckOPEN_WRITE))
 		return SCRES_FAIL;
 
 	// Find the longest string.
@@ -249,7 +249,7 @@ int CStringContainerA::SaveToFile(const TCHAR *szFileName,bool bCRLF)
 int CStringContainerA::LoadFromFile(const TCHAR *szFileName)
 {
 	ckcore::File File(szFileName);
-	if (!File.open(ckcore::FileBase::ckOPEN_READ))
+	if (!File.open(ckcore::File::ckOPEN_READ))
 		return SCRES_FAIL;
 
 	// Read the file data.

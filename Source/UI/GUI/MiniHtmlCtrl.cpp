@@ -100,7 +100,7 @@ bool CMiniHtmlCtrl::Load(const TCHAR *szFileName)
 	Close();
 
 	ckcore::File File(szFileName);
-	if (!File.open(ckcore::FileBase::ckOPEN_READ))
+	if (!File.open(ckcore::File::ckOPEN_READ))
 		return false;
 
 	// Make sure that the file is not too large.
@@ -127,7 +127,7 @@ bool CMiniHtmlCtrl::Load(const TCHAR *szFileName)
 
 		default:
 			// If no BOM is found the file pointer has to be re-moved to the beginning.
-			File.seek(0,ckcore::FileBase::ckFILE_BEGIN);
+			File.seek(0,ckcore::File::ckFILE_BEGIN);
 			break;
 	};
 #endif

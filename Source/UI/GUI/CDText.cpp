@@ -180,7 +180,7 @@ bool CCDText::ReadFile(const TCHAR *szFileName)
 	Reset();
 
 	ckcore::File File(szFileName);
-	if (!File.open(ckcore::FileBase::ckOPEN_READ))
+	if (!File.open(ckcore::File::ckOPEN_READ))
 		return false;
 
 	// Make sure that the file is not too large.
@@ -198,7 +198,7 @@ bool CCDText::ReadFile(const TCHAR *szFileName)
 	if (ulSignature == CDTEXT_SIGNATURE)
 		uiDataSize -= 4;
 	else
-		File.seek(0,ckcore::FileBase::ckFILE_BEGIN);
+		File.seek(0,ckcore::File::ckFILE_BEGIN);
 
 	unsigned int uiNumPackets = uiDataSize/18;
 
@@ -214,7 +214,7 @@ bool CCDText::ReadFile(const TCHAR *szFileName)
 		ReadPacket(File,ulHeader & 0xFFFFFF,(ulHeader & 0xFF000000) >> 24);
 
 		// Skip the CRC-field.
-		if (File.seek(2,ckcore::FileBase::ckFILE_CURRENT) == -1)
+		if (File.seek(2,ckcore::File::ckFILE_CURRENT) == -1)
 			return false;
 	}
 
@@ -316,7 +316,7 @@ void CCDText::FlushText(ckcore::File &File,unsigned char ucType,unsigned int uiC
 bool CCDText::WriteFile(const TCHAR *szFileName)
 {
 	ckcore::File File(szFileName);
-	if (!File.open(ckcore::FileBase::ckOPEN_WRITE))
+	if (!File.open(ckcore::File::ckOPEN_WRITE))
 		return false;
 
 #ifdef CDTEXT_SAVESIGNATURE
@@ -370,7 +370,7 @@ bool CCDText::WriteFileEx(const TCHAR *szFileName,const TCHAR *szAlbumName,
 						  const TCHAR *szArtistName,std::vector<CItemData *> &Tracks)
 {
 	ckcore::File File(szFileName);
-	if (!File.open(ckcore::FileBase::ckOPEN_WRITE))
+	if (!File.open(ckcore::File::ckOPEN_WRITE))
 		return false;
 
 #ifdef CDTEXT_SAVESIGNATURE
