@@ -79,6 +79,7 @@ BEGIN
             MENUITEM "&Selected",                   ID_ADD_SELECTED
             MENUITEM "&All",                        ID_ADD_ALL
         END
+        MENUITEM "Im&port...",                  ID_EDIT_IMPORT
         MENUITEM SEPARATOR
         MENUITEM "Select &All\tCtrl+A",         ID_EDIT_SELECTALL
         MENUITEM "&Invert Selection",           ID_EDIT_INVERTSELECTION
@@ -857,6 +858,7 @@ BEGIN
     ID_EDIT_SELECTALL       "Select all items in the window."
     ID_EDIT_INVERTSELECTION "Reverse which items are selected and which are not."
     ID_NEWPROJECT_DATACDMS  "Create a new multi-session data CD project."
+    ID_EDIT_IMPORT          "Import file(s) to the project."
 END
 
 #endif    // English (U.S.) resources

@@ -319,7 +319,6 @@
 #define IDC_WIZARDCHECK                 1224
 #define IDC_BUTTON3                     1225
 #define IDC_NUMCOPIESSTATIC             1226
-#define IDC_COMBO1                      1228
 #define IDC_NUMCOPIESCOMBO              1228
 #define IDC_PROJECTTREEVIEW             10001
 #define IDC_PROJECTLISTVIEW             10002
@@ -383,13 +382,14 @@
 #define ID_POPUPMENU_PROPERTIES         32840
 #define ID_NEWPROJECT_DATACD32841       32841
 #define ID_NEWPROJECT_DATACDMS          32842
+#define ID_EDIT_IMPORT                  32843
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        297
-#define _APS_NEXT_COMMAND_VALUE         32843
+#define _APS_NEXT_COMMAND_VALUE         32844
 #define _APS_NEXT_CONTROL_VALUE         1229
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

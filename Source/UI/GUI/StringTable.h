@@ -391,10 +391,14 @@ enum eStringTable
 	WARNING_IMPORTFS,
 	STITLE_VERIFYDISC,
 
-	// Add version 0.46.
+	// Added version 0.46.
 	ERROR_NUMCOPIES,
 	INFO_NEXTCOPY,
-	INFO_CREATECOPY
+	INFO_CREATECOPY,
+
+	// Added version 0.47.
+	ERROR_PROJECT_IMPORT,
+	ERROR_PROJECT_IMPORT_FILE
 };
 
 extern TCHAR *g_szStringTable[];

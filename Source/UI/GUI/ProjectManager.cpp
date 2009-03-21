@@ -20,6 +20,7 @@
 #include <ckcore/filestream.hh>
 #include <ckcore/directory.hh>
 #include <ckcore/convert.hh>
+#include <ckcore/linereader.hh>
 #include "../../Common/StringUtil.h"
 #include "StringTable.h"
 #include "MainFrm.h"
@@ -245,6 +246,11 @@ CProjectNode *CProjectManager::CFileTransaction::
 bool CProjectManager::CFileTransaction::
 	AddAudioFile(CProjectNode *pParentNode,const TCHAR *szFullPath)
 {
+	// Check if M3U play list, in that case import the contents from it.
+	ckcore::Path FullPath(szFullPath);
+	if (!ckcore::string::astrcmpi(FullPath.ext_name().c_str(),ckT("m3u")))
+		return g_ProjectManager.Import(szFullPath);
+
 	bool bEncoded = false;
 	unsigned __int64 uiDuration = 0;
 
@@ -2186,4 +2192,117 @@ void CProjectManager::SetModified(bool bModified)
 bool CProjectManager::GetModified()
 {
 	return m_bModified;
+}
+
+/**
+ * Imports a single file into the project.
+ * @param [in] BasePath The base path to use in order to build full path if the
+ *                      specified file path is relative.
+ * @param [in] FilePath The full or relative file path.
+ * @param [in] Transaction The transaction object to update with the new file.
+ * @return If successful true is returned, if not false is returned.
+ */
+bool CProjectManager::ImportFile(ckcore::Path &BasePath,
+								 ckcore::tstring &FilePath,
+								 CFileTransaction &Transaction)
+{
+	// Check if full file path.
+	if (FilePath.size() > 1 && FilePath[1] == ':')
+		return Transaction.AddFile(FilePath.c_str());
+
+	// Create full path from relative path.
+	ckcore::Path FullPath = BasePath;
+	FullPath += FilePath.c_str();
+
+	return Transaction.AddFile(FullPath.name().c_str());
+}
+
+/**
+ * Imports data from a file list (text file containing one file or folder on
+ * each line). The file can be in M3U format, supporting comments starting with
+ * the '#'-character.
+ * @param [in] szFullPath Path to the file list.
+ * @return If successful true is returned, if not false is returned.
+ */
+bool CProjectManager::Import(const TCHAR *szFullPath)
+{
+	// Open the selected file for reading.
+	ckcore::FileInStream FileStream(szFullPath);
+	if (!FileStream.open())
+		return false;
+
+	// Calculate the base path name in case the listed files have relative paths.
+	ckcore::Path BasePath(szFullPath);
+	BasePath = BasePath.dir_name().c_str();
+
+	CFileTransaction Transaction;
+
+	// Read the file line by line.
+	ckcore::LineReader<ckcore::tchar>::Encoding FileEnc =
+		ckcore::LineReader<ckcore::tchar>::encoding(FileStream);
+	FileStream.seek(0,ckcore::InStream::ckSTREAM_BEGIN);
+
+	// Check if ANSI or UTF-16 encoding.
+	if (FileEnc == ckcore::LineReader<ckcore::tchar>::ckENCODING_ANSI)
+	{
+		ckcore::LineReader<char> LineReader(FileStream);
+		while (!LineReader.end())
+		{
+			ckcore::tstring Line =
+				ckcore::string::ansi_to_auto<1024>(LineReader.read_line().c_str());
+
+			// Skip empty and commented lines.
+			if (Line.empty())
+				continue;
+
+			if (Line[0] == '#')
+				continue;
+
+			// Remove any trailing path delimiters.
+			if (Line[Line.size() - 1] == '\\' || Line[Line.size() - 1] == '/')
+				Line.resize(Line.size() - 1);
+
+			if (!ImportFile(BasePath,Line,Transaction))
+			{
+				TCHAR szBuffer[1024];
+				lsprintf(szBuffer,lngGetString(ERROR_PROJECT_IMPORT_FILE),
+					Line.c_str());
+
+				MessageBox(HWND_DESKTOP,szBuffer,lngGetString(GENERAL_ERROR),
+					MB_OK | MB_ICONERROR);
+			}
+		}
+	}
+	else
+	{
+		ckcore::LineReader<wchar_t> LineReader(FileStream);
+		while (!LineReader.end())
+		{
+			ckcore::tstring Line =
+				ckcore::string::utf16_to_auto<1024>(LineReader.read_line().c_str());
+			
+			// Skip empty and commented lines.
+			if (Line.empty())
+				continue;
+
+			if (Line[0] == '#')
+				continue;
+
+			// Remove any trailing path delimiters.
+			if (Line[Line.size() - 1] == '\\' || Line[Line.size() - 1] == '/')
+				Line.resize(Line.size() - 1);
+
+			if (!ImportFile(BasePath,Line,Transaction))
+			{
+				TCHAR szBuffer[1024];
+				lsprintf(szBuffer,lngGetString(ERROR_PROJECT_IMPORT_FILE),
+					Line.c_str());
+
+				MessageBox(HWND_DESKTOP,szBuffer,lngGetString(GENERAL_ERROR),
+					MB_OK | MB_ICONERROR);
+			}
+		}
+	}
+
+	return true;
 }

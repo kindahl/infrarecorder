@@ -17,6 +17,8 @@
  */
 
 #include "stdafx.h"
+#include <ckcore/filestream.hh>
+#include <ckcore/linereader.hh>
 #include "resource.h"
 #include "MainFrm.h"
 #include "Settings.h"
@@ -721,6 +723,8 @@ bool CMainFrame::Translate()
 		// Modify the popup menu.
 		ModifyMenu(m_hProjListSelMenu,ID_EDIT_REMOVE,MF_BYCOMMAND | MF_STRING,ID_EDIT_REMOVE,(LPCTSTR)szStrValue);
 	}
+	if (pLNG->GetValuePtr(ID_EDIT_IMPORT,szStrValue))
+		ModifyMenu(hCurMenu,ID_EDIT_IMPORT,MF_BYCOMMAND | MF_STRING,ID_EDIT_IMPORT,(LPCTSTR)szStrValue);
 	if (pLNG->GetValuePtr(ID_EDIT_SELECTALL,szStrValue))
 	{
 		TCHAR szMenuString[64];
@@ -2717,6 +2721,20 @@ LRESULT CMainFrame::OnAdd(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 	}
 
 	m_pShellListView->EndGetItems();
+	return 0;
+}
+
+LRESULT CMainFrame::OnImport(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
+{
+	WTL::CFileDialog FileDialog(true,0,0,OFN_FILEMUSTEXIST | OFN_EXPLORER,
+		_T("File List (*.txt,*.m3u)\0*.txt;*.m3u\0\0"),m_hWnd);
+
+	if (FileDialog.DoModal() == IDOK)
+	{
+		if (!g_ProjectManager.Import(FileDialog.m_szFileName))
+			lngMessageBox(m_hWnd,ERROR_PROJECT_IMPORT,GENERAL_ERROR,MB_OK | MB_ICONERROR);
+	}
+
 	return 0;
 }
 

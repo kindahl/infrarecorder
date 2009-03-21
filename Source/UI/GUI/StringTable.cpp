@@ -397,5 +397,9 @@ TCHAR *g_szStringTable[] = {
 	// Add version 0.46.
 	_T("Invalid number of copies. Please specify a number larger than zero."),
 	_T("Please insert a new blank disc to create another copy."),
-	_T("Creating copy %d of %d.")
+	_T("Creating copy %d of %d."),
+
+	// Added version 0.47.
+	_T("Unable to import, does the selected source file exist?"),
+	_T("Could not import the file \"%s\".")
 };

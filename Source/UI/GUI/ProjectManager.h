@@ -57,6 +57,46 @@
 */
 class CProjectManager
 {
+public:
+	/// Class for performing file transactions within a project.
+	/**
+		Implements support for adding and moving files to/within a project.
+	*/
+	class CFileTransaction
+	{
+	public:
+		enum eMode
+		{
+			MODE_NORMAL,
+			MODE_IMPORT
+		};
+
+	private:
+		eMode m_Mode;
+		CConfirmFileReplaceDlg m_ReplaceDlg;
+
+		void AddFilesInFolder(CProjectNode *pParentNode,std::vector<CProjectNode *> &FolderStack);
+
+		bool AddDataFile(CProjectNode *pParentNode,const TCHAR *szFileName,
+			const TCHAR *szFilePath,const TCHAR *szFullPath,FILETIME *pFileTime,
+			unsigned __int64 uiSize);
+		CItemData *AddDataFile(CProjectNode *pParentNode,const TCHAR *szFullPath);
+		CProjectNode *AddFolder(CProjectNode *pParentNode,const TCHAR *szFolderName,
+			const TCHAR *szFolderPath,const TCHAR *szFullPath,FILETIME *pFileTime);
+		CProjectNode *AddFolder(CProjectNode *pParentNode,const TCHAR *szFullPath);
+		bool AddAudioFile(CProjectNode *pParentNode,const TCHAR *szFullPath);
+
+	public:
+		CFileTransaction(eMode Mode = MODE_NORMAL);
+		~CFileTransaction();
+
+		bool AddFile(const TCHAR *szFullPath,CProjectNode *pTargetNode = NULL);
+		CItemData *AddFile(const TCHAR *szFullPath,const TCHAR *szProjectPath);
+
+		bool MoveFile(CProjectNode *pItemParent,CItemData *pItemData,CProjectNode *pNewParent);
+		bool MoveFileToCurrent(CProjectNode *pItemParent,CItemData *pItemData);
+	};
+
 private:
 	int m_iProjectType;
 	int m_iViewType;
@@ -107,46 +147,10 @@ private:
 		AV_LIST
 	};
 
+	bool ImportFile(ckcore::Path &BasePath,ckcore::tstring &FilePath,
+		CFileTransaction &Transaction);
+
 public:
-	/// Class for performing file transactions within a project.
-	/**
-		Implements support for adding and moving files to/within a project.
-	*/
-	class CFileTransaction
-	{
-	public:
-		enum eMode
-		{
-			MODE_NORMAL,
-			MODE_IMPORT
-		};
-
-	private:
-		eMode m_Mode;
-		CConfirmFileReplaceDlg m_ReplaceDlg;
-
-		void AddFilesInFolder(CProjectNode *pParentNode,std::vector<CProjectNode *> &FolderStack);
-
-		bool AddDataFile(CProjectNode *pParentNode,const TCHAR *szFileName,
-			const TCHAR *szFilePath,const TCHAR *szFullPath,FILETIME *pFileTime,
-			unsigned __int64 uiSize);
-		CItemData *AddDataFile(CProjectNode *pParentNode,const TCHAR *szFullPath);
-		CProjectNode *AddFolder(CProjectNode *pParentNode,const TCHAR *szFolderName,
-			const TCHAR *szFolderPath,const TCHAR *szFullPath,FILETIME *pFileTime);
-		CProjectNode *AddFolder(CProjectNode *pParentNode,const TCHAR *szFullPath);
-		bool AddAudioFile(CProjectNode *pParentNode,const TCHAR *szFullPath);
-
-	public:
-		CFileTransaction(eMode Mode = MODE_NORMAL);
-		~CFileTransaction();
-
-		bool AddFile(const TCHAR *szFullPath,CProjectNode *pTargetNode = NULL);
-		CItemData *AddFile(const TCHAR *szFullPath,const TCHAR *szProjectPath);
-
-		bool MoveFile(CProjectNode *pItemParent,CItemData *pItemData,CProjectNode *pNewParent);
-		bool MoveFileToCurrent(CProjectNode *pItemParent,CItemData *pItemData);
-	};
-
 	CProjectManager();
 	~CProjectManager();
 
@@ -208,6 +212,8 @@ public:
 
 	bool SaveProject(const TCHAR *szFullPath);
 	bool LoadProject(const TCHAR *szFullPath);
+
+	bool Import(const TCHAR *szFullPath);
 };
 
 extern CProjectManager g_ProjectManager;

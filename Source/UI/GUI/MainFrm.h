@@ -363,6 +363,7 @@ public:
 		COMMAND_ID_HANDLER(ID_EDIT_REMOVE,g_ProjectManager.OnRemove)
 		COMMAND_ID_HANDLER(ID_ADD_SELECTED,OnAdd)
 		COMMAND_ID_HANDLER(ID_ADD_ALL,OnAdd)
+		COMMAND_ID_HANDLER(ID_EDIT_IMPORT,OnImport)
 		COMMAND_ID_HANDLER(ID_EDIT_SELECTALL,OnSelectAll)
 		COMMAND_ID_HANDLER(ID_EDIT_INVERTSELECTION,OnInvertSel)
 
@@ -467,6 +468,7 @@ public:
 
 	// Edit menu.
 	LRESULT OnAdd(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+	LRESULT OnImport(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
 	LRESULT OnSelectAll(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
 	LRESULT OnInvertSel(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
 
