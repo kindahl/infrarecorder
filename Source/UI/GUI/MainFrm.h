@@ -174,9 +174,11 @@ public:
 	CMainFrame();
 	~CMainFrame();
 
+	// FIXME: This is damn ugly.
 	int m_iDefaultProjType;
-	bool m_bDefaultProjDataDVD;
+	int m_iDefaultMedia;
 	bool m_bDefaultProjDVDVideo;
+	bool m_bDefaultWizard;
 
 	TCHAR m_szProjectFile[MAX_PATH];
 

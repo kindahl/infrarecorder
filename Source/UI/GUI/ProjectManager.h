@@ -99,9 +99,9 @@ public:
 
 private:
 	int m_iProjectType;
+	int m_iProjectMedia;
 	int m_iViewType;
 	int m_iActiveView;				// Tells us what view (tree or list) that last had focus.
-	bool m_bProjectDVD;				// Is set to true if the project is to be recorded on a DVD media.
 	bool m_bModified;				// Set to true if the project has been modified since the last save.
 
 	CProjectNode *m_pActionNode;	// Used for random internal temporary purposes.
@@ -163,9 +163,9 @@ public:
 
 	void EnableAll(int iID,bool bEnable,HMENU hMenu = NULL);
 
-	void NewDataProject(bool bDVD);
-	void NewAudioProject();
-	void NewMixedProject();
+	void NewDataProject(int iDiscMedia);
+	void NewAudioProject(int iDiscMedia);
+	void NewMixedProject(int iDiscMedia);
 
 	void DataSelected();
 	void AudioSelected();
@@ -191,7 +191,6 @@ public:
 	void GetProjectContents(unsigned __int64 &uiFileCount,unsigned __int64 &uiFolderCount,
 		unsigned __int64 &uiTrackCount);
 	unsigned __int64 GetProjectSize();
-	bool GetProjectDVDState();
 	//unsigned __int64 GetProjectAudioSize();
 	CProjectNode *GetMixDataRootNode();
 	CProjectNode *GetMixAudioRootNode();

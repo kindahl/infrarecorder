@@ -535,9 +535,9 @@ bool CProjectManager::CFileTransaction::
 CProjectManager::CProjectManager()
 {
 	m_iProjectType = -1;
+	m_iProjectMedia = -1;
 	m_iViewType = -1;
 	m_iActiveView = AV_TREE;
-	m_bProjectDVD = false;
 
 	m_pProjectView = NULL;
 	m_pContainer = NULL;
@@ -716,7 +716,7 @@ void CProjectManager::AssignControls(CSplitterWindow *pProjectView,CCustomContai
 	@param bDVD specifies whether the project should be recorded to DVD media or
 	not.
 */
-void CProjectManager::NewDataProject(bool bDVD)
+void CProjectManager::NewDataProject(int iDiscMedia)
 {
 	// Reset the old project settings.
 	g_ProjectSettings.Reset();
@@ -729,7 +729,7 @@ void CProjectManager::NewDataProject(bool bDVD)
 	CloseProject();
 
 	m_iProjectType = PROJECTTYPE_DATA;
-	m_bProjectDVD = bDVD;
+	m_iProjectMedia = iDiscMedia;
 
 	if (m_pProjectView != NULL)
 		SetupDataListView();
@@ -749,11 +749,7 @@ void CProjectManager::NewDataProject(bool bDVD)
 	if (m_pSpaceMeter != NULL)
 	{
 		m_pSpaceMeter->SetDisplayMode(PROJECTVIEWTYPE_DATA);
-
-		if (bDVD)
-			m_pSpaceMeter->SetDiscSize(SPACEMETER_SIZE_DVD);
-		else
-			m_pSpaceMeter->SetDiscSize(SPACEMETER_SIZE_703MB);
+		m_pSpaceMeter->SetDiscSize(m_iProjectMedia);
 
 		m_pSpaceMeter->SetAllocatedSize(0);
 		m_pSpaceMeter->ForceRedraw();
@@ -770,7 +766,7 @@ void CProjectManager::NewDataProject(bool bDVD)
 /**
 	Creates a mew empty audio project.
 */
-void CProjectManager::NewAudioProject()
+void CProjectManager::NewAudioProject(int iDiscMedia)
 {
 	// Reset the old project settings.
 	g_ProjectSettings.Reset();
@@ -783,7 +779,7 @@ void CProjectManager::NewAudioProject()
 	CloseProject();
 
 	m_iProjectType = PROJECTTYPE_AUDIO;
-	m_bProjectDVD = false;
+	m_iProjectMedia = iDiscMedia;
 
 	if (m_pListView != NULL)
 		SetupAudioListView();
@@ -795,7 +791,7 @@ void CProjectManager::NewAudioProject()
 	if (m_pSpaceMeter != NULL)
 	{
 		m_pSpaceMeter->SetDisplayMode(PROJECTVIEWTYPE_AUDIO);
-		m_pSpaceMeter->SetDiscSize(SPACEMETER_SIZE_80MIN);
+		m_pSpaceMeter->SetDiscSize(m_iProjectMedia);
 		m_pSpaceMeter->SetAllocatedSize(0);
 		m_pSpaceMeter->ForceRedraw();
 	}
@@ -811,7 +807,7 @@ void CProjectManager::NewAudioProject()
 /**
 	Creates a new empty mixed mode project.
 */
-void CProjectManager::NewMixedProject()
+void CProjectManager::NewMixedProject(int iDiscMedia)
 {
 	// Reset the old project settings.
 	g_ProjectSettings.Reset();
@@ -824,7 +820,7 @@ void CProjectManager::NewMixedProject()
 	CloseProject();
 
 	m_iProjectType = PROJECTTYPE_MIXED;
-	m_bProjectDVD = false;
+	m_iProjectMedia = iDiscMedia;
 
 	// By default we display the data view.
 	if (m_pListView != NULL)
@@ -851,7 +847,7 @@ void CProjectManager::NewMixedProject()
 	if (m_pSpaceMeter != NULL)
 	{
 		m_pSpaceMeter->SetDisplayMode(PROJECTVIEWTYPE_DATA);
-		m_pSpaceMeter->SetDiscSize(SPACEMETER_SIZE_703MB);
+		m_pSpaceMeter->SetDiscSize(m_iProjectMedia);
 		m_pSpaceMeter->SetAllocatedSize(0);
 		m_pSpaceMeter->ForceRedraw();
 	}
@@ -1519,7 +1515,7 @@ bool CProjectManager::SaveProject(const TCHAR *szFullPath)
 		XML.AddElement(_T("Project"),_T(""),true);
 			XML.AddElementAttr(_T("version"),PROJECTMANAGER_FILEVERSION);
 			XML.AddElementAttr(_T("type"),m_iProjectType);
-			XML.AddElementAttr(_T("dvd"),m_bProjectDVD);
+			XML.AddElementAttr(_T("media"),m_iProjectMedia);
 
 			switch (m_iProjectType)
 			{
@@ -1596,13 +1592,13 @@ bool CProjectManager::LoadProject(const TCHAR *szFullPath)
 	int iType = -1;
 	XML.GetSafeElementAttrValue(_T("type"),&iType);
 
-	bool bDVD = false;
-	XML.GetSafeElementAttrValue(_T("dvd"),&bDVD);
+	int iMedia = false;
+	XML.GetSafeElementAttrValue(_T("media"),&iMedia);
 
 	switch (iType)
 	{
 		case PROJECTTYPE_DATA:
-			NewDataProject(bDVD);
+			NewDataProject(iMedia);
 
 			// Label.
 			XML.GetSafeElementData(_T("Label"),g_ProjectSettings.m_szLabel,MAX_PATH - 1);
@@ -1616,7 +1612,7 @@ bool CProjectManager::LoadProject(const TCHAR *szFullPath)
 			break;
 
 		case PROJECTTYPE_AUDIO:
-			NewAudioProject();
+			NewAudioProject(iMedia);
 
 			// Album information.
 			XML.GetSafeElementData(_T("AlbumName"),g_ProjectSettings.m_szAlbumName,159);
@@ -1624,7 +1620,7 @@ bool CProjectManager::LoadProject(const TCHAR *szFullPath)
 			break;
 
 		case PROJECTTYPE_MIXED:
-			NewMixedProject();
+			NewMixedProject(iMedia);
 
 			// Label.
 			XML.GetSafeElementData(_T("Label"),g_ProjectSettings.m_szLabel,MAX_PATH - 1);
@@ -1702,15 +1698,6 @@ void CProjectManager::GetProjectContents(unsigned __int64 &uiFileCount,unsigned 
 unsigned __int64 CProjectManager::GetProjectSize()
 {
 	return m_pSpaceMeter->GetAllocatedSize();
-}
-
-/**
-	Returns true if the project should be recorded to a DVD media.
-	@return true if the project should be recorded to a DVD media.
-*/
-bool CProjectManager::GetProjectDVDState()
-{
-	return m_bProjectDVD;
 }
 
 /*

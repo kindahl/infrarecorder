@@ -17,12 +17,12 @@
  */
 
 #include "stdafx.h"
-#include "SpaceMeter.h"
 #include "../../Common/StringUtil.h"
 #include "../../Common/GraphUtil.h"
 #include "LangUtil.h"
 #include "StringTable.h"
 #include "WinVer.h"
+#include "SpaceMeter.h"
 
 CSpaceMeter::CSpaceMeter()
 {

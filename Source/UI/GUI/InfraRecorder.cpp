@@ -100,7 +100,7 @@ int Run(LPTSTR lpstrCmdLine = NULL,int nCmdShow = SW_SHOWDEFAULT)
 		g_DynamicSettings.m_rcWindow.top != -1 &&
 		g_DynamicSettings.m_rcWindow.bottom != -1)
 	{
-		if (g_GlobalSettings.m_bShowWizard)
+		if (g_MainFrame.m_bDefaultWizard)
 		{
 			RECT rcWindow = g_DynamicSettings.m_rcWindow;
 			rcWindow.right = rcWindow.left + 500;
@@ -115,7 +115,7 @@ int Run(LPTSTR lpstrCmdLine = NULL,int nCmdShow = SW_SHOWDEFAULT)
 	}
 	else
 	{
-		if (g_GlobalSettings.m_bShowWizard)
+		if (g_MainFrame.m_bDefaultWizard)
 		{
 			RECT rcWindow = g_DynamicSettings.m_rcWindow;
 			rcWindow.right = rcWindow.left + 500;
@@ -136,23 +136,68 @@ int Run(LPTSTR lpstrCmdLine = NULL,int nCmdShow = SW_SHOWDEFAULT)
 
 INT_PTR ParseAndRun(LPTSTR lpstrCmdLine,int nCmdShow = SW_SHOWDEFAULT)
 {
-	// From the express application.
-	if (!lstrcmp(lpstrCmdLine,_T("-datadvdproject")))
+	g_MainFrame.m_bDefaultWizard = g_GlobalSettings.m_bShowWizard;
+
+	// FIXME: This is an absolutely horrible parameter parsing implementation.
+
+	// Default project selection.
+	if (!lstrncmp(lpstrCmdLine,_T("-project="),9))
 	{
-		g_MainFrame.m_bDefaultProjDataDVD = true;
+		lpstrCmdLine += 9;
+		if (!lstrncmp(lpstrCmdLine,_T("data"),4))
+		{
+			g_MainFrame.m_iDefaultProjType = PROJECTTYPE_DATA;
+			g_MainFrame.m_bDefaultWizard = false;
+
+			lpstrCmdLine += 4;
+		}
+		else if (!lstrncmp(lpstrCmdLine,_T("audio"),5))
+		{
+			g_MainFrame.m_iDefaultProjType = PROJECTTYPE_AUDIO;
+			g_MainFrame.m_bDefaultWizard = false;
+
+			lpstrCmdLine += 5;
+		}
+		else if (!lstrncmp(lpstrCmdLine,_T("mixed"),5))
+		{
+			g_MainFrame.m_iDefaultProjType = PROJECTTYPE_MIXED;
+			g_MainFrame.m_bDefaultWizard = false;
+
+			lpstrCmdLine += 5;
+		}
+		else if (!lstrncmp(lpstrCmdLine,_T("dvdvideo"),8))
+		{
+			g_MainFrame.m_iDefaultProjType = PROJECTTYPE_DATA;
+			g_MainFrame.m_iDefaultMedia = SPACEMETER_SIZE_DVD;
+			g_MainFrame.m_bDefaultProjDVDVideo = true;
+			g_MainFrame.m_bDefaultWizard = false;
+
+			lpstrCmdLine += 8;
+		}
+
+		if (*lpstrCmdLine)
+			lpstrCmdLine++;
 	}
-	if (!lstrcmp(lpstrCmdLine,_T("-audioproject")))
+
+	// Default media selection.
+	if (!lstrncmp(lpstrCmdLine,_T("-media="),7))
 	{
-		g_MainFrame.m_iDefaultProjType = PROJECTTYPE_AUDIO;
-	}
-	else if (!lstrcmp(lpstrCmdLine,_T("-mixedproject")))
-	{
-		g_MainFrame.m_iDefaultProjType = PROJECTTYPE_MIXED;
-	}
-	else if (!lstrcmp(lpstrCmdLine,_T("-dvdvideoproject")))
-	{
-		g_MainFrame.m_bDefaultProjDataDVD = true;
-		g_MainFrame.m_bDefaultProjDVDVideo = true;
+		lpstrCmdLine += 7;
+		if (!lstrcmp(lpstrCmdLine,_T("dldvd")))
+		{
+			g_MainFrame.m_iDefaultMedia = SPACEMETER_SIZE_DLDVD;
+			g_MainFrame.m_bDefaultWizard = false;
+		}
+		else if (!lstrcmp(lpstrCmdLine,_T("dvd")))
+		{
+			g_MainFrame.m_iDefaultMedia = SPACEMETER_SIZE_DVD;
+			g_MainFrame.m_bDefaultWizard = false;
+		}
+		else if (!lstrcmp(lpstrCmdLine,_T("cd")))
+		{
+			g_MainFrame.m_iDefaultMedia = SPACEMETER_SIZE_703MB;
+			g_MainFrame.m_bDefaultWizard = false;
+		}
 	}
 	else if (!lstrcmp(lpstrCmdLine,_T("-burnimage")))
 	{
@@ -193,17 +238,6 @@ INT_PTR ParseAndRun(LPTSTR lpstrCmdLine,int nCmdShow = SW_SHOWDEFAULT)
 	// General, open file.
 	else if (lpstrCmdLine[0] != '\0')
 	{
-		// Strip quotes.
-		/*if (lpstrCmdLine[0] == '\"')
-		{
-			lstrcpy(g_MainFrame.m_szProjectFile,lpstrCmdLine + 1);
-			g_MainFrame.m_szProjectFile[lstrlen(g_MainFrame.m_szProjectFile) - 1] = '\0';
-		}
-		else
-		{
-			lstrcpy(g_MainFrame.m_szProjectFile,lpstrCmdLine);
-		}*/
-
 		TCHAR *szFullPath = new TCHAR[lstrlen(lpstrCmdLine) + 1];
 
 		// Strip quotes.
@@ -230,6 +264,8 @@ INT_PTR ParseAndRun(LPTSTR lpstrCmdLine,int nCmdShow = SW_SHOWDEFAULT)
 				return g_ActionManager.BurnImageEx(NULL,true,szFullPath);
 		}
 
+		g_MainFrame.m_bDefaultWizard = false;
+
 		lstrcpy(g_MainFrame.m_szProjectFile,szFullPath);
 		delete [] szFullPath;
 	}
@@ -237,7 +273,7 @@ INT_PTR ParseAndRun(LPTSTR lpstrCmdLine,int nCmdShow = SW_SHOWDEFAULT)
 	return Run(lpstrCmdLine,nCmdShow);
 }
 
-/*INT_PTR*/int WINAPI _tWinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPTSTR lpstrCmdLine,int nCmdShow)
+int WINAPI _tWinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPTSTR lpstrCmdLine,int nCmdShow)
 {
 	HRESULT hRes = ::CoInitialize(NULL);
 	// If you are running on NT 4.0 or higher you can use the following call instead to 

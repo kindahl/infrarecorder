@@ -408,22 +408,22 @@ LRESULT CWelcomePane::OnLButtonDown(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &
 		{
 			case ID_NEWPROJECT_DATACD:
 				g_MainFrame.ShowWelcomePane(false);
-				g_ProjectManager.NewDataProject(false);
+				g_ProjectManager.NewDataProject(SPACEMETER_SIZE_703MB);
 				break;
 
 			case ID_NEWPROJECT_DATADVD:
 				g_MainFrame.ShowWelcomePane(false);
-				g_ProjectManager.NewDataProject(true);
+				g_ProjectManager.NewDataProject(SPACEMETER_SIZE_DVD);
 				break;
 
 			case ID_NEWPROJECT_AUDIO:
 				g_MainFrame.ShowWelcomePane(false);
-				g_ProjectManager.NewAudioProject();
+				g_ProjectManager.NewAudioProject(SPACEMETER_SIZE_80MIN);
 				break;
 
 			case ID_NEWPROJECT_DVDVIDEO:
 				g_MainFrame.ShowWelcomePane(false);
-				g_ProjectManager.NewDataProject(true);
+				g_ProjectManager.NewDataProject(SPACEMETER_SIZE_DVD);
 				g_ProjectSettings.m_iFileSystem = FILESYSTEM_DVDVIDEO;
 				break;
 

@@ -51,8 +51,9 @@ CMainFrame g_MainFrame;
 CMainFrame::CMainFrame() : m_pShellListView(NULL),m_bWelcomePane(false)
 {
 	m_iDefaultProjType = PROJECTTYPE_DATA;
-	m_bDefaultProjDataDVD = false;		// CD project by default.
+	m_iDefaultMedia = -1;			// Use default for each project type.
 	m_bDefaultProjDVDVideo = false;
+	m_bDefaultWizard = true;
 
 	// Empty the file name.
 	m_szProjectFile[0] = '\0';
@@ -232,7 +233,7 @@ void CMainFrame::InitializeMainView()
 	RECT rcClient;
 	::GetClientRect(m_hWndClient,&rcClient);
 
-	if (g_GlobalSettings.m_bShowWizard)
+	if (m_bDefaultWizard)
 	{
 		m_bWelcomePane = true;
 
@@ -483,18 +484,21 @@ void CMainFrame::InitializeProjectView(unsigned int uiSplitterPos)
 	switch (m_iDefaultProjType)
 	{
 		case PROJECTTYPE_DATA:
-			g_ProjectManager.NewDataProject(m_bDefaultProjDataDVD);
+			g_ProjectManager.NewDataProject(m_iDefaultMedia != -1 ? m_iDefaultMedia :
+											SPACEMETER_SIZE_703MB);
 
 			if (m_bDefaultProjDVDVideo)
 				g_ProjectSettings.m_iFileSystem = FILESYSTEM_DVDVIDEO;
 			break;
 
 		case PROJECTTYPE_AUDIO:
-			g_ProjectManager.NewAudioProject();
+			g_ProjectManager.NewAudioProject(m_iDefaultMedia != -1 ? m_iDefaultMedia :
+											 SPACEMETER_SIZE_80MIN);
 			break;
 
 		case PROJECTTYPE_MIXED:
-			g_ProjectManager.NewMixedProject();
+			g_ProjectManager.NewMixedProject(m_iDefaultMedia != -1 ? m_iDefaultMedia :
+											 SPACEMETER_SIZE_703MB);
 			break;
 	}
 }
@@ -2540,7 +2544,7 @@ LRESULT CMainFrame::OnNewProjectDataCD(WORD wNotifyCode,WORD wID,HWND hWndCtl,BO
 	SetTitleNormal();
 	m_szProjectFile[0] = '\0';
 
-	g_ProjectManager.NewDataProject(false);
+	g_ProjectManager.NewDataProject(SPACEMETER_SIZE_703MB);
 	return 0;
 }
 
@@ -2555,7 +2559,7 @@ LRESULT CMainFrame::OnNewProjectDataCDMS(WORD wNotifyCode,WORD wID,HWND hWndCtl,
 	SetTitleNormal();
 	m_szProjectFile[0] = '\0';
 
-	g_ProjectManager.NewDataProject(false);
+	g_ProjectManager.NewDataProject(SPACEMETER_SIZE_703MB);
 
 	g_ProjectSettings.m_iFileSystem = FILESYSTEM_ISO9660;
 	g_ProjectSettings.m_iIsoFormat = 1;	// Mode 2 (multi-session).
@@ -2574,7 +2578,7 @@ LRESULT CMainFrame::OnNewProjectDataDVD(WORD wNotifyCode,WORD wID,HWND hWndCtl,B
 	SetTitleNormal();
 	m_szProjectFile[0] = '\0';
 
-	g_ProjectManager.NewDataProject(true);
+	g_ProjectManager.NewDataProject(SPACEMETER_SIZE_DVD);
 	return 0;
 }
 
@@ -2589,7 +2593,7 @@ LRESULT CMainFrame::OnNewProjectAudio(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOO
 	SetTitleNormal();
 	m_szProjectFile[0] = '\0';
 
-	g_ProjectManager.NewAudioProject();
+	g_ProjectManager.NewAudioProject(SPACEMETER_SIZE_80MIN);
 	return 0;
 }
 
@@ -2604,7 +2608,7 @@ LRESULT CMainFrame::OnNewProjectMixed(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOO
 	SetTitleNormal();
 	m_szProjectFile[0] = '\0';
 
-	g_ProjectManager.NewMixedProject();
+	g_ProjectManager.NewMixedProject(SPACEMETER_SIZE_703MB);
 	return 0;
 }
 
@@ -2619,7 +2623,7 @@ LRESULT CMainFrame::OnNewProjectDVDVideo(WORD wNotifyCode,WORD wID,HWND hWndCtl,
 	SetTitleNormal();
 	m_szProjectFile[0] = '\0';
 
-	g_ProjectManager.NewDataProject(true);
+	g_ProjectManager.NewDataProject(SPACEMETER_SIZE_DVD);
 
 	g_ProjectSettings.m_iFileSystem = FILESYSTEM_DVDVIDEO;
 	return 0;
