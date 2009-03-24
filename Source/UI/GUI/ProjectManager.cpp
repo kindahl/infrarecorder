@@ -2194,7 +2194,10 @@ bool CProjectManager::ImportFile(ckcore::Path &BasePath,
 								 CFileTransaction &Transaction)
 {
 	// Check if full file path.
-	if (FilePath.size() > 1 && FilePath[1] == ':')
+	bool bFullPath = FilePath.size() > 1 && (FilePath[1] == ':' ||
+		(FilePath[0] == '\\' && FilePath[1] == '\\'));
+
+	if (bFullPath)
 		return Transaction.AddFile(FilePath.c_str());
 
 	// Create full path from relative path.
