@@ -257,7 +257,7 @@ CWelcomePane::CWelcomePane()
 	// Add buttons.
 	m_Buttons.push_back(new CMultiButton(this,IDR_WIZARDDATAPNG,
 		CButton::BUTTON_WIDTH * 0 + 10,10,
-		ID_NEWPROJECT_DATACD,ID_NEWPROJECT_DATACD,ID_NEWPROJECT_DATADVD));
+		ID_NEWPROJECT_DATA,ID_NEWPROJECT_DATACD,ID_NEWPROJECT_DATADVD));
 	m_Buttons.push_back(new CStandardButton(this,IDR_WIZARDAUDIOPNG,
 		CButton::BUTTON_WIDTH * 1 + 10,10,
 		ID_NEWPROJECT_AUDIO));
@@ -406,6 +406,10 @@ LRESULT CWelcomePane::OnLButtonDown(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &
 		long lAction = pButton->ClickTest(iPosX,iPosY);
 		switch (lAction)
 		{
+			case ID_NEWPROJECT_DATA:
+				g_MainFrame.ShowWelcomePane(false);
+				break;
+
 			case ID_NEWPROJECT_DATACD:
 				g_MainFrame.ShowWelcomePane(false);
 				g_ProjectManager.NewDataProject(SPACEMETER_SIZE_703MB);

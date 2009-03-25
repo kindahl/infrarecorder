@@ -752,6 +752,7 @@ BEGIN
     ID_BOOT_ADD             "Add a new boot image to the project."
     ID_BOOT_REMOVE          "Remove the selected boot image from the project."
     ID_BOOT_EDIT            "Edit the selected boot image."
+    ID_NEWPROJECT_DATA      "Create a new data project."
 END
 
 STRINGTABLE 

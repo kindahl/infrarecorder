@@ -184,20 +184,11 @@ INT_PTR ParseAndRun(LPTSTR lpstrCmdLine,int nCmdShow = SW_SHOWDEFAULT)
 	{
 		lpstrCmdLine += 7;
 		if (!lstrcmp(lpstrCmdLine,_T("dldvd")))
-		{
 			g_MainFrame.m_iDefaultMedia = SPACEMETER_SIZE_DLDVD;
-			g_MainFrame.m_bDefaultWizard = false;
-		}
 		else if (!lstrcmp(lpstrCmdLine,_T("dvd")))
-		{
 			g_MainFrame.m_iDefaultMedia = SPACEMETER_SIZE_DVD;
-			g_MainFrame.m_bDefaultWizard = false;
-		}
 		else if (!lstrcmp(lpstrCmdLine,_T("cd")))
-		{
 			g_MainFrame.m_iDefaultMedia = SPACEMETER_SIZE_703MB;
-			g_MainFrame.m_bDefaultWizard = false;
-		}
 	}
 	else if (!lstrcmp(lpstrCmdLine,_T("-burnimage")))
 	{

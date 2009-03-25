@@ -16,6 +16,7 @@
 #define ID_BOOT_REMOVE                  136
 #define ID_BOOT_EDIT                    137
 #define IDR_MAINFRAME_PORTABLE          138
+#define ID_NEWPROJECT_DATA              138
 #define IDD_PROGRESSDLG                 201
 #define IDD_SIMPLEPROGRESSDLG           202
 #define IDD_ERASEDLG                    203
