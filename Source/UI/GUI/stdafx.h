@@ -46,6 +46,7 @@ extern CAppModule _Module;
 #include <atlctrlw.h>
 #include <atlsplit.h>		// CSplitterWindowImpl
 #include <htmlhelp.h>
+#include "AtlCompat.h"
 
 #include <ckcore/types.hh>
 using namespace ckcore;

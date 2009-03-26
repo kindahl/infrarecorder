@@ -1069,6 +1069,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\AtlCompat.h"
+				>
+			</File>
+			<File
 				RelativePath=".\AudioUtil.h"
 				>
 			</File>

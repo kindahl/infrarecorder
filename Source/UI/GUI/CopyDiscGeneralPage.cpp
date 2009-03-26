@@ -179,10 +179,10 @@ bool CCopyDiscGeneralPage::InitRecorderMedia()
 		return false;
 
 	if (m_uiParentTitleLen == 0)
-		m_uiParentTitleLen = GetParent().GetWindowTextLength();
+		m_uiParentTitleLen = GetParentWindow(this).GetWindowTextLength();
 
 	TCHAR szBuffer[256];
-	GetParent().GetWindowText(szBuffer,m_uiParentTitleLen + 1);
+	GetParentWindow(this).GetWindowText(szBuffer,m_uiParentTitleLen + 1);
 
 	// Open the device.
 	UINT_PTR uiDeviceIndex = m_TargetCombo.GetItemData(m_TargetCombo.GetCurSel());
@@ -245,7 +245,7 @@ bool CCopyDiscGeneralPage::InitRecorderMedia()
 			break;
 	}
 
-	GetParent().SetWindowText(szBuffer);
+	GetParentWindow(this).SetWindowText(szBuffer);
 
 	if (bSupportedProfile)
 	{

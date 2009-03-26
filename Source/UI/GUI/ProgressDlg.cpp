@@ -130,7 +130,7 @@ void CProgressDlg::set_progress(unsigned char ucPercent)
 			TCHAR szHostTitle[32 + 64];
 			lsnprintf_s(szHostTitle,sizeof(szHostTitle)/sizeof(TCHAR),_T("%d%% - %s"),ucPercent,szTitle);
 
-			GetParent().SetWindowText(szHostTitle);
+			GetParentWindow(this).SetWindowText(szHostTitle);
 		}
 
 		ProcessMessages();
@@ -265,7 +265,7 @@ void CProgressDlg::NotifyCompleted()
 	// Restore the window title.
 	if (!m_bAppMode && m_szHostTitle != NULL)
 	{
-		GetParent().SetWindowText(m_szHostTitle);
+		GetParentWindow(this).SetWindowText(m_szHostTitle);
 
 		delete m_szHostTitle;
 		m_szHostTitle = NULL;
@@ -345,9 +345,9 @@ LRESULT CProgressDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &b
 		if (m_szHostTitle != NULL)
 			delete [] m_szHostTitle;
 
-		int iSize = GetParent().GetWindowTextLength() + 1;
+		int iSize = GetParentWindow(this).GetWindowTextLength() + 1;
 		m_szHostTitle = new TCHAR[iSize];
-		GetParent().GetWindowText(m_szHostTitle,iSize);
+		GetParentWindow(this).GetWindowText(m_szHostTitle,iSize);
 	}
 
 	return TRUE;

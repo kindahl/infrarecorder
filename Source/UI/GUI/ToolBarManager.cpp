@@ -351,7 +351,7 @@ bool CToolBarManager::Customize()
 
 	RECT rcToolBar;
 	m_pToolBar->GetWindowRect(&rcToolBar);
-	m_pToolBar->GetParent().ScreenToClient(&rcToolBar);
+	GetParentWindow(m_pToolBar).ScreenToClient(&rcToolBar);
 	m_pToolBar->MoveWindow(rcToolBar.left,rcToolBar.top,rcToolBar.right - rcToolBar.left,iButtonHeight);
 
 	// Repaint.

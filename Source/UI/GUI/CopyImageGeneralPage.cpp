@@ -224,7 +224,7 @@ LRESULT CCopyImageGeneralPage::OnTimer(UINT uMsg,WPARAM wParam,LPARAM lParam,BOO
 		// Check for media change.
 		if (g_Core2.CheckMediaChange(&m_CurDevice))
 		{
-			GetParent().SendMessage(WM_CHECKMEDIA_BROADCAST,0,
+			GetParentWindow(this).SendMessage(WM_CHECKMEDIA_BROADCAST,0,
 				m_SourceCombo.GetItemData(m_SourceCombo.GetCurSel()));
 		}
 	}
@@ -250,7 +250,7 @@ LRESULT CCopyImageGeneralPage::OnSourceChange(WORD wNotifyCode,WORD wID,HWND hWn
 	::SetTimer(m_hWnd,TIMER_ID,TIMER_INTERVAL,NULL);
 
 	// Initialize the drive media.
-	GetParent().SendMessage(WM_CHECKMEDIA_BROADCAST,0,
+	GetParentWindow(this).SendMessage(WM_CHECKMEDIA_BROADCAST,0,
 		m_SourceCombo.GetItemData(m_SourceCombo.GetCurSel()));
 
 	bHandled = false;
@@ -260,7 +260,7 @@ LRESULT CCopyImageGeneralPage::OnSourceChange(WORD wNotifyCode,WORD wID,HWND hWn
 LRESULT CCopyImageGeneralPage::OnRefresh(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
 	// Initialize the drive media.
-	GetParent().SendMessage(WM_CHECKMEDIA_BROADCAST,0,
+	GetParentWindow(this).SendMessage(WM_CHECKMEDIA_BROADCAST,0,
 		m_SourceCombo.GetItemData(m_SourceCombo.GetCurSel()));
 
 	return 0;
