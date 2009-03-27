@@ -37,10 +37,10 @@ inline ATL::CWindow GetParentWindow(const ATL::CWindow *pWnd)
 	// standard headers may also cause compilation trouble in other projects or
 	// with other versions of Visual Studio.
 
-	#if _ATL_VER <= 0x0300
-		return ATL::CWindow(pWnd->GetParent());
-	#else
-		// Use the one that comes with ATL.
-		return pWnd->GetParent();
-	#endif
+#if _ATL_VER <= 0x0300
+	return ATL::CWindow(pWnd->GetParent());
+#else
+	// Use the one that comes with ATL.
+	return pWnd->GetParent();
+#endif
 }

@@ -153,7 +153,11 @@ public:
 
 	void Initialize();
 
+#if _ATL_VER <= 0x0300
+	BEGIN_MSG_MAP_EX(CSpaceMeter)
+#else
 	BEGIN_MSG_MAP(CSpaceMeter)
+#endif
 		MESSAGE_HANDLER(WM_CREATE,OnCreate)
 		MESSAGE_HANDLER(WM_SIZE,OnSize)
 		MESSAGE_HANDLER(WM_PAINT,OnPaint)
