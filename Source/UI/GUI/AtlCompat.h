@@ -44,3 +44,9 @@ inline ATL::CWindow GetParentWindow(const ATL::CWindow *pWnd)
 	return pWnd->GetParent();
 #endif
 }
+
+#if _ATL_VER <= 0x0300
+	#pragma comment(lib,"shell32")
+	#pragma comment(lib,"gdi32")
+	#pragma comment(lib,"comdlg32")
+#endif
