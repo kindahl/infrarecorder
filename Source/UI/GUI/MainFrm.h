@@ -510,4 +510,4 @@ public:
 	LRESULT OnShellPaste(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
 };
 
-extern CMainFrame g_MainFrame;
+extern CMainFrame *g_pMainFrame;

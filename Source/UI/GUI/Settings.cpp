@@ -263,55 +263,55 @@ void CDynamicSettings::Apply()
 	switch (m_iPrjListViewStyle)
 	{
 		case LISTVIEWSTYLE_LARGEICONS:
-			CheckMenuItem(g_MainFrame.m_hProjListNoSelMenu,ID_VIEW_LARGEICONS,MF_BYCOMMAND | MF_CHECKED);
-			CheckMenuItem(g_MainFrame.m_hProjListNoSelMenu,ID_VIEW_SMALLICONS,MF_BYCOMMAND | MF_UNCHECKED);
-			CheckMenuItem(g_MainFrame.m_hProjListNoSelMenu,ID_VIEW_LIST,MF_BYCOMMAND | MF_UNCHECKED);
-			CheckMenuItem(g_MainFrame.m_hProjListNoSelMenu,ID_VIEW_DETAILS,MF_BYCOMMAND | MF_UNCHECKED);
+			CheckMenuItem(g_pMainFrame->m_hProjListNoSelMenu,ID_VIEW_LARGEICONS,MF_BYCOMMAND | MF_CHECKED);
+			CheckMenuItem(g_pMainFrame->m_hProjListNoSelMenu,ID_VIEW_SMALLICONS,MF_BYCOMMAND | MF_UNCHECKED);
+			CheckMenuItem(g_pMainFrame->m_hProjListNoSelMenu,ID_VIEW_LIST,MF_BYCOMMAND | MF_UNCHECKED);
+			CheckMenuItem(g_pMainFrame->m_hProjListNoSelMenu,ID_VIEW_DETAILS,MF_BYCOMMAND | MF_UNCHECKED);
 
-			g_MainFrame.UISetCheck(ID_VIEW_LARGEICONS,true);
-			g_MainFrame.UISetCheck(ID_VIEW_SMALLICONS,false);
-			g_MainFrame.UISetCheck(ID_VIEW_LIST,false);
-			g_MainFrame.UISetCheck(ID_VIEW_DETAILS,false);
+			g_pMainFrame->UISetCheck(ID_VIEW_LARGEICONS,true);
+			g_pMainFrame->UISetCheck(ID_VIEW_SMALLICONS,false);
+			g_pMainFrame->UISetCheck(ID_VIEW_LIST,false);
+			g_pMainFrame->UISetCheck(ID_VIEW_DETAILS,false);
 			break;
 
 		case LISTVIEWSTYLE_SMALLICONS:
-			CheckMenuItem(g_MainFrame.m_hProjListNoSelMenu,ID_VIEW_LARGEICONS,MF_BYCOMMAND | MF_UNCHECKED);
-			CheckMenuItem(g_MainFrame.m_hProjListNoSelMenu,ID_VIEW_SMALLICONS,MF_BYCOMMAND | MF_CHECKED);
-			CheckMenuItem(g_MainFrame.m_hProjListNoSelMenu,ID_VIEW_LIST,MF_BYCOMMAND | MF_UNCHECKED);
-			CheckMenuItem(g_MainFrame.m_hProjListNoSelMenu,ID_VIEW_DETAILS,MF_BYCOMMAND | MF_UNCHECKED);
+			CheckMenuItem(g_pMainFrame->m_hProjListNoSelMenu,ID_VIEW_LARGEICONS,MF_BYCOMMAND | MF_UNCHECKED);
+			CheckMenuItem(g_pMainFrame->m_hProjListNoSelMenu,ID_VIEW_SMALLICONS,MF_BYCOMMAND | MF_CHECKED);
+			CheckMenuItem(g_pMainFrame->m_hProjListNoSelMenu,ID_VIEW_LIST,MF_BYCOMMAND | MF_UNCHECKED);
+			CheckMenuItem(g_pMainFrame->m_hProjListNoSelMenu,ID_VIEW_DETAILS,MF_BYCOMMAND | MF_UNCHECKED);
 
-			g_MainFrame.UISetCheck(ID_VIEW_LARGEICONS,false);
-			g_MainFrame.UISetCheck(ID_VIEW_SMALLICONS,true);
-			g_MainFrame.UISetCheck(ID_VIEW_LIST,false);
-			g_MainFrame.UISetCheck(ID_VIEW_DETAILS,false);
+			g_pMainFrame->UISetCheck(ID_VIEW_LARGEICONS,false);
+			g_pMainFrame->UISetCheck(ID_VIEW_SMALLICONS,true);
+			g_pMainFrame->UISetCheck(ID_VIEW_LIST,false);
+			g_pMainFrame->UISetCheck(ID_VIEW_DETAILS,false);
 			break;
 
 		case LISTVIEWSTYLE_LIST:
-			CheckMenuItem(g_MainFrame.m_hProjListNoSelMenu,ID_VIEW_LARGEICONS,MF_BYCOMMAND | MF_UNCHECKED);
-			CheckMenuItem(g_MainFrame.m_hProjListNoSelMenu,ID_VIEW_SMALLICONS,MF_BYCOMMAND | MF_UNCHECKED);
-			CheckMenuItem(g_MainFrame.m_hProjListNoSelMenu,ID_VIEW_LIST,MF_BYCOMMAND | MF_CHECKED);
-			CheckMenuItem(g_MainFrame.m_hProjListNoSelMenu,ID_VIEW_DETAILS,MF_BYCOMMAND | MF_UNCHECKED);
+			CheckMenuItem(g_pMainFrame->m_hProjListNoSelMenu,ID_VIEW_LARGEICONS,MF_BYCOMMAND | MF_UNCHECKED);
+			CheckMenuItem(g_pMainFrame->m_hProjListNoSelMenu,ID_VIEW_SMALLICONS,MF_BYCOMMAND | MF_UNCHECKED);
+			CheckMenuItem(g_pMainFrame->m_hProjListNoSelMenu,ID_VIEW_LIST,MF_BYCOMMAND | MF_CHECKED);
+			CheckMenuItem(g_pMainFrame->m_hProjListNoSelMenu,ID_VIEW_DETAILS,MF_BYCOMMAND | MF_UNCHECKED);
 
-			g_MainFrame.UISetCheck(ID_VIEW_LARGEICONS,false);
-			g_MainFrame.UISetCheck(ID_VIEW_SMALLICONS,false);
-			g_MainFrame.UISetCheck(ID_VIEW_LIST,true);
-			g_MainFrame.UISetCheck(ID_VIEW_DETAILS,false);
+			g_pMainFrame->UISetCheck(ID_VIEW_LARGEICONS,false);
+			g_pMainFrame->UISetCheck(ID_VIEW_SMALLICONS,false);
+			g_pMainFrame->UISetCheck(ID_VIEW_LIST,true);
+			g_pMainFrame->UISetCheck(ID_VIEW_DETAILS,false);
 			break;
 
 		case LISTVIEWSTYLE_DETAILS:
-			CheckMenuItem(g_MainFrame.m_hProjListNoSelMenu,ID_VIEW_LARGEICONS,MF_BYCOMMAND | MF_UNCHECKED);
-			CheckMenuItem(g_MainFrame.m_hProjListNoSelMenu,ID_VIEW_SMALLICONS,MF_BYCOMMAND | MF_UNCHECKED);
-			CheckMenuItem(g_MainFrame.m_hProjListNoSelMenu,ID_VIEW_LIST,MF_BYCOMMAND | MF_UNCHECKED);
-			CheckMenuItem(g_MainFrame.m_hProjListNoSelMenu,ID_VIEW_DETAILS,MF_BYCOMMAND | MF_CHECKED);
+			CheckMenuItem(g_pMainFrame->m_hProjListNoSelMenu,ID_VIEW_LARGEICONS,MF_BYCOMMAND | MF_UNCHECKED);
+			CheckMenuItem(g_pMainFrame->m_hProjListNoSelMenu,ID_VIEW_SMALLICONS,MF_BYCOMMAND | MF_UNCHECKED);
+			CheckMenuItem(g_pMainFrame->m_hProjListNoSelMenu,ID_VIEW_LIST,MF_BYCOMMAND | MF_UNCHECKED);
+			CheckMenuItem(g_pMainFrame->m_hProjListNoSelMenu,ID_VIEW_DETAILS,MF_BYCOMMAND | MF_CHECKED);
 
-			g_MainFrame.UISetCheck(ID_VIEW_LARGEICONS,false);
-			g_MainFrame.UISetCheck(ID_VIEW_SMALLICONS,false);
-			g_MainFrame.UISetCheck(ID_VIEW_LIST,false);
-			g_MainFrame.UISetCheck(ID_VIEW_DETAILS,true);
+			g_pMainFrame->UISetCheck(ID_VIEW_LARGEICONS,false);
+			g_pMainFrame->UISetCheck(ID_VIEW_SMALLICONS,false);
+			g_pMainFrame->UISetCheck(ID_VIEW_LIST,false);
+			g_pMainFrame->UISetCheck(ID_VIEW_DETAILS,true);
 			break;
 	};
 
-	g_MainFrame.m_ProjectListView.SetViewStyle(m_iPrjListViewStyle);
+	g_pMainFrame->m_ProjectListView.SetViewStyle(m_iPrjListViewStyle);
 }
 
 bool CEraseSettings::Save(CXMLProcessor *pXML)

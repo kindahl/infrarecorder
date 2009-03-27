@@ -335,11 +335,11 @@ bool CToolBarManager::Customize()
 	switch (g_DynamicSettings.m_iToolBarIcon)
 	{
 		case TOOLBAR_ICON_SMALL:
-			m_pToolBar->SetImageList(g_MainFrame.GetToolBarSmall());
+			m_pToolBar->SetImageList(g_pMainFrame->GetToolBarSmall());
 			break;
 
 		case TOOLBAR_ICON_LARGE:
-			m_pToolBar->SetImageList(g_MainFrame.GetToolBarLarge());
+			m_pToolBar->SetImageList(g_pMainFrame->GetToolBarLarge());
 			break;
 	}
 
@@ -442,7 +442,7 @@ LRESULT CToolBarManager::OnToolBarGetButtonInfo(int idCtrl,LPNMHDR pNMH,BOOL &bH
 		/*CMenuItemInfo mii;
 		mii.fMask = MIIM_STATE;
 
-		if (GetMenuItemInfo(g_MainFrame.m_CmdBar.GetMenu(),lpTbNotify->tbButton.idCommand,FALSE,&mii))
+		if (GetMenuItemInfo(g_pMainFrame->m_CmdBar.GetMenu(),lpTbNotify->tbButton.idCommand,FALSE,&mii))
 		{
 			if (mii.fState & MFS_DISABLED)
 				lpTbNotify->tbButton.fsState = TBSTATE_INDETERMINATE;

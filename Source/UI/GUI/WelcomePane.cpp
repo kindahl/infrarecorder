@@ -294,7 +294,7 @@ void CWelcomePane::SetStatusText(long lCtrlId)
 		TCHAR *szStrValue;
 		if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(lCtrlId,szStrValue))
 		{
-			::SendMessage(g_MainFrame.m_hWndStatusBar,SB_SETTEXT,0,(LPARAM)szStrValue);
+			::SendMessage(g_pMainFrame->m_hWndStatusBar,SB_SETTEXT,0,(LPARAM)szStrValue);
 			bSuccess = true;
 		}
 	}
@@ -303,7 +303,7 @@ void CWelcomePane::SetStatusText(long lCtrlId)
 	{
 		TCHAR szBuffer[256];
 		LoadString(_Module.GetResourceInstance(),lCtrlId,szBuffer,sizeof(szBuffer) / sizeof(TCHAR));
-		::SendMessage(g_MainFrame.m_hWndStatusBar,SB_SETTEXT,0,(LPARAM)szBuffer);
+		::SendMessage(g_pMainFrame->m_hWndStatusBar,SB_SETTEXT,0,(LPARAM)szBuffer);
 	}
 }
 
@@ -388,7 +388,7 @@ LRESULT CWelcomePane::OnMouseMove(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bH
 	}
 
 	if (!bHasHit)
-		::SetWindowText(g_MainFrame.m_hWndStatusBar,_T(""));
+		::SetWindowText(g_pMainFrame->m_hWndStatusBar,_T(""));
 
 	return 0;
 }
@@ -407,40 +407,40 @@ LRESULT CWelcomePane::OnLButtonDown(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &
 		switch (lAction)
 		{
 			case ID_NEWPROJECT_DATA:
-				g_MainFrame.ShowWelcomePane(false);
+				g_pMainFrame->ShowWelcomePane(false);
 				break;
 
 			case ID_NEWPROJECT_DATACD:
-				g_MainFrame.ShowWelcomePane(false);
+				g_pMainFrame->ShowWelcomePane(false);
 				g_ProjectManager.NewDataProject(SPACEMETER_SIZE_703MB);
 				break;
 
 			case ID_NEWPROJECT_DATADVD:
-				g_MainFrame.ShowWelcomePane(false);
+				g_pMainFrame->ShowWelcomePane(false);
 				g_ProjectManager.NewDataProject(SPACEMETER_SIZE_DVD);
 				break;
 
 			case ID_NEWPROJECT_AUDIO:
-				g_MainFrame.ShowWelcomePane(false);
+				g_pMainFrame->ShowWelcomePane(false);
 				g_ProjectManager.NewAudioProject(SPACEMETER_SIZE_80MIN);
 				break;
 
 			case ID_NEWPROJECT_DVDVIDEO:
-				g_MainFrame.ShowWelcomePane(false);
+				g_pMainFrame->ShowWelcomePane(false);
 				g_ProjectManager.NewDataProject(SPACEMETER_SIZE_DVD);
 				g_ProjectSettings.m_iFileSystem = FILESYSTEM_DVDVIDEO;
 				break;
 
 			case ID_ACTIONS_BURNIMAGE:
-				g_ActionManager.BurnImage(g_MainFrame,false);
+				g_ActionManager.BurnImage(*g_pMainFrame,false);
 				break;
 
 			case ID_COPYDISC_COMPACTDISC:
-				g_ActionManager.CopyDisc(g_MainFrame,false);
+				g_ActionManager.CopyDisc(*g_pMainFrame,false);
 				break;
 
 			case ID_COPYDISC_DISCIMAGE:
-				g_ActionManager.CopyImage(g_MainFrame,false);
+				g_ActionManager.CopyImage(*g_pMainFrame,false);
 				break;
 		}
 	}

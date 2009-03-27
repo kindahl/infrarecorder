@@ -39,6 +39,9 @@ CAppModule _Module;
 // Global codec manager object.
 CCodecManager g_CodecManager;
 
+// Global pointers to GUI objects owned by this file.
+CMainFrame *g_pMainFrame = NULL;
+
 void PerformDeviceScan()
 {
 #ifdef SHOW_SPLASH
@@ -88,7 +91,7 @@ int Run(LPTSTR lpstrCmdLine = NULL,int nCmdShow = SW_SHOWDEFAULT)
 	CMessageLoop MainLoop;
 	_Module.AddMessageLoop(&MainLoop);
 
-	if (g_MainFrame.CreateEx() == NULL)
+	if (g_pMainFrame->CreateEx() == NULL)
 	{
 		ATLTRACE(_T("Main window creation failed!\n"));
 		return 0;
@@ -100,34 +103,34 @@ int Run(LPTSTR lpstrCmdLine = NULL,int nCmdShow = SW_SHOWDEFAULT)
 		g_DynamicSettings.m_rcWindow.top != -1 &&
 		g_DynamicSettings.m_rcWindow.bottom != -1)
 	{
-		if (g_MainFrame.m_bDefaultWizard)
+		if (g_pMainFrame->m_bDefaultWizard)
 		{
 			RECT rcWindow = g_DynamicSettings.m_rcWindow;
 			rcWindow.right = rcWindow.left + 500;
 			rcWindow.bottom = rcWindow.top + 400;
 
-			g_MainFrame.SetWindowPos(HWND_TOP,&rcWindow,0);
+			g_pMainFrame->SetWindowPos(HWND_TOP,&rcWindow,0);
 		}
 		else
 		{
-			g_MainFrame.SetWindowPos(HWND_TOP,&g_DynamicSettings.m_rcWindow,0);
+			g_pMainFrame->SetWindowPos(HWND_TOP,&g_DynamicSettings.m_rcWindow,0);
 		}
 	}
 	else
 	{
-		if (g_MainFrame.m_bDefaultWizard)
+		if (g_pMainFrame->m_bDefaultWizard)
 		{
 			RECT rcWindow = g_DynamicSettings.m_rcWindow;
 			rcWindow.right = rcWindow.left + 500;
 			rcWindow.bottom = rcWindow.top + 400;
 
-			g_MainFrame.SetWindowPos(HWND_TOP,&rcWindow,0);
+			g_pMainFrame->SetWindowPos(HWND_TOP,&rcWindow,0);
 		}
 
-		g_MainFrame.CenterWindow();
+		g_pMainFrame->CenterWindow();
 	}
 
-	g_MainFrame.ShowWindow(g_DynamicSettings.m_bWinMaximized ? SW_SHOWMAXIMIZED : nCmdShow);
+	g_pMainFrame->ShowWindow(g_DynamicSettings.m_bWinMaximized ? SW_SHOWMAXIMIZED : nCmdShow);
 
 	int nRet = MainLoop.Run();
 		_Module.RemoveMessageLoop();
@@ -136,7 +139,7 @@ int Run(LPTSTR lpstrCmdLine = NULL,int nCmdShow = SW_SHOWDEFAULT)
 
 INT_PTR ParseAndRun(LPTSTR lpstrCmdLine,int nCmdShow = SW_SHOWDEFAULT)
 {
-	g_MainFrame.m_bDefaultWizard = g_GlobalSettings.m_bShowWizard;
+	g_pMainFrame->m_bDefaultWizard = g_GlobalSettings.m_bShowWizard;
 
 	// FIXME: This is an absolutely horrible parameter parsing implementation.
 
@@ -146,31 +149,31 @@ INT_PTR ParseAndRun(LPTSTR lpstrCmdLine,int nCmdShow = SW_SHOWDEFAULT)
 		lpstrCmdLine += 9;
 		if (!lstrncmp(lpstrCmdLine,_T("data"),4))
 		{
-			g_MainFrame.m_iDefaultProjType = PROJECTTYPE_DATA;
-			g_MainFrame.m_bDefaultWizard = false;
+			g_pMainFrame->m_iDefaultProjType = PROJECTTYPE_DATA;
+			g_pMainFrame->m_bDefaultWizard = false;
 
 			lpstrCmdLine += 4;
 		}
 		else if (!lstrncmp(lpstrCmdLine,_T("audio"),5))
 		{
-			g_MainFrame.m_iDefaultProjType = PROJECTTYPE_AUDIO;
-			g_MainFrame.m_bDefaultWizard = false;
+			g_pMainFrame->m_iDefaultProjType = PROJECTTYPE_AUDIO;
+			g_pMainFrame->m_bDefaultWizard = false;
 
 			lpstrCmdLine += 5;
 		}
 		else if (!lstrncmp(lpstrCmdLine,_T("mixed"),5))
 		{
-			g_MainFrame.m_iDefaultProjType = PROJECTTYPE_MIXED;
-			g_MainFrame.m_bDefaultWizard = false;
+			g_pMainFrame->m_iDefaultProjType = PROJECTTYPE_MIXED;
+			g_pMainFrame->m_bDefaultWizard = false;
 
 			lpstrCmdLine += 5;
 		}
 		else if (!lstrncmp(lpstrCmdLine,_T("dvdvideo"),8))
 		{
-			g_MainFrame.m_iDefaultProjType = PROJECTTYPE_DATA;
-			g_MainFrame.m_iDefaultMedia = SPACEMETER_SIZE_DVD;
-			g_MainFrame.m_bDefaultProjDVDVideo = true;
-			g_MainFrame.m_bDefaultWizard = false;
+			g_pMainFrame->m_iDefaultProjType = PROJECTTYPE_DATA;
+			g_pMainFrame->m_iDefaultMedia = SPACEMETER_SIZE_DVD;
+			g_pMainFrame->m_bDefaultProjDVDVideo = true;
+			g_pMainFrame->m_bDefaultWizard = false;
 
 			lpstrCmdLine += 8;
 		}
@@ -184,11 +187,11 @@ INT_PTR ParseAndRun(LPTSTR lpstrCmdLine,int nCmdShow = SW_SHOWDEFAULT)
 	{
 		lpstrCmdLine += 7;
 		if (!lstrcmp(lpstrCmdLine,_T("dldvd")))
-			g_MainFrame.m_iDefaultMedia = SPACEMETER_SIZE_DLDVD;
+			g_pMainFrame->m_iDefaultMedia = SPACEMETER_SIZE_DLDVD;
 		else if (!lstrcmp(lpstrCmdLine,_T("dvd")))
-			g_MainFrame.m_iDefaultMedia = SPACEMETER_SIZE_DVD;
+			g_pMainFrame->m_iDefaultMedia = SPACEMETER_SIZE_DVD;
 		else if (!lstrcmp(lpstrCmdLine,_T("cd")))
-			g_MainFrame.m_iDefaultMedia = SPACEMETER_SIZE_703MB;
+			g_pMainFrame->m_iDefaultMedia = SPACEMETER_SIZE_703MB;
 	}
 	else if (!lstrcmp(lpstrCmdLine,_T("-burnimage")))
 	{
@@ -255,9 +258,9 @@ INT_PTR ParseAndRun(LPTSTR lpstrCmdLine,int nCmdShow = SW_SHOWDEFAULT)
 				return g_ActionManager.BurnImageEx(NULL,true,szFullPath);
 		}
 
-		g_MainFrame.m_bDefaultWizard = false;
+		g_pMainFrame->m_bDefaultWizard = false;
 
-		lstrcpy(g_MainFrame.m_szProjectFile,szFullPath);
+		lstrcpy(g_pMainFrame->m_szProjectFile,szFullPath);
 		delete [] szFullPath;
 	}
 
@@ -280,62 +283,84 @@ int WINAPI _tWinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPTSTR lpstrCmd
 	hRes = _Module.Init(NULL,hInstance);
 	ATLASSERT(SUCCEEDED(hRes));
 
-	// Load the configuration.
-	g_SettingsManager.Load();
+	INT_PTR nRet;
 
-	// Create the log dialog.
-	g_LogDlg.Create(HWND_DESKTOP);
-
-	// Translate some of the string tables.
-	lngTranslateTables();
-
-	// Initialize, SCSI buses etc.
-	if (g_DeviceManager.LoadConfiguration())
+	try	// Also acts as scope for variable 'MainFrame'.
 	{
-		if (g_GlobalSettings.m_bAutoCheckBus)
+		// In order for it to work under Visual Studio 2005 Express / ATL 3.0,
+		// the constructor for CMainFrame must run after _Module.Init() has been
+		// called, and the destructor must run before _Module.Term().
+		CMainFrame MainFrame;
+		g_pMainFrame = &MainFrame;
+
+		// Load the configuration.
+		g_SettingsManager.Load();
+
+		// Create the log dialog.
+		g_LogDlg.Create(HWND_DESKTOP);
+
+		// Translate some of the string tables.
+		lngTranslateTables();
+
+		// Initialize, SCSI buses etc.
+		if (g_DeviceManager.LoadConfiguration())
 		{
-			if (!g_DeviceManager.VerifyConfiguration())
+			if (g_GlobalSettings.m_bAutoCheckBus)
 			{
-				if (lngMessageBox(HWND_DESKTOP,INIT_FOUNDDEVICES,GENERAL_QUESTION,MB_YESNO | MB_ICONQUESTION) == IDYES)
-					PerformDeviceScan();
+				if (!g_DeviceManager.VerifyConfiguration())
+				{
+					if (lngMessageBox(HWND_DESKTOP,INIT_FOUNDDEVICES,GENERAL_QUESTION,MB_YESNO | MB_ICONQUESTION) == IDYES)
+						PerformDeviceScan();
+				}
 			}
 		}
-	}
-	else
-	{
-		// If we failed to load drive configuration we scan the busses while
-		// displaying the splash screen.
-		PerformDeviceScan();
-	}
-
-	// Load the codecs.
-	TCHAR szCodecPath[MAX_PATH];
-    GetModuleFileName(NULL,szCodecPath,MAX_PATH - 1);
-
-	ExtractFilePath(szCodecPath);
-	lstrcat(szCodecPath,_T("Codecs\\"));
-
-	if (!g_CodecManager.LoadCodecs(szCodecPath))
-	{
-		if (g_GlobalSettings.m_bCodecWarning)
+		else
 		{
-			CInfoDlg InfoDlg(&g_GlobalSettings.m_bCodecWarning,lngGetString(ERROR_LOADCODECS),INFODLG_NOCANCEL | INFODLG_ICONWARNING);
-			InfoDlg.DoModal();
+			// If we failed to load drive configuration we scan the busses while
+			// displaying the splash screen.
+			PerformDeviceScan();
 		}
+
+		// Load the codecs.
+		TCHAR szCodecPath[MAX_PATH];
+		GetModuleFileName(NULL,szCodecPath,MAX_PATH - 1);
+
+		ExtractFilePath(szCodecPath);
+		lstrcat(szCodecPath,_T("Codecs\\"));
+
+		if (!g_CodecManager.LoadCodecs(szCodecPath))
+		{
+			if (g_GlobalSettings.m_bCodecWarning)
+			{
+				CInfoDlg InfoDlg(&g_GlobalSettings.m_bCodecWarning,lngGetString(ERROR_LOADCODECS),INFODLG_NOCANCEL | INFODLG_ICONWARNING);
+				InfoDlg.DoModal();
+			}
+		}
+
+		// Display the main window.
+		nRet = ParseAndRun(lpstrCmdLine,nCmdShow);
+
+		// Save the devices configuration.
+		g_DeviceManager.SaveConfiguration();
+
+		// Remove any temporary files.
+		g_TempManager.CleanUp();
+
+		// Destroy the log dialog.
+		if (g_LogDlg.IsWindow())
+			g_LogDlg.DestroyWindow();
+    }
+	catch ( ... )
+	{
+		// If someone tries to touch g_pMainFrame after the object has been destroyed,
+		// we need to find out.
+		g_pMainFrame = NULL;
+		throw;
 	}
 
-	// Display the main window.
-	INT_PTR nRet = ParseAndRun(lpstrCmdLine,nCmdShow);
-
-	// Save the devices configuration.
-	g_DeviceManager.SaveConfiguration();
-
-	// Remove any temporary files.
-	g_TempManager.CleanUp();
-
-	// Destroy the log dialog.
-	if (g_LogDlg.IsWindow())
-		g_LogDlg.DestroyWindow();
+	// If someone tries to touch g_pMainFrame after the object has been destroyed,
+	// we need to find out.
+	g_pMainFrame = NULL;
 
 	_Module.Term();
 	::CoUninitialize();

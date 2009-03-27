@@ -262,7 +262,7 @@ LRESULT CProjectListViewCtrl::OnKeyDown(UINT uMsg,WPARAM wParam,LPARAM lParam,BO
 		{
 			// This is not safe, I know.
 			BOOL bDummy;
-			g_MainFrame.OnPLVDblClk(IDC_PROJECTLISTVIEW,NULL,bDummy);
+			g_pMainFrame->OnPLVDblClk(IDC_PROJECTLISTVIEW,NULL,bDummy);
 		}
 	}
 

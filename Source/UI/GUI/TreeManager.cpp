@@ -570,7 +570,7 @@ void CTreeManager::SelectPath(const TCHAR *szPath)
     }
 
 	// FIXME: Update the status bar path pane.
-	/*g_MainFrame.m_StatusBar.SetPaneText(ID_PANE_PATH,szPath);
+	/*g_MainFrame->m_StatusBar.SetPaneText(ID_PANE_PATH,szPath);
 
 	// Update the default status bar pane.
 	TCHAR szSelObjPane[32];
@@ -579,7 +579,7 @@ void CTreeManager::SelectPath(const TCHAR *szPath)
 #else
 	sprintf(szSelObjPane,_T(PANE_STR_SELOBJECTS),0);
 #endif
-	g_MainFrame.m_StatusBar.SetPaneText(ID_DEFAULT_PANE,szSelObjPane);*/
+	g_MainFrame->m_StatusBar.SetPaneText(ID_DEFAULT_PANE,szSelObjPane);*/
 
     ListNode(pCurrentNode);
 
@@ -593,10 +593,10 @@ void CTreeManager::SelectPath(const TCHAR *szPath)
 
 	// FIXME: Sort the list view.
 	/*tSortData SortData;
-	SortData.iSubItem = g_MainFrame.m_ListViewHeader.m_iSortCol;
-	SortData.bSortUp = g_MainFrame.m_ListViewHeader.m_bSortUp;
+	SortData.iSubItem = g_MainFrame->m_ListViewHeader.m_iSortCol;
+	SortData.bSortUp = g_MainFrame->m_ListViewHeader.m_bSortUp;
 
-	g_MainFrame.m_ListView.SortItemsEx(g_MainFrame.MainListViewCompareProc,(LPARAM)&SortData);*/
+	g_MainFrame->m_ListView.SortItemsEx(g_MainFrame->MainListViewCompareProc,(LPARAM)&SortData);*/
 }
 
 void CTreeManager::Refresh()

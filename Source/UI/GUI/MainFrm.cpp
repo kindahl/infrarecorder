@@ -46,8 +46,6 @@
 #include "ProjectDropSource.h"
 #include "FilesDataObject.h"
 
-CMainFrame g_MainFrame;
-
 CMainFrame::CMainFrame() : m_pShellListView(NULL),m_bWelcomePane(false)
 {
 	m_iDefaultProjType = PROJECTTYPE_DATA;
@@ -1153,7 +1151,7 @@ LRESULT CMainFrame::OnCreate(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandle
 HMENU CMainFrame::GetToolBarsMenu()
 {
 	// Just divided the different sections up a bit so it's easier to see.
-	HMENU hViewMenu = GetSubMenu(g_MainFrame.m_CmdBar.GetMenu(),MENU_VIEW_INDEX);
+	HMENU hViewMenu = GetSubMenu(m_CmdBar.GetMenu(),MENU_VIEW_INDEX);
 	HMENU hToolBarsMenu = GetSubMenu(hViewMenu,MENU_TOOLBARS_INDEX);
 
 	return hToolBarsMenu;
@@ -1343,28 +1341,28 @@ bool CMainFrame::OpenSpecialFolder(int iFolder)
 	SHGetSpecialFolderLocation(NULL,iFolder,&pidl);
 
 	// First the root item (desktop) is expanded.
-	HTREEITEM hRootItem = g_MainFrame.m_ShellTreeView.GetRootItem();
-	g_MainFrame.m_ShellTreeView.Expand(hRootItem);
+	HTREEITEM hRootItem = m_ShellTreeView.GetRootItem();
+	m_ShellTreeView.Expand(hRootItem);
 
 	// Then we search desktop item for the special folder.
-	HTREEITEM hItem = g_MainFrame.m_ShellTreeView.GetChildItem(hRootItem);
+	HTREEITEM hItem = m_ShellTreeView.GetChildItem(hRootItem);
 
 	while (hItem)
 	{
 		CShellTreeItemInfo *pItemInfo = 
-			(CShellTreeItemInfo *)g_MainFrame.m_ShellTreeView.GetItemData(hItem);
+			(CShellTreeItemInfo *)m_ShellTreeView.GetItemData(hItem);
 
 		if (pItemInfo->pParentFolder->CompareIDs(SHCIDS_CANONICALONLY,pItemInfo->pidlSelf,pidl) == 0)
 		{
 			m_bEnableTreeSelection = false;
-				g_MainFrame.m_ShellTreeView.SelectItem(hItem);
-				g_MainFrame.m_ShellTreeView.Expand(hItem);
+				m_ShellTreeView.SelectItem(hItem);
+				m_ShellTreeView.Expand(hItem);
 			m_bEnableTreeSelection = true;
 
 			return true;
 		}
 
-		hItem = g_MainFrame.m_ShellTreeView.GetNextVisibleItem(hItem);
+		hItem = m_ShellTreeView.GetNextVisibleItem(hItem);
 	}
 
 	return false;
@@ -1379,9 +1377,9 @@ bool CMainFrame::OpenFolder(TCHAR *szFullPath,HTREEITEM hFrom,bool bExpandMyComp
 			return false;
 	}
 
-	HTREEITEM hItem = g_MainFrame.m_ShellTreeView.GetChildItem(hFrom);
+	HTREEITEM hItem = m_ShellTreeView.GetChildItem(hFrom);
 	CShellTreeItemInfo *pItemInfo = 
-		(CShellTreeItemInfo *)g_MainFrame.m_ShellTreeView.GetItemData(hItem);
+		(CShellTreeItemInfo *)m_ShellTreeView.GetItemData(hItem);
 
 	TCHAR szCurName[MAX_PATH];
 
@@ -1395,10 +1393,10 @@ bool CMainFrame::OpenFolder(TCHAR *szFullPath,HTREEITEM hFrom,bool bExpandMyComp
 	while (hItem)
 	{
 		pItemInfo = NULL;
-		pItemInfo = (CShellTreeItemInfo *)g_MainFrame.m_ShellTreeView.GetItemData(hItem);
+		pItemInfo = (CShellTreeItemInfo *)m_ShellTreeView.GetItemData(hItem);
 
 		ATLASSERT(pItemInfo != NULL);
-		g_MainFrame.m_PidlHelp.GetPathName(pItemInfo->pParentFolder,pItemInfo->pidlSelf,szCurName,MAX_PATH - 1);
+		m_PidlHelp.GetPathName(pItemInfo->pParentFolder,pItemInfo->pidlSelf,szCurName,MAX_PATH - 1);
 
 		IncludeTrailingBackslash(szCurName);
 		int iCurLength = lstrlen(szCurName);
@@ -1409,14 +1407,14 @@ bool CMainFrame::OpenFolder(TCHAR *szFullPath,HTREEITEM hFrom,bool bExpandMyComp
 		if (!_strnicmp(szCurName,szFullPath,iCurLength))
 #endif
 		{
-			g_MainFrame.m_ShellTreeView.SelectItem(hItem);
-			g_MainFrame.m_ShellTreeView.Expand(hItem);
+			m_ShellTreeView.SelectItem(hItem);
+			m_ShellTreeView.Expand(hItem);
 
 			if (iCurLength == iFullLength)
 				break;
 		}
 
-		hItem = g_MainFrame.m_ShellTreeView.GetNextVisibleItem(hItem);
+		hItem = m_ShellTreeView.GetNextVisibleItem(hItem);
 	}
 
 	m_bEnableTreeSelection = true;
@@ -1433,14 +1431,14 @@ bool CMainFrame::AddFolder(TCHAR *szFullPath)
 {
 	// Get the full pidl of the new folder.
 	LPITEMIDLIST pidl;
-	if (!g_MainFrame.m_PidlHelp.GetPidl(szFullPath,&pidl))
+	if (!m_PidlHelp.GetPidl(szFullPath,&pidl))
 		return false;
 
 	if (ExtractFilePath(szFullPath))
 	{
 		// Get the pidl of the parent.
 		LPITEMIDLIST pidlParent;
-		if (!g_MainFrame.m_PidlHelp.GetPidl(szFullPath,&pidlParent))
+		if (!m_PidlHelp.GetPidl(szFullPath,&pidlParent))
 			return false;
 
 		// Locate the parent in the tree.
@@ -1459,21 +1457,21 @@ bool CMainFrame::AddFolder(TCHAR *szFullPath)
 		TVITEMEX tvParentItem;
 		tvParentItem.hItem = hParentItem;
 		tvParentItem.mask = TVIF_CHILDREN | TVIF_STATE;
-		if (g_MainFrame.m_ShellTreeView.GetItem(&tvParentItem))
+		if (m_ShellTreeView.GetItem(&tvParentItem))
 		{
 			if (tvParentItem.cChildren == 0 || !(tvParentItem.state & TVIS_EXPANDEDONCE))
 			{
 				tvParentItem.cChildren = 1;
-				g_MainFrame.m_ShellTreeView.SetItem(&tvParentItem);
+				m_ShellTreeView.SetItem(&tvParentItem);
 				return true;
 			}
 		}
 
 		// The parent already has children so we need to add the new folder manually.
-		CShellTreeItemInfo *pParentInfo = (CShellTreeItemInfo *)g_MainFrame.m_ShellTreeView.GetItemData(hParentItem);
+		CShellTreeItemInfo *pParentInfo = (CShellTreeItemInfo *)m_ShellTreeView.GetItemData(hParentItem);
 
 		LPITEMIDLIST parentpidl,childpidl;
-		g_MainFrame.m_PidlHelp.Split(pidl,&parentpidl,&childpidl);
+		m_PidlHelp.Split(pidl,&parentpidl,&childpidl);
 		IShellFolder *pParentFolder;
 
 		// If the parent has no parent, the desktop should be used as parent.
@@ -1495,7 +1493,7 @@ bool CMainFrame::AddFolder(TCHAR *szFullPath)
 		CShellTreeItemInfo *pItemInfo = new CShellTreeItemInfo;
 		pItemInfo->pidlSelf = childpidl;
 		// We can't use ppidls[0], we need to allocate our own one.
-		pItemInfo->pidlFullyQual = g_MainFrame.m_PidlHelp.ConcatenatePidl(parentpidl,childpidl);;
+		pItemInfo->pidlFullyQual = m_PidlHelp.ConcatenatePidl(parentpidl,childpidl);;
 			pParentFolder->AddRef();
 		pItemInfo->pParentFolder = pParentFolder;
 
@@ -1523,7 +1521,7 @@ bool CMainFrame::AddFolder(TCHAR *szFullPath)
 		tvInsert.hParent = hParentItem;
 		
 		// Insert the tree item.
-		g_MainFrame.m_ShellTreeView.InsertItem(&tvInsert);
+		m_ShellTreeView.InsertItem(&tvInsert);
 
 		pParentFolder->Release();
 	}
@@ -1563,19 +1561,19 @@ bool CMainFrame::RenameFolder(LPITEMIDLIST pidlOldFullyQual,LPITEMIDLIST pidlNew
 	if (!hItem)
 		return false;
 
-	CShellTreeItemInfo *pItemInfo = (CShellTreeItemInfo *)g_MainFrame.m_ShellTreeView.GetItemData(hItem);
+	CShellTreeItemInfo *pItemInfo = (CShellTreeItemInfo *)m_ShellTreeView.GetItemData(hItem);
 	if (!pItemInfo)
 		return false;
 
 	// Extract the full path name from the new pidl.
 	TCHAR szFullPath[MAX_PATH];
-	g_MainFrame.m_PidlHelp.GetPathName(pidlNewFullyQual,szFullPath);
+	m_PidlHelp.GetPathName(pidlNewFullyQual,szFullPath);
 
 	// Compare the two paths where the new folder and old folder are located.
 	// If they differ the folder has been moved, otherwise we can just rename the
 	// existing one.
 	TCHAR szOldFullPath[MAX_PATH];
-	g_MainFrame.m_PidlHelp.GetPathName(pidlOldFullyQual,szOldFullPath);
+	m_PidlHelp.GetPathName(pidlOldFullyQual,szOldFullPath);
 
 	TCHAR szTemp[MAX_PATH];
 	lstrcpy(szTemp,szFullPath);
@@ -1589,16 +1587,16 @@ bool CMainFrame::RenameFolder(LPITEMIDLIST pidlOldFullyQual,LPITEMIDLIST pidlNew
 
 	// Generate a new pidl from the path name above. (Why doesn't the first work?)
 	LPITEMIDLIST pidlNew;
-	if (!g_MainFrame.m_PidlHelp.GetPidl(szFullPath,&pidlNew))
+	if (!m_PidlHelp.GetPidl(szFullPath,&pidlNew))
 		return false;
 
 	// Split the pidl into parent and child parts.
 	LPITEMIDLIST pidlParent,pidlChild;
-	g_MainFrame.m_PidlHelp.Split(pidlNew,&pidlParent,&pidlChild);
+	m_PidlHelp.Split(pidlNew,&pidlParent,&pidlChild);
 
 	pItemInfo->pidlSelf = pidlChild;
 	// We can't use pidlOldFullyQual, we need to allocate our own one.
-	pItemInfo->pidlFullyQual = g_MainFrame.m_PidlHelp.ConcatenatePidl(pidlParent,pidlChild);
+	pItemInfo->pidlFullyQual = m_PidlHelp.ConcatenatePidl(pidlParent,pidlChild);
 
 	// Manually update the tree item text.
 	SHFILEINFO shFileInfo;
@@ -1606,13 +1604,13 @@ bool CMainFrame::RenameFolder(LPITEMIDLIST pidlOldFullyQual,LPITEMIDLIST pidlNew
 	if (SHGetFileInfo((LPCTSTR)pItemInfo->pidlFullyQual,0,&shFileInfo,
 		sizeof(shFileInfo),SHGFI_PIDL | SHGFI_DISPLAYNAME))
 	{
-		g_MainFrame.m_ShellTreeView.SetItemText(hItem,shFileInfo.szDisplayName);
+		m_ShellTreeView.SetItemText(hItem,shFileInfo.szDisplayName);
 	}
 
 	// Sort all children to the active parent (not recursive).
 	// Update: I don't want to sort the tree. This will prevent all system folder
 	//         to stay at top in the tree.
-	//g_MainFrame.m_ShellTreeView.SortChildren(g_MainFrame.m_ShellTreeView.GetParentItem(hItem),FALSE);
+	//m_ShellTreeView.SortChildren(m_ShellTreeView.GetParentItem(hItem),FALSE);
 
 	return true;
 }
@@ -1627,23 +1625,23 @@ bool CMainFrame::MoveFolder(LPITEMIDLIST pidlFullyQual,TCHAR *szNewName)
 
 bool CMainFrame::ItemExist(HTREEITEM hParentItem,LPITEMIDLIST pidl)
 {
-	HTREEITEM hItem = g_MainFrame.m_ShellTreeView.GetChildItem(hParentItem);
+	HTREEITEM hItem = m_ShellTreeView.GetChildItem(hParentItem);
 
 	while (hItem)
 	{
-		CShellTreeItemInfo *pItemInfo = (CShellTreeItemInfo *)g_MainFrame.m_ShellTreeView.GetItemData(hItem);
+		CShellTreeItemInfo *pItemInfo = (CShellTreeItemInfo *)m_ShellTreeView.GetItemData(hItem);
 		
 		if (pItemInfo)
 		{
 			TCHAR szPath1[MAX_PATH],szPath2[MAX_PATH];
-			g_MainFrame.m_PidlHelp.GetPathName(pidl,szPath1);
-			g_MainFrame.m_PidlHelp.GetPathName(pItemInfo->pidlFullyQual,szPath2);
+			m_PidlHelp.GetPathName(pidl,szPath1);
+			m_PidlHelp.GetPathName(pItemInfo->pidlFullyQual,szPath2);
 
 			if (!lstrcmp(szPath1,szPath2))
 				return true;
 		}
 
-		hItem = g_MainFrame.m_ShellTreeView.GetNextVisibleItem(hItem);
+		hItem = m_ShellTreeView.GetNextVisibleItem(hItem);
 	}
 
 	return false;
@@ -1651,21 +1649,21 @@ bool CMainFrame::ItemExist(HTREEITEM hParentItem,LPITEMIDLIST pidl)
 
 HTREEITEM CMainFrame::FindItemFromPath(LPITEMIDLIST pidl)
 {
-	HTREEITEM hItem = g_MainFrame.m_ShellTreeView.GetRootItem();
+	HTREEITEM hItem = m_ShellTreeView.GetRootItem();
 
 	while (hItem)
 	{
 		CShellTreeItemInfo *pItemInfo = NULL;
-		pItemInfo = (CShellTreeItemInfo *)g_MainFrame.m_ShellTreeView.GetItemData(hItem);
+		pItemInfo = (CShellTreeItemInfo *)m_ShellTreeView.GetItemData(hItem);
 
 		TCHAR szPath1[MAX_PATH],szPath2[MAX_PATH];
-		g_MainFrame.m_PidlHelp.GetPathName(pidl,szPath1);
-		g_MainFrame.m_PidlHelp.GetPathName(pItemInfo->pidlFullyQual,szPath2);
+		m_PidlHelp.GetPathName(pidl,szPath1);
+		m_PidlHelp.GetPathName(pItemInfo->pidlFullyQual,szPath2);
 
 		if (!lstrcmp(szPath1,szPath2))
 			return hItem;
 
-		hItem = g_MainFrame.m_ShellTreeView.GetNextVisibleItem(hItem);
+		hItem = m_ShellTreeView.GetNextVisibleItem(hItem);
 	}
 
 	return 0;
@@ -1719,13 +1717,9 @@ bool CMainFrame::EnumTreeObjects(HTREEITEM hParentItem,IShellFolder* pParentFold
 
 		while (SUCCEEDED(pEnum->Next(1,&pidl,&dwFetched)) && dwFetched)
 		{
-			TCHAR szFoo[MAX_PATH];
-			g_MainFrame.m_PidlHelp.GetDisplayPathName(pParentFolder,pidl,szFoo);
-			//MessageBox(szFoo,_T(""));
-
 			CShellTreeItemInfo *pItemInfo = new CShellTreeItemInfo();
 			pItemInfo->pidlSelf = pidl;
-			pItemInfo->pidlFullyQual = g_MainFrame.m_PidlHelp.ConcatenatePidl(pidlParent,pidl);
+			pItemInfo->pidlFullyQual = m_PidlHelp.ConcatenatePidl(pidlParent,pidl);
 
 			pParentFolder->AddRef();
 
@@ -1774,7 +1768,7 @@ bool CMainFrame::EnumTreeObjects(HTREEITEM hParentItem,IShellFolder* pParentFold
 			tvInsert.hParent = hParentItem;
 
 			// Insert the tree item.
-			g_MainFrame.m_ShellTreeView.InsertItem(&tvInsert);
+			m_ShellTreeView.InsertItem(&tvInsert);
 
 			dwFetched = 0;
 		}
@@ -1832,7 +1826,7 @@ LRESULT CMainFrame::OnSTVItemExpanding(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled)
 
 	if (pNMTV->action == TVE_COLLAPSE)
 	{
-		g_MainFrame.m_ShellTreeView.Expand(pNMTV->itemNew.hItem,
+		m_ShellTreeView.Expand(pNMTV->itemNew.hItem,
 			TVE_COLLAPSE | TVE_COLLAPSERESET);
 	}
     else if (pNMTV->action == TVE_EXPAND)
@@ -1842,7 +1836,7 @@ LRESULT CMainFrame::OnSTVItemExpanding(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled)
 		tvItem.mask = TVIF_PARAM;
 		tvItem.hItem = pNMTV->itemNew.hItem;
 
-		if (!g_MainFrame.m_ShellTreeView.GetItem(&tvItem))
+		if (!m_ShellTreeView.GetItem(&tvItem))
 			return 0;
 
 		CShellTreeItemInfo *pItemInfo = (CShellTreeItemInfo *)tvItem.lParam;
@@ -1859,10 +1853,10 @@ LRESULT CMainFrame::OnSTVItemExpanding(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled)
 			return 0;
 		}
 	
-		g_MainFrame.m_ShellTreeView.SetRedraw(FALSE);
+		m_ShellTreeView.SetRedraw(FALSE);
 			EnumTreeObjects(pNMTV->itemNew.hItem,pParentFolder,
 				pItemInfo->pidlFullyQual);
-		g_MainFrame.m_ShellTreeView.SetRedraw(TRUE);
+		m_ShellTreeView.SetRedraw(TRUE);
 
 		pParentFolder->Release();
 		SetCursor(hCursor);

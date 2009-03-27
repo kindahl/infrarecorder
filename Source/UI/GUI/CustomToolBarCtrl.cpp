@@ -33,15 +33,15 @@ LRESULT CCustomToolBarCtrl::OnRButtonDown(UINT uMsg,WPARAM wParam,LPARAM lParam,
 	POINT ptCursor;
 	GetCursorPos(&ptCursor);
 
-	HMENU hToolBarsMenu = g_MainFrame.GetToolBarsMenu();
+	HMENU hToolBarsMenu = g_pMainFrame->GetToolBarsMenu();
 
 	// Force the popup menu items to update. This is needed since WTL seems to be lazy
 	// and only want to refresh the corresponding main menu items when needed.
 	CMainFrame::_AtlUpdateUIData UIData;
 	UIData.m_lpData = NULL;
 
-	UIData.m_wState = (WORD)g_MainFrame.UIGetState(ID_VIEW_STANDARDTOOLBAR);
-	g_MainFrame.UIUpdateMenuBarElement(ID_VIEW_STANDARDTOOLBAR,&UIData,hToolBarsMenu);
+	UIData.m_wState = (WORD)g_pMainFrame->UIGetState(ID_VIEW_STANDARDTOOLBAR);
+	g_pMainFrame->UIUpdateMenuBarElement(ID_VIEW_STANDARDTOOLBAR,&UIData,hToolBarsMenu);
 
 	// Show the popup menu.
 	TrackPopupMenuEx(hToolBarsMenu,0,ptCursor.x,ptCursor.y,m_hWnd,NULL);

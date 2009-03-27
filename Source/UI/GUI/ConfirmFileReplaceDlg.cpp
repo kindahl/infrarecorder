@@ -84,7 +84,7 @@ bool CConfirmFileReplaceDlg::Execute()
 {
 	bool bResult = false;
 
-	switch (DoModal(g_MainFrame))	// It's okay if g_MainFrame.m_hWnd is NULL.
+	switch (DoModal(*g_pMainFrame))	// It's okay if g_pMainFrame->m_hWnd is NULL.
 	{
 		case IDC_YESBUTTON:
 			bResult = true;

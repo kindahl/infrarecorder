@@ -271,7 +271,7 @@ LRESULT CSimpleProgressDlg::OnReload(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL
 LRESULT CSimpleProgressDlg::OnOK(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
 	// Re-enable the main window.
-	//g_MainFrame.EnableWindow(true);
+	//g_MainFrame->EnableWindow(true);
 	if (::IsWindow(m_hWndHost))
 		::EnableWindow(m_hWndHost,true);
 

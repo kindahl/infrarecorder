@@ -280,7 +280,7 @@ bool CProjectManager::CFileTransaction::
 
 		if (!bEncoded)
 		{
-			lngMessageBox(g_MainFrame,FAILURE_UNSUPAUDIO,GENERAL_ERROR,MB_OK | MB_ICONERROR);
+			lngMessageBox(*g_pMainFrame,FAILURE_UNSUPAUDIO,GENERAL_ERROR,MB_OK | MB_ICONERROR);
 			return false;
 		}
 	}
@@ -423,7 +423,7 @@ bool CProjectManager::CFileTransaction::
 		// We can't add folder to an audio disc.
 		if (g_ProjectManager.m_iViewType != PROJECTVIEWTYPE_DATA)
 		{
-			lngMessageBox(g_MainFrame,ERROR_AUDIOADDFOLDER,GENERAL_ERROR,MB_OK | MB_ICONERROR);
+			lngMessageBox(*g_pMainFrame,ERROR_AUDIOADDFOLDER,GENERAL_ERROR,MB_OK | MB_ICONERROR);
 			return false;
 		}
 
@@ -511,7 +511,7 @@ bool CProjectManager::CFileTransaction::
 	}
 
 	if (!g_TreeManager.MoveEntry(pItemParent,pItemData,pNewParent))
-		lngMessageBox(g_MainFrame,ERROR_MOVESAMESRCDST,GENERAL_ERROR,MB_OK | MB_ICONERROR);
+		lngMessageBox(*g_pMainFrame,ERROR_MOVESAMESRCDST,GENERAL_ERROR,MB_OK | MB_ICONERROR);
 
 	g_TreeManager.Refresh();
 
@@ -553,7 +553,7 @@ CProjectManager::~CProjectManager()
 LRESULT CProjectManager::OnNewFolder(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
 	// Make sure that this action is allowed to happen (accelerators does not care about menu item state).
-	if (g_MainFrame.UIGetState(ID_EDIT_NEWFOLDER) & g_MainFrame.UPDUI_DISABLED)
+	if (g_pMainFrame->UIGetState(ID_EDIT_NEWFOLDER) & g_pMainFrame->UPDUI_DISABLED)
 		return 0;
 
 	switch (m_iActiveView)
@@ -574,7 +574,7 @@ LRESULT CProjectManager::OnNewFolder(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL
 LRESULT CProjectManager::OnRename(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
 	// Make sure that this action is allowed to happen (accelerators does not care about menu item state).
-	if (g_MainFrame.UIGetState(ID_EDIT_RENAME) & g_MainFrame.UPDUI_DISABLED)
+	if (g_pMainFrame->UIGetState(ID_EDIT_RENAME) & g_pMainFrame->UPDUI_DISABLED)
 		return 0;
 
 	switch (m_iActiveView)
@@ -606,13 +606,13 @@ LRESULT CProjectManager::OnRename(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &b
 LRESULT CProjectManager::OnRemove(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
 	// Make sure that this action is allowed to happen (accelerators does not care about menu item state).
-	if (g_MainFrame.UIGetState(ID_EDIT_REMOVE) & g_MainFrame.UPDUI_DISABLED)
+	if (g_pMainFrame->UIGetState(ID_EDIT_REMOVE) & g_pMainFrame->UPDUI_DISABLED)
 		return 0;
 
 	// We need to store the current active view since it will change after the message box has been shown.
 	int iActiveView = m_iActiveView;
 
-	if (lngMessageBox(g_MainFrame,CONFIRM_REMOVEITEMS,GENERAL_QUESTION,MB_YESNO | MB_ICONQUESTION) != IDYES)
+	if (lngMessageBox(*g_pMainFrame,CONFIRM_REMOVEITEMS,GENERAL_QUESTION,MB_YESNO | MB_ICONQUESTION) != IDYES)
 		return 0;
 
 	switch (iActiveView)
@@ -650,8 +650,8 @@ void CProjectManager::SetupDataListView()
 	m_pListView->InsertColumn(4,lngGetString(COLUMN_PATH),LVCFMT_LEFT,120,COLUMN_SUBINDEX_PATH);
 
 	// Update menu items.
-	EnableAll(ID_EDIT_NEWFOLDER,true,g_MainFrame.m_hProjListNoSelMenu);
-	EnableAll(ID_EDIT_RENAME,false,g_MainFrame.m_hProjListSelMenu);
+	EnableAll(ID_EDIT_NEWFOLDER,true,g_pMainFrame->m_hProjListNoSelMenu);
+	EnableAll(ID_EDIT_RENAME,false,g_pMainFrame->m_hProjListSelMenu);
 	EnableAll(ID_EDIT_REMOVE,false);
 
 	// Enable editing of names.
@@ -679,8 +679,8 @@ void CProjectManager::SetupAudioListView()
 	m_pListView->InsertColumn(3,lngGetString(COLUMN_LOCATION),LVCFMT_LEFT,450,COLUMN_SUBINDEX_LOCATION);
 
 	// Update menu items.
-	EnableAll(ID_EDIT_NEWFOLDER,false,g_MainFrame.m_hProjListNoSelMenu);
-	EnableAll(ID_EDIT_RENAME,false,g_MainFrame.m_hProjListSelMenu);
+	EnableAll(ID_EDIT_NEWFOLDER,false,g_pMainFrame->m_hProjListNoSelMenu);
+	EnableAll(ID_EDIT_RENAME,false,g_pMainFrame->m_hProjListSelMenu);
 	EnableAll(ID_EDIT_REMOVE,false);
 
 	// Disable editing of names.
@@ -759,8 +759,8 @@ void CProjectManager::NewDataProject(int iDiscMedia)
 	lstrcpy(g_ProjectSettings.m_szLabel,szDateTime);
 
 	// Enable/disable menu items.
-	g_MainFrame.UIEnable(ID_BURNCOMPILATION_DISCIMAGE,true);
-	g_MainFrame.UIEnable(ID_ACTIONS_IMPORTSESSION,true);
+	g_pMainFrame->UIEnable(ID_BURNCOMPILATION_DISCIMAGE,true);
+	g_pMainFrame->UIEnable(ID_ACTIONS_IMPORTSESSION,true);
 }
 
 /**
@@ -800,8 +800,8 @@ void CProjectManager::NewAudioProject(int iDiscMedia)
 	g_ProjectSettings.m_szLabel[0] = '\0';
 
 	// Enable/disable menu items.
-	g_MainFrame.UIEnable(ID_BURNCOMPILATION_DISCIMAGE,false);
-	g_MainFrame.UIEnable(ID_ACTIONS_IMPORTSESSION,false);
+	g_pMainFrame->UIEnable(ID_BURNCOMPILATION_DISCIMAGE,false);
+	g_pMainFrame->UIEnable(ID_ACTIONS_IMPORTSESSION,false);
 }
 
 /**
@@ -856,8 +856,8 @@ void CProjectManager::NewMixedProject(int iDiscMedia)
 	lstrcpy(g_ProjectSettings.m_szLabel,szDateTime);
 
 	// Enable/disable menu items.
-	g_MainFrame.UIEnable(ID_BURNCOMPILATION_DISCIMAGE,true);
-	g_MainFrame.UIEnable(ID_ACTIONS_IMPORTSESSION,false);
+	g_pMainFrame->UIEnable(ID_BURNCOMPILATION_DISCIMAGE,true);
+	g_pMainFrame->UIEnable(ID_ACTIONS_IMPORTSESSION,false);
 }
 
 /**
@@ -1113,25 +1113,25 @@ void CProjectManager::NotifyListSelChanged(unsigned int uiSelCount)
 	{
 		if (uiSelCount > 0)
 		{
-			EnableAll(ID_EDIT_RENAME,true,g_MainFrame.m_hProjListSelMenu);
-			EnableAll(ID_EDIT_REMOVE,true,g_MainFrame.m_hProjListSelMenu);
+			EnableAll(ID_EDIT_RENAME,true,g_pMainFrame->m_hProjListSelMenu);
+			EnableAll(ID_EDIT_REMOVE,true,g_pMainFrame->m_hProjListSelMenu);
 		}
 		else
 		{
-			EnableAll(ID_EDIT_RENAME,false,g_MainFrame.m_hProjListSelMenu);
-			EnableAll(ID_EDIT_REMOVE,false,g_MainFrame.m_hProjListSelMenu);
+			EnableAll(ID_EDIT_RENAME,false,g_pMainFrame->m_hProjListSelMenu);
+			EnableAll(ID_EDIT_REMOVE,false,g_pMainFrame->m_hProjListSelMenu);
 		}
 	}
 	else if (m_iViewType == PROJECTVIEWTYPE_AUDIO)
 	{
 		if (uiSelCount > 0)
-			EnableAll(ID_EDIT_REMOVE,true,g_MainFrame.m_hProjListSelMenu);
+			EnableAll(ID_EDIT_REMOVE,true,g_pMainFrame->m_hProjListSelMenu);
 		else
-			EnableAll(ID_EDIT_REMOVE,false,g_MainFrame.m_hProjListSelMenu);
+			EnableAll(ID_EDIT_REMOVE,false,g_pMainFrame->m_hProjListSelMenu);
 	}
 
 	// Currently the properties menu item only works when right-clicking on the project tree root.
-	g_ProjectManager.EnableAll(ID_POPUPMENU_PROPERTIES,false,g_MainFrame.m_hProjListSelMenu);
+	g_ProjectManager.EnableAll(ID_POPUPMENU_PROPERTIES,false,g_pMainFrame->m_hProjListSelMenu);
 }
 
 /**
@@ -1143,28 +1143,28 @@ void CProjectManager::NotifyTreeSelChanged(CProjectNode *pNode)
 {
 	if (m_iProjectType == PROJECTTYPE_DATA)
 	{
-		g_ProjectManager.EnableAll(ID_EDIT_RENAME,true,g_MainFrame.m_hProjListSelMenu);
-		g_ProjectManager.EnableAll(ID_EDIT_REMOVE,pNode != g_TreeManager.GetRootNode(),g_MainFrame.m_hProjListSelMenu);
+		g_ProjectManager.EnableAll(ID_EDIT_RENAME,true,g_pMainFrame->m_hProjListSelMenu);
+		g_ProjectManager.EnableAll(ID_EDIT_REMOVE,pNode != g_TreeManager.GetRootNode(),g_pMainFrame->m_hProjListSelMenu);
 	}
 	else if (m_iProjectType == PROJECTTYPE_MIXED)
 	{
 		if (pNode == m_pMixAudioNode)
 		{
-			g_ProjectManager.EnableAll(ID_EDIT_RENAME,false,g_MainFrame.m_hProjListSelMenu);
-			g_ProjectManager.EnableAll(ID_EDIT_REMOVE,false,g_MainFrame.m_hProjListSelMenu);
+			g_ProjectManager.EnableAll(ID_EDIT_RENAME,false,g_pMainFrame->m_hProjListSelMenu);
+			g_ProjectManager.EnableAll(ID_EDIT_REMOVE,false,g_pMainFrame->m_hProjListSelMenu);
 		}
 		else
 		{
-			g_ProjectManager.EnableAll(ID_EDIT_RENAME,true,g_MainFrame.m_hProjListSelMenu);
-			g_ProjectManager.EnableAll(ID_EDIT_REMOVE,pNode != m_pMixDataNode,g_MainFrame.m_hProjListSelMenu);
+			g_ProjectManager.EnableAll(ID_EDIT_RENAME,true,g_pMainFrame->m_hProjListSelMenu);
+			g_ProjectManager.EnableAll(ID_EDIT_REMOVE,pNode != m_pMixDataNode,g_pMainFrame->m_hProjListSelMenu);
 		}
 	}
 
 	// Currently the properties menu item only works when right-clicking on the project tree root.
 	if (pNode == g_TreeManager.GetRootNode())
-		g_ProjectManager.EnableAll(ID_POPUPMENU_PROPERTIES,true,g_MainFrame.m_hProjListSelMenu);
+		g_ProjectManager.EnableAll(ID_POPUPMENU_PROPERTIES,true,g_pMainFrame->m_hProjListSelMenu);
 	else
-		g_ProjectManager.EnableAll(ID_POPUPMENU_PROPERTIES,false,g_MainFrame.m_hProjListSelMenu);
+		g_ProjectManager.EnableAll(ID_POPUPMENU_PROPERTIES,false,g_pMainFrame->m_hProjListSelMenu);
 }
 
 /**
@@ -1227,7 +1227,7 @@ void CProjectManager::CloseProject()
 
 void CProjectManager::EnableAll(int iID,bool bEnable,HMENU hMenu)
 {
-	g_MainFrame.UIEnable(iID,bEnable);
+	g_pMainFrame->UIEnable(iID,bEnable);
 	m_pContainer->EnableToolbarButton(iID,bEnable);
 
 	if (hMenu != NULL)
@@ -1565,7 +1565,7 @@ bool CProjectManager::LoadProject(const TCHAR *szFullPath)
 		TCHAR szMessage[128];
 		lsnprintf_s(szMessage,128,lngGetString(ERROR_LOADPROJECTXML),iResult);
 
-		MessageBox(g_MainFrame,szMessage,lngGetString(GENERAL_ERROR),MB_OK | MB_ICONERROR);
+		MessageBox(*g_pMainFrame,szMessage,lngGetString(GENERAL_ERROR),MB_OK | MB_ICONERROR);
 		return false;
 	}
 
@@ -1581,12 +1581,12 @@ bool CProjectManager::LoadProject(const TCHAR *szFullPath)
 
 	if (iVersion > PROJECTMANAGER_FILEVERSION)
 	{
-		lngMessageBox(g_MainFrame,ERROR_PROJECTVERSION,GENERAL_ERROR,MB_OK | MB_ICONERROR);
+		lngMessageBox(*g_pMainFrame,ERROR_PROJECTVERSION,GENERAL_ERROR,MB_OK | MB_ICONERROR);
 		return false;
 	}
 
 	if (iVersion < PROJECTMANAGER_FILEVERSION)
-		lngMessageBox(g_MainFrame,WARNING_OLDPROJECT,GENERAL_WARNING,MB_OK | MB_ICONWARNING);
+		lngMessageBox(*g_pMainFrame,WARNING_OLDPROJECT,GENERAL_WARNING,MB_OK | MB_ICONWARNING);
 
 	// Project type.
 	int iType = -1;
@@ -1637,14 +1637,14 @@ bool CProjectManager::LoadProject(const TCHAR *szFullPath)
 			break;
 
 		default:
-			lngMessageBox(g_MainFrame,ERROR_LOADPROJECT,GENERAL_ERROR,MB_OK | MB_ICONERROR);
+			lngMessageBox(*g_pMainFrame,ERROR_LOADPROJECT,GENERAL_ERROR,MB_OK | MB_ICONERROR);
 			return false;
 	}
 
 	// Project data.
 	if (!LoadProjectData(&XML))
 	{
-		lngMessageBox(g_MainFrame,ERROR_LOADPROJECT,GENERAL_ERROR,MB_OK | MB_ICONERROR);
+		lngMessageBox(*g_pMainFrame,ERROR_LOADPROJECT,GENERAL_ERROR,MB_OK | MB_ICONERROR);
 		return false;
 	}
 

@@ -157,7 +157,7 @@ LRESULT CCustomContainer::OnGetIShellBrowser(UINT uMsg,WPARAM wParam,LPARAM lPar
 	// the correct IShellBrowser object. If we do not answer to this message the CreateViewObject
 	// function call will fail on Windows 98 systems for all other directories than the desktop.
 	bHandled = TRUE;
-	return ::SendMessage(g_MainFrame,WM_GETISHELLBROWSER,wParam,lParam);
+	return ::SendMessage(*g_pMainFrame,WM_GETISHELLBROWSER,wParam,lParam);
 }
 
 LRESULT CCustomContainer::OnCustomDraw(int idCtrl,LPNMHDR pnmh,BOOL &bHandled)
