@@ -17,6 +17,8 @@
  */
 
 #pragma once
+
+#include <atlcrack.h>	// BEGIN_MSG_MAP_EX
 #include "VisualStyles.h"
 
 #define DROPDOWNBUTTON_MAX_TEXT_SIZE			64
@@ -41,7 +43,11 @@ public:
 	DWORD OnPrePaint(int idCtrl,LPNMCUSTOMDRAW lpNMCD);
 	DWORD OnPostPaint(int idCtrl,LPNMCUSTOMDRAW lpNMCD);
 
+#if _ATL_VER <= 0x0300
+	BEGIN_MSG_MAP_EX(CDropDownButton)
+#else
 	BEGIN_MSG_MAP(CDropDownButton)
+#endif
 		REFLECTED_COMMAND_CODE_HANDLER(BN_CLICKED,OnClicked)
 
 		 CHAIN_MSG_MAP_ALT(COwnerDraw<CDropDownButton>,1)
