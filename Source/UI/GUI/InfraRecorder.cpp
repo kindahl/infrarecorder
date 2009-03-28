@@ -19,6 +19,8 @@
 #include "stdafx.h"
 #include "resource.h"
 #include "MainFrm.h"
+#include "ProgressDlg.h"
+#include "SimpleProgressDlg.h"
 #include "SplashWindow.h"
 #include "DeviceManager.h"
 #include "LogDlg.h"
@@ -41,6 +43,10 @@ CCodecManager g_CodecManager;
 
 // Global pointers to GUI objects owned by this file.
 CMainFrame *g_pMainFrame = NULL;
+CProgressDlg *g_pProgressDlg = NULL;
+CSimpleProgressDlg *g_pSimpleProgressDlg = NULL;
+CLogDlg *g_pLogDlg = NULL;
+
 
 void PerformDeviceScan()
 {
@@ -269,6 +275,11 @@ INT_PTR ParseAndRun(LPTSTR lpstrCmdLine,int nCmdShow = SW_SHOWDEFAULT)
 
 int WINAPI _tWinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPTSTR lpstrCmdLine,int nCmdShow)
 {
+#ifdef _DEBUG
+	// In debug builds, generate a memory leak report on exit.
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+#endif
+
 	HRESULT hRes = ::CoInitialize(NULL);
 	// If you are running on NT 4.0 or higher you can use the following call instead to 
 	// make the EXE free threaded. This means that calls come in on a random RPC thread.
@@ -285,19 +296,26 @@ int WINAPI _tWinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPTSTR lpstrCmd
 
 	INT_PTR nRet;
 
-	try	// Also acts as scope for variable 'MainFrame'.
+	try	// Also acts as scope for variable 'MainFrame' etc.
 	{
 		// In order for it to work under Visual Studio 2005 Express / ATL 3.0,
-		// the constructor for CMainFrame must run after _Module.Init() has been
+		// the constructor for CMainFrame etc. must run after _Module.Init() has been
 		// called, and the destructor must run before _Module.Term().
 		CMainFrame MainFrame;
+		CProgressDlg ProgressDlg;
+		CSimpleProgressDlg SimpleProgressDlg;
+		CLogDlg LogDlg;
+
 		g_pMainFrame = &MainFrame;
+		g_pProgressDlg = &ProgressDlg;
+		g_pSimpleProgressDlg = &SimpleProgressDlg;
+		g_pLogDlg = &LogDlg;
 
 		// Load the configuration.
 		g_SettingsManager.Load();
 
 		// Create the log dialog.
-		g_LogDlg.Create(HWND_DESKTOP);
+		g_pLogDlg->Create(HWND_DESKTOP);
 
 		// Translate some of the string tables.
 		lngTranslateTables();
@@ -347,20 +365,26 @@ int WINAPI _tWinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPTSTR lpstrCmd
 		g_TempManager.CleanUp();
 
 		// Destroy the log dialog.
-		if (g_LogDlg.IsWindow())
-			g_LogDlg.DestroyWindow();
+		if (g_pLogDlg->IsWindow())
+			g_pLogDlg->DestroyWindow();
     }
 	catch ( ... )
 	{
-		// If someone tries to touch g_pMainFrame after the object has been destroyed,
+		// If someone tries to touch g_pMainFrame etc. after the object has been destroyed,
 		// we need to find out.
 		g_pMainFrame = NULL;
+		g_pProgressDlg = NULL;
+		g_pSimpleProgressDlg = NULL;
+		g_pLogDlg = NULL;
 		throw;
 	}
 
-	// If someone tries to touch g_pMainFrame after the object has been destroyed,
+	// If someone tries to touch g_pMainFrame etc. after the object has been destroyed,
 	// we need to find out.
 	g_pMainFrame = NULL;
+	g_pProgressDlg = NULL;
+	g_pSimpleProgressDlg = NULL;
+	g_pLogDlg = NULL;
 
 	_Module.Term();
 	::CoUninitialize();

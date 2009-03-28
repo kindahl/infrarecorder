@@ -71,11 +71,11 @@ bool CImportSessionDlg::Translate()
 
 bool CImportSessionDlg::UpdateDiscInfo(CCore2Device *pDevice)
 {
-	g_LogDlg.print_line(_T("CImportSessionDlg::UpdateDiscInfo"));
+	g_pLogDlg->print_line(_T("CImportSessionDlg::UpdateDiscInfo"));
 
 	if (pDevice == NULL)
 	{
-		g_LogDlg.print_line(_T("  Error: No device specified."));
+		g_pLogDlg->print_line(_T("  Error: No device specified."));
 		return false;
 	}
 
@@ -85,7 +85,7 @@ bool CImportSessionDlg::UpdateDiscInfo(CCore2Device *pDevice)
 	CCore2Info Info;
 	if (Info.ReadTOC(pDevice,ucFirstTrackNumber,ucLastTrackNumber,Tracks))
 	{
-		g_LogDlg.print_line(_T("  First and last disc track number: %d, %d."),
+		g_pLogDlg->print_line(_T("  First and last disc track number: %d, %d."),
 			ucFirstTrackNumber,ucLastTrackNumber);
 
 		// Iterate through all tracks.
@@ -96,7 +96,7 @@ bool CImportSessionDlg::UpdateDiscInfo(CCore2Device *pDevice)
 		{
 			if (!Info.ReadTrackInformation(pDevice,CCore2Info::TIT_LBA,itTrack->m_ulTrackAddr,&TrackInfo))
 			{
-				g_LogDlg.print_line(_T("  Error: Unable to read information about track %d."),itTrack->m_ucTrackNumber);
+				g_pLogDlg->print_line(_T("  Error: Unable to read information about track %d."),itTrack->m_ucTrackNumber);
 				return false;
 			}
 
@@ -109,7 +109,7 @@ bool CImportSessionDlg::UpdateDiscInfo(CCore2Device *pDevice)
 	}
 	else
 	{
-		g_LogDlg.print_line(_T("  Error: Unable to read TOC information to validate selected track."));
+		g_pLogDlg->print_line(_T("  Error: Unable to read TOC information to validate selected track."));
 		return false;
 	}
 

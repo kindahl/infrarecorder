@@ -87,31 +87,31 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 		if (!g_BurnImageSettings.m_bOnFly)
 		{
 			// Set the status information.
-			g_ProgressDlg.SetWindowText(lngGetString(STITLE_CREATEIMAGE));
-			g_ProgressDlg.SetDevice(lngGetString(PROGRESS_IMAGEDEVICE));
-			g_ProgressDlg.set_status(lngGetString(STATUS_WRITEIMAGE));
+			g_pProgressDlg->SetWindowText(lngGetString(STITLE_CREATEIMAGE));
+			g_pProgressDlg->SetDevice(lngGetString(PROGRESS_IMAGEDEVICE));
+			g_pProgressDlg->set_status(lngGetString(STATUS_WRITEIMAGE));
 
-			g_ProgressDlg.notify(ckcore::Progress::ckINFORMATION,lngGetString(PROGRESS_BEGINDISCIMAGE));
+			g_pProgressDlg->notify(ckcore::Progress::ckINFORMATION,lngGetString(PROGRESS_BEGINDISCIMAGE));
 
-			iResult = g_Core2.CreateImage(ImageFile.name().c_str(),Files,g_ProgressDlg,g_BurnImageSettings.m_bVerify ? &FilePathMap : NULL);
-			g_ProgressDlg.set_progress(100);
+			iResult = g_Core2.CreateImage(ImageFile.name().c_str(),Files,*g_pProgressDlg,g_BurnImageSettings.m_bVerify ? &FilePathMap : NULL);
+			g_pProgressDlg->set_progress(100);
 
 			switch (iResult)
 			{
 				case RESULT_OK:
-					g_ProgressDlg.notify(ckcore::Progress::ckINFORMATION,lngGetString(SUCCESS_CREATEIMAGE));
+					g_pProgressDlg->notify(ckcore::Progress::ckINFORMATION,lngGetString(SUCCESS_CREATEIMAGE));
 					break;
 
 				case RESULT_CANCEL:
-					g_ProgressDlg.NotifyCompleted();
+					g_pProgressDlg->NotifyCompleted();
 
 					ImageFile.remove();
 					return 0;
 
 				case RESULT_FAIL:
-					g_ProgressDlg.set_status(lngGetString(PROGRESS_FAILED));
-					g_ProgressDlg.notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_CREATEIMAGE));
-					g_ProgressDlg.NotifyCompleted();
+					g_pProgressDlg->set_status(lngGetString(PROGRESS_FAILED));
+					g_pProgressDlg->notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_CREATEIMAGE));
+					g_pProgressDlg->NotifyCompleted();
 
 					ImageFile.remove();
 					return 0;
@@ -119,7 +119,7 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 		}
 	}
 
-	g_ProgressDlg.set_progress(0);
+	g_pProgressDlg->set_progress(0);
 
 	tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(g_BurnImageSettings.m_iRecorder);
 	tDeviceCap *pDeviceCap = g_DeviceManager.GetDeviceCap(g_BurnImageSettings.m_iRecorder);
@@ -129,15 +129,15 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 	TCHAR szDeviceName[128];
 	g_DeviceManager.GetDeviceName(pDeviceInfo,szDeviceName);
 
-	g_ProgressDlg.SetWindowText(lngGetString(STITLE_BURNCOMPILATION));
-	g_ProgressDlg.SetDevice(szDeviceName);
+	g_pProgressDlg->SetWindowText(lngGetString(STITLE_BURNCOMPILATION));
+	g_pProgressDlg->SetDevice(szDeviceName);
 
 	std::vector<TCHAR *> AudioTracks;
 	std::vector<TCHAR *> TempTracks;
 	const TCHAR *pAudioText = NULL;
 
 	// Decode any encoded tracks in audio and mixed-mode projects.
-	g_ProgressDlg.set_status(lngGetString(PROGRESS_DECODETRACKS));
+	g_pProgressDlg->set_status(lngGetString(PROGRESS_DECODETRACKS));
 	switch (iProjectType)
 	{
 		case PROJECTTYPE_MIXED:
@@ -145,9 +145,9 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 			g_ProjectManager.GetAudioTracks(AudioTracks);
 
 			// Decode any audio tracks that might be encoded.
-			if (!g_ProjectManager.DecodeAudioTracks(AudioTracks,TempTracks,&g_ProgressDlg))
+			if (!g_ProjectManager.DecodeAudioTracks(AudioTracks,TempTracks,g_pProgressDlg))
 			{
-				g_ProgressDlg.NotifyCompleted();
+				g_pProgressDlg->NotifyCompleted();
 
 				// Remove any temporary tracks.
 				for (unsigned int i = 0; i < TempTracks.size(); i++)
@@ -165,7 +165,7 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 	}
 
 	// Start the burn process.
-	/*g_ProgressDlg.set_status(lngGetString(PROGRESS_INIT));
+	/*g_pProgressDlg->set_status(lngGetString(PROGRESS_INIT));
 	switch (iProjectType)
 	{
 		case PROJECTTYPE_DATA:
@@ -173,7 +173,7 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 			{
 				// Try to estimate the file system size before burning the compilation.
 				unsigned __int64 uiDataSize = 0;
-				g_ProgressDlg.set_status(lngGetString(PROGRESS_ESTIMAGESIZE));
+				g_pProgressDlg->set_status(lngGetString(PROGRESS_ESTIMAGESIZE));
 
 				ckfilesystem::FileComparator FileComp(g_ProjectSettings.m_iFileSystem == FILESYSTEM_DVDVIDEO);
 				ckfilesystem::FileSet Files(FileComp);
@@ -182,12 +182,12 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 
 				iResult = g_Core2.EstimateImageSize(Files,g_ProgressDlg,uiDataSize);
 
-				g_ProgressDlg.set_progress(100);
+				g_pProgressDlg->set_progress(100);
 
 				if (iResult == RESULT_OK)
 				{
 					// Reset the status.
-					g_ProgressDlg.set_status(lngGetString(PROGRESS_INIT));
+					g_pProgressDlg->set_status(lngGetString(PROGRESS_INIT));
 
 					if (g_BurnImageSettings.m_bVerify)
 					{
@@ -202,7 +202,7 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 				}
 				else if (iResult == RESULT_FAIL)
 				{
-					g_ProgressDlg.notify(ckcore::Progress::ckERROR,lngGetString(ERROR_ESTIMAGESIZE));
+					g_pProgressDlg->notify(ckcore::Progress::ckERROR,lngGetString(ERROR_ESTIMAGESIZE));
 				}
 			}
 			else
@@ -242,7 +242,7 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 			{
 				// Try to estimate the file system size before burning the compilation.
 				unsigned __int64 uiDataSize = 0;
-				g_ProgressDlg.set_status(lngGetString(PROGRESS_ESTIMAGESIZE));
+				g_pProgressDlg->set_status(lngGetString(PROGRESS_ESTIMAGESIZE));
 
 				ckfilesystem::FileComparator FileComp(g_ProjectSettings.m_iFileSystem == FILESYSTEM_DVDVIDEO);
 				ckfilesystem::FileSet Files(FileComp);
@@ -252,12 +252,12 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 
 				iResult = g_Core2.EstimateImageSize(Files,g_ProgressDlg,uiDataSize);
 
-				g_ProgressDlg.set_progress(100);
+				g_pProgressDlg->set_progress(100);
 
 				if (iResult == RESULT_OK)
 				{
 					// Reset the status.
-					g_ProgressDlg.set_status(lngGetString(PROGRESS_INIT));
+					g_pProgressDlg->set_status(lngGetString(PROGRESS_INIT));
 
 					if (g_BurnImageSettings.m_bVerify)
 					{
@@ -272,7 +272,7 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 				}
 				else if (iResult == RESULT_FAIL)
 				{
-					g_ProgressDlg.notify(ckcore::Progress::ckERROR,lngGetString(ERROR_ESTIMAGESIZE));
+					g_pProgressDlg->notify(ckcore::Progress::ckERROR,lngGetString(ERROR_ESTIMAGESIZE));
 				}
 			}
 			else
@@ -346,9 +346,9 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 	// Handle the result.
 	if (!iResult)
 	{
-		g_ProgressDlg.set_status(lngGetString(PROGRESS_CANCELED));
-		g_ProgressDlg.notify(ckcore::Progress::ckWARNING,lngGetString(PROGRESS_CANCELED));
-		g_ProgressDlg.NotifyCompleted();
+		g_pProgressDlg->set_status(lngGetString(PROGRESS_CANCELED));
+		g_pProgressDlg->notify(ckcore::Progress::ckWARNING,lngGetString(PROGRESS_CANCELED));
+		g_pProgressDlg->NotifyCompleted();
 
 		lngMessageBox(HWND_DESKTOP,FAILURE_CDRTOOLS,GENERAL_ERROR,MB_OK | MB_ICONERROR);
 		return 0;
@@ -359,7 +359,7 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 		if (g_BurnImageSettings.m_bVerify)
 		{
 			// We need to reload the drive media.
-			g_ProgressDlg.set_status(lngGetString(PROGRESS_RELOADMEDIA));
+			g_pProgressDlg->set_status(lngGetString(PROGRESS_RELOADMEDIA));
 
 			CCore2Device Device;
 			Device.Open(&pDeviceInfo->Address);
@@ -372,9 +372,9 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 			TCHAR szDeviceName[128];
 			g_DeviceManager.GetDeviceName(pDeviceInfo,szDeviceName);
 
-			g_ProgressDlg.SetDevice(szDeviceName);
-			g_ProgressDlg.set_status(lngGetString(PROGRESS_INIT));
-			g_ProgressDlg.SetWindowText(lngGetString(STITLE_VERIFYDISC));
+			g_pProgressDlg->SetDevice(szDeviceName);
+			g_pProgressDlg->set_status(lngGetString(PROGRESS_INIT));
+			g_pProgressDlg->SetWindowText(lngGetString(STITLE_VERIFYDISC));
 
 			// Get the device drive letter.
 			TCHAR szDriveLetter[3];
@@ -386,9 +386,9 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 			g_ProjectManager.VerifyCompilation(&g_ProgressDlg,szDriveLetter,FilePathMap);
 
 			// We're done.
-			g_ProgressDlg.set_progress(100);
-			g_ProgressDlg.set_status(lngGetString(PROGRESS_DONE));
-			g_ProgressDlg.NotifyCompleted();
+			g_pProgressDlg->set_progress(100);
+			g_pProgressDlg->set_status(lngGetString(PROGRESS_DONE));
+			g_pProgressDlg->NotifyCompleted();
 		}
 
 		// Eject the disc if requested.
@@ -402,7 +402,7 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 	for (long i = 0; i < g_BurnImageSettings.m_lNumCopies; i++)
 	{
 		bool bLast = i == (g_BurnImageSettings.m_lNumCopies - 1);
-		g_ProgressDlg.set_status(lngGetString(PROGRESS_INIT));
+		g_pProgressDlg->set_status(lngGetString(PROGRESS_INIT));
 		switch (iProjectType)
 		{
 			case PROJECTTYPE_DATA:
@@ -410,48 +410,48 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 				{
 					// Try to estimate the file system size before burning the compilation.
 					unsigned __int64 uiDataSize = 0;
-					g_ProgressDlg.set_status(lngGetString(PROGRESS_ESTIMAGESIZE));
+					g_pProgressDlg->set_status(lngGetString(PROGRESS_ESTIMAGESIZE));
 
 					ckfilesystem::FileComparator FileComp(g_ProjectSettings.m_iFileSystem == FILESYSTEM_DVDVIDEO);
 					ckfilesystem::FileSet Files(FileComp);
 
 					g_TreeManager.GetPathList(Files,g_TreeManager.GetRootNode());
 
-					iResult = g_Core2.EstimateImageSize(Files,g_ProgressDlg,uiDataSize);
+					iResult = g_Core2.EstimateImageSize(Files,*g_pProgressDlg,uiDataSize);
 
-					g_ProgressDlg.set_progress(100);
+					g_pProgressDlg->set_progress(100);
 
 					if (iResult == RESULT_OK)
 					{
 						// Reset the status.
-						g_ProgressDlg.set_status(lngGetString(PROGRESS_INIT));
+						g_pProgressDlg->set_status(lngGetString(PROGRESS_INIT));
 
 						if (g_BurnImageSettings.m_bVerify || !bLast)
 						{
-							iResult = (int)g_Core.BurnCompilationEx(pDeviceInfo,pDeviceCap,pDeviceInfoEx,&g_ProgressDlg,g_ProgressDlg,Files,
+							iResult = (int)g_Core.BurnCompilationEx(pDeviceInfo,pDeviceCap,pDeviceInfoEx,g_pProgressDlg,*g_pProgressDlg,Files,
 								AudioTracks,NULL,g_ProjectSettings.m_iIsoFormat,uiDataSize);
 						}
 						else
 						{
-							iResult = (int)g_Core.BurnCompilation(pDeviceInfo,pDeviceCap,pDeviceInfoEx,&g_ProgressDlg,g_ProgressDlg,Files,
+							iResult = (int)g_Core.BurnCompilation(pDeviceInfo,pDeviceCap,pDeviceInfoEx,g_pProgressDlg,*g_pProgressDlg,Files,
 								AudioTracks,NULL,g_ProjectSettings.m_iIsoFormat,uiDataSize);
 						}
 					}
 					else if (iResult == RESULT_FAIL)
 					{
-						g_ProgressDlg.notify(ckcore::Progress::ckERROR,lngGetString(ERROR_ESTIMAGESIZE));
+						g_pProgressDlg->notify(ckcore::Progress::ckERROR,lngGetString(ERROR_ESTIMAGESIZE));
 					}
 				}
 				else
 				{
 					if (g_BurnImageSettings.m_bVerify || !bLast)
 					{
-						iResult = (int)g_Core.BurnTracksEx(pDeviceInfo,pDeviceCap,pDeviceInfoEx,&g_ProgressDlg,ImageFile.name().c_str(),
+						iResult = (int)g_Core.BurnTracksEx(pDeviceInfo,pDeviceCap,pDeviceInfoEx,g_pProgressDlg,ImageFile.name().c_str(),
 							AudioTracks,NULL,g_ProjectSettings.m_iIsoFormat);
 					}
 					else
 					{
-						iResult = (int)g_Core.BurnTracks(pDeviceInfo,pDeviceCap,pDeviceInfoEx,&g_ProgressDlg,ImageFile.name().c_str(),
+						iResult = (int)g_Core.BurnTracks(pDeviceInfo,pDeviceCap,pDeviceInfoEx,g_pProgressDlg,ImageFile.name().c_str(),
 							AudioTracks,NULL,g_ProjectSettings.m_iIsoFormat);
 					}
 				}
@@ -477,7 +477,7 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 				{
 					// Try to estimate the file system size before burning the compilation.
 					unsigned __int64 uiDataSize = 0;
-					g_ProgressDlg.set_status(lngGetString(PROGRESS_ESTIMAGESIZE));
+					g_pProgressDlg->set_status(lngGetString(PROGRESS_ESTIMAGESIZE));
 
 					ckfilesystem::FileComparator FileComp(g_ProjectSettings.m_iFileSystem == FILESYSTEM_DVDVIDEO);
 					ckfilesystem::FileSet Files(FileComp);
@@ -485,41 +485,41 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 					g_TreeManager.GetPathList(Files,g_ProjectManager.GetMixDataRootNode(),
 						lstrlen(g_ProjectManager.GetMixDataRootNode()->pItemData->GetFileName()) + 1);
 
-					iResult = g_Core2.EstimateImageSize(Files,g_ProgressDlg,uiDataSize);
+					iResult = g_Core2.EstimateImageSize(Files,*g_pProgressDlg,uiDataSize);
 
-					g_ProgressDlg.set_progress(100);
+					g_pProgressDlg->set_progress(100);
 
 					if (iResult == RESULT_OK)
 					{
 						// Reset the status.
-						g_ProgressDlg.set_status(lngGetString(PROGRESS_INIT));
+						g_pProgressDlg->set_status(lngGetString(PROGRESS_INIT));
 
 						if (g_BurnImageSettings.m_bVerify || !bLast)
 						{
-							iResult = (int)g_Core.BurnCompilationEx(pDeviceInfo,pDeviceCap,pDeviceInfoEx,&g_ProgressDlg,g_ProgressDlg,Files,
+							iResult = (int)g_Core.BurnCompilationEx(pDeviceInfo,pDeviceCap,pDeviceInfoEx,g_pProgressDlg,*g_pProgressDlg,Files,
 								AudioTracks,pAudioText,g_ProjectSettings.m_iIsoFormat,uiDataSize);
 						}
 						else
 						{
-							iResult = (int)g_Core.BurnCompilation(pDeviceInfo,pDeviceCap,pDeviceInfoEx,&g_ProgressDlg,g_ProgressDlg,Files,
+							iResult = (int)g_Core.BurnCompilation(pDeviceInfo,pDeviceCap,pDeviceInfoEx,g_pProgressDlg,*g_pProgressDlg,Files,
 								AudioTracks,pAudioText,g_ProjectSettings.m_iIsoFormat,uiDataSize);
 						}
 					}
 					else if (iResult == RESULT_FAIL)
 					{
-						g_ProgressDlg.notify(ckcore::Progress::ckERROR,lngGetString(ERROR_ESTIMAGESIZE));
+						g_pProgressDlg->notify(ckcore::Progress::ckERROR,lngGetString(ERROR_ESTIMAGESIZE));
 					}
 				}
 				else
 				{
 					if (g_BurnImageSettings.m_bVerify || !bLast)
 					{
-						iResult = (int)g_Core.BurnTracksEx(pDeviceInfo,pDeviceCap,pDeviceInfoEx,&g_ProgressDlg,ImageFile.name().c_str(),
+						iResult = (int)g_Core.BurnTracksEx(pDeviceInfo,pDeviceCap,pDeviceInfoEx,g_pProgressDlg,ImageFile.name().c_str(),
 							AudioTracks,pAudioText,g_ProjectSettings.m_iIsoFormat);
 					}
 					else
 					{
-						iResult = (int)g_Core.BurnTracks(pDeviceInfo,pDeviceCap,pDeviceInfoEx,&g_ProgressDlg,ImageFile.name().c_str(),
+						iResult = (int)g_Core.BurnTracks(pDeviceInfo,pDeviceCap,pDeviceInfoEx,g_pProgressDlg,ImageFile.name().c_str(),
 							AudioTracks,pAudioText,g_ProjectSettings.m_iIsoFormat);
 					}
 				}
@@ -543,12 +543,12 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 
 				if (bLast)
 				{
-					iResult = (int)g_Core.BurnTracks(pDeviceInfo,pDeviceCap,pDeviceInfoEx,&g_ProgressDlg,NULL,
+					iResult = (int)g_Core.BurnTracks(pDeviceInfo,pDeviceCap,pDeviceInfoEx,g_pProgressDlg,NULL,
 						AudioTracks,pAudioText,0);
 				}
 				else
 				{
-					iResult = (int)g_Core.BurnTracksEx(pDeviceInfo,pDeviceCap,pDeviceInfoEx,&g_ProgressDlg,NULL,
+					iResult = (int)g_Core.BurnTracksEx(pDeviceInfo,pDeviceCap,pDeviceInfoEx,g_pProgressDlg,NULL,
 						AudioTracks,pAudioText,0);
 				}
 				break;
@@ -557,9 +557,9 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 		// Handle the result.
 		if (!iResult)
 		{
-			g_ProgressDlg.set_status(lngGetString(PROGRESS_CANCELED));
-			g_ProgressDlg.notify(ckcore::Progress::ckWARNING,lngGetString(PROGRESS_CANCELED));
-			g_ProgressDlg.NotifyCompleted();
+			g_pProgressDlg->set_status(lngGetString(PROGRESS_CANCELED));
+			g_pProgressDlg->notify(ckcore::Progress::ckWARNING,lngGetString(PROGRESS_CANCELED));
+			g_pProgressDlg->NotifyCompleted();
 
 			lngMessageBox(HWND_DESKTOP,FAILURE_CDRTOOLS,GENERAL_ERROR,MB_OK | MB_ICONERROR);
 			return 0;
@@ -570,22 +570,22 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 			if (g_BurnImageSettings.m_bVerify)
 			{
 				// We need to reload the drive media.
-				g_ProgressDlg.set_status(lngGetString(PROGRESS_RELOADMEDIA));
+				g_pProgressDlg->set_status(lngGetString(PROGRESS_RELOADMEDIA));
 
 				CCore2Device Device;
 				Device.Open(&pDeviceInfo->Address);
 
 				g_Core2.StartStopUnit(&Device,CCore2::LOADMEDIA_EJECT,false);
 				if (!g_Core2.StartStopUnit(&Device,CCore2::LOADMEDIA_LOAD,false))
-					lngMessageBox(g_ProgressDlg,INFO_RELOAD,GENERAL_INFORMATION,MB_OK | MB_ICONINFORMATION);
+					lngMessageBox(*g_pProgressDlg,INFO_RELOAD,GENERAL_INFORMATION,MB_OK | MB_ICONINFORMATION);
 
 				// Set the device information.
 				TCHAR szDeviceName[128];
 				g_DeviceManager.GetDeviceName(pDeviceInfo,szDeviceName);
 
-				g_ProgressDlg.SetDevice(szDeviceName);
-				g_ProgressDlg.set_status(lngGetString(PROGRESS_INIT));
-				g_ProgressDlg.SetWindowText(lngGetString(STITLE_VERIFYDISC));
+				g_pProgressDlg->SetDevice(szDeviceName);
+				g_pProgressDlg->set_status(lngGetString(PROGRESS_INIT));
+				g_pProgressDlg->SetWindowText(lngGetString(STITLE_VERIFYDISC));
 
 				// Get the device drive letter.
 				TCHAR szDriveLetter[3];
@@ -594,12 +594,12 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 				szDriveLetter[2] = '\0';
 
 				// Validate the project files.
-				g_ProjectManager.VerifyCompilation(&g_ProgressDlg,szDriveLetter,FilePathMap);
+				g_ProjectManager.VerifyCompilation(g_pProgressDlg,szDriveLetter,FilePathMap);
 
 				// We're done.
-				g_ProgressDlg.set_progress(100);
-				g_ProgressDlg.set_status(lngGetString(PROGRESS_DONE));
-				g_ProgressDlg.NotifyCompleted();
+				g_pProgressDlg->set_progress(100);
+				g_pProgressDlg->set_status(lngGetString(PROGRESS_DONE));
+				g_pProgressDlg->NotifyCompleted();
 			}
 
 			// Eject the disc if requested.
@@ -609,11 +609,11 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 
 		if (!bLast)
 		{
-			g_ProgressDlg.set_progress(0);
+			g_pProgressDlg->set_progress(0);
 
-			if (!g_ProgressDlg.RequestNextDisc())
+			if (!g_pProgressDlg->RequestNextDisc())
 			{
-				g_ProgressDlg.NotifyCompleted();
+				g_pProgressDlg->NotifyCompleted();
 				break;
 			}
 
@@ -621,7 +621,7 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 			lsprintf(szBuffer,lngGetString(INFO_CREATECOPY),
 				i + 2,
 				g_BurnImageSettings.m_lNumCopies);
-			g_ProgressDlg.notify(ckcore::Progress::ckINFORMATION,szBuffer);
+			g_pProgressDlg->notify(ckcore::Progress::ckINFORMATION,szBuffer);
 		}
 	}
 
@@ -698,26 +698,26 @@ DWORD WINAPI CActionManager::CreateImageThread(LPVOID lpThreadParameter)
 	};
 
 	// Set the status information.
-	g_ProgressDlg.SetWindowText(lngGetString(STITLE_CREATEIMAGE));
-	g_ProgressDlg.SetDevice(lngGetString(PROGRESS_IMAGEDEVICE));
-	g_ProgressDlg.set_status(lngGetString(STATUS_WRITEIMAGE));
+	g_pProgressDlg->SetWindowText(lngGetString(STITLE_CREATEIMAGE));
+	g_pProgressDlg->SetDevice(lngGetString(PROGRESS_IMAGEDEVICE));
+	g_pProgressDlg->set_status(lngGetString(STATUS_WRITEIMAGE));
 
-	g_ProgressDlg.notify(ckcore::Progress::ckINFORMATION,lngGetString(PROGRESS_BEGINDISCIMAGE));
+	g_pProgressDlg->notify(ckcore::Progress::ckINFORMATION,lngGetString(PROGRESS_BEGINDISCIMAGE));
 
-	int iResult = g_Core2.CreateImage(szFileName,Files,g_ProgressDlg);
-	g_ProgressDlg.set_progress(100);
-	g_ProgressDlg.NotifyCompleted();
+	int iResult = g_Core2.CreateImage(szFileName,Files,*g_pProgressDlg);
+	g_pProgressDlg->set_progress(100);
+	g_pProgressDlg->NotifyCompleted();
 
 	switch (iResult)
 	{
 		case RESULT_OK:
-			g_ProgressDlg.set_status(lngGetString(PROGRESS_DONE));
-			g_ProgressDlg.notify(ckcore::Progress::ckINFORMATION,lngGetString(SUCCESS_CREATEIMAGE));
+			g_pProgressDlg->set_status(lngGetString(PROGRESS_DONE));
+			g_pProgressDlg->notify(ckcore::Progress::ckINFORMATION,lngGetString(SUCCESS_CREATEIMAGE));
 			break;
 
 		case RESULT_FAIL:
-			g_ProgressDlg.set_status(lngGetString(PROGRESS_FAILED));
-			g_ProgressDlg.notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_CREATEIMAGE));
+			g_pProgressDlg->set_status(lngGetString(PROGRESS_FAILED));
+			g_pProgressDlg->notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_CREATEIMAGE));
 
 			ckcore::File::remove(szFileName);
 			break;
@@ -777,13 +777,13 @@ void CActionManager::QuickErase(INT_PTR iRecorder)
 			g_EraseSettings.m_iRecorder = iRecorder;
 			g_EraseSettings.m_uiSpeed = 0xFFFFFFFF;	// Maximum.
 
-			g_ProgressDlg.SetWindowText(lngGetString(STITLE_ERASE));
-			g_ProgressDlg.set_status(lngGetString(PROGRESS_INIT));
+			g_pProgressDlg->SetWindowText(lngGetString(STITLE_ERASE));
+			g_pProgressDlg->set_status(lngGetString(PROGRESS_INIT));
 
 			// Set the device information.
 			TCHAR szDeviceName[128];
 			g_DeviceManager.GetDeviceName(pDeviceInfo,szDeviceName);
-			g_ProgressDlg.SetDevice(szDeviceName);
+			g_pProgressDlg->SetDevice(szDeviceName);
 
 			// Create the new erase thread.
 			unsigned long ulThreadID = 0;
@@ -805,8 +805,8 @@ void CActionManager::QuickErase(INT_PTR iRecorder)
 
 			::CloseHandle(hThread);
 
-			g_ProgressDlg.Reset();
-			g_ProgressDlg.AllowCancel(true);
+			g_pProgressDlg->Reset();
+			g_pProgressDlg->AllowCancel(true);
 
 			// Restore settings.
 			g_EraseSettings.m_iMode = iMode;
@@ -901,14 +901,14 @@ INT_PTR CActionManager::BurnCompilation(HWND hWndParent,bool bAppMode)
 			_Module.AddMessageLoop(&MainLoop);
 
 		// Create and display the progress dialog.
-		g_ProgressDlg.SetAppMode(bAppMode);
-		if (!g_ProgressDlg.IsWindow())
-			g_ProgressDlg.Create(hWndParent);
+		g_pProgressDlg->SetAppMode(bAppMode);
+		if (!g_pProgressDlg->IsWindow())
+			g_pProgressDlg->Create(hWndParent);
 
-		g_ProgressDlg.ShowWindow(true);
-		g_ProgressDlg.Reset();
-		g_ProgressDlg.AttachProcess(&g_Core);
-		g_ProgressDlg.AttachHost(hWndParent);
+		g_pProgressDlg->ShowWindow(true);
+		g_pProgressDlg->Reset();
+		g_pProgressDlg->AttachProcess(&g_Core);
+		g_pProgressDlg->AttachHost(hWndParent);
 		ProcessMessages();
 
 		if (bErase)
@@ -951,14 +951,14 @@ INT_PTR CActionManager::CreateImage(HWND hWndParent,bool bAppMode)
 			_Module.AddMessageLoop(&MainLoop);
 
 		// Create and display the progress dialog.
-		g_ProgressDlg.SetAppMode(bAppMode);
-		if (!g_ProgressDlg.IsWindow())
-			g_ProgressDlg.Create(hWndParent);
+		g_pProgressDlg->SetAppMode(bAppMode);
+		if (!g_pProgressDlg->IsWindow())
+			g_pProgressDlg->Create(hWndParent);
 
-		g_ProgressDlg.ShowWindow(true);
-		g_ProgressDlg.Reset();
-		g_ProgressDlg.AttachProcess(&g_Core);
-		g_ProgressDlg.AttachHost(hWndParent);
+		g_pProgressDlg->ShowWindow(true);
+		g_pProgressDlg->Reset();
+		g_pProgressDlg->AttachProcess(&g_Core);
+		g_pProgressDlg->AttachHost(hWndParent);
 		ProcessMessages();
 
 		// WARNING: Heap allocation, this memory memory must be freed when the thread exit.
@@ -1039,16 +1039,16 @@ INT_PTR CActionManager::BurnImageEx(HWND hWndParent,bool bAppMode,const TCHAR *s
 			_Module.AddMessageLoop(&MainLoop);
 
 		// Create and display the progress dialog.
-		g_ProgressDlg.SetAppMode(bAppMode);
+		g_pProgressDlg->SetAppMode(bAppMode);
 
-		if (!g_ProgressDlg.IsWindow())
-			g_ProgressDlg.Create(hWndParent);
+		if (!g_pProgressDlg->IsWindow())
+			g_pProgressDlg->Create(hWndParent);
 
-		g_ProgressDlg.ShowWindow(true);
-		//g_ProgressDlg.SetWindowText(lngGetString(STITLE_BURNIMAGE));
-		g_ProgressDlg.Reset();
-		g_ProgressDlg.AttachProcess(&g_Core);
-		g_ProgressDlg.AttachHost(hWndParent);
+		g_pProgressDlg->ShowWindow(true);
+		//g_pProgressDlg->SetWindowText(lngGetString(STITLE_BURNIMAGE));
+		g_pProgressDlg->Reset();
+		g_pProgressDlg->AttachProcess(&g_Core);
+		g_pProgressDlg->AttachHost(hWndParent);
 		ProcessMessages();
 
 		// Erase the disc if necessary.
@@ -1059,16 +1059,16 @@ INT_PTR CActionManager::BurnImageEx(HWND hWndParent,bool bAppMode,const TCHAR *s
 		TCHAR szDeviceName[128];
 		g_DeviceManager.GetDeviceName(pDeviceInfo,szDeviceName);
 
-		g_ProgressDlg.SetWindowText(lngGetString(STITLE_BURNIMAGE));
-		g_ProgressDlg.SetDevice(szDeviceName);
-		g_ProgressDlg.set_status(lngGetString(PROGRESS_INIT));
+		g_pProgressDlg->SetWindowText(lngGetString(STITLE_BURNIMAGE));
+		g_pProgressDlg->SetDevice(szDeviceName);
+		g_pProgressDlg->set_status(lngGetString(PROGRESS_INIT));
 
 		// Begin burning the image.
-		if (!g_Core.BurnImage(pDeviceInfo,pDeviceCap,pDeviceInfoEx,&g_ProgressDlg,szFilePath,bImageHasTOC))
+		if (!g_Core.BurnImage(pDeviceInfo,pDeviceCap,pDeviceInfoEx,g_pProgressDlg,szFilePath,bImageHasTOC))
 		{
-			g_ProgressDlg.set_status(lngGetString(PROGRESS_CANCELED));
-			g_ProgressDlg.notify(ckcore::Progress::ckWARNING,lngGetString(PROGRESS_CANCELED));
-			g_ProgressDlg.NotifyCompleted();
+			g_pProgressDlg->set_status(lngGetString(PROGRESS_CANCELED));
+			g_pProgressDlg->notify(ckcore::Progress::ckWARNING,lngGetString(PROGRESS_CANCELED));
+			g_pProgressDlg->NotifyCompleted();
 
 			lngMessageBox(HWND_DESKTOP,FAILURE_CDRTOOLS,GENERAL_ERROR,MB_OK | MB_ICONERROR);
 		}
@@ -1098,16 +1098,16 @@ DWORD WINAPI CActionManager::CopyDiscOnFlyThread(LPVOID lpThreadParameter)
 	TCHAR szDeviceName[128];
 	g_DeviceManager.GetDeviceName(pTargetDeviceInfo,szDeviceName);
 
-	g_ProgressDlg.SetWindowText(lngGetString(STITLE_COPYDISC));
-	g_ProgressDlg.SetDevice(szDeviceName);
-	g_ProgressDlg.set_status(lngGetString(PROGRESS_INIT));
+	g_pProgressDlg->SetWindowText(lngGetString(STITLE_COPYDISC));
+	g_pProgressDlg->SetDevice(szDeviceName);
+	g_pProgressDlg->set_status(lngGetString(PROGRESS_INIT));
 
 	// Start the operation.
-	if (!g_Core.CopyDisc(pSourceDeviceInfo,pTargetDeviceInfo,pTargetDeviceCap,pTargetDeviceInfoEx,&g_ProgressDlg))
+	if (!g_Core.CopyDisc(pSourceDeviceInfo,pTargetDeviceInfo,pTargetDeviceCap,pTargetDeviceInfoEx,g_pProgressDlg))
 	{
-		g_ProgressDlg.set_status(lngGetString(PROGRESS_CANCELED));
-		g_ProgressDlg.notify(ckcore::Progress::ckWARNING,lngGetString(PROGRESS_CANCELED));
-		g_ProgressDlg.NotifyCompleted();
+		g_pProgressDlg->set_status(lngGetString(PROGRESS_CANCELED));
+		g_pProgressDlg->notify(ckcore::Progress::ckWARNING,lngGetString(PROGRESS_CANCELED));
+		g_pProgressDlg->NotifyCompleted();
 
 		lngMessageBox(HWND_DESKTOP,FAILURE_CDRTOOLS,GENERAL_ERROR,MB_OK | MB_ICONERROR);
 		return 0;
@@ -1121,9 +1121,9 @@ DWORD WINAPI CActionManager::CopyDiscThread(LPVOID lpThreadParameter)
 	ckcore::File ImageFile = ckcore::File::temp(g_GlobalSettings.m_szTempPath);
 
 	// Set the status information.
-	g_ProgressDlg.SetWindowText(lngGetString(STITLE_CREATEIMAGE));
-	g_ProgressDlg.SetDevice(lngGetString(PROGRESS_IMAGEDEVICE));
-	g_ProgressDlg.set_status(lngGetString(PROGRESS_INIT));
+	g_pProgressDlg->SetWindowText(lngGetString(STITLE_CREATEIMAGE));
+	g_pProgressDlg->SetDevice(lngGetString(PROGRESS_IMAGEDEVICE));
+	g_pProgressDlg->set_status(lngGetString(PROGRESS_INIT));
 
 	// Get device information.
 	tDeviceInfo *pSourceDeviceInfo = g_DeviceManager.GetDeviceInfo(g_CopyDiscSettings.m_iSource);
@@ -1131,14 +1131,14 @@ DWORD WINAPI CActionManager::CopyDiscThread(LPVOID lpThreadParameter)
 	// Override the read sub-channel data setting.
 	g_ReadSettings.m_bClone = g_CopyDiscSettings.m_bClone;
 
-	int iResult = g_Core.ReadDiscEx(pSourceDeviceInfo,&g_ProgressDlg,ImageFile.name().c_str());
+	int iResult = g_Core.ReadDiscEx(pSourceDeviceInfo,g_pProgressDlg,ImageFile.name().c_str());
 
 	switch (iResult)
 	{
 		case RESULT_INTERNALERROR:
-			g_ProgressDlg.set_status(lngGetString(PROGRESS_CANCELED));
-			g_ProgressDlg.notify(ckcore::Progress::ckWARNING,lngGetString(PROGRESS_CANCELED));
-			g_ProgressDlg.NotifyCompleted();
+			g_pProgressDlg->set_status(lngGetString(PROGRESS_CANCELED));
+			g_pProgressDlg->notify(ckcore::Progress::ckWARNING,lngGetString(PROGRESS_CANCELED));
+			g_pProgressDlg->NotifyCompleted();
 
 			lngMessageBox(HWND_DESKTOP,FAILURE_CDRTOOLS,GENERAL_ERROR,MB_OK | MB_ICONERROR);
 
@@ -1173,9 +1173,9 @@ DWORD WINAPI CActionManager::CopyDiscThread(LPVOID lpThreadParameter)
 		CCore2Device Device;
 		if (!Device.Open(&pDeviceInfo->Address))
 		{
-			g_ProgressDlg.set_status(lngGetString(ERROR_OPENDEVICE));
-			g_ProgressDlg.notify(ckcore::Progress::ckWARNING,lngGetString(ERROR_OPENDEVICE));
-			g_ProgressDlg.NotifyCompleted();
+			g_pProgressDlg->set_status(lngGetString(ERROR_OPENDEVICE));
+			g_pProgressDlg->notify(ckcore::Progress::ckWARNING,lngGetString(ERROR_OPENDEVICE));
+			g_pProgressDlg->NotifyCompleted();
 			return 0;
 		}
 
@@ -1183,12 +1183,12 @@ DWORD WINAPI CActionManager::CopyDiscThread(LPVOID lpThreadParameter)
 		Device.Close();
 
 		
-		if (lngMessageBox(g_ProgressDlg,INFO_INSERTBLANK,GENERAL_INFORMATION,
+		if (lngMessageBox(*g_pProgressDlg,INFO_INSERTBLANK,GENERAL_INFORMATION,
 			MB_OKCANCEL | MB_ICONINFORMATION) == IDCANCEL)
 		{
-			g_ProgressDlg.set_status(lngGetString(PROGRESS_CANCELED));
-			g_ProgressDlg.notify(ckcore::Progress::ckWARNING,lngGetString(PROGRESS_CANCELED));
-			g_ProgressDlg.NotifyCompleted();
+			g_pProgressDlg->set_status(lngGetString(PROGRESS_CANCELED));
+			g_pProgressDlg->notify(ckcore::Progress::ckWARNING,lngGetString(PROGRESS_CANCELED));
+			g_pProgressDlg->NotifyCompleted();
 
 			// Remove any temporary files.
 			ImageFile.remove();
@@ -1212,16 +1212,16 @@ DWORD WINAPI CActionManager::CopyDiscThread(LPVOID lpThreadParameter)
 	TCHAR szDeviceName[128];
 	g_DeviceManager.GetDeviceName(pTargetDeviceInfo,szDeviceName);
 
-	g_ProgressDlg.SetWindowText(lngGetString(STITLE_BURNIMAGE));
-	g_ProgressDlg.SetDevice(szDeviceName);
-	g_ProgressDlg.set_status(lngGetString(PROGRESS_INIT));
+	g_pProgressDlg->SetWindowText(lngGetString(STITLE_BURNIMAGE));
+	g_pProgressDlg->SetDevice(szDeviceName);
+	g_pProgressDlg->set_status(lngGetString(PROGRESS_INIT));
 
-	if (!g_Core.BurnImageEx(pTargetDeviceInfo,pTargetDeviceCap,pTargetDeviceInfoEx,&g_ProgressDlg,ImageFile.name().c_str(),
+	if (!g_Core.BurnImageEx(pTargetDeviceInfo,pTargetDeviceCap,pTargetDeviceInfoEx,g_pProgressDlg,ImageFile.name().c_str(),
 		g_CopyDiscSettings.m_bClone))
 	{
-		g_ProgressDlg.set_status(lngGetString(PROGRESS_CANCELED));
-		g_ProgressDlg.notify(ckcore::Progress::ckWARNING,lngGetString(PROGRESS_CANCELED));
-		g_ProgressDlg.NotifyCompleted();
+		g_pProgressDlg->set_status(lngGetString(PROGRESS_CANCELED));
+		g_pProgressDlg->notify(ckcore::Progress::ckWARNING,lngGetString(PROGRESS_CANCELED));
+		g_pProgressDlg->NotifyCompleted();
 
 		lngMessageBox(HWND_DESKTOP,FAILURE_CDRTOOLS,GENERAL_ERROR,MB_OK | MB_ICONERROR);
 	}
@@ -1250,7 +1250,7 @@ DWORD WINAPI CActionManager::EraseThread(LPVOID lpThreadParameter)
 	CCore2Device Device;
 	if (Device.Open(&pDeviceInfo->Address))
 	{
-		bResult = g_Core2.EraseDisc(&Device,&g_ProgressDlg,g_EraseSettings.m_iMode,
+		bResult = g_Core2.EraseDisc(&Device,g_pProgressDlg,g_EraseSettings.m_iMode,
 			g_EraseSettings.m_bForce,g_EraseSettings.m_bEject,g_EraseSettings.m_bSimulate,
 			g_EraseSettings.m_uiSpeed);
 
@@ -1258,25 +1258,25 @@ DWORD WINAPI CActionManager::EraseThread(LPVOID lpThreadParameter)
 	}
 	else
 	{
-		g_ProgressDlg.set_status(lngGetString(ERROR_OPENDEVICE));
-		g_ProgressDlg.notify(ckcore::Progress::ckERROR,lngGetString(ERROR_OPENDEVICE));
-		g_ProgressDlg.NotifyCompleted();
+		g_pProgressDlg->set_status(lngGetString(ERROR_OPENDEVICE));
+		g_pProgressDlg->notify(ckcore::Progress::ckERROR,lngGetString(ERROR_OPENDEVICE));
+		g_pProgressDlg->NotifyCompleted();
 		return false;
 	}
 
-	g_ProgressDlg.set_progress(100);
+	g_pProgressDlg->set_progress(100);
 
 	if (Param->m_bNotifyCompleted)
-		g_ProgressDlg.NotifyCompleted();
+		g_pProgressDlg->NotifyCompleted();
 
 	if (bResult)
 	{
-		g_ProgressDlg.set_status(lngGetString(PROGRESS_DONE));
+		g_pProgressDlg->set_status(lngGetString(PROGRESS_DONE));
 	}
 	else
 	{
-		g_ProgressDlg.set_status(lngGetString(PROGRESS_FAILED));
-		g_ProgressDlg.notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_ERASE));
+		g_pProgressDlg->set_status(lngGetString(PROGRESS_FAILED));
+		g_pProgressDlg->notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_ERASE));
 	}
 
 	return true;
@@ -1329,14 +1329,14 @@ INT_PTR CActionManager::CopyDisc(HWND hWndParent,bool bAppMode)
 			_Module.AddMessageLoop(&MainLoop);
 
 		// Create and display the progress dialog.
-		g_ProgressDlg.SetAppMode(bAppMode);
-		if (!g_ProgressDlg.IsWindow())
-			g_ProgressDlg.Create(hWndParent);
+		g_pProgressDlg->SetAppMode(bAppMode);
+		if (!g_pProgressDlg->IsWindow())
+			g_pProgressDlg->Create(hWndParent);
 
-		g_ProgressDlg.ShowWindow(true);
-		g_ProgressDlg.Reset();
-		g_ProgressDlg.AttachProcess(&g_Core);
-		g_ProgressDlg.AttachHost(hWndParent);
+		g_pProgressDlg->ShowWindow(true);
+		g_pProgressDlg->Reset();
+		g_pProgressDlg->AttachProcess(&g_Core);
+		g_pProgressDlg->AttachHost(hWndParent);
 		ProcessMessages();
 
 		// Create the new thread.
@@ -1383,30 +1383,30 @@ INT_PTR CActionManager::CopyImage(HWND hWndParent,bool bAppMode)
 			_Module.AddMessageLoop(&MainLoop);
 
 		// Create and display the progress dialog.
-		g_ProgressDlg.SetAppMode(bAppMode);
-		if (!g_ProgressDlg.IsWindow())
-			g_ProgressDlg.Create(hWndParent);
+		g_pProgressDlg->SetAppMode(bAppMode);
+		if (!g_pProgressDlg->IsWindow())
+			g_pProgressDlg->Create(hWndParent);
 
-		g_ProgressDlg.ShowWindow(true);
-		g_ProgressDlg.SetWindowText(lngGetString(STITLE_CREATEIMAGE));
-		g_ProgressDlg.Reset();
-		g_ProgressDlg.AttachProcess(&g_Core);
-		g_ProgressDlg.AttachHost(hWndParent);
+		g_pProgressDlg->ShowWindow(true);
+		g_pProgressDlg->SetWindowText(lngGetString(STITLE_CREATEIMAGE));
+		g_pProgressDlg->Reset();
+		g_pProgressDlg->AttachProcess(&g_Core);
+		g_pProgressDlg->AttachHost(hWndParent);
 		ProcessMessages();
 
 		// Set the device information.
 		TCHAR szDeviceName[128];
 		g_DeviceManager.GetDeviceName(pDeviceInfo,szDeviceName);
 
-		g_ProgressDlg.SetDevice(szDeviceName);
-		g_ProgressDlg.set_status(lngGetString(PROGRESS_INIT));
+		g_pProgressDlg->SetDevice(szDeviceName);
+		g_pProgressDlg->set_status(lngGetString(PROGRESS_INIT));
 
 		// Begin reading the disc.
-		if (!g_Core.ReadDisc(pDeviceInfo,&g_ProgressDlg,CopyImageDlg.GetFileName()))
+		if (!g_Core.ReadDisc(pDeviceInfo,g_pProgressDlg,CopyImageDlg.GetFileName()))
 		{
-			g_ProgressDlg.set_status(lngGetString(PROGRESS_CANCELED));
-			g_ProgressDlg.notify(ckcore::Progress::ckWARNING,lngGetString(PROGRESS_CANCELED));
-			g_ProgressDlg.NotifyCompleted();
+			g_pProgressDlg->set_status(lngGetString(PROGRESS_CANCELED));
+			g_pProgressDlg->notify(ckcore::Progress::ckWARNING,lngGetString(PROGRESS_CANCELED));
+			g_pProgressDlg->NotifyCompleted();
 
 			lngMessageBox(HWND_DESKTOP,FAILURE_CDRTOOLS,GENERAL_ERROR,MB_OK | MB_ICONERROR);
 		}
@@ -1451,24 +1451,24 @@ INT_PTR CActionManager::Erase(HWND hWndParent,bool bAppMode)
 			_Module.AddMessageLoop(&MainLoop);
 
 		// Create and display the progress dialog.
-		g_ProgressDlg.SetAppMode(bAppMode);
+		g_pProgressDlg->SetAppMode(bAppMode);
 
-		if (!g_ProgressDlg.IsWindow())
-			g_ProgressDlg.Create(hWndParent);
+		if (!g_pProgressDlg->IsWindow())
+			g_pProgressDlg->Create(hWndParent);
 
-		g_ProgressDlg.ShowWindow(true);
-		g_ProgressDlg.SetWindowText(lngGetString(STITLE_ERASE));
-		g_ProgressDlg.Reset();
-		g_ProgressDlg.AttachProcess(&g_Core);
-		g_ProgressDlg.AttachHost(hWndParent);
+		g_pProgressDlg->ShowWindow(true);
+		g_pProgressDlg->SetWindowText(lngGetString(STITLE_ERASE));
+		g_pProgressDlg->Reset();
+		g_pProgressDlg->AttachProcess(&g_Core);
+		g_pProgressDlg->AttachHost(hWndParent);
 		ProcessMessages();
 
 		// Set the device information.
 		TCHAR szDeviceName[128];
 		g_DeviceManager.GetDeviceName(pDeviceInfo,szDeviceName);
 
-		g_ProgressDlg.SetDevice(szDeviceName);
-		g_ProgressDlg.set_status(lngGetString(PROGRESS_INIT));
+		g_pProgressDlg->SetDevice(szDeviceName);
+		g_pProgressDlg->set_status(lngGetString(PROGRESS_INIT));
 
 		// Create the new thread.
 		unsigned long ulThreadID = 0;
@@ -1510,33 +1510,33 @@ INT_PTR CActionManager::Fixate(HWND hWndParent,bool bAppMode)
 			_Module.AddMessageLoop(&MainLoop);
 
 		// Create and display the progress dialog.
-		g_SimpleProgressDlg.SetAppMode(bAppMode);
+		g_pSimpleProgressDlg->SetAppMode(bAppMode);
 
-		if (!g_SimpleProgressDlg.IsWindow())
-			g_SimpleProgressDlg.Create(hWndParent);
+		if (!g_pSimpleProgressDlg->IsWindow())
+			g_pSimpleProgressDlg->Create(hWndParent);
 
-		g_SimpleProgressDlg.ShowWindow(true);
-		g_SimpleProgressDlg.SetWindowText(lngGetString(STITLE_FIXATE));
-		g_SimpleProgressDlg.Reset();
-		g_SimpleProgressDlg.AttachProcess(&g_Core);
-		g_SimpleProgressDlg.AttachHost(hWndParent);
+		g_pSimpleProgressDlg->ShowWindow(true);
+		g_pSimpleProgressDlg->SetWindowText(lngGetString(STITLE_FIXATE));
+		g_pSimpleProgressDlg->Reset();
+		g_pSimpleProgressDlg->AttachProcess(&g_Core);
+		g_pSimpleProgressDlg->AttachHost(hWndParent);
 		ProcessMessages();
 
 		// Set the device information.
 		TCHAR szDeviceName[128];
 		g_DeviceManager.GetDeviceName(pDeviceInfo,szDeviceName);
 
-		g_SimpleProgressDlg.SetDevice(szDeviceName);
-		g_SimpleProgressDlg.set_status(lngGetString(PROGRESS_INIT));
+		g_pSimpleProgressDlg->SetDevice(szDeviceName);
+		g_pSimpleProgressDlg->set_status(lngGetString(PROGRESS_INIT));
 
 		// Begin erasing the disc.
-		if (!g_Core.FixateDisc(pDeviceInfo,pDeviceCap,&g_SimpleProgressDlg,
+		if (!g_Core.FixateDisc(pDeviceInfo,pDeviceCap,g_pSimpleProgressDlg,
 			g_FixateSettings.m_bEject,
 			g_FixateSettings.m_bSimulate))
 		{
-			g_SimpleProgressDlg.set_status(lngGetString(PROGRESS_CANCELED));
-			g_SimpleProgressDlg.notify(ckcore::Progress::ckWARNING,lngGetString(PROGRESS_CANCELED));
-			g_SimpleProgressDlg.NotifyCompleted();
+			g_pSimpleProgressDlg->set_status(lngGetString(PROGRESS_CANCELED));
+			g_pSimpleProgressDlg->notify(ckcore::Progress::ckWARNING,lngGetString(PROGRESS_CANCELED));
+			g_pSimpleProgressDlg->NotifyCompleted();
 
 			lngMessageBox(HWND_DESKTOP,FAILURE_CDRTOOLS,GENERAL_ERROR,MB_OK | MB_ICONERROR);
 		}
@@ -1565,24 +1565,24 @@ INT_PTR CActionManager::Fixate(HWND hWndParent,bool bAppMode)
 		::EnableWindow(hWndParent,false);
 
 	// Create and display the progress dialog.
-	g_ProgressDlg.SetAppMode(false);
+	g_pProgressDlg->SetAppMode(false);
 
-	if (!g_ProgressDlg.IsWindow())
-		g_ProgressDlg.Create(hWndParent);
+	if (!g_pProgressDlg->IsWindow())
+		g_pProgressDlg->Create(hWndParent);
 
-	g_ProgressDlg.ShowWindow(true);
-	g_ProgressDlg.SetWindowText(lngGetString(STITLE_BURNIMAGE));
-	g_ProgressDlg.Reset();
-	g_ProgressDlg.AttachProcess(&g_Core);
-	g_ProgressDlg.AttachHost(hWndParent);
+	g_pProgressDlg->ShowWindow(true);
+	g_pProgressDlg->SetWindowText(lngGetString(STITLE_BURNIMAGE));
+	g_pProgressDlg->Reset();
+	g_pProgressDlg->AttachProcess(&g_Core);
+	g_pProgressDlg->AttachHost(hWndParent);
 	ProcessMessages();
 
 	// Set the device information.
 	TCHAR szDeviceName[128];
 	g_DeviceManager.GetDeviceName(pDeviceInfo,szDeviceName);
 
-	g_ProgressDlg.SetDevice(szDeviceName);
-	g_ProgressDlg.set_status(lngGetString(PROGRESS_INIT));
+	g_pProgressDlg->SetDevice(szDeviceName);
+	g_pProgressDlg->set_status(lngGetString(PROGRESS_INIT));
 
 	// Get the device drive letter.
 	TCHAR szDriveLetter[3];
@@ -1608,7 +1608,7 @@ INT_PTR CActionManager::Fixate(HWND hWndParent,bool bAppMode)
 	if (bFoundDriveLetter)
 	{
 		// Validate the project files.
-		g_ProjectManager.VerifyCompilation(&g_ProgressDlg,szDriveLetter);
+		g_ProjectManager.VerifyCompilation(g_pProgressDlg,szDriveLetter);
 	}
 	else
 	{
@@ -1617,9 +1617,9 @@ INT_PTR CActionManager::Fixate(HWND hWndParent,bool bAppMode)
 	}
 
 	// We're done.
-	g_ProgressDlg.set_progress(100);
-	g_ProgressDlg.set_status(lngGetString(PROGRESS_DONE));
-	g_ProgressDlg.NotifyCompleted();
+	g_pProgressDlg->set_progress(100);
+	g_pProgressDlg->set_status(lngGetString(PROGRESS_DONE));
+	g_pProgressDlg->NotifyCompleted();
 
 	return 0;
 }*/

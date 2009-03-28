@@ -285,7 +285,7 @@ bool CCore2DriverSPTI::Transport(unsigned char *pCdb,unsigned char ucCdbLength,
 		&sptwb,sizeof(SCSI_PASS_THROUGH_DIRECT_WITH_BUFFER),&ulReturned,FALSE))
 	{
 		if (m_bLog)
-			g_LogDlg.print_line(_T("  DeviceIoControl failed, last error: %d."),GetLastError());
+			g_pLogDlg->print_line(_T("  DeviceIoControl failed, last error: %d."),GetLastError());
 
 		return false;
 	}
@@ -294,30 +294,30 @@ bool CCore2DriverSPTI::Transport(unsigned char *pCdb,unsigned char ucCdbLength,
 	{
 		if (m_bLog)
 		{
-			g_LogDlg.print_line(_T("  Error: SCSI command failed, returned: 0x%.2X."),sptwb.spt.ScsiStatus);
+			g_pLogDlg->print_line(_T("  Error: SCSI command failed, returned: 0x%.2X."),sptwb.spt.ScsiStatus);
 
 			// Dump CDB.
-			g_LogDlg.print(_T("  CDB:\t"));
+			g_pLogDlg->print(_T("  CDB:\t"));
 			for (unsigned int i = 0; i < ucCdbLength; i++)
 			{
 				if (i == 0)
-					g_LogDlg.print(_T("0x%.2X"),pCdb[i]);
+					g_pLogDlg->print(_T("0x%.2X"),pCdb[i]);
 				else
-					g_LogDlg.print(_T(",0x%.2X"),pCdb[i]);
+					g_pLogDlg->print(_T(",0x%.2X"),pCdb[i]);
 			}
 
-			g_LogDlg.print_line(_T(""));
+			g_pLogDlg->print_line(_T(""));
 
 			// Dump sense information.
-			g_LogDlg.print_line(_T("  Sense:\t0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X"),
+			g_pLogDlg->print_line(_T("  Sense:\t0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X"),
 				sptwb.ucSenseBuf[0],sptwb.ucSenseBuf[1],sptwb.ucSenseBuf[2],sptwb.ucSenseBuf[3],
 				sptwb.ucSenseBuf[4],sptwb.ucSenseBuf[5],sptwb.ucSenseBuf[6],sptwb.ucSenseBuf[7]);
 
-			g_LogDlg.print_line(_T("  \t0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X"),
+			g_pLogDlg->print_line(_T("  \t0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X"),
 				sptwb.ucSenseBuf[ 8],sptwb.ucSenseBuf[ 9],sptwb.ucSenseBuf[10],sptwb.ucSenseBuf[11],
 				sptwb.ucSenseBuf[12],sptwb.ucSenseBuf[13],sptwb.ucSenseBuf[14],sptwb.ucSenseBuf[15]);
 
-			g_LogDlg.print_line(_T("  \t0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X"),
+			g_pLogDlg->print_line(_T("  \t0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X,0x%.2X"),
 				sptwb.ucSenseBuf[16],sptwb.ucSenseBuf[17],sptwb.ucSenseBuf[18],sptwb.ucSenseBuf[19],
 				sptwb.ucSenseBuf[20],sptwb.ucSenseBuf[21],sptwb.ucSenseBuf[22],sptwb.ucSenseBuf[23]);
 		}
@@ -326,7 +326,7 @@ bool CCore2DriverSPTI::Transport(unsigned char *pCdb,unsigned char ucCdbLength,
 	}
 
 /*#ifdef _DEBUG
-	g_LogDlg.print_line(_T("DEBUG: Command 0x%.2X returned %d bytes of data."),pCdb[0],ulReturned);
+	g_pLogDlg->print_line(_T("DEBUG: Command 0x%.2X returned %d bytes of data."),pCdb[0],ulReturned);
 #endif*/
 
 	return true;
@@ -393,13 +393,13 @@ bool CCore2DriverSPTI::TransportWithSense(unsigned char *pCdb,unsigned char ucCd
 		&sptwb,sizeof(SCSI_PASS_THROUGH_DIRECT_WITH_BUFFER),&ulReturned,FALSE))
 	{
 		if (m_bLog)
-			g_LogDlg.print_line(_T("  DeviceIoControl failed, last error: %d."),GetLastError());
+			g_pLogDlg->print_line(_T("  DeviceIoControl failed, last error: %d."),GetLastError());
 
 		return false;
 	}
 
 /*#ifdef _DEBUG
-	g_LogDlg.print_line(_T("DEBUG: Command 0x%.2X returned %d bytes of data."),pCdb[0],ulReturned);
+	g_pLogDlg->print_line(_T("DEBUG: Command 0x%.2X returned %d bytes of data."),pCdb[0],ulReturned);
 #endif*/
 
 	memcpy(pSense,sptwb.ucSenseBuf,24);

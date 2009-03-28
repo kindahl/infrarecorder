@@ -2874,7 +2874,7 @@ LRESULT CMainFrame::OnActionsDiscInfo(UINT uNotifyCode,int nID,CWindow wnd)
 
 LRESULT CMainFrame::OnActionsImportsession(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
-	g_LogDlg.print_line(_T("CMainFrame::OnActionsImportsession"));
+	g_pLogDlg->print_line(_T("CMainFrame::OnActionsImportsession"));
 
 	// We can only import to projects containing a data track.
 	CProjectNode *pDataRootNode = NULL;
@@ -2910,7 +2910,7 @@ LRESULT CMainFrame::OnActionsImportsession(WORD wNotifyCode,WORD wID,HWND hWndCt
 		// Make sure a valid track was selected.
 		if (ImportSessionDlg.m_pSelTrackData == NULL)
 		{
-			g_LogDlg.print_line(_T("  Error: Invalid track selection in import session dialog."));
+			g_pLogDlg->print_line(_T("  Error: Invalid track selection in import session dialog."));
 			return 0;
 		}
 
@@ -2920,7 +2920,7 @@ LRESULT CMainFrame::OnActionsImportsession(WORD wNotifyCode,WORD wID,HWND hWndCt
 		CCore2Device Device;
 		if (!Device.Open(&pDeviceInfo->Address))
 		{
-			g_LogDlg.print_line(_T("  Error: Failed to open device when trying to import session."));
+			g_pLogDlg->print_line(_T("  Error: Failed to open device when trying to import session."));
 			return 0;
 		}
 		
@@ -2928,15 +2928,15 @@ LRESULT CMainFrame::OnActionsImportsession(WORD wNotifyCode,WORD wID,HWND hWndCt
 		CCore2TrackInfo TrackInfo;
 		if (!Info.ReadTrackInformation(&Device,CCore2Info::TIT_TRACK,0xFF,&TrackInfo))
 		{
-			g_LogDlg.print_line(_T("  Error: Failed to read track information when trying to import session."));
+			g_pLogDlg->print_line(_T("  Error: Failed to read track information when trying to import session."));
 			return 0;
 		}
 
 		// Import file tree.
-		CCore2InStream InStream(&g_LogDlg,&Device,0,
+		CCore2InStream InStream(g_pLogDlg,&Device,0,
 			ImportSessionDlg.m_pSelTrackData->m_ulTrackAddr + ImportSessionDlg.m_pSelTrackData->m_ulTrackLen);
 
-		ckfilesystem::Iso9660Reader Reader(g_LogDlg);
+		ckfilesystem::Iso9660Reader Reader(*g_pLogDlg);
 		Reader.read(InStream,ImportSessionDlg.m_pSelTrackData->m_ulTrackAddr);
 		//Reader.PrintTree();
 
@@ -2954,7 +2954,7 @@ LRESULT CMainFrame::OnActionsImportsession(WORD wNotifyCode,WORD wID,HWND hWndCt
 		g_ProjectSettings.m_uiDeviceIndex = ImportSessionDlg.m_uiDeviceIndex;
 		g_ProjectSettings.m_iIsoFormat = 1;	// Mode 2 (multi-session)
 
-		g_LogDlg.print_line(_T("  Imported session: %I64d-%I64d, %I64d."),
+		g_pLogDlg->print_line(_T("  Imported session: %I64d-%I64d, %I64d."),
 			g_ProjectSettings.m_uiImportTrackAddr,
 			g_ProjectSettings.m_uiImportTrackAddr + g_ProjectSettings.m_uiImportTrackLen,
 			g_ProjectSettings.m_uiNextWritableAddr);
@@ -3025,7 +3025,7 @@ LRESULT CMainFrame::OnViewStatusBar(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL 
 
 LRESULT CMainFrame::OnViewProgramlog(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
-	g_LogDlg.Show();
+	g_pLogDlg->Show();
 	return 0;
 }
 

@@ -154,6 +154,9 @@ bool CPngFile::Close()
 	if (m_pRowData == NULL)
 		return false;
 
+	// FIXME: This does not work if libpng is linked dynamically. Maybe look into
+	//		  saving the pInfo structure and free it with png_destroy_read_struct
+	//		  here.
 	for (unsigned long y = 0; y < m_ulHeight; y++)
 		free(m_pRowData[y]);
 

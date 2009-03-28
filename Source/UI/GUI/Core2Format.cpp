@@ -103,7 +103,7 @@ bool CCore2Format::WaitBkgndFormat(CCore2Device *pDevice,CAdvancedProgress *pPro
 
 bool CCore2Format::FormatUnit(CCore2Device *pDevice,CAdvancedProgress *pProgress,bool bFull)
 {
-	g_LogDlg.print_line(_T("CCore2Format::FormatUnit"));
+	g_pLogDlg->print_line(_T("CCore2Format::FormatUnit"));
 
 	// Initialize buffers.
 	unsigned char ucBuffer[192];
@@ -134,13 +134,13 @@ bool CCore2Format::FormatUnit(CCore2Device *pDevice,CAdvancedProgress *pProgress
 		return false;
 
 	unsigned short usProfile = ucBuffer[6] << 8 | ucBuffer[7];
-	g_LogDlg.print_line(_T("  Current profile: 0x%.4X."),usProfile);
+	g_pLogDlg->print_line(_T("  Current profile: 0x%.4X."),usProfile);
 
 	if (usProfile != PROFILE_DVDPLUSRW && usProfile != PROFILE_DVDPLUSRW_DL &&
 		usProfile != PROFILE_DVDRAM && usProfile != PROFILE_DVDMINUSRW_RESTOV &&
 		usProfile != PROFILE_DVDMINUSRW_SEQ)
 	{
-		g_LogDlg.print_line(_T("  Error: Unsupported media."));
+		g_pLogDlg->print_line(_T("  Error: Unsupported media."));
 		return false;
 	}
 
@@ -154,11 +154,11 @@ bool CCore2Format::FormatUnit(CCore2Device *pDevice,CAdvancedProgress *pProgress
 		return false;
 
 	unsigned char ucCapListLen = ucBuffer[3];
-	g_LogDlg.print_line(_T("  Capacity list length: %d bytes."),ucCapListLen);
+	g_pLogDlg->print_line(_T("  Capacity list length: %d bytes."),ucCapListLen);
 
 	if (ucCapListLen % 8 != 0 || ucCapListLen == 0)
 	{
-		g_LogDlg.print_line(_T("  Error: Invalid capacity list length."));
+		g_pLogDlg->print_line(_T("  Error: Invalid capacity list length."));
 		return false;
 	}
 
@@ -205,7 +205,7 @@ bool CCore2Format::FormatUnit(CCore2Device *pDevice,CAdvancedProgress *pProgress
 
 	if ((ucBuffer[8] & 0x03) == 0x03)		// No media present or unknown capacity.
 	{
-		g_LogDlg.print_line(_T("  Error: Unable to determine media capacity."));
+		g_pLogDlg->print_line(_T("  Error: Unable to determine media capacity."));
 		return false;
 	}
 	else
@@ -213,20 +213,20 @@ bool CCore2Format::FormatUnit(CCore2Device *pDevice,CAdvancedProgress *pProgress
 		unsigned int uiCapacity = ucBuffer[4] << 24 | ucBuffer[5] << 16 |
 			ucBuffer[6] << 8 | ucBuffer[7];
 
-		g_LogDlg.print_line(_T("  Disc capacity: %.2f GiB (%I64d bytes)."),
+		g_pLogDlg->print_line(_T("  Disc capacity: %.2f GiB (%I64d bytes)."),
 			((double)uiCapacity * 2048)/1073741824,(__int64)uiCapacity * 2048);
 
 		if ((ucBuffer[8] & 0x03) == 0x01)	// Unformatted or blank media.
-			g_LogDlg.print_line(_T("  The disc media is unformatted or blank."));
+			g_pLogDlg->print_line(_T("  The disc media is unformatted or blank."));
 		else if ((ucBuffer[8] & 0x03) == 0x02)	// Formatted media.
-			g_LogDlg.print_line(_T("  The disc media is formatted."));
+			g_pLogDlg->print_line(_T("  The disc media is formatted."));
 	}
 
 	// Handle any unhandled events.
 	unsigned char ucEvents;
 	if (g_Core2.HandleEvents(pDevice,pProgress,ucEvents))
 	{
-		g_LogDlg.print_line(_T("  Handled events: 0x%.2X"),ucEvents);
+		g_pLogDlg->print_line(_T("  Handled events: 0x%.2X"),ucEvents);
 	}
 	else
 	{

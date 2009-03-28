@@ -40,19 +40,19 @@ void CDiagnostics::event_output(const std::string &block)
 	if (!strncmp(block.c_str(),CDRTOOLS_COPYRIGHT,CDRTOOLS_COPYRIGHT_LENGTH))
 		return;
 
-	g_LogDlg.print(_T("   > "));
-	g_LogDlg.print_line(ckcore::string::ansi_to_auto<1024>(block.c_str()).c_str());
+	g_pLogDlg->print(_T("   > "));
+	g_pLogDlg->print_line(ckcore::string::ansi_to_auto<1024>(block.c_str()).c_str());
 }
 
 void CDiagnostics::event_finished()
 {
-	g_LogDlg.print_line(_T("CDiagnostics::ProcessEnded"));
-	g_LogDlg.print_line(_T(""));
+	g_pLogDlg->print_line(_T("CDiagnostics::ProcessEnded"));
+	g_pLogDlg->print_line(_T(""));
 }
 
 bool CDiagnostics::DeviceScan()
 {
-	g_LogDlg.print_line(_T("CDiagnostics::DeviceScan"));
+	g_pLogDlg->print_line(_T("CDiagnostics::DeviceScan"));
 
 	TCHAR szCommandLine[MAX_PATH];
 	lstrcpy(szCommandLine,_T("\""));

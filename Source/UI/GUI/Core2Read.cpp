@@ -43,7 +43,7 @@ namespace Core2ReadFunction
 		memset(ucCdb,0,sizeof(ucCdb));
 
 		if (ulBlockCount > 0xFFFFFF)
-			g_LogDlg.print_line(_T("  Warning: Requested block count to large, trunkated the number of block requested to read."));
+			g_pLogDlg->print_line(_T("  Warning: Requested block count to large, trunkated the number of block requested to read."));
 
 		ucCdb[ 0] = SCSI_READ_CD;
 		ucCdb[ 1] = 0;		// Return all types of sectors.
@@ -84,10 +84,10 @@ namespace Core2ReadFunction
 		if (!Core2Info.ReadCapacity(pDevice,ulBlockAddress,m_ulFrameSize))
 		{
 			m_ulFrameSize = 2048;
-			g_LogDlg.print_line(_T("  Error: Unable to obtain disc block information, impossible to continue."));
+			g_pLogDlg->print_line(_T("  Error: Unable to obtain disc block information, impossible to continue."));
 		}
 
-		g_LogDlg.print_line(_T("  Block address: %u, block length: %u."),ulBlockAddress,m_ulFrameSize);
+		g_pLogDlg->print_line(_T("  Block address: %u, block length: %u."),ulBlockAddress,m_ulFrameSize);
 	}
 
 	CReadUserData::~CReadUserData()
@@ -257,26 +257,26 @@ bool CCore2Read::ReadData(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 						  Core2ReadFunction::CReadFunction *pReadFunction,unsigned long ulStartBlock,
 						  unsigned long ulNumBlocks,bool bIgnoreErr)
 {
-	//g_LogDlg.print_line(_T("CCore2Read::ReadData"));
+	//g_pLogDlg->print_line(_T("CCore2Read::ReadData"));
 
 	// Make sure that the device supports this operation.
 	bool bSupportFeature = false;
 	if (!g_Core2.GetFeatureSupport(pDevice,FEATURE_MULTIREAD,bSupportFeature))
-		g_LogDlg.print_line(_T("  Warning: Unable to check device support for feature 0x%.4X."),FEATURE_MULTIREAD);
+		g_pLogDlg->print_line(_T("  Warning: Unable to check device support for feature 0x%.4X."),FEATURE_MULTIREAD);
 	if (!bSupportFeature)
 	{
-		g_LogDlg.print_line(_T("  Error: The selected device does not support this kind of operation."));
+		g_pLogDlg->print_line(_T("  Error: The selected device does not support this kind of operation."));
 		return false;
 	}
 
 	if (!g_Core2.GetFeatureSupport(pDevice,FEATURE_CD_READ,bSupportFeature))
-		g_LogDlg.print_line(_T("  Warning: Unable to check device support for feature 0x%.4X."),FEATURE_CD_READ);
+		g_pLogDlg->print_line(_T("  Warning: Unable to check device support for feature 0x%.4X."),FEATURE_CD_READ);
 	if (!bSupportFeature)
 	{
 		if (pProgress != NULL)
 			pProgress->notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_NOMEDIA));
 
-		g_LogDlg.print_line(_T("  Error: The selected device does not support this kind of operation."));
+		g_pLogDlg->print_line(_T("  Error: The selected device does not support this kind of operation."));
 		return false;
 	}
 
@@ -285,7 +285,7 @@ bool CCore2Read::ReadData(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 	g_Core2.GetProfile(pDevice,usProfile);
 	if (usProfile == PROFILE_NONE)
 	{
-		g_LogDlg.print_line(_T("  Error: No disc inserted."));
+		g_pLogDlg->print_line(_T("  Error: No disc inserted."));
 		return false;
 	}
 
@@ -326,7 +326,7 @@ bool CCore2Read::ReadData(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 
 		if (!pReadFunction->Read(pReadBuffer,l,ulReadCount))
 		{
-			g_LogDlg.print_line(_T("  Warning: Failed to read sector range %u-%u"),
+			g_pLogDlg->print_line(_T("  Warning: Failed to read sector range %u-%u"),
 				l,l + ulReadCount);
 			if (pProgress != NULL)
 				pProgress->notify(ckcore::Progress::ckWARNING,lngGetString(FAILURE_READSOURCEDISC),l);
@@ -343,7 +343,7 @@ bool CCore2Read::ReadData(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 
 				if (!RetryReadBlock(pDevice,pProgress,pReadFunction,pReadBuffer + j * pReadFunction->GetFrameSize(),l + j))
 				{
-					g_LogDlg.print_line(_T("    Retry on sector %u failed."),l+j);
+					g_pLogDlg->print_line(_T("    Retry on sector %u failed."),l+j);
 
 					// Check if we're allowed to ignore this error.
 					if (!bIgnoreErr)
@@ -363,7 +363,7 @@ bool CCore2Read::ReadData(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 
 		if (!pReadFunction->Process(pReadBuffer,ulReadCount))
 		{
-			g_LogDlg.print_line(_T("  Error: Unable to process read data."));
+			g_pLogDlg->print_line(_T("  Error: Unable to process read data."));
 
 			delete [] pReadBuffer;
 			return false;

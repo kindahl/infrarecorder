@@ -23,8 +23,6 @@
 #include "LangUtil.h"
 #include "Settings.h"
 
-CSimpleProgressDlg g_SimpleProgressDlg;
-
 CSimpleProgressDlg::CSimpleProgressDlg() : m_pProcess(NULL),m_bAppMode(false),
 	m_bRealMode(false),m_bCancelled(false),m_hWndHost(NULL)
 {

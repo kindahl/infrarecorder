@@ -34,7 +34,7 @@ CCore2Blank::~CCore2Blank()
 bool CCore2Blank::Blank(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 						int iMethod,bool bForce,bool bSimulate)
 {
-	g_LogDlg.print_line(_T("CCore2Blank::Blank"));
+	g_pLogDlg->print_line(_T("CCore2Blank::Blank"));
 
 	unsigned char ucBlankType;
 	switch (iMethod)
@@ -56,7 +56,7 @@ bool CCore2Blank::Blank(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 			break;
 
 		default:
-			g_LogDlg.print_line(_T("  Warning: Unknown erase method, using full erase."));
+			g_pLogDlg->print_line(_T("  Warning: Unknown erase method, using full erase."));
 			ucBlankType = 0x00;
 			break;
 	}
@@ -69,11 +69,11 @@ bool CCore2Blank::Blank(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 	unsigned char ucEvents;
 	if (g_Core2.HandleEvents(pDevice,pProgress,ucEvents))
 	{
-		g_LogDlg.print_line(_T("  Handled events: 0x%.2X"),ucEvents);
+		g_pLogDlg->print_line(_T("  Handled events: 0x%.2X"),ucEvents);
 	}
 	else
 	{
-		g_LogDlg.print_line(_T("  Error: Failed to handle events, handled events: 0x%.2X"),ucEvents);
+		g_pLogDlg->print_line(_T("  Error: Failed to handle events, handled events: 0x%.2X"),ucEvents);
 		return false;
 	}
 

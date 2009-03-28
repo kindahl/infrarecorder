@@ -90,4 +90,4 @@ public:
 	SMOKE_IMPL
 };
 
-extern CSimpleProgressDlg g_SimpleProgressDlg;
+extern CSimpleProgressDlg * g_pSimpleProgressDlg;

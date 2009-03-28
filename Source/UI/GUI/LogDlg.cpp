@@ -25,8 +25,6 @@
 #include "Diagnostics.h"
 #include "WinVer.h"
 
-CLogDlg g_LogDlg;
-
 // FIXME: No arrow is used, not enough space.
 CLogDlg::CLogDlg() : m_DiagButton(IDR_DIAGNOSTICSMENU,false),
 	m_LogFile(GetLogFullPath())
@@ -158,7 +156,7 @@ bool CLogDlg::Translate()
 */
 void CLogDlg::Show()
 {
-	g_LogDlg.ShowWindow(SW_SHOW);
+	g_pLogDlg->ShowWindow(SW_SHOW);
 	m_LogEdit.LineScroll(m_LogEdit.GetLineCount());
 }
 

@@ -24,8 +24,6 @@
 #include "InfraRecorder.h"
 #include "ProgressDlg.h"
 
-CProgressDlg g_ProgressDlg;
-
 CProgressDlg::CProgressDlg() : m_pProcess(NULL),m_bAppMode(false),
 	m_bRealMode(false),m_bCancelled(false),m_hWndHost(NULL),m_ucPercent(0),
 	m_szHostTitle(NULL)

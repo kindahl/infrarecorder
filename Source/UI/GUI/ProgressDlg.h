@@ -105,4 +105,4 @@ public:
 	SMOKE_IMPL
 };
 
-extern CProgressDlg g_ProgressDlg;
+extern CProgressDlg * g_pProgressDlg;

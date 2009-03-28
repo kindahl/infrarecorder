@@ -91,4 +91,4 @@ public:
 	LRESULT OnFiles(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
 };
 
-extern CLogDlg g_LogDlg;
+extern CLogDlg * g_pLogDlg;
