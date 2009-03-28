@@ -186,7 +186,6 @@ bool CCopyDiscGeneralPage::InitRecorderMedia()
 
 	// Open the device.
 	UINT_PTR uiDeviceIndex = m_TargetCombo.GetItemData(m_TargetCombo.GetCurSel());
-	tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(uiDeviceIndex);
 	tDeviceCap *pDeviceCap = g_DeviceManager.GetDeviceCap(uiDeviceIndex);
 
 	// Get current profile.
@@ -252,7 +251,7 @@ bool CCopyDiscGeneralPage::InitRecorderMedia()
 		// Maximum write speed.
 		m_WriteSpeedCombo.ResetContent();
 		m_WriteSpeedCombo.AddString(lngGetString(MISC_MAXIMUM));
-		m_WriteSpeedCombo.SetItemData(0,-1);
+		m_WriteSpeedCombo.SetItemData(0,static_cast<DWORD_PTR>(-1));
 		m_WriteSpeedCombo.SetCurSel(0);
 
 		// Other supported write speeds.

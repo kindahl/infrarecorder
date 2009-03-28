@@ -121,7 +121,7 @@ bool CProjectListViewDropTarget::HandleDropData(IDataObject *pDataObject,CProjec
 		// Move to another folder if possible, otherwise rearrange in the list.
 		if (pTargetNode != NULL)
 		{
-			FormatEtc.cfFormat = m_uiClipFormat;
+			FormatEtc.cfFormat = static_cast<CLIPFORMAT>(m_uiClipFormat);
 			if (pDataObject->QueryGetData(&FormatEtc) == S_OK)
 			{
 				if (pDataObject->GetData(&FormatEtc,&StgMedium) == S_OK)
@@ -200,7 +200,7 @@ bool CProjectListViewDropTarget::HandleDropData(IDataObject *pDataObject,CProjec
 				lvi.iItem = iItemIndex;
 				lvi.iSubItem = 0;
 				lvi.pszText = LPSTR_TEXTCALLBACK;
-				lvi.stateMask = ~LVIS_SELECTED;
+				lvi.stateMask = static_cast<unsigned int>(~LVIS_SELECTED);
 				lvi.mask = LVIF_TEXT | LVIF_IMAGE | LVIF_PARAM | LVIF_STATE;
 				m_pHost->GetItem(&lvi);
 
@@ -357,7 +357,7 @@ void CProjectListViewCtrl::BeginDrag(LPNMLISTVIEW pNMListView)
 	pDataObject->SetParent(g_TreeManager.GetCurrentNode());
 
 	DWORD dwEffect = 0;
-	DWORD dwResult = ::DoDragDrop(pDataObject,pDropSource,DROPEFFECT_MOVE,&dwEffect);
+	::DoDragDrop(pDataObject,pDropSource,DROPEFFECT_MOVE,&dwEffect);
 
 	pDropSource->Release();
 	pDataObject->Release();	

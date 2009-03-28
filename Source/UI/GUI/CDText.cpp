@@ -108,9 +108,9 @@ unsigned int CCDText::ReadPacket(ckcore::File &File,unsigned long ulPID,
 		return 0;
 
 	// Not currently used.
-	unsigned char ucDBCC = (unsigned char)(ulBlockInfo & 0x80) >> 7;
+	/*unsigned char ucDBCC = (unsigned char)(ulBlockInfo & 0x80) >> 7;
 	unsigned char ucBlockNumber = (unsigned char)(ulBlockInfo & 0x70) >> 4;
-	unsigned char ucCharPos = (unsigned char)(ulBlockInfo & 0x0F);
+	unsigned char ucCharPos = (unsigned char)(ulBlockInfo & 0x0F);*/
 
 	if (File.read(m_szBuffer + m_uiBufferPos,12) == -1)
 		return false;
@@ -234,7 +234,7 @@ unsigned int CCDText::WriteText(ckcore::File &File,unsigned char ucType,unsigned
 	// Copy any old data to the write-buffer.
 	if (m_uiBufferPos > 0)
 	{
-		ucBuffer[1] = m_uiPrevPID2;
+		ucBuffer[1] = m_ucPrevPID2;
 		memcpy(ucBuffer + 4,m_szBuffer,m_uiBufferPos);
 	}
 
@@ -248,14 +248,14 @@ unsigned int CCDText::WriteText(ckcore::File &File,unsigned char ucType,unsigned
 		// Flush.
 		if (iByteCount + m_uiBufferPos == 12)
 		{
-			ucBuffer[2] = m_uiBlockCount++;
+			ucBuffer[2] = m_ucBlockCount++;
 			ucBuffer[3] = uiCharPos + uiCurrentPos;
 
 			// CRC.
 			unsigned short usCRC = CalcCRC(ucBuffer,16);
 			usCRC ^= 0xFFFF;
-			ucBuffer[16] = (usCRC & 0xFF00) >> 8;
-			ucBuffer[17] = (usCRC & 0xFF);
+			ucBuffer[16] = static_cast<unsigned char>((usCRC & 0xFF00) >> 8);
+			ucBuffer[17] = static_cast<unsigned char>(usCRC & 0xFF);
 
 			// Write.
 			File.write(ucBuffer,18);
@@ -266,7 +266,7 @@ unsigned int CCDText::WriteText(ckcore::File &File,unsigned char ucType,unsigned
 
 			// If we have just written a block associated with the previous we can now
 			// safeley set the second PID to match the current string.
-			if (ucBuffer[1] == m_uiPrevPID2)
+			if (ucBuffer[1] == m_ucPrevPID2)
 			{
 				ucBuffer[1] = ucPID2;
 
@@ -293,8 +293,8 @@ void CCDText::FlushText(ckcore::File &File,unsigned char ucType,unsigned int uiC
 		unsigned char ucBuffer[18];
 		ucBuffer[0] = ucType;
 
-		ucBuffer[1] = m_uiPrevPID2;
-		ucBuffer[2] = m_uiBlockCount++;
+		ucBuffer[1] = m_ucPrevPID2;
+		ucBuffer[2] = m_ucBlockCount++;
 		ucBuffer[3] = uiCharPos;
 
 		memcpy(ucBuffer + 4,m_szBuffer,m_uiBufferPos);
@@ -303,8 +303,8 @@ void CCDText::FlushText(ckcore::File &File,unsigned char ucType,unsigned int uiC
 		// CRC.
 		unsigned short usCRC = CalcCRC(ucBuffer,16);
 		usCRC ^= 0xFFFF;
-		ucBuffer[16] = (usCRC & 0xFF00) >> 8;
-		ucBuffer[17] = (usCRC & 0xFF);
+		ucBuffer[16] = static_cast<unsigned char>((usCRC & 0xFF00) >> 8);
+		ucBuffer[17] = static_cast<unsigned char>(usCRC & 0xFF);
 
 		// Flush.
 		File.write(ucBuffer,18);
@@ -327,7 +327,7 @@ bool CCDText::WriteFile(const TCHAR *szFileName)
 
 	// Reset the internal counters.
 	m_uiBufferPos = 0;
-	m_uiBlockCount = 0;
+	m_ucBlockCount = 0;
 
 	unsigned int uiCharPos = 0;
 
@@ -335,13 +335,13 @@ bool CCDText::WriteFile(const TCHAR *szFileName)
 	if (m_szAlbumName[0] != '\0')
 	{
 		uiCharPos = WriteText(File,PTI_NAMETITLE,0,m_szAlbumName,uiCharPos);
-		m_uiPrevPID2 = 0;
+		m_ucPrevPID2 = 0;
 	}
 
 	for (unsigned int i = 0; i < m_TrackNames.size(); i++)
 	{
 		uiCharPos = WriteText(File,PTI_NAMETITLE,(unsigned char)i + 1,m_TrackNames[i].c_str(),uiCharPos);
-		m_uiPrevPID2 = i + 1;
+		m_ucPrevPID2 = i + 1;
 	}
 
 	FlushText(File,PTI_NAMETITLE,uiCharPos);
@@ -351,13 +351,13 @@ bool CCDText::WriteFile(const TCHAR *szFileName)
 	if (m_szArtistName[0] != '\0')
 	{
 		uiCharPos = WriteText(File,PTI_NAMEPERFORMER,0,m_szArtistName,uiCharPos);
-		m_uiPrevPID2 = 0;
+		m_ucPrevPID2 = 0;
 	}
 
 	for (unsigned int i = 0; i < m_ArtistNames.size(); i++)
 	{
 		uiCharPos = WriteText(File,PTI_NAMEPERFORMER,(unsigned char)i + 1,m_ArtistNames[i].c_str(),uiCharPos);
-		m_uiPrevPID2 = i + 1;
+		m_ucPrevPID2 = i + 1;
 	}
 
 	FlushText(File,PTI_NAMEPERFORMER,uiCharPos);
@@ -382,7 +382,7 @@ bool CCDText::WriteFileEx(const TCHAR *szFileName,const TCHAR *szAlbumName,
 
 	// Reset the internal counters.
 	m_uiBufferPos = 0;
-	m_uiBlockCount = 0;
+	m_ucBlockCount = 0;
 
 	unsigned int uiCharPos = 0;
 	char szBuffer[CDTEXT_MAXFIELDSIZE];
@@ -397,7 +397,7 @@ bool CCDText::WriteFileEx(const TCHAR *szFileName,const TCHAR *szAlbumName,
 #endif
 
 		uiCharPos = WriteText(File,PTI_NAMETITLE,0,szBuffer,uiCharPos);
-		m_uiPrevPID2 = 0;
+		m_ucPrevPID2 = 0;
 	}
 
 	for (unsigned int i = 0; i < Tracks.size(); i++)
@@ -409,7 +409,7 @@ bool CCDText::WriteFileEx(const TCHAR *szFileName,const TCHAR *szAlbumName,
 #endif
 
 		uiCharPos = WriteText(File,PTI_NAMETITLE,(unsigned char)i + 1,szBuffer,uiCharPos);
-		m_uiPrevPID2 = i + 1;
+		m_ucPrevPID2 = i + 1;
 	}
 
 	FlushText(File,PTI_NAMETITLE,uiCharPos);
@@ -425,7 +425,7 @@ bool CCDText::WriteFileEx(const TCHAR *szFileName,const TCHAR *szAlbumName,
 #endif
 
 		uiCharPos = WriteText(File,PTI_NAMEPERFORMER,0,szBuffer,uiCharPos);
-		m_uiPrevPID2 = 0;
+		m_ucPrevPID2 = 0;
 	}
 
 	for (unsigned int i = 0; i < Tracks.size(); i++)
@@ -437,7 +437,7 @@ bool CCDText::WriteFileEx(const TCHAR *szFileName,const TCHAR *szAlbumName,
 #endif
 
 		uiCharPos = WriteText(File,PTI_NAMEPERFORMER,(unsigned char)i + 1,szBuffer,uiCharPos);
-		m_uiPrevPID2 = i + 1;
+		m_ucPrevPID2 = i + 1;
 	}
 
 	FlushText(File,PTI_NAMEPERFORMER,uiCharPos);

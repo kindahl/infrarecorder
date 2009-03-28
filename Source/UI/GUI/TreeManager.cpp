@@ -1413,8 +1413,6 @@ void CTreeManager::SaveNodeFileData(CXMLProcessor *pXML,CProjectNode *pRootNode)
 
 void CTreeManager::SaveNodeAudioData(CXMLProcessor *pXML,CProjectNode *pRootNode)
 {
-	CProjectNode *pCurNode = pRootNode;
-
 	unsigned int uiRootLength = lstrlen(pRootNode->pItemData->GetFilePath()) +
 		lstrlen(pRootNode->pItemData->GetFileName());
 

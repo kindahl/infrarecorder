@@ -75,7 +75,7 @@ CProjectDropTargetBase::eDropType CProjectDropTargetBase::QueryDataObject(IDataO
 	if (pDataObject->QueryGetData(&fmtetc) == S_OK)
 		return DT_HDROP;
 
-	fmtetc.cfFormat = m_uiClipFormat;
+	fmtetc.cfFormat = static_cast<CLIPFORMAT>(m_uiClipFormat);
 	if (pDataObject->QueryGetData(&fmtetc) == S_OK)
 		return DT_IRPROJECT;
 
@@ -85,7 +85,7 @@ CProjectDropTargetBase::eDropType CProjectDropTargetBase::QueryDataObject(IDataO
 HRESULT __stdcall CProjectDropTargetBase::DragEnter(IDataObject *pDataObject,DWORD grfKeyState,
 												POINTL pt,DWORD *pdwEffect)
 {
-    m_ucDropType = QueryDataObject(pDataObject);
+    m_DropType = QueryDataObject(pDataObject);
 
 	*pdwEffect = DROPEFFECT_NONE;
 	return S_OK;
@@ -93,8 +93,8 @@ HRESULT __stdcall CProjectDropTargetBase::DragEnter(IDataObject *pDataObject,DWO
 
 HRESULT __stdcall CProjectDropTargetBase::DragOver(DWORD grfKeyState,POINTL pt,DWORD *pdwEffect)
 {
-	if (m_ucDropType != DT_NONE && OnDragOver(pt))
-		*pdwEffect = m_ucDropType == DT_HDROP ? DROPEFFECT_COPY : DROPEFFECT_MOVE;
+	if (m_DropType != DT_NONE && OnDragOver(pt))
+		*pdwEffect = m_DropType == DT_HDROP ? DROPEFFECT_COPY : DROPEFFECT_MOVE;
 	else
 		*pdwEffect = DROPEFFECT_NONE;
 
@@ -110,8 +110,8 @@ HRESULT __stdcall CProjectDropTargetBase::DragLeave()
 HRESULT __stdcall CProjectDropTargetBase::Drop(IDataObject *pDataObject,DWORD grfKeyState,
 												   POINTL pt,DWORD *pdwEffect)
 {
-	if (m_ucDropType != DT_NONE && OnDrop(pt,pDataObject))
-		*pdwEffect = m_ucDropType == DT_HDROP ? DROPEFFECT_COPY : DROPEFFECT_MOVE;
+	if (m_DropType != DT_NONE && OnDrop(pt,pDataObject))
+		*pdwEffect = m_DropType == DT_HDROP ? DROPEFFECT_COPY : DROPEFFECT_MOVE;
 	else
 		*pdwEffect = DROPEFFECT_NONE;
 

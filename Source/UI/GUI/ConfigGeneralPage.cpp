@@ -400,6 +400,12 @@ LRESULT CConfigGeneralPage::OnFolderBrowse(WORD wNotifyCode,WORD wID,HWND hWndCt
 		case IDC_TEMPFOLDERBROWSEBUTTON:
 			iControlID = IDC_TEMPFOLDEREDIT;
 			break;
+
+		default:
+		{
+			bHandled = false;
+			return 0;
+		}
 	}
 
 	if (FolderDialog.DoModal() == IDOK)

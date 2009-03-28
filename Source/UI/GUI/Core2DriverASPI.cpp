@@ -112,7 +112,7 @@ bool CCore2DriverASPI::Close()
 }
 
 bool CCore2DriverASPI::Transport(unsigned char *pCdb,unsigned char ucCdbLength,
-							 unsigned char *pData,unsigned long ulDataLength,int iDataMode)
+								 unsigned char *pData,unsigned long ulDataLength,int iDataMode)
 {
 	if (m_iBus == -1 || m_iTarget == -1 || m_iLun == -1)
 		return false;
@@ -125,9 +125,9 @@ bool CCore2DriverASPI::Transport(unsigned char *pCdb,unsigned char ucCdbLength,
 	memset(&srbCommand,0,sizeof(SRB_ExecSCSICmd));
 
 	srbCommand.SRB_Cmd = SC_EXEC_SCSI_CMD;
-	srbCommand.SRB_HaId = m_iBus;
-	srbCommand.SRB_Target = m_iTarget;
-	srbCommand.SRB_Lun = m_iLun;
+	srbCommand.SRB_HaId = static_cast<BYTE>(m_iBus);
+	srbCommand.SRB_Target = static_cast<BYTE>(m_iTarget);
+	srbCommand.SRB_Lun = static_cast<BYTE>(m_iLun);
 
 	srbCommand.SRB_SenseLen = 24;
 	srbCommand.SRB_BufPointer = pData;
@@ -226,9 +226,9 @@ bool CCore2DriverASPI::TransportWithSense(unsigned char *pCdb,unsigned char ucCd
 	memset(&srbCommand,0,sizeof(SRB_ExecSCSICmd));
 
 	srbCommand.SRB_Cmd = SC_EXEC_SCSI_CMD;
-	srbCommand.SRB_HaId = m_iBus;
-	srbCommand.SRB_Target = m_iTarget;
-	srbCommand.SRB_Lun = m_iLun;
+	srbCommand.SRB_HaId = static_cast<BYTE>(m_iBus);
+	srbCommand.SRB_Target = static_cast<BYTE>(m_iTarget);
+	srbCommand.SRB_Lun = static_cast<BYTE>(m_iLun);
 
 	srbCommand.SRB_SenseLen = 24;
 	srbCommand.SRB_BufPointer = pData;

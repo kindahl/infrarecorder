@@ -193,7 +193,7 @@ bool CCore2::WaitForUnit(CCore2Device *pDevice,CAdvancedProgress *pProgress)
 				if (ucSense[15] & 0x80)
 				{
 					unsigned short usProgress = ((unsigned short)ucSense[16] << 8) | ucSense[17];
-					pProgress->set_progress((int)(usProgress * 100.0f / 0xFFFF));
+					pProgress->set_progress((unsigned char)(usProgress * 100.0f / 0xFFFF));
 				}
 				else
 				{
@@ -390,8 +390,8 @@ bool CCore2::CloseTrackSession(CCore2Device *pDevice,unsigned char ucCloseFuncti
 	ucCdb[0] = SCSI_CLOSE_TRACK_SESSION;
 	ucCdb[1] = bImmed ? 0x01 : 0x00;
 	ucCdb[2] = ucCloseFunction & 0x07;
-	ucCdb[4] = usTrackNumber >> 8;
-	ucCdb[5] = usTrackNumber & 0xFF;
+	ucCdb[4] = static_cast<unsigned char>(usTrackNumber >> 8);
+	ucCdb[5] = static_cast<unsigned char>(usTrackNumber & 0xFF);
 	ucCdb[9] = 0x00;
 
 	if (!pDevice->Transport(ucCdb,10,NULL,0))
@@ -439,8 +439,8 @@ bool CCore2::GetFeatureSupport(CCore2Device *pDevice,unsigned short usFeature,
 
 	ucCdb[0] = SCSI_GET_CONFIGURATION;
 	ucCdb[1] = 0x02;	// Only return feature descriptor if the feature is supported.
-	ucCdb[2] = usFeature >> 8;
-	ucCdb[3] = usFeature & 0xFF;
+	ucCdb[2] = static_cast<unsigned char>(usFeature >> 8);
+	ucCdb[3] = static_cast<unsigned char>(usFeature & 0xFF);
 	ucCdb[8] = 0x48;	// Allocation length.
 	ucCdb[9] = 0;
 
@@ -470,8 +470,8 @@ bool CCore2::GetMediaWriteSpeeds(CCore2Device *pDevice,
 	unsigned short usNumDescriptors = sizeof(ucBuffer) / 16;
 
 	ucCdb[ 0] = SCSI_GET_PERFORMANCE;
-	ucCdb[ 8] = usNumDescriptors << 8;
-	ucCdb[ 9] = usNumDescriptors & 0xFF;
+	ucCdb[ 8] = static_cast<unsigned char>(usNumDescriptors << 8);
+	ucCdb[ 9] = static_cast<unsigned char>(usNumDescriptors & 0xFF);
 	ucCdb[10] = 0x03;		// Write speed descriptors.
 	ucCdb[11] = 0x00;
 
@@ -689,10 +689,10 @@ bool CCore2::SetDiscSpeeds(CCore2Device *pDevice,unsigned short usReadSpeed,
 	memset(ucCdb,0,sizeof(ucCdb));
 
 	ucCdb[ 0] = SCSI_SET_CD_SPEED;
-	ucCdb[ 2] = usReadSpeed >> 8;
-	ucCdb[ 3] = usReadSpeed & 0xFF;
-	ucCdb[ 4] = usWriteSpeed >> 8;
-	ucCdb[ 5] = usWriteSpeed & 0xFF;
+	ucCdb[ 2] = static_cast<unsigned char>(usReadSpeed >> 8);
+	ucCdb[ 3] = static_cast<unsigned char>(usReadSpeed & 0xFF);
+	ucCdb[ 4] = static_cast<unsigned char>(usWriteSpeed >> 8);
+	ucCdb[ 5] = static_cast<unsigned char>(usWriteSpeed & 0xFF);
 	ucCdb[11] = 0x08;
 
 	if (!pDevice->Transport(ucCdb,12,NULL,0))
@@ -808,8 +808,8 @@ bool CCore2::UpdateModePage5(CCore2Device *pDevice,bool bTestWrite,eWriteMode Wr
 	memset(ucCdb,0,sizeof(ucCdb));
 	ucCdb[0] = SCSI_MODE_SELECT10;
 	ucCdb[1] = 0x10;	// PF (not using vendor specified mode page).
-	ucCdb[7] = (usFileListSize) >> 8;
-	ucCdb[8] = (usFileListSize) & 0xFF;
+	ucCdb[7] = static_cast<unsigned char>(usFileListSize >> 8);
+	ucCdb[8] = static_cast<unsigned char>(usFileListSize & 0xFF);
 	ucCdb[9] = 0x00;
 
 	if (!bSilent)
@@ -1153,7 +1153,7 @@ int CCore2::CreateImage(ckcore::OutStream &OutStream,ckfilesystem::FileSet &File
 		{
 			case PROJECTBI_BOOTEMU_NONE:
 				FileSys.add_boot_image_no_emu((*itBootImage)->m_FullPath.c_str(),
-					!(*itBootImage)->m_bNoBoot,(*itBootImage)->m_iLoadSegment,(*itBootImage)->m_iLoadSize);
+					!(*itBootImage)->m_bNoBoot,(*itBootImage)->m_uiLoadSegment,(*itBootImage)->m_uiLoadSize);
 				break;
 
 			case PROJECTBI_BOOTEMU_FLOPPY:

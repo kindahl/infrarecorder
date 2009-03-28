@@ -251,7 +251,7 @@ unsigned int CPidlHelper::GetPidlSize(LPCITEMIDLIST pidl)
 LPITEMIDLIST CPidlHelper::ConcatenatePidl(LPCITEMIDLIST pidl1,LPCITEMIDLIST pidl2)
 {
 	LPITEMIDLIST pidlNew;
-	unsigned int cb1,cb2 = 0;
+	unsigned int cb1 = 0,cb2 = 0;
 
 	if (pidl1)
 		cb1 = GetPidlSize(pidl1) - (2 * sizeof(BYTE));

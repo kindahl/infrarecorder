@@ -345,7 +345,6 @@ void UnicodeToAnsi(char *szTarget,const wchar_t *szSource,int iTargetSize)
 
 void GetCygwinFileName(const TCHAR *szFileName,TCHAR *szCygwinFileName)
 {
-	const TCHAR *pFileName = szFileName;
 	lstrcpy(szCygwinFileName,_T("/cygdrive/"));
 
 	// Copy the drive letter.

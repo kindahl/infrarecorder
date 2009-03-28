@@ -1448,8 +1448,8 @@ void CProjectManager::SaveProjectBoot(CXMLProcessor *pXML)
 					pXML->AddElement(_T("LocalName"),pBootImage->m_LocalName.c_str());
 					pXML->AddElement(_T("Emulation"),pBootImage->m_iEmulation);
 					pXML->AddElement(_T("NoBoot"),pBootImage->m_bNoBoot);
-					pXML->AddElement(_T("LoadSegment"),pBootImage->m_iLoadSegment);
-					pXML->AddElement(_T("LoadSize"),pBootImage->m_iLoadSize);
+					pXML->AddElement(_T("LoadSegment"),pBootImage->m_uiLoadSegment);
+					pXML->AddElement(_T("LoadSize"),pBootImage->m_uiLoadSize);
 				pXML->LeaveElement();
 			}
 		pXML->LeaveElement();
@@ -1488,8 +1488,14 @@ bool CProjectManager::LoadProjectBoot(CXMLProcessor *pXML)
 
 		pXML->GetSafeElementData(_T("Emulation"),&pBootImage->m_iEmulation);
 		pXML->GetSafeElementData(_T("NoBoot"),&pBootImage->m_bNoBoot);
-		pXML->GetSafeElementData(_T("LoadSegment"),&pBootImage->m_iLoadSegment);
-		pXML->GetSafeElementData(_T("LoadSize"),&pBootImage->m_iLoadSize);	
+
+		int iLoadSegment = 0;
+		pXML->GetSafeElementData(_T("LoadSegment"),&iLoadSegment);
+		pBootImage->m_uiLoadSegment = static_cast<ckcore::tuint16>(iLoadSegment);
+
+		int iLoadSize = 0;
+		pXML->GetSafeElementData(_T("LoadSize"),&iLoadSize);	
+		pBootImage->m_uiLoadSize = static_cast<ckcore::tuint16>(iLoadSize);
 
 		g_ProjectSettings.m_BootImages.push_back(pBootImage);
 
@@ -1868,8 +1874,8 @@ bool CProjectManager::DecodeAudioTrack(const TCHAR *szFullPath,const TCHAR *szFu
 		}
 
 		// Update the progres bar.
-		int iPercent = (int)(((double)uiCurrentTime/uiDuration) * 100);
-		pProgress->set_progress(iPercent);
+		unsigned char ucPercent = (unsigned char)(((double)uiCurrentTime/uiDuration) * 100);
+		pProgress->set_progress(ucPercent);
 	}
 
 	// Free buffer memory.

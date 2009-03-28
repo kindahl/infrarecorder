@@ -37,8 +37,8 @@ private:
 	char m_szBuffer[CDTEXT_MAXFIELDSIZE];
 	unsigned int m_uiBufferPos;
 
-	unsigned int m_uiBlockCount;
-	unsigned int m_uiPrevPID2;
+	unsigned char m_ucBlockCount;
+	unsigned char m_ucPrevPID2;
 
 	void Reset();
 	unsigned int FindBufferEOS(unsigned int uiStart,unsigned int uiEnd);

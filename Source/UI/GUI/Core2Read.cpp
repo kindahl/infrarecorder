@@ -47,14 +47,14 @@ namespace Core2ReadFunction
 
 		ucCdb[ 0] = SCSI_READ_CD;
 		ucCdb[ 1] = 0;		// Return all types of sectors.
-		ucCdb[ 2] = (unsigned char)(ulAddress >> 24);
-		ucCdb[ 3] = (unsigned char)(ulAddress >> 16);
-		ucCdb[ 4] = (unsigned char)(ulAddress >>  8);
-		ucCdb[ 5] = (unsigned char)(ulAddress & 0xFF);
-		ucCdb[ 6] = (unsigned char)(ulBlockCount >> 16);
-		ucCdb[ 7] = (unsigned char)(ulBlockCount >>  8);
-		ucCdb[ 8] = (unsigned char)(ulBlockCount & 0xFF);
-		ucCdb[ 9] = 0 | MCD | ErrorInfo;
+		ucCdb[ 2] = static_cast<unsigned char>(ulAddress >> 24);
+		ucCdb[ 3] = static_cast<unsigned char>(ulAddress >> 16);
+		ucCdb[ 4] = static_cast<unsigned char>(ulAddress >>  8);
+		ucCdb[ 5] = static_cast<unsigned char>(ulAddress & 0xFF);
+		ucCdb[ 6] = static_cast<unsigned char>(ulBlockCount >> 16);
+		ucCdb[ 7] = static_cast<unsigned char>(ulBlockCount >>  8);
+		ucCdb[ 8] = static_cast<unsigned char>(ulBlockCount & 0xFF);
+		ucCdb[ 9] = static_cast<unsigned char>(0 | MCD | ErrorInfo);
 		ucCdb[11] = 0;
 
 		switch (SCD)
@@ -370,7 +370,7 @@ bool CCore2Read::ReadData(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 		}
 
 		if (pProgress != NULL)
-			pProgress->set_progress((int)(((double)l/ulEndBlock) * 100));
+			pProgress->set_progress((unsigned char)(((double)l/ulEndBlock) * 100));
 		ulWritten += ulReadCount;
 	}
 

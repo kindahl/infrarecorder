@@ -92,7 +92,7 @@ void CDriveLetterDlg::FillDriveCombo()
 
 		// Get the driveletter on the form x:/
 		TCHAR szDriveLetter[4];
-		szDriveLetter[0] = i + _T('A');
+		szDriveLetter[0] = static_cast<TCHAR>(i + _T('A'));
 		szDriveLetter[1] = _T(':');
 		szDriveLetter[2] = _T('\\');
 		szDriveLetter[3] = _T('\0');

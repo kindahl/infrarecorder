@@ -18,6 +18,9 @@
 
 #pragma once
 
+#pragma warning (disable: 4100)		// "unreferenced formal parameter".
+#pragma warning (disable: 4706)		// "assignment within conditional expression".
+
 // Change these values to use different versions.
 #define WINVER			0x0400
 //#define _WIN32_WINNT	0x0400

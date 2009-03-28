@@ -26,7 +26,7 @@ CProjectDataObject::CProjectDataObject()
 	m_lRefCount = 1;
 
 	memset(&m_FormatEtc,0,sizeof(m_FormatEtc));
-	m_FormatEtc.cfFormat = ::RegisterClipboardFormat(_T(PROJECT_CF_NAME));
+	m_FormatEtc.cfFormat = static_cast<CLIPFORMAT>(::RegisterClipboardFormat(_T(PROJECT_CF_NAME)));
 	m_FormatEtc.dwAspect = DVASPECT_CONTENT;
 	m_FormatEtc.lindex = 0;
 	m_FormatEtc.ptd = NULL;

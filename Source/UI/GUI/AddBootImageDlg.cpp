@@ -105,10 +105,10 @@ LRESULT CAddBootImageDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOO
 	CheckDlgButton(IDC_NOBOOTCHECK,m_pBootImage->m_bNoBoot);
 
 	TCHAR szBuffer[32];
-	lsnprintf_s(szBuffer,32,_T("0x%x"),m_pBootImage->m_iLoadSegment);
+	lsnprintf_s(szBuffer,32,_T("0x%x"),m_pBootImage->m_uiLoadSegment);
 	SetDlgItemText(IDC_BOOTSEGMENTEDIT,szBuffer);
 
-	lsnprintf_s(szBuffer,32,_T("0x%x"),m_pBootImage->m_iLoadSize);
+	lsnprintf_s(szBuffer,32,_T("0x%x"),m_pBootImage->m_uiLoadSize);
 	SetDlgItemText(IDC_BOOTSIZEEDIT,szBuffer);
 
 	// Translate the window.
@@ -125,13 +125,13 @@ LRESULT CAddBootImageDlg::OnOK(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHan
 
 	TCHAR szBuffer[MAX_BOOTLOAD_SIZE];
 	GetDlgItemText(IDC_BOOTSEGMENTEDIT,szBuffer,MAX_BOOTLOAD_SIZE - 1);
-	lsscanf(szBuffer,_T("0x%x"),&m_pBootImage->m_iLoadSegment);
+	lsscanf(szBuffer,_T("0x%x"),&m_pBootImage->m_uiLoadSegment);
 
 	GetDlgItemText(IDC_BOOTSIZEEDIT,szBuffer,MAX_BOOTLOAD_SIZE - 1);
-	lsscanf(szBuffer,_T("0x%x"),&m_pBootImage->m_iLoadSize);
+	lsscanf(szBuffer,_T("0x%x"),&m_pBootImage->m_uiLoadSize);
 
 	TCHAR szTemp[32];
-	lsprintf(szTemp,_T("%d %d"),m_pBootImage->m_iLoadSegment,m_pBootImage->m_iLoadSize);
+	lsprintf(szTemp,_T("%d %d"),m_pBootImage->m_uiLoadSegment,m_pBootImage->m_uiLoadSize);
 
 	EndDialog(wID);
 	return FALSE;

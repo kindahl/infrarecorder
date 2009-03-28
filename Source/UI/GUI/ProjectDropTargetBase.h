@@ -32,7 +32,7 @@ private:
 		DT_IRPROJECT
 	};
 
-	unsigned char m_ucDropType;
+	eDropType m_DropType;
 	long m_lRefCount;
 
 	eDropType QueryDataObject(IDataObject *pDataObject);

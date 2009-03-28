@@ -510,8 +510,8 @@ bool CTracksDlg::EncodeTrack(const TCHAR *szFileName,CCodec *pEncoder)
 		}
 
 		// Update the progres bar.
-		int iPercent = (int)(((double)uiCurrentTime/uiDuration) * 100);
-		g_pProgressDlg->set_progress(iPercent);
+		unsigned char ucPercent = (unsigned char)(((double)uiCurrentTime/uiDuration) * 100);
+		g_pProgressDlg->set_progress(ucPercent);
 	}
 
 	// Free buffer memory.
@@ -586,10 +586,9 @@ unsigned long WINAPI CTracksDlg::ReadTrackThread(LPVOID lpThreadParameter)
 		{
 			if (bData)
 			{
-				//g_Core2.SetDiscSpeeds(&Device,0,0xFFFF);
-
-				//if (!g_Core.ReadDataTrack(pDeviceInfo,g_pProgressDlg,szFilePath,iItemIndex + 1,ulAddress,ulAddress + ulLength))
-				bool bResult = g_Core2.ReadDataTrack(&Device,g_pProgressDlg,iItemIndex + 1,true,szFilePath);
+				bool bResult = g_Core2.ReadDataTrack(&Device,g_pProgressDlg,
+													 static_cast<unsigned char>(iItemIndex + 1),
+													 true,szFilePath);
 
 				g_pProgressDlg->set_progress(100);
 				g_pProgressDlg->set_status(lngGetString(PROGRESS_DONE));
@@ -642,8 +641,8 @@ unsigned long WINAPI CTracksDlg::ReadTrackThread(LPVOID lpThreadParameter)
 		{
 			if (bData)
 			{
-				//if (g_Core.ReadDataTrackEx(pDeviceInfo,g_pProgressDlg,szFilePath,iItemIndex + 1,ulAddress,ulAddress + ulLength) != RESULT_OK)
-				if (g_Core2.ReadDataTrack(&Device,g_pProgressDlg,iItemIndex + 1,true,szFilePath))
+				if (g_Core2.ReadDataTrack(&Device,g_pProgressDlg,static_cast<unsigned char>(iItemIndex + 1),
+										  true,szFilePath))
 				{
 					g_pProgressDlg->set_progress(0);
 				}

@@ -70,7 +70,7 @@ bool CCore2Info::ReadTrackInformation(CCore2Device *pDevice,eTrackInfoType InfoT
 	memset(ucCdb,0,sizeof(ucCdb));
 
 	ucCdb[0] = SCSI_READ_TRACK_INFORMATION;
-	ucCdb[1] = InfoType & 0x3;
+	ucCdb[1] = static_cast<unsigned char>(InfoType & 0x3);
 	ucCdb[2] = 0;
 	ucCdb[2] = (unsigned char)(ulTrackAddr >> 24);
 	ucCdb[3] = (unsigned char)(ulTrackAddr >> 16);
@@ -425,7 +425,7 @@ bool CCore2Info::GetDiscDVDRegion(CCore2Device *pDevice,unsigned char &ucRegion)
 
 	if (ucRegMask != 0xFF)
 	{
-		for (unsigned int i = 0; i < 8; i++)
+		for (unsigned char i = 0; i < 8; i++)
 		{
 			if (!((ucRegMask >> i) & 0x01))
 				ucRegion = i + 1;

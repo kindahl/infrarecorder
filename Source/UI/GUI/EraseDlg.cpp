@@ -99,7 +99,6 @@ bool CEraseDlg::InitRecorderMedia()
 
 	// Open the device.
 	UINT_PTR uiDeviceIndex = m_RecorderCombo.GetItemData(m_RecorderCombo.GetCurSel());
-	tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(uiDeviceIndex);
 	tDeviceCap *pDeviceCap = g_DeviceManager.GetDeviceCap(uiDeviceIndex);
 
 	// Get current profile.

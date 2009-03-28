@@ -611,7 +611,7 @@ CIDA *CShellListViewCtrl::BeginGetItems(bool bSelected)
 
 	// CFSTR_SHELLIDLIST
 	FORMATETC fetc;
-	fetc.cfFormat = CF_IDLIST;
+	fetc.cfFormat = static_cast<CLIPFORMAT>(CF_IDLIST);
 	fetc.dwAspect = DVASPECT_CONTENT;
 	fetc.ptd = NULL;
 	fetc.lindex = -1;

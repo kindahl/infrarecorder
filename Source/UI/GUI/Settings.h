@@ -299,8 +299,8 @@ class CProjectBootImage	// FIXME: Make m_iLoadSegment and m_iLoadSize unsigned s
 public:
 	bool m_bNoBoot;
 	int m_iEmulation;
-	int m_iLoadSegment;
-	int m_iLoadSize;
+	ckcore::tuint16 m_uiLoadSegment;
+	ckcore::tuint16 m_uiLoadSize;
 	ckcore::tstring m_FullPath;			// Full path to the file on the harddrive.
 	ckcore::tstring m_LocalName;		// Internal name.
 
@@ -308,8 +308,8 @@ public:
 	{
 		m_bNoBoot = false;
 		m_iEmulation = PROJECTBI_BOOTEMU_FLOPPY;
-		m_iLoadSegment = 0x7c0;
-		m_iLoadSize = 4;
+		m_uiLoadSegment = 0x7c0;
+		m_uiLoadSize = 4;
 	}
 };
 

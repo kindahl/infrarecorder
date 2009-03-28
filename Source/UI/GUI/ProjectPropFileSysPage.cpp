@@ -101,7 +101,7 @@ LRESULT CProjectPropFileSysPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lPa
 	bool bFoundItem = false;
 	for (int i = 0; i < m_FileSysCombo.GetCount(); i++)
 	{
-		if (m_FileSysCombo.GetItemData(i) == g_ProjectSettings.m_iFileSystem)
+		if (static_cast<int>(m_FileSysCombo.GetItemData(i)) == g_ProjectSettings.m_iFileSystem)
 		{
 			m_FileSysCombo.SetCurSel(i);
 			bFoundItem = true;

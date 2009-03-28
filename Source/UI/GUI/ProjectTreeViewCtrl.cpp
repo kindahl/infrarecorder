@@ -102,7 +102,7 @@ bool CProjectTreeViewDropTarget::HandleDropData(IDataObject *pDataObject,CProjec
 	}
 	else
 	{
-		FormatEtc.cfFormat = m_uiClipFormat;
+		FormatEtc.cfFormat = static_cast<CLIPFORMAT>(m_uiClipFormat);
 		if (pDataObject->QueryGetData(&FormatEtc) == S_OK)
 		{
 			if (pDataObject->GetData(&FormatEtc,&StgMedium) == S_OK)
@@ -215,7 +215,7 @@ void CProjectTreeViewCtrl::BeginDrag(LPNMTREEVIEW pNMTreeView)
 	pDataObject->SetParent((CProjectNode *)GetItemData(GetParentItem(pNMTreeView->itemNew.hItem)));
 
 	DWORD dwEffect = 0;
-	DWORD dwResult = ::DoDragDrop(pDataObject,pDropSource,DROPEFFECT_MOVE,&dwEffect);
+	::DoDragDrop(pDataObject,pDropSource,DROPEFFECT_MOVE,&dwEffect);
 
 	pDropSource->Release();
 	pDataObject->Release();

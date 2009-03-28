@@ -521,7 +521,7 @@ void CCore::ReadDataTrackOutput(const char *szBuffer)
 		unsigned __int64 uiCount = 0;
 
 		if (sscanf(szBuffer,"addr: %8ld cnt: %ld",&uiAddress,&uiCount) == 2)
-			m_pProgress->set_progress((int)(((double)(uiAddress - m_TrackSize[0])/m_uiTotalSize) * 100));
+			m_pProgress->set_progress((unsigned char)(((double)(uiAddress - m_TrackSize[0])/m_uiTotalSize) * 100));
 	}
 	else if (!strncmp(szBuffer,CDRTOOLS_TOTALTIME,CDRTOOLS_TOTALTIME_LENGTH))
 	{
@@ -554,7 +554,7 @@ void CCore::ScanTrackOutput(const char *szBuffer)
 		unsigned __int64 uiCount = 0;
 
 		if (sscanf(szBuffer,"addr: %8ld cnt: %ld",&uiAddress,&uiCount) == 2)
-			m_pProgress->set_progress((int)(((double)(uiAddress - m_TrackSize[0])/m_uiTotalSize) * 100));
+			m_pProgress->set_progress((unsigned char)(((double)(uiAddress - m_TrackSize[0])/m_uiTotalSize) * 100));
 	}
 	else if (!strncmp(szBuffer,CDRTOOLS_TOTALTIME,CDRTOOLS_TOTALTIME_LENGTH))
 	{
@@ -606,7 +606,7 @@ void CCore::ReadDiscOutput(const char *szBuffer)
 		unsigned __int64 uiCount = 0;
 
 		if (sscanf(szBuffer,"addr: %8ld cnt: %ld",&uiAddress,&uiCount) == 2)
-			m_pProgress->set_progress((int)(((double)uiAddress/m_uiTotalSize) * 100));
+			m_pProgress->set_progress((unsigned char)(((double)uiAddress/m_uiTotalSize) * 100));
 	}
 	else if (!strncmp(szBuffer,CDRTOOLS_TOTALTIME,CDRTOOLS_TOTALTIME_LENGTH))
 	{
@@ -812,11 +812,11 @@ void CCore::event_output(const std::string &block)
 		// Update the status.
 		m_pProgress->set_status(lngGetString(STATUS_WRITE),m_uiCurrentTrack + 1,(int)m_TrackSize.size(),fSpeed);
 
-		m_pProgress->set_progress((int)(((double)(iWritten + m_uiProcessedSize)/m_uiTotalSize) * 100));
+		m_pProgress->set_progress((unsigned char)(((double)(iWritten + m_uiProcessedSize)/m_uiTotalSize) * 100));
 		m_pProgress->SetBuffer(iBuffer);
 
 		// Check if we're done writing the track.
-		if (iWritten != 0 && iWritten == m_TrackSize[m_uiCurrentTrack])
+		if (iWritten != 0 && iWritten == static_cast<__int64>(m_TrackSize[m_uiCurrentTrack]))
 		{
 			m_uiCurrentTrack++;
 
@@ -834,7 +834,7 @@ void CCore::event_output(const std::string &block)
 	else if (m_iStatusMode == SMODE_AUDIOPROGRESS)
 	{
 		int iProgress = atoi(block.c_str());
-		m_pProgress->set_progress(iProgress);
+		m_pProgress->set_progress((unsigned char)iProgress);
 
 		if (iProgress == 100)
 		{

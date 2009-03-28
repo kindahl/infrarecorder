@@ -79,7 +79,7 @@ bool CCore2Format::WaitBkgndFormat(CCore2Device *pDevice,CAdvancedProgress *pPro
 					if (ucSense[15] & 0x80)
 					{
 						unsigned short usProgress = ((unsigned short)ucSense[16] << 8) | ucSense[17];
-						pProgress->set_progress((int)(usProgress * 100.0f / 0xFFFF));
+						pProgress->set_progress((unsigned char)(usProgress * 100.0f / 0xFFFF));
 					}
 					else
 					{

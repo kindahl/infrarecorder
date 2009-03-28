@@ -155,7 +155,6 @@ bool CBurnImageGeneralPage::InitRecorderMedia()
 
 	// Open the device.
 	UINT_PTR uiDeviceIndex = m_RecorderCombo.GetItemData(m_RecorderCombo.GetCurSel());
-	tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(uiDeviceIndex);
 	tDeviceCap *pDeviceCap = g_DeviceManager.GetDeviceCap(uiDeviceIndex);
 
 	// Get current profile.
@@ -220,7 +219,7 @@ bool CBurnImageGeneralPage::InitRecorderMedia()
 		// Maximum write speed.
 		m_WriteSpeedCombo.ResetContent();
 		m_WriteSpeedCombo.AddString(lngGetString(MISC_MAXIMUM));
-		m_WriteSpeedCombo.SetItemData(0,/*0xFFFFFFFF*/-1);
+		m_WriteSpeedCombo.SetItemData(0,static_cast<DWORD_PTR>(-1));
 		m_WriteSpeedCombo.SetCurSel(0);
 
 		// Other supported write speeds.
@@ -273,9 +272,6 @@ bool CBurnImageGeneralPage::InitRecorderMedia()
 
 void CBurnImageGeneralPage::SuggestWriteMethod()
 {
-	UINT_PTR uiDeviceIndex = m_RecorderCombo.GetItemData(m_RecorderCombo.GetCurSel());
-	tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(uiDeviceIndex);
-
 	// Suggest the best raw write method if the image has an associated TOC file.
 	if (m_bImageHasTOC)
 	{

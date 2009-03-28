@@ -1028,7 +1028,6 @@ LRESULT CMainFrame::OnCreate(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandle
 	mii.fMask = MIIM_FTYPE;
 	mii.fType = MFT_RADIOCHECK;
 
-	HMENU hMainMenu = m_CmdBar.GetMenu();
 	SetMenuItemInfo(m_hProjListNoSelMenu,ID_VIEW_LARGEICONS,FALSE,&mii);
 	SetMenuItemInfo(m_hProjListNoSelMenu,ID_VIEW_SMALLICONS,FALSE,&mii);
 	SetMenuItemInfo(m_hProjListNoSelMenu,ID_VIEW_LIST,FALSE,&mii);
@@ -1671,7 +1670,7 @@ HTREEITEM CMainFrame::FindItemFromPath(LPITEMIDLIST pidl)
 
 LRESULT CMainFrame::OnSLVChangeFolder(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
-	const LPCITEMIDLIST pidl = (LPCITEMIDLIST)wParam;
+	//const LPCITEMIDLIST pidl = (LPCITEMIDLIST)wParam;
 	const TCHAR *szNewPathName = (TCHAR *)lParam;
 
 	TCHAR szFullPath[MAX_PATH];
@@ -1690,7 +1689,7 @@ LRESULT CMainFrame::OnSLVChangeFolder(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL
 
 LRESULT CMainFrame::OnSLVChangeFolderLink(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
-	const LPCITEMIDLIST pidl = (LPCITEMIDLIST)wParam;
+	//const LPCITEMIDLIST pidl = (LPCITEMIDLIST)wParam;
 	const TCHAR *szNewPathName = (TCHAR *)lParam;
 
 	TCHAR szFullPath[MAX_PATH];
@@ -1958,7 +1957,7 @@ LRESULT CMainFrame::OnSTVBeginDrag(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled)
 	pDataObject->AddFile(szFileName);
 
 	DWORD dwEffect = 0;
-	DWORD dwResult = ::DoDragDrop(pDataObject,pDropSource,DROPEFFECT_COPY,&dwEffect);
+	::DoDragDrop(pDataObject,pDropSource,DROPEFFECT_COPY,&dwEffect);
 
 	pDropSource->Release();
 	pDataObject->Release();

@@ -1437,7 +1437,6 @@ INT_PTR CActionManager::Erase(HWND hWndParent,bool bAppMode)
 	if (iResult == IDOK)
 	{
 		tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(g_EraseSettings.m_iRecorder);
-		tDeviceCap *pDeviceCap = g_DeviceManager.GetDeviceCap(g_EraseSettings.m_iRecorder);
 
 		// Disable the parent window.
 		if (hWndParent != NULL)

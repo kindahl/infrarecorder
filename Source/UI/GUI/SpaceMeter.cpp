@@ -79,7 +79,6 @@ void CSpaceMeter::FillPopupMenu()
 {
 	// Remove the old items.
 	int iMenuItemCount = GetMenuItemCount(m_hPopupMenu);
-	int iMenuIndex = 0;
 	for (int i = iMenuItemCount - 1; i >= 0; i--)
 		RemoveMenu(m_hPopupMenu,i,MF_BYPOSITION);
 
@@ -550,7 +549,6 @@ LRESULT CSpaceMeter::OnCreate(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandl
 LRESULT CSpaceMeter::OnSize(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
 	LRESULT lResult = DefWindowProc(uMsg,wParam,lParam);
-	unsigned long ulNewSize = LOWORD(lParam);
 
 	unsigned int uiWidth = LOWORD(lParam);
 	UpdateMeter(uiWidth);
