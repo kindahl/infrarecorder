@@ -16,6 +16,13 @@ In order to compile InfraRecorder you will need the following libraries:
 InfraRecorder uses cdrtools, sources can be found at:
 http://cdrecord.berlios.de/
 
+InfraRecorder has been developed with Visual C++ 2005 Professional edition. It
+is however possible to compile the sources with the free "Express" edition, but
+you will need to separately obtain and install the ATL library headers. The
+Microsoft Windows Server 2003 R2 Platform SDK (also free) was the last
+Windows SDK version to ship with the ATL headers. The bundled ATL 3.0 is rather
+old, but it is still supported by the latest WTL library.
+
 The graphics used in InfraRecorder are NOT covered by GPL. The official
 InfraRecorder logo (the logo used in official InfraRecorder binaries), and all
 other graphics using it are licensed under the Creative Commons
