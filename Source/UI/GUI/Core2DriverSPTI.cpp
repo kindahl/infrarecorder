@@ -22,19 +22,11 @@
 #include "LogDlg.h"
 #include "SCSI.h"
 
-typedef struct _SCSI_PASS_THROUGH_WITH_BUFFERS
-{
-        SCSI_PASS_THROUGH spt;
-        ULONG Filler;							// Realign buffers to double word boundary.
-        UCHAR ucSenseBuf[32];
-        UCHAR ucDataBuf[512];
-} SCSI_PASS_THROUGH_WITH_BUFFERS, *PSCSI_PASS_THROUGH_WITH_BUFFERS;
-
 typedef struct _SCSI_PASS_THROUGH_DIRECT_WITH_BUFFER
 {
-        SCSI_PASS_THROUGH_DIRECT spt;
-        ULONG Filler;							// Realign buffer to double word boundary.
-        UCHAR ucSenseBuf[32];
+	SCSI_PASS_THROUGH_DIRECT spt;
+	ULONG Filler;							// Realign buffer to double word boundary.
+	UCHAR ucSenseBuf[32];
 } SCSI_PASS_THROUGH_DIRECT_WITH_BUFFER, *PSCSI_PASS_THROUGH_DIRECT_WITH_BUFFER;
 
 CCore2DriverSPTI::CCore2DriverSPTI()
@@ -325,10 +317,6 @@ bool CCore2DriverSPTI::Transport(unsigned char *pCdb,unsigned char ucCdbLength,
 		return false;
 	}
 
-/*#ifdef _DEBUG
-	g_pLogDlg->print_line(_T("DEBUG: Command 0x%.2X returned %d bytes of data."),pCdb[0],ulReturned);
-#endif*/
-
 	return true;
 }
 
@@ -356,7 +344,6 @@ bool CCore2DriverSPTI::TransportWithSense(unsigned char *pCdb,unsigned char ucCd
 	sptwb.spt.DataTransferLength = ulDataLength;
 	sptwb.spt.DataBuffer = pData;
 	sptwb.spt.CdbLength = ucCdbLength;
-	//sptwb.spt.TargetId = 1;
 	memcpy(sptwb.spt.Cdb,pCdb,ucCdbLength);
 
 	if (m_iNextTimeOut < 0)
@@ -397,10 +384,6 @@ bool CCore2DriverSPTI::TransportWithSense(unsigned char *pCdb,unsigned char ucCd
 
 		return false;
 	}
-
-/*#ifdef _DEBUG
-	g_pLogDlg->print_line(_T("DEBUG: Command 0x%.2X returned %d bytes of data."),pCdb[0],ulReturned);
-#endif*/
 
 	memcpy(pSense,sptwb.ucSenseBuf,24);
 	ucResult = sptwb.spt.ScsiStatus;
