@@ -25,7 +25,7 @@
 #include "AdvancedProgress.h"
 
 #define CORE_IGNORE_ERRORINFOMESSAGES		// Should we ignore error information message (copyright etc.)?
-//#define CORE_PRINT_UNSUPERRORMESSAGES		// Should we print unhandled/unsupported messages to the log window?
+#define CORE_PRINT_UNSUPERRORMESSAGES		// Should we print unhandled/unsupported messages to the log window?
 #define CORE_DVD_SUPPORT					// Is DVD recording supported in this version?
 
 #define RESULT_INTERNALERROR		0
