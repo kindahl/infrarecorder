@@ -106,7 +106,7 @@ void CDriveLetterDlg::FillDriveCombo()
 		for (unsigned int j = 0; j < g_DeviceManager.GetDeviceCount(); j++)
 		{
 			pDeviceInfo = g_DeviceManager.GetDeviceInfo(j);
-			if (pDeviceInfo->Address.m_cDriveLetter == NULL)
+			if (pDeviceInfo->Address.m_cDriveLetter == '\0')
 				continue;
 
 			if (pDeviceInfo->Address.m_cDriveLetter == szDriveLetter[0])

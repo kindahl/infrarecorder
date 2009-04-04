@@ -28,7 +28,7 @@ public:
 
 	CCore2DeviceAddress()
 	{
-		m_cDriveLetter = NULL;
+		m_cDriveLetter = '\0';
 		m_iBus = -1;
 		m_iTarget = -1;
 		m_iLun = -1;

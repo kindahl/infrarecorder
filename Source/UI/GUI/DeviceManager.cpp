@@ -160,7 +160,7 @@ void CDeviceManager::ScanBusOutput(const char *szBuffer)
 		TrimRight(pDeviceInfo->szRevision);
 
 		// Get the device drive letter.
-		pDeviceInfo->Address.m_cDriveLetter = NULL;
+		pDeviceInfo->Address.m_cDriveLetter = '\0';
 		if (pDeviceInfo->iType == DEVICEMANAGER_TYPE_CDROM)
 		{
 			bool bFoundDriveLetter = true;
@@ -902,7 +902,8 @@ bool CDeviceManager::IsDeviceDVDRecorder(UINT_PTR uiIndex)
 
 void CDeviceManager::GetDeviceName(tDeviceInfo *pDeviceInfo,TCHAR *szDeviceName)
 {
-	lsprintf(szDeviceName,_T("%s %s %s"),
+	lsprintf(szDeviceName,_T("%C: %s %s %s"),
+		pDeviceInfo->Address.m_cDriveLetter,
 		pDeviceInfo->szVendor,
 		pDeviceInfo->szIdentification,
 		pDeviceInfo->szRevision);
