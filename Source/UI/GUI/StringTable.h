@@ -398,7 +398,10 @@ enum eStringTable
 
 	// Added version 0.47.
 	ERROR_PROJECT_IMPORT,
-	ERROR_PROJECT_IMPORT_FILE
+	ERROR_PROJECT_IMPORT_FILE,
+
+	// Added version 0.48.
+	COLUMN_DRIVE
 };
 
 extern TCHAR *g_szStringTable[];

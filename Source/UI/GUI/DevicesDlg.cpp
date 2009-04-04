@@ -78,6 +78,8 @@ void CDevicesDlg::FillListView()
 
 		tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(i);
 
+		TCHAR szBuffer[64];
+
 		if (pDeviceInfo->Address.m_iBus == -1 || pDeviceInfo->Address.m_iTarget == -1 ||
 			pDeviceInfo->Address.m_iLun == -1)
 		{
@@ -85,15 +87,17 @@ void CDevicesDlg::FillListView()
 		}
 		else
 		{
-			TCHAR szBuffer[64];
 			lsprintf(szBuffer,_T("[%d,%d,%d]"),pDeviceInfo->Address.m_iBus,
 				pDeviceInfo->Address.m_iTarget,pDeviceInfo->Address.m_iLun);
 			m_ListView.AddItem(iItemCount,0,szBuffer,0);
 		}
 
-		m_ListView.AddItem(iItemCount,1,pDeviceInfo->szVendor,0);
-		m_ListView.AddItem(iItemCount,2,pDeviceInfo->szIdentification,0);
-		m_ListView.AddItem(iItemCount,3,pDeviceInfo->szRevision,0);
+		lsprintf(szBuffer,_T("%c:"),pDeviceInfo->Address.m_cDriveLetter);
+		m_ListView.AddItem(iItemCount,1,szBuffer,0);
+
+		m_ListView.AddItem(iItemCount,2,pDeviceInfo->szVendor,0);
+		m_ListView.AddItem(iItemCount,3,pDeviceInfo->szIdentification,0);
+		m_ListView.AddItem(iItemCount,4,pDeviceInfo->szRevision,0);
 		m_ListView.SetItemData(iItemCount,i);
 
 		iItemCount++;
@@ -121,12 +125,14 @@ void CDevicesDlg::InitializeListView()
 	// Add the columns.
 	m_ListView.AddColumn(lngGetString(COLUMN_ID),0);
 	m_ListView.SetColumnWidth(0,60);
-	m_ListView.AddColumn(lngGetString(COLUMN_VENDOR),1);
-	m_ListView.SetColumnWidth(1,80);
-	m_ListView.AddColumn(lngGetString(COLUMN_IDENTIFICATION),2);
-	m_ListView.SetColumnWidth(2,120);
-	m_ListView.AddColumn(lngGetString(COLUMN_REVISION),3);
-	m_ListView.SetColumnWidth(3,60);
+	m_ListView.AddColumn(lngGetString(COLUMN_DRIVE),1);
+	m_ListView.SetColumnWidth(1,40);  // 25 is not enough for wide letters like "W:"
+	m_ListView.AddColumn(lngGetString(COLUMN_VENDOR),2);
+	m_ListView.SetColumnWidth(2,65);
+	m_ListView.AddColumn(lngGetString(COLUMN_IDENTIFICATION),3);
+	m_ListView.SetColumnWidth(3,125);
+	m_ListView.AddColumn(lngGetString(COLUMN_REVISION),4);
+	m_ListView.SetColumnWidth(4,55);
 }
 
 LRESULT CDevicesDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)

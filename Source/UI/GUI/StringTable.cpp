@@ -401,5 +401,8 @@ TCHAR *g_szStringTable[] = {
 
 	// Added version 0.47.
 	_T("Unable to import, does the selected source file exist?"),
-	_T("Could not import the file \"%s\".")
+	_T("Could not import the file \"%s\"."),
+
+	// Added version 0.48.
+	_T("Drive")
 };
