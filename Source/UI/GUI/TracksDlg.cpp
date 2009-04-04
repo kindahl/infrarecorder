@@ -17,10 +17,9 @@
  */
 
 #include "stdafx.h"
-#include "TracksDlg.h"
+#include "../../Common/StringUtil.h"
 #include "DeviceManager.h"
 #include "StringTable.h"
-#include "../../Common/StringUtil.h"
 #include "SCSI.h"
 #include "WaitDlg.h"
 #include "WinVer.h"
@@ -32,6 +31,7 @@
 #include "Settings.h"
 #include "SaveTracksDlg.h"
 #include "DriveLetterDlg.h"
+#include "TracksDlg.h"
 
 CTracksDlg::CTracksDlg(bool bAppMode)
 {
@@ -866,6 +866,30 @@ LRESULT CTracksDlg::OnListItemChanged(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled)
 	}
 
 	bHandled = false;
+	return 0;
+}
+
+LRESULT CTracksDlg::OnListKeyDown(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled)
+{
+    LPNMLVKEYDOWN KeyDown = (LPNMLVKEYDOWN)pNMH;
+
+	// Ctrl+A = select all
+	if (KeyDown->wVKey == _T('A') && (GetKeyState(VK_CONTROL) & 0x8000))
+	{
+		const int iItemCount = m_ListView.GetItemCount();
+
+		for (int i = 0; i < iItemCount; ++i )
+		{
+			ATLVERIFY(TRUE == m_ListView.SetItemState(i,LVIS_SELECTED,LVIS_SELECTED));
+		}
+
+		bHandled = TRUE;
+	}
+	else
+	{
+		bHandled = FALSE;
+	}
+
 	return 0;
 }
 

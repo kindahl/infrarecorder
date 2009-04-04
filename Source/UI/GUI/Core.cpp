@@ -369,7 +369,7 @@ void CCore::ErrorOutputCDRECORD(const char *szBuffer)
 		else
 		{
 			m_pProgress->notify(ckcore::Progress::ckEXTERNAL,
-								ckcore::string::ansi_to_auto<1024>(szBuffer)).c_str());
+								ckcore::string::ansi_to_auto<1024>(szBuffer).c_str());
 		}
 #endif
 	}
@@ -400,7 +400,7 @@ void CCore::ErrorOutputREADCD(const char *szBuffer)
 		else
 		{
 			m_pProgress->notify(ckcore::Progress::ckEXTERNAL,
-								ckcore::string::ansi_to_auto<1024>(szBuffer)).c_str());
+								ckcore::string::ansi_to_auto<1024>(szBuffer).c_str());
 		}
 #endif
 	}

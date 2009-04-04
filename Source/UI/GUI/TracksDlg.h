@@ -59,6 +59,7 @@ public:
 	CTracksDlg(bool bAppMode);
 	~CTracksDlg();
 
+private:
 	BEGIN_MSG_MAP(CTracksDlg)
 		MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
 		COMMAND_HANDLER(IDC_DEVICECOMBO,CBN_SELCHANGE,OnDeviceChange)
@@ -67,6 +68,7 @@ public:
 		COMMAND_ID_HANDLER(ID_TRACK_ERASE,OnEraseTrack)
 		NOTIFY_CODE_HANDLER(TTN_GETDISPINFO,OnToolBarGetInfo)
 		NOTIFY_HANDLER(IDC_TRACKLIST,LVN_ITEMCHANGED,OnListItemChanged)
+		NOTIFY_HANDLER(IDC_TRACKLIST,LVN_KEYDOWN,OnListKeyDown)
 
 		COMMAND_ID_HANDLER(IDOK,OnOK)
 		COMMAND_ID_HANDLER(IDCANCEL,OnOK)
@@ -80,6 +82,7 @@ public:
 	LRESULT OnEraseTrack(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
 	LRESULT OnToolBarGetInfo(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled);
 	LRESULT OnListItemChanged(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled);
+	LRESULT OnListKeyDown(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled);
 
 	LRESULT OnOK(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
 	LRESULT OnHelp(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
