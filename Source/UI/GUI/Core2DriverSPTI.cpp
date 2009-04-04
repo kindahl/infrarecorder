@@ -31,7 +31,7 @@ typedef struct _SCSI_PASS_THROUGH_DIRECT_WITH_BUFFER
 
 CCore2DriverSPTI::CCore2DriverSPTI()
 {
-	m_hDevice = NULL;
+	m_hDevice = INVALID_HANDLE_VALUE;
 	m_iNextTimeOut = -1;	// Use default.
 	m_bLog = true;
 }
@@ -184,7 +184,7 @@ bool CCore2DriverSPTI::GetDriveAddress(TCHAR cDriveLetter,
 
 bool CCore2DriverSPTI::Open(TCHAR cDriveLetter)
 {
-	if (m_hDevice != NULL)
+	if (m_hDevice != INVALID_HANDLE_VALUE)
 	{
 		if (!Close())
 			return false;
@@ -203,12 +203,12 @@ bool CCore2DriverSPTI::Open(TCHAR cDriveLetter)
 
 bool CCore2DriverSPTI::Close()
 {
-	if (m_hDevice == NULL)
+	if (m_hDevice == INVALID_HANDLE_VALUE)
 		return false;
 
 	if (CloseHandle(m_hDevice) != FALSE)
 	{
-		m_hDevice = NULL;
+		m_hDevice = INVALID_HANDLE_VALUE;
 		return true;
 	}
 
@@ -224,7 +224,7 @@ bool CCore2DriverSPTI::SetNextTimeOut(unsigned int uiTimeOut)
 bool CCore2DriverSPTI::Transport(unsigned char *pCdb,unsigned char ucCdbLength,
 								 unsigned char *pData,unsigned long ulDataLength,int iDataMode)
 {
-	if (m_hDevice == NULL)
+	if (m_hDevice == INVALID_HANDLE_VALUE)
 		return false;
 
 	// Verify CDB data.
@@ -324,7 +324,7 @@ bool CCore2DriverSPTI::TransportWithSense(unsigned char *pCdb,unsigned char ucCd
 										  unsigned char *pData,unsigned long ulDataLength,
 										  unsigned char *pSense,unsigned char &ucResult,int iDataMode)
 {
-	if (m_hDevice == NULL)
+	if (m_hDevice == INVALID_HANDLE_VALUE)
 		return false;
 
 	// Verify CDB data.
