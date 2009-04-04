@@ -1124,7 +1124,7 @@ bool CCore::BurnImage(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 		g_pLogDlg->print_line(_T("  [%d,%d,%d] %s %s %s"),pDeviceInfo->Address.m_iBus,pDeviceInfo->Address.m_iTarget,
 			pDeviceInfo->Address.m_iLun,pDeviceInfo->szVendor,pDeviceInfo->szIdentification,pDeviceInfo->szRevision);
 		g_pLogDlg->print_line(_T("  File = %s."),szFileName);
-		g_pLogDlg->print_line(_T("  Eject = %d, Simulate = %d, BUP = %d, Pad tracks = %d, Fixate = %d, Overburn = %d, Swab = %d, Ignore size = %d, Immed = %d, Audio master = %d, Forcespeed = %d, VariRec (enabled) = %d, VariRec (value) = %d, Clone = %d."),
+		g_pLogDlg->print_line(_T("  Eject = %d, Simulate = %d, BUP = %d, Pad tracks = %d, Close = %d, Overburn = %d, Swab = %d, Ignore size = %d, Immed = %d, Audio master = %d, Forcespeed = %d, VariRec (enabled) = %d, VariRec (value) = %d, Clone = %d."),
 			(int)g_BurnImageSettings.m_bEject,
 			(int)g_BurnImageSettings.m_bSimulate,
 			(int)g_BurnImageSettings.m_bBUP,
@@ -1349,7 +1349,7 @@ bool CCore::BurnTracks(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 		if (szDataTrack != NULL)
 			g_pLogDlg->print_line(_T("  File = %s."),szDataTrack);
 
-		g_pLogDlg->print_line(_T("  Eject = %d, Simulate = %d, BUP = %d, Pad tracks = %d, Fixate = %d, Method = %d, Overburn = %d, Swab = %d, Ignore size = %d, Immed = %d, Audio master = %d, Forcespeed = %d, VariRec (enabled) = %d, VariRec (value) = %d, Mode = %d."),
+		g_pLogDlg->print_line(_T("  Eject = %d, Simulate = %d, BUP = %d, Pad tracks = %d, Close = %d, Method = %d, Overburn = %d, Swab = %d, Ignore size = %d, Immed = %d, Audio master = %d, Forcespeed = %d, VariRec (enabled) = %d, VariRec (value) = %d, Mode = %d."),
 			(int)g_BurnImageSettings.m_bEject,
 			(int)g_BurnImageSettings.m_bSimulate,
 			(int)g_BurnImageSettings.m_bBUP,
@@ -1868,7 +1868,7 @@ bool CCore::CopyDisc(tDeviceInfo *pSourceDeviceInfo,tDeviceInfo *pTargetDeviceIn
 			pSourceDeviceInfo->Address.m_iLun,pSourceDeviceInfo->szVendor,pSourceDeviceInfo->szIdentification,pSourceDeviceInfo->szRevision);
 		g_pLogDlg->print_line(_T("  Target: [%d,%d,%d] %s %s %s"),pTargetDeviceInfo->Address.m_iBus,pTargetDeviceInfo->Address.m_iTarget,
 			pTargetDeviceInfo->Address.m_iLun,pTargetDeviceInfo->szVendor,pTargetDeviceInfo->szIdentification,pTargetDeviceInfo->szRevision);
-		g_pLogDlg->print_line(_T("  Eject = %d, Simulate = %d, BUP = %d, Pad tracks = %d, Fixate = %d, Overburn = %d, Swab = %d, Ignore size = %d, Immed = %d, Audio master = %d, Forcespeed = %d, VariRec (enabled) = %d, VariRec (value) = %d, Ignore read errors = %d."),
+		g_pLogDlg->print_line(_T("  Eject = %d, Simulate = %d, BUP = %d, Pad tracks = %d, Close = %d, Overburn = %d, Swab = %d, Ignore size = %d, Immed = %d, Audio master = %d, Forcespeed = %d, VariRec (enabled) = %d, VariRec (value) = %d, Ignore read errors = %d."),
 			(int)g_BurnImageSettings.m_bEject,
 			(int)g_BurnImageSettings.m_bSimulate,
 			(int)g_BurnImageSettings.m_bBUP,
@@ -2239,7 +2239,7 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 		g_pLogDlg->print_line(_T("CCore::BurnCompilation"));
 		g_pLogDlg->print_line(_T("  [%d,%d,%d] %s %s %s"),pDeviceInfo->Address.m_iBus,pDeviceInfo->Address.m_iTarget,
 			pDeviceInfo->Address.m_iLun,pDeviceInfo->szVendor,pDeviceInfo->szIdentification,pDeviceInfo->szRevision);
-		g_pLogDlg->print_line(_T("  Eject = %d, Simulate = %d, BUP = %d, Pad tracks = %d, Fixate = %d, Overburn = %d, Swab = %d, Ignore size = %d, Immed = %d, Audio master = %d, Forcespeed = %d, VariRec (enabled) = %d, VariRec (value) = %d, Data bytes %I64d."),
+		g_pLogDlg->print_line(_T("  Eject = %d, Simulate = %d, BUP = %d, Pad tracks = %d, Close = %d, Overburn = %d, Swab = %d, Ignore size = %d, Immed = %d, Audio master = %d, Forcespeed = %d, VariRec (enabled) = %d, VariRec (value) = %d, Data bytes %I64d."),
 			(int)g_BurnImageSettings.m_bEject,
 			(int)g_BurnImageSettings.m_bSimulate,
 			(int)g_BurnImageSettings.m_bBUP,

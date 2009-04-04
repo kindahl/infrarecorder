@@ -192,7 +192,7 @@ TCHAR *g_szStringTable[] = {
 	_T("Operation canceled."),
 	_T("Last chance to abort, operation will start in %d seconds."),
 	_T("Started to erase disc in %s mode."),
-	_T("Started to fixate disc in %s mode."),
+	_T("Started to close disc in %s mode."),
 	_T("Started to write disc in %s mode."),
 	_T("Started to write track %d."),
 	_T("Started to write disc image."),
@@ -207,7 +207,7 @@ TCHAR *g_szStringTable[] = {
 	_T("Writing track %d of %d at %.1fx speed."),
 	_T("Writing pregap for track %d at %ld."),
 	_T("Waiting for reader process to fill input buffer."),
-	_T("Fixating."),
+	_T("Closing disc."),
 	_T("Writing disc image."),
 	_T("Reading track."),
 	_T("Scanning track."),
@@ -220,7 +220,7 @@ TCHAR *g_szStringTable[] = {
 	_T("Burning Image"),
 	_T("Creating Image"),
 	_T("Burning Compilation"),
-	_T("Fixating Disc"),
+	_T("Closing Disc"),
 	_T("Reading Track"),
 	_T("Scanning Track"),
 	_T("Copying Disc"),
@@ -228,14 +228,14 @@ TCHAR *g_szStringTable[] = {
 	// Sucess messages.
 	_T("The disc was successfully erased."),
 	_T("The data was successfully written to the disc."),
-	_T("The disc was successfully fixated."),
+	_T("The disc was successfully closed."),
 	_T("The disc image was successfully created."),
 	_T("Done reading track %d."),
 	_T("Done scanning track %d."),
 	_T("Done reading disc."),
 
 	// Warning messages.
-	_T("Some drives don't like fixation in simulation mode."),
+	_T("Some drives don't like closing in simulation mode."),
 
 	// Information messages.
 	_T("Some recorders does not support all erase modes."),
@@ -261,7 +261,7 @@ TCHAR *g_szStringTable[] = {
 	_T("Not region protected"),
 	_T("blank"),
 	_T("incomplete"),
-	_T("fixated"),
+	_T("closed"),
 	_T("random access"),
 	_T("empty"),
 	_T("reserved"),
@@ -369,7 +369,7 @@ TCHAR *g_szStringTable[] = {
 	_T("Copy"),
 	_T("Tracks"),
 	_T("Erase"),
-	_T("Fixate"),
+	_T("Close"),
 	_T("Log"),
 	_T("Configuration"),
 	_T("Devices"),
@@ -379,7 +379,7 @@ TCHAR *g_szStringTable[] = {
 	_T("(please insert a blank disc)"),
 	_T("Please insert the blank disc which should be recorded."),
 	_T("Please insert the source disc that should be copied."),
-	_T("Please note that disabling the fixation step does not create a multi-session disc. Please see the help documentation for more information."),
+	_T("Please note that disabling the closing step does not create a multi-session disc. Please see the help documentation for more information."),
 
 	// Added version 0.45.
 	_T("Unable to automatically reload the media. Please try to reload it manually, and then press OK."),
