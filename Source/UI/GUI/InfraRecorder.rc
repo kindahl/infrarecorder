@@ -168,10 +168,10 @@ BEGIN
     CONTROL         277,IDC_LOGOSTATIC,"Static",SS_BITMAP | SS_REALSIZEIMAGE,0,0,146,49
     LTEXT           "Copyright © 2006-2009 Christian Kindahl\n\nInfraRecorder comes with absolutely no warranty. This is free software, and you are welcome to redistribute it under certain conditions; please see License.txt for more information.",IDC_INFOSTATIC,7,52,225,43
     CONTROL         "",IDC_BEVELSTATIC2,"Static",SS_ETCHEDHORZ | WS_GROUP,0,171,239,1,WS_EX_STATICEDGE
-    RTEXT           "",IDC_VERSIONSTATIC,147,4,85,27
     LTEXT           "Installed codecs (double-click to view copyright note):",IDC_CODECSSTATIC,7,100,170,8
     CONTROL         "",IDC_CODECLIST,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,111,225,53
     PUSHBUTTON      "Website",IDC_WEBSITEBUTTON,7,181,50,14
+    EDITTEXT        IDC_VERSIONEDIT,147,4,85,27,ES_RIGHT | ES_MULTILINE | ES_AUTOHSCROLL | ES_READONLY | NOT WS_BORDER,WS_EX_TRANSPARENT
 END
 
 IDD_PROPPAGE_DEVICEGENERAL DIALOGEX 0, 0, 227, 209

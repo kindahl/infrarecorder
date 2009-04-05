@@ -250,6 +250,7 @@
 #define IDC_WHITESTATIC                 1155
 #define IDC_HELPBUTTON                  1157
 #define IDC_VERSIONSTATIC               1160
+#define IDC_VERSIONEDIT	                1160
 #define IDC_ASSOCIATECHECK              1161
 #define IDC_CLONECHECK                  1161
 #define IDC_NOREADERRCHECK              1161

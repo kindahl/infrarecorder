@@ -108,7 +108,7 @@ void CAboutDlg::UpdateVersionInfo()
 				}
 			}
 
-			SetDlgItemText(IDC_VERSIONSTATIC,szStrBuffer);
+			SetDlgItemText(IDC_VERSIONEDIT,szStrBuffer);
 		}
 
 		delete [] pBlock;
@@ -171,7 +171,7 @@ LRESULT CAboutDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHan
 		lf.lfHeight = -8;
 		hSmallFont = ::CreateFontIndirect(&lf);
 
-		::SendMessage(GetDlgItem(IDC_VERSIONSTATIC),WM_SETFONT,(WPARAM)hSmallFont,TRUE);
+		::SendMessage(GetDlgItem(IDC_VERSIONEDIT),WM_SETFONT,(WPARAM)hSmallFont,TRUE);
 	}
 
 	// Update the version information.
@@ -189,20 +189,22 @@ LRESULT CAboutDlg::OnCtlColorStatic(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &
 {
 	HDC hDC = (HDC)wParam;
 
-	// Begin: Fix Windows XP bug.
-	RECT rcRect;
-	::GetClientRect((HWND)lParam,&rcRect);
+	if ((HWND)lParam != ::GetDlgItem(m_hWnd,IDC_VERSIONEDIT))
+	{
+		// Begin: Fix Windows XP bug.
+		RECT rcRect;
+		::GetClientRect((HWND)lParam,&rcRect);
 
-	HDC hSrcDC = ::GetDC((HWND)lParam);
-	BitBlt(hDC,0,0,rcRect.right - rcRect.left,rcRect.bottom - rcRect.top,
-		hSrcDC,rcRect.left,rcRect.top,SRCCOPY);
-	ReleaseDC(hSrcDC);
-	// End.
+		HDC hSrcDC = ::GetDC((HWND)lParam);
+		BitBlt(hDC,0,0,rcRect.right - rcRect.left,rcRect.bottom - rcRect.top,
+			hSrcDC,rcRect.left,rcRect.top,SRCCOPY);
+		ReleaseDC(hSrcDC);
+		// End.
 
-	::SetBkMode(hDC,TRANSPARENT);
+		::SetBkMode(hDC,TRANSPARENT);
+	}
 
 	bHandled = true;
-	//return (LRESULT)GetSysColorBrush(COLOR_WINDOW);
 	return (LRESULT)GetStockObject(HOLLOW_BRUSH);
 }
 
