@@ -51,6 +51,7 @@ private:
 
 	public:
 		CButton(CWelcomePane *pParent,int iX,int iY) : m_pParent(pParent),m_iX(iX),m_iY(iY),m_iOffsetX(0),m_iOffsetY(0) {}
+		virtual ~CButton() {};
 
 		void Offset(int iOffsetX,int iOffsetY)
 		{
