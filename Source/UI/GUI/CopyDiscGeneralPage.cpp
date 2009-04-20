@@ -592,6 +592,14 @@ LRESULT CCopyDiscGeneralPage::OnSourceChange(WORD wNotifyCode,WORD wID,HWND hWnd
 
 LRESULT CCopyDiscGeneralPage::OnTargetChange(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
+	// If you insert a CD and immediately open this dialog, the application
+	// will be unresponsive for a few seconds while the device is being opened
+	// [see m_CurDevice.Open() below]. It would be best to avoid that pause
+	// altogether, but at least we display the hourglass cursor here, to let
+	// the user know he should be patient, otherwise he might try to click all
+	// over the place and wonder why nothing happens.
+	CWaitCursor WaitCursor;		// This displays the hourglass cursor.
+
 	UINT_PTR uiSourceDevIndex = m_SourceCombo.GetItemData(m_SourceCombo.GetCurSel());
 	UINT_PTR uiTargetDevIndex = m_TargetCombo.GetItemData(m_TargetCombo.GetCurSel());
 

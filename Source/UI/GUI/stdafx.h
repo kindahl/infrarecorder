@@ -47,6 +47,7 @@ extern CAppModule _Module;
 #include <atlctrls.h>
 #include <atldlgs.h>
 #include <atlctrlw.h>
+#include <atlctrlx.h>		// CWaitCursor
 #include <atlsplit.h>		// CSplitterWindowImpl
 #include <htmlhelp.h>
 #include "AtlCompat.h"
