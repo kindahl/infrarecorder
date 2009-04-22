@@ -30,7 +30,6 @@
 #define SPACEMETER_METER_COUNT				10
 #define SPACEMETER_METERTEXT_SIZE			16
 #define SPACEMETER_METERTEXT_INDENT_LEFT	4
-#define SPACEMETER_TOOLTIPTEXT_SIZE			256
 
 /*
 	New Tango colors.
@@ -121,7 +120,7 @@ private:
 
 	// Tooltip.
 	CToolTipCtrl m_ToolTip;
-	TCHAR m_szToolTip[SPACEMETER_TOOLTIPTEXT_SIZE];
+	ckcore::tstring m_ToolTipText;
 
 	// Popup menu.
 	HMENU m_hPopupMenu;

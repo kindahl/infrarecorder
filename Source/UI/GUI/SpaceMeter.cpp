@@ -49,7 +49,7 @@ CSpaceMeter::CSpaceMeter()
 	m_hWarnBarBorderBrush = ::CreateSolidBrush(SPACEMETER_WARNBORDERCOLOR);
 	m_hFullBarBorderBrush = ::CreateSolidBrush(SPACEMETER_FULLBORDERCOLOR);
 
-	m_szToolTip[0] = '\0';
+	m_ToolTipText.reserve(256);
 
 	// Create and fill the popup menu.
 	m_hPopupMenu = CreatePopupMenu();
@@ -297,45 +297,38 @@ void CSpaceMeter::UpdateToolTip()
 	const TCHAR *szFree = lngGetString(SPACEMETER_FREE);
 	unsigned __int64 uiFree = m_uiAllocatedSize > m_uiDiscSize ? 0 : m_uiDiscSize -  m_uiAllocatedSize;
 
-	// Make sure that there will be no buffer overruns.
-	if (lstrlen(szUsed) > 16)
-		szUsed = g_szStringTable[SPACEMETER_USED];
-
-	if (lstrlen(szFree) > 16)
-		szFree = g_szStringTable[SPACEMETER_FREE];
-
 	if (m_iDisplayMode == SPACEMETER_DMSIZE)
 	{
 		// Used.
-		lstrcpy(m_szToolTip,szUsed);
+		m_ToolTipText = szUsed;
 		FormatBytes(szBuffer,m_uiAllocatedSize);
-		lstrcat(m_szToolTip,szBuffer);
+		m_ToolTipText += szBuffer;
 
 		lsnprintf_s(szBuffer,64,_T(" (%I64d Bytes)\r\n"),m_uiAllocatedSize);
-		lstrcat(m_szToolTip,szBuffer);
+		m_ToolTipText += szBuffer;
 
 		// Free.
-		lstrcat(m_szToolTip,szFree);
+		m_ToolTipText += szFree;
 		FormatBytes(szBuffer,uiFree);
-		lstrcat(m_szToolTip,szBuffer);
+		m_ToolTipText += szBuffer;
 
 		lsnprintf_s(szBuffer,64,_T(" (%I64d Bytes)"),uiFree);
-		lstrcat(m_szToolTip,szBuffer);
+		m_ToolTipText += szBuffer;
 	}
 	else
 	{
 		// Used.
-		lstrcpy(m_szToolTip,szUsed);
+		m_ToolTipText = szUsed;
 
 		lsnprintf_s(szBuffer,64,lngGetString(MISC_MINUTES),m_uiAllocatedSize/(1000 * 60));
-		lstrcat(m_szToolTip,szBuffer);
-		lstrcat(m_szToolTip,_T("\r\n"));
+		m_ToolTipText += szBuffer;
+		m_ToolTipText += _T("\r\n");
 
 		// Free.
-		lstrcat(m_szToolTip,szFree);
+		m_ToolTipText += szFree;
 
 		lsnprintf_s(szBuffer,64,lngGetString(MISC_MINUTES),uiFree/(1000 * 60));
-		lstrcat(m_szToolTip,szBuffer);
+		m_ToolTipText += szBuffer;
 	}
 }
 
@@ -637,7 +630,7 @@ LRESULT CSpaceMeter::OnGetDispInfo(int idCtrl,LPNMHDR pnmh,BOOL &bHandled)
 	}
 
 	LPNMTTDISPINFO pNMTDI = (LPNMTTDISPINFO)pnmh;
-	pNMTDI->lpszText = m_szToolTip;
+	pNMTDI->lpszText = const_cast<TCHAR *>(m_ToolTipText.c_str());
 
 	return 0;
 }
