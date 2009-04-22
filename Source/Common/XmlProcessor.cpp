@@ -21,38 +21,38 @@
 #include "StringConv.h"
 
 #ifdef UNICODE
-const wchar_t CXMLProcessor::m_szXMLHeader[] = _T("<?xml version=\"1.0\" encoding=\"utf-16\" standalone=\"yes\"?>\r\n");
+const wchar_t CXmlProcessor::m_szXMLHeader[] = _T("<?xml version=\"1.0\" encoding=\"utf-16\" standalone=\"yes\"?>\r\n");
 #else
-const char CXMLProcessor::m_szXMLHeader[] = "<?xml version=\"1.0\" encoding=\"windows-%i\" standalone=\"yes\"?>\r\n";
+const char CXmlProcessor::m_szXMLHeader[] = "<?xml version=\"1.0\" encoding=\"windows-%i\" standalone=\"yes\"?>\r\n";
 #endif
 
-CXMLProcessor::CXMLProcessor(eMode Mode) : m_Mode(Mode)
+CXmlProcessor::CXmlProcessor(eMode Mode) : m_Mode(Mode)
 {
 	m_ulBufferSize = 0;
 	m_ulBufferPos = 0;
 
 	memset(m_ucBuffer,0,sizeof(m_ucBuffer));
 
-	m_pRoot = new CXMLElement();
+	m_pRoot = new CXmlElement();
 	lstrcpy(m_pRoot->m_szName,_T("Root"));
 
 	// Set the current child to the root.
 	m_pCurrent = m_pRoot;
 }
 
-CXMLProcessor::~CXMLProcessor()
+CXmlProcessor::~CXmlProcessor()
 {
 	delete m_pRoot;
 }
 
-void CXMLProcessor::DumpBuffer()
+void CXmlProcessor::DumpBuffer()
 {
 	ckcore::File File(_T("xml_buffer_dump.txt"));
 	if (File.open(ckcore::File::ckOPEN_WRITE))
 		File.write(m_ucBuffer,sizeof(m_ucBuffer));
 }
 
-bool CXMLProcessor::ReadNext(ckcore::File &File,TCHAR &c)
+bool CXmlProcessor::ReadNext(ckcore::File &File,TCHAR &c)
 {
 	if (m_ulBufferPos == m_ulBufferSize)
 	{
@@ -78,7 +78,7 @@ bool CXMLProcessor::ReadNext(ckcore::File &File,TCHAR &c)
 	return true;
 }
 
-void CXMLProcessor::ReadBack()
+void CXmlProcessor::ReadBack()
 {
 	if (m_ulBufferPos > 0)
 	{
@@ -88,18 +88,18 @@ void CXMLProcessor::ReadBack()
 }
 
 /*
-	CXMLProcessor::ReadTagAttr
+	CXmlProcessor::ReadTagAttr
 	-----------------------
 	Reads the current tag's attributes. It returns false if the element is empty
 	and true if it's not. 
 */
-bool CXMLProcessor::ReadTagAttr(ckcore::File &File,CXMLElement *pElement)
+bool CXmlProcessor::ReadTagAttr(ckcore::File &File,CXmlElement *pElement)
 {
 	TCHAR uc;
 	if (!ReadNext(File,uc))
 		return false;
 
-	CXMLAttribute *pAttr = new CXMLAttribute();
+	CXmlAttribute *pAttr = new CXmlAttribute();
 
 	while (uc != '>')
 	{
@@ -144,7 +144,7 @@ bool CXMLProcessor::ReadTagAttr(ckcore::File &File,CXMLElement *pElement)
 			pElement->m_Attributes.push_back(pAttr);
 
 			// Allocate memory for the next attribute.
-			pAttr = new CXMLAttribute();
+			pAttr = new CXmlAttribute();
 		}
 		else
 		{
@@ -167,12 +167,12 @@ bool CXMLProcessor::ReadTagAttr(ckcore::File &File,CXMLElement *pElement)
 }
 
 /*
-	CXMLProcessor::ReadNextTag
+	CXmlProcessor::ReadNextTag
 	-----------------------
 	Reads the next tag in the file. It returns false if the element is empty
 	and true if it's not.
 */
-bool CXMLProcessor::ReadNextTag(ckcore::File &File,CXMLElement *pElement)
+bool CXmlProcessor::ReadNextTag(ckcore::File &File,CXmlElement *pElement)
 {
 	TCHAR uc;
 	if (!ReadNext(File,uc))
@@ -198,11 +198,11 @@ bool CXMLProcessor::ReadNextTag(ckcore::File &File,CXMLElement *pElement)
 }
 
 /*
-	CXMLProcessor::Load
+	CXmlProcessor::Load
 	-------------------
 	Loads the specified XML into a tree structure in memory. Varius return values.
 */
-int CXMLProcessor::Load(const TCHAR *szFullPath)
+int CXmlProcessor::Load(const TCHAR *szFullPath)
 {
 	// Open the file.
 	ckcore::File File(szFullPath);
@@ -238,7 +238,7 @@ int CXMLProcessor::Load(const TCHAR *szFullPath)
 
 	// Clear the root.
 	m_pRoot->Clear();
-	CXMLElement *pCurElem = m_pRoot;
+	CXmlElement *pCurElem = m_pRoot;
 
 	// Set the current child to the root.
 	m_pCurrent = m_pRoot;
@@ -318,7 +318,7 @@ int CXMLProcessor::Load(const TCHAR *szFullPath)
 				}
 
 				// Add the new element.
-				CXMLElement *pNewElem = new CXMLElement();	
+				CXmlElement *pNewElem = new CXmlElement();	
 				pNewElem->m_pParent = pCurElem;
 
 				bHandleData = ReadNextTag(File,pNewElem);
@@ -344,7 +344,7 @@ int CXMLProcessor::Load(const TCHAR *szFullPath)
 	return XMLRES_OK;
 }
 
-void CXMLProcessor::SaveEntity(ckcore::File &File,unsigned int uiIndent,CXMLElement *pElement)
+void CXmlProcessor::SaveEntity(ckcore::File &File,unsigned int uiIndent,CXmlElement *pElement)
 {
 	// If the element contains no information we skip it.
 	if (pElement->m_Children.size() == 0 &&
@@ -453,12 +453,12 @@ void CXMLProcessor::SaveEntity(ckcore::File &File,unsigned int uiIndent,CXMLElem
 }
 
 /*
-	CXMLProcessor::Save
+	CXmlProcessor::Save
 	-------------------
 	Saves the current loaded XML-structure to a file with the specified filename.
 	Various return values.
 */
-int CXMLProcessor::Save(const TCHAR *szFullPath)
+int CXmlProcessor::Save(const TCHAR *szFullPath)
 {
 	// Open the file.
 	ckcore::File File(szFullPath);
@@ -507,7 +507,7 @@ int CXMLProcessor::Save(const TCHAR *szFullPath)
 	Enters the specified element if it exists. True is returned upon success,
 	false if the specified element was not found.
 */
-bool CXMLProcessor::EnterElement(const TCHAR *szName)
+bool CXmlProcessor::EnterElement(const TCHAR *szName)
 {
 	for (unsigned int i = 0; i < m_pCurrent->m_Children.size(); i++)
 	{
@@ -521,7 +521,7 @@ bool CXMLProcessor::EnterElement(const TCHAR *szName)
 	return false;
 }
 
-bool CXMLProcessor::EnterElement(unsigned int uiIndex)
+bool CXmlProcessor::EnterElement(unsigned int uiIndex)
 {
 	if (uiIndex >= m_pCurrent->m_Children.size())
 		return false;
@@ -531,12 +531,12 @@ bool CXMLProcessor::EnterElement(unsigned int uiIndex)
 }
 
 /*
-	CXMLProcessor::LeaveElement
+	CXmlProcessor::LeaveElement
 	---------------------------
 	Leaves the current element. True is returned if the operation was successful,
 	otherwise false is returned.
 */
-bool CXMLProcessor::LeaveElement()
+bool CXmlProcessor::LeaveElement()
 {
 	if (m_pCurrent->m_pParent != NULL)
 	{
@@ -547,12 +547,12 @@ bool CXMLProcessor::LeaveElement()
 	return false;
 }
 
-unsigned int CXMLProcessor::GetElementChildCount()
+unsigned int CXmlProcessor::GetElementChildCount()
 {
 	return (unsigned int)m_pCurrent->m_Children.size();
 }
 
-bool CXMLProcessor::GetElementAttrValue(const TCHAR *szAttrName,TCHAR *&szValue)
+bool CXmlProcessor::GetElementAttrValue(const TCHAR *szAttrName,TCHAR *&szValue)
 {
 	for (unsigned int i = 0; i < m_pCurrent->m_Attributes.size(); i++)
 	{
@@ -566,49 +566,49 @@ bool CXMLProcessor::GetElementAttrValue(const TCHAR *szAttrName,TCHAR *&szValue)
 	return false;
 }
 
-void CXMLProcessor::GetSafeElementAttrValue(const TCHAR *szAttrName,TCHAR *szValue,int iMaxLength)
+void CXmlProcessor::GetSafeElementAttrValue(const TCHAR *szAttrName,TCHAR *szValue,int iMaxLength)
 {
 	TCHAR *szData = NULL;
 	if (GetElementAttrValue(szAttrName,szData) && lstrlen(szData) < iMaxLength)
 		lstrcpy(szValue,szData);
 }
 
-void CXMLProcessor::GetSafeElementAttrValue(const TCHAR *szAttrName,bool *pValue)
+void CXmlProcessor::GetSafeElementAttrValue(const TCHAR *szAttrName,bool *pValue)
 {
 	TCHAR *szData = NULL;
 	if (GetElementAttrValue(szAttrName,szData))
 		*pValue = StringToInt(szData) != 0;
 }
 
-void CXMLProcessor::GetSafeElementAttrValue(const TCHAR *szAttrName,int *pValue)
+void CXmlProcessor::GetSafeElementAttrValue(const TCHAR *szAttrName,int *pValue)
 {
 	TCHAR *szData = NULL;
 	if (GetElementAttrValue(szAttrName,szData))
 		*pValue = StringToInt(szData);
 }
 
-void CXMLProcessor::GetSafeElementAttrValue(const TCHAR *szAttrName,__int64 *pValue)
+void CXmlProcessor::GetSafeElementAttrValue(const TCHAR *szAttrName,__int64 *pValue)
 {
 	TCHAR *szData = NULL;
 	if (GetElementAttrValue(szAttrName,szData))
 		*pValue = StringToInt64(szData);
 }
 
-void CXMLProcessor::GetSafeElementAttrValue(const TCHAR *szAttrName,double *pValue)
+void CXmlProcessor::GetSafeElementAttrValue(const TCHAR *szAttrName,double *pValue)
 {
 	TCHAR *szData = NULL;
 	if (GetElementAttrValue(szAttrName,szData))
 		*pValue = StringToDouble(szData);
 }
 
-void CXMLProcessor::GetSafeElementAttrValue(const TCHAR *szAttrName,long *pValue)
+void CXmlProcessor::GetSafeElementAttrValue(const TCHAR *szAttrName,long *pValue)
 {
 	TCHAR *szData = NULL;
 	if (GetElementAttrValue(szAttrName,szData))
 		*pValue = StringToLong(szData);
 }
 
-bool CXMLProcessor::GetElementData(TCHAR *&szData)
+bool CXmlProcessor::GetElementData(TCHAR *&szData)
 {
 	if (m_pCurrent->m_szData[0] == '\0')
 		return false;
@@ -617,7 +617,7 @@ bool CXMLProcessor::GetElementData(TCHAR *&szData)
 	return true;
 }
 
-void CXMLProcessor::GetSafeElementData(const TCHAR *szName,TCHAR *pData,int iMaxLength)
+void CXmlProcessor::GetSafeElementData(const TCHAR *szName,TCHAR *pData,int iMaxLength)
 {
 	if (EnterElement(szName))
 	{
@@ -632,7 +632,7 @@ void CXMLProcessor::GetSafeElementData(const TCHAR *szName,TCHAR *pData,int iMax
 	}
 }
 
-void CXMLProcessor::GetSafeElementData(const TCHAR *szName,bool *pData)
+void CXmlProcessor::GetSafeElementData(const TCHAR *szName,bool *pData)
 {
 	if (EnterElement(szName))
 	{
@@ -644,7 +644,7 @@ void CXMLProcessor::GetSafeElementData(const TCHAR *szName,bool *pData)
 	}
 }
 
-void CXMLProcessor::GetSafeElementData(const TCHAR *szName,int *pData)
+void CXmlProcessor::GetSafeElementData(const TCHAR *szName,int *pData)
 {
 	if (EnterElement(szName))
 	{
@@ -656,7 +656,7 @@ void CXMLProcessor::GetSafeElementData(const TCHAR *szName,int *pData)
 	}
 }
 
-void CXMLProcessor::GetSafeElementData(const TCHAR *szName,__int64 *pData)
+void CXmlProcessor::GetSafeElementData(const TCHAR *szName,__int64 *pData)
 {
 	if (EnterElement(szName))
 	{
@@ -668,7 +668,7 @@ void CXMLProcessor::GetSafeElementData(const TCHAR *szName,__int64 *pData)
 	}
 }
 
-void CXMLProcessor::GetSafeElementData(const TCHAR *szName,double *pData)
+void CXmlProcessor::GetSafeElementData(const TCHAR *szName,double *pData)
 {
 	if (EnterElement(szName))
 	{
@@ -680,7 +680,7 @@ void CXMLProcessor::GetSafeElementData(const TCHAR *szName,double *pData)
 	}
 }
 
-void CXMLProcessor::GetSafeElementData(const TCHAR *szName,long *pData)
+void CXmlProcessor::GetSafeElementData(const TCHAR *szName,long *pData)
 {
 	if (EnterElement(szName))
 	{
@@ -692,51 +692,51 @@ void CXMLProcessor::GetSafeElementData(const TCHAR *szName,long *pData)
 	}
 }
 
-void CXMLProcessor::GetSafeElementData(TCHAR *pData)
+void CXmlProcessor::GetSafeElementData(TCHAR *pData)
 {
 	TCHAR *szData = NULL;
 	if (GetElementData(szData))
 		lstrcpy(pData,szData);
 }
 
-void CXMLProcessor::GetSafeElementData(bool *pData)
+void CXmlProcessor::GetSafeElementData(bool *pData)
 {
 	TCHAR *szData = NULL;
 	if (GetElementData(szData))
 		*pData = StringToInt(szData) != 0;
 }
 
-void CXMLProcessor::GetSafeElementData(int *pData)
+void CXmlProcessor::GetSafeElementData(int *pData)
 {
 	TCHAR *szData = NULL;
 	if (GetElementData(szData))
 		*pData = StringToInt(szData);
 }
 
-void CXMLProcessor::GetSafeElementData(__int64 *pData)
+void CXmlProcessor::GetSafeElementData(__int64 *pData)
 {
 	TCHAR *szData = NULL;
 	if (GetElementData(szData))
 		*pData = StringToInt64(szData);
 }
 
-void CXMLProcessor::GetSafeElementData(double *pData)
+void CXmlProcessor::GetSafeElementData(double *pData)
 {
 	TCHAR *szData = NULL;
 	if (GetElementData(szData))
 		*pData = StringToDouble(szData);
 }
 
-void CXMLProcessor::GetSafeElementData(long *pData)
+void CXmlProcessor::GetSafeElementData(long *pData)
 {
 	TCHAR *szData = NULL;
 	if (GetElementData(szData))
 		*pData = StringToLong(szData);
 }
 
-bool CXMLProcessor::AddElement(const TCHAR *szName,const TCHAR *szData,bool bEnter)
+bool CXmlProcessor::AddElement(const TCHAR *szName,const TCHAR *szData,bool bEnter)
 {
-	CXMLElement *pNewElem = new CXMLElement(lstrlen(szName) + 1,lstrlen(szData) + 1);
+	CXmlElement *pNewElem = new CXmlElement(lstrlen(szName) + 1,lstrlen(szData) + 1);
 	if (!pNewElem)
 		return false;
 
@@ -756,12 +756,12 @@ bool CXMLProcessor::AddElement(const TCHAR *szName,const TCHAR *szData,bool bEnt
 	return true;
 }
 
-bool CXMLProcessor::AddElement(const TCHAR *szName,bool bData,bool bEnter)
+bool CXmlProcessor::AddElement(const TCHAR *szName,bool bData,bool bEnter)
 {
 	return AddElement(szName,(int)bData,bEnter);
 }
 
-bool CXMLProcessor::AddElement(const TCHAR *szName,int iData,bool bEnter)
+bool CXmlProcessor::AddElement(const TCHAR *szName,int iData,bool bEnter)
 {
 	TCHAR szTemp[16];
 
@@ -774,7 +774,7 @@ bool CXMLProcessor::AddElement(const TCHAR *szName,int iData,bool bEnter)
 	return AddElement(szName,szTemp,bEnter);
 }
 
-bool CXMLProcessor::AddElement(const TCHAR *szName,__int64 iData,bool bEnter)
+bool CXmlProcessor::AddElement(const TCHAR *szName,__int64 iData,bool bEnter)
 {
 	TCHAR szTemp[32];
 
@@ -787,7 +787,7 @@ bool CXMLProcessor::AddElement(const TCHAR *szName,__int64 iData,bool bEnter)
 	return AddElement(szName,szTemp,bEnter);
 }
 
-bool CXMLProcessor::AddElement(const TCHAR *szName,double dData,bool bEnter)
+bool CXmlProcessor::AddElement(const TCHAR *szName,double dData,bool bEnter)
 {
 	TCHAR szTemp[32];
 
@@ -800,7 +800,7 @@ bool CXMLProcessor::AddElement(const TCHAR *szName,double dData,bool bEnter)
 	return AddElement(szName,szTemp,bEnter);
 }
 
-bool CXMLProcessor::AddElement(const TCHAR *szName,long lData,bool bEnter)
+bool CXmlProcessor::AddElement(const TCHAR *szName,long lData,bool bEnter)
 {
 	TCHAR szTemp[16];
 
@@ -813,9 +813,9 @@ bool CXMLProcessor::AddElement(const TCHAR *szName,long lData,bool bEnter)
 	return AddElement(szName,szTemp,bEnter);
 }
 
-bool CXMLProcessor::AddElementAttr(const TCHAR *szAttrName,const TCHAR *szValue)
+bool CXmlProcessor::AddElementAttr(const TCHAR *szAttrName,const TCHAR *szValue)
 {
-	CXMLAttribute *pNewAttr = new CXMLAttribute(lstrlen(szAttrName) + 1,lstrlen(szValue) + 1);
+	CXmlAttribute *pNewAttr = new CXmlAttribute(lstrlen(szAttrName) + 1,lstrlen(szValue) + 1);
 	if (!pNewAttr)
 		return false;
 
@@ -831,12 +831,12 @@ bool CXMLProcessor::AddElementAttr(const TCHAR *szAttrName,const TCHAR *szValue)
 	return true;
 }
 
-bool CXMLProcessor::AddElementAttr(const TCHAR *szAttrName,bool bValue)
+bool CXmlProcessor::AddElementAttr(const TCHAR *szAttrName,bool bValue)
 {
 	return AddElementAttr(szAttrName,(int)bValue);
 }
 
-bool CXMLProcessor::AddElementAttr(const TCHAR *szAttrName,int iValue)
+bool CXmlProcessor::AddElementAttr(const TCHAR *szAttrName,int iValue)
 {
 	TCHAR szTemp[16];
 
@@ -849,7 +849,7 @@ bool CXMLProcessor::AddElementAttr(const TCHAR *szAttrName,int iValue)
 	return AddElementAttr(szAttrName,szTemp);
 }
 
-bool CXMLProcessor::AddElementAttr(const TCHAR *szAttrName,__int64 iValue)
+bool CXmlProcessor::AddElementAttr(const TCHAR *szAttrName,__int64 iValue)
 {
 	TCHAR szTemp[32];
 
@@ -862,7 +862,7 @@ bool CXMLProcessor::AddElementAttr(const TCHAR *szAttrName,__int64 iValue)
 	return AddElementAttr(szAttrName,szTemp);
 }
 
-bool CXMLProcessor::AddElementAttr(const TCHAR *szAttrName,double dValue)
+bool CXmlProcessor::AddElementAttr(const TCHAR *szAttrName,double dValue)
 {
 	TCHAR szTemp[32];
 
@@ -875,7 +875,7 @@ bool CXMLProcessor::AddElementAttr(const TCHAR *szAttrName,double dValue)
 	return AddElementAttr(szAttrName,szTemp);
 }
 
-bool CXMLProcessor::AddElementAttr(const TCHAR *szAttrName,long lValue)
+bool CXmlProcessor::AddElementAttr(const TCHAR *szAttrName,long lValue)
 {
 	TCHAR szTemp[16];
 

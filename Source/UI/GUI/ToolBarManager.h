@@ -19,7 +19,7 @@
 #pragma once
 #include <vector>
 #include <map>
-#include "../../Common/XMLProcessor.h"
+#include "../../Common/XmlProcessor.h"
 #include "resource.h"
 
 class CToolBarManager
@@ -78,8 +78,8 @@ public:
 
 	bool FillToolBarCtrl(CToolBarCtrl *pToolBar);
 
-	bool Save(CXMLProcessor *pXML);
-	bool Load(CXMLProcessor *pXML);
+	bool Save(CXmlProcessor *pXml);
+	bool Load(CXmlProcessor *pXml);
 
 	bool Customize();
 

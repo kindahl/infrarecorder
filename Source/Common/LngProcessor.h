@@ -37,19 +37,19 @@
 #define LNGRES_FILEERROR		0x02
 #define LNGRES_UNSUPBOM			0x03
 
-class CLNGValue
+class CLngValue
 {
 public:
 	unsigned long ulName;
 	CCustomString m_szValue;
 
-	CLNGValue() : m_szValue(LNG_VALUELENGTH)
+	CLngValue() : m_szValue(LNG_VALUELENGTH)
 	{
 		ulName = 0;
 		m_szValue[0] = '\0';
 	}
 
-	CLNGValue(unsigned int uiValueLength) :
+	CLngValue(unsigned int uiValueLength) :
 		m_szValue(uiValueLength)
 	{
 		ulName = 0;
@@ -57,24 +57,24 @@ public:
 	}
 };
 
-class CLNGSection
+class CLngSection
 {
 public:
 	CCustomString m_szName;
-	std::vector<CLNGValue *> m_Values;
+	std::vector<CLngValue *> m_Values;
 
-	CLNGSection() : m_szName(LNG_NAMELENGTH)
+	CLngSection() : m_szName(LNG_NAMELENGTH)
 	{
 		m_szName[0] = '\0';
 	}
 
-	CLNGSection(unsigned int uiNameLength) :
+	CLngSection(unsigned int uiNameLength) :
 		m_szName(uiNameLength)
 	{
 		m_szName[0] = '\0';
 	}
 
-	~CLNGSection()
+	~CLngSection()
 	{
 		Clear();
 	}
@@ -85,7 +85,7 @@ public:
 		for (unsigned int iIndex = 0; iIndex < m_Values.size(); iIndex++)
 		{
 			// Remove the object from m_Instances.
-			std::vector <CLNGValue *>::iterator itObject = m_Values.begin() + iIndex;
+			std::vector <CLngValue *>::iterator itObject = m_Values.begin() + iIndex;
 			delete *itObject;
 		}
 
@@ -93,7 +93,7 @@ public:
 	}
 };
 
-class CLNGProcessor
+class CLngProcessor
 {
 protected:
 	ckcore::File m_File;
@@ -104,8 +104,8 @@ protected:
 
 	__int64 m_iRemainBytes;
 
-	std::vector<CLNGSection *> m_pSections;
-	CLNGSection *m_pCurrent;
+	std::vector<CLngSection *> m_pSections;
+	CLngSection *m_pCurrent;
 
 	void Clear();
 
@@ -113,8 +113,8 @@ protected:
 	void ReadBack();
 
 public:
-	CLNGProcessor(const TCHAR *szFullPath);
-	~CLNGProcessor();
+	CLngProcessor(const TCHAR *szFullPath);
+	~CLngProcessor();
 
 	int Load();
 

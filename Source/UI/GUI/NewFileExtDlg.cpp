@@ -32,27 +32,27 @@ CNewFileExtDlg::~CNewFileExtDlg()
 
 bool CNewFileExtDlg::Translate()
 {
-	if (g_LanguageSettings.m_pLNGProcessor == NULL)
+	if (g_LanguageSettings.m_pLngProcessor == NULL)
 		return false;
 
-	CLNGProcessor *pLNG = g_LanguageSettings.m_pLNGProcessor;
+	CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
 	
 	// Make sure that there is a newfileext translation section.
-	if (!pLNG->EnterSection(_T("newfileext")))
+	if (!pLng->EnterSection(_T("newfileext")))
 		return false;
 
 	// Translate.
 	TCHAR *szStrValue;
 
-	if (pLNG->GetValuePtr(IDD_NEWFILEEXTDLG,szStrValue))	// Title.
+	if (pLng->GetValuePtr(IDD_NEWFILEEXTDLG,szStrValue))	// Title.
 		SetWindowText(szStrValue);
-	if (pLNG->GetValuePtr(IDOK,szStrValue))
+	if (pLng->GetValuePtr(IDOK,szStrValue))
 		SetDlgItemText(IDOK,szStrValue);
-	if (pLNG->GetValuePtr(IDCANCEL,szStrValue))
+	if (pLng->GetValuePtr(IDCANCEL,szStrValue))
 		SetDlgItemText(IDCANCEL,szStrValue);
-	if (pLNG->GetValuePtr(IDC_DESCSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_DESCSTATIC,szStrValue))
 		SetDlgItemText(IDC_DESCSTATIC,szStrValue);
-	if (pLNG->GetValuePtr(IDC_EXTSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_EXTSTATIC,szStrValue))
 		SetDlgItemText(IDC_EXTSTATIC,szStrValue);
 
 	return true;

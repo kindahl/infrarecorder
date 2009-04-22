@@ -37,13 +37,13 @@ CReadOptionsPage::CReadOptionsPage(bool bEnableClone,bool bEnableSpeed)
 	m_hRefreshImageList = NULL;
 
 	// Try to load translated string.
-	if (g_LanguageSettings.m_pLNGProcessor != NULL)
+	if (g_LanguageSettings.m_pLngProcessor != NULL)
 	{	
 		// Make sure that there is a strings translation section.
-		if (g_LanguageSettings.m_pLNGProcessor->EnterSection(_T("strings")))
+		if (g_LanguageSettings.m_pLngProcessor->EnterSection(_T("strings")))
 		{
 			TCHAR *szStrValue;
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(TITLE_READ,szStrValue))
+			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(TITLE_READ,szStrValue))
 				SetTitle(szStrValue);
 		}
 	}
@@ -62,24 +62,24 @@ CReadOptionsPage::~CReadOptionsPage()
 
 bool CReadOptionsPage::Translate()
 {
-	if (g_LanguageSettings.m_pLNGProcessor == NULL)
+	if (g_LanguageSettings.m_pLngProcessor == NULL)
 		return false;
 
-	CLNGProcessor *pLNG = g_LanguageSettings.m_pLNGProcessor;
+	CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
 	
 	// Make sure that there is a burn translation section.
-	if (!pLNG->EnterSection(_T("read")))
+	if (!pLng->EnterSection(_T("read")))
 		return false;
 
 	// Translate.
 	TCHAR *szStrValue;
 	int iMaxStaticRight = 0;
 
-	if (pLNG->GetValuePtr(IDC_NOREADERRCHECK,szStrValue))
+	if (pLng->GetValuePtr(IDC_NOREADERRCHECK,szStrValue))
 		SetDlgItemText(IDC_NOREADERRCHECK,szStrValue);
-	if (pLNG->GetValuePtr(IDC_READSUBCHANNELCHECK,szStrValue))
+	if (pLng->GetValuePtr(IDC_READSUBCHANNELCHECK,szStrValue))
 		SetDlgItemText(IDC_READSUBCHANNELCHECK,szStrValue);
-	if (pLNG->GetValuePtr(IDC_READSPEEDSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_READSPEEDSTATIC,szStrValue))
 	{
 		SetDlgItemText(IDC_READSPEEDSTATIC,szStrValue);
 

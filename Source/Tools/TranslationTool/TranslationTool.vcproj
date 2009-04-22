@@ -382,7 +382,7 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm"
 			>
 			<File
-				RelativePath=".\LNGAnalyzer.cpp"
+				RelativePath=".\LngAnalyzer.cpp"
 				>
 			</File>
 			<File
@@ -435,7 +435,7 @@
 			Filter="h;hpp;hxx;hm;inl;inc"
 			>
 			<File
-				RelativePath=".\LNGAnalyzer.h"
+				RelativePath=".\LngAnalyzer.h"
 				>
 			</File>
 			<File
@@ -480,11 +480,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\Common\LNGProcessor.cpp"
+				RelativePath="..\..\Common\LngProcessor.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Common\LNGProcessor.h"
+				RelativePath="..\..\Common\LngProcessor.h"
 				>
 			</File>
 			<File
@@ -504,11 +504,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\Common\XMLProcessor.cpp"
+				RelativePath="..\..\Common\XmlProcessor.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Common\XMLProcessor.h"
+				RelativePath="..\..\Common\XmlProcessor.h"
 				>
 			</File>
 		</Filter>

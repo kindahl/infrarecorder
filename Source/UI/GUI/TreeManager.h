@@ -22,7 +22,7 @@
 #include <ckfilesystem/fileset.hh>
 #include <ckfilesystem/iso9660reader.hh>
 #include <ckfilesystem/iso9660writer.hh>
-#include "../../Common/XMLProcessor.h"
+#include "../../Common/XmlProcessor.h"
 #include "../../Common/StringContainer.h"
 
 #define PROJECTITEM_FLAG_ISFOLDER					1
@@ -206,7 +206,7 @@ private:
 	void RebuildLocalPaths(CProjectNode *pNode,std::vector<CProjectNode *> &FolderStack);
 	unsigned __int64 GetLocalSizeFromNode(CProjectNode *pNode,std::vector<CProjectNode *> &FolderStack);
 
-	void SaveLocalNodeFileData(CXMLProcessor *pXML,CProjectNode *pNode,
+	void SaveLocalNodeFileData(CXmlProcessor *pXml,CProjectNode *pNode,
 		std::vector<CProjectNode *> &FolderStack,unsigned int &uiFileCount,
 		unsigned int uiRootLength);
 
@@ -264,10 +264,10 @@ public:
 	bool HasExtraAudioData(CProjectNode *pNode);
 
 	// Save/load routines.
-	void SaveNodeFileData(CXMLProcessor *pXML,CProjectNode *pRootNode);
-	void SaveNodeAudioData(CXMLProcessor *pXML,CProjectNode *pRootNode);
-	bool LoadNodeFileData(CXMLProcessor *pXML,CProjectNode *pRootNode);
-	bool LoadNodeAudioData(CXMLProcessor *pXML,CProjectNode *pRootNode);
+	void SaveNodeFileData(CXmlProcessor *pXml,CProjectNode *pRootNode);
+	void SaveNodeAudioData(CXmlProcessor *pXml,CProjectNode *pRootNode);
+	bool LoadNodeFileData(CXmlProcessor *pXml,CProjectNode *pRootNode);
+	bool LoadNodeAudioData(CXmlProcessor *pXml,CProjectNode *pRootNode);
 
 	void GetPathList(ckfilesystem::FileSet &Files,CProjectNode *pRootNode,int iPathStripLen = 0);
 

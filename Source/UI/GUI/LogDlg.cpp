@@ -117,31 +117,31 @@ void CLogDlg::InitializeLogFile()
 
 bool CLogDlg::Translate()
 {
-	if (g_LanguageSettings.m_pLNGProcessor == NULL)
+	if (g_LanguageSettings.m_pLngProcessor == NULL)
 		return false;
 
-	CLNGProcessor *pLNG = g_LanguageSettings.m_pLNGProcessor;
+	CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
 	
 	// Make sure that there is a log translation section.
-	if (!pLNG->EnterSection(_T("log")))
+	if (!pLng->EnterSection(_T("log")))
 		return false;
 
 	// Translate.
 	TCHAR *szStrValue;
 
-	if (pLNG->GetValuePtr(IDD_LOGDLG,szStrValue))			// Title.
+	if (pLng->GetValuePtr(IDD_LOGDLG,szStrValue))			// Title.
 		SetWindowText(szStrValue);
-	if (pLNG->GetValuePtr(IDOK,szStrValue))
+	if (pLng->GetValuePtr(IDOK,szStrValue))
 		SetDlgItemText(IDOK,szStrValue);
-	if (pLNG->GetValuePtr(ID_SAVEASBUTTON,szStrValue))
+	if (pLng->GetValuePtr(ID_SAVEASBUTTON,szStrValue))
 		SetDlgItemText(ID_SAVEASBUTTON,szStrValue);
-	if (pLNG->GetValuePtr(IDC_FILESBUTTON,szStrValue))
+	if (pLng->GetValuePtr(IDC_FILESBUTTON,szStrValue))
 		SetDlgItemText(IDC_FILESBUTTON,szStrValue);
-	if (pLNG->GetValuePtr(IDC_DIAGNOSTICSBUTTON,szStrValue))
+	if (pLng->GetValuePtr(IDC_DIAGNOSTICSBUTTON,szStrValue))
 		SetDlgItemText(IDC_DIAGNOSTICSBUTTON,szStrValue);
 
 	// Modify the diagnostics popup menu.
-	if (pLNG->GetValuePtr(ID_DIAGNOSTICS_DEVICESCAN,szStrValue))
+	if (pLng->GetValuePtr(ID_DIAGNOSTICS_DEVICESCAN,szStrValue))
 		ModifyMenu(m_DiagButton.GetMenu(),ID_DIAGNOSTICS_DEVICESCAN,MF_BYCOMMAND | MF_STRING,
 			ID_DIAGNOSTICS_DEVICESCAN,(LPCTSTR)szStrValue);
 

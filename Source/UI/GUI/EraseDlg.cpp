@@ -46,37 +46,37 @@ CEraseDlg::~CEraseDlg()
 
 bool CEraseDlg::Translate()
 {
-	if (g_LanguageSettings.m_pLNGProcessor == NULL)
+	if (g_LanguageSettings.m_pLngProcessor == NULL)
 		return false;
 
-	CLNGProcessor *pLNG = g_LanguageSettings.m_pLNGProcessor;
+	CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
 	
 	// Make sure that there is an erase translation section.
-	if (!pLNG->EnterSection(_T("erase")))
+	if (!pLng->EnterSection(_T("erase")))
 		return false;
 
 	// Translate.
 	TCHAR *szStrValue;
 
-	if (pLNG->GetValuePtr(IDD_ERASEDLG,szStrValue))				// Title.
+	if (pLng->GetValuePtr(IDD_ERASEDLG,szStrValue))				// Title.
 		SetWindowText(szStrValue);
-	if (pLNG->GetValuePtr(IDOK,szStrValue))
+	if (pLng->GetValuePtr(IDOK,szStrValue))
 		SetDlgItemText(IDOK,szStrValue);
-	if (pLNG->GetValuePtr(IDCANCEL,szStrValue))
+	if (pLng->GetValuePtr(IDCANCEL,szStrValue))
 		SetDlgItemText(IDCANCEL,szStrValue);
-	if (pLNG->GetValuePtr(IDC_HELPBUTTON,szStrValue))
+	if (pLng->GetValuePtr(IDC_HELPBUTTON,szStrValue))
 		SetDlgItemText(IDC_HELPBUTTON,szStrValue);
-	if (pLNG->GetValuePtr(IDC_RECORDERSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_RECORDERSTATIC,szStrValue))
 		SetDlgItemText(IDC_RECORDERSTATIC,szStrValue);
-	if (pLNG->GetValuePtr(IDC_METHODSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_METHODSTATIC,szStrValue))
 		SetDlgItemText(IDC_METHODSTATIC,szStrValue);
-	if (pLNG->GetValuePtr(IDC_FORCECHECK,szStrValue))
+	if (pLng->GetValuePtr(IDC_FORCECHECK,szStrValue))
 		SetDlgItemText(IDC_FORCECHECK,szStrValue);
-	if (pLNG->GetValuePtr(IDC_EJECTCHECK,szStrValue))
+	if (pLng->GetValuePtr(IDC_EJECTCHECK,szStrValue))
 		SetDlgItemText(IDC_EJECTCHECK,szStrValue);
-	if (pLNG->GetValuePtr(IDC_SIMULATECHECK,szStrValue))
+	if (pLng->GetValuePtr(IDC_SIMULATECHECK,szStrValue))
 		SetDlgItemText(IDC_SIMULATECHECK,szStrValue);
-	if (pLNG->GetValuePtr(IDC_SPEEDSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_SPEEDSTATIC,szStrValue))
 		SetDlgItemText(IDC_SPEEDSTATIC,szStrValue);
 
 	return true;

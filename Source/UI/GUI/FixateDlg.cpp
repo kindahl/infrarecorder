@@ -34,36 +34,36 @@ CFixateDlg::~CFixateDlg()
 
 bool CFixateDlg::Translate()
 {
-	if (g_LanguageSettings.m_pLNGProcessor == NULL)
+	if (g_LanguageSettings.m_pLngProcessor == NULL)
 		return false;
 
-	CLNGProcessor *pLNG = g_LanguageSettings.m_pLNGProcessor;
+	CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
 	
 	// This dialog shares many strings with the erase dialog so we begin
 	// borrow strings from the erase section.
-	if (!pLNG->EnterSection(_T("erase")))
+	if (!pLng->EnterSection(_T("erase")))
 		return false;
 
 	// Translate.
 	TCHAR *szStrValue;
 
-	if (pLNG->GetValuePtr(IDOK,szStrValue))
+	if (pLng->GetValuePtr(IDOK,szStrValue))
 		SetDlgItemText(IDOK,szStrValue);
-	if (pLNG->GetValuePtr(IDCANCEL,szStrValue))
+	if (pLng->GetValuePtr(IDCANCEL,szStrValue))
 		SetDlgItemText(IDCANCEL,szStrValue);
-	if (pLNG->GetValuePtr(IDC_HELPBUTTON,szStrValue))
+	if (pLng->GetValuePtr(IDC_HELPBUTTON,szStrValue))
 		SetDlgItemText(IDC_HELPBUTTON,szStrValue);
-	if (pLNG->GetValuePtr(IDC_RECORDERSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_RECORDERSTATIC,szStrValue))
 		SetDlgItemText(IDC_RECORDERSTATIC,szStrValue);
-	if (pLNG->GetValuePtr(IDC_SIMULATECHECK,szStrValue))
+	if (pLng->GetValuePtr(IDC_SIMULATECHECK,szStrValue))
 		SetDlgItemText(IDC_SIMULATECHECK,szStrValue);
 
-	if (!pLNG->EnterSection(_T("fixate")))
+	if (!pLng->EnterSection(_T("fixate")))
 		return false;
 
-	if (pLNG->GetValuePtr(IDD_FIXATEDLG,szStrValue))			// Title.
+	if (pLng->GetValuePtr(IDD_FIXATEDLG,szStrValue))			// Title.
 		SetWindowText(szStrValue);
-	if (pLNG->GetValuePtr(IDC_EJECTCHECK,szStrValue))
+	if (pLng->GetValuePtr(IDC_EJECTCHECK,szStrValue))
 		SetDlgItemText(IDC_EJECTCHECK,szStrValue);
 
 	return true;

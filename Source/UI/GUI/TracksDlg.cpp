@@ -54,25 +54,25 @@ CTracksDlg::~CTracksDlg()
 
 bool CTracksDlg::Translate()
 {
-	if (g_LanguageSettings.m_pLNGProcessor == NULL)
+	if (g_LanguageSettings.m_pLngProcessor == NULL)
 		return false;
 
-	CLNGProcessor *pLNG = g_LanguageSettings.m_pLNGProcessor;
+	CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
 	
 	// Make sure that there is a tracks translation section.
-	if (!pLNG->EnterSection(_T("tracks")))
+	if (!pLng->EnterSection(_T("tracks")))
 		return false;
 
 	// Translate.
 	TCHAR *szStrValue;
 
-	if (pLNG->GetValuePtr(IDD_TRACKSDLG,szStrValue))			// Title.
+	if (pLng->GetValuePtr(IDD_TRACKSDLG,szStrValue))			// Title.
 		SetWindowText(szStrValue);
-	if (pLNG->GetValuePtr(IDOK,szStrValue))
+	if (pLng->GetValuePtr(IDOK,szStrValue))
 		SetDlgItemText(IDOK,szStrValue);
-	if (pLNG->GetValuePtr(IDC_HELPBUTTON,szStrValue))
+	if (pLng->GetValuePtr(IDC_HELPBUTTON,szStrValue))
 		SetDlgItemText(IDC_HELPBUTTON,szStrValue);
-	if (pLNG->GetValuePtr(IDC_DRIVESTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_DRIVESTATIC,szStrValue))
 		SetDlgItemText(IDC_DRIVESTATIC,szStrValue);
 
 	return true;
@@ -832,13 +832,13 @@ LRESULT CTracksDlg::OnToolBarGetInfo(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled)
 	LPTOOLTIPTEXT pTipText = (LPTOOLTIPTEXT)pNMH;
 
 	// Try to load translated string.
-	if (g_LanguageSettings.m_pLNGProcessor != NULL)
+	if (g_LanguageSettings.m_pLngProcessor != NULL)
 	{	
 		// Make sure that there is a hint translation section.
-		if (g_LanguageSettings.m_pLNGProcessor->EnterSection(_T("hint")))
+		if (g_LanguageSettings.m_pLngProcessor->EnterSection(_T("hint")))
 		{
 			TCHAR *szStrValue;
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr((unsigned long)pTipText->hdr.idFrom,szStrValue))
+			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr((unsigned long)pTipText->hdr.idFrom,szStrValue))
 			{
 				pTipText->lpszText = szStrValue;
 				return 0;

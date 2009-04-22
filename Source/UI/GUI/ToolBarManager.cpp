@@ -233,12 +233,12 @@ bool CToolBarManager::FillToolBarCtrl(CToolBarCtrl *pToolBar)
 	return true;
 }
 
-bool CToolBarManager::Save(CXMLProcessor *pXML)
+bool CToolBarManager::Save(CXmlProcessor *pXml)
 {
-	if (pXML == NULL)
+	if (pXml == NULL)
 		return false;
 
-	pXML->AddElement(_T("Buttons"),_T(""),true);
+	pXml->AddElement(_T("Buttons"),_T(""),true);
 		TCHAR szTemp[16];
 
 		int iIndex = 0;
@@ -247,34 +247,34 @@ bool CToolBarManager::Save(CXMLProcessor *pXML)
 			m_SelButtons.end(); itSelButton++,iIndex++)
 		{
 			lsprintf(szTemp,_T("Item%i"),iIndex);
-			pXML->AddElement(szTemp,*itSelButton);
+			pXml->AddElement(szTemp,*itSelButton);
 		}
 
-	pXML->LeaveElement();
+	pXml->LeaveElement();
 	return true;
 }
 
-bool CToolBarManager::Load(CXMLProcessor *pXML)
+bool CToolBarManager::Load(CXmlProcessor *pXml)
 {
-	if (pXML == NULL)
+	if (pXml == NULL)
 		return false;
 
-	if (!pXML->EnterElement(_T("Buttons")))
+	if (!pXml->EnterElement(_T("Buttons")))
 		return false;
 
 	m_SelButtons.clear();
 
 	TCHAR szTemp[16];
-	for (unsigned int i = 0; i < pXML->GetElementChildCount(); i++)
+	for (unsigned int i = 0; i < pXml->GetElementChildCount(); i++)
 	{
 		lsprintf(szTemp,_T("Item%i"),i);
 
 		int iButton = -1;
-		pXML->GetSafeElementData(szTemp,&iButton);
+		pXml->GetSafeElementData(szTemp,&iButton);
 		m_SelButtons.push_back(iButton);
 	}
 
-	pXML->LeaveElement();
+	pXml->LeaveElement();
 	return true;
 }
 

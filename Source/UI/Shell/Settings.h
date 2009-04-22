@@ -17,37 +17,37 @@
  */
 
 #pragma once
-#include "../../Common/XMLProcessor.h"
-#include "../../Common/LNGProcessor.h"
+#include "../../Common/XmlProcessor.h"
+#include "../../Common/LngProcessor.h"
 
 class ISettings
 {
 public:
-	virtual bool Load(CXMLProcessor *pXML) = 0;
+	virtual bool Load(CXmlProcessor *pXml) = 0;
 };
 
 class CLanguageSettings : public ISettings
 {
 public:
 	TCHAR m_szLanguageFile[MAX_PATH];
-	CLNGProcessor *m_pLNGProcessor;
+	CLngProcessor *m_pLngProcessor;
 
 	CLanguageSettings()
 	{
 		m_szLanguageFile[0] = '\0';
-		m_pLNGProcessor = NULL;
+		m_pLngProcessor = NULL;
 	}
 
 	~CLanguageSettings()
 	{
-		if (m_pLNGProcessor != NULL)
+		if (m_pLngProcessor != NULL)
 		{
-			delete m_pLNGProcessor;
-			m_pLNGProcessor = NULL;
+			delete m_pLngProcessor;
+			m_pLngProcessor = NULL;
 		}
 	}
 
-	bool Load(CXMLProcessor *pXML);
+	bool Load(CXmlProcessor *pXml);
 };
 
 class CGlobalSettings : public ISettings
@@ -64,7 +64,7 @@ public:
 		m_bShellExtIcon = true;
 	}
 
-	bool Load(CXMLProcessor *pXML);
+	bool Load(CXmlProcessor *pXml);
 };
 
 extern CLanguageSettings g_LanguageSettings;

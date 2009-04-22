@@ -26,13 +26,13 @@
 CProjectPropFieldsPage::CProjectPropFieldsPage()
 {
 	// Try to load translated string.
-	if (g_LanguageSettings.m_pLNGProcessor != NULL)
+	if (g_LanguageSettings.m_pLngProcessor != NULL)
 	{	
 		// Make sure that there is a strings translation section.
-		if (g_LanguageSettings.m_pLNGProcessor->EnterSection(_T("strings")))
+		if (g_LanguageSettings.m_pLngProcessor->EnterSection(_T("strings")))
 		{
 			TCHAR *szStrValue;
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(TITLE_FIELDS,szStrValue))
+			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(TITLE_FIELDS,szStrValue))
 				SetTitle(szStrValue);
 		}
 	}
@@ -46,20 +46,20 @@ CProjectPropFieldsPage::~CProjectPropFieldsPage()
 
 bool CProjectPropFieldsPage::Translate()
 {
-	if (g_LanguageSettings.m_pLNGProcessor == NULL)
+	if (g_LanguageSettings.m_pLngProcessor == NULL)
 		return false;
 
-	CLNGProcessor *pLNG = g_LanguageSettings.m_pLNGProcessor;
+	CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
 	
 	// Make sure that there is a projectprop translation section.
-	if (!pLNG->EnterSection(_T("projectprop")))
+	if (!pLng->EnterSection(_T("projectprop")))
 		return false;
 
 	// Translate.
 	TCHAR *szStrValue;
 	int iMaxStaticRight = 0;
 
-	if (pLNG->GetValuePtr(IDC_PUBLISHERSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_PUBLISHERSTATIC,szStrValue))
 	{
 		SetDlgItemText(IDC_PUBLISHERSTATIC,szStrValue);
 
@@ -68,7 +68,7 @@ bool CProjectPropFieldsPage::Translate()
 		if (iStaticRight > iMaxStaticRight)
 			iMaxStaticRight = iStaticRight;
 	}
-	if (pLNG->GetValuePtr(IDC_PREPARERSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_PREPARERSTATIC,szStrValue))
 	{
 		SetDlgItemText(IDC_PREPARERSTATIC,szStrValue);
 
@@ -77,7 +77,7 @@ bool CProjectPropFieldsPage::Translate()
 		if (iStaticRight > iMaxStaticRight)
 			iMaxStaticRight = iStaticRight;
 	}
-	if (pLNG->GetValuePtr(IDC_SYSTEMSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_SYSTEMSTATIC,szStrValue))
 	{
 		SetDlgItemText(IDC_SYSTEMSTATIC,szStrValue);
 
@@ -86,7 +86,7 @@ bool CProjectPropFieldsPage::Translate()
 		if (iStaticRight > iMaxStaticRight)
 			iMaxStaticRight = iStaticRight;
 	}
-	if (pLNG->GetValuePtr(IDC_VOLUMESTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_VOLUMESTATIC,szStrValue))
 	{
 		SetDlgItemText(IDC_VOLUMESTATIC,szStrValue);
 
@@ -95,7 +95,7 @@ bool CProjectPropFieldsPage::Translate()
 		if (iStaticRight > iMaxStaticRight)
 			iMaxStaticRight = iStaticRight;
 	}
-	if (pLNG->GetValuePtr(IDC_COPYRIGHTSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_COPYRIGHTSTATIC,szStrValue))
 	{
 		SetDlgItemText(IDC_COPYRIGHTSTATIC,szStrValue);
 
@@ -104,7 +104,7 @@ bool CProjectPropFieldsPage::Translate()
 		if (iStaticRight > iMaxStaticRight)
 			iMaxStaticRight = iStaticRight;
 	}
-	if (pLNG->GetValuePtr(IDC_ABSTRACTSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_ABSTRACTSTATIC,szStrValue))
 	{
 		SetDlgItemText(IDC_ABSTRACTSTATIC,szStrValue);
 
@@ -113,7 +113,7 @@ bool CProjectPropFieldsPage::Translate()
 		if (iStaticRight > iMaxStaticRight)
 			iMaxStaticRight = iStaticRight;
 	}
-	if (pLNG->GetValuePtr(IDC_BIBLIOGRAPHICSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_BIBLIOGRAPHICSTATIC,szStrValue))
 	{
 		SetDlgItemText(IDC_BIBLIOGRAPHICSTATIC,szStrValue);
 

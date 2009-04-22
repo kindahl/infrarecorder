@@ -38,33 +38,33 @@ CConfirmFileReplaceDlg::~CConfirmFileReplaceDlg()
 
 bool CConfirmFileReplaceDlg::Translate()
 {
-	if (g_LanguageSettings.m_pLNGProcessor == NULL)
+	if (g_LanguageSettings.m_pLngProcessor == NULL)
 		return false;
 
-	CLNGProcessor *pLNG = g_LanguageSettings.m_pLNGProcessor;
+	CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
 	
 	// Make sure that there is an erase translation section.
-	if (!pLNG->EnterSection(_T("confirmfilereplace")))
+	if (!pLng->EnterSection(_T("confirmfilereplace")))
 		return false;
 
 	// Translate.
 	TCHAR *szStrValue;
 
-	if (pLNG->GetValuePtr(IDD_CONFIRMFILEREPLACEDLG,szStrValue))		// Title.
+	if (pLng->GetValuePtr(IDD_CONFIRMFILEREPLACEDLG,szStrValue))		// Title.
 		SetWindowText(szStrValue);
-	if (pLNG->GetValuePtr(IDC_YESBUTTON,szStrValue))
+	if (pLng->GetValuePtr(IDC_YESBUTTON,szStrValue))
 		SetDlgItemText(IDC_YESBUTTON,szStrValue);
-	if (pLNG->GetValuePtr(IDC_YESALLBUTTON,szStrValue))
+	if (pLng->GetValuePtr(IDC_YESALLBUTTON,szStrValue))
 		SetDlgItemText(IDC_YESALLBUTTON,szStrValue);
-	if (pLNG->GetValuePtr(IDC_NOBUTTON,szStrValue))
+	if (pLng->GetValuePtr(IDC_NOBUTTON,szStrValue))
 		SetDlgItemText(IDC_NOBUTTON,szStrValue);
-	if (pLNG->GetValuePtr(IDC_NOALLBUTTON,szStrValue))
+	if (pLng->GetValuePtr(IDC_NOALLBUTTON,szStrValue))
 		SetDlgItemText(IDC_NOALLBUTTON,szStrValue);
-	if (pLNG->GetValuePtr(IDC_INFOSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_INFOSTATIC,szStrValue))
 		SetDlgItemText(IDC_INFOSTATIC,szStrValue);
-	if (pLNG->GetValuePtr(IDC_REPLACEINFOSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_REPLACEINFOSTATIC,szStrValue))
 		SetDlgItemText(IDC_REPLACEINFOSTATIC,szStrValue);
-	if (pLNG->GetValuePtr(IDC_REPLACEINFO2STATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_REPLACEINFO2STATIC,szStrValue))
 		SetDlgItemText(IDC_REPLACEINFO2STATIC,szStrValue);
 
 	return true;

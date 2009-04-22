@@ -546,13 +546,13 @@ void CMainFrame::InitializeProjectImageLists()
 
 bool CMainFrame::Translate()
 {
-	if (g_LanguageSettings.m_pLNGProcessor == NULL)
+	if (g_LanguageSettings.m_pLngProcessor == NULL)
 		return false;
 
-	CLNGProcessor *pLNG = g_LanguageSettings.m_pLNGProcessor;
+	CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
 	
 	// Make sure that there is a main translation section.
-	if (!pLNG->EnterSection(_T("main")))
+	if (!pLng->EnterSection(_T("main")))
 		return false;
 
 	// Sub menus.
@@ -561,25 +561,25 @@ bool CMainFrame::Translate()
 	HMENU hMainMenu = m_CmdBar.GetMenu();
 	HMENU hCurMenu;
 
-	if (pLNG->GetValuePtr(ID_MENUROOT_FILE,szStrValue))			// File.
+	if (pLng->GetValuePtr(ID_MENUROOT_FILE,szStrValue))			// File.
 	{
 		hCurMenu = ::GetSubMenu(hMainMenu,0);
 		::ModifyMenu(hMainMenu,0,MF_POPUP | MF_BYPOSITION | MF_STRING,(UINT_PTR)hCurMenu,szStrValue);
 	}
 
-	if (pLNG->GetValuePtr(ID_MENUROOT_EDIT,szStrValue))			// Edit.
+	if (pLng->GetValuePtr(ID_MENUROOT_EDIT,szStrValue))			// Edit.
 	{
 		hCurMenu = ::GetSubMenu(hMainMenu,1);
 		::ModifyMenu(hMainMenu,1,MF_POPUP | MF_BYPOSITION | MF_STRING,(UINT_PTR)hCurMenu,szStrValue);
 	}
 
-	if (pLNG->GetValuePtr(ID_MENUROOT_ACTIONS,szStrValue))		// Actions.
+	if (pLng->GetValuePtr(ID_MENUROOT_ACTIONS,szStrValue))		// Actions.
 	{
 		hCurMenu = ::GetSubMenu(hMainMenu,2);
 		::ModifyMenu(hMainMenu,2,MF_POPUP | MF_BYPOSITION | MF_STRING,(UINT_PTR)hCurMenu,szStrValue);
 	}
 
-	if (pLNG->GetValuePtr(ID_MENUROOT_VIEW,szStrValue))			// View.
+	if (pLng->GetValuePtr(ID_MENUROOT_VIEW,szStrValue))			// View.
 	{
 		hCurMenu = ::GetSubMenu(hMainMenu,3);
 		::ModifyMenu(hMainMenu,3,MF_POPUP | MF_BYPOSITION | MF_STRING,(UINT_PTR)hCurMenu,szStrValue);
@@ -591,13 +591,13 @@ bool CMainFrame::Translate()
 		::ModifyMenu(hCurMenu,0,MF_POPUP | MF_BYPOSITION | MF_STRING,(UINT_PTR)hViewMenu,szStrValue);
 	}
 
-	if (pLNG->GetValuePtr(ID_MENUROOT_OPTIONS,szStrValue))		// Options.
+	if (pLng->GetValuePtr(ID_MENUROOT_OPTIONS,szStrValue))		// Options.
 	{
 		hCurMenu = ::GetSubMenu(hMainMenu,4);
 		::ModifyMenu(hMainMenu,4,MF_POPUP | MF_BYPOSITION | MF_STRING,(UINT_PTR)hCurMenu,szStrValue);
 	}
 
-	if (pLNG->GetValuePtr(ID_MENUROOT_HELP,szStrValue))			// Help.
+	if (pLng->GetValuePtr(ID_MENUROOT_HELP,szStrValue))			// Help.
 	{
 		hCurMenu = ::GetSubMenu(hMainMenu,5);
 		::ModifyMenu(hMainMenu,5,MF_POPUP | MF_BYPOSITION | MF_STRING,(UINT_PTR)hCurMenu,szStrValue);
@@ -606,7 +606,7 @@ bool CMainFrame::Translate()
 	m_CmdBar.AttachMenu(hMainMenu);
 	HMENU hSubMenu = GetSubMenu(hMainMenu,0);
 
-	if (pLNG->GetValuePtr(ID_FILE_NEWPROJECT,szStrValue))		// File -> New Project.
+	if (pLng->GetValuePtr(ID_FILE_NEWPROJECT,szStrValue))		// File -> New Project.
 	{
 		hCurMenu = ::GetSubMenu(hSubMenu,0);
 		::ModifyMenu(hSubMenu,0,MF_POPUP | MF_BYPOSITION | MF_STRING,(UINT_PTR)hCurMenu,szStrValue);
@@ -614,7 +614,7 @@ bool CMainFrame::Translate()
 
 	hSubMenu = GetSubMenu(hMainMenu,1);
 
-	if (pLNG->GetValuePtr(ID_EDIT_ADDPROJECT,szStrValue))		// Edit -> Add.
+	if (pLng->GetValuePtr(ID_EDIT_ADDPROJECT,szStrValue))		// Edit -> Add.
 	{
 		hCurMenu = ::GetSubMenu(hSubMenu,3);
 		::ModifyMenu(hSubMenu,3,MF_POPUP | MF_BYPOSITION | MF_STRING,(UINT_PTR)hCurMenu,szStrValue);
@@ -622,25 +622,25 @@ bool CMainFrame::Translate()
 
 	hSubMenu = GetSubMenu(hMainMenu,2);
 
-	if (pLNG->GetValuePtr(ID_ACTIONS_BURNCOMPILATION,szStrValue))		// Actions -> Burn Compilation.
+	if (pLng->GetValuePtr(ID_ACTIONS_BURNCOMPILATION,szStrValue))		// Actions -> Burn Compilation.
 	{
 		hCurMenu = ::GetSubMenu(hSubMenu,0);
 		::ModifyMenu(hSubMenu,0,MF_POPUP | MF_BYPOSITION | MF_STRING,(UINT_PTR)hCurMenu,szStrValue);
 	}
 
-	if (pLNG->GetValuePtr(ID_ACTIONS_COPYDISC,szStrValue))				// Actions -> Copy Disc.
+	if (pLng->GetValuePtr(ID_ACTIONS_COPYDISC,szStrValue))				// Actions -> Copy Disc.
 	{
 		hCurMenu = ::GetSubMenu(hSubMenu,2);
 		::ModifyMenu(hSubMenu,2,MF_POPUP | MF_BYPOSITION | MF_STRING,(UINT_PTR)hCurMenu,szStrValue);
 	}
 
-	if (pLNG->GetValuePtr(ID_ACTIONS_DISCINFORMATION,szStrValue))
+	if (pLng->GetValuePtr(ID_ACTIONS_DISCINFORMATION,szStrValue))
 	{
 		hCurMenu = ::GetSubMenu(hSubMenu,MENU_DISCINFO_INDEX);
 		::ModifyMenu(hSubMenu,MENU_DISCINFO_INDEX,MF_POPUP | MF_BYPOSITION | MF_STRING,(UINT_PTR)hCurMenu,szStrValue);
 	}
 
-	if (pLNG->GetValuePtr(ID_ACTIONS_EJECT,szStrValue))					// Actions -> Eject Disc.
+	if (pLng->GetValuePtr(ID_ACTIONS_EJECT,szStrValue))					// Actions -> Eject Disc.
 	{
 		hCurMenu = ::GetSubMenu(hSubMenu,MENU_EJECTDISC_INDEX);
 		::ModifyMenu(hSubMenu,MENU_EJECTDISC_INDEX,MF_POPUP | MF_BYPOSITION | MF_STRING,(UINT_PTR)hCurMenu,szStrValue);
@@ -648,7 +648,7 @@ bool CMainFrame::Translate()
 
 	hSubMenu = GetSubMenu(hMainMenu,3);
 
-	if (pLNG->GetValuePtr(ID_VIEW_TOOLBARS,szStrValue))					// View -> Toolbars.
+	if (pLng->GetValuePtr(ID_VIEW_TOOLBARS,szStrValue))					// View -> Toolbars.
 	{
 		hCurMenu = ::GetSubMenu(hSubMenu,0);
 		::ModifyMenu(hSubMenu,0,MF_POPUP | MF_BYPOSITION | MF_STRING,(UINT_PTR)hCurMenu,szStrValue);
@@ -656,7 +656,7 @@ bool CMainFrame::Translate()
 
 	// File menu.
 	hCurMenu = GetSubMenu(hMainMenu,0);
-	if (pLNG->GetValuePtr(ID_FILE_OPEN,szStrValue))
+	if (pLng->GetValuePtr(ID_FILE_OPEN,szStrValue))
 	{
 		TCHAR szMenuString[64];
 		lstrncpy(szMenuString,szStrValue,sizeof(szMenuString) / sizeof(TCHAR) - 8);
@@ -664,7 +664,7 @@ bool CMainFrame::Translate()
 
 		ModifyMenu(hCurMenu,ID_FILE_OPEN,MF_BYCOMMAND | MF_STRING,ID_FILE_OPEN,(LPCTSTR)szMenuString);
 	}
-	if (pLNG->GetValuePtr(ID_FILE_SAVE,szStrValue))
+	if (pLng->GetValuePtr(ID_FILE_SAVE,szStrValue))
 	{
 		TCHAR szMenuString[64];
 		lstrncpy(szMenuString,szStrValue,sizeof(szMenuString) / sizeof(TCHAR) - 8);
@@ -672,38 +672,38 @@ bool CMainFrame::Translate()
 
 		ModifyMenu(hCurMenu,ID_FILE_SAVE,MF_BYCOMMAND | MF_STRING,ID_FILE_SAVE,(LPCTSTR)szMenuString);
 	}
-	if (pLNG->GetValuePtr(ID_FILE_SAVE_AS,szStrValue))
+	if (pLng->GetValuePtr(ID_FILE_SAVE_AS,szStrValue))
 		ModifyMenu(hCurMenu,ID_FILE_SAVE_AS,MF_BYCOMMAND | MF_STRING,ID_FILE_SAVE_AS,(LPCTSTR)szStrValue);
-	if (pLNG->GetValuePtr(ID_FILE_PROJECTPROPERTIES,szStrValue))
+	if (pLng->GetValuePtr(ID_FILE_PROJECTPROPERTIES,szStrValue))
 		ModifyMenu(hCurMenu,ID_FILE_PROJECTPROPERTIES,MF_BYCOMMAND | MF_STRING,ID_FILE_PROJECTPROPERTIES,(LPCTSTR)szStrValue);
-	if (pLNG->GetValuePtr(ID_APP_EXIT,szStrValue))
+	if (pLng->GetValuePtr(ID_APP_EXIT,szStrValue))
 		ModifyMenu(hCurMenu,ID_APP_EXIT,MF_BYCOMMAND | MF_STRING,ID_APP_EXIT,(LPCTSTR)szStrValue);
 
 	// New project menu.
 	hCurMenu = GetSubMenu(hCurMenu,0);
-	if (pLNG->GetValuePtr(ID_NEWPROJECT_DATACD,szStrValue))
+	if (pLng->GetValuePtr(ID_NEWPROJECT_DATACD,szStrValue))
 		ModifyMenu(hCurMenu,ID_NEWPROJECT_DATACD,MF_BYCOMMAND | MF_STRING,ID_NEWPROJECT_DATACD,(LPCTSTR)szStrValue);
-	if (pLNG->GetValuePtr(ID_NEWPROJECT_DATACDMS,szStrValue))
+	if (pLng->GetValuePtr(ID_NEWPROJECT_DATACDMS,szStrValue))
 		ModifyMenu(hCurMenu,ID_NEWPROJECT_DATACDMS,MF_BYCOMMAND | MF_STRING,ID_NEWPROJECT_DATACDMS,(LPCTSTR)szStrValue);
-	if (pLNG->GetValuePtr(ID_NEWPROJECT_AUDIO,szStrValue))
+	if (pLng->GetValuePtr(ID_NEWPROJECT_AUDIO,szStrValue))
 		ModifyMenu(hCurMenu,ID_NEWPROJECT_AUDIO,MF_BYCOMMAND | MF_STRING,ID_NEWPROJECT_AUDIO,(LPCTSTR)szStrValue);
-	if (pLNG->GetValuePtr(ID_NEWPROJECT_MIXED,szStrValue))
+	if (pLng->GetValuePtr(ID_NEWPROJECT_MIXED,szStrValue))
 		ModifyMenu(hCurMenu,ID_NEWPROJECT_MIXED,MF_BYCOMMAND | MF_STRING,ID_NEWPROJECT_MIXED,(LPCTSTR)szStrValue);
-	if (pLNG->GetValuePtr(ID_NEWPROJECT_DVDVIDEO,szStrValue))
+	if (pLng->GetValuePtr(ID_NEWPROJECT_DVDVIDEO,szStrValue))
 		ModifyMenu(hCurMenu,ID_NEWPROJECT_DVDVIDEO,MF_BYCOMMAND | MF_STRING,ID_NEWPROJECT_DVDVIDEO,(LPCTSTR)szStrValue);
-	if (pLNG->GetValuePtr(ID_NEWPROJECT_DATADVD,szStrValue))
+	if (pLng->GetValuePtr(ID_NEWPROJECT_DATADVD,szStrValue))
 		ModifyMenu(hCurMenu,ID_NEWPROJECT_DATADVD,MF_BYCOMMAND | MF_STRING,ID_NEWPROJECT_DATADVD,(LPCTSTR)szStrValue);
 
 	// Edit menu.
 	hCurMenu = GetSubMenu(hMainMenu,1);
-	if (pLNG->GetValuePtr(ID_EDIT_NEWFOLDER,szStrValue))
+	if (pLng->GetValuePtr(ID_EDIT_NEWFOLDER,szStrValue))
 	{
 		ModifyMenu(hCurMenu,ID_EDIT_NEWFOLDER,MF_BYCOMMAND | MF_STRING,ID_EDIT_NEWFOLDER,(LPCTSTR)szStrValue);
 
 		// Modify the popup menu.
 		ModifyMenu(m_hProjListNoSelMenu,ID_EDIT_NEWFOLDER,MF_BYCOMMAND | MF_STRING,ID_EDIT_NEWFOLDER,(LPCTSTR)szStrValue);
 	}
-	if (pLNG->GetValuePtr(ID_EDIT_RENAME,szStrValue))
+	if (pLng->GetValuePtr(ID_EDIT_RENAME,szStrValue))
 	{
 		TCHAR szMenuString[64];
 		lstrncpy(szMenuString,szStrValue,sizeof(szMenuString) / sizeof(TCHAR) - 4);
@@ -714,7 +714,7 @@ bool CMainFrame::Translate()
 		// Modify the popup menu.
 		ModifyMenu(m_hProjListSelMenu,ID_EDIT_RENAME,MF_BYCOMMAND | MF_STRING,ID_EDIT_RENAME,(LPCTSTR)szStrValue);
 	}
-	if (pLNG->GetValuePtr(ID_EDIT_REMOVE,szStrValue))
+	if (pLng->GetValuePtr(ID_EDIT_REMOVE,szStrValue))
 	{
 		TCHAR szMenuString[64];
 		lstrncpy(szMenuString,szStrValue,sizeof(szMenuString) / sizeof(TCHAR) - 5);
@@ -725,9 +725,9 @@ bool CMainFrame::Translate()
 		// Modify the popup menu.
 		ModifyMenu(m_hProjListSelMenu,ID_EDIT_REMOVE,MF_BYCOMMAND | MF_STRING,ID_EDIT_REMOVE,(LPCTSTR)szStrValue);
 	}
-	if (pLNG->GetValuePtr(ID_EDIT_IMPORT,szStrValue))
+	if (pLng->GetValuePtr(ID_EDIT_IMPORT,szStrValue))
 		ModifyMenu(hCurMenu,ID_EDIT_IMPORT,MF_BYCOMMAND | MF_STRING,ID_EDIT_IMPORT,(LPCTSTR)szStrValue);
-	if (pLNG->GetValuePtr(ID_EDIT_SELECTALL,szStrValue))
+	if (pLng->GetValuePtr(ID_EDIT_SELECTALL,szStrValue))
 	{
 		TCHAR szMenuString[64];
 		lstrncpy(szMenuString,szStrValue,sizeof(szMenuString) / sizeof(TCHAR) - 8);
@@ -735,71 +735,71 @@ bool CMainFrame::Translate()
 
 		ModifyMenu(hCurMenu,ID_EDIT_SELECTALL,MF_BYCOMMAND | MF_STRING,ID_EDIT_SELECTALL,(LPCTSTR)szMenuString);
 	}
-	if (pLNG->GetValuePtr(ID_EDIT_INVERTSELECTION,szStrValue))
+	if (pLng->GetValuePtr(ID_EDIT_INVERTSELECTION,szStrValue))
 		ModifyMenu(hCurMenu,ID_EDIT_INVERTSELECTION,MF_BYCOMMAND | MF_STRING,ID_EDIT_INVERTSELECTION,(LPCTSTR)szStrValue);
 
 	// Add menu.
 	hCurMenu = GetSubMenu(hCurMenu,3);
-	if (pLNG->GetValuePtr(ID_ADD_SELECTED,szStrValue))
+	if (pLng->GetValuePtr(ID_ADD_SELECTED,szStrValue))
 		ModifyMenu(hCurMenu,ID_ADD_SELECTED,MF_BYCOMMAND | MF_STRING,ID_ADD_SELECTED,(LPCTSTR)szStrValue);
-	if (pLNG->GetValuePtr(ID_ADD_ALL,szStrValue))
+	if (pLng->GetValuePtr(ID_ADD_ALL,szStrValue))
 		ModifyMenu(hCurMenu,ID_ADD_ALL,MF_BYCOMMAND | MF_STRING,ID_ADD_ALL,(LPCTSTR)szStrValue);
 
 	// Actions menu.
 	hCurMenu = GetSubMenu(hMainMenu,2);
-	if (pLNG->GetValuePtr(ID_ACTIONS_BURNIMAGE,szStrValue))
+	if (pLng->GetValuePtr(ID_ACTIONS_BURNIMAGE,szStrValue))
 		ModifyMenu(hCurMenu,ID_ACTIONS_BURNIMAGE,MF_BYCOMMAND | MF_STRING,ID_ACTIONS_BURNIMAGE,(LPCTSTR)szStrValue);
-	if (pLNG->GetValuePtr(ID_ACTIONS_MANAGETRACKS,szStrValue))
+	if (pLng->GetValuePtr(ID_ACTIONS_MANAGETRACKS,szStrValue))
 		ModifyMenu(hCurMenu,ID_ACTIONS_MANAGETRACKS,MF_BYCOMMAND | MF_STRING,ID_ACTIONS_MANAGETRACKS,(LPCTSTR)szStrValue);
-	if (pLNG->GetValuePtr(ID_ACTIONS_ERASERE,szStrValue))
+	if (pLng->GetValuePtr(ID_ACTIONS_ERASERE,szStrValue))
 		ModifyMenu(hCurMenu,ID_ACTIONS_ERASERE,MF_BYCOMMAND | MF_STRING,ID_ACTIONS_ERASERE,(LPCTSTR)szStrValue);
-	if (pLNG->GetValuePtr(ID_ACTIONS_FIXATEDISC,szStrValue))
+	if (pLng->GetValuePtr(ID_ACTIONS_FIXATEDISC,szStrValue))
 		ModifyMenu(hCurMenu,ID_ACTIONS_FIXATEDISC,MF_BYCOMMAND | MF_STRING,ID_ACTIONS_FIXATEDISC,(LPCTSTR)szStrValue);
-	if (pLNG->GetValuePtr(ID_ACTIONS_IMPORTSESSION,szStrValue))
+	if (pLng->GetValuePtr(ID_ACTIONS_IMPORTSESSION,szStrValue))
 		ModifyMenu(hCurMenu,ID_ACTIONS_IMPORTSESSION,MF_BYCOMMAND | MF_STRING,ID_ACTIONS_IMPORTSESSION,(LPCTSTR)szStrValue);
 
 	// Burn compilation menu.
 	hCurMenu = GetSubMenu(hCurMenu,0);
-	if (pLNG->GetValuePtr(ID_BURNCOMPILATION_DISCIMAGE,szStrValue))
+	if (pLng->GetValuePtr(ID_BURNCOMPILATION_DISCIMAGE,szStrValue))
 		ModifyMenu(hCurMenu,ID_BURNCOMPILATION_DISCIMAGE,MF_BYCOMMAND | MF_STRING,ID_BURNCOMPILATION_DISCIMAGE,(LPCTSTR)szStrValue);
-	if (pLNG->GetValuePtr(ID_BURNCOMPILATION_COMPACTDISC,szStrValue))
+	if (pLng->GetValuePtr(ID_BURNCOMPILATION_COMPACTDISC,szStrValue))
 		ModifyMenu(hCurMenu,ID_BURNCOMPILATION_COMPACTDISC,MF_BYCOMMAND | MF_STRING,ID_BURNCOMPILATION_COMPACTDISC,(LPCTSTR)szStrValue);
 
 	// Copy disc menu (same strings as compilation menu).
 	hCurMenu = GetSubMenu(GetSubMenu(hMainMenu,2),2);
-	if (pLNG->GetValuePtr(ID_BURNCOMPILATION_DISCIMAGE,szStrValue))
+	if (pLng->GetValuePtr(ID_BURNCOMPILATION_DISCIMAGE,szStrValue))
 		ModifyMenu(hCurMenu,ID_COPYDISC_DISCIMAGE,MF_BYCOMMAND | MF_STRING,ID_COPYDISC_DISCIMAGE,(LPCTSTR)szStrValue);
-	if (pLNG->GetValuePtr(ID_BURNCOMPILATION_COMPACTDISC,szStrValue))
+	if (pLng->GetValuePtr(ID_BURNCOMPILATION_COMPACTDISC,szStrValue))
 		ModifyMenu(hCurMenu,ID_COPYDISC_COMPACTDISC,MF_BYCOMMAND | MF_STRING,ID_COPYDISC_COMPACTDISC,(LPCTSTR)szStrValue);
 
 	// View menu.
 	hCurMenu = GetSubMenu(hMainMenu,3);
-	if (pLNG->GetValuePtr(ID_VIEW_STATUS_BAR,szStrValue))
+	if (pLng->GetValuePtr(ID_VIEW_STATUS_BAR,szStrValue))
 		ModifyMenu(hCurMenu,ID_VIEW_STATUS_BAR,MF_BYCOMMAND | MF_STRING,ID_VIEW_STATUS_BAR,(LPCTSTR)szStrValue);
-	if (pLNG->GetValuePtr(ID_VIEW_PROGRAMLOG,szStrValue))
+	if (pLng->GetValuePtr(ID_VIEW_PROGRAMLOG,szStrValue))
 		ModifyMenu(hCurMenu,ID_VIEW_PROGRAMLOG,MF_BYCOMMAND | MF_STRING,ID_VIEW_PROGRAMLOG,(LPCTSTR)szStrValue);
-	if (pLNG->GetValuePtr(ID_VIEW_LARGEICONS,szStrValue))
+	if (pLng->GetValuePtr(ID_VIEW_LARGEICONS,szStrValue))
 	{
 		ModifyMenu(hCurMenu,ID_VIEW_LARGEICONS,MF_BYCOMMAND | MF_STRING,ID_VIEW_LARGEICONS,(LPCTSTR)szStrValue);
 
 		// Modify the popup menu.
 		ModifyMenu(GetSubMenu(m_hProjListNoSelMenu,0),ID_VIEW_LARGEICONS,MF_BYCOMMAND | MF_STRING,ID_VIEW_LARGEICONS,(LPCTSTR)szStrValue);
 	}
-	if (pLNG->GetValuePtr(ID_VIEW_SMALLICONS,szStrValue))
+	if (pLng->GetValuePtr(ID_VIEW_SMALLICONS,szStrValue))
 	{
 		ModifyMenu(hCurMenu,ID_VIEW_SMALLICONS,MF_BYCOMMAND | MF_STRING,ID_VIEW_SMALLICONS,(LPCTSTR)szStrValue);
 
 		// Modify the popup menu.
 		ModifyMenu(GetSubMenu(m_hProjListNoSelMenu,0),ID_VIEW_SMALLICONS,MF_BYCOMMAND | MF_STRING,ID_VIEW_SMALLICONS,(LPCTSTR)szStrValue);
 	}
-	if (pLNG->GetValuePtr(ID_VIEW_LIST,szStrValue))
+	if (pLng->GetValuePtr(ID_VIEW_LIST,szStrValue))
 	{
 		ModifyMenu(hCurMenu,ID_VIEW_LIST,MF_BYCOMMAND | MF_STRING,ID_VIEW_LIST,(LPCTSTR)szStrValue);
 
 		// Modify the popup menu.
 		ModifyMenu(GetSubMenu(m_hProjListNoSelMenu,0),ID_VIEW_LIST,MF_BYCOMMAND | MF_STRING,ID_VIEW_LIST,(LPCTSTR)szStrValue);
 	}
-	if (pLNG->GetValuePtr(ID_VIEW_DETAILS,szStrValue))
+	if (pLng->GetValuePtr(ID_VIEW_DETAILS,szStrValue))
 	{
 		ModifyMenu(hCurMenu,ID_VIEW_DETAILS,MF_BYCOMMAND | MF_STRING,ID_VIEW_DETAILS,(LPCTSTR)szStrValue);
 
@@ -809,23 +809,23 @@ bool CMainFrame::Translate()
 
 	// Toolbars menu.
 	hCurMenu = GetSubMenu(hCurMenu,0);
-	if (pLNG->GetValuePtr(ID_VIEW_STANDARDTOOLBAR,szStrValue))
+	if (pLng->GetValuePtr(ID_VIEW_STANDARDTOOLBAR,szStrValue))
 		ModifyMenu(hCurMenu,ID_VIEW_STANDARDTOOLBAR,MF_BYCOMMAND | MF_STRING,ID_VIEW_STANDARDTOOLBAR,(LPCTSTR)szStrValue);
-	if (pLNG->GetValuePtr(ID_VIEW_TBCUSTOMIZE,szStrValue))
+	if (pLng->GetValuePtr(ID_VIEW_TBCUSTOMIZE,szStrValue))
 		ModifyMenu(hCurMenu,ID_VIEW_TBCUSTOMIZE,MF_BYCOMMAND | MF_STRING,ID_VIEW_TBCUSTOMIZE,(LPCTSTR)szStrValue);
 
 	// Options menu.
 	hCurMenu = GetSubMenu(hMainMenu,4);
-	if (pLNG->GetValuePtr(ID_OPTIONS_CONFIGURATION,szStrValue))
+	if (pLng->GetValuePtr(ID_OPTIONS_CONFIGURATION,szStrValue))
 		ModifyMenu(hCurMenu,ID_OPTIONS_CONFIGURATION,MF_BYCOMMAND | MF_STRING,ID_OPTIONS_CONFIGURATION,(LPCTSTR)szStrValue);
-	if (pLNG->GetValuePtr(ID_OPTIONS_DEVICES,szStrValue))
+	if (pLng->GetValuePtr(ID_OPTIONS_DEVICES,szStrValue))
 		ModifyMenu(hCurMenu,ID_OPTIONS_DEVICES,MF_BYCOMMAND | MF_STRING,ID_OPTIONS_DEVICES,(LPCTSTR)szStrValue);
 
 	// Help menu.
 	hCurMenu = GetSubMenu(hMainMenu,5);
-	if (pLNG->GetValuePtr(ID_HELP_HELPTOPICS,szStrValue))
+	if (pLng->GetValuePtr(ID_HELP_HELPTOPICS,szStrValue))
 		ModifyMenu(hCurMenu,ID_HELP_HELPTOPICS,MF_BYCOMMAND | MF_STRING,ID_HELP_HELPTOPICS,(LPCTSTR)szStrValue);
-	if (pLNG->GetValuePtr(ID_APP_ABOUT,szStrValue))
+	if (pLng->GetValuePtr(ID_APP_ABOUT,szStrValue))
 	{
 		TCHAR szTitle[32];
 		::LoadString(_Module.GetResourceInstance(),IDR_MAINFRAME,szTitle,32);
@@ -840,7 +840,7 @@ bool CMainFrame::Translate()
 	}
 
 	// Project list seleced menu.
-	if (pLNG->GetValuePtr(ID_POPUPMENU_PROPERTIES,szStrValue))
+	if (pLng->GetValuePtr(ID_POPUPMENU_PROPERTIES,szStrValue))
 	{
 		ModifyMenu(m_hProjListSelMenu,ID_POPUPMENU_PROPERTIES,MF_BYCOMMAND | MF_STRING,
 			ID_POPUPMENU_PROPERTIES,(LPCTSTR)szStrValue);
@@ -2472,13 +2472,13 @@ LRESULT CMainFrame::OnToolTipGetInfo(int idCtrl,LPNMHDR pNMH,BOOL &bHandled)
 	LPTOOLTIPTEXT pTipText = (LPTOOLTIPTEXT)pNMH;
 
 	// Try to load translated string.
-	if (g_LanguageSettings.m_pLNGProcessor != NULL)
+	if (g_LanguageSettings.m_pLngProcessor != NULL)
 	{	
 		// Make sure that there is a hint translation section.
-		if (g_LanguageSettings.m_pLNGProcessor->EnterSection(_T("hint")))
+		if (g_LanguageSettings.m_pLngProcessor->EnterSection(_T("hint")))
 		{
 			TCHAR *szStrValue;
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr((unsigned long)pTipText->hdr.idFrom,szStrValue))
+			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr((unsigned long)pTipText->hdr.idFrom,szStrValue))
 			{
 				pTipText->lpszText = szStrValue;
 				return 0;
@@ -2492,14 +2492,14 @@ LRESULT CMainFrame::OnToolTipGetInfo(int idCtrl,LPNMHDR pNMH,BOOL &bHandled)
 
 LRESULT CMainFrame::OnMenuSelect(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
-	if (g_LanguageSettings.m_pLNGProcessor == NULL)
+	if (g_LanguageSettings.m_pLngProcessor == NULL)
 	{
 		bHandled = false;
 		return TRUE;
 	}
 	
 	// Make sure that there is a hint translation section.
-	if (!g_LanguageSettings.m_pLNGProcessor->EnterSection(_T("hint")))
+	if (!g_LanguageSettings.m_pLngProcessor->EnterSection(_T("hint")))
 	{
 		bHandled = false;
 		return TRUE;
@@ -2514,7 +2514,7 @@ LRESULT CMainFrame::OnMenuSelect(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHa
 		lsprintf(szTemp,_T("%d (%d)"),iIndex,(int)((iFlags & MF_POPUP) > 0));
 
 		TCHAR *szStrValue;
-		if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(iIndex,szStrValue))
+		if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(iIndex,szStrValue))
 			::SendMessage(m_hWndStatusBar,SB_SETTEXT,0,(LPARAM)szStrValue);
 	}
 	else

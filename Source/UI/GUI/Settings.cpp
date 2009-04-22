@@ -34,27 +34,27 @@ CBurnAdvancedSettings g_BurnAdvancedSettings;
 CSaveTracksSettings g_SaveTracksSettings;
 CReadSettings g_ReadSettings;
 
-bool CLanguageSettings::Save(CXMLProcessor *pXML)
+bool CLanguageSettings::Save(CXmlProcessor *pXml)
 {
-	if (pXML == NULL)
+	if (pXml == NULL)
 		return false;
 
-	pXML->AddElement(_T("Language"),_T(""),true);
-		pXML->AddElement(_T("LanguageFile"),m_szLanguageFile);
-	pXML->LeaveElement();
+	pXml->AddElement(_T("Language"),_T(""),true);
+		pXml->AddElement(_T("LanguageFile"),m_szLanguageFile);
+	pXml->LeaveElement();
 
 	return true;
 }
 
-bool CLanguageSettings::Load(CXMLProcessor *pXML)
+bool CLanguageSettings::Load(CXmlProcessor *pXml)
 {
-	if (pXML == NULL)
+	if (pXml == NULL)
 		return false;
 
-	if (!pXML->EnterElement(_T("Language")))
+	if (!pXml->EnterElement(_T("Language")))
 		return false;
 
-	pXML->GetSafeElementData(_T("LanguageFile"),m_szLanguageFile,MAX_PATH - 1);
+	pXml->GetSafeElementData(_T("LanguageFile"),m_szLanguageFile,MAX_PATH - 1);
 
 	// Calculate full path.
 	TCHAR szFullPath[MAX_PATH];
@@ -65,47 +65,47 @@ bool CLanguageSettings::Load(CXMLProcessor *pXML)
 
 	if (ckcore::File::exist(szFullPath))
 	{
-		m_pLNGProcessor = new CLNGProcessor(szFullPath);
-		m_pLNGProcessor->Load();
+		m_pLngProcessor = new CLngProcessor(szFullPath);
+		m_pLngProcessor->Load();
 	}
 
-	pXML->LeaveElement();
+	pXml->LeaveElement();
 	return true;
 }
 
-bool CGlobalSettings::Save(CXMLProcessor *pXML)
+bool CGlobalSettings::Save(CXmlProcessor *pXml)
 {
-	if (pXML == NULL)
+	if (pXml == NULL)
 		return false;
 
-	pXML->AddElement(_T("Global"),_T(""),true);
-		pXML->AddElement(_T("AutoRunCheck"),m_bAutoRunCheck);
-		pXML->AddElement(_T("AutoCheckBus"),m_bAutoCheckBus);
-		pXML->AddElement(_T("Log"),m_bLog);
-		pXML->AddElement(_T("RememberShell"),m_bRememberShell);
-		pXML->AddElement(_T("CopyWarning"),m_bCopyWarning);
-		pXML->AddElement(_T("RawImageInfo"),m_bRawImageInfo);
-		pXML->AddElement(_T("CharSetWarning"),m_bCharSetWarning);
-		pXML->AddElement(_T("WriteSpeedWarning"),m_bWriteSpeedWarning);
-		pXML->AddElement(_T("CodecWarning"),m_bCodecWarning);
-		pXML->AddElement(_T("FixateWarning"),m_bFixateWarning);
-		pXML->AddElement(_T("Smoke"),m_bSmoke);
-		pXML->AddElement(_T("Wizard"),m_bShowWizard);
-		pXML->AddElement(_T("GraceTime"),m_iGraceTime);
-		pXML->AddElement(_T("FIFO"),m_iFIFOSize);
+	pXml->AddElement(_T("Global"),_T(""),true);
+		pXml->AddElement(_T("AutoRunCheck"),m_bAutoRunCheck);
+		pXml->AddElement(_T("AutoCheckBus"),m_bAutoCheckBus);
+		pXml->AddElement(_T("Log"),m_bLog);
+		pXml->AddElement(_T("RememberShell"),m_bRememberShell);
+		pXml->AddElement(_T("CopyWarning"),m_bCopyWarning);
+		pXml->AddElement(_T("RawImageInfo"),m_bRawImageInfo);
+		pXml->AddElement(_T("CharSetWarning"),m_bCharSetWarning);
+		pXml->AddElement(_T("WriteSpeedWarning"),m_bWriteSpeedWarning);
+		pXml->AddElement(_T("CodecWarning"),m_bCodecWarning);
+		pXml->AddElement(_T("FixateWarning"),m_bFixateWarning);
+		pXml->AddElement(_T("Smoke"),m_bSmoke);
+		pXml->AddElement(_T("Wizard"),m_bShowWizard);
+		pXml->AddElement(_T("GraceTime"),m_iGraceTime);
+		pXml->AddElement(_T("FIFO"),m_iFIFOSize);
 		if (m_iFIFOSize > FIFO_MAX)
 			m_iFIFOSize = FIFO_MAX;
 		else if (m_iFIFOSize < FIFO_MIN)
 			m_iFIFOSize = FIFO_MIN;
 
 		// Temporary folder.
-		pXML->AddElement(_T("TempPath"),m_szTempPath);
+		pXml->AddElement(_T("TempPath"),m_szTempPath);
 
 		// Shell extension.
-		pXML->AddElement(_T("ShellExtension"),_T(""),true);
-			pXML->AddElementAttr(_T("submenu"),m_bShellExtSubMenu);
-			pXML->AddElementAttr(_T("icons"),m_bShellExtIcon);
-			pXML->AddElementAttr(_T("count"),(int)m_szShellExt.size());
+		pXml->AddElement(_T("ShellExtension"),_T(""),true);
+			pXml->AddElementAttr(_T("submenu"),m_bShellExtSubMenu);
+			pXml->AddElementAttr(_T("icons"),m_bShellExtIcon);
+			pXml->AddElementAttr(_T("count"),(int)m_szShellExt.size());
 
 			TCHAR szItemName[32];
 			int iItemCount = 0;
@@ -113,39 +113,39 @@ bool CGlobalSettings::Save(CXMLProcessor *pXML)
 			for (itNodeObject = m_szShellExt.begin(); itNodeObject != m_szShellExt.end(); itNodeObject++)
 			{
 				lsprintf(szItemName,_T("Item%i"),iItemCount++);
-				pXML->AddElement(szItemName,(*itNodeObject).c_str());
+				pXml->AddElement(szItemName,(*itNodeObject).c_str());
 			}
-		pXML->LeaveElement();
-	pXML->LeaveElement();
+		pXml->LeaveElement();
+	pXml->LeaveElement();
 
 	return true;
 }
 
-bool CGlobalSettings::Load(CXMLProcessor *pXML)
+bool CGlobalSettings::Load(CXmlProcessor *pXml)
 {
-	if (pXML == NULL)
+	if (pXml == NULL)
 		return false;
 
-	if (!pXML->EnterElement(_T("Global")))
+	if (!pXml->EnterElement(_T("Global")))
 		return false;
 
-	pXML->GetSafeElementData(_T("AutoRunCheck"),&m_bAutoRunCheck);
-	pXML->GetSafeElementData(_T("AutoCheckBus"),&m_bAutoCheckBus);
-	pXML->GetSafeElementData(_T("Log"),&m_bLog);
-	pXML->GetSafeElementData(_T("RememberShell"),&m_bRememberShell);
-	pXML->GetSafeElementData(_T("CopyWarning"),&m_bCopyWarning);
-	pXML->GetSafeElementData(_T("RawImageInfo"),&m_bRawImageInfo);
-	pXML->GetSafeElementData(_T("CharSetWarning"),&m_bCharSetWarning);
-	pXML->GetSafeElementData(_T("WriteSpeedWarning"),&m_bWriteSpeedWarning);
-	pXML->GetSafeElementData(_T("CodecWarning"),&m_bCodecWarning);
-	pXML->GetSafeElementData(_T("FixateWarning"),&m_bFixateWarning);
-	pXML->GetSafeElementData(_T("Smoke"),&m_bSmoke);
-	pXML->GetSafeElementData(_T("Wizard"),&m_bShowWizard);
-	pXML->GetSafeElementData(_T("GraceTime"),&m_iGraceTime);
-	pXML->GetSafeElementData(_T("FIFO"),&m_iFIFOSize);
+	pXml->GetSafeElementData(_T("AutoRunCheck"),&m_bAutoRunCheck);
+	pXml->GetSafeElementData(_T("AutoCheckBus"),&m_bAutoCheckBus);
+	pXml->GetSafeElementData(_T("Log"),&m_bLog);
+	pXml->GetSafeElementData(_T("RememberShell"),&m_bRememberShell);
+	pXml->GetSafeElementData(_T("CopyWarning"),&m_bCopyWarning);
+	pXml->GetSafeElementData(_T("RawImageInfo"),&m_bRawImageInfo);
+	pXml->GetSafeElementData(_T("CharSetWarning"),&m_bCharSetWarning);
+	pXml->GetSafeElementData(_T("WriteSpeedWarning"),&m_bWriteSpeedWarning);
+	pXml->GetSafeElementData(_T("CodecWarning"),&m_bCodecWarning);
+	pXml->GetSafeElementData(_T("FixateWarning"),&m_bFixateWarning);
+	pXml->GetSafeElementData(_T("Smoke"),&m_bSmoke);
+	pXml->GetSafeElementData(_T("Wizard"),&m_bShowWizard);
+	pXml->GetSafeElementData(_T("GraceTime"),&m_iGraceTime);
+	pXml->GetSafeElementData(_T("FIFO"),&m_iFIFOSize);
 
 	// Temporary folder.
-	pXML->GetSafeElementData(_T("TempPath"),m_szTempPath,MAX_PATH - 1);
+	pXml->GetSafeElementData(_T("TempPath"),m_szTempPath,MAX_PATH - 1);
 	if (!ckcore::Directory::exist(m_szTempPath))
 	{
 		// If the folder does not exist, create it.
@@ -161,77 +161,77 @@ bool CGlobalSettings::Load(CXMLProcessor *pXML)
 	}
 
 	// Shell extension.
-	if (pXML->EnterElement(_T("ShellExtension")))
+	if (pXml->EnterElement(_T("ShellExtension")))
 	{
-		pXML->GetSafeElementAttrValue(_T("submenu"),&m_bShellExtSubMenu);
-		pXML->GetSafeElementAttrValue(_T("icons"),&m_bShellExtIcon);
+		pXml->GetSafeElementAttrValue(_T("submenu"),&m_bShellExtSubMenu);
+		pXml->GetSafeElementAttrValue(_T("icons"),&m_bShellExtIcon);
 
 		int iItemCount = 0;
 		TCHAR szItemName[32];
 		TCHAR szBuffer[128];
 
-		pXML->GetSafeElementAttrValue(_T("count"),&iItemCount);
+		pXml->GetSafeElementAttrValue(_T("count"),&iItemCount);
 		m_szShellExt.clear();
 
 		for (int i = 0; i < iItemCount; i++)
 		{
 			lsprintf(szItemName,_T("Item%i"),i);
 
-			pXML->GetSafeElementData(szItemName,szBuffer,127);
+			pXml->GetSafeElementData(szItemName,szBuffer,127);
 			m_szShellExt.push_back(szBuffer);
 		}
 
-		pXML->LeaveElement();
+		pXml->LeaveElement();
 	}
 
-	pXML->LeaveElement();
+	pXml->LeaveElement();
 	return true;
 }
 
-bool CDynamicSettings::Save(CXMLProcessor *pXML)
+bool CDynamicSettings::Save(CXmlProcessor *pXml)
 {
-	if (pXML == NULL)
+	if (pXml == NULL)
 		return false;
 
-	pXML->AddElement(_T("Dynamic"),_T(""),true);
-		pXML->AddElement(_T("ProjectListViewStyle"),m_iPrjListViewStyle);
-		pXML->AddElement(_T("ToolBar"),m_bViewToolBar,true);
-			pXML->AddElementAttr(_T("text"),m_iToolBarText);
-			pXML->AddElementAttr(_T("icon"),m_iToolBarIcon);
-		pXML->LeaveElement();
-		pXML->AddElement(_T("StatusBar"),m_bViewStatusBar);
+	pXml->AddElement(_T("Dynamic"),_T(""),true);
+		pXml->AddElement(_T("ProjectListViewStyle"),m_iPrjListViewStyle);
+		pXml->AddElement(_T("ToolBar"),m_bViewToolBar,true);
+			pXml->AddElementAttr(_T("text"),m_iToolBarText);
+			pXml->AddElementAttr(_T("icon"),m_iToolBarIcon);
+		pXml->LeaveElement();
+		pXml->AddElement(_T("StatusBar"),m_bViewStatusBar);
 
-		pXML->AddElement(_T("WindowLeft"),m_rcWindow.left);
-		pXML->AddElement(_T("WindowRight"),m_rcWindow.right);
-		pXML->AddElement(_T("WindowTop"),m_rcWindow.top);
-		pXML->AddElement(_T("WindowBottom"),m_rcWindow.bottom);
-		pXML->AddElement(_T("WindowMaximized"),m_bWinMaximized);
+		pXml->AddElement(_T("WindowLeft"),m_rcWindow.left);
+		pXml->AddElement(_T("WindowRight"),m_rcWindow.right);
+		pXml->AddElement(_T("WindowTop"),m_rcWindow.top);
+		pXml->AddElement(_T("WindowBottom"),m_rcWindow.bottom);
+		pXml->AddElement(_T("WindowMaximized"),m_bWinMaximized);
 
-		pXML->AddElement(_T("ShellDir"),m_szShellDir);
+		pXml->AddElement(_T("ShellDir"),m_szShellDir);
 
 		// Save the toolbar button configuration.
-		g_ToolBarManager.Save(pXML);
-	pXML->LeaveElement();
+		g_ToolBarManager.Save(pXml);
+	pXml->LeaveElement();
 
 	return true;
 }
 
-bool CDynamicSettings::Load(CXMLProcessor *pXML)
+bool CDynamicSettings::Load(CXmlProcessor *pXml)
 {
-	if (pXML == NULL)
+	if (pXml == NULL)
 		return false;
 
-	if (!pXML->EnterElement(_T("Dynamic")))
+	if (!pXml->EnterElement(_T("Dynamic")))
 		return false;
 
-	pXML->GetSafeElementData(_T("ProjectListViewStyle"),&m_iPrjListViewStyle);
+	pXml->GetSafeElementData(_T("ProjectListViewStyle"),&m_iPrjListViewStyle);
 
-	if (pXML->EnterElement(_T("ToolBar")))
+	if (pXml->EnterElement(_T("ToolBar")))
 	{
-		pXML->GetSafeElementData(&m_bViewToolBar);
-		pXML->GetSafeElementAttrValue(_T("text"),&m_iToolBarText);
-		pXML->GetSafeElementAttrValue(_T("icon"),&m_iToolBarIcon);
-		pXML->LeaveElement();
+		pXml->GetSafeElementData(&m_bViewToolBar);
+		pXml->GetSafeElementAttrValue(_T("text"),&m_iToolBarText);
+		pXml->GetSafeElementAttrValue(_T("icon"),&m_iToolBarIcon);
+		pXml->LeaveElement();
 
 		// Validate the values.
 		if (m_iToolBarText > TOOLBAR_TEXT_DONTSHOW || m_iToolBarText < 0)
@@ -240,20 +240,20 @@ bool CDynamicSettings::Load(CXMLProcessor *pXML)
 			m_iToolBarIcon = TOOLBAR_ICON_SMALL;
 	}
 
-	pXML->GetSafeElementData(_T("StatusBar"),&m_bViewStatusBar);
+	pXml->GetSafeElementData(_T("StatusBar"),&m_bViewStatusBar);
 
-	pXML->GetSafeElementData(_T("WindowLeft"),&m_rcWindow.left);
-	pXML->GetSafeElementData(_T("WindowRight"),&m_rcWindow.right);
-	pXML->GetSafeElementData(_T("WindowTop"),&m_rcWindow.top);
-	pXML->GetSafeElementData(_T("WindowBottom"),&m_rcWindow.bottom);
-	pXML->GetSafeElementData(_T("WindowMaximized"),&m_bWinMaximized);
+	pXml->GetSafeElementData(_T("WindowLeft"),&m_rcWindow.left);
+	pXml->GetSafeElementData(_T("WindowRight"),&m_rcWindow.right);
+	pXml->GetSafeElementData(_T("WindowTop"),&m_rcWindow.top);
+	pXml->GetSafeElementData(_T("WindowBottom"),&m_rcWindow.bottom);
+	pXml->GetSafeElementData(_T("WindowMaximized"),&m_bWinMaximized);
 
-	pXML->GetSafeElementData(_T("ShellDir"),m_szShellDir,MAX_PATH - 1);
+	pXml->GetSafeElementData(_T("ShellDir"),m_szShellDir,MAX_PATH - 1);
 
 	// Save the toolbar button configuration.
-	g_ToolBarManager.Load(pXML);
+	g_ToolBarManager.Load(pXml);
 
-	pXML->LeaveElement();
+	pXml->LeaveElement();
 	return true;
 }
 
@@ -314,239 +314,239 @@ void CDynamicSettings::Apply()
 	g_pMainFrame->m_ProjectListView.SetViewStyle(m_iPrjListViewStyle);
 }
 
-bool CEraseSettings::Save(CXMLProcessor *pXML)
+bool CEraseSettings::Save(CXmlProcessor *pXml)
 {
-	if (pXML == NULL)
+	if (pXml == NULL)
 		return false;
 
-	pXML->AddElement(_T("Erase"),_T(""),true);
-		pXML->AddElement(_T("Mode"),m_iMode);
-		pXML->AddElement(_T("Force"),m_bForce);
-		pXML->AddElement(_T("Eject"),m_bEject);
-		pXML->AddElement(_T("Simulate"),m_bSimulate);
-	pXML->LeaveElement();
+	pXml->AddElement(_T("Erase"),_T(""),true);
+		pXml->AddElement(_T("Mode"),m_iMode);
+		pXml->AddElement(_T("Force"),m_bForce);
+		pXml->AddElement(_T("Eject"),m_bEject);
+		pXml->AddElement(_T("Simulate"),m_bSimulate);
+	pXml->LeaveElement();
 
 	return true;
 }
 
-bool CEraseSettings::Load(CXMLProcessor *pXML)
+bool CEraseSettings::Load(CXmlProcessor *pXml)
 {
-	if (pXML == NULL)
+	if (pXml == NULL)
 		return false;
 
-	if (!pXML->EnterElement(_T("Erase")))
+	if (!pXml->EnterElement(_T("Erase")))
 		return false;
 
-	pXML->GetSafeElementData(_T("Mode"),&m_iMode);
-	pXML->GetSafeElementData(_T("Force"),&m_bForce);
-	pXML->GetSafeElementData(_T("Eject"),&m_bEject);
-	pXML->GetSafeElementData(_T("Simulate"),&m_bSimulate);
+	pXml->GetSafeElementData(_T("Mode"),&m_iMode);
+	pXml->GetSafeElementData(_T("Force"),&m_bForce);
+	pXml->GetSafeElementData(_T("Eject"),&m_bEject);
+	pXml->GetSafeElementData(_T("Simulate"),&m_bSimulate);
 
-	pXML->LeaveElement();
+	pXml->LeaveElement();
 	return true;
 }
 
-bool CFixateSettings::Save(CXMLProcessor *pXML)
+bool CFixateSettings::Save(CXmlProcessor *pXml)
 {
-	if (pXML == NULL)
+	if (pXml == NULL)
 		return false;
 
-	pXML->AddElement(_T("Fixate"),_T(""),true);
-		pXML->AddElement(_T("Eject"),m_bEject);
-		pXML->AddElement(_T("Simulate"),m_bSimulate);
-	pXML->LeaveElement();
-
-	return true;
-}
-
-bool CFixateSettings::Load(CXMLProcessor *pXML)
-{
-	if (pXML == NULL)
-		return false;
-
-	if (!pXML->EnterElement(_T("Fixate")))
-		return false;
-
-	pXML->GetSafeElementData(_T("Eject"),&m_bEject);
-	pXML->GetSafeElementData(_T("Simulate"),&m_bSimulate);
-
-	pXML->LeaveElement();
-	return true;
-}
-
-bool CBurnImageSettings::Save(CXMLProcessor *pXML)
-{
-	if (pXML == NULL)
-		return false;
-
-	pXML->AddElement(_T("BurnImage"),_T(""),true);
-		pXML->AddElement(_T("OnFly"),m_bOnFly);
-		pXML->AddElement(_T("Verify"),m_bVerify);
-		pXML->AddElement(_T("Eject"),m_bEject);
-		pXML->AddElement(_T("Simulate"),m_bSimulate);
-		pXML->AddElement(_T("BUP"),m_bBUP);
-		pXML->AddElement(_T("PadTracks"),m_bPadTracks);
-		pXML->AddElement(_T("Fixate"),m_bFixate);
-	pXML->LeaveElement();
+	pXml->AddElement(_T("Fixate"),_T(""),true);
+		pXml->AddElement(_T("Eject"),m_bEject);
+		pXml->AddElement(_T("Simulate"),m_bSimulate);
+	pXml->LeaveElement();
 
 	return true;
 }
 
-bool CBurnImageSettings::Load(CXMLProcessor *pXML)
+bool CFixateSettings::Load(CXmlProcessor *pXml)
 {
-	if (pXML == NULL)
+	if (pXml == NULL)
 		return false;
 
-	if (!pXML->EnterElement(_T("BurnImage")))
+	if (!pXml->EnterElement(_T("Fixate")))
 		return false;
 
-	pXML->GetSafeElementData(_T("OnFly"),&m_bOnFly);
-	pXML->GetSafeElementData(_T("Verify"),&m_bVerify);
-	pXML->GetSafeElementData(_T("Eject"),&m_bEject);
-	pXML->GetSafeElementData(_T("Simulate"),&m_bSimulate);
-	pXML->GetSafeElementData(_T("BUP"),&m_bBUP);
-	pXML->GetSafeElementData(_T("PadTracks"),&m_bPadTracks);
-	pXML->GetSafeElementData(_T("Fixate"),&m_bFixate);
+	pXml->GetSafeElementData(_T("Eject"),&m_bEject);
+	pXml->GetSafeElementData(_T("Simulate"),&m_bSimulate);
 
-	pXML->LeaveElement();
+	pXml->LeaveElement();
 	return true;
 }
 
-bool CProjectSettings::Save(CXMLProcessor *pXML)
+bool CBurnImageSettings::Save(CXmlProcessor *pXml)
+{
+	if (pXml == NULL)
+		return false;
+
+	pXml->AddElement(_T("BurnImage"),_T(""),true);
+		pXml->AddElement(_T("OnFly"),m_bOnFly);
+		pXml->AddElement(_T("Verify"),m_bVerify);
+		pXml->AddElement(_T("Eject"),m_bEject);
+		pXml->AddElement(_T("Simulate"),m_bSimulate);
+		pXml->AddElement(_T("BUP"),m_bBUP);
+		pXml->AddElement(_T("PadTracks"),m_bPadTracks);
+		pXml->AddElement(_T("Fixate"),m_bFixate);
+	pXml->LeaveElement();
+
+	return true;
+}
+
+bool CBurnImageSettings::Load(CXmlProcessor *pXml)
+{
+	if (pXml == NULL)
+		return false;
+
+	if (!pXml->EnterElement(_T("BurnImage")))
+		return false;
+
+	pXml->GetSafeElementData(_T("OnFly"),&m_bOnFly);
+	pXml->GetSafeElementData(_T("Verify"),&m_bVerify);
+	pXml->GetSafeElementData(_T("Eject"),&m_bEject);
+	pXml->GetSafeElementData(_T("Simulate"),&m_bSimulate);
+	pXml->GetSafeElementData(_T("BUP"),&m_bBUP);
+	pXml->GetSafeElementData(_T("PadTracks"),&m_bPadTracks);
+	pXml->GetSafeElementData(_T("Fixate"),&m_bFixate);
+
+	pXml->LeaveElement();
+	return true;
+}
+
+bool CProjectSettings::Save(CXmlProcessor *pXml)
 {
 	return false;
 }
 
-bool CProjectSettings::Load(CXMLProcessor *pXML)
+bool CProjectSettings::Load(CXmlProcessor *pXml)
 {
 	return false;
 }
 
-bool CCopyDiscSettings::Save(CXMLProcessor *pXML)
+bool CCopyDiscSettings::Save(CXmlProcessor *pXml)
 {
-	if (pXML == NULL)
+	if (pXml == NULL)
 		return false;
 
-	pXML->AddElement(_T("CopyDisc"),_T(""),true);
-		pXML->AddElement(_T("OnFly"),m_bOnFly);
-		pXML->AddElement(_T("Clone"),m_bClone);
-	pXML->LeaveElement();
+	pXml->AddElement(_T("CopyDisc"),_T(""),true);
+		pXml->AddElement(_T("OnFly"),m_bOnFly);
+		pXml->AddElement(_T("Clone"),m_bClone);
+	pXml->LeaveElement();
 
 	return true;
 }
 
-bool CCopyDiscSettings::Load(CXMLProcessor *pXML)
+bool CCopyDiscSettings::Load(CXmlProcessor *pXml)
 {
-	if (pXML == NULL)
+	if (pXml == NULL)
 		return false;
 
-	if (!pXML->EnterElement(_T("CopyDisc")))
+	if (!pXml->EnterElement(_T("CopyDisc")))
 		return false;
 
-	pXML->GetSafeElementData(_T("OnFly"),&m_bOnFly);
-	pXML->GetSafeElementData(_T("Clone"),&m_bClone);
+	pXml->GetSafeElementData(_T("OnFly"),&m_bOnFly);
+	pXml->GetSafeElementData(_T("Clone"),&m_bClone);
 
-	pXML->LeaveElement();
+	pXml->LeaveElement();
 	return true;
 }
 
-bool CBurnAdvancedSettings::Save(CXMLProcessor *pXML)
+bool CBurnAdvancedSettings::Save(CXmlProcessor *pXml)
 {
-	if (pXML == NULL)
+	if (pXml == NULL)
 		return false;
 
-	pXML->AddElement(_T("BurnAdvanced"),_T(""),true);
-		pXML->AddElement(_T("Overburn"),m_bOverburn);
-		pXML->AddElement(_T("Swab"),m_bSwab);
-		pXML->AddElement(_T("IgnoreSize"),m_bIgnoreSize);
-		pXML->AddElement(_T("Immed"),m_bImmed);
-		pXML->AddElement(_T("AudioMaster"),m_bAudioMaster);
-		pXML->AddElement(_T("ForceSpeed"),m_bForceSpeed);
-		pXML->AddElement(_T("VariRec"),m_bVariRec,true);
-			pXML->AddElementAttr(_T("value"),m_iVariRec);
-		pXML->LeaveElement();
-	pXML->LeaveElement();
+	pXml->AddElement(_T("BurnAdvanced"),_T(""),true);
+		pXml->AddElement(_T("Overburn"),m_bOverburn);
+		pXml->AddElement(_T("Swab"),m_bSwab);
+		pXml->AddElement(_T("IgnoreSize"),m_bIgnoreSize);
+		pXml->AddElement(_T("Immed"),m_bImmed);
+		pXml->AddElement(_T("AudioMaster"),m_bAudioMaster);
+		pXml->AddElement(_T("ForceSpeed"),m_bForceSpeed);
+		pXml->AddElement(_T("VariRec"),m_bVariRec,true);
+			pXml->AddElementAttr(_T("value"),m_iVariRec);
+		pXml->LeaveElement();
+	pXml->LeaveElement();
 
 	return true;
 }
 
-bool CBurnAdvancedSettings::Load(CXMLProcessor *pXML)
+bool CBurnAdvancedSettings::Load(CXmlProcessor *pXml)
 {
-	if (pXML == NULL)
+	if (pXml == NULL)
 		return false;
 
-	if (!pXML->EnterElement(_T("BurnAdvanced")))
+	if (!pXml->EnterElement(_T("BurnAdvanced")))
 		return false;
 
-	pXML->GetSafeElementData(_T("Overburn"),&m_bOverburn);
-	pXML->GetSafeElementData(_T("Swab"),&m_bSwab);
-	pXML->GetSafeElementData(_T("IgnoreSize"),&m_bIgnoreSize);
-	pXML->GetSafeElementData(_T("Immed"),&m_bImmed);
-	pXML->GetSafeElementData(_T("AudioMaster"),&m_bAudioMaster);
-	pXML->GetSafeElementData(_T("ForceSpeed"),&m_bForceSpeed);
+	pXml->GetSafeElementData(_T("Overburn"),&m_bOverburn);
+	pXml->GetSafeElementData(_T("Swab"),&m_bSwab);
+	pXml->GetSafeElementData(_T("IgnoreSize"),&m_bIgnoreSize);
+	pXml->GetSafeElementData(_T("Immed"),&m_bImmed);
+	pXml->GetSafeElementData(_T("AudioMaster"),&m_bAudioMaster);
+	pXml->GetSafeElementData(_T("ForceSpeed"),&m_bForceSpeed);
 
-	if (pXML->EnterElement(_T("VariRec")))
+	if (pXml->EnterElement(_T("VariRec")))
 	{
-		pXML->GetSafeElementData(&m_bVariRec);
-		pXML->GetSafeElementAttrValue(_T("value"),&m_iVariRec);
+		pXml->GetSafeElementData(&m_bVariRec);
+		pXml->GetSafeElementAttrValue(_T("value"),&m_iVariRec);
 		
-		pXML->LeaveElement();
+		pXml->LeaveElement();
 	}
 
-	pXML->LeaveElement();
+	pXml->LeaveElement();
 	return true;
 }
 
-bool CSaveTracksSettings::Save(CXMLProcessor *pXML)
+bool CSaveTracksSettings::Save(CXmlProcessor *pXml)
 {
-	if (pXML == NULL)
+	if (pXml == NULL)
 		return false;
 
-	pXML->AddElement(_T("SaveTracks"),_T(""),true);
-		pXML->AddElement(_T("Target"),m_szTarget);
-	pXML->LeaveElement();
-
-	return true;
-}
-
-bool CSaveTracksSettings::Load(CXMLProcessor *pXML)
-{
-	if (pXML == NULL)
-		return false;
-
-	if (!pXML->EnterElement(_T("SaveTracks")))
-		return false;
-
-	pXML->GetSafeElementData(_T("Target"),m_szTarget,MAX_PATH - 1);
-
-	pXML->LeaveElement();
-	return true;
-}
-
-bool CReadSettings::Save(CXMLProcessor *pXML)
-{
-	if (pXML == NULL)
-		return false;
-
-	pXML->AddElement(_T("Read"),_T(""),true);
-		pXML->AddElement(_T("IgnoreErr"),m_bIgnoreErr);
-		pXML->AddElement(_T("Clone"),m_bClone);
-	pXML->LeaveElement();
+	pXml->AddElement(_T("SaveTracks"),_T(""),true);
+		pXml->AddElement(_T("Target"),m_szTarget);
+	pXml->LeaveElement();
 
 	return true;
 }
 
-bool CReadSettings::Load(CXMLProcessor *pXML)
+bool CSaveTracksSettings::Load(CXmlProcessor *pXml)
 {
-	if (pXML == NULL)
+	if (pXml == NULL)
 		return false;
 
-	if (!pXML->EnterElement(_T("Read")))
+	if (!pXml->EnterElement(_T("SaveTracks")))
 		return false;
 
-	pXML->GetSafeElementData(_T("IgnoreErr"),&m_bIgnoreErr);
-	pXML->GetSafeElementData(_T("Clone"),&m_bClone);
+	pXml->GetSafeElementData(_T("Target"),m_szTarget,MAX_PATH - 1);
 
-	pXML->LeaveElement();
+	pXml->LeaveElement();
+	return true;
+}
+
+bool CReadSettings::Save(CXmlProcessor *pXml)
+{
+	if (pXml == NULL)
+		return false;
+
+	pXml->AddElement(_T("Read"),_T(""),true);
+		pXml->AddElement(_T("IgnoreErr"),m_bIgnoreErr);
+		pXml->AddElement(_T("Clone"),m_bClone);
+	pXml->LeaveElement();
+
+	return true;
+}
+
+bool CReadSettings::Load(CXmlProcessor *pXml)
+{
+	if (pXml == NULL)
+		return false;
+
+	if (!pXml->EnterElement(_T("Read")))
+		return false;
+
+	pXml->GetSafeElementData(_T("IgnoreErr"),&m_bIgnoreErr);
+	pXml->GetSafeElementData(_T("Clone"),&m_bClone);
+
+	pXml->LeaveElement();
 	return true;
 }

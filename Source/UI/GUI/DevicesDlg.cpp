@@ -39,29 +39,29 @@ CDevicesDlg::~CDevicesDlg()
 
 bool CDevicesDlg::Translate()
 {
-	if (g_LanguageSettings.m_pLNGProcessor == NULL)
+	if (g_LanguageSettings.m_pLngProcessor == NULL)
 		return false;
 
-	CLNGProcessor *pLNG = g_LanguageSettings.m_pLNGProcessor;
+	CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
 	
 	// Make sure that there is a devices translation section.
-	if (!pLNG->EnterSection(_T("devices")))
+	if (!pLng->EnterSection(_T("devices")))
 		return false;
 
 	// Translate.
 	TCHAR *szStrValue;
 
-	if (pLNG->GetValuePtr(IDD_DEVICESDLG,szStrValue))			// Title.
+	if (pLng->GetValuePtr(IDD_DEVICESDLG,szStrValue))			// Title.
 		SetWindowText(szStrValue);
-	if (pLNG->GetValuePtr(IDOK,szStrValue))
+	if (pLng->GetValuePtr(IDOK,szStrValue))
 		SetDlgItemText(IDOK,szStrValue);
-	if (pLNG->GetValuePtr(IDC_HELPBUTTON,szStrValue))
+	if (pLng->GetValuePtr(IDC_HELPBUTTON,szStrValue))
 		SetDlgItemText(IDC_HELPBUTTON,szStrValue);
-	if (pLNG->GetValuePtr(IDC_RESCANBUTTON,szStrValue))
+	if (pLng->GetValuePtr(IDC_RESCANBUTTON,szStrValue))
 		SetDlgItemText(IDC_RESCANBUTTON,szStrValue);
-	if (pLNG->GetValuePtr(IDC_INFOSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_INFOSTATIC,szStrValue))
 		SetDlgItemText(IDC_INFOSTATIC,szStrValue);
-	if (pLNG->GetValuePtr(IDC_AUTOSCANCHECK,szStrValue))
+	if (pLng->GetValuePtr(IDC_AUTOSCANCHECK,szStrValue))
 		SetDlgItemText(IDC_AUTOSCANCHECK,szStrValue);
 
 	return true;

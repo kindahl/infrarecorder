@@ -19,8 +19,8 @@
 #pragma once
 #include <list>
 #include "../../Common/StringUtil.h"
-#include "../../Common/XMLProcessor.h"
-#include "../../Common/LNGProcessor.h"
+#include "../../Common/XmlProcessor.h"
+#include "../../Common/LngProcessor.h"
 #include "TreeManager.h"
 
 #define WRITEMETHOD_SAO					0
@@ -52,33 +52,33 @@
 class ISettings
 {
 public:
-	virtual bool Save(CXMLProcessor *pXML) = 0;
-	virtual bool Load(CXMLProcessor *pXML) = 0;
+	virtual bool Save(CXmlProcessor *pXml) = 0;
+	virtual bool Load(CXmlProcessor *pXml) = 0;
 };
 
 class CLanguageSettings : public ISettings
 {
 public:
 	TCHAR m_szLanguageFile[MAX_PATH];
-	CLNGProcessor *m_pLNGProcessor;
+	CLngProcessor *m_pLngProcessor;
 
 	CLanguageSettings()
 	{
 		m_szLanguageFile[0] = '\0';
-		m_pLNGProcessor = NULL;
+		m_pLngProcessor = NULL;
 	}
 
 	~CLanguageSettings()
 	{
-		if (m_pLNGProcessor != NULL)
+		if (m_pLngProcessor != NULL)
 		{
-			delete m_pLNGProcessor;
-			m_pLNGProcessor = NULL;
+			delete m_pLngProcessor;
+			m_pLngProcessor = NULL;
 		}
 	}
 
-	bool Save(CXMLProcessor *pXML);
-	bool Load(CXMLProcessor *pXML);
+	bool Save(CXmlProcessor *pXml);
+	bool Load(CXmlProcessor *pXml);
 };
 
 class CGlobalSettings : public ISettings
@@ -160,8 +160,8 @@ public:
 		m_szShellExt.clear();
 	}
 
-	bool Save(CXMLProcessor *pXML);
-	bool Load(CXMLProcessor *pXML);
+	bool Save(CXmlProcessor *pXml);
+	bool Load(CXmlProcessor *pXml);
 };
 
 class CDynamicSettings : public ISettings
@@ -204,8 +204,8 @@ public:
 	{
 	}
 
-	bool Save(CXMLProcessor *pXML);
-	bool Load(CXMLProcessor *pXML);
+	bool Save(CXmlProcessor *pXml);
+	bool Load(CXmlProcessor *pXml);
 	void Apply();
 };
 
@@ -231,8 +231,8 @@ public:
 		m_uiSpeed = 0xFFFFFFFF;		// Maximum.
 	}
 
-	bool Save(CXMLProcessor *pXML);
-	bool Load(CXMLProcessor *pXML);
+	bool Save(CXmlProcessor *pXml);
+	bool Load(CXmlProcessor *pXml);
 };
 
 class CFixateSettings : public ISettings
@@ -250,8 +250,8 @@ public:
 		m_bSimulate = false;
 	}
 
-	bool Save(CXMLProcessor *pXML);
-	bool Load(CXMLProcessor *pXML);
+	bool Save(CXmlProcessor *pXml);
+	bool Load(CXmlProcessor *pXml);
 };
 
 class CBurnImageSettings : public ISettings
@@ -285,8 +285,8 @@ public:
 		m_lNumCopies = 1;
 	}
 
-	bool Save(CXMLProcessor *pXML);
-	bool Load(CXMLProcessor *pXML);
+	bool Save(CXmlProcessor *pXml);
+	bool Load(CXmlProcessor *pXml);
 };
 
 // Class used to destribe a project boot image.
@@ -418,8 +418,8 @@ public:
 		m_uiDeviceIndex = 0;
 	}
 
-	bool Save(CXMLProcessor *pXML);
-	bool Load(CXMLProcessor *pXML);
+	bool Save(CXmlProcessor *pXml);
+	bool Load(CXmlProcessor *pXml);
 };
 
 class CCopyDiscSettings : public ISettings
@@ -443,8 +443,8 @@ public:
 		m_uiSourceSize = 0;
 	}
 
-	bool Save(CXMLProcessor *pXML);
-	bool Load(CXMLProcessor *pXML);
+	bool Save(CXmlProcessor *pXml);
+	bool Load(CXmlProcessor *pXml);
 };
 
 class CBurnAdvancedSettings : public ISettings
@@ -471,8 +471,8 @@ public:
 		m_iVariRec = 0;
 	}
 
-	bool Save(CXMLProcessor *pXML);
-	bool Load(CXMLProcessor *pXML);
+	bool Save(CXmlProcessor *pXml);
+	bool Load(CXmlProcessor *pXml);
 };
 
 class CSaveTracksSettings : public ISettings
@@ -485,8 +485,8 @@ public:
 		m_szTarget[0] = '\0';
 	}
 
-	bool Save(CXMLProcessor *pXML);
-	bool Load(CXMLProcessor *pXML);
+	bool Save(CXmlProcessor *pXml);
+	bool Load(CXmlProcessor *pXml);
 };
 
 class CReadSettings : public ISettings
@@ -505,8 +505,8 @@ public:
 		m_iReadSpeed = -1;	// -1 = Maximum.
 	}
 
-	bool Save(CXMLProcessor *pXML);
-	bool Load(CXMLProcessor *pXML);
+	bool Save(CXmlProcessor *pXml);
+	bool Load(CXmlProcessor *pXml);
 };
 
 extern CLanguageSettings g_LanguageSettings;

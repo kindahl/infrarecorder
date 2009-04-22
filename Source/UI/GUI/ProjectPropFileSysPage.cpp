@@ -27,13 +27,13 @@
 CProjectPropFileSysPage::CProjectPropFileSysPage()
 {
 	// Try to load translated string.
-	if (g_LanguageSettings.m_pLNGProcessor != NULL)
+	if (g_LanguageSettings.m_pLngProcessor != NULL)
 	{	
 		// Make sure that there is a strings translation section.
-		if (g_LanguageSettings.m_pLNGProcessor->EnterSection(_T("strings")))
+		if (g_LanguageSettings.m_pLngProcessor->EnterSection(_T("strings")))
 		{
 			TCHAR *szStrValue;
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(TITLE_FILESYSTEM,szStrValue))
+			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(TITLE_FILESYSTEM,szStrValue))
 				SetTitle(szStrValue);
 		}
 	}
@@ -47,18 +47,18 @@ CProjectPropFileSysPage::~CProjectPropFileSysPage()
 
 bool CProjectPropFileSysPage::Translate()
 {
-	if (g_LanguageSettings.m_pLNGProcessor == NULL)
+	if (g_LanguageSettings.m_pLngProcessor == NULL)
 		return false;
 
-	CLNGProcessor *pLNG = g_LanguageSettings.m_pLNGProcessor;
+	CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
 	
 	// Make sure that there is a projectprop translation section.
-	if (!pLNG->EnterSection(_T("projectprop")))
+	if (!pLng->EnterSection(_T("projectprop")))
 		return false;
 
 	// Translate.
 	TCHAR *szStrValue;
-	if (pLNG->GetValuePtr(IDC_FILESYSSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_FILESYSSTATIC,szStrValue))
 		SetDlgItemText(IDC_FILESYSSTATIC,szStrValue);
 
 	return true;

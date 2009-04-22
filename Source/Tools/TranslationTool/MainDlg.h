@@ -17,7 +17,7 @@
  */
 
 #pragma once
-#include "../../Common/XMLProcessor.h"
+#include "../../Common/XmlProcessor.h"
 
 class CMainDlg : public CDialogImpl<CMainDlg>,public CUpdateUI<CMainDlg>,
 	public CMessageFilter,public CIdleHandler,public CDialogResize<CMainDlg>
@@ -25,7 +25,7 @@ class CMainDlg : public CDialogImpl<CMainDlg>,public CUpdateUI<CMainDlg>,
 private:
 	CListBox m_TransList;
 
-	bool AnalyzeTranslation(const TCHAR *szFileName,CXMLProcessor *pXML);
+	bool AnalyzeTranslation(const TCHAR *szFileName,CXmlProcessor *pXml);
 
 public:
 	enum { IDD = IDD_MAINDLG };

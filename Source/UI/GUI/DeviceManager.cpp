@@ -18,7 +18,7 @@
 
 #include "stdafx.h"
 #include <ckcore/directory.hh>
-#include "../../Common/XMLProcessor.h"
+#include "../../Common/XmlProcessor.h"
 #include "DeviceManager.h"
 #include "Settings.h"
 #include "cdrtoolsParseStrings.h"
@@ -1028,10 +1028,10 @@ bool CDeviceManager::SaveConfiguration()
 	if (GetDeviceCount() == 0)
 		return false;
 
-	CXMLProcessor XML;
-	XML.AddElement(_T("InfraRecorder"),_T(""),true);
-		XML.AddElement(_T("Devices"),_T(""),true);
-		XML.AddElementAttr(_T("count"),(long)GetDeviceCount());
+	CXmlProcessor Xml;
+	Xml.AddElement(_T("InfraRecorder"),_T(""),true);
+		Xml.AddElement(_T("Devices"),_T(""),true);
+		Xml.AddElementAttr(_T("count"),(long)GetDeviceCount());
 			
 		// Add all devices.
 		TCHAR szElemName[32];
@@ -1045,121 +1045,121 @@ bool CDeviceManager::SaveConfiguration()
 			bool bIsRecorder = IsDeviceRecorder(i);
 
 			lsprintf(szElemName,_T("Device%d"),i);
-			XML.AddElement(szElemName,_T(""),true);
-				XML.AddElementAttr(_T("type"),pDeviceInfo->iType);
-				XML.AddElementAttr(_T("removable"),pDeviceInfo->bRemovable);
-				XML.AddElementAttr(_T("letter"),(int)pDeviceInfo->Address.m_cDriveLetter);
+			Xml.AddElement(szElemName,_T(""),true);
+				Xml.AddElementAttr(_T("type"),pDeviceInfo->iType);
+				Xml.AddElementAttr(_T("removable"),pDeviceInfo->bRemovable);
+				Xml.AddElementAttr(_T("letter"),(int)pDeviceInfo->Address.m_cDriveLetter);
 	
 				// General information.
-				XML.AddElement(_T("ID"),_T(""),true);
-					XML.AddElementAttr(_T("bus"),pDeviceInfo->Address.m_iBus);
-					XML.AddElementAttr(_T("target"),pDeviceInfo->Address.m_iTarget);
-					XML.AddElementAttr(_T("lun"),pDeviceInfo->Address.m_iLun);
-					XML.AddElement(_T("Vendor"),pDeviceInfo->szVendor);
-					XML.AddElement(_T("Identification"),pDeviceInfo->szIdentification);
-					XML.AddElement(_T("Revision"),pDeviceInfo->szRevision);
-				XML.LeaveElement();
+				Xml.AddElement(_T("ID"),_T(""),true);
+					Xml.AddElementAttr(_T("bus"),pDeviceInfo->Address.m_iBus);
+					Xml.AddElementAttr(_T("target"),pDeviceInfo->Address.m_iTarget);
+					Xml.AddElementAttr(_T("lun"),pDeviceInfo->Address.m_iLun);
+					Xml.AddElement(_T("Vendor"),pDeviceInfo->szVendor);
+					Xml.AddElement(_T("Identification"),pDeviceInfo->szIdentification);
+					Xml.AddElement(_T("Revision"),pDeviceInfo->szRevision);
+				Xml.LeaveElement();
 
 			if (IsDeviceReader(i))
 			{
 				// Capabilities.
-				XML.AddElement(_T("Capabilities"),_T(""),true);
-					XML.AddElement(_T("Media"),(long)pDeviceCap->uiMedia);
-					XML.AddElement(_T("General"),(long)pDeviceCap->uiGeneral);
-					XML.AddElement(_T("DigitalAudio"),(long)pDeviceCap->uiDigitalAudio);
-					XML.AddElement(_T("RW"),(long)pDeviceCap->uiRW);
+				Xml.AddElement(_T("Capabilities"),_T(""),true);
+					Xml.AddElement(_T("Media"),(long)pDeviceCap->uiMedia);
+					Xml.AddElement(_T("General"),(long)pDeviceCap->uiGeneral);
+					Xml.AddElement(_T("DigitalAudio"),(long)pDeviceCap->uiDigitalAudio);
+					Xml.AddElement(_T("RW"),(long)pDeviceCap->uiRW);
 
-					XML.AddElement(_T("Audio"),(long)pDeviceCap->uiAudio);
-					XML.AddElement(_T("DigitalOutput"),(long)pDeviceCap->uiDigitalOutput);
-					XML.AddElement(_T("NumVolLevels"),(long)pDeviceCap->uiNumVolLevels);
+					Xml.AddElement(_T("Audio"),(long)pDeviceCap->uiAudio);
+					Xml.AddElement(_T("DigitalOutput"),(long)pDeviceCap->uiDigitalOutput);
+					Xml.AddElement(_T("NumVolLevels"),(long)pDeviceCap->uiNumVolLevels);
 
-					XML.AddElement(_T("BufferSize"),(long)pDeviceCap->uiBufferSize);
-					XML.AddElement(_T("LoadType"),(long)pDeviceCap->ucLoadType);
-					XML.AddElement(_T("RotationControl"),(long)pDeviceCap->ucRotCtrl);
-					XML.AddElement(_T("DigitalAudioBL"),(long)pDeviceCap->ucDigitalAudioBL);
-					XML.AddElement(_T("MaxSpeeds"),_T(""),true);
+					Xml.AddElement(_T("BufferSize"),(long)pDeviceCap->uiBufferSize);
+					Xml.AddElement(_T("LoadType"),(long)pDeviceCap->ucLoadType);
+					Xml.AddElement(_T("RotationControl"),(long)pDeviceCap->ucRotCtrl);
+					Xml.AddElement(_T("DigitalAudioBL"),(long)pDeviceCap->ucDigitalAudioBL);
+					Xml.AddElement(_T("MaxSpeeds"),_T(""),true);
 						if (bIsRecorder)
 						{
-							XML.AddElement(_T("Write"),(long)pDeviceCap->uiMaxSpeeds[0],true);
-								XML.AddElementAttr(_T("cd"),(long)pDeviceCap->uiMaxSpeeds[1]);
-								XML.AddElementAttr(_T("dvd"),(long)pDeviceCap->uiMaxSpeeds[2]);
-							XML.LeaveElement();
+							Xml.AddElement(_T("Write"),(long)pDeviceCap->uiMaxSpeeds[0],true);
+								Xml.AddElementAttr(_T("cd"),(long)pDeviceCap->uiMaxSpeeds[1]);
+								Xml.AddElementAttr(_T("dvd"),(long)pDeviceCap->uiMaxSpeeds[2]);
+							Xml.LeaveElement();
 						}
-						XML.AddElement(_T("Read"),(long)pDeviceCap->uiMaxSpeeds[3],true);
-							XML.AddElementAttr(_T("cd"),(long)pDeviceCap->uiMaxSpeeds[4]);
-							XML.AddElementAttr(_T("dvd"),(long)pDeviceCap->uiMaxSpeeds[5]);
-						XML.LeaveElement();
-					XML.LeaveElement();
-					XML.AddElement(_T("CurrentSpeeds"),_T(""),true);
+						Xml.AddElement(_T("Read"),(long)pDeviceCap->uiMaxSpeeds[3],true);
+							Xml.AddElementAttr(_T("cd"),(long)pDeviceCap->uiMaxSpeeds[4]);
+							Xml.AddElementAttr(_T("dvd"),(long)pDeviceCap->uiMaxSpeeds[5]);
+						Xml.LeaveElement();
+					Xml.LeaveElement();
+					Xml.AddElement(_T("CurrentSpeeds"),_T(""),true);
 						if (bIsRecorder)
 						{
-							XML.AddElement(_T("Write"),(long)pDeviceCap->uiCurSpeeds[0],true);
-								XML.AddElementAttr(_T("cd"),(long)pDeviceCap->uiCurSpeeds[1]);
-								XML.AddElementAttr(_T("dvd"),(long)pDeviceCap->uiCurSpeeds[2]);
-							XML.LeaveElement();
+							Xml.AddElement(_T("Write"),(long)pDeviceCap->uiCurSpeeds[0],true);
+								Xml.AddElementAttr(_T("cd"),(long)pDeviceCap->uiCurSpeeds[1]);
+								Xml.AddElementAttr(_T("dvd"),(long)pDeviceCap->uiCurSpeeds[2]);
+							Xml.LeaveElement();
 						}
-						XML.AddElement(_T("Read"),(long)pDeviceCap->uiCurSpeeds[3],true);
-							XML.AddElementAttr(_T("cd"),(long)pDeviceCap->uiCurSpeeds[4]);
-							XML.AddElementAttr(_T("dvd"),(long)pDeviceCap->uiCurSpeeds[5]);
-						XML.LeaveElement();
-					XML.LeaveElement();
+						Xml.AddElement(_T("Read"),(long)pDeviceCap->uiCurSpeeds[3],true);
+							Xml.AddElementAttr(_T("cd"),(long)pDeviceCap->uiCurSpeeds[4]);
+							Xml.AddElementAttr(_T("dvd"),(long)pDeviceCap->uiCurSpeeds[5]);
+						Xml.LeaveElement();
+					Xml.LeaveElement();
 
 #ifdef DEVICEMANAGER_COLLECTWRITESPEEDS
 					if (bIsRecorder)
 					{
-						XML.AddElement(_T("WriteSpeeds"),_T(""),true);
-						XML.AddElementAttr(_T("count"),(long)pDeviceCap->uiWriteSpeedsCount);
+						Xml.AddElement(_T("WriteSpeeds"),_T(""),true);
+						Xml.AddElementAttr(_T("count"),(long)pDeviceCap->uiWriteSpeedsCount);
 
 						for (unsigned int j = 0; j < pDeviceCap->uiWriteSpeedsCount; j++)
 						{
 							lsprintf(szElemName,_T("Item%d"),j);
-							XML.AddElement(szElemName,(long)pDeviceCap->uiWriteSpeeds[j][0],true);
-								XML.AddElementAttr(_T("cd"),(long)pDeviceCap->uiWriteSpeeds[j][1]);
-								XML.AddElementAttr(_T("dvd"),(long)pDeviceCap->uiWriteSpeeds[j][2]);
-							XML.LeaveElement();
+							Xml.AddElement(szElemName,(long)pDeviceCap->uiWriteSpeeds[j][0],true);
+								Xml.AddElementAttr(_T("cd"),(long)pDeviceCap->uiWriteSpeeds[j][1]);
+								Xml.AddElementAttr(_T("dvd"),(long)pDeviceCap->uiWriteSpeeds[j][2]);
+							Xml.LeaveElement();
 						}
-						XML.LeaveElement();
+						Xml.LeaveElement();
 					}
 #endif
-				XML.LeaveElement();
+				Xml.LeaveElement();
 
 				// Extended information.
 				if (bIsRecorder)
 				{
-					XML.AddElement(_T("Extended"),_T(""),true);
+					Xml.AddElement(_T("Extended"),_T(""),true);
 #ifdef UNICODE
 						TCHAR szBuffer[DEVICEMANAGER_MAXLINESIZE];
 
 						AnsiToUnicode(szBuffer,pDeviceInfoEx->szWriteFlags,sizeof(szBuffer) / sizeof(wchar_t));
-						XML.AddElement(_T("Flags"),szBuffer);
+						Xml.AddElement(_T("Flags"),szBuffer);
 
 						AnsiToUnicode(szBuffer,pDeviceInfoEx->szWriteModes,sizeof(szBuffer) / sizeof(wchar_t));
-						XML.AddElement(_T("Modes"),szBuffer);
+						Xml.AddElement(_T("Modes"),szBuffer);
 #else
-						XML.AddElement(_T("Flags"),pDeviceInfoEx->szWriteFlags);
-						XML.AddElement(_T("Flags"),pDeviceInfoEx->szWriteModes);
+						Xml.AddElement(_T("Flags"),pDeviceInfoEx->szWriteFlags);
+						Xml.AddElement(_T("Flags"),pDeviceInfoEx->szWriteModes);
 #endif
-					XML.LeaveElement();
+					Xml.LeaveElement();
 				}
 			}
 
-			XML.LeaveElement();
+			Xml.LeaveElement();
 		}
 
-		XML.LeaveElement();
-	XML.LeaveElement();
+		Xml.LeaveElement();
+	Xml.LeaveElement();
 
 	// Get the correct file-path.
 	TCHAR szConfigPath[MAX_PATH];
 	if (!GetConfigPath(szConfigPath))
 		return false;
 
-	return XML.Save(szConfigPath) == XMLRES_OK;
+	return Xml.Save(szConfigPath) == XMLRES_OK;
 }
 
 bool CDeviceManager::LoadConfiguration()
 {
-	CXMLProcessor XML;
+	CXmlProcessor Xml;
 	bool bResult = true;
 
 	// Get the correct file-path.
@@ -1168,19 +1168,19 @@ bool CDeviceManager::LoadConfiguration()
 		return false;
 
 	// Load the file.
-	int iResult = XML.Load(szConfigPath);
+	int iResult = Xml.Load(szConfigPath);
 	if (iResult != XMLRES_OK && iResult != XMLRES_FILEERROR)
 		return false;
 
-	if (!XML.EnterElement(_T("InfraRecorder")))
+	if (!Xml.EnterElement(_T("InfraRecorder")))
 		return false;
 
-	if (!XML.EnterElement(_T("Devices")))
+	if (!Xml.EnterElement(_T("Devices")))
 		return false;
 
 	TCHAR szElemName[32];
 	unsigned int iDeviceCount = 0;
-	XML.GetSafeElementAttrValue(_T("count"),(int *)&iDeviceCount);
+	Xml.GetSafeElementAttrValue(_T("count"),(int *)&iDeviceCount);
 
 	// Initialize counters.
 	m_uiDeviceInfoCount = iDeviceCount;
@@ -1199,60 +1199,60 @@ bool CDeviceManager::LoadConfiguration()
 		tDeviceCap *pDeviceCap = &m_DeviceCap[i];
 
 		lsprintf(szElemName,_T("Device%d"),i);
-		if (!XML.EnterElement(szElemName))
+		if (!Xml.EnterElement(szElemName))
 		{
 			bResult = false;
 			break;
 		}
 
-		XML.GetSafeElementAttrValue(_T("type"),(int *)&pDeviceInfo->iType);
-		XML.GetSafeElementAttrValue(_T("removable"),(bool *)&pDeviceInfo->bRemovable);
-		XML.GetSafeElementAttrValue(_T("letter"),(int *)&pDeviceInfo->Address.m_cDriveLetter);
+		Xml.GetSafeElementAttrValue(_T("type"),(int *)&pDeviceInfo->iType);
+		Xml.GetSafeElementAttrValue(_T("removable"),(bool *)&pDeviceInfo->bRemovable);
+		Xml.GetSafeElementAttrValue(_T("letter"),(int *)&pDeviceInfo->Address.m_cDriveLetter);
 
 		// General information.
-		if (!XML.EnterElement(_T("ID")))
+		if (!Xml.EnterElement(_T("ID")))
 		{
 			bResult = false;
 			break;
 		}
 
-		XML.GetSafeElementAttrValue(_T("bus"),(int *)&pDeviceInfo->Address.m_iBus);
-		XML.GetSafeElementAttrValue(_T("target"),(int *)&pDeviceInfo->Address.m_iTarget);
-		XML.GetSafeElementAttrValue(_T("lun"),(int *)&pDeviceInfo->Address.m_iLun);
-		XML.GetSafeElementData(_T("Vendor"),pDeviceInfo->szVendor,9);
-		XML.GetSafeElementData(_T("Identification"),pDeviceInfo->szIdentification,17);
-		XML.GetSafeElementData(_T("Revision"),pDeviceInfo->szRevision,5);
-		XML.LeaveElement();
+		Xml.GetSafeElementAttrValue(_T("bus"),(int *)&pDeviceInfo->Address.m_iBus);
+		Xml.GetSafeElementAttrValue(_T("target"),(int *)&pDeviceInfo->Address.m_iTarget);
+		Xml.GetSafeElementAttrValue(_T("lun"),(int *)&pDeviceInfo->Address.m_iLun);
+		Xml.GetSafeElementData(_T("Vendor"),pDeviceInfo->szVendor,9);
+		Xml.GetSafeElementData(_T("Identification"),pDeviceInfo->szIdentification,17);
+		Xml.GetSafeElementData(_T("Revision"),pDeviceInfo->szRevision,5);
+		Xml.LeaveElement();
 
 		if (!IsDeviceReader(i))
 		{
-			XML.LeaveElement();		// Device
+			Xml.LeaveElement();		// Device
 			continue;
 		}
 
 		// Capabilities.
-		if (!XML.EnterElement(_T("Capabilities")))
+		if (!Xml.EnterElement(_T("Capabilities")))
 		{
 			bResult = false;
 			break;
 		}
 
-		XML.GetSafeElementData(_T("Media"),(int *)&pDeviceCap->uiMedia);
-		XML.GetSafeElementData(_T("General"),(int *)&pDeviceCap->uiGeneral);
-		XML.GetSafeElementData(_T("DigitalAudio"),(int *)&pDeviceCap->uiDigitalAudio);
-		XML.GetSafeElementData(_T("RW"),(int *)&pDeviceCap->uiRW);
+		Xml.GetSafeElementData(_T("Media"),(int *)&pDeviceCap->uiMedia);
+		Xml.GetSafeElementData(_T("General"),(int *)&pDeviceCap->uiGeneral);
+		Xml.GetSafeElementData(_T("DigitalAudio"),(int *)&pDeviceCap->uiDigitalAudio);
+		Xml.GetSafeElementData(_T("RW"),(int *)&pDeviceCap->uiRW);
 
-		XML.GetSafeElementData(_T("Audio"),(int *)&pDeviceCap->uiAudio);
-		XML.GetSafeElementData(_T("DigitalOutput"),(int *)&pDeviceCap->uiDigitalOutput);
-		XML.GetSafeElementData(_T("NumVolLevels"),(int *)&pDeviceCap->uiNumVolLevels);
+		Xml.GetSafeElementData(_T("Audio"),(int *)&pDeviceCap->uiAudio);
+		Xml.GetSafeElementData(_T("DigitalOutput"),(int *)&pDeviceCap->uiDigitalOutput);
+		Xml.GetSafeElementData(_T("NumVolLevels"),(int *)&pDeviceCap->uiNumVolLevels);
 
-		XML.GetSafeElementData(_T("BufferSize"),(int *)&pDeviceCap->uiBufferSize);
-		XML.GetSafeElementData(_T("LoadType"),(int *)&pDeviceCap->ucLoadType);
-		XML.GetSafeElementData(_T("RotationControl"),(int *)&pDeviceCap->ucRotCtrl);
-		XML.GetSafeElementData(_T("DigitalAudioBL"),(int *)&pDeviceCap->ucDigitalAudioBL);
+		Xml.GetSafeElementData(_T("BufferSize"),(int *)&pDeviceCap->uiBufferSize);
+		Xml.GetSafeElementData(_T("LoadType"),(int *)&pDeviceCap->ucLoadType);
+		Xml.GetSafeElementData(_T("RotationControl"),(int *)&pDeviceCap->ucRotCtrl);
+		Xml.GetSafeElementData(_T("DigitalAudioBL"),(int *)&pDeviceCap->ucDigitalAudioBL);
 
 		// Max speeds.
-		if (!XML.EnterElement(_T("MaxSpeeds")))
+		if (!Xml.EnterElement(_T("MaxSpeeds")))
 		{
 			bResult = false;
 			break;
@@ -1262,32 +1262,32 @@ bool CDeviceManager::LoadConfiguration()
 
 		if (bIsRecorder)
 		{
-			if (!XML.EnterElement(_T("Write")))
+			if (!Xml.EnterElement(_T("Write")))
 			{
 				bResult = false;
 				break;
 			}
 
-			XML.GetSafeElementAttrValue(_T("cd"),(int *)&pDeviceCap->uiMaxSpeeds[1]);
-			XML.GetSafeElementAttrValue(_T("dvd"),(int *)&pDeviceCap->uiMaxSpeeds[2]);
-			XML.GetSafeElementData((int *)&pDeviceCap->uiMaxSpeeds[0]);
-			XML.LeaveElement();
+			Xml.GetSafeElementAttrValue(_T("cd"),(int *)&pDeviceCap->uiMaxSpeeds[1]);
+			Xml.GetSafeElementAttrValue(_T("dvd"),(int *)&pDeviceCap->uiMaxSpeeds[2]);
+			Xml.GetSafeElementData((int *)&pDeviceCap->uiMaxSpeeds[0]);
+			Xml.LeaveElement();
 		}
 
-		if (!XML.EnterElement(_T("Read")))
+		if (!Xml.EnterElement(_T("Read")))
 		{
 			bResult = false;
 			break;
 		}
 
-		XML.GetSafeElementAttrValue(_T("cd"),(int *)&pDeviceCap->uiMaxSpeeds[4]);
-		XML.GetSafeElementAttrValue(_T("dvd"),(int *)&pDeviceCap->uiMaxSpeeds[5]);
-		XML.GetSafeElementData((int *)&pDeviceCap->uiMaxSpeeds[3]);
-		XML.LeaveElement();
-		XML.LeaveElement();
+		Xml.GetSafeElementAttrValue(_T("cd"),(int *)&pDeviceCap->uiMaxSpeeds[4]);
+		Xml.GetSafeElementAttrValue(_T("dvd"),(int *)&pDeviceCap->uiMaxSpeeds[5]);
+		Xml.GetSafeElementData((int *)&pDeviceCap->uiMaxSpeeds[3]);
+		Xml.LeaveElement();
+		Xml.LeaveElement();
 
 		// Current speeds.
-		if (!XML.EnterElement(_T("CurrentSpeeds")))
+		if (!Xml.EnterElement(_T("CurrentSpeeds")))
 		{
 			bResult = false;
 			break;
@@ -1295,71 +1295,71 @@ bool CDeviceManager::LoadConfiguration()
 
 		if (bIsRecorder)
 		{
-			if (!XML.EnterElement(_T("Write")))
+			if (!Xml.EnterElement(_T("Write")))
 			{
 				bResult = false;
 				break;
 			}
 
-			XML.GetSafeElementAttrValue(_T("cd"),(int *)&pDeviceCap->uiCurSpeeds[1]);
-			XML.GetSafeElementAttrValue(_T("dvd"),(int *)&pDeviceCap->uiCurSpeeds[2]);
-			XML.GetSafeElementData((int *)&pDeviceCap->uiCurSpeeds[0]);
-			XML.LeaveElement();
+			Xml.GetSafeElementAttrValue(_T("cd"),(int *)&pDeviceCap->uiCurSpeeds[1]);
+			Xml.GetSafeElementAttrValue(_T("dvd"),(int *)&pDeviceCap->uiCurSpeeds[2]);
+			Xml.GetSafeElementData((int *)&pDeviceCap->uiCurSpeeds[0]);
+			Xml.LeaveElement();
 		}
 
-		if (!XML.EnterElement(_T("Read")))
+		if (!Xml.EnterElement(_T("Read")))
 		{
 			bResult = false;
 			break;
 		}
 
-		XML.GetSafeElementAttrValue(_T("cd"),(int *)&pDeviceCap->uiCurSpeeds[4]);
-		XML.GetSafeElementAttrValue(_T("dvd"),(int *)&pDeviceCap->uiCurSpeeds[5]);
-		XML.GetSafeElementData((int *)&pDeviceCap->uiCurSpeeds[3]);
-		XML.LeaveElement();
-		XML.LeaveElement();
+		Xml.GetSafeElementAttrValue(_T("cd"),(int *)&pDeviceCap->uiCurSpeeds[4]);
+		Xml.GetSafeElementAttrValue(_T("dvd"),(int *)&pDeviceCap->uiCurSpeeds[5]);
+		Xml.GetSafeElementData((int *)&pDeviceCap->uiCurSpeeds[3]);
+		Xml.LeaveElement();
+		Xml.LeaveElement();
 
 		// Write speeds.
 #ifdef DEVICEMANAGER_COLLECTWRITESPEEDS
 		if (bIsRecorder)
 		{
-			if (!XML.EnterElement(_T("WriteSpeeds")))
+			if (!Xml.EnterElement(_T("WriteSpeeds")))
 			{
 				bResult = false;
 				break;
 			}
 
-			XML.GetSafeElementAttrValue(_T("count"),(int *)&pDeviceCap->uiWriteSpeedsCount);
+			Xml.GetSafeElementAttrValue(_T("count"),(int *)&pDeviceCap->uiWriteSpeedsCount);
 
 			for (unsigned int j = 0; j < pDeviceCap->uiWriteSpeedsCount; j++)
 			{
 				lsprintf(szElemName,_T("Item%d"),j);
 
-				if (!XML.EnterElement(szElemName))
+				if (!Xml.EnterElement(szElemName))
 				{
 					bResult = false;
 					break;
 				}
 
-				XML.GetSafeElementAttrValue(_T("cd"),(int *)&pDeviceCap->uiWriteSpeeds[j][1]);
-				XML.GetSafeElementAttrValue(_T("dvd"),(int *)&pDeviceCap->uiWriteSpeeds[j][2]);
-				XML.GetSafeElementData((int *)&pDeviceCap->uiWriteSpeeds[j][0]);
-				XML.LeaveElement();
+				Xml.GetSafeElementAttrValue(_T("cd"),(int *)&pDeviceCap->uiWriteSpeeds[j][1]);
+				Xml.GetSafeElementAttrValue(_T("dvd"),(int *)&pDeviceCap->uiWriteSpeeds[j][2]);
+				Xml.GetSafeElementData((int *)&pDeviceCap->uiWriteSpeeds[j][0]);
+				Xml.LeaveElement();
 			}
 
 			if (!bResult)
 				break;
 
-			XML.LeaveElement();
+			Xml.LeaveElement();
 		}
 #endif
 
-		XML.LeaveElement();
+		Xml.LeaveElement();
 
 		// Extended information.
 		if (bIsRecorder)
 		{
-			if (!XML.EnterElement(_T("Extended")))
+			if (!Xml.EnterElement(_T("Extended")))
 			{
 				bResult = false;
 				break;
@@ -1368,24 +1368,24 @@ bool CDeviceManager::LoadConfiguration()
 #ifdef UNICODE
 			TCHAR szBuffer[DEVICEMANAGER_MAXLINESIZE];
 			
-			XML.GetSafeElementData(_T("Flags"),szBuffer,DEVICEMANAGER_MAXLINESIZE);
+			Xml.GetSafeElementData(_T("Flags"),szBuffer,DEVICEMANAGER_MAXLINESIZE);
 			UnicodeToAnsi(pDeviceInfoEx->szWriteFlags,szBuffer,sizeof(pDeviceInfoEx->szWriteFlags));
 
-			XML.GetSafeElementData(_T("Modes"),szBuffer,DEVICEMANAGER_MAXLINESIZE);
+			Xml.GetSafeElementData(_T("Modes"),szBuffer,DEVICEMANAGER_MAXLINESIZE);
 			UnicodeToAnsi(pDeviceInfoEx->szWriteModes,szBuffer,sizeof(pDeviceInfoEx->szWriteModes));
 #else
-			XML.GetSafeElementData(_T("Flags"),pDeviceInfoEx->szWriteFlags,CONSOLEPIPE_MAX_LINE_SIZE);
-			XML.GetSafeElementData(_T("Modes"),pDeviceInfoEx->szWriteModes,CONSOLEPIPE_MAX_LINE_SIZE);
+			Xml.GetSafeElementData(_T("Flags"),pDeviceInfoEx->szWriteFlags,CONSOLEPIPE_MAX_LINE_SIZE);
+			Xml.GetSafeElementData(_T("Modes"),pDeviceInfoEx->szWriteModes,CONSOLEPIPE_MAX_LINE_SIZE);
 #endif
-			XML.LeaveElement();
+			Xml.LeaveElement();
 		}
 
 
-		XML.LeaveElement();		// Device
+		Xml.LeaveElement();		// Device
 	}
 
-	XML.LeaveElement();
-	XML.LeaveElement();
+	Xml.LeaveElement();
+	Xml.LeaveElement();
 
 	return bResult;
 }

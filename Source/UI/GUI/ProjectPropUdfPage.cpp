@@ -34,18 +34,18 @@ CProjectPropUdfPage::~CProjectPropUdfPage()
 
 bool CProjectPropUdfPage::Translate()
 {
-	if (g_LanguageSettings.m_pLNGProcessor == NULL)
+	if (g_LanguageSettings.m_pLngProcessor == NULL)
 		return false;
 
-	CLNGProcessor *pLNG = g_LanguageSettings.m_pLNGProcessor;
+	CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
 	
 	// Make sure that there is a projectprop translation section.
-	if (!pLNG->EnterSection(_T("projectprop")))
+	if (!pLng->EnterSection(_T("projectprop")))
 		return false;
 
 	// Translate.
 	TCHAR *szStrValue;
-	if (pLNG->GetValuePtr(IDC_VERSIONSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_VERSIONSTATIC,szStrValue))
 		SetDlgItemText(IDC_VERSIONSTATIC,szStrValue);
 
 	return true;

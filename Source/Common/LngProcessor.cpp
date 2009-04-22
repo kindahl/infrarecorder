@@ -21,7 +21,7 @@
 #include "StringConv.h"
 #include "StringUtil.h"
 
-CLNGProcessor::CLNGProcessor(const TCHAR *szFullPath) : m_File(szFullPath)
+CLngProcessor::CLngProcessor(const TCHAR *szFullPath) : m_File(szFullPath)
 {
 	m_ulBufferSize = 0;
 	m_ulBufferPos = 0;
@@ -32,25 +32,25 @@ CLNGProcessor::CLNGProcessor(const TCHAR *szFullPath) : m_File(szFullPath)
 	m_pCurrent = NULL;
 }
 
-CLNGProcessor::~CLNGProcessor()
+CLngProcessor::~CLngProcessor()
 {
 	Clear();
 }
 
-void CLNGProcessor::Clear()
+void CLngProcessor::Clear()
 {
 	// Free the children.
 	for (unsigned int iIndex = 0; iIndex < m_pSections.size(); iIndex++)
 	{
 		// Remove the object from m_Instances.
-		std::vector <CLNGSection *>::iterator itObject = m_pSections.begin() + iIndex;
+		std::vector <CLngSection *>::iterator itObject = m_pSections.begin() + iIndex;
 		delete *itObject;
 	}
 
 	m_pSections.clear();
 }
 
-bool CLNGProcessor::ReadNext(TCHAR &c)
+bool CLngProcessor::ReadNext(TCHAR &c)
 {
 	if (m_ulBufferPos == m_ulBufferSize)
 	{
@@ -76,7 +76,7 @@ bool CLNGProcessor::ReadNext(TCHAR &c)
 	return true;
 }
 
-void CLNGProcessor::ReadBack()
+void CLngProcessor::ReadBack()
 {
 	if (m_ulBufferPos > 0)
 	{
@@ -86,11 +86,11 @@ void CLNGProcessor::ReadBack()
 }
 
 /*
-	CLNGProcessor::Load
+	CLngProcessor::Load
 	-------------------
 	Loads the specified XML into a tree structure in memory. Varius return values.
 */
-int CLNGProcessor::Load()
+int CLngProcessor::Load()
 {
 	// Open the file.
 	if (!m_File.open(ckcore::File::ckOPEN_READ))
@@ -130,7 +130,7 @@ int CLNGProcessor::Load()
 	m_pCurrent = NULL;
 
 	// The current section (when parsing).
-	CLNGSection *pCurSection = NULL;
+	CLngSection *pCurSection = NULL;
 
 	CCustomString szNameBuffer(11);
 
@@ -167,7 +167,7 @@ int CLNGProcessor::Load()
 			if (!ReadNext(uc))
 				break;
 
-			pCurSection = new CLNGSection();
+			pCurSection = new CLngSection();
 			m_pSections.push_back(pCurSection);
 
 			while (uc != ']')
@@ -186,7 +186,7 @@ int CLNGProcessor::Load()
 				continue;
 
 			// If we didn't find a section we have found a value.
-			CLNGValue *pNewValue = new CLNGValue();
+			CLngValue *pNewValue = new CLngValue();
 
 			while (uc != '=')
 			{
@@ -219,7 +219,7 @@ int CLNGProcessor::Load()
 	return LNGRES_OK;
 }
 
-bool CLNGProcessor::EnterSection(const TCHAR *szSectionName)
+bool CLngProcessor::EnterSection(const TCHAR *szSectionName)
 {
 	// First, check if we're already in the requested section.
 	if (m_pCurrent != NULL && !lstrcmp(szSectionName,m_pCurrent->m_szName))
@@ -237,7 +237,7 @@ bool CLNGProcessor::EnterSection(const TCHAR *szSectionName)
 	return false;
 }
 
-bool CLNGProcessor::GetValue(unsigned long ulName,TCHAR *szValue,unsigned int uiMaxValueLen)
+bool CLngProcessor::GetValue(unsigned long ulName,TCHAR *szValue,unsigned int uiMaxValueLen)
 {
 	if (m_pCurrent == NULL)
 		return false;
@@ -258,7 +258,7 @@ bool CLNGProcessor::GetValue(unsigned long ulName,TCHAR *szValue,unsigned int ui
 	return false;
 }
 
-bool CLNGProcessor::GetValuePtr(unsigned long ulName,TCHAR *&szValue)
+bool CLngProcessor::GetValuePtr(unsigned long ulName,TCHAR *&szValue)
 {
 	if (m_pCurrent == NULL)
 		return false;

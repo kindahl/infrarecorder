@@ -26,13 +26,13 @@
 CConfigGeneralPage::CConfigGeneralPage()
 {
 	// Try to load translated string.
-	if (g_LanguageSettings.m_pLNGProcessor != NULL)
+	if (g_LanguageSettings.m_pLngProcessor != NULL)
 	{	
 		// Make sure that there is a strings translation section.
-		if (g_LanguageSettings.m_pLNGProcessor->EnterSection(_T("strings")))
+		if (g_LanguageSettings.m_pLngProcessor->EnterSection(_T("strings")))
 		{
 			TCHAR *szStrValue;
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(TITLE_GENERAL,szStrValue))
+			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(TITLE_GENERAL,szStrValue))
 				SetTitle(szStrValue);
 		}
 	}
@@ -258,35 +258,35 @@ bool CConfigGeneralPage::UnregisterFileExt(const TCHAR *szFileExt)
 
 bool CConfigGeneralPage::Translate()
 {
-	if (g_LanguageSettings.m_pLNGProcessor == NULL)
+	if (g_LanguageSettings.m_pLngProcessor == NULL)
 		return false;
 
-	CLNGProcessor *pLNG = g_LanguageSettings.m_pLNGProcessor;
+	CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
 	
 	// Make sure that there is a config translation section.
-	if (!pLNG->EnterSection(_T("config")))
+	if (!pLng->EnterSection(_T("config")))
 		return false;
 
 	// Translate.
 	TCHAR *szStrValue;
 
-	if (pLNG->GetValuePtr(IDC_AUTORUNCHECK,szStrValue))
+	if (pLng->GetValuePtr(IDC_AUTORUNCHECK,szStrValue))
 		SetDlgItemText(IDC_AUTORUNCHECK,szStrValue);
-	if (pLNG->GetValuePtr(IDC_WIZARDCHECK,szStrValue))
+	if (pLng->GetValuePtr(IDC_WIZARDCHECK,szStrValue))
 		SetDlgItemText(IDC_WIZARDCHECK,szStrValue);
-	if (pLNG->GetValuePtr(IDC_ASSOCIATECHECK,szStrValue))
+	if (pLng->GetValuePtr(IDC_ASSOCIATECHECK,szStrValue))
 		SetDlgItemText(IDC_ASSOCIATECHECK,szStrValue);
-	if (pLNG->GetValuePtr(IDC_ASSOCIATEDISCIMAGECHECK,szStrValue))
+	if (pLng->GetValuePtr(IDC_ASSOCIATEDISCIMAGECHECK,szStrValue))
 		SetDlgItemText(IDC_ASSOCIATEDISCIMAGECHECK,szStrValue);
-	if (pLNG->GetValuePtr(IDC_SHELLFOLDERGROUPSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_SHELLFOLDERGROUPSTATIC,szStrValue))
 		SetDlgItemText(IDC_SHELLFOLDERGROUPSTATIC,szStrValue);
-	if (pLNG->GetValuePtr(IDC_SHELLFOLDERINFOSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_SHELLFOLDERINFOSTATIC,szStrValue))
 		SetDlgItemText(IDC_SHELLFOLDERINFOSTATIC,szStrValue);
-	if (pLNG->GetValuePtr(IDC_REMEMBERSHELLCHECK,szStrValue))
+	if (pLng->GetValuePtr(IDC_REMEMBERSHELLCHECK,szStrValue))
 		SetDlgItemText(IDC_REMEMBERSHELLCHECK,szStrValue);
-	if (pLNG->GetValuePtr(IDC_TEMPFOLDERGROUPSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_TEMPFOLDERGROUPSTATIC,szStrValue))
 		SetDlgItemText(IDC_TEMPFOLDERGROUPSTATIC,szStrValue);
-	if (pLNG->GetValuePtr(IDC_TEMPFOLDERINFOSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_TEMPFOLDERINFOSTATIC,szStrValue))
 		SetDlgItemText(IDC_TEMPFOLDERINFOSTATIC,szStrValue);
 
 	return true;

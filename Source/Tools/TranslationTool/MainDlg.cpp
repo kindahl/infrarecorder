@@ -18,7 +18,7 @@
 
 #include "stdafx.h"
 #include "resource.h"
-#include "LNGAnalyzer.h"
+#include "LngAnalyzer.h"
 #include "MainDlg.h"
 
 BOOL CMainDlg::PreTranslateMessage(MSG *pMsg)
@@ -92,15 +92,15 @@ LRESULT CMainDlg::OnDropFiles(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandl
 	return 0;
 }
 
-bool CMainDlg::AnalyzeTranslation(const TCHAR *szFileName,CXMLProcessor *pXML)
+bool CMainDlg::AnalyzeTranslation(const TCHAR *szFileName,CXmlProcessor *pXml)
 {
 	::EnableWindow(GetDlgItem(IDC_EXPORTBUTTON),FALSE);
 
 	TCHAR szRefFile[MAX_PATH];
 	GetDlgItemText(IDC_REFEDIT,szRefFile,MAX_PATH - 1);
 
-	CLNGAnalyzer RefFile(szRefFile);
-	CLNGAnalyzer LangFile(szFileName);
+	CLngAnalyzer RefFile(szRefFile);
+	CLngAnalyzer LangFile(szFileName);
 
 	if (RefFile.Load() != LNGRES_OK)
 		return false;
@@ -109,45 +109,45 @@ bool CMainDlg::AnalyzeTranslation(const TCHAR *szFileName,CXMLProcessor *pXML)
 		return false;
 
 	// Add some translation information.
-	pXML->AddElement(_T("Header"),_T(""),true);
+	pXml->AddElement(_T("Header"),_T(""),true);
 		if (LangFile.EnterSection(_T("translation")))
 		{
 			TCHAR *szStrValue;
 			// Author.
 			if (LangFile.GetValuePtr(1,szStrValue))
-				pXML->AddElement(_T("Author"),szStrValue);
+				pXml->AddElement(_T("Author"),szStrValue);
 			else
-				pXML->AddElement(_T("Author"),_T("Unknown"));
+				pXml->AddElement(_T("Author"),_T("Unknown"));
 
 			// Date.
 			if (LangFile.GetValuePtr(2,szStrValue))
-				pXML->AddElement(_T("Date"),szStrValue);
+				pXml->AddElement(_T("Date"),szStrValue);
 			else
-				pXML->AddElement(_T("Date"),_T("Unknown"));
+				pXml->AddElement(_T("Date"),_T("Unknown"));
 
 			// Version.
 			if (LangFile.GetValuePtr(3,szStrValue))
-				pXML->AddElement(_T("Version"),szStrValue);
+				pXml->AddElement(_T("Version"),szStrValue);
 			else
-				pXML->AddElement(_T("Version"),_T("Unknown"));
+				pXml->AddElement(_T("Version"),_T("Unknown"));
 
 			// Help.
 			if (LangFile.GetValuePtr(4,szStrValue))
-				pXML->AddElement(_T("Help"),_T("Yes"));
+				pXml->AddElement(_T("Help"),_T("Yes"));
 			else
-				pXML->AddElement(_T("Help"),_T("No"));
+				pXml->AddElement(_T("Help"),_T("No"));
 		}
 		else
 		{
-			pXML->AddElement(_T("Author"),_T("Unknown"));
-			pXML->AddElement(_T("Version"),_T("Unknown"));
-			pXML->AddElement(_T("Date"),_T("Unknown"));
-			pXML->AddElement(_T("Help"),_T("Unknown"));
+			pXml->AddElement(_T("Author"),_T("Unknown"));
+			pXml->AddElement(_T("Version"),_T("Unknown"));
+			pXml->AddElement(_T("Date"),_T("Unknown"));
+			pXml->AddElement(_T("Help"),_T("Unknown"));
 		}
 
 		// Ignore the values in the translation section.
 		unsigned int uiRefTransCount = 0;
-		CLNGSection *pTempSection = RefFile.GetSection(_T("translation"));
+		CLngSection *pTempSection = RefFile.GetSection(_T("translation"));
 		if (pTempSection != NULL)
 			uiRefTransCount = (unsigned int)pTempSection->m_Values.size();
 
@@ -156,18 +156,18 @@ bool CMainDlg::AnalyzeTranslation(const TCHAR *szFileName,CXMLProcessor *pXML)
 		if (pTempSection != NULL)
 			uiLangTransCount = (unsigned int)pTempSection->m_Values.size();
 
-		pXML->AddElement(_T("SectionRatio"),(double)LangFile.GetNumSections()/RefFile.GetNumSections());
-		pXML->AddElement(_T("ValueRatio"),(double)(LangFile.GetNumValues() - uiLangTransCount)/(RefFile.GetNumValues() - uiRefTransCount));
-	pXML->LeaveElement();
+		pXml->AddElement(_T("SectionRatio"),(double)LangFile.GetNumSections()/RefFile.GetNumSections());
+		pXml->AddElement(_T("ValueRatio"),(double)(LangFile.GetNumValues() - uiLangTransCount)/(RefFile.GetNumValues() - uiRefTransCount));
+	pXml->LeaveElement();
 
-	pXML->AddElement(_T("Missing"),_T(""),true);
+	pXml->AddElement(_T("Missing"),_T(""),true);
 		// Perform the comparission.
 		TCHAR szBuffer[32];
 		unsigned int uiSectionCount = 0;
 
 		for (unsigned int i = 0; i < RefFile.GetNumSections(); i++)
 		{
-			CLNGSection *pRefSection = RefFile.GetSection(i);
+			CLngSection *pRefSection = RefFile.GetSection(i);
 			if (pRefSection == NULL)
 				return false;
 
@@ -175,22 +175,22 @@ bool CMainDlg::AnalyzeTranslation(const TCHAR *szFileName,CXMLProcessor *pXML)
 			if (!lstrcmp(pRefSection->m_szName,_T("translation")))
 				continue;
 
-			CLNGSection *pLangSection = LangFile.GetSection(pRefSection->m_szName);
+			CLngSection *pLangSection = LangFile.GetSection(pRefSection->m_szName);
 			if (pLangSection == NULL)
 			{
 				lsprintf(szBuffer,_T("Item%d"),uiSectionCount++);
 
-				pXML->AddElement(szBuffer,_T(""),true);
-				pXML->AddElementAttr(_T("name"),pRefSection->m_szName);
+				pXml->AddElement(szBuffer,_T(""),true);
+				pXml->AddElementAttr(_T("name"),pRefSection->m_szName);
 					for (unsigned int j = 0; j < pRefSection->m_Values.size(); j++)
 					{
 						lsprintf(szBuffer,_T("Item%d"),j);
 
-						pXML->AddElement(szBuffer,pRefSection->m_Values[j]->m_szValue,true);
-						pXML->AddElementAttr(_T("name"),(long)pRefSection->m_Values[j]->ulName);
-						pXML->LeaveElement();
+						pXml->AddElement(szBuffer,pRefSection->m_Values[j]->m_szValue,true);
+						pXml->AddElementAttr(_T("name"),(long)pRefSection->m_Values[j]->ulName);
+						pXml->LeaveElement();
 					}
-				pXML->LeaveElement();
+				pXml->LeaveElement();
 			}
 			else
 			{
@@ -207,26 +207,26 @@ bool CMainDlg::AnalyzeTranslation(const TCHAR *szFileName,CXMLProcessor *pXML)
 						{
 							lsprintf(szBuffer,_T("Item%d"),uiSectionCount++);
 
-							pXML->AddElement(szBuffer,_T(""),true);
-							pXML->AddElementAttr(_T("name"),pRefSection->m_szName);
+							pXml->AddElement(szBuffer,_T(""),true);
+							pXml->AddElementAttr(_T("name"),pRefSection->m_szName);
 
 							bAddSection = true;
 						}
 
 						lsprintf(szBuffer,_T("Item%d"),uiValueCount++);
 
-						pXML->AddElement(szBuffer,pRefSection->m_Values[j]->m_szValue,true);
-						pXML->AddElementAttr(_T("name"),(long)pRefSection->m_Values[j]->ulName);
-						pXML->LeaveElement();
+						pXml->AddElement(szBuffer,pRefSection->m_Values[j]->m_szValue,true);
+						pXml->AddElementAttr(_T("name"),(long)pRefSection->m_Values[j]->ulName);
+						pXml->LeaveElement();
 					}
 				}
 
 				// Don't forget to leave any entered sections.
 				if (bAddSection)
-					pXML->LeaveElement();
+					pXml->LeaveElement();
 			}
 		}
-	pXML->LeaveElement();
+	pXml->LeaveElement();
 
 	return true;
 }
@@ -239,14 +239,14 @@ LRESULT CMainDlg::OnOK(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 		m_TransList.GetText(i,szTransFileName);
 
 		// Analyze the current translation.
-		CXMLProcessor XML(CXMLProcessor::MODE_HTML);
-		XML.AddElement(_T("InfraRecorder"),_T(""),true);
-			XML.AddElement(_T("Translation"),_T(""),true);
+		CXmlProcessor Xml(CXmlProcessor::MODE_HTML);
+		Xml.AddElement(_T("InfraRecorder"),_T(""),true);
+			Xml.AddElement(_T("Translation"),_T(""),true);
 
-				AnalyzeTranslation(szTransFileName,&XML);
+				AnalyzeTranslation(szTransFileName,&Xml);
 
-			XML.LeaveElement();
-		XML.LeaveElement();
+			Xml.LeaveElement();
+		Xml.LeaveElement();
 
 		// Calculate new file name.
 		ExtractFileName(szTransFileName);
@@ -263,8 +263,8 @@ LRESULT CMainDlg::OnOK(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 		ExtractFilePath(szFileName);
 		lstrcat(szFileName,szTransFileName);
 
-		// Save the XML document.
-		XML.Save(szFileName);
+		// Save the Xml document.
+		Xml.Save(szFileName);
 	}
 
 	return 0;

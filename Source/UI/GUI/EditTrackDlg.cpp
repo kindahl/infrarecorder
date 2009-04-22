@@ -33,25 +33,25 @@ CEditTrackDlg::~CEditTrackDlg()
 
 bool CEditTrackDlg::Translate()
 {
-	if (g_LanguageSettings.m_pLNGProcessor == NULL)
+	if (g_LanguageSettings.m_pLngProcessor == NULL)
 		return false;
 
-	CLNGProcessor *pLNG = g_LanguageSettings.m_pLNGProcessor;
+	CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
 	
 	// Make sure that there is a edittrack translation section.
-	if (!pLNG->EnterSection(_T("edittrack")))
+	if (!pLng->EnterSection(_T("edittrack")))
 		return false;
 
 	// Translate.
 	TCHAR *szStrValue;
 
-	if (pLNG->GetValuePtr(IDOK,szStrValue))
+	if (pLng->GetValuePtr(IDOK,szStrValue))
 		SetDlgItemText(IDOK,szStrValue);
-	if (pLNG->GetValuePtr(IDCANCEL,szStrValue))
+	if (pLng->GetValuePtr(IDCANCEL,szStrValue))
 		SetDlgItemText(IDCANCEL,szStrValue);
-	if (pLNG->GetValuePtr(IDC_TITLESTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_TITLESTATIC,szStrValue))
 		SetDlgItemText(IDC_TITLESTATIC,szStrValue);
-	if (pLNG->GetValuePtr(IDC_ARTISTSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_ARTISTSTATIC,szStrValue))
 		SetDlgItemText(IDC_ARTISTSTATIC,szStrValue);
 
 	return true;

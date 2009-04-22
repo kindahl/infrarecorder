@@ -20,7 +20,7 @@
 #include <ckcore/directory.hh>
 #include "SettingsManager.h"
 #include "../../Common/StringUtil.h"
-#include "../../Common/XMLProcessor.h"
+#include "../../Common/XmlProcessor.h"
 #include "StringTable.h"
 #include "LangUtil.h"
 
@@ -69,7 +69,7 @@ bool CSettingsManager::GetConfigPath(TCHAR *szConfigPath)
 
 bool CSettingsManager::Load()
 {
-	CXMLProcessor XML;
+	CXmlProcessor Xml;
 	bool bResult = true;
 
 	// Get the correct file-path.
@@ -78,24 +78,24 @@ bool CSettingsManager::Load()
 		return false;
 
 	// Load the file.
-	int iResult = XML.Load(szConfigPath);
+	int iResult = Xml.Load(szConfigPath);
 	if (iResult != XMLRES_OK && iResult != XMLRES_FILEERROR)
 		return false;
 
-	if (!XML.EnterElement(_T("InfraRecorder")))
+	if (!Xml.EnterElement(_T("InfraRecorder")))
 		return false;
 
-	if (!XML.EnterElement(_T("Settings")))
+	if (!Xml.EnterElement(_T("Settings")))
 		return false;
 
 	for (unsigned int i = 0; i < m_Settings.size(); i++)
 	{
-		if (!m_Settings[i]->Load(&XML))
+		if (!m_Settings[i]->Load(&Xml))
 			bResult = false;
 	}
 
-	XML.LeaveElement();
-	XML.LeaveElement();
+	Xml.LeaveElement();
+	Xml.LeaveElement();
 
 	return bResult;
 }

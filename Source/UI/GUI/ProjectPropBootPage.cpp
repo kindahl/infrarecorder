@@ -31,13 +31,13 @@ CProjectPropBootPage::CProjectPropBootPage()
 	m_hToolBarImageList = NULL;
 
 	// Try to load translated string.
-	if (g_LanguageSettings.m_pLNGProcessor != NULL)
+	if (g_LanguageSettings.m_pLngProcessor != NULL)
 	{	
 		// Make sure that there is a strings translation section.
-		if (g_LanguageSettings.m_pLNGProcessor->EnterSection(_T("strings")))
+		if (g_LanguageSettings.m_pLngProcessor->EnterSection(_T("strings")))
 		{
 			TCHAR *szStrValue;
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(TITLE_BOOT,szStrValue))
+			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(TITLE_BOOT,szStrValue))
 				SetTitle(szStrValue);
 		}
 	}
@@ -53,18 +53,18 @@ CProjectPropBootPage::~CProjectPropBootPage()
 
 bool CProjectPropBootPage::Translate()
 {
-	if (g_LanguageSettings.m_pLNGProcessor == NULL)
+	if (g_LanguageSettings.m_pLngProcessor == NULL)
 		return false;
 
-	CLNGProcessor *pLNG = g_LanguageSettings.m_pLNGProcessor;
+	CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
 	
 	// Make sure that there is a projectprop translation section.
-	if (!pLNG->EnterSection(_T("projectprop")))
+	if (!pLng->EnterSection(_T("projectprop")))
 		return false;
 
 	// Translate.
 	TCHAR *szStrValue;
-	if (pLNG->GetValuePtr(IDC_BOOTSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_BOOTSTATIC,szStrValue))
 		SetDlgItemText(IDC_BOOTSTATIC,szStrValue);
 
 	return true;
@@ -268,13 +268,13 @@ LRESULT CProjectPropBootPage::OnToolBarGetInfo(int iCtrlID,LPNMHDR pNMH,BOOL &bH
 	LPTOOLTIPTEXT pTipText = (LPTOOLTIPTEXT)pNMH;
 
 	// Try to load translated string.
-	if (g_LanguageSettings.m_pLNGProcessor != NULL)
+	if (g_LanguageSettings.m_pLngProcessor != NULL)
 	{	
 		// Make sure that there is a hint translation section.
-		if (g_LanguageSettings.m_pLNGProcessor->EnterSection(_T("hint")))
+		if (g_LanguageSettings.m_pLngProcessor->EnterSection(_T("hint")))
 		{
 			TCHAR *szStrValue;
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr((unsigned long)pTipText->hdr.idFrom,szStrValue))
+			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr((unsigned long)pTipText->hdr.idFrom,szStrValue))
 			{
 				pTipText->lpszText = szStrValue;
 				return 0;

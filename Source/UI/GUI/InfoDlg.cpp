@@ -35,26 +35,26 @@ CInfoDlg::~CInfoDlg()
 
 bool CInfoDlg::Translate()
 {
-	if (g_LanguageSettings.m_pLNGProcessor == NULL)
+	if (g_LanguageSettings.m_pLngProcessor == NULL)
 		return false;
 
-	CLNGProcessor *pLNG = g_LanguageSettings.m_pLNGProcessor;
+	CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
 
 	TCHAR *szStrValue;
 
 	// Translate the title.
-	if (!pLNG->EnterSection(_T("strings")))
+	if (!pLng->EnterSection(_T("strings")))
 		return false;
 	
 	// Translate the rest.
-	if (!pLNG->EnterSection(_T("info")))
+	if (!pLng->EnterSection(_T("info")))
 		return false;
 
-	if (pLNG->GetValuePtr(IDOK,szStrValue))
+	if (pLng->GetValuePtr(IDOK,szStrValue))
 		SetDlgItemText(IDOK,szStrValue);
-	if (pLNG->GetValuePtr(IDCANCEL,szStrValue))
+	if (pLng->GetValuePtr(IDCANCEL,szStrValue))
 		SetDlgItemText(IDCANCEL,szStrValue);
-	if (pLNG->GetValuePtr(IDC_DISPLAYMSGCHECK,szStrValue))
+	if (pLng->GetValuePtr(IDC_DISPLAYMSGCHECK,szStrValue))
 		SetDlgItemText(IDC_DISPLAYMSGCHECK,szStrValue);
 
 	return true;

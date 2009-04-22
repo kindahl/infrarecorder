@@ -23,15 +23,15 @@
 CLanguageSettings g_LanguageSettings;
 CGlobalSettings g_GlobalSettings;
 
-bool CLanguageSettings::Load(CXMLProcessor *pXML)
+bool CLanguageSettings::Load(CXmlProcessor *pXml)
 {
-	if (pXML == NULL)
+	if (pXml == NULL)
 		return false;
 
-	if (!pXML->EnterElement(_T("Language")))
+	if (!pXml->EnterElement(_T("Language")))
 		return false;
 
-	pXML->GetSafeElementData(_T("LanguageFile"),m_szLanguageFile,MAX_PATH - 1);
+	pXml->GetSafeElementData(_T("LanguageFile"),m_szLanguageFile,MAX_PATH - 1);
 
 	// Calculate full path.
 	TCHAR szFullPath[MAX_PATH];
@@ -42,31 +42,31 @@ bool CLanguageSettings::Load(CXMLProcessor *pXML)
 
 	if (ckcore::File::exist(szFullPath))
 	{
-		m_pLNGProcessor = new CLNGProcessor(szFullPath);
-		m_pLNGProcessor->Load();
+		m_pLngProcessor = new CLngProcessor(szFullPath);
+		m_pLngProcessor->Load();
 	}
 
-	pXML->LeaveElement();
+	pXml->LeaveElement();
 	return true;
 }
 
-bool CGlobalSettings::Load(CXMLProcessor *pXML)
+bool CGlobalSettings::Load(CXmlProcessor *pXml)
 {
-	if (pXML == NULL)
+	if (pXml == NULL)
 		return false;
 
-	if (!pXML->EnterElement(_T("Global")))
+	if (!pXml->EnterElement(_T("Global")))
 		return false;
 
 	// Shell extension.
-	if (pXML->EnterElement(_T("ShellExtension")))
+	if (pXml->EnterElement(_T("ShellExtension")))
 	{
-		pXML->GetSafeElementAttrValue(_T("submenu"),&m_bShellExtSubMenu);
-		pXML->GetSafeElementAttrValue(_T("icons"),&m_bShellExtIcon);
+		pXml->GetSafeElementAttrValue(_T("submenu"),&m_bShellExtSubMenu);
+		pXml->GetSafeElementAttrValue(_T("icons"),&m_bShellExtIcon);
 
-		pXML->LeaveElement();
+		pXml->LeaveElement();
 	}
 
-	pXML->LeaveElement();
+	pXml->LeaveElement();
 	return true;
 }

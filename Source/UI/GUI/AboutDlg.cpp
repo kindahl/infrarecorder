@@ -94,13 +94,13 @@ void CAboutDlg::UpdateVersionInfo()
 #endif
 
 			// Append translator information if possible.
-			if (g_LanguageSettings.m_pLNGProcessor != NULL)
+			if (g_LanguageSettings.m_pLngProcessor != NULL)
 			{	
 				// Make sure that there is a strings translation section.
-				if (g_LanguageSettings.m_pLNGProcessor->EnterSection(_T("translation")))
+				if (g_LanguageSettings.m_pLngProcessor->EnterSection(_T("translation")))
 				{
 					TCHAR *szStrValue;
-					if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(TRANSLATION_ID_AUTHOR,szStrValue))
+					if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(TRANSLATION_ID_AUTHOR,szStrValue))
 					{
 						lstrcat(szStrBuffer,_T("\n\nTranslated by "));
 						lstrcat(szStrBuffer,szStrValue);

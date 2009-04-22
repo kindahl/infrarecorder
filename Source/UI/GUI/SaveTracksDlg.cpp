@@ -33,29 +33,29 @@ CSaveTracksDlg::~CSaveTracksDlg()
 
 bool CSaveTracksDlg::Translate()
 {
-	if (g_LanguageSettings.m_pLNGProcessor == NULL)
+	if (g_LanguageSettings.m_pLngProcessor == NULL)
 		return false;
 
-	CLNGProcessor *pLNG = g_LanguageSettings.m_pLNGProcessor;
+	CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
 	
 	// Make sure that there is a edittrack translation section.
-	if (!pLNG->EnterSection(_T("savetracks")))
+	if (!pLng->EnterSection(_T("savetracks")))
 		return false;
 
 	// Translate.
 	TCHAR *szStrValue;
 
-	if (pLNG->GetValuePtr(IDOK,szStrValue))
+	if (pLng->GetValuePtr(IDOK,szStrValue))
 		SetDlgItemText(IDOK,szStrValue);
-	if (pLNG->GetValuePtr(IDCANCEL,szStrValue))
+	if (pLng->GetValuePtr(IDCANCEL,szStrValue))
 		SetDlgItemText(IDCANCEL,szStrValue);
-	if (pLNG->GetValuePtr(IDD_SAVETRACKSDLG,szStrValue))			// Title.
+	if (pLng->GetValuePtr(IDD_SAVETRACKSDLG,szStrValue))			// Title.
 		SetWindowText(szStrValue);
-	if (pLNG->GetValuePtr(IDC_TARGETSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_TARGETSTATIC,szStrValue))
 		SetDlgItemText(IDC_TARGETSTATIC,szStrValue);
-	if (pLNG->GetValuePtr(IDC_AUDIOFORMATSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_AUDIOFORMATSTATIC,szStrValue))
 		SetDlgItemText(IDC_AUDIOFORMATSTATIC,szStrValue);
-	if (pLNG->GetValuePtr(IDC_AUDIOFORMATBUTTON,szStrValue))
+	if (pLng->GetValuePtr(IDC_AUDIOFORMATBUTTON,szStrValue))
 		SetDlgItemText(IDC_AUDIOFORMATBUTTON,szStrValue);
 
 	return true;

@@ -28,13 +28,13 @@
 CBurnAdvancedPage::CBurnAdvancedPage()
 {
 	// Try to load translated string.
-	if (g_LanguageSettings.m_pLNGProcessor != NULL)
+	if (g_LanguageSettings.m_pLngProcessor != NULL)
 	{	
 		// Make sure that there is a strings translation section.
-		if (g_LanguageSettings.m_pLNGProcessor->EnterSection(_T("strings")))
+		if (g_LanguageSettings.m_pLngProcessor->EnterSection(_T("strings")))
 		{
 			TCHAR *szStrValue;
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(TITLE_ADVANCED,szStrValue))
+			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(TITLE_ADVANCED,szStrValue))
 				SetTitle(szStrValue);
 		}
 	}
@@ -48,31 +48,31 @@ CBurnAdvancedPage::~CBurnAdvancedPage()
 
 bool CBurnAdvancedPage::Translate()
 {
-	if (g_LanguageSettings.m_pLNGProcessor == NULL)
+	if (g_LanguageSettings.m_pLngProcessor == NULL)
 		return false;
 
-	CLNGProcessor *pLNG = g_LanguageSettings.m_pLNGProcessor;
+	CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
 	
 	// Make sure that there is a burn translation section.
-	if (!pLNG->EnterSection(_T("burn")))
+	if (!pLng->EnterSection(_T("burn")))
 		return false;
 
 	// Translate.
 	TCHAR *szStrValue;
 
-	if (pLNG->GetValuePtr(IDC_OVERBURNCHECK,szStrValue))
+	if (pLng->GetValuePtr(IDC_OVERBURNCHECK,szStrValue))
 		SetDlgItemText(IDC_OVERBURNCHECK,szStrValue);
-	if (pLNG->GetValuePtr(IDC_SWABCHECK,szStrValue))
+	if (pLng->GetValuePtr(IDC_SWABCHECK,szStrValue))
 		SetDlgItemText(IDC_SWABCHECK,szStrValue);
-	if (pLNG->GetValuePtr(IDC_IGNORESIZECHECK,szStrValue))
+	if (pLng->GetValuePtr(IDC_IGNORESIZECHECK,szStrValue))
 		SetDlgItemText(IDC_IGNORESIZECHECK,szStrValue);
-	if (pLNG->GetValuePtr(IDC_IMMEDCHECK,szStrValue))
+	if (pLng->GetValuePtr(IDC_IMMEDCHECK,szStrValue))
 		SetDlgItemText(IDC_IMMEDCHECK,szStrValue);
-	if (pLNG->GetValuePtr(IDC_AUDIOMASTERCHECK,szStrValue))
+	if (pLng->GetValuePtr(IDC_AUDIOMASTERCHECK,szStrValue))
 		SetDlgItemText(IDC_AUDIOMASTERCHECK,szStrValue);
-	if (pLNG->GetValuePtr(IDC_FORCESPEEDCHECK,szStrValue))
+	if (pLng->GetValuePtr(IDC_FORCESPEEDCHECK,szStrValue))
 		SetDlgItemText(IDC_FORCESPEEDCHECK,szStrValue);
-	if (pLNG->GetValuePtr(IDC_VARIRECCHECK,szStrValue))
+	if (pLng->GetValuePtr(IDC_VARIRECCHECK,szStrValue))
 		SetDlgItemText(IDC_VARIRECCHECK,szStrValue);
 
 	return true;

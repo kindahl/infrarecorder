@@ -43,13 +43,13 @@ CBurnImageGeneralPage::CBurnImageGeneralPage(bool bImageHasTOC,bool bEnableOnFly
 	m_hRefreshImageList = NULL;
 
 	// Try to load translated string.
-	if (g_LanguageSettings.m_pLNGProcessor != NULL)
+	if (g_LanguageSettings.m_pLngProcessor != NULL)
 	{	
 		// Make sure that there is a strings translation section.
-		if (g_LanguageSettings.m_pLNGProcessor->EnterSection(_T("strings")))
+		if (g_LanguageSettings.m_pLngProcessor->EnterSection(_T("strings")))
 		{
 			TCHAR *szStrValue;
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(TITLE_GENERAL,szStrValue))
+			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(TITLE_GENERAL,szStrValue))
 				SetTitle(szStrValue);
 		}
 	}
@@ -71,20 +71,20 @@ CBurnImageGeneralPage::~CBurnImageGeneralPage()
 
 bool CBurnImageGeneralPage::Translate()
 {
-	if (g_LanguageSettings.m_pLNGProcessor == NULL)
+	if (g_LanguageSettings.m_pLngProcessor == NULL)
 		return false;
 
-	CLNGProcessor *pLNG = g_LanguageSettings.m_pLNGProcessor;
+	CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
 	
 	// Make sure that there is a burn translation section.
-	if (!pLNG->EnterSection(_T("burn")))
+	if (!pLng->EnterSection(_T("burn")))
 		return false;
 
 	// Translate.
 	TCHAR *szStrValue;
 	int iMaxStaticRight = 0;
 
-	if (pLNG->GetValuePtr(IDC_WRITESPEEDSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_WRITESPEEDSTATIC,szStrValue))
 	{
 		SetDlgItemText(IDC_WRITESPEEDSTATIC,szStrValue);
 
@@ -93,7 +93,7 @@ bool CBurnImageGeneralPage::Translate()
 		if (iStaticRight > iMaxStaticRight)
 			iMaxStaticRight = iStaticRight;
 	}
-	if (pLNG->GetValuePtr(IDC_WRITEMETHODSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_WRITEMETHODSTATIC,szStrValue))
 	{
 		SetDlgItemText(IDC_WRITEMETHODSTATIC,szStrValue);
 
@@ -102,7 +102,7 @@ bool CBurnImageGeneralPage::Translate()
 		if (iStaticRight > iMaxStaticRight)
 			iMaxStaticRight = iStaticRight;
 	}
-	if (pLNG->GetValuePtr(IDC_NUMCOPIESSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_NUMCOPIESSTATIC,szStrValue))
 	{
 		SetDlgItemText(IDC_NUMCOPIESSTATIC,szStrValue);
 
@@ -111,24 +111,24 @@ bool CBurnImageGeneralPage::Translate()
 		if (iStaticRight > iMaxStaticRight)
 			iMaxStaticRight = iStaticRight;
 	}
-	if (pLNG->GetValuePtr(IDC_EJECTCHECK,szStrValue))
+	if (pLng->GetValuePtr(IDC_EJECTCHECK,szStrValue))
 		SetDlgItemText(IDC_EJECTCHECK,szStrValue);
-	if (pLNG->GetValuePtr(IDC_SIMULATECHECK,szStrValue))
+	if (pLng->GetValuePtr(IDC_SIMULATECHECK,szStrValue))
 		SetDlgItemText(IDC_SIMULATECHECK,szStrValue);
-	if (pLNG->GetValuePtr(IDC_BUPCHECK,szStrValue))
+	if (pLng->GetValuePtr(IDC_BUPCHECK,szStrValue))
 		SetDlgItemText(IDC_BUPCHECK,szStrValue);
-	if (pLNG->GetValuePtr(IDC_PADCHECK,szStrValue))
+	if (pLng->GetValuePtr(IDC_PADCHECK,szStrValue))
 		SetDlgItemText(IDC_PADCHECK,szStrValue);
-	if (pLNG->GetValuePtr(IDC_FIXATECHECK,szStrValue))
+	if (pLng->GetValuePtr(IDC_FIXATECHECK,szStrValue))
 		SetDlgItemText(IDC_FIXATECHECK,szStrValue);
-	if (pLNG->GetValuePtr(IDC_VERIFYCHECK,szStrValue))
+	if (pLng->GetValuePtr(IDC_VERIFYCHECK,szStrValue))
 		SetDlgItemText(IDC_VERIFYCHECK,szStrValue);
 
 	// Borrow the on the fly translation from the copy dialog.
-	if (!pLNG->EnterSection(_T("copy")))
+	if (!pLng->EnterSection(_T("copy")))
 		return false;
 
-	if (pLNG->GetValuePtr(IDC_ONFLYCHECK,szStrValue))
+	if (pLng->GetValuePtr(IDC_ONFLYCHECK,szStrValue))
 		SetDlgItemText(IDC_ONFLYCHECK,szStrValue);
 
 	// Make sure that the edit controls are not in the way of the statics.

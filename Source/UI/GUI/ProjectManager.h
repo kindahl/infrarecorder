@@ -130,16 +130,16 @@ private:
 		unsigned int uiFolderNameSize);
 
 	void CloseProject();
-	void SaveProjectData(CXMLProcessor *pXML);
-	bool LoadProjectData(CXMLProcessor *pXML);
-	void SaveProjectFileSys(CXMLProcessor *pXML);
-	bool LoadProjectFileSys(CXMLProcessor *pXML);
-	void SaveProjectISO(CXMLProcessor *pXML);
-	bool LoadProjectISO(CXMLProcessor *pXML);
-	void SaveProjectFields(CXMLProcessor *pXML);
-	bool LoadProjectFields(CXMLProcessor *pXML);
-	void SaveProjectBoot(CXMLProcessor *pXML);
-	bool LoadProjectBoot(CXMLProcessor *pXML);
+	void SaveProjectData(CXmlProcessor *pXML);
+	bool LoadProjectData(CXmlProcessor *pXML);
+	void SaveProjectFileSys(CXmlProcessor *pXML);
+	bool LoadProjectFileSys(CXmlProcessor *pXML);
+	void SaveProjectISO(CXmlProcessor *pXML);
+	bool LoadProjectISO(CXmlProcessor *pXML);
+	void SaveProjectFields(CXmlProcessor *pXML);
+	bool LoadProjectFields(CXmlProcessor *pXML);
+	void SaveProjectBoot(CXmlProcessor *pXML);
+	bool LoadProjectBoot(CXmlProcessor *pXML);
 
 	enum eActiveView
 	{

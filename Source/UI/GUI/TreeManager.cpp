@@ -1322,7 +1322,7 @@ bool CTreeManager::HasExtraAudioData(CProjectNode *pNode)
 	return true;
 }
 
-void CTreeManager::SaveLocalNodeFileData(CXMLProcessor *pXML,CProjectNode *pNode,
+void CTreeManager::SaveLocalNodeFileData(CXmlProcessor *pXml,CProjectNode *pNode,
 										 std::vector<CProjectNode *> &FolderStack,
 										 unsigned int &uiFileCount,unsigned int uiRootLength)
 {
@@ -1342,21 +1342,21 @@ void CTreeManager::SaveLocalNodeFileData(CXMLProcessor *pXML,CProjectNode *pNode
 			continue;
 
 		lsprintf(szEntryName,_T("File%d"),uiFileCount++);
-		pXML->AddElement(szEntryName,_T(""),true);
-			pXML->AddElementAttr(_T("flags"),(int)pItemData->ucFlags);
+		pXml->AddElement(szEntryName,_T(""),true);
+			pXml->AddElementAttr(_T("flags"),(int)pItemData->ucFlags);
 
 			lstrcpy(szInternalName,pItemData->GetFilePath() + uiRootLength);
 			lstrcat(szInternalName,pItemData->GetFileName());
 
-			pXML->AddElement(_T("InternalName"),szInternalName);
-			pXML->AddElement(_T("FullPath"),pItemData->szFullPath);
+			pXml->AddElement(_T("InternalName"),szInternalName);
+			pXml->AddElement(_T("FullPath"),pItemData->szFullPath);
 
 			FILETIME LocalFileTime;
 			DosDateTimeToFileTime(pItemData->usFileDate,pItemData->usFileTime,&LocalFileTime);
 			ULARGE_INTEGER iLocalFileTime;
 			memcpy(&iLocalFileTime,&LocalFileTime,sizeof(FILETIME));
-			pXML->AddElement(_T("FileTime"),(__int64)iLocalFileTime.QuadPart);
-		pXML->LeaveElement();
+			pXml->AddElement(_T("FileTime"),(__int64)iLocalFileTime.QuadPart);
+		pXml->LeaveElement();
 	}
 
 	std::list <CItemData *>::iterator itFileObject;
@@ -1369,27 +1369,27 @@ void CTreeManager::SaveLocalNodeFileData(CXMLProcessor *pXML,CProjectNode *pNode
 			continue;
 
 		lsprintf(szEntryName,_T("File%d"),uiFileCount++);
-		pXML->AddElement(szEntryName,_T(""),true);
-			pXML->AddElementAttr(_T("flags"),(int)pItemData->ucFlags);
+		pXml->AddElement(szEntryName,_T(""),true);
+			pXml->AddElementAttr(_T("flags"),(int)pItemData->ucFlags);
 
 			lstrcpy(szInternalName,pItemData->GetFilePath() + uiRootLength);
 			lstrcat(szInternalName,pItemData->GetFileName());
 
-			pXML->AddElement(_T("InternalName"),szInternalName);
-			pXML->AddElement(_T("FullPath"),pItemData->szFullPath);
+			pXml->AddElement(_T("InternalName"),szInternalName);
+			pXml->AddElement(_T("FullPath"),pItemData->szFullPath);
 
 			FILETIME LocalFileTime;
 			DosDateTimeToFileTime(pItemData->usFileDate,pItemData->usFileTime,&LocalFileTime);
 			ULARGE_INTEGER iLocalFileTime;
 			memcpy(&iLocalFileTime,&LocalFileTime,sizeof(FILETIME));
-			pXML->AddElement(_T("FileTime"),(__int64)iLocalFileTime.QuadPart);
+			pXml->AddElement(_T("FileTime"),(__int64)iLocalFileTime.QuadPart);
 
-			pXML->AddElement(_T("FileSize"),(__int64)pItemData->uiSize);
-		pXML->LeaveElement();
+			pXml->AddElement(_T("FileSize"),(__int64)pItemData->uiSize);
+		pXml->LeaveElement();
 	}
 }
 
-void CTreeManager::SaveNodeFileData(CXMLProcessor *pXML,CProjectNode *pRootNode)
+void CTreeManager::SaveNodeFileData(CXmlProcessor *pXml,CProjectNode *pRootNode)
 {
 	CProjectNode *pCurNode = pRootNode;
 
@@ -1400,18 +1400,18 @@ void CTreeManager::SaveNodeFileData(CXMLProcessor *pXML,CProjectNode *pRootNode)
 	unsigned int uiFileCount = 0;
 
 	std::vector<CProjectNode *> FolderStack;
-	SaveLocalNodeFileData(pXML,pCurNode,FolderStack,uiFileCount,uiRootLength);
+	SaveLocalNodeFileData(pXml,pCurNode,FolderStack,uiFileCount,uiRootLength);
 
 	while (FolderStack.size() > 0)
 	{ 
 		pCurNode = FolderStack[FolderStack.size() - 1];
 		FolderStack.pop_back();
 
-		SaveLocalNodeFileData(pXML,pCurNode,FolderStack,uiFileCount,uiRootLength);
+		SaveLocalNodeFileData(pXml,pCurNode,FolderStack,uiFileCount,uiRootLength);
 	}
 }
 
-void CTreeManager::SaveNodeAudioData(CXMLProcessor *pXML,CProjectNode *pRootNode)
+void CTreeManager::SaveNodeAudioData(CXmlProcessor *pXml,CProjectNode *pRootNode)
 {
 	unsigned int uiRootLength = lstrlen(pRootNode->pItemData->GetFilePath()) +
 		lstrlen(pRootNode->pItemData->GetFileName());
@@ -1427,57 +1427,57 @@ void CTreeManager::SaveNodeAudioData(CXMLProcessor *pXML,CProjectNode *pRootNode
 		CItemData *pItemData = (*itFileObject);
 
 		lsprintf(szEntryName,_T("File%d"),uiFileCount++);
-		pXML->AddElement(szEntryName,_T(""),true);
+		pXml->AddElement(szEntryName,_T(""),true);
 			lstrcpy(szInternalName,pItemData->GetFilePath() + uiRootLength);
 			lstrcat(szInternalName,pItemData->GetFileName());
 
-			pXML->AddElement(_T("InternalName"),szInternalName);
-			pXML->AddElement(_T("FullPath"),pItemData->szFullPath);
-			pXML->AddElement(_T("FileSize"),(__int64)pItemData->uiSize);
+			pXml->AddElement(_T("InternalName"),szInternalName);
+			pXml->AddElement(_T("FullPath"),pItemData->szFullPath);
+			pXml->AddElement(_T("FileSize"),(__int64)pItemData->uiSize);
 
 			if (pItemData->HasAudioData())
 			{
-				pXML->AddElement(_T("TrackLength"),(__int64)pItemData->GetAudioData()->uiTrackLength);
-				pXML->AddElement(_T("TrackTitle"),pItemData->GetAudioData()->szTrackTitle);
-				pXML->AddElement(_T("TrackArtist"),pItemData->GetAudioData()->szTrackArtist);
+				pXml->AddElement(_T("TrackLength"),(__int64)pItemData->GetAudioData()->uiTrackLength);
+				pXml->AddElement(_T("TrackTitle"),pItemData->GetAudioData()->szTrackTitle);
+				pXml->AddElement(_T("TrackArtist"),pItemData->GetAudioData()->szTrackArtist);
 			}
-		pXML->LeaveElement();
+		pXml->LeaveElement();
 	}
 }
 
-bool CTreeManager::LoadNodeFileData(CXMLProcessor *pXML,CProjectNode *pRootNode)
+bool CTreeManager::LoadNodeFileData(CXmlProcessor *pXml,CProjectNode *pRootNode)
 {
 	TCHAR szInternalName[MAX_PATH];
 	TCHAR szFullName[MAX_PATH];
 
-	for (unsigned int i = 0; i < pXML->GetElementChildCount(); i++)
+	for (unsigned int i = 0; i < pXml->GetElementChildCount(); i++)
 	{
-		if (!pXML->EnterElement(i))
+		if (!pXml->EnterElement(i))
 			return false;
 
 		/*bool bIsFolder = false;
-		pXML->GetSafeElementAttrValue(_T("folder"),&bIsFolder);
+		pXml->GetSafeElementAttrValue(_T("folder"),&bIsFolder);
 
 		bool bIsBootImage = false;
-		pXML->GetSafeElementAttrValue(_T("bootimage"),&bIsBootImage);
+		pXml->GetSafeElementAttrValue(_T("bootimage"),&bIsBootImage);
 
 		bool bIsLocked = false;
-		pXML->GetSafeElementAttrValue(_T("locked"),&bIsLocked);*/
+		pXml->GetSafeElementAttrValue(_T("locked"),&bIsLocked);*/
 		int iFlags = 0;
-		pXML->GetSafeElementAttrValue(_T("flags"),&iFlags);
+		pXml->GetSafeElementAttrValue(_T("flags"),&iFlags);
 
 		// Temporary borrow the szFullName variable. It's safe.
-		pXML->GetSafeElementData(_T("InternalName"),szFullName,MAX_PATH - 1);
+		pXml->GetSafeElementData(_T("InternalName"),szFullName,MAX_PATH - 1);
 		lstrcpy(szInternalName,pRootNode->pItemData->GetFilePath());
 		lstrcat(szInternalName,pRootNode->pItemData->GetFileName());
 		lstrcat(szInternalName,szFullName);
 
-		pXML->GetSafeElementData(_T("FullPath"),szFullName,MAX_PATH - 1);
+		pXml->GetSafeElementData(_T("FullPath"),szFullName,MAX_PATH - 1);
 
 		// File time.
 		ULARGE_INTEGER iLocalFileTime;
 		__int64 iTemp = 0;
-		pXML->GetSafeElementData(_T("FileTime"),&iTemp);
+		pXml->GetSafeElementData(_T("FileTime"),&iTemp);
 		iLocalFileTime.QuadPart = iTemp;
 
 		FILETIME LocalFileTime;
@@ -1549,30 +1549,30 @@ bool CTreeManager::LoadNodeFileData(CXMLProcessor *pXML,CProjectNode *pRootNode)
 			FileTimeToDosDateTime(&LocalFileTime,&pItemData->usFileDate,&pItemData->usFileTime);
 
 			// Size.
-			pXML->GetSafeElementData(_T("FileSize"),&iTemp);
+			pXml->GetSafeElementData(_T("FileSize"),&iTemp);
 			pItemData->uiSize = iTemp;
 
 			pCurrentNode->m_Files.push_back(pItemData);
 		}
 
-		pXML->LeaveElement();
+		pXml->LeaveElement();
 	}
 
 	return true;
 }
 
-bool CTreeManager::LoadNodeAudioData(CXMLProcessor *pXML,CProjectNode *pRootNode)
+bool CTreeManager::LoadNodeAudioData(CXmlProcessor *pXml,CProjectNode *pRootNode)
 {
 	TCHAR szInternalName[MAX_PATH];
 	TCHAR szFullName[MAX_PATH];
 
-	for (unsigned int i = 0; i < pXML->GetElementChildCount(); i++)
+	for (unsigned int i = 0; i < pXml->GetElementChildCount(); i++)
 	{
-		if (!pXML->EnterElement(i))
+		if (!pXml->EnterElement(i))
 			return false;
 
-		pXML->GetSafeElementData(_T("InternalName"),szInternalName,MAX_PATH - 1);
-		pXML->GetSafeElementData(_T("FullPath"),szFullName,MAX_PATH - 1);
+		pXml->GetSafeElementData(_T("InternalName"),szInternalName,MAX_PATH - 1);
+		pXml->GetSafeElementData(_T("FullPath"),szFullName,MAX_PATH - 1);
 
 		CItemData *pItemData = new CItemData();
 
@@ -1592,35 +1592,35 @@ bool CTreeManager::LoadNodeAudioData(CXMLProcessor *pXML,CProjectNode *pRootNode
 
 		// Size.
 		__int64 iSizeTemp = 0;
-		pXML->GetSafeElementData(_T("FileSize"),&iSizeTemp);
+		pXml->GetSafeElementData(_T("FileSize"),&iSizeTemp);
 		pItemData->uiSize = iSizeTemp;
 
 		// Length.
-		if (pXML->EnterElement(_T("TrackLength")))
+		if (pXml->EnterElement(_T("TrackLength")))
 		{
-			pXML->LeaveElement();
+			pXml->LeaveElement();
 
 			__int64 iLengthTemp = 0;
-			pXML->GetSafeElementData(_T("TrackLength"),&iLengthTemp);
+			pXml->GetSafeElementData(_T("TrackLength"),&iLengthTemp);
 			pItemData->GetAudioData()->uiTrackLength = iLengthTemp;
 		}
 
 		// Track information.
-		if (pXML->EnterElement(_T("TrackTitle")))
+		if (pXml->EnterElement(_T("TrackTitle")))
 		{
-			pXML->LeaveElement();
-			pXML->GetSafeElementData(_T("TrackTitle"),pItemData->GetAudioData()->szTrackTitle,159);	// FIXME: Constant value?!
+			pXml->LeaveElement();
+			pXml->GetSafeElementData(_T("TrackTitle"),pItemData->GetAudioData()->szTrackTitle,159);	// FIXME: Constant value?!
 		}
 
-		if (pXML->EnterElement(_T("TrackArtist")))
+		if (pXml->EnterElement(_T("TrackArtist")))
 		{
-			pXML->LeaveElement();
-			pXML->GetSafeElementData(_T("TrackArtist"),pItemData->GetAudioData()->szTrackArtist,159);
+			pXml->LeaveElement();
+			pXml->GetSafeElementData(_T("TrackArtist"),pItemData->GetAudioData()->szTrackArtist,159);
 		}
 
 		pRootNode->m_Files.push_back(pItemData);
 
-		pXML->LeaveElement();
+		pXml->LeaveElement();
 	}
 
 	return true;

@@ -44,13 +44,13 @@ bool CAddBootImageDlg::Translate()
 	if (m_bEdit)
 		SetWindowText(lngGetString(TITLE_EDITBOOTIMAGE));
 
-	if (g_LanguageSettings.m_pLNGProcessor == NULL)
+	if (g_LanguageSettings.m_pLngProcessor == NULL)
 		return false;
 
-	CLNGProcessor *pLNG = g_LanguageSettings.m_pLNGProcessor;
+	CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
 	
 	// Make sure that there is a addbootimage translation section.
-	if (!pLNG->EnterSection(_T("addbootimage")))
+	if (!pLng->EnterSection(_T("addbootimage")))
 		return false;
 
 	TCHAR *szStrValue;
@@ -58,26 +58,26 @@ bool CAddBootImageDlg::Translate()
 	// Set the title.
 	if (!m_bEdit)
 	{
-		if (pLNG->GetValuePtr(IDD_ADDBOOTIMAGEDLG,szStrValue))
+		if (pLng->GetValuePtr(IDD_ADDBOOTIMAGEDLG,szStrValue))
 			SetWindowText(szStrValue);
 	}
 
 	// Translate the rest.
-	if (pLNG->GetValuePtr(IDOK,szStrValue))
+	if (pLng->GetValuePtr(IDOK,szStrValue))
 		SetDlgItemText(IDOK,szStrValue);
-	if (pLNG->GetValuePtr(IDCANCEL,szStrValue))
+	if (pLng->GetValuePtr(IDCANCEL,szStrValue))
 		SetDlgItemText(IDCANCEL,szStrValue);
-	if (pLNG->GetValuePtr(IDC_HELPBUTTON,szStrValue))
+	if (pLng->GetValuePtr(IDC_HELPBUTTON,szStrValue))
 		SetDlgItemText(IDC_HELPBUTTON,szStrValue);
-	if (pLNG->GetValuePtr(IDC_EMULATIONSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_EMULATIONSTATIC,szStrValue))
 		SetDlgItemText(IDC_EMULATIONSTATIC,szStrValue);
-	if (pLNG->GetValuePtr(IDC_OPTIONSSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_OPTIONSSTATIC,szStrValue))
 		SetDlgItemText(IDC_OPTIONSSTATIC,szStrValue);
-	if (pLNG->GetValuePtr(IDC_NOBOOTCHECK,szStrValue))
+	if (pLng->GetValuePtr(IDC_NOBOOTCHECK,szStrValue))
 		SetDlgItemText(IDC_NOBOOTCHECK,szStrValue);
-	if (pLNG->GetValuePtr(IDC_BOOTSEGMENTSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_BOOTSEGMENTSTATIC,szStrValue))
 		SetDlgItemText(IDC_BOOTSEGMENTSTATIC,szStrValue);
-	if (pLNG->GetValuePtr(IDC_BOOTSIZESTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_BOOTSIZESTATIC,szStrValue))
 		SetDlgItemText(IDC_BOOTSIZESTATIC,szStrValue);
 
 	return true;

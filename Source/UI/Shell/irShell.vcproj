@@ -811,11 +811,11 @@
 			Name="Common"
 			>
 			<File
-				RelativePath="..\..\Common\LNGProcessor.cpp"
+				RelativePath="..\..\Common\LngProcessor.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Common\LNGProcessor.h"
+				RelativePath="..\..\Common\LngProcessor.h"
 				>
 			</File>
 			<File
@@ -835,11 +835,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\Common\XMLProcessor.cpp"
+				RelativePath="..\..\Common\XmlProcessor.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Common\XMLProcessor.h"
+				RelativePath="..\..\Common\XmlProcessor.h"
 				>
 			</File>
 		</Filter>

@@ -27,13 +27,13 @@ const TCHAR *g_szHelpFile = _T("InfraRecorder.chm");
 const TCHAR *lngGetString(unsigned int uiID)
 {
 	// Try to load translated string.
-	if (g_LanguageSettings.m_pLNGProcessor != NULL)
+	if (g_LanguageSettings.m_pLngProcessor != NULL)
 	{	
 		// Make sure that there is a strings translation section.
-		if (g_LanguageSettings.m_pLNGProcessor->EnterSection(_T("strings")))
+		if (g_LanguageSettings.m_pLngProcessor->EnterSection(_T("strings")))
 		{
 			TCHAR *szStrValue;
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(uiID,szStrValue))
+			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(uiID,szStrValue))
 				return szStrValue;
 		}
 	}
@@ -45,13 +45,13 @@ const TCHAR *lngGetString(unsigned int uiID)
 const TCHAR *lngGetManual()
 {
 	// Try to load translated string.
-	if (g_LanguageSettings.m_pLNGProcessor != NULL)
+	if (g_LanguageSettings.m_pLngProcessor != NULL)
 	{	
 		// Make sure that there is a strings translation section.
-		if (g_LanguageSettings.m_pLNGProcessor->EnterSection(_T("translation")))
+		if (g_LanguageSettings.m_pLngProcessor->EnterSection(_T("translation")))
 		{
 			TCHAR *szStrValue;
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(TRANSLATION_ID_MANUAL,szStrValue))
+			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(TRANSLATION_ID_MANUAL,szStrValue))
 				return szStrValue;
 		}
 	}
@@ -68,35 +68,35 @@ int lngMessageBox(HWND hWnd,unsigned int uiTextID,unsigned int uiCaptionID,unsig
 void lngTranslateTables()
 {
 	// Try to load translated string.
-	if (g_LanguageSettings.m_pLNGProcessor != NULL)
+	if (g_LanguageSettings.m_pLngProcessor != NULL)
 	{	
 		// Make sure that there is a strings translation section.
-		if (g_LanguageSettings.m_pLNGProcessor->EnterSection(_T("filesystem")))
+		if (g_LanguageSettings.m_pLngProcessor->EnterSection(_T("filesystem")))
 		{
 			TCHAR *szStrValue;
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckfilesystem::StringTable::WARNING_FSDIRLEVEL,szStrValue))
+			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(ckfilesystem::StringTable::WARNING_FSDIRLEVEL,szStrValue))
 				ckfilesystem::StringTable::instance().set_string(ckfilesystem::StringTable::WARNING_FSDIRLEVEL,szStrValue);
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckfilesystem::StringTable::WARNING_SKIPFILE,szStrValue))
+			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(ckfilesystem::StringTable::WARNING_SKIPFILE,szStrValue))
 				ckfilesystem::StringTable::instance().set_string(ckfilesystem::StringTable::WARNING_SKIPFILE,szStrValue);
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckfilesystem::StringTable::WARNING_SKIP4GFILE,szStrValue))
+			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(ckfilesystem::StringTable::WARNING_SKIP4GFILE,szStrValue))
 				ckfilesystem::StringTable::instance().set_string(ckfilesystem::StringTable::WARNING_SKIP4GFILE,szStrValue);
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckfilesystem::StringTable::WARNING_SKIP4GFILEISO,szStrValue))
+			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(ckfilesystem::StringTable::WARNING_SKIP4GFILEISO,szStrValue))
 				ckfilesystem::StringTable::instance().set_string(ckfilesystem::StringTable::WARNING_SKIP4GFILEISO,szStrValue);
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckfilesystem::StringTable::ERROR_PATHTABLESIZE,szStrValue))
+			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(ckfilesystem::StringTable::ERROR_PATHTABLESIZE,szStrValue))
 				ckfilesystem::StringTable::instance().set_string(ckfilesystem::StringTable::ERROR_PATHTABLESIZE,szStrValue);
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckfilesystem::StringTable::ERROR_OPENWRITE,szStrValue))
+			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(ckfilesystem::StringTable::ERROR_OPENWRITE,szStrValue))
 				ckfilesystem::StringTable::instance().set_string(ckfilesystem::StringTable::ERROR_OPENWRITE,szStrValue);
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckfilesystem::StringTable::ERROR_OPENREAD,szStrValue))
+			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(ckfilesystem::StringTable::ERROR_OPENREAD,szStrValue))
 				ckfilesystem::StringTable::instance().set_string(ckfilesystem::StringTable::ERROR_OPENREAD,szStrValue);
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckfilesystem::StringTable::STATUS_BUILDTREE,szStrValue))
+			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(ckfilesystem::StringTable::STATUS_BUILDTREE,szStrValue))
 				ckfilesystem::StringTable::instance().set_string(ckfilesystem::StringTable::STATUS_BUILDTREE,szStrValue);
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckfilesystem::StringTable::STATUS_WRITEDATA,szStrValue))
+			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(ckfilesystem::StringTable::STATUS_WRITEDATA,szStrValue))
 				ckfilesystem::StringTable::instance().set_string(ckfilesystem::StringTable::STATUS_WRITEDATA,szStrValue);
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckfilesystem::StringTable::STATUS_WRITEISOTABLE,szStrValue))
+			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(ckfilesystem::StringTable::STATUS_WRITEISOTABLE,szStrValue))
 				ckfilesystem::StringTable::instance().set_string(ckfilesystem::StringTable::STATUS_WRITEISOTABLE,szStrValue);
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckfilesystem::StringTable::STATUS_WRITEJOLIETTABLE,szStrValue))
+			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(ckfilesystem::StringTable::STATUS_WRITEJOLIETTABLE,szStrValue))
 				ckfilesystem::StringTable::instance().set_string(ckfilesystem::StringTable::STATUS_WRITEJOLIETTABLE,szStrValue);
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(ckfilesystem::StringTable::STATUS_WRITEDIRENTRIES,szStrValue))
+			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(ckfilesystem::StringTable::STATUS_WRITEDIRENTRIES,szStrValue))
 				ckfilesystem::StringTable::instance().set_string(ckfilesystem::StringTable::STATUS_WRITEDIRENTRIES,szStrValue);
 		}
 	}

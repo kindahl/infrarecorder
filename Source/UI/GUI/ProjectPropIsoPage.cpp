@@ -34,20 +34,20 @@ CProjectPropIsoPage::~CProjectPropIsoPage()
 
 bool CProjectPropIsoPage::Translate()
 {
-	if (g_LanguageSettings.m_pLNGProcessor == NULL)
+	if (g_LanguageSettings.m_pLngProcessor == NULL)
 		return false;
 
-	CLNGProcessor *pLNG = g_LanguageSettings.m_pLNGProcessor;
+	CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
 	
 	// Make sure that there is a projectprop translation section.
-	if (!pLNG->EnterSection(_T("projectprop")))
+	if (!pLng->EnterSection(_T("projectprop")))
 		return false;
 
 	// Translate.
 	TCHAR *szStrValue;
 	int iMaxStaticRight = 0;
 
-	if (pLNG->GetValuePtr(IDC_LEVELSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_LEVELSTATIC,szStrValue))
 	{
 		SetDlgItemText(IDC_LEVELSTATIC,szStrValue);
 
@@ -56,7 +56,7 @@ bool CProjectPropIsoPage::Translate()
 		if (iStaticRight > iMaxStaticRight)
 			iMaxStaticRight = iStaticRight;
 	}
-	if (pLNG->GetValuePtr(IDC_FORMATSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_FORMATSTATIC,szStrValue))
 	{
 		SetDlgItemText(IDC_FORMATSTATIC,szStrValue);
 
@@ -65,13 +65,13 @@ bool CProjectPropIsoPage::Translate()
 		if (iStaticRight > iMaxStaticRight)
 			iMaxStaticRight = iStaticRight;
 	}
-	if (pLNG->GetValuePtr(IDC_JOLIETCHECK,szStrValue))
+	if (pLng->GetValuePtr(IDC_JOLIETCHECK,szStrValue))
 		SetDlgItemText(IDC_JOLIETCHECK,szStrValue);
-	if (pLNG->GetValuePtr(IDC_JOLIETLONGNAMESCHECK,szStrValue))
+	if (pLng->GetValuePtr(IDC_JOLIETLONGNAMESCHECK,szStrValue))
 		SetDlgItemText(IDC_JOLIETLONGNAMESCHECK,szStrValue);
-	if (pLNG->GetValuePtr(IDC_OMITVNCHECK,szStrValue))
+	if (pLng->GetValuePtr(IDC_OMITVNCHECK,szStrValue))
 		SetDlgItemText(IDC_OMITVNCHECK,szStrValue);
-	if (pLNG->GetValuePtr(IDC_DEEPDIRCHECK,szStrValue))
+	if (pLng->GetValuePtr(IDC_DEEPDIRCHECK,szStrValue))
 		SetDlgItemText(IDC_DEEPDIRCHECK,szStrValue);
 
 	// Make sure that the edit controls are not in the way of the statics.

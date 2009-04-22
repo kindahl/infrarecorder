@@ -35,23 +35,23 @@ CDriveLetterDlg::~CDriveLetterDlg()
 
 bool CDriveLetterDlg::Translate()
 {
-	if (g_LanguageSettings.m_pLNGProcessor == NULL)
+	if (g_LanguageSettings.m_pLngProcessor == NULL)
 		return false;
 
-	CLNGProcessor *pLNG = g_LanguageSettings.m_pLNGProcessor;
+	CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
 	
 	// Make sure that there is an erase translation section.
-	if (!pLNG->EnterSection(_T("driveletter")))
+	if (!pLng->EnterSection(_T("driveletter")))
 		return false;
 
 	// Translate.
 	TCHAR *szStrValue;
 
-	if (pLNG->GetValuePtr(IDOK,szStrValue))
+	if (pLng->GetValuePtr(IDOK,szStrValue))
 		SetDlgItemText(IDOK,szStrValue);
-	if (pLNG->GetValuePtr(IDCANCEL,szStrValue))
+	if (pLng->GetValuePtr(IDCANCEL,szStrValue))
 		SetDlgItemText(IDCANCEL,szStrValue);
-	if (pLNG->GetValuePtr(IDC_INFOSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_INFOSTATIC,szStrValue))
 	{
 		SetDlgItemText(IDC_INFOSTATIC,szStrValue);
 

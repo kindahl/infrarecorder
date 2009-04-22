@@ -28,13 +28,13 @@
 CProjectPropAudioPage::CProjectPropAudioPage()
 {
 	// Try to load translated string.
-	if (g_LanguageSettings.m_pLNGProcessor != NULL)
+	if (g_LanguageSettings.m_pLngProcessor != NULL)
 	{	
 		// Make sure that there is a strings translation section.
-		if (g_LanguageSettings.m_pLNGProcessor->EnterSection(_T("strings")))
+		if (g_LanguageSettings.m_pLngProcessor->EnterSection(_T("strings")))
 		{
 			TCHAR *szStrValue;
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(TITLE_AUDIO,szStrValue))
+			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(TITLE_AUDIO,szStrValue))
 				SetTitle(szStrValue);
 		}
 	}
@@ -48,20 +48,20 @@ CProjectPropAudioPage::~CProjectPropAudioPage()
 
 bool CProjectPropAudioPage::Translate()
 {
-	if (g_LanguageSettings.m_pLNGProcessor == NULL)
+	if (g_LanguageSettings.m_pLngProcessor == NULL)
 		return false;
 
-	CLNGProcessor *pLNG = g_LanguageSettings.m_pLNGProcessor;
+	CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
 	
 	// Make sure that there is a projectprop translation section.
-	if (!pLNG->EnterSection(_T("projectprop")))
+	if (!pLng->EnterSection(_T("projectprop")))
 		return false;
 
 	// Translate.
 	TCHAR *szStrValue;
 	int iMaxStaticRight = 0;
 
-	if (pLNG->GetValuePtr(IDC_ALBUMSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_ALBUMSTATIC,szStrValue))
 	{
 		SetDlgItemText(IDC_ALBUMSTATIC,szStrValue);
 
@@ -70,7 +70,7 @@ bool CProjectPropAudioPage::Translate()
 		if (iStaticRight > iMaxStaticRight)
 			iMaxStaticRight = iStaticRight;
 	}
-	if (pLNG->GetValuePtr(IDC_ARTISTSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_ARTISTSTATIC,szStrValue))
 	{
 		SetDlgItemText(IDC_ARTISTSTATIC,szStrValue);
 
@@ -79,7 +79,7 @@ bool CProjectPropAudioPage::Translate()
 		if (iStaticRight > iMaxStaticRight)
 			iMaxStaticRight = iStaticRight;
 	}
-	if (pLNG->GetValuePtr(IDC_INFOSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_INFOSTATIC,szStrValue))
 		SetDlgItemText(IDC_INFOSTATIC,szStrValue);
 
 	// Make sure that the edit/combo controls are not in the way of the statics.

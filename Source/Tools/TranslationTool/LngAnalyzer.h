@@ -17,17 +17,17 @@
  */
 
 #pragma once
-#include "../../Common/LNGProcessor.h"
+#include "../../Common/LngProcessor.h"
 
-class CLNGAnalyzer : public CLNGProcessor
+class CLngAnalyzer : public CLngProcessor
 {
 public:
-	CLNGAnalyzer(const TCHAR *szFullPath);
-	~CLNGAnalyzer();
+	CLngAnalyzer(const TCHAR *szFullPath);
+	~CLngAnalyzer();
 
 	unsigned int GetNumValues();
 	unsigned int GetNumSections();
-	CLNGSection *GetSection(unsigned int uiIndex);
-	CLNGSection *GetSection(const TCHAR *szName);
-	bool SectionHasValue(CLNGSection *pSection,unsigned long ulName);
+	CLngSection *GetSection(unsigned int uiIndex);
+	CLngSection *GetSection(const TCHAR *szName);
+	bool SectionHasValue(CLngSection *pSection,unsigned long ulName);
 };

@@ -30,13 +30,13 @@ CDeviceGeneralPage::CDeviceGeneralPage()
 	m_hIcon = NULL;
 
 	// Try to load translated string.
-	if (g_LanguageSettings.m_pLNGProcessor != NULL)
+	if (g_LanguageSettings.m_pLngProcessor != NULL)
 	{	
 		// Make sure that there is a strings translation section.
-		if (g_LanguageSettings.m_pLNGProcessor->EnterSection(_T("strings")))
+		if (g_LanguageSettings.m_pLngProcessor->EnterSection(_T("strings")))
 		{
 			TCHAR *szStrValue;
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(TITLE_GENERAL,szStrValue))
+			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(TITLE_GENERAL,szStrValue))
 				SetTitle(szStrValue);
 		}
 	}
@@ -50,31 +50,31 @@ CDeviceGeneralPage::~CDeviceGeneralPage()
 
 bool CDeviceGeneralPage::Translate()
 {
-	if (g_LanguageSettings.m_pLNGProcessor == NULL)
+	if (g_LanguageSettings.m_pLngProcessor == NULL)
 		return false;
 
-	CLNGProcessor *pLNG = g_LanguageSettings.m_pLNGProcessor;
+	CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
 	
 	// Make sure that there is a device translation section.
-	if (!pLNG->EnterSection(_T("device")))
+	if (!pLng->EnterSection(_T("device")))
 		return false;
 
 	// Translate.
 	TCHAR *szStrValue;
 
-	if (pLNG->GetValuePtr(IDC_TYPELABELSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_TYPELABELSTATIC,szStrValue))
 		SetDlgItemText(IDC_TYPELABELSTATIC,szStrValue);
-	if (pLNG->GetValuePtr(IDC_LOCATIONLABELSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_LOCATIONLABELSTATIC,szStrValue))
 		SetDlgItemText(IDC_LOCATIONLABELSTATIC,szStrValue);
-	if (pLNG->GetValuePtr(IDC_BUFFERLABELSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_BUFFERLABELSTATIC,szStrValue))
 		SetDlgItemText(IDC_BUFFERLABELSTATIC,szStrValue);
-	if (pLNG->GetValuePtr(IDC_MAXREADLABELSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_MAXREADLABELSTATIC,szStrValue))
 		SetDlgItemText(IDC_MAXREADLABELSTATIC,szStrValue);
-	if (pLNG->GetValuePtr(IDC_MAXWRITELABELSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_MAXWRITELABELSTATIC,szStrValue))
 		SetDlgItemText(IDC_MAXWRITELABELSTATIC,szStrValue);
-	if (pLNG->GetValuePtr(IDC_READSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_READSTATIC,szStrValue))
 		SetDlgItemText(IDC_READSTATIC,szStrValue);
-	if (pLNG->GetValuePtr(IDC_WRITESTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_WRITESTATIC,szStrValue))
 		SetDlgItemText(IDC_WRITESTATIC,szStrValue);
 
 	return true;

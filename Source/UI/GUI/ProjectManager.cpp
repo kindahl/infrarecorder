@@ -1253,187 +1253,187 @@ int CProjectManager::GetProjectType()
 }
 
 /**
-	Saves the current project to the specified XML structure.
-	@param pXML the XML container which the project should be saved to.
+	Saves the current project to the specified Xml structure.
+	@param pXml the Xml container which the project should be saved to.
 */
-void CProjectManager::SaveProjectData(CXMLProcessor *pXML)
+void CProjectManager::SaveProjectData(CXmlProcessor *pXml)
 {
 	m_bModified = false;
 
 	switch (m_iProjectType)
 	{
 		case PROJECTTYPE_DATA:
-			pXML->AddElement(_T("Data"),_T(""),true);
-				g_TreeManager.SaveNodeFileData(pXML,g_TreeManager.GetRootNode());
-			pXML->LeaveElement();
+			pXml->AddElement(_T("Data"),_T(""),true);
+				g_TreeManager.SaveNodeFileData(pXml,g_TreeManager.GetRootNode());
+			pXml->LeaveElement();
 			break;
 
 		case PROJECTTYPE_AUDIO:
-			pXML->AddElement(_T("Audio"),_T(""),true);
-				g_TreeManager.SaveNodeAudioData(pXML,g_TreeManager.GetRootNode());
-			pXML->LeaveElement();
+			pXml->AddElement(_T("Audio"),_T(""),true);
+				g_TreeManager.SaveNodeAudioData(pXml,g_TreeManager.GetRootNode());
+			pXml->LeaveElement();
 			break;
 
 		case PROJECTTYPE_MIXED:
-			pXML->AddElement(_T("Data"),_T(""),true);
-				g_TreeManager.SaveNodeFileData(pXML,m_pMixDataNode);
-			pXML->LeaveElement();
+			pXml->AddElement(_T("Data"),_T(""),true);
+				g_TreeManager.SaveNodeFileData(pXml,m_pMixDataNode);
+			pXml->LeaveElement();
 
-			pXML->AddElement(_T("Audio"),_T(""),true);
-				g_TreeManager.SaveNodeAudioData(pXML,m_pMixAudioNode);
-			pXML->LeaveElement();
+			pXml->AddElement(_T("Audio"),_T(""),true);
+				g_TreeManager.SaveNodeAudioData(pXml,m_pMixAudioNode);
+			pXml->LeaveElement();
 			break;
 	};
 }
 
 /**
-	Loads the project from the specified XML structure.
-	@param pXML the XML container which the project should be loaded from.
+	Loads the project from the specified Xml structure.
+	@param pXml the Xml container which the project should be loaded from.
 	@return true if the project was successfylly loaded, false otherwise.
 */
-bool CProjectManager::LoadProjectData(CXMLProcessor *pXML)
+bool CProjectManager::LoadProjectData(CXmlProcessor *pXml)
 {
 	switch (m_iProjectType)
 	{
 		case PROJECTTYPE_DATA:
-			if (!pXML->EnterElement(_T("Data")))
+			if (!pXml->EnterElement(_T("Data")))
 				return true;
 
-			g_TreeManager.LoadNodeFileData(pXML,g_TreeManager.GetRootNode());
+			g_TreeManager.LoadNodeFileData(pXml,g_TreeManager.GetRootNode());
 
-			pXML->LeaveElement();
+			pXml->LeaveElement();
 			break;
 
 		case PROJECTTYPE_AUDIO:
-			if (!pXML->EnterElement(_T("Audio")))
+			if (!pXml->EnterElement(_T("Audio")))
 				return true;
 
-			g_TreeManager.LoadNodeAudioData(pXML,g_TreeManager.GetRootNode());
+			g_TreeManager.LoadNodeAudioData(pXml,g_TreeManager.GetRootNode());
 
-			pXML->LeaveElement();
+			pXml->LeaveElement();
 			break;
 
 		case PROJECTTYPE_MIXED:
-			if (!pXML->EnterElement(_T("Data")))
+			if (!pXml->EnterElement(_T("Data")))
 				return true;
 
-			g_TreeManager.LoadNodeFileData(pXML,m_pMixDataNode);
+			g_TreeManager.LoadNodeFileData(pXml,m_pMixDataNode);
 
-			pXML->LeaveElement();
+			pXml->LeaveElement();
 
-			if (!pXML->EnterElement(_T("Audio")))
+			if (!pXml->EnterElement(_T("Audio")))
 				return true;
 
-			g_TreeManager.LoadNodeAudioData(pXML,m_pMixAudioNode);
+			g_TreeManager.LoadNodeAudioData(pXml,m_pMixAudioNode);
 
-			pXML->LeaveElement();
+			pXml->LeaveElement();
 			break;
 	};
 
 	return true;
 }
 
-void CProjectManager::SaveProjectFileSys(CXMLProcessor *pXML)
+void CProjectManager::SaveProjectFileSys(CXmlProcessor *pXml)
 {
-	pXML->AddElement(_T("FileSystem"),_T(""),true);
-		pXML->AddElement(_T("Identifier"),g_ProjectSettings.m_iFileSystem);
-	pXML->LeaveElement();
+	pXml->AddElement(_T("FileSystem"),_T(""),true);
+		pXml->AddElement(_T("Identifier"),g_ProjectSettings.m_iFileSystem);
+	pXml->LeaveElement();
 }
 
-bool CProjectManager::LoadProjectFileSys(CXMLProcessor *pXML)
+bool CProjectManager::LoadProjectFileSys(CXmlProcessor *pXml)
 {
-	if (!pXML->EnterElement(_T("FileSystem")))
+	if (!pXml->EnterElement(_T("FileSystem")))
 		return false;
 
-	pXML->GetSafeElementData(_T("Identifier"),&g_ProjectSettings.m_iFileSystem);
-	pXML->LeaveElement();
+	pXml->GetSafeElementData(_T("Identifier"),&g_ProjectSettings.m_iFileSystem);
+	pXml->LeaveElement();
 	return true;
 }
 
-void CProjectManager::SaveProjectISO(CXMLProcessor *pXML)
+void CProjectManager::SaveProjectISO(CXmlProcessor *pXml)
 {
-	pXML->AddElement(_T("ISO"),_T(""),true);
-		pXML->AddElement(_T("Level"),g_ProjectSettings.m_iIsoLevel);
-		pXML->AddElement(_T("Format"),g_ProjectSettings.m_iIsoFormat);
-		pXML->AddElement(_T("DeepDirs"),g_ProjectSettings.m_bDeepDirs);
-		pXML->AddElement(_T("Joliet"),_T(""),true);
-			pXML->AddElementAttr(_T("enable"),g_ProjectSettings.m_bJoliet);
-			pXML->AddElement(_T("LongNames"),g_ProjectSettings.m_bJolietLongNames);
-		pXML->LeaveElement();
-		pXML->AddElement(_T("OmitVerNum"),g_ProjectSettings.m_bOmitVerNum);
-	pXML->LeaveElement();
+	pXml->AddElement(_T("ISO"),_T(""),true);
+		pXml->AddElement(_T("Level"),g_ProjectSettings.m_iIsoLevel);
+		pXml->AddElement(_T("Format"),g_ProjectSettings.m_iIsoFormat);
+		pXml->AddElement(_T("DeepDirs"),g_ProjectSettings.m_bDeepDirs);
+		pXml->AddElement(_T("Joliet"),_T(""),true);
+			pXml->AddElementAttr(_T("enable"),g_ProjectSettings.m_bJoliet);
+			pXml->AddElement(_T("LongNames"),g_ProjectSettings.m_bJolietLongNames);
+		pXml->LeaveElement();
+		pXml->AddElement(_T("OmitVerNum"),g_ProjectSettings.m_bOmitVerNum);
+	pXml->LeaveElement();
 }
 
-bool CProjectManager::LoadProjectISO(CXMLProcessor *pXML)
+bool CProjectManager::LoadProjectISO(CXmlProcessor *pXml)
 {
-	if (!pXML->EnterElement(_T("ISO")))
+	if (!pXml->EnterElement(_T("ISO")))
 		return false;
 
-	pXML->GetSafeElementData(_T("Level"),&g_ProjectSettings.m_iIsoLevel);
-	pXML->GetSafeElementData(_T("Format"),&g_ProjectSettings.m_iIsoFormat);
-	pXML->GetSafeElementData(_T("DeepDirs"),&g_ProjectSettings.m_bDeepDirs);
+	pXml->GetSafeElementData(_T("Level"),&g_ProjectSettings.m_iIsoLevel);
+	pXml->GetSafeElementData(_T("Format"),&g_ProjectSettings.m_iIsoFormat);
+	pXml->GetSafeElementData(_T("DeepDirs"),&g_ProjectSettings.m_bDeepDirs);
 
-	if (!pXML->EnterElement(_T("Joliet")))
+	if (!pXml->EnterElement(_T("Joliet")))
 	{
-		pXML->LeaveElement();
+		pXml->LeaveElement();
 		return false;
 	}
 
-	pXML->GetSafeElementAttrValue(_T("enable"),&g_ProjectSettings.m_bJoliet);
-	pXML->GetSafeElementData(_T("LongNames"),&g_ProjectSettings.m_bJolietLongNames);
-	pXML->LeaveElement();
+	pXml->GetSafeElementAttrValue(_T("enable"),&g_ProjectSettings.m_bJoliet);
+	pXml->GetSafeElementData(_T("LongNames"),&g_ProjectSettings.m_bJolietLongNames);
+	pXml->LeaveElement();
 
-	pXML->GetSafeElementData(_T("OmitVerNum"),&g_ProjectSettings.m_bOmitVerNum);
+	pXml->GetSafeElementData(_T("OmitVerNum"),&g_ProjectSettings.m_bOmitVerNum);
 
-	pXML->LeaveElement();
+	pXml->LeaveElement();
 	return true;
 }
 
-void CProjectManager::SaveProjectFields(CXMLProcessor *pXML)
+void CProjectManager::SaveProjectFields(CXmlProcessor *pXml)
 {
-	pXML->AddElement(_T("Fields"),_T(""),true);
-		pXML->AddElement(_T("Publisher"),g_ProjectSettings.m_szPublisher);
-		pXML->AddElement(_T("Preparer"),g_ProjectSettings.m_szPreparer);
-		pXML->AddElement(_T("System"),g_ProjectSettings.m_szSystem);
-		pXML->AddElement(_T("VolumeSet"),g_ProjectSettings.m_szVolumeSet);
+	pXml->AddElement(_T("Fields"),_T(""),true);
+		pXml->AddElement(_T("Publisher"),g_ProjectSettings.m_szPublisher);
+		pXml->AddElement(_T("Preparer"),g_ProjectSettings.m_szPreparer);
+		pXml->AddElement(_T("System"),g_ProjectSettings.m_szSystem);
+		pXml->AddElement(_T("VolumeSet"),g_ProjectSettings.m_szVolumeSet);
 
-		pXML->AddElement(_T("Files"),_T(""),true);
-			pXML->AddElement(_T("Copyright"),g_ProjectSettings.m_szCopyright);
-			pXML->AddElement(_T("Abstract"),g_ProjectSettings.m_szAbstract);
-			pXML->AddElement(_T("Bibliographic"),g_ProjectSettings.m_szBibliographic);
-		pXML->LeaveElement();
-	pXML->LeaveElement();
+		pXml->AddElement(_T("Files"),_T(""),true);
+			pXml->AddElement(_T("Copyright"),g_ProjectSettings.m_szCopyright);
+			pXml->AddElement(_T("Abstract"),g_ProjectSettings.m_szAbstract);
+			pXml->AddElement(_T("Bibliographic"),g_ProjectSettings.m_szBibliographic);
+		pXml->LeaveElement();
+	pXml->LeaveElement();
 }
 
-bool CProjectManager::LoadProjectFields(CXMLProcessor *pXML)
+bool CProjectManager::LoadProjectFields(CXmlProcessor *pXml)
 {
-	if (!pXML->EnterElement(_T("Fields")))
+	if (!pXml->EnterElement(_T("Fields")))
 		return false;
 
-	pXML->GetSafeElementData(_T("Publisher"),g_ProjectSettings.m_szPublisher,127);
-	pXML->GetSafeElementData(_T("Preparer"),g_ProjectSettings.m_szPreparer,127);
-	pXML->GetSafeElementData(_T("System"),g_ProjectSettings.m_szSystem,127);
-	pXML->GetSafeElementData(_T("VolumeSet"),g_ProjectSettings.m_szVolumeSet,127);
+	pXml->GetSafeElementData(_T("Publisher"),g_ProjectSettings.m_szPublisher,127);
+	pXml->GetSafeElementData(_T("Preparer"),g_ProjectSettings.m_szPreparer,127);
+	pXml->GetSafeElementData(_T("System"),g_ProjectSettings.m_szSystem,127);
+	pXml->GetSafeElementData(_T("VolumeSet"),g_ProjectSettings.m_szVolumeSet,127);
 
-	if (!pXML->EnterElement(_T("Files")))
+	if (!pXml->EnterElement(_T("Files")))
 	{
-		pXML->LeaveElement();
+		pXml->LeaveElement();
 		return false;
 	}
 
-	pXML->GetSafeElementData(_T("Copyright"),g_ProjectSettings.m_szCopyright,36);
-	pXML->GetSafeElementData(_T("Abstract"),g_ProjectSettings.m_szAbstract,36);
-	pXML->GetSafeElementData(_T("Bibliographic"),g_ProjectSettings.m_szBibliographic,36);
-	pXML->LeaveElement();
+	pXml->GetSafeElementData(_T("Copyright"),g_ProjectSettings.m_szCopyright,36);
+	pXml->GetSafeElementData(_T("Abstract"),g_ProjectSettings.m_szAbstract,36);
+	pXml->GetSafeElementData(_T("Bibliographic"),g_ProjectSettings.m_szBibliographic,36);
+	pXml->LeaveElement();
 
-	pXML->LeaveElement();
+	pXml->LeaveElement();
 	return true;
 }
 
-void CProjectManager::SaveProjectBoot(CXMLProcessor *pXML)
+void CProjectManager::SaveProjectBoot(CXmlProcessor *pXml)
 {
-	pXML->AddElement(_T("Boot"),_T(""),true);
-		pXML->AddElement(_T("Images"),_T(""),true);
+	pXml->AddElement(_T("Boot"),_T(""),true);
+		pXml->AddElement(_T("Images"),_T(""),true);
 			int iCounter = 0;
 			TCHAR szName[32];
 
@@ -1443,67 +1443,67 @@ void CProjectManager::SaveProjectBoot(CXMLProcessor *pXML)
 				CProjectBootImage *pBootImage = *itNodeObject;
 				lsnprintf_s(szName,32,_T("Image%d"),iCounter);
 
-				pXML->AddElement(szName,_T(""),true);
-					pXML->AddElement(_T("FullPath"),pBootImage->m_FullPath.c_str());
-					pXML->AddElement(_T("LocalName"),pBootImage->m_LocalName.c_str());
-					pXML->AddElement(_T("Emulation"),pBootImage->m_iEmulation);
-					pXML->AddElement(_T("NoBoot"),pBootImage->m_bNoBoot);
-					pXML->AddElement(_T("LoadSegment"),pBootImage->m_uiLoadSegment);
-					pXML->AddElement(_T("LoadSize"),pBootImage->m_uiLoadSize);
-				pXML->LeaveElement();
+				pXml->AddElement(szName,_T(""),true);
+					pXml->AddElement(_T("FullPath"),pBootImage->m_FullPath.c_str());
+					pXml->AddElement(_T("LocalName"),pBootImage->m_LocalName.c_str());
+					pXml->AddElement(_T("Emulation"),pBootImage->m_iEmulation);
+					pXml->AddElement(_T("NoBoot"),pBootImage->m_bNoBoot);
+					pXml->AddElement(_T("LoadSegment"),pBootImage->m_uiLoadSegment);
+					pXml->AddElement(_T("LoadSize"),pBootImage->m_uiLoadSize);
+				pXml->LeaveElement();
 			}
-		pXML->LeaveElement();
-	pXML->LeaveElement();
+		pXml->LeaveElement();
+	pXml->LeaveElement();
 }
 
-bool CProjectManager::LoadProjectBoot(CXMLProcessor *pXML)
+bool CProjectManager::LoadProjectBoot(CXmlProcessor *pXml)
 {
-	if (!pXML->EnterElement(_T("Boot")))
+	if (!pXml->EnterElement(_T("Boot")))
 		return false;
 
-	if (!pXML->EnterElement(_T("Images")))
+	if (!pXml->EnterElement(_T("Images")))
 	{
-		pXML->LeaveElement();
+		pXml->LeaveElement();
 		return false;
 	}
 
 	TCHAR szFileName[MAX_PATH];
 
-	for (unsigned int i = 0; i < pXML->GetElementChildCount(); i++)
+	for (unsigned int i = 0; i < pXml->GetElementChildCount(); i++)
 	{
-		if (!pXML->EnterElement(i))
+		if (!pXml->EnterElement(i))
 		{
-			pXML->LeaveElement();
-			pXML->LeaveElement();
+			pXml->LeaveElement();
+			pXml->LeaveElement();
 			return false;
 		}
 
 		CProjectBootImage *pBootImage = new CProjectBootImage();
 
-		pXML->GetSafeElementData(_T("FullPath"),szFileName,MAX_PATH - 1);
+		pXml->GetSafeElementData(_T("FullPath"),szFileName,MAX_PATH - 1);
 		pBootImage->m_FullPath = szFileName;
 
-		pXML->GetSafeElementData(_T("LocalName"),szFileName,MAX_PATH - 1);
+		pXml->GetSafeElementData(_T("LocalName"),szFileName,MAX_PATH - 1);
 		pBootImage->m_LocalName = szFileName;
 
-		pXML->GetSafeElementData(_T("Emulation"),&pBootImage->m_iEmulation);
-		pXML->GetSafeElementData(_T("NoBoot"),&pBootImage->m_bNoBoot);
+		pXml->GetSafeElementData(_T("Emulation"),&pBootImage->m_iEmulation);
+		pXml->GetSafeElementData(_T("NoBoot"),&pBootImage->m_bNoBoot);
 
 		int iLoadSegment = 0;
-		pXML->GetSafeElementData(_T("LoadSegment"),&iLoadSegment);
+		pXml->GetSafeElementData(_T("LoadSegment"),&iLoadSegment);
 		pBootImage->m_uiLoadSegment = static_cast<ckcore::tuint16>(iLoadSegment);
 
 		int iLoadSize = 0;
-		pXML->GetSafeElementData(_T("LoadSize"),&iLoadSize);	
+		pXml->GetSafeElementData(_T("LoadSize"),&iLoadSize);	
 		pBootImage->m_uiLoadSize = static_cast<ckcore::tuint16>(iLoadSize);
 
 		g_ProjectSettings.m_BootImages.push_back(pBootImage);
 
-		pXML->LeaveElement();
+		pXml->LeaveElement();
 	}
 
-	pXML->LeaveElement();
-	pXML->LeaveElement();
+	pXml->LeaveElement();
+	pXml->LeaveElement();
 	return true;
 }
 
@@ -1515,45 +1515,45 @@ bool CProjectManager::LoadProjectBoot(CXMLProcessor *pXML)
 */
 bool CProjectManager::SaveProject(const TCHAR *szFullPath)
 {
-	CXMLProcessor XML;
+	CXmlProcessor Xml;
 
-	XML.AddElement(_T("InfraRecorder"),_T(""),true);
-		XML.AddElement(_T("Project"),_T(""),true);
-			XML.AddElementAttr(_T("version"),PROJECTMANAGER_FILEVERSION);
-			XML.AddElementAttr(_T("type"),m_iProjectType);
-			XML.AddElementAttr(_T("media"),m_iProjectMedia);
+	Xml.AddElement(_T("InfraRecorder"),_T(""),true);
+		Xml.AddElement(_T("Project"),_T(""),true);
+			Xml.AddElementAttr(_T("version"),PROJECTMANAGER_FILEVERSION);
+			Xml.AddElementAttr(_T("type"),m_iProjectType);
+			Xml.AddElementAttr(_T("media"),m_iProjectMedia);
 
 			switch (m_iProjectType)
 			{
 				case PROJECTTYPE_DATA:
-					XML.AddElement(_T("Label"),g_ProjectSettings.m_szLabel);
-					SaveProjectFileSys(&XML);
-					SaveProjectISO(&XML);
-					SaveProjectFields(&XML);
-					SaveProjectBoot(&XML);
+					Xml.AddElement(_T("Label"),g_ProjectSettings.m_szLabel);
+					SaveProjectFileSys(&Xml);
+					SaveProjectISO(&Xml);
+					SaveProjectFields(&Xml);
+					SaveProjectBoot(&Xml);
 					break;
 
 				case PROJECTTYPE_AUDIO:
-					XML.AddElement(_T("AlbumName"),g_ProjectSettings.m_szAlbumName);
-					XML.AddElement(_T("AlbumArtist"),g_ProjectSettings.m_szAlbumArtist);
+					Xml.AddElement(_T("AlbumName"),g_ProjectSettings.m_szAlbumName);
+					Xml.AddElement(_T("AlbumArtist"),g_ProjectSettings.m_szAlbumArtist);
 					break;
 
 				case PROJECTTYPE_MIXED:
-					XML.AddElement(_T("Label"),g_ProjectSettings.m_szLabel);
-					XML.AddElement(_T("AlbumName"),g_ProjectSettings.m_szAlbumName);
-					XML.AddElement(_T("AlbumArtist"),g_ProjectSettings.m_szAlbumArtist);
+					Xml.AddElement(_T("Label"),g_ProjectSettings.m_szLabel);
+					Xml.AddElement(_T("AlbumName"),g_ProjectSettings.m_szAlbumName);
+					Xml.AddElement(_T("AlbumArtist"),g_ProjectSettings.m_szAlbumArtist);
 
-					SaveProjectFileSys(&XML);
-					SaveProjectISO(&XML);
-					SaveProjectFields(&XML);
+					SaveProjectFileSys(&Xml);
+					SaveProjectISO(&Xml);
+					SaveProjectFields(&Xml);
 					break;
 			};
 
-			SaveProjectData(&XML);
-		XML.LeaveElement();
-	XML.LeaveElement();
+			SaveProjectData(&Xml);
+		Xml.LeaveElement();
+	Xml.LeaveElement();
 
-	return XML.Save(szFullPath) == XMLRES_OK;
+	return Xml.Save(szFullPath) == XMLRES_OK;
 }
 
 /**
@@ -1563,9 +1563,9 @@ bool CProjectManager::SaveProject(const TCHAR *szFullPath)
 */
 bool CProjectManager::LoadProject(const TCHAR *szFullPath)
 {
-	CXMLProcessor XML;
+	CXmlProcessor Xml;
 
-	int iResult = XML.Load(szFullPath);
+	int iResult = Xml.Load(szFullPath);
 	if (iResult != XMLRES_OK && iResult != XMLRES_FILEERROR)
 	{
 		TCHAR szMessage[128];
@@ -1575,15 +1575,15 @@ bool CProjectManager::LoadProject(const TCHAR *szFullPath)
 		return false;
 	}
 
-	if (!XML.EnterElement(_T("InfraRecorder")))
+	if (!Xml.EnterElement(_T("InfraRecorder")))
 		return false;
 
-	if (!XML.EnterElement(_T("Project")))
+	if (!Xml.EnterElement(_T("Project")))
 		return false;
 
 	// Version check.
 	int iVersion = 0;
-	XML.GetSafeElementAttrValue(_T("version"),&iVersion);
+	Xml.GetSafeElementAttrValue(_T("version"),&iVersion);
 
 	if (iVersion > PROJECTMANAGER_FILEVERSION)
 	{
@@ -1596,10 +1596,10 @@ bool CProjectManager::LoadProject(const TCHAR *szFullPath)
 
 	// Project type.
 	int iType = -1;
-	XML.GetSafeElementAttrValue(_T("type"),&iType);
+	Xml.GetSafeElementAttrValue(_T("type"),&iType);
 
 	int iMedia = false;
-	XML.GetSafeElementAttrValue(_T("media"),&iMedia);
+	Xml.GetSafeElementAttrValue(_T("media"),&iMedia);
 
 	switch (iType)
 	{
@@ -1607,39 +1607,39 @@ bool CProjectManager::LoadProject(const TCHAR *szFullPath)
 			NewDataProject(iMedia);
 
 			// Label.
-			XML.GetSafeElementData(_T("Label"),g_ProjectSettings.m_szLabel,MAX_PATH - 1);
+			Xml.GetSafeElementData(_T("Label"),g_ProjectSettings.m_szLabel,MAX_PATH - 1);
 			SetDiscLabel(g_ProjectSettings.m_szLabel);
 
 			// Data information.
-			LoadProjectFileSys(&XML);
-			LoadProjectISO(&XML);
-			LoadProjectFields(&XML);
-			LoadProjectBoot(&XML);
+			LoadProjectFileSys(&Xml);
+			LoadProjectISO(&Xml);
+			LoadProjectFields(&Xml);
+			LoadProjectBoot(&Xml);
 			break;
 
 		case PROJECTTYPE_AUDIO:
 			NewAudioProject(iMedia);
 
 			// Album information.
-			XML.GetSafeElementData(_T("AlbumName"),g_ProjectSettings.m_szAlbumName,159);
-			XML.GetSafeElementData(_T("AlbumArtist"),g_ProjectSettings.m_szAlbumArtist,159);
+			Xml.GetSafeElementData(_T("AlbumName"),g_ProjectSettings.m_szAlbumName,159);
+			Xml.GetSafeElementData(_T("AlbumArtist"),g_ProjectSettings.m_szAlbumArtist,159);
 			break;
 
 		case PROJECTTYPE_MIXED:
 			NewMixedProject(iMedia);
 
 			// Label.
-			XML.GetSafeElementData(_T("Label"),g_ProjectSettings.m_szLabel,MAX_PATH - 1);
+			Xml.GetSafeElementData(_T("Label"),g_ProjectSettings.m_szLabel,MAX_PATH - 1);
 			SetDiscLabel(g_ProjectSettings.m_szLabel);
 
 			// Album information.
-			XML.GetSafeElementData(_T("AlbumName"),g_ProjectSettings.m_szAlbumName,159);
-			XML.GetSafeElementData(_T("AlbumArtist"),g_ProjectSettings.m_szAlbumArtist,159);
+			Xml.GetSafeElementData(_T("AlbumName"),g_ProjectSettings.m_szAlbumName,159);
+			Xml.GetSafeElementData(_T("AlbumArtist"),g_ProjectSettings.m_szAlbumArtist,159);
 
 			// Data information.
-			LoadProjectFileSys(&XML);
-			LoadProjectISO(&XML);
-			LoadProjectFields(&XML);
+			LoadProjectFileSys(&Xml);
+			LoadProjectISO(&Xml);
+			LoadProjectFields(&Xml);
 			break;
 
 		default:
@@ -1648,7 +1648,7 @@ bool CProjectManager::LoadProject(const TCHAR *szFullPath)
 	}
 
 	// Project data.
-	if (!LoadProjectData(&XML))
+	if (!LoadProjectData(&Xml))
 	{
 		lngMessageBox(*g_pMainFrame,ERROR_LOADPROJECT,GENERAL_ERROR,MB_OK | MB_ICONERROR);
 		return false;
@@ -1662,8 +1662,8 @@ bool CProjectManager::LoadProject(const TCHAR *szFullPath)
 	if (m_pSpaceMeter != NULL)
 		m_pSpaceMeter->SetAllocatedSize(g_TreeManager.GetNodeSize(g_TreeManager.GetRootNode()));
 
-	XML.LeaveElement();
-	XML.LeaveElement();
+	Xml.LeaveElement();
+	Xml.LeaveElement();
 
 	return true;
 }

@@ -46,23 +46,23 @@
 #define XMLRES_FILEERROR		0x03
 #define XMLRES_UNSUPBOM			0x04
 
-class CXMLAttribute
+class CXmlAttribute
 {
 public:
 	CCustomString m_szName;
 	CCustomString m_szValue;
 
-	CXMLAttribute() : m_szName(XML_ATTR_NAMELENGTH), m_szValue(XML_ATTR_VALUELENGTH)
+	CXmlAttribute() : m_szName(XML_ATTR_NAMELENGTH), m_szValue(XML_ATTR_VALUELENGTH)
 	{
 	}
 
-	CXMLAttribute(unsigned int uiNameLength,unsigned int uiValueLength) :
+	CXmlAttribute(unsigned int uiNameLength,unsigned int uiValueLength) :
 		m_szName(uiNameLength), m_szValue(uiValueLength)
 	{
 	}
 };
 
-class CXMLElement
+class CXmlElement
 {
 public:
 	CCustomString m_szName;
@@ -70,11 +70,11 @@ public:
 
 	unsigned long m_ulAttrLength;
 
-	std::vector<CXMLAttribute *> m_Attributes;
-	std::vector<CXMLElement *> m_Children;
-	CXMLElement *m_pParent;
+	std::vector<CXmlAttribute *> m_Attributes;
+	std::vector<CXmlElement *> m_Children;
+	CXmlElement *m_pParent;
 
-	CXMLElement() : m_szName(XML_NAMELENGTH), m_szData(XML_DATALENGTH)
+	CXmlElement() : m_szName(XML_NAMELENGTH), m_szData(XML_DATALENGTH)
 	{
 		m_szName[0] = '\0';
 		m_szData[0] = '\0';
@@ -82,7 +82,7 @@ public:
 		m_ulAttrLength = 0;
 	}
 
-	CXMLElement(unsigned int uiNameLength,unsigned int uiDataLength) :
+	CXmlElement(unsigned int uiNameLength,unsigned int uiDataLength) :
 		m_szName(uiNameLength), m_szData(uiDataLength)
 	{
 		m_szName[0] = '\0';
@@ -91,7 +91,7 @@ public:
 		m_ulAttrLength = 0;
 	}
 
-	~CXMLElement()
+	~CXmlElement()
 	{
 		Clear();
 	}
@@ -102,7 +102,7 @@ public:
 		for (unsigned int iIndex = 0; iIndex < m_Children.size(); iIndex++)
 		{
 			// Remove the object from m_Instances.
-			std::vector <CXMLElement *>::iterator itObject = m_Children.begin() + iIndex;
+			std::vector <CXmlElement *>::iterator itObject = m_Children.begin() + iIndex;
 			delete *itObject;
 		}
 
@@ -112,7 +112,7 @@ public:
 		for (unsigned int iIndex = 0; iIndex < m_Attributes.size(); iIndex++)
 		{
 			// Remove the object from m_Instances.
-			std::vector <CXMLAttribute *>::iterator itObject = m_Attributes.begin() + iIndex;
+			std::vector <CXmlAttribute *>::iterator itObject = m_Attributes.begin() + iIndex;
 			delete *itObject;
 		}
 
@@ -120,7 +120,7 @@ public:
 	}
 };
 
-class CXMLProcessor
+class CXmlProcessor
 {
 public:
 	enum eMode
@@ -138,18 +138,18 @@ private:
 
 	__int64 m_iRemainBytes;
 
-	CXMLElement *m_pRoot;
-	CXMLElement *m_pCurrent;
+	CXmlElement *m_pRoot;
+	CXmlElement *m_pCurrent;
 
 	void DumpBuffer();
 
 	bool ReadNext(ckcore::File &File,TCHAR &c);
 	void ReadBack();
 
-	bool ReadTagAttr(ckcore::File &File,CXMLElement *pElement);
-	bool ReadNextTag(ckcore::File &File,CXMLElement *pElement);
+	bool ReadTagAttr(ckcore::File &File,CXmlElement *pElement);
+	bool ReadNextTag(ckcore::File &File,CXmlElement *pElement);
 
-	void SaveEntity(ckcore::File &File,unsigned int uiIndent,CXMLElement *pElement);
+	void SaveEntity(ckcore::File &File,unsigned int uiIndent,CXmlElement *pElement);
 
 #ifdef UNICODE
 	static const wchar_t m_szXMLHeader[];
@@ -158,8 +158,8 @@ private:
 #endif
 
 public:
-	CXMLProcessor(eMode Mode = MODE_NORMAL);
-	~CXMLProcessor();
+	CXmlProcessor(eMode Mode = MODE_NORMAL);
+	~CXmlProcessor();
 
 	int Load(const TCHAR *szFullPath);
 	int Save(const TCHAR *szFullPath);

@@ -32,13 +32,13 @@ CDiscGeneralPage::CDiscGeneralPage(const TCHAR *szDiscLabel,CCore2DeviceAddress 
 	lstrcpy(m_szDiscLabel,szDiscLabel);
 
 	// Try to load translated string.
-	if (g_LanguageSettings.m_pLNGProcessor != NULL)
+	if (g_LanguageSettings.m_pLngProcessor != NULL)
 	{	
 		// Make sure that there is a strings translation section.
-		if (g_LanguageSettings.m_pLNGProcessor->EnterSection(_T("strings")))
+		if (g_LanguageSettings.m_pLngProcessor->EnterSection(_T("strings")))
 		{
 			TCHAR *szStrValue;
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(TITLE_GENERAL,szStrValue))
+			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(TITLE_GENERAL,szStrValue))
 				SetTitle(szStrValue);
 		}
 	}
@@ -52,20 +52,20 @@ CDiscGeneralPage::~CDiscGeneralPage()
 
 bool CDiscGeneralPage::Translate()
 {
-	if (g_LanguageSettings.m_pLNGProcessor == NULL)
+	if (g_LanguageSettings.m_pLngProcessor == NULL)
 		return false;
 
-	CLNGProcessor *pLNG = g_LanguageSettings.m_pLNGProcessor;
+	CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
 	
 	// Make sure that there is a device translation section.
-	if (!pLNG->EnterSection(_T("disc")))
+	if (!pLng->EnterSection(_T("disc")))
 		return false;
 
 	// Translate.
 	TCHAR *szStrValue;
 	int iMaxStaticRight = 0;
 
-	if (pLNG->GetValuePtr(IDC_TYPELABELSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_TYPELABELSTATIC,szStrValue))
 	{
 		SetDlgItemText(IDC_TYPELABELSTATIC,szStrValue);
 
@@ -74,7 +74,7 @@ bool CDiscGeneralPage::Translate()
 		if (iStaticRight > iMaxStaticRight)
 			iMaxStaticRight = iStaticRight;
 	}
-	if (pLNG->GetValuePtr(IDC_BOOKLABELSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_BOOKLABELSTATIC,szStrValue))
 	{
 		SetDlgItemText(IDC_BOOKLABELSTATIC,szStrValue);
 
@@ -83,7 +83,7 @@ bool CDiscGeneralPage::Translate()
 		if (iStaticRight > iMaxStaticRight)
 			iMaxStaticRight = iStaticRight;
 	}
-	if (pLNG->GetValuePtr(IDC_REGIONLABELSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_REGIONLABELSTATIC,szStrValue))
 	{
 		SetDlgItemText(IDC_REGIONLABELSTATIC,szStrValue);
 
@@ -92,7 +92,7 @@ bool CDiscGeneralPage::Translate()
 		if (iStaticRight > iMaxStaticRight)
 			iMaxStaticRight = iStaticRight;
 	}
-	if (pLNG->GetValuePtr(IDC_LAYERLABELSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_LAYERLABELSTATIC,szStrValue))
 	{
 		SetDlgItemText(IDC_LAYERLABELSTATIC,szStrValue);
 
@@ -101,7 +101,7 @@ bool CDiscGeneralPage::Translate()
 		if (iStaticRight > iMaxStaticRight)
 			iMaxStaticRight = iStaticRight;
 	}
-	if (pLNG->GetValuePtr(IDC_TRACKLABELSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_TRACKLABELSTATIC,szStrValue))
 	{
 		SetDlgItemText(IDC_TRACKLABELSTATIC,szStrValue);
 
@@ -110,7 +110,7 @@ bool CDiscGeneralPage::Translate()
 		if (iStaticRight > iMaxStaticRight)
 			iMaxStaticRight = iStaticRight;
 	}
-	if (pLNG->GetValuePtr(IDC_SESSIONLABELSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_SESSIONLABELSTATIC,szStrValue))
 	{
 		SetDlgItemText(IDC_SESSIONLABELSTATIC,szStrValue);
 
@@ -119,7 +119,7 @@ bool CDiscGeneralPage::Translate()
 		if (iStaticRight > iMaxStaticRight)
 			iMaxStaticRight = iStaticRight;
 	}
-	if (pLNG->GetValuePtr(IDC_STATUSLABELSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_STATUSLABELSTATIC,szStrValue))
 	{
 		SetDlgItemText(IDC_STATUSLABELSTATIC,szStrValue);
 
@@ -128,7 +128,7 @@ bool CDiscGeneralPage::Translate()
 		if (iStaticRight > iMaxStaticRight)
 			iMaxStaticRight = iStaticRight;
 	}
-	if (pLNG->GetValuePtr(IDC_USEDSPACELABELSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_USEDSPACELABELSTATIC,szStrValue))
 	{
 		SetDlgItemText(IDC_USEDSPACELABELSTATIC,szStrValue);
 
@@ -137,7 +137,7 @@ bool CDiscGeneralPage::Translate()
 		if (iStaticRight > iMaxStaticRight)
 			iMaxStaticRight = iStaticRight;
 	}
-	if (pLNG->GetValuePtr(IDC_FREESPACELABELSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_FREESPACELABELSTATIC,szStrValue))
 	{
 		SetDlgItemText(IDC_FREESPACELABELSTATIC,szStrValue);
 

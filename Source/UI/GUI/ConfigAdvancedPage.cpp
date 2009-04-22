@@ -25,13 +25,13 @@
 CConfigAdvancedPage::CConfigAdvancedPage()
 {
 	// Try to load translated string.
-	if (g_LanguageSettings.m_pLNGProcessor != NULL)
+	if (g_LanguageSettings.m_pLngProcessor != NULL)
 	{	
 		// Make sure that there is a strings translation section.
-		if (g_LanguageSettings.m_pLNGProcessor->EnterSection(_T("strings")))
+		if (g_LanguageSettings.m_pLngProcessor->EnterSection(_T("strings")))
 		{
 			TCHAR *szStrValue;
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(TITLE_ADVANCED,szStrValue))
+			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(TITLE_ADVANCED,szStrValue))
 				SetTitle(szStrValue);
 		}
 	}
@@ -45,25 +45,25 @@ CConfigAdvancedPage::~CConfigAdvancedPage()
 
 bool CConfigAdvancedPage::Translate()
 {
-	if (g_LanguageSettings.m_pLNGProcessor == NULL)
+	if (g_LanguageSettings.m_pLngProcessor == NULL)
 		return false;
 
-	CLNGProcessor *pLNG = g_LanguageSettings.m_pLNGProcessor;
+	CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
 	
 	// Make sure that there is a config translation section.
-	if (!pLNG->EnterSection(_T("config")))
+	if (!pLng->EnterSection(_T("config")))
 		return false;
 
 	// Translate.
 	TCHAR *szStrValue;
 
-	if (pLNG->GetValuePtr(IDC_LOGCHECK,szStrValue))
+	if (pLng->GetValuePtr(IDC_LOGCHECK,szStrValue))
 		SetDlgItemText(IDC_LOGCHECK,szStrValue);
-	if (pLNG->GetValuePtr(IDC_SMOKECHECK,szStrValue))
+	if (pLng->GetValuePtr(IDC_SMOKECHECK,szStrValue))
 		SetDlgItemText(IDC_SMOKECHECK,szStrValue);
-	if (pLNG->GetValuePtr(IDC_FIFOGROUPSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_FIFOGROUPSTATIC,szStrValue))
 		SetDlgItemText(IDC_FIFOGROUPSTATIC,szStrValue);
-	if (pLNG->GetValuePtr(IDC_FIFOINFOSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_FIFOINFOSTATIC,szStrValue))
 		SetDlgItemText(IDC_FIFOINFOSTATIC,szStrValue);
 
 	return true;

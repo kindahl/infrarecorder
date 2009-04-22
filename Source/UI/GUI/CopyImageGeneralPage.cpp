@@ -36,13 +36,13 @@ CCopyImageGeneralPage::CCopyImageGeneralPage()
 	m_szFileName[0] = '\0';
 
 	// Try to load translated string.
-	if (g_LanguageSettings.m_pLNGProcessor != NULL)
+	if (g_LanguageSettings.m_pLngProcessor != NULL)
 	{	
 		// Make sure that there is a strings translation section.
-		if (g_LanguageSettings.m_pLNGProcessor->EnterSection(_T("strings")))
+		if (g_LanguageSettings.m_pLngProcessor->EnterSection(_T("strings")))
 		{
 			TCHAR *szStrValue;
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(TITLE_GENERAL,szStrValue))
+			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(TITLE_GENERAL,szStrValue))
 				SetTitle(szStrValue);
 		}
 	}
@@ -61,20 +61,20 @@ CCopyImageGeneralPage::~CCopyImageGeneralPage()
 
 bool CCopyImageGeneralPage::Translate()
 {
-	if (g_LanguageSettings.m_pLNGProcessor == NULL)
+	if (g_LanguageSettings.m_pLngProcessor == NULL)
 		return false;
 
-	CLNGProcessor *pLNG = g_LanguageSettings.m_pLNGProcessor;
+	CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
 	
 	// Make sure that there is a copy translation section.
-	if (!pLNG->EnterSection(_T("copy")))
+	if (!pLng->EnterSection(_T("copy")))
 		return false;
 
 	// Translate.
 	TCHAR *szStrValue;
 	int iMaxStaticRight = 0;
 
-	if (pLNG->GetValuePtr(IDC_SOURCESTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_SOURCESTATIC,szStrValue))
 	{
 		SetDlgItemText(IDC_SOURCESTATIC,szStrValue);
 
@@ -83,7 +83,7 @@ bool CCopyImageGeneralPage::Translate()
 		if (iStaticRight > iMaxStaticRight)
 			iMaxStaticRight = iStaticRight;
 	}
-	if (pLNG->GetValuePtr(IDC_IMAGESTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_IMAGESTATIC,szStrValue))
 	{
 		SetDlgItemText(IDC_IMAGESTATIC,szStrValue);
 

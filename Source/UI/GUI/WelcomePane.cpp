@@ -288,11 +288,11 @@ CWelcomePane::~CWelcomePane()
 void CWelcomePane::SetStatusText(long lCtrlId)
 {
 	bool bSuccess = false;
-	if (g_LanguageSettings.m_pLNGProcessor != NULL &&
-		g_LanguageSettings.m_pLNGProcessor->EnterSection(_T("hint")))
+	if (g_LanguageSettings.m_pLngProcessor != NULL &&
+		g_LanguageSettings.m_pLngProcessor->EnterSection(_T("hint")))
 	{
 		TCHAR *szStrValue;
-		if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(lCtrlId,szStrValue))
+		if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(lCtrlId,szStrValue))
 		{
 			::SendMessage(g_pMainFrame->m_hWndStatusBar,SB_SETTEXT,0,(LPARAM)szStrValue);
 			bSuccess = true;

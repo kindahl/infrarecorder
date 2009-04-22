@@ -24,13 +24,13 @@
 TCHAR *lngGetString(unsigned int uiID)
 {
 	// Try to load translated string.
-	if (g_LanguageSettings.m_pLNGProcessor != NULL)
+	if (g_LanguageSettings.m_pLngProcessor != NULL)
 	{	
 		// Make sure that there is a main translation section.
-		if (g_LanguageSettings.m_pLNGProcessor->EnterSection(_T("shell")))
+		if (g_LanguageSettings.m_pLngProcessor->EnterSection(_T("shell")))
 		{
 			TCHAR *szStrValue;
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(uiID,szStrValue))
+			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(uiID,szStrValue))
 				return szStrValue;
 		}
 	}

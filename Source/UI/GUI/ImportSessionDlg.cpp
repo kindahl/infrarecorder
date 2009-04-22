@@ -41,29 +41,29 @@ CImportSessionDlg::~CImportSessionDlg()
 
 bool CImportSessionDlg::Translate()
 {
-	if (g_LanguageSettings.m_pLNGProcessor == NULL)
+	if (g_LanguageSettings.m_pLngProcessor == NULL)
 		return false;
 
-	CLNGProcessor *pLNG = g_LanguageSettings.m_pLNGProcessor;
+	CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
 	
 	// Make sure that there is an erase translation section.
-	if (!pLNG->EnterSection(_T("importsession")))
+	if (!pLng->EnterSection(_T("importsession")))
 		return false;
 
 	// Translate.
 	TCHAR *szStrValue;
 
-	if (pLNG->GetValuePtr(IDD_IMPORTSESSIONDLG,szStrValue))			// Title.
+	if (pLng->GetValuePtr(IDD_IMPORTSESSIONDLG,szStrValue))			// Title.
 		SetWindowText(szStrValue);
-	if (pLNG->GetValuePtr(IDOK,szStrValue))
+	if (pLng->GetValuePtr(IDOK,szStrValue))
 		SetDlgItemText(IDOK,szStrValue);
-	if (pLNG->GetValuePtr(IDCANCEL,szStrValue))
+	if (pLng->GetValuePtr(IDCANCEL,szStrValue))
 		SetDlgItemText(IDCANCEL,szStrValue);
-	if (pLNG->GetValuePtr(IDC_DRIVESTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_DRIVESTATIC,szStrValue))
 		SetDlgItemText(IDC_DRIVESTATIC,szStrValue);
-	if (pLNG->GetValuePtr(IDC_USEDSPACELABELSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_USEDSPACELABELSTATIC,szStrValue))
 		SetDlgItemText(IDC_USEDSPACELABELSTATIC,szStrValue);
-	if (pLNG->GetValuePtr(IDC_TRACKSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_TRACKSTATIC,szStrValue))
 		SetDlgItemText(IDC_TRACKSTATIC,szStrValue);
 
 	return true;

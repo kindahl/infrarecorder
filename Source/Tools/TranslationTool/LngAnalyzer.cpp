@@ -17,17 +17,17 @@
  */
 
 #include "stdafx.h"
-#include "LNGAnalyzer.h"
+#include "LngAnalyzer.h"
 
-CLNGAnalyzer::CLNGAnalyzer(const TCHAR *szFullPath) : CLNGProcessor(szFullPath)
+CLngAnalyzer::CLngAnalyzer(const TCHAR *szFullPath) : CLngProcessor(szFullPath)
 {
 }
 
-CLNGAnalyzer::~CLNGAnalyzer()
+CLngAnalyzer::~CLngAnalyzer()
 {
 }
 
-unsigned int CLNGAnalyzer::GetNumValues()
+unsigned int CLngAnalyzer::GetNumValues()
 {
 	unsigned int uiResult = 0;
 
@@ -37,12 +37,12 @@ unsigned int CLNGAnalyzer::GetNumValues()
 	return uiResult;
 }
 
-unsigned int CLNGAnalyzer::GetNumSections()
+unsigned int CLngAnalyzer::GetNumSections()
 {
 	return (unsigned int)m_pSections.size();
 }
 
-CLNGSection *CLNGAnalyzer::GetSection(unsigned int uiIndex)
+CLngSection *CLngAnalyzer::GetSection(unsigned int uiIndex)
 {
 	if (uiIndex > m_pSections.size())
 		return NULL;
@@ -50,7 +50,7 @@ CLNGSection *CLNGAnalyzer::GetSection(unsigned int uiIndex)
 	return m_pSections[uiIndex];
 }
 
-CLNGSection *CLNGAnalyzer::GetSection(const TCHAR *szName)
+CLngSection *CLngAnalyzer::GetSection(const TCHAR *szName)
 {
 	for (unsigned int i = 0; i < m_pSections.size(); i++)
 	{
@@ -61,7 +61,7 @@ CLNGSection *CLNGAnalyzer::GetSection(const TCHAR *szName)
 	return NULL;
 }
 
-bool CLNGAnalyzer::SectionHasValue(CLNGSection *pSection,unsigned long ulName)
+bool CLngAnalyzer::SectionHasValue(CLngSection *pSection,unsigned long ulName)
 {
 	for (unsigned int i = 0; i < pSection->m_Values.size(); i++)
 	{

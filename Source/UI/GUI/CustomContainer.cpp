@@ -178,13 +178,13 @@ LRESULT CCustomContainer::OnToolBarGetInfo(int idCtrl,LPNMHDR pNMH,BOOL &bHandle
 	//pTipText->lpszText = MAKEINTRESOURCE(pTipText->hdr.idFrom);
 
 	// Try to load translated string.
-	if (g_LanguageSettings.m_pLNGProcessor != NULL)
+	if (g_LanguageSettings.m_pLngProcessor != NULL)
 	{	
 		// Make sure that there is a hint translation section.
-		if (g_LanguageSettings.m_pLNGProcessor->EnterSection(_T("hint")))
+		if (g_LanguageSettings.m_pLngProcessor->EnterSection(_T("hint")))
 		{
 			TCHAR *szStrValue;
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr((unsigned long)pTipText->hdr.idFrom,szStrValue))
+			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr((unsigned long)pTipText->hdr.idFrom,szStrValue))
 			{
 				pTipText->lpszText = szStrValue;
 				return 0;

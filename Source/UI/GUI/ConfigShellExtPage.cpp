@@ -30,13 +30,13 @@ CConfigShellExtPage::CConfigShellExtPage()
 	m_hToolBarImageList = NULL;
 
 	// Try to load translated string.
-	if (g_LanguageSettings.m_pLNGProcessor != NULL)
+	if (g_LanguageSettings.m_pLngProcessor != NULL)
 	{	
 		// Make sure that there is a strings translation section.
-		if (g_LanguageSettings.m_pLNGProcessor->EnterSection(_T("strings")))
+		if (g_LanguageSettings.m_pLngProcessor->EnterSection(_T("strings")))
 		{
 			TCHAR *szStrValue;
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr(TITLE_SHELLEXT,szStrValue))
+			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(TITLE_SHELLEXT,szStrValue))
 				SetTitle(szStrValue);
 		}
 	}
@@ -52,25 +52,25 @@ CConfigShellExtPage::~CConfigShellExtPage()
 
 bool CConfigShellExtPage::Translate()
 {
-	if (g_LanguageSettings.m_pLNGProcessor == NULL)
+	if (g_LanguageSettings.m_pLngProcessor == NULL)
 		return false;
 
-	CLNGProcessor *pLNG = g_LanguageSettings.m_pLNGProcessor;
+	CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
 	
 	// Make sure that there is a config translation section.
-	if (!pLNG->EnterSection(_T("config")))
+	if (!pLng->EnterSection(_T("config")))
 		return false;
 
 	// Translate.
 	TCHAR *szStrValue;
 
-	if (pLNG->GetValuePtr(IDC_SHELLEXTCHECK,szStrValue))
+	if (pLng->GetValuePtr(IDC_SHELLEXTCHECK,szStrValue))
 		SetDlgItemText(IDC_SHELLEXTCHECK,szStrValue);
-	if (pLNG->GetValuePtr(IDC_SHELLEXTSUBMENUCHECK,szStrValue))
+	if (pLng->GetValuePtr(IDC_SHELLEXTSUBMENUCHECK,szStrValue))
 		SetDlgItemText(IDC_SHELLEXTSUBMENUCHECK,szStrValue);
-	if (pLNG->GetValuePtr(IDC_SHELLEXTICONCHECK,szStrValue))
+	if (pLng->GetValuePtr(IDC_SHELLEXTICONCHECK,szStrValue))
 		SetDlgItemText(IDC_SHELLEXTICONCHECK,szStrValue);
-	if (pLNG->GetValuePtr(IDC_SHELLEXTTEXTSTATIC,szStrValue))
+	if (pLng->GetValuePtr(IDC_SHELLEXTTEXTSTATIC,szStrValue))
 		SetDlgItemText(IDC_SHELLEXTTEXTSTATIC,szStrValue);
 
 	return true;
@@ -440,13 +440,13 @@ LRESULT CConfigShellExtPage::OnToolBarGetInfo(int iCtrlID,LPNMHDR pNMH,BOOL &bHa
 	LPTOOLTIPTEXT pTipText = (LPTOOLTIPTEXT)pNMH;
 
 	// Try to load translated string.
-	if (g_LanguageSettings.m_pLNGProcessor != NULL)
+	if (g_LanguageSettings.m_pLngProcessor != NULL)
 	{	
 		// Make sure that there is a hint translation section.
-		if (g_LanguageSettings.m_pLNGProcessor->EnterSection(_T("hint")))
+		if (g_LanguageSettings.m_pLngProcessor->EnterSection(_T("hint")))
 		{
 			TCHAR *szStrValue;
-			if (g_LanguageSettings.m_pLNGProcessor->GetValuePtr((unsigned long)pTipText->hdr.idFrom,szStrValue))
+			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr((unsigned long)pTipText->hdr.idFrom,szStrValue))
 			{
 				pTipText->lpszText = szStrValue;
 				return 0;
