@@ -25,7 +25,7 @@
 #include "CtrlMessages.h"
 #include "cdrtoolsParseStrings.h"
 #include "WaitDlg.h"
-#include "SCSI.h"
+#include "Scsi.h"
 #include "TransUtil.h"
 #include "Core2Util.h"
 #include "DriveLetterDlg.h"

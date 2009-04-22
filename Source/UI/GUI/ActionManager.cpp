@@ -36,7 +36,7 @@
 #include "StringTable.h"
 #include "LangUtil.h"
 #include "ProjectManager.h"
-#include "SCSI.h"
+#include "Scsi.h"
 #include "LogDlg.h"
 #include "ActionManager.h"
 

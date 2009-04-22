@@ -29,7 +29,7 @@
 // Define if a 4 byte header should be stored in the beginning of each cd-text binary file.
 //#define CDTEXT_SAVESIGNATURE
 
-class CCDText
+class CCdText
 {
 private:
 	unsigned short m_usCRCTable[256];
@@ -74,8 +74,8 @@ private:
 	};
 
 public:
-	CCDText();
-	~CCDText();
+	CCdText();
+	~CCdText();
 
 	char m_szAlbumName[CDTEXT_MAXFIELDSIZE];
 	char m_szArtistName[CDTEXT_MAXFIELDSIZE];

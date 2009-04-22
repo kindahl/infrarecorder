@@ -17,8 +17,8 @@
  */
 
 #pragma once
-#include "Core2DriverSPTI.h"
-#include "Core2DriverASPI.h"
+#include "Core2DriverSpti.h"
+#include "Core2DriverAspi.h"
 
 class CCore2DeviceAddress
 {
@@ -38,8 +38,8 @@ public:
 class CCore2Device
 {
 private:
-	CCore2DriverSPTI m_DriverSPTI;
-	CCore2DriverASPI m_DriverASPI;
+	CCore2DriverSpti m_DriverSpti;
+	CCore2DriverAspi m_DriverAspi;
 	int m_iDeviceStatus;
 
 	enum

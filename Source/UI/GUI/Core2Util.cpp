@@ -18,7 +18,7 @@
 
 #include "stdafx.h"
 #include <map>
-#include "SCSI.h"
+#include "Scsi.h"
 #include "Core2Util.h"
 
 /**

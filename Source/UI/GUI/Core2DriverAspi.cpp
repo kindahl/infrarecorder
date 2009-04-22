@@ -17,14 +17,12 @@
  */
 
 #include "stdafx.h"
-#include "Core2DriverASPI.h"
 #include "../../Common/StringUtil.h"
 #include "LogDlg.h"
-#include "SCSI.h"
+#include "Scsi.h"
+#include "Core2DriverAspi.h"
 
-CCore2DriverASPI g_Core2DriverASPI;
-
-CCore2DriverASPI::CCore2DriverASPI()
+CCore2DriverAspi::CCore2DriverAspi()
 {
 	m_hDllInstance = NULL;
 	m_bDriverLoaded = false;
@@ -34,32 +32,32 @@ CCore2DriverASPI::CCore2DriverASPI()
 	m_iLun = -1;
 }
 
-CCore2DriverASPI::~CCore2DriverASPI()
+CCore2DriverAspi::~CCore2DriverAspi()
 {
 	UnloadDriver();
 }
 
-bool CCore2DriverASPI::LoadDriver()
+bool CCore2DriverAspi::LoadDriver()
 {
 	m_hDllInstance = LoadLibrary(_T("wnaspi32.dll"));
 	if (m_hDllInstance == NULL)
 	{
-		g_pLogDlg->print_line(_T("  Error: Unable to load ASPI driver, wnaspi32.dll could not be loaded."));
+		g_pLogDlg->print_line(_T("  Error: Unable to load Aspi driver, wnaspi32.dll could not be loaded."));
 		return false;
 	}
 
-	GetASPI32SupportInfo = (tGetASPI32SupportInfo)GetProcAddress(m_hDllInstance,"GetASPI32SupportInfo");
+	GetASPI32SupportInfo = (tGetASPI32SupportInfo)GetProcAddress(m_hDllInstance,"GetAspi32SupportInfo");
 	if (!GetASPI32SupportInfo)
 		return false;
 
-	SendASPI32Command = (tSendASPI32Command)GetProcAddress(m_hDllInstance,"SendASPI32Command");
+	SendASPI32Command = (tSendASPI32Command)GetProcAddress(m_hDllInstance,"SendAspi32Command");
 	if (!SendASPI32Command)
 		return false;
 
 	unsigned long ulStatusCode = (GetASPI32SupportInfo() & 0xFF00) >> 8;
 	if (ulStatusCode != SS_COMP && ulStatusCode != SS_NO_ADAPTERS)
 	{
-		g_pLogDlg->print_line(_T("  Error: Unable to load ASPI driver, status code 0x%.2X."),ulStatusCode);
+		g_pLogDlg->print_line(_T("  Error: Unable to load Aspi driver, status code 0x%.2X."),ulStatusCode);
 		return false;
 	}
 
@@ -67,7 +65,7 @@ bool CCore2DriverASPI::LoadDriver()
 	return true;
 }
 
-bool CCore2DriverASPI::UnloadDriver()
+bool CCore2DriverAspi::UnloadDriver()
 {
 	if (m_hDllInstance == NULL)
 		return false;
@@ -82,7 +80,7 @@ bool CCore2DriverASPI::UnloadDriver()
 	return true;
 }
 
-bool CCore2DriverASPI::Open(int iBus,int iTarget,int iLun)
+bool CCore2DriverAspi::Open(int iBus,int iTarget,int iLun)
 {
 	if (!m_bDriverLoaded)
 	{
@@ -99,7 +97,7 @@ bool CCore2DriverASPI::Open(int iBus,int iTarget,int iLun)
 	return true;
 }
 
-bool CCore2DriverASPI::Close()
+bool CCore2DriverAspi::Close()
 {
 	if (m_iBus == -1 || m_iTarget == -1 || m_iLun == -1)
 		return false;
@@ -111,7 +109,7 @@ bool CCore2DriverASPI::Close()
 	return true;
 }
 
-bool CCore2DriverASPI::Transport(unsigned char *pCdb,unsigned char ucCdbLength,
+bool CCore2DriverAspi::Transport(unsigned char *pCdb,unsigned char ucCdbLength,
 								 unsigned char *pData,unsigned long ulDataLength,int iDataMode)
 {
 	if (m_iBus == -1 || m_iTarget == -1 || m_iLun == -1)
@@ -167,7 +165,7 @@ bool CCore2DriverASPI::Transport(unsigned char *pCdb,unsigned char ucCdbLength,
 
 	if (srbCommand.SRB_Status != SS_COMP)
 	{
-		g_pLogDlg->print_line(_T("  SendASPI32Command failed, status: 0x%.2X, last error: %d."),
+		g_pLogDlg->print_line(_T("  SendAspi32Command failed, status: 0x%.2X, last error: %d."),
 			srbCommand.SRB_Status,GetLastError());
 		return false;
 	}
@@ -207,7 +205,7 @@ bool CCore2DriverASPI::Transport(unsigned char *pCdb,unsigned char ucCdbLength,
 	return true;
 }
 
-bool CCore2DriverASPI::TransportWithSense(unsigned char *pCdb,unsigned char ucCdbLength,
+bool CCore2DriverAspi::TransportWithSense(unsigned char *pCdb,unsigned char ucCdbLength,
 									  unsigned char *pData,unsigned long ulDataLength,
 									  unsigned char *pSense,unsigned char &ucResult,int iDataMode)
 {

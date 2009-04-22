@@ -173,7 +173,7 @@ typedef union
 typedef unsigned long (*tGetASPI32SupportInfo)();
 typedef unsigned long (*tSendASPI32Command)(LPSRB psrb);
 
-class CCore2DriverASPI
+class CCore2DriverAspi
 {
 private:
 	HINSTANCE m_hDllInstance;
@@ -189,8 +189,8 @@ private:
 	bool UnloadDriver();
 
 public:
-	CCore2DriverASPI();
-	~CCore2DriverASPI();
+	CCore2DriverAspi();
+	~CCore2DriverAspi();
 
 	enum
 	{

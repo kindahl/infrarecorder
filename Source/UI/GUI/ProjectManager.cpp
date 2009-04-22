@@ -26,7 +26,7 @@
 #include "MainFrm.h"
 #include "AudioUtil.h"
 #include "Settings.h"
-#include "CDText.h"
+#include "CdText.h"
 #include "LangUtil.h"
 #include "InfraRecorder.h"
 #include "ProjectManager.h"
@@ -1977,8 +1977,8 @@ bool CProjectManager::SaveCDText(const TCHAR *szFullPath)
 			break;
 	};
 
-	CCDText CDText;
-	return CDText.WriteFileEx(szFullPath,g_ProjectSettings.m_szAlbumName,g_ProjectSettings.m_szAlbumArtist,Files);
+	CCdText CdText;
+	return CdText.WriteFileEx(szFullPath,g_ProjectSettings.m_szAlbumName,g_ProjectSettings.m_szAlbumArtist,Files);
 }
 
 /**

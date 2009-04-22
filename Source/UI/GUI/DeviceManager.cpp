@@ -19,14 +19,14 @@
 #include "stdafx.h"
 #include <ckcore/directory.hh>
 #include "../../Common/XmlProcessor.h"
-#include "DeviceManager.h"
 #include "Settings.h"
 #include "cdrtoolsParseStrings.h"
 #include "StringTable.h"
 #include "LangUtil.h"
 #include "Core.h"
 #include "DriveLetterDlg.h"
-#include "SCSI.h"
+#include "Scsi.h"
+#include "DeviceManager.h"
 
 CDeviceManager g_DeviceManager;
 
@@ -164,7 +164,7 @@ void CDeviceManager::ScanBusOutput(const char *szBuffer)
 		if (pDeviceInfo->iType == DEVICEMANAGER_TYPE_CDROM)
 		{
 			bool bFoundDriveLetter = true;
-			if (!CCore2DriverSPTI::GetDriveLetter(pDeviceInfo->Address.m_iBus,pDeviceInfo->Address.m_iTarget,
+			if (!CCore2DriverSpti::GetDriveLetter(pDeviceInfo->Address.m_iBus,pDeviceInfo->Address.m_iTarget,
 				pDeviceInfo->Address.m_iLun,pDeviceInfo->Address.m_cDriveLetter))
 			{
 				// This is not water proof. External USB and FireWire devices will fail the above
@@ -173,7 +173,7 @@ void CDeviceManager::ScanBusOutput(const char *szBuffer)
 				// In a second attempt to locate the drive a search is performed by the device name.
 				// If two identical devices are connected (same revision) to the system there will
 				// be a conflict. Maybe I can solve this by using the ASPI driver?
-				if (!CCore2DriverSPTI::GetDriveLetter(pDeviceInfo->szVendor,pDeviceInfo->szIdentification,
+				if (!CCore2DriverSpti::GetDriveLetter(pDeviceInfo->szVendor,pDeviceInfo->szIdentification,
 					pDeviceInfo->szRevision,pDeviceInfo->Address.m_cDriveLetter))
 				{
 					// Ask for the user to specify a drive letter.
@@ -247,7 +247,7 @@ void CDeviceManager::DevicesOutput(const char *szBuffer)
 		pDeviceInfo->iType = DEVICEMANAGER_TYPE_CDROM;
 
 		// Get the device address.
-		if (!CCore2DriverSPTI::GetDriveAddress(pDeviceInfo->Address.m_cDriveLetter,
+		if (!CCore2DriverSpti::GetDriveAddress(pDeviceInfo->Address.m_cDriveLetter,
 			pDeviceInfo->Address.m_iBus,
 			pDeviceInfo->Address.m_iTarget,
 			pDeviceInfo->Address.m_iLun))
@@ -662,7 +662,7 @@ void CDeviceManager::VerifyDevicesOutput(const char *szBuffer)
 		int iBus = -1,iTarget = -1,iLun = -1;
 
 		// Get the device address.
-		CCore2DriverSPTI::GetDriveAddress(cDriveLetter,iBus,iTarget,iLun);
+		CCore2DriverSpti::GetDriveAddress(cDriveLetter,iBus,iTarget,iLun);
 
 		// Verify the device bus information.
 		if ((m_DeviceInfo[m_uiVeriCounter].Address.m_iBus != iBus) ||

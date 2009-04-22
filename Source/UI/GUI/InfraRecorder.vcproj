@@ -608,7 +608,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\CDText.cpp"
+				RelativePath=".\CdText.cpp"
 				>
 			</File>
 			<File
@@ -668,11 +668,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Core2DriverASPI.cpp"
+				RelativePath=".\Core2DriverAspi.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Core2DriverSPTI.cpp"
+				RelativePath=".\Core2DriverSpti.cpp"
 				>
 			</File>
 			<File
@@ -920,7 +920,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\SCSI.cpp"
+				RelativePath=".\Scsi.cpp"
 				>
 			</File>
 			<File
@@ -1093,7 +1093,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\CDText.h"
+				RelativePath=".\CdText.h"
 				>
 			</File>
 			<File
@@ -1153,11 +1153,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Core2DriverASPI.h"
+				RelativePath=".\Core2DriverAspi.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Core2DriverSPTI.h"
+				RelativePath=".\Core2DriverSpti.h"
 				>
 			</File>
 			<File
@@ -1413,7 +1413,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\SCSI.h"
+				RelativePath=".\Scsi.h"
 				>
 			</File>
 			<File

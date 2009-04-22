@@ -40,12 +40,12 @@ bool CCore2Device::Open(CCore2DeviceAddress *pAddress)
 	}
 
 	// Open the new device.
-	if (m_DriverSPTI.Open(pAddress->m_cDriveLetter))
+	if (m_DriverSpti.Open(pAddress->m_cDriveLetter))
 	{
 		m_iDeviceStatus = DS_OPEN_SPTI;
 		g_pLogDlg->print_line(_T("  Opened device '%C' using SPTI."),pAddress->m_cDriveLetter);
 	}
-	else if (m_DriverASPI.Open(pAddress->m_iBus,pAddress->m_iTarget,pAddress->m_iLun))
+	else if (m_DriverAspi.Open(pAddress->m_iBus,pAddress->m_iTarget,pAddress->m_iLun))
 	{
 		m_iDeviceStatus = DS_OPEN_ASPI;
 		g_pLogDlg->print_line(_T("  Opened device [%d,%d,%d] using ASPI."),pAddress->m_iBus,pAddress->m_iTarget,pAddress->m_iLun);
@@ -61,9 +61,9 @@ bool CCore2Device::Close()
 	bool bResult = false;
 
 	if (m_iDeviceStatus == DS_OPEN_SPTI)
-		bResult =  m_DriverSPTI.Close();
+		bResult =  m_DriverSpti.Close();
 	else if (m_iDeviceStatus = DS_OPEN_ASPI)
-		bResult = m_DriverASPI.Close();
+		bResult = m_DriverAspi.Close();
 
 	m_iDeviceStatus = DS_CLOSED;
 	return bResult;
@@ -77,7 +77,7 @@ bool CCore2Device::IsOpen()
 bool CCore2Device::SetNextTimeOut(unsigned int uiTimeOut)
 {
 	if (m_iDeviceStatus == DS_OPEN_SPTI)
-		return m_DriverSPTI.SetNextTimeOut(uiTimeOut);
+		return m_DriverSpti.SetNextTimeOut(uiTimeOut);
 
 	return false;
 }
@@ -86,9 +86,9 @@ bool CCore2Device::Transport(unsigned char *pCdb,unsigned char ucCdbLength,
 							 unsigned char *pData,unsigned long ulDataLength,int iDataMode)
 {
 	if (m_iDeviceStatus == DS_OPEN_SPTI)
-		return m_DriverSPTI.Transport(pCdb,ucCdbLength,pData,ulDataLength,iDataMode);
+		return m_DriverSpti.Transport(pCdb,ucCdbLength,pData,ulDataLength,iDataMode);
 	else if (m_iDeviceStatus = DS_OPEN_ASPI)
-		return m_DriverASPI.Transport(pCdb,ucCdbLength,pData,ulDataLength,iDataMode);
+		return m_DriverAspi.Transport(pCdb,ucCdbLength,pData,ulDataLength,iDataMode);
 
 	return false;
 }
@@ -98,9 +98,9 @@ bool CCore2Device::TransportWithSense(unsigned char *pCdb,unsigned char ucCdbLen
 									  unsigned char *pSense,unsigned char &ucResult,int iDataMode)
 {
 	if (m_iDeviceStatus == DS_OPEN_SPTI)
-		return m_DriverSPTI.TransportWithSense(pCdb,ucCdbLength,pData,ulDataLength,pSense,ucResult,iDataMode);
+		return m_DriverSpti.TransportWithSense(pCdb,ucCdbLength,pData,ulDataLength,pSense,ucResult,iDataMode);
 	else if (m_iDeviceStatus = DS_OPEN_ASPI)
-		return m_DriverASPI.TransportWithSense(pCdb,ucCdbLength,pData,ulDataLength,pSense,ucResult,iDataMode);
+		return m_DriverAspi.TransportWithSense(pCdb,ucCdbLength,pData,ulDataLength,pSense,ucResult,iDataMode);
 
 	return true;
 }

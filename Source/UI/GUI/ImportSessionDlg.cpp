@@ -17,16 +17,16 @@
  */
 
 #include "stdafx.h"
-#include "ImportSessionDlg.h"
 #include "StringTable.h"
 #include "Settings.h"
 #include "LangUtil.h"
 #include "DeviceManager.h"
 #include "WaitDlg.h"
-#include "SCSI.h"
+#include "Scsi.h"
 #include "DriveLetterDlg.h"
 #include "Core2Info.h"
 #include "LogDlg.h"
+#include "ImportSessionDlg.h"
 
 CImportSessionDlg::CImportSessionDlg()
 {

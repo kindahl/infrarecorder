@@ -19,8 +19,8 @@
 #include "stdafx.h"
 #include <ckcore/filestream.hh>
 #include <ckcore/linereader.hh>
+#include "../../Common/StringUtil.h"
 #include "resource.h"
-#include "MainFrm.h"
 #include "Settings.h"
 #include "Registry.h"
 #include "LogDlg.h"
@@ -30,7 +30,6 @@
 #include "Core2.h"
 #include "SettingsManager.h"
 #include "StringTable.h"
-#include "../../Common/StringUtil.h"
 #include "TreeManager.h"
 #include "WinVer.h"
 #include "ProjectPropDlg.h"
@@ -38,13 +37,14 @@
 #include "ConfigDlg.h"
 #include "ActionManager.h"
 #include "DiscDlg.h"
-#include "SCSI.h"
+#include "Scsi.h"
 #include "ImportSessionDlg.h"
 #include "DriveLetterDlg.h"
-#include "Core2DriverASPI.h"
+#include "Core2DriverAspi.h"
 #include "Core2Stream.h"
 #include "ProjectDropSource.h"
 #include "FilesDataObject.h"
+#include "MainFrm.h"
 
 CMainFrame::CMainFrame() : m_pShellListView(NULL),m_bWelcomePane(false)
 {

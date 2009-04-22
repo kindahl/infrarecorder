@@ -18,7 +18,7 @@
 
 #pragma once
 
-class CCore2DriverSPTI
+class CCore2DriverSpti
 {
 private:
 	HANDLE m_hDevice;
@@ -26,8 +26,8 @@ private:
 	bool m_bLog;
 
 public:
-	CCore2DriverSPTI();
-	~CCore2DriverSPTI();
+	CCore2DriverSpti();
+	~CCore2DriverSpti();
 
 	enum
 	{

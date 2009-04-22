@@ -17,4 +17,4 @@
  */
 
 #include "stdafx.h"
-#include "SCSI.h"
+#include "Scsi.h"

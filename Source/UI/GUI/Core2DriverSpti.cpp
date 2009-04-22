@@ -18,9 +18,9 @@
 
 #include "stdafx.h"
 #include <ntddscsi.h>
-#include "Core2DriverSPTI.h"
 #include "LogDlg.h"
-#include "SCSI.h"
+#include "Scsi.h"
+#include "Core2DriverSpti.h"
 
 typedef struct _SCSI_PASS_THROUGH_DIRECT_WITH_BUFFER
 {
@@ -29,25 +29,25 @@ typedef struct _SCSI_PASS_THROUGH_DIRECT_WITH_BUFFER
 	UCHAR ucSenseBuf[32];
 } SCSI_PASS_THROUGH_DIRECT_WITH_BUFFER, *PSCSI_PASS_THROUGH_DIRECT_WITH_BUFFER;
 
-CCore2DriverSPTI::CCore2DriverSPTI()
+CCore2DriverSpti::CCore2DriverSpti()
 {
 	m_hDevice = INVALID_HANDLE_VALUE;
 	m_iNextTimeOut = -1;	// Use default.
 	m_bLog = true;
 }
 
-CCore2DriverSPTI::~CCore2DriverSPTI()
+CCore2DriverSpti::~CCore2DriverSpti()
 {
 	Close();
 }
 
-bool CCore2DriverSPTI::GetDriveLetter(int iBus,int iTarget,int iLun,
+bool CCore2DriverSpti::GetDriveLetter(int iBus,int iTarget,int iLun,
 									  TCHAR &cDriveLetter)
 {
 	unsigned long ulDummy;
 	SCSI_ADDRESS DeviceAddress;
 
-	CCore2DriverSPTI Device;
+	CCore2DriverSpti Device;
 
 	// For some reason it's not possible to log when this function is called. The
 	// AppendText function in CEdit never returns. Is the behaviour related to
@@ -80,7 +80,7 @@ bool CCore2DriverSPTI::GetDriveLetter(int iBus,int iTarget,int iLun,
 	return false;
 }
 
-bool CCore2DriverSPTI::GetDriveLetter(TCHAR *szVendor,TCHAR *szIdentification,
+bool CCore2DriverSpti::GetDriveLetter(TCHAR *szVendor,TCHAR *szIdentification,
 									  TCHAR *szRevision,TCHAR &cDriveLetter)
 {
 #ifdef UNICODE
@@ -105,7 +105,7 @@ bool CCore2DriverSPTI::GetDriveLetter(TCHAR *szVendor,TCHAR *szIdentification,
 	int iIdentficationLen = lstrlen(szIdentification);
 	int iRevisionLen = lstrlen(szRevision);
 
-	CCore2DriverSPTI Device;
+	CCore2DriverSpti Device;
 
 	// For some reason it's not possible to log when this function is called. The
 	// AppendText function in CEdit never returns. Is the behaviour related to
@@ -150,13 +150,13 @@ bool CCore2DriverSPTI::GetDriveLetter(TCHAR *szVendor,TCHAR *szIdentification,
 	return false;
 }
 
-bool CCore2DriverSPTI::GetDriveAddress(TCHAR cDriveLetter,
+bool CCore2DriverSpti::GetDriveAddress(TCHAR cDriveLetter,
 									   int &iBus,int &iTarget,int &iLun)
 {
 	unsigned long ulDummy;
 	SCSI_ADDRESS DeviceAddress;
 
-	CCore2DriverSPTI Device;
+	CCore2DriverSpti Device;
 
 	// For some reason it's not possible to log when this function is called. The
 	// AppendText function in CEdit never returns. Is the behaviour related to
@@ -182,7 +182,7 @@ bool CCore2DriverSPTI::GetDriveAddress(TCHAR cDriveLetter,
 	return true;
 }
 
-bool CCore2DriverSPTI::Open(TCHAR cDriveLetter)
+bool CCore2DriverSpti::Open(TCHAR cDriveLetter)
 {
 	if (m_hDevice != INVALID_HANDLE_VALUE)
 	{
@@ -201,7 +201,7 @@ bool CCore2DriverSPTI::Open(TCHAR cDriveLetter)
 	return m_hDevice != INVALID_HANDLE_VALUE;
 }
 
-bool CCore2DriverSPTI::Close()
+bool CCore2DriverSpti::Close()
 {
 	if (m_hDevice == INVALID_HANDLE_VALUE)
 		return false;
@@ -215,13 +215,13 @@ bool CCore2DriverSPTI::Close()
 	return false;
 }
 
-bool CCore2DriverSPTI::SetNextTimeOut(unsigned int uiTimeOut)
+bool CCore2DriverSpti::SetNextTimeOut(unsigned int uiTimeOut)
 {
 	m_iNextTimeOut = uiTimeOut;
 	return true;
 }
 
-bool CCore2DriverSPTI::Transport(unsigned char *pCdb,unsigned char ucCdbLength,
+bool CCore2DriverSpti::Transport(unsigned char *pCdb,unsigned char ucCdbLength,
 								 unsigned char *pData,unsigned long ulDataLength,int iDataMode)
 {
 	if (m_hDevice == INVALID_HANDLE_VALUE)
@@ -320,7 +320,7 @@ bool CCore2DriverSPTI::Transport(unsigned char *pCdb,unsigned char ucCdbLength,
 	return true;
 }
 
-bool CCore2DriverSPTI::TransportWithSense(unsigned char *pCdb,unsigned char ucCdbLength,
+bool CCore2DriverSpti::TransportWithSense(unsigned char *pCdb,unsigned char ucCdbLength,
 										  unsigned char *pData,unsigned long ulDataLength,
 										  unsigned char *pSense,unsigned char &ucResult,int iDataMode)
 {

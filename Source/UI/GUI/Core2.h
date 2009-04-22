@@ -23,7 +23,7 @@
 #include <ckfilesystem/sectorstream.hh>
 #include <ckfilesystem/fileset.hh>
 #include "../../Common/StringUtil.h"
-#include "SCSI.h"
+#include "Scsi.h"
 #include "AdvancedProgress.h"
 #include "Core2Device.h"
 

@@ -20,7 +20,7 @@
 #include "../../Common/StringUtil.h"
 #include "DeviceManager.h"
 #include "StringTable.h"
-#include "SCSI.h"
+#include "Scsi.h"
 #include "WaitDlg.h"
 #include "WinVer.h"
 #include "ProgressDlg.h"

@@ -18,10 +18,10 @@
 
 #include "stdafx.h"
 #include <math.h>
-#include "CDText.h"
+#include "CdText.h"
 #include "../../Common/StringUtil.h"
 
-void CCDText::InitCRC()
+void CCdText::InitCRC()
 {
 	// Compute basis polynomials.
 	unsigned short usBasePoly[8];
@@ -53,7 +53,7 @@ void CCDText::InitCRC()
 	}
 }
 
-unsigned short CCDText::CalcCRC(unsigned char *pBuffer,unsigned int uiLength)
+unsigned short CCdText::CalcCRC(unsigned char *pBuffer,unsigned int uiLength)
 {
 	unsigned short usCRC = 0;
 
@@ -63,7 +63,7 @@ unsigned short CCDText::CalcCRC(unsigned char *pBuffer,unsigned int uiLength)
 	return usCRC;
 }
 
-CCDText::CCDText()
+CCdText::CCdText()
 {
 	Reset();
 
@@ -71,13 +71,13 @@ CCDText::CCDText()
 	InitCRC();
 }
 
-CCDText::~CCDText()
+CCdText::~CCdText()
 {
 	m_TrackNames.clear();
 	m_ArtistNames.clear();
 }
 
-void CCDText::Reset()
+void CCdText::Reset()
 {
 	m_szAlbumName[0] = '\0';
 	m_szArtistName[0] = '\0';
@@ -89,7 +89,7 @@ void CCDText::Reset()
 	m_ArtistNames.clear();
 }
 
-unsigned int CCDText::FindBufferEOS(unsigned int uiStart,unsigned int uiEnd)
+unsigned int CCdText::FindBufferEOS(unsigned int uiStart,unsigned int uiEnd)
 {
 	for (unsigned int i = uiStart; i < uiEnd; i++)
 	{
@@ -100,7 +100,7 @@ unsigned int CCDText::FindBufferEOS(unsigned int uiStart,unsigned int uiEnd)
 	return 0;
 }
 
-unsigned int CCDText::ReadPacket(ckcore::File &File,unsigned long ulPID,
+unsigned int CCdText::ReadPacket(ckcore::File &File,unsigned long ulPID,
 								 unsigned long ulBlockInfo)
 {
 	// If the buffer can't hold the data we abort.
@@ -174,7 +174,7 @@ unsigned int CCDText::ReadPacket(ckcore::File &File,unsigned long ulPID,
 	return 12;
 }
 
-bool CCDText::ReadFile(const TCHAR *szFileName)
+bool CCdText::ReadFile(const TCHAR *szFileName)
 {
 	// Clear any previous data.
 	Reset();
@@ -221,7 +221,7 @@ bool CCDText::ReadFile(const TCHAR *szFileName)
 	return true;
 }
 
-unsigned int CCDText::WriteText(ckcore::File &File,unsigned char ucType,unsigned char ucPID2,
+unsigned int CCdText::WriteText(ckcore::File &File,unsigned char ucType,unsigned char ucPID2,
 								const char *szText,unsigned int uiCharPos)
 {
 	unsigned char ucBuffer[18];
@@ -285,7 +285,7 @@ unsigned int CCDText::WriteText(ckcore::File &File,unsigned char ucType,unsigned
 	return uiCurrentPos;
 }
 
-void CCDText::FlushText(ckcore::File &File,unsigned char ucType,unsigned int uiCharPos)
+void CCdText::FlushText(ckcore::File &File,unsigned char ucType,unsigned int uiCharPos)
 {
 	// Is there anything to flush?
 	if (m_uiBufferPos > 0)
@@ -313,7 +313,7 @@ void CCDText::FlushText(ckcore::File &File,unsigned char ucType,unsigned int uiC
 	}
 }
 
-bool CCDText::WriteFile(const TCHAR *szFileName)
+bool CCdText::WriteFile(const TCHAR *szFileName)
 {
 	ckcore::File File(szFileName);
 	if (!File.open(ckcore::File::ckOPEN_WRITE))
@@ -366,7 +366,7 @@ bool CCDText::WriteFile(const TCHAR *szFileName)
 	return true;
 }
 
-bool CCDText::WriteFileEx(const TCHAR *szFileName,const TCHAR *szAlbumName,
+bool CCdText::WriteFileEx(const TCHAR *szFileName,const TCHAR *szAlbumName,
 						  const TCHAR *szArtistName,std::vector<CItemData *> &Tracks)
 {
 	ckcore::File File(szFileName);

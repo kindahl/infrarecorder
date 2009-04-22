@@ -22,7 +22,7 @@
 #include "Settings.h"
 #include "LangUtil.h"
 #include "WaitDlg.h"
-#include "SCSI.h"
+#include "Scsi.h"
 
 CCopyImageDlg::CCopyImageDlg(bool bAppMode) :
 	CPropertySheetImpl<CCopyImageDlg>(lngGetString(COPYIMAGE_TITLE),0,NULL),
