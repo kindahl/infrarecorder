@@ -19,7 +19,7 @@
 #include "stdafx.h"
 #include "LNGAnalyzer.h"
 
-CLNGAnalyzer::CLNGAnalyzer()
+CLNGAnalyzer::CLNGAnalyzer(const TCHAR *szFullPath) : CLNGProcessor(szFullPath)
 {
 }
 

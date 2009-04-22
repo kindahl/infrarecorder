@@ -96,16 +96,16 @@ bool CMainDlg::AnalyzeTranslation(const TCHAR *szFileName,CXMLProcessor *pXML)
 {
 	::EnableWindow(GetDlgItem(IDC_EXPORTBUTTON),FALSE);
 
-	CLNGAnalyzer RefFile;
-	CLNGAnalyzer LangFile;
-
 	TCHAR szRefFile[MAX_PATH];
 	GetDlgItemText(IDC_REFEDIT,szRefFile,MAX_PATH - 1);
 
-	if (RefFile.Load(szRefFile) != LNGRES_OK)
+	CLNGAnalyzer RefFile(szRefFile);
+	CLNGAnalyzer LangFile(szFileName);
+
+	if (RefFile.Load() != LNGRES_OK)
 		return false;
 
-	if (LangFile.Load(szFileName) != LNGRES_OK)
+	if (LangFile.Load() != LNGRES_OK)
 		return false;
 
 	// Add some translation information.

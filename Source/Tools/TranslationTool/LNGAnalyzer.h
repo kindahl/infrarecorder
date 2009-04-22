@@ -22,7 +22,7 @@
 class CLNGAnalyzer : public CLNGProcessor
 {
 public:
-	CLNGAnalyzer();
+	CLNGAnalyzer(const TCHAR *szFullPath);
 	~CLNGAnalyzer();
 
 	unsigned int GetNumValues();
