@@ -30,10 +30,11 @@
 extern CAppModule _Module;
 
 #include <atlwin.h>
-
 #include <atlframe.h>
 #include <atlctrls.h>
 #include <atldlgs.h>
+
+#include "../../UI/GUI/AtlCompat.h"
 
 // Manifest.
 #if defined _M_IX86
