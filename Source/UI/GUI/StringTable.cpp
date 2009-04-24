@@ -33,7 +33,7 @@ TCHAR *g_szStringTable[] = {
 	_T("Unable to parse project file, it may be corrupt."),
 	_T("The project has been created with a newer version of InfraRecorder. You need to update InfraRecorder to open this project."),
 	_T("The active character set could not be automatically detected. The registry suggests the following body character set: %s."),
-	_T("Please reload the drive and press the 'Reload' button."),
+	_T("Please reload the drive and press the 'Reload' button."),	// FIXME: Obsolete.
 	_T("Error on sector %d not corrected."),
 	_T("The internal command line is too long for your system to handle. The length limit on your system is %d characters. Please try to shorten the file paths in your project and try again."),
 
@@ -57,16 +57,16 @@ TCHAR *g_szStringTable[] = {
 	_T("No recorders available"),
 	_T("No devices available"),
 	_T("An error occured while trying to perform the selected operation."),
-	_T("Unable to load drive media. Please insert a valid disc into the drive."),
+	_T("Unable to load drive media. Please insert a valid disc into the drive."),	// FIXME: Obsolete.
 	_T("The disc is not rewritable or your recorder might not support the operation."),
-	_T("Couldn't erase disc using the selected method."),
-	_T("Unsupported sector size of %d bytes."),
-	_T("A write error occurred. Please see program log for more details."),
+	_T("Couldn't erase disc using the selected method."),	// FIXME: Obsolete.
+	_T("Unsupported sector size of %d bytes."),	// FIXME: Obsolete.
+	_T("A write error occurred. Please see program log for more details."),	// FIXME: Obsolete.
 	_T("The file you are trying to add is not supported."),
 	_T("Unable to locate the file:"),
 	_T("An error occured while trying to save the CD-Text binary data. The CD-Text information will not be recorded."),
-	_T("Inappropriate audio coding in file:"),
-	_T("The drive could not automatically be reloaded."),
+	_T("Inappropriate audio coding in file:"),				// FIXME: Obsolete.
+	_T("The drive could not automatically be reloaded."),	// FIXME: Obsolete.
 	_T("Can't read source disc. Retrying from sector %d."),
 	_T("The directory structure is too deep for '%s' (%d), maximum allowed depth is %d."),
 	_T("DVD media found. DVD write support is not available in this version."),
@@ -159,8 +159,8 @@ TCHAR *g_szStringTable[] = {
 	_T("(no drives found)"),
 
 	// Write modes.
-	_T("real write"),
-	_T("simulation"),
+	_T("real write"),	// FIXME: Obsolete.
+	_T("simulation"),	// FIXME: Obsolete.
 
 	// Column titles.
 	_T("Time"),
@@ -190,11 +190,11 @@ TCHAR *g_szStringTable[] = {
 	_T("Preparing to perform the selected operation."),
 	_T("Operation completed."),
 	_T("Operation canceled."),
-	_T("Last chance to abort, operation will start in %d seconds."),
+	_T("Last chance to abort, operation will start in %d seconds."),	// FIXME: Obsolete.
 	_T("Started to erase disc in %s mode."),
 	_T("Started to close disc in %s mode."),
-	_T("Started to write disc in %s mode."),
-	_T("Started to write track %d."),
+	_T("Started to write disc in %s mode."),	// FIXME: Obsolete.
+	_T("Started to write track %d."),			// FIXME: Obsolete.
 	_T("Started to write disc image."),
 	_T("Virtual Disc Image Recorder"),
 	_T("Started to read track %d."),
@@ -203,11 +203,11 @@ TCHAR *g_szStringTable[] = {
 
 	// Status strings.
 	_T("Erasing disc."),
-	_T("Writing data."),
-	_T("Writing track %d of %d at %.1fx speed."),
-	_T("Writing pregap for track %d at %ld."),
-	_T("Waiting for reader process to fill input buffer."),
-	_T("Closing disc."),
+	_T("Writing data."),							// FIXME: Obsolete.
+	_T("Writing track %d of %d at %.1fx speed."),	// FIXME: Obsolete.
+	_T("Writing pregap for track %d at %ld."),		// FIXME: Obsolete.
+	_T("Waiting for reader process to fill input buffer."),	// FIXME: Obsolete.
+	_T("Closing disc."),							// FIXME: Obsolete.
 	_T("Writing disc image."),
 	_T("Reading track."),
 	_T("Scanning track."),
@@ -227,19 +227,19 @@ TCHAR *g_szStringTable[] = {
 
 	// Sucess messages.
 	_T("The disc was successfully erased."),
-	_T("The data was successfully written to the disc."),
-	_T("The disc was successfully closed."),
+	_T("The data was successfully written to the disc."),	// FIXME: Obsolete.
+	_T("The disc was successfully closed."),				// FIXME: Obsolete.
 	_T("The disc image was successfully created."),
 	_T("Done reading track %d."),
 	_T("Done scanning track %d."),
 	_T("Done reading disc."),
 
 	// Warning messages.
-	_T("Some drives don't like closing in simulation mode."),
+	_T("Some drives don't like closing in simulation mode."),	// FIXME: Obsolete.
 
 	// Information messages.
-	_T("Some recorders does not support all erase modes."),
-	_T("You can try the erase entire disc method."),
+	_T("Some recorders does not support all erase modes."),	// FIXME: Obsolete.
+	_T("You can try the erase entire disc method."),		// FIXME: Obsolete.
 
 	// Property page and dialog titles.
 	_T("General"),
@@ -270,8 +270,8 @@ TCHAR *g_szStringTable[] = {
 	_T("The disc is %s, the last session is %s, the disc can %sbe erased."),
 
 	// Miscellaneous.
-	_T("The data may not fit on the current disc."),
-	_T("Could not open a new session."),
+	_T("The data may not fit on the current disc."),// FIXME: Obsolete.
+	_T("Could not open a new session."),			// FIXME: Obsolete.
 
 	// Added version 0.40.
 	_T("An error occured while trying to load the installed codecs. Please make sure that the installed codecs are compatible with this version of InfraRecorder."),
@@ -319,9 +319,9 @@ TCHAR *g_szStringTable[] = {
 	_T("The project you are trying to open is created by an older version of InfraRecorder. It might not open correctly."),
 	_T("Please select the folder that contains all the DVD-files that you want to record. The folder should include a subfolder named VIDEO_TS:"),
 	_T("The selected folder does not contain a valid DVD-Video file structure (the folder VIDEO_TS is missing). Please select another folder."),
-	_T("A write error occurred. Failed to write lead-in."),
-	_T("Failed to initialize the recorder."),
-	_T("DVD+RW discs can not be written in simulation mode."),
+	_T("A write error occurred. Failed to write lead-in."),		// FIXME: Obsolete.
+	_T("Failed to initialize the recorder."),					// FIXME: Obsolete.
+	_T("DVD+RW discs can not be written in simulation mode."),	// FIXME: Obsolete.
 	_T("Reloading media."),
 	_T("Verifying '%s'."),
 	_T("Done verifying disc. No errors found."),
