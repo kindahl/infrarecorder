@@ -130,35 +130,103 @@ void FormatBytesEx(TCHAR *szBuffer,unsigned __int64 iBytes)
 #endif
 }
 
+class CNumberFmt
+{
+private:
+    TCHAR m_szDecimalSep[10];
+    TCHAR m_szThousandSep[10];
+
+public:
+    NUMBERFMT m_NumberFmt;
+
+    void RetrieveDefaults(void);
+};
+
+void CNumberFmt::RetrieveDefaults(void)
+{
+	// Please avoid memset to clear the data structures,
+	// as it confuses test software like BoundsChecker,
+	// it's actually slower (!) and is not really portable.
+	m_szDecimalSep[0]  = _T('\0');
+	m_szThousandSep[0] = _T('\0');
+
+	m_NumberFmt.NumDigits     = 0;
+    m_NumberFmt.LeadingZero   = 0;
+    m_NumberFmt.Grouping      = 0;
+	m_NumberFmt.lpDecimalSep  = m_szDecimalSep;
+    m_NumberFmt.lpThousandSep = m_szThousandSep;
+	m_NumberFmt.NegativeOrder = 0;
+
+    ATLVERIFY(0 != GetLocaleInfo(LOCALE_USER_DEFAULT,
+	                             LOCALE_IDIGITS | LOCALE_RETURN_NUMBER,
+								 LPTSTR(&m_NumberFmt.NumDigits),
+								 sizeof(m_NumberFmt.NumDigits) / sizeof(TCHAR)));
+
+    ATLVERIFY(0 != GetLocaleInfo(LOCALE_USER_DEFAULT,
+								 LOCALE_ILZERO | LOCALE_RETURN_NUMBER,
+								 LPTSTR(&m_NumberFmt.LeadingZero),
+								 sizeof(m_NumberFmt.LeadingZero) / sizeof(TCHAR)));
+
+    ATLVERIFY(0 != GetLocaleInfo(LOCALE_USER_DEFAULT,
+								 LOCALE_SDECIMAL,
+								 m_szDecimalSep,
+								 _countof(m_szDecimalSep)));
+
+    ATLVERIFY(0 != GetLocaleInfo(LOCALE_USER_DEFAULT,
+								 LOCALE_STHOUSAND,
+								 m_szThousandSep,
+								 _countof( m_szThousandSep)));
+
+	ATLVERIFY(0 != GetLocaleInfo(LOCALE_USER_DEFAULT,
+								 LOCALE_INEGNUMBER | LOCALE_RETURN_NUMBER,
+								 LPTSTR(&m_NumberFmt.NegativeOrder),
+								 sizeof(m_NumberFmt.NegativeOrder) / sizeof(TCHAR)));
+
+	TCHAR szBuffer[100]; // Huge, but just in case.
+	ATLVERIFY(0 != GetLocaleInfo(LOCALE_USER_DEFAULT,
+		                         LOCALE_SGROUPING,
+								 szBuffer,
+								 _countof(szBuffer)));
+
+	// Now the ugly part. Have to convert from something like string "3;2;0" to
+	// int 32.
+	for (const TCHAR *pParseGrpS = szBuffer; *pParseGrpS != _T('\0'); ++pParseGrpS)
+	{
+        if ((*pParseGrpS >= _T('1')) && (*pParseGrpS <= _T('9')))
+            m_NumberFmt.Grouping = m_NumberFmt.Grouping * 10 + (*pParseGrpS - _T('0'));
+
+        if ((*pParseGrpS != _T('0')) && !pParseGrpS[1])
+			m_NumberFmt.Grouping *= 10;
+    }
+}
+
+// Formats the given integer number according to the locale, adding for example
+// thousand separators. The only difference to the default formatting is that
+// no decimal digits are displayed.
+void FormatInteger(unsigned __int64 uiValue,TCHAR *szBuffer,
+				   unsigned uiBufferSize)
+{
+	const unsigned MIN_CHAR_COUNT = 80;				// The documentation for _ui64tot_s says 65 characters max.
+	ATLASSERT(uiBufferSize >= MIN_CHAR_COUNT * 2);  // We certainly need less than that, but I don't know exactly how much.
+
+	TCHAR szNumber[MIN_CHAR_COUNT];
+	_ui64tot_s(uiValue,szNumber,_countof(szNumber),10);
+
+	CNumberFmt Fmt;
+	Fmt.RetrieveDefaults();
+	Fmt.m_NumberFmt.NumDigits = 0;
+
+	ATLVERIFY(0 != GetNumberFormat(LOCALE_USER_DEFAULT,
+								   0,
+								   szNumber,
+								   &Fmt.m_NumberFmt,
+								   szBuffer,
+								   uiBufferSize));
+}
+
 int LastDelimiter(const TCHAR *szString,TCHAR cDelimiter)
 {    
 	int iLength = lstrlen(szString);
-
-	for (int i = iLength - 1; i >= 0; i--)
-	{
-		if (/*tolower(*/szString[i]/*)*/ == cDelimiter)
-			return i;
-	}
-
-	return -1;
-}
-
-int LastDelimiterA(const char *szString,char cDelimiter)
-{    
-	int iLength = (int)strlen(szString);
-
-	for (int i = iLength - 1; i >= 0; i--)
-	{
-		if (szString[i] == cDelimiter)
-			return i;
-	}
-
-	return -1;
-}
-
-int LastDelimiterW(const wchar_t *szString,wchar_t cDelimiter)
-{    
-	int iLength = lstrlenW(szString);
 
 	for (int i = iLength - 1; i >= 0; i--)
 	{
@@ -206,22 +274,8 @@ bool ExtractFileName(TCHAR *szFileName)
 	if (iLastDelimiter == -1)
 		return false;
 
-	/*TCHAR *szResult = SubString(szFileName,iLastDelimiter + 1,lstrlen(szFileName) - iLastDelimiter - 1);
-		lstrcpy(szFileName,szResult);
-	delete [] szResult;*/
 	lstrcpy(szFileName,szFileName + (iLastDelimiter + 1));
-
 	return true;
-}
-
-bool ExtractFileExt(const TCHAR *szFileName,TCHAR *szFileExt)
-{
-	unsigned int uiLastDelimiter = LastDelimiter(szFileName,'.');
-
-	const TCHAR *pFileExt = szFileName + uiLastDelimiter;
-	lstrcpy(szFileExt,pFileExt);
-
-	return uiLastDelimiter != 0;
 }
 
 bool ChangeFileExt(TCHAR *szFileName,const TCHAR *szFileExt)

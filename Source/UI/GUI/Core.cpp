@@ -1311,9 +1311,8 @@ bool CCore::BurnImage(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	TCHAR szCygwinFileName[MAX_PATH + 16];
 	GetCygwinFileName(szFileName,szCygwinFileName);
 
-	TCHAR szFileExt[MAX_PATH];
-	ExtractFileExt(szFileName,szFileExt);
-	if (!lstrcmp(szFileExt,_T(".cue")))				// .cue file.
+	ckcore::Path FilePath(szFileName);
+	if (!ckcore::string::astrcmpi(FilePath.ext_name().c_str(),ckT("cue")))
 	{
 		CommandLine += _T(" cuefile=\"");
 		CommandLine += szCygwinFileName;
@@ -1558,9 +1557,8 @@ bool CCore::BurnTracks(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 
 		GetCygwinFileName(szDataTrack,szCygwinFileName);
 
-		TCHAR szFileExt[MAX_PATH];
-		ExtractFileExt(szDataTrack,szFileExt);
-		if (!lstrcmp(szFileExt,_T(".cue")))				// .cue file.
+		ckcore::Path FilePath(szDataTrack);
+		if (!ckcore::string::astrcmpi(FilePath.ext_name().c_str(),ckT("cue")))
 		{
 			CommandLine += _T(" cuefile=\"");
 			CommandLine += szCygwinFileName;

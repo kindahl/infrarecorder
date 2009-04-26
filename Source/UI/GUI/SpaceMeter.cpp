@@ -292,19 +292,22 @@ void CSpaceMeter::UpdateMeter(int iClientWidth)
 
 void CSpaceMeter::UpdateToolTip()
 {
-	TCHAR szBuffer[64];
+	TCHAR szBuffer[ 200 ]; // Must be bigger than szFormattedInt, see below.
 	const TCHAR *szUsed = lngGetString(SPACEMETER_USED);
 	const TCHAR *szFree = lngGetString(SPACEMETER_FREE);
 	unsigned __int64 uiFree = m_uiAllocatedSize > m_uiDiscSize ? 0 : m_uiDiscSize -  m_uiAllocatedSize;
 
 	if (m_iDisplayMode == SPACEMETER_DMSIZE)
 	{
+		TCHAR szFormattedInt[ 160 ];
+
 		// Used.
 		m_ToolTipText = szUsed;
 		FormatBytes(szBuffer,m_uiAllocatedSize);
 		m_ToolTipText += szBuffer;
 
-		lsnprintf_s(szBuffer,64,_T(" (%I64d Bytes)\r\n"),m_uiAllocatedSize);
+		FormatInteger( m_uiAllocatedSize, szFormattedInt, _countof( szFormattedInt ) );
+		lsnprintf_s(szBuffer,64,_T(" (%s Bytes)\r\n"),szFormattedInt);
 		m_ToolTipText += szBuffer;
 
 		// Free.
@@ -312,7 +315,8 @@ void CSpaceMeter::UpdateToolTip()
 		FormatBytes(szBuffer,uiFree);
 		m_ToolTipText += szBuffer;
 
-		lsnprintf_s(szBuffer,64,_T(" (%I64d Bytes)"),uiFree);
+		FormatInteger( uiFree, szFormattedInt, _countof( szFormattedInt ) );
+		lsnprintf_s(szBuffer,64,_T(" (%s Bytes)"),szFormattedInt);
 		m_ToolTipText += szBuffer;
 	}
 	else

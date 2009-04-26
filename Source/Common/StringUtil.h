@@ -28,22 +28,17 @@ TCHAR *SubString(const TCHAR *szText,unsigned int uiStart,unsigned int uiLength)
 
 void FormatBytes(TCHAR *szBuffer,unsigned __int64 iBytes);
 void FormatBytesEx(TCHAR *szBuffer,unsigned __int64 iBytes);
+void FormatInteger(unsigned __int64 uiValue,TCHAR *szBuffer,unsigned uiBufferSize);
+
 int LastDelimiter(const TCHAR *szString,TCHAR cDelimiter);
-int LastDelimiterA(const char *szString,char cDelimiter);
-int LastDelimiterW(const wchar_t *szString,wchar_t cDelimiter);
-//int LastDelimiterEx(const TCHAR *szString,char cDelimiter);
-//int LastDelimiterExA(const char *szString,char cDelimiter);
 int FirstDelimiter(const TCHAR *szString,TCHAR cDelimiter);
-//int FindInString(const TCHAR *szString1,const TCHAR *szString2);
 bool ExtractFilePath(TCHAR *szFileName);
 bool ExtractFileName(TCHAR *szFileName);
-bool ExtractFileExt(const TCHAR *szFileName,TCHAR *szFileExt);
 bool ChangeFileExt(TCHAR *szFileName,const TCHAR *szFileExt);
 void ForceSlashDelimiters(TCHAR *szFileName);
 int ComparePaths(const TCHAR *szPath1,const TCHAR *szPath2);
 
 void TrimRight(TCHAR *szString);
-
 char *SkipInteger(char *szString);
 
 void AnsiToUnicode(wchar_t *szTarget,const char *szSource,int iTargetSize);

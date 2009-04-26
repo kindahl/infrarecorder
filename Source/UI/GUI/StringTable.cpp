@@ -188,7 +188,7 @@ TCHAR *g_szStringTable[] = {
 	_T("Device: "),
 	_T("Total progress: %d%%"),
 	_T("Preparing to perform the selected operation."),
-	_T("Operation completed."),
+	_T("Operation completed."),					// FIXME: Obsolete.
 	_T("Operation canceled."),
 	_T("Last chance to abort, operation will start in %d seconds."),	// FIXME: Obsolete.
 	_T("Started to erase disc in %s mode."),
@@ -199,7 +199,7 @@ TCHAR *g_szStringTable[] = {
 	_T("Virtual Disc Image Recorder"),
 	_T("Started to read track %d."),
 	_T("Started to scan track %d."),
-	_T("Started to read disc."),
+	_T("Started to read disc."),				// FIXME: Obsolete.
 
 	// Status strings.
 	_T("Erasing disc."),
@@ -213,7 +213,7 @@ TCHAR *g_szStringTable[] = {
 	_T("Scanning track."),
 	_T("Found %d bytes of C2 errors in %d sectors."),
 	_T("The C2 error rate is %f%%."),
-	_T("Reading disc."),
+	_T("Reading disc."),							// FIXME: Obsolete.
 
 	// Status titles.
 	_T("Erasing Disc"),
@@ -232,7 +232,7 @@ TCHAR *g_szStringTable[] = {
 	_T("The disc image was successfully created."),
 	_T("Done reading track %d."),
 	_T("Done scanning track %d."),
-	_T("Done reading disc."),
+	_T("Done reading disc."),								// FIXME: Obsolete.
 
 	// Warning messages.
 	_T("Some drives don't like closing in simulation mode."),	// FIXME: Obsolete.
