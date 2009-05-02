@@ -404,4 +404,4 @@ enum eStringTable
 	COLUMN_DRIVE = 0x013f
 };
 
-extern TCHAR *g_szStringTable[];
+extern const TCHAR *g_szStringTable[];

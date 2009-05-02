@@ -19,7 +19,7 @@
 #include "stdafx.h"
 #include "StringTable.h"
 
-TCHAR *g_szStringTable[] = {
+const TCHAR *g_szStringTable[] = {
 	_T("Error"),
 	_T("Warning"),
 	_T("Information"),

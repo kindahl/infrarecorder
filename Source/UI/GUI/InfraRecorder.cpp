@@ -47,7 +47,6 @@ CProgressDlg *g_pProgressDlg = NULL;
 CSimpleProgressDlg *g_pSimpleProgressDlg = NULL;
 CLogDlg *g_pLogDlg = NULL;
 
-
 void PerformDeviceScan()
 {
 #ifdef SHOW_SPLASH
