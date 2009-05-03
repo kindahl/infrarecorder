@@ -1469,6 +1469,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\TranslatedStrings.h"
+				>
+			</File>
+			<File
 				RelativePath=".\TransUtil.h"
 				>
 			</File>
