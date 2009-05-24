@@ -22,7 +22,48 @@
 #else
 #include <stdio.h>
 #endif
+#include <ckcore/types.hh>
 #include "StringUtil.h"
+
+void SlowFormatStrV(ckcore::tstring &Result,
+                    const TCHAR *const szFormatStr,
+                    const va_list Args)
+{
+    // There are here several ways to write this routine:
+    // 1) Call vasprintf(), insert the result into the string, free() the result.
+    // 2) [the one implemented] Call Microsoft's _vscprintf() to calculate the string length upfront,
+    //    make enough room for that length, then call sprintf() to print the string.
+    // 3) Try once with snprintf(), and, if not enough room was available,
+    //    make enough room and call snprintf() again.
+    // 4) Try once with Microsoft's _snprintf(), and, if not enough room,
+    //    increase room (perhaps exponentially) and try again.
+    const int iCharCount = _vsctprintf_p(szFormatStr,Args);
+    if (iCharCount == 0)
+    {
+        Result.clear();
+        return;
+    }
+
+    Result.resize(iCharCount + 1);
+    ATLVERIFY(iCharCount == _vstprintf_p(&Result[0],iCharCount + 1,szFormatStr,Args));
+
+    // Remove the null terminator, std::string will add its own if necessary.
+    Result.resize(iCharCount);
+}
+
+// This routine admits positional arguments, like "%1$s".
+ckcore::tstring SlowFormatStr(const TCHAR * const szFormatStr,...)
+{
+    ckcore::tstring Result;
+
+	va_list Args;
+	va_start(Args,szFormatStr);
+
+	SlowFormatStrV(Result,szFormatStr,Args);
+
+	va_end(Args);
+    return Result;
+}
 
 // FIXME: Backslash in the name is missleading.
 TCHAR *IncludeTrailingBackslash(TCHAR *szPath)

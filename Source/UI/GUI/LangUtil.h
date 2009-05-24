@@ -27,3 +27,4 @@ const TCHAR *lngGetString(unsigned int uiID);
 const TCHAR *lngGetManual();
 int lngMessageBox(HWND hWnd,unsigned int uiTextID,unsigned int uiCaptionID,unsigned int uiType);
 void lngTranslateTables();
+ckcore::tstring lngSlowFormatStr(const eStringTable TranslatedFormatStr,...);

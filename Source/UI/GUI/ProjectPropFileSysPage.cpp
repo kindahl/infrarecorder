@@ -19,8 +19,8 @@
 #include "stdafx.h"
 #include "ProjectPropFileSysPage.h"
 #include "Settings.h"
-#include "LangUtil.h"
 #include "StringTable.h"
+#include "LangUtil.h"
 #include "TransUtil.h"
 #include "CtrlMessages.h"
 

@@ -385,4 +385,6 @@
 	TRSTR(ERROR_PROJECT_IMPORT_FILE /* 0x013e */, _T("Could not import the file \"%s\".") )
 
 	// Added version 0.48.
-	TRSTR(COLUMN_DRIVE /* 0x013f */, _T("Drive") )
+	TRSTR(COLUMN_DRIVE /* 0x013f */, _T("Drive"))
+	TRSTR(CONFIRM_CREATE_DIR_PATH /* 0x0140 */, _T("Directory \"%s\" does not exist. Do you want it to be created?" ) )
+	TRSTR(CANNOT_CREATE_DIR_PATH  /* 0x0141 */, _T("Cannot create directory \"%s\"." ) )

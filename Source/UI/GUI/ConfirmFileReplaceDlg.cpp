@@ -20,8 +20,8 @@
 #include <ckcore/convert.hh>
 #include "ConfirmFileReplaceDlg.h"
 #include "Settings.h"
-#include "LangUtil.h"
 #include "StringTable.h"
+#include "LangUtil.h"
 #include "MainFrm.h"
 
 CConfirmFileReplaceDlg::CConfirmFileReplaceDlg()

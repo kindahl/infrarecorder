@@ -17,9 +17,10 @@
  */
 
 #include "stdafx.h"
+#include <ckcore/directory.hh>
 #include "SaveTracksDlg.h"
-#include "StringTable.h"
 #include "Settings.h"
+#include "StringTable.h"
 #include "LangUtil.h"
 
 CSaveTracksDlg::CSaveTracksDlg()
@@ -109,6 +110,25 @@ LRESULT CSaveTracksDlg::OnOK(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandl
 	{
 		MessageBox(lngGetString(ERROR_TARGETFOLDER),lngGetString(GENERAL_ERROR),MB_OK | MB_ICONERROR);
 		return FALSE;
+	}
+
+	// Check if the target path exist.
+	const ckcore::Path Path(szFolderPath);
+	if (!ckcore::Directory::exist(Path))
+	{
+		if (MessageBox(lngSlowFormatStr(CONFIRM_CREATE_DIR_PATH,szFolderPath).c_str(),
+			           lngGetString(GENERAL_QUESTION),
+					   MB_YESNO | MB_ICONQUESTION) != IDYES)
+		{
+			return FALSE;
+		}
+
+		if (!ckcore::Directory::create(Path))
+		{
+			MessageBox(lngSlowFormatStr(CANNOT_CREATE_DIR_PATH,szFolderPath).c_str(),
+				       lngGetString(GENERAL_ERROR),MB_OK | MB_ICONERROR);
+			return FALSE;
+		}
 	}
 
 	lstrcpy(g_SaveTracksSettings.m_szTarget,szFolderPath);

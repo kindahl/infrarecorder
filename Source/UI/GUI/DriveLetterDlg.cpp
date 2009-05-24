@@ -20,8 +20,8 @@
 #include "DriveLetterDlg.h"
 #include "Settings.h"
 #include "TransUtil.h"
-#include "LangUtil.h"
 #include "StringTable.h"
+#include "LangUtil.h"
 #include "DeviceManager.h"
 
 CDriveLetterDlg::CDriveLetterDlg()

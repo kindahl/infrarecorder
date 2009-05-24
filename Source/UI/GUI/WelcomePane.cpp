@@ -21,6 +21,7 @@
 #include "MainFrm.h"
 #include "ProjectManager.h"
 #include "Settings.h"
+#include "StringTable.h"
 #include "LangUtil.h"
 #include "ActionManager.h"
 #include "WelcomePane.h"

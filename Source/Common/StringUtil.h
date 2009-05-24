@@ -22,6 +22,10 @@
 #define _T TEXT
 #endif
 
+void SlowFormatStrV(ckcore::tstring &Result,const TCHAR *const szFormatStr,
+                    const va_list Args);
+ckcore::tstring SlowFormatStr(const TCHAR * const szFormatStr,...);
+
 TCHAR *IncludeTrailingBackslash(TCHAR *szPath);
 TCHAR *ExcludeTrailingBackslash(TCHAR *szPath);
 TCHAR *SubString(const TCHAR *szText,unsigned int uiStart,unsigned int uiLength);

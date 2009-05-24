@@ -22,6 +22,7 @@
 #include "../../Common/StringUtil.h"
 #include "InfraRecorder.h"
 #include "Settings.h"
+#include "StringTable.h"
 #include "LangUtil.h"
 
 CAboutDlg::CAboutDlg()

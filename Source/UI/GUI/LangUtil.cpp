@@ -18,9 +18,10 @@
 
 #include "stdafx.h"
 #include <ckfilesystem/stringtable.hh>
-#include "LangUtil.h"
+#include "../../Common/StringUtil.h"
 #include "Settings.h"
 #include "StringTable.h"
+#include "LangUtil.h"
 
 const TCHAR *g_szHelpFile = _T("InfraRecorder.chm");
 
@@ -100,4 +101,17 @@ void lngTranslateTables()
 				ckfilesystem::StringTable::instance().set_string(ckfilesystem::StringTable::STATUS_WRITEDIRENTRIES,szStrValue);
 		}
 	}
+}
+
+ckcore::tstring lngSlowFormatStr(const eStringTable TranslatedFormatStr,...)
+{
+    ckcore::tstring Result;
+
+	va_list Args;
+	va_start(Args,TranslatedFormatStr);
+
+	SlowFormatStrV(Result,lngGetString(TranslatedFormatStr),Args);
+
+	va_end(Args);
+    return Result;
 }

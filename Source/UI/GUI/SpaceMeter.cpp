@@ -19,8 +19,8 @@
 #include "stdafx.h"
 #include "../../Common/StringUtil.h"
 #include "../../Common/GraphUtil.h"
-#include "LangUtil.h"
 #include "StringTable.h"
+#include "LangUtil.h"
 #include "WinVer.h"
 #include "SpaceMeter.h"
 
