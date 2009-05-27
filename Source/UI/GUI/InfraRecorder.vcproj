@@ -1698,6 +1698,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\Common\Exception.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Common\Exception.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\Common\GraphUtil.cpp"
 				>
 			</File>
