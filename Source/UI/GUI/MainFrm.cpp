@@ -219,9 +219,6 @@ void CMainFrame::InitializeMainView()
 
 	UpdateLayout();
 
-	//m_SpaceMeterView.SetSplitterPane(SPLIT_PANE_BOTTOM,m_SpaceMeter);
-	//m_SpaceMeterView.SetSplitterPane(SPLIT_PANE_TOP,m_MainView);
-
 	// FIXME:
 	m_WelcomePane.Create(m_SpaceMeterView,rcDefault,NULL,
 		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_TABSTOP,

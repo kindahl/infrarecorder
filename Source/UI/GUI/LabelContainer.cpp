@@ -272,22 +272,13 @@ void CLabelContainer::DrawText(CDCHandle dc,RECT *pHeaderRect)
 		::SetBkMode(dc,TRANSPARENT);
 		::SetTextColor(dc,RGB(139,139,139));
 	}
-	else if (true)
-	{
-		HFONT hFont = AtlCreateBoldFont(AtlGetDefaultGuiFont());
-		hOldFont = (HFONT)SelectObject(dc,hFont);
-		//hOldFont = (HFONT)SelectObject(dc,AtlGetDefaultGuiFont());
-
-		::SetBkMode(dc,TRANSPARENT);
-		::SetTextColor(dc,::GetSysColor(/*COLOR_WINDOW*/COLOR_BTNFACE));
-	}
 	else
 	{
 		HFONT hFont = AtlCreateBoldFont(AtlGetDefaultGuiFont());
 		hOldFont = (HFONT)SelectObject(dc,hFont);
 
 		::SetBkMode(dc,TRANSPARENT);
-		::SetTextColor(dc,LABELCONTAINER_COLOR_BORDER);
+		::SetTextColor(dc,::GetSysColor(COLOR_BTNFACE));
 	}
 
 	RECT rcText;
