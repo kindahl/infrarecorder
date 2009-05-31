@@ -68,7 +68,7 @@ ckcore::tstring GetExceptMsg(const std::exception &e)
  * @param [in] e The exception to rethrow.
  * @param [in] szFormatStr The message format string.
  */
-void RethrowWithPrefix(const std::exception &e,const TCHAR *const szFormatStr,...)
+void RethrowWithPrefix(const std::exception &e,const ckcore::tchar *const szFormatStr,...)
 {
     ckcore::tstring Msg;
 

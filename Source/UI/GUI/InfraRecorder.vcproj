@@ -1682,6 +1682,14 @@
 			Name="Common"
 			>
 			<File
+				RelativePath="..\..\Common\CheckFmtStrPlaceholders.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Common\CheckFmtStrPlaceholders.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\Common\CodecConst.h"
 				>
 			</File>

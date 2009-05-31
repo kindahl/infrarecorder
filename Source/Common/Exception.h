@@ -32,3 +32,6 @@ public:
     virtual const char *what(void) const throw();
 	const ckcore::tchar *lwhat(void) const throw();
 };
+
+ckcore::tstring GetExceptMsg(const std::exception &e);
+void RethrowWithPrefix(const std::exception &e,const ckcore::tchar *const szFormatStr,...);
