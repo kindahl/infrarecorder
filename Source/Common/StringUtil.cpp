@@ -394,6 +394,26 @@ void TrimRight(TCHAR *szString)
 	}
 }
 
+void TrimLeft(ckcore::tstring &Str,const ckcore::tchar * const szCharsToRemove)
+{
+	ckcore::tstring::size_type Pos = Str.find_first_not_of(szCharsToRemove);
+
+	if (Pos != ckcore::tstring::npos)
+		Str.erase(0,Pos);
+	else
+		Str.clear();
+}
+
+void TrimRight(ckcore::tstring &Str,const ckcore::tchar * const szCharsToRemove)
+{
+	ckcore::tstring::size_type Pos = Str.find_last_not_of(szCharsToRemove);
+
+	if (Pos != ckcore::tstring::npos)
+		Str.erase(Pos + 1);
+	else
+		Str.clear();
+}
+
 /*
 	SkipInteger
 	-----------

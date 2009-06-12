@@ -43,6 +43,13 @@ void ForceSlashDelimiters(TCHAR *szFileName);
 int ComparePaths(const TCHAR *szPath1,const TCHAR *szPath2);
 
 void TrimRight(TCHAR *szString);
+void TrimRight(ckcore::tstring &Str,const ckcore::tchar * const szCharsToRemove);
+void TrimLeft(ckcore::tstring &Str,const ckcore::tchar * const szCharsToRemove);
+inline void TrimStr(ckcore::tstring &Str,const ckcore::tchar * const szCharsToRemove)
+{
+	TrimRight(Str,szCharsToRemove); TrimLeft(Str,szCharsToRemove);
+}
+
 char *SkipInteger(char *szString);
 
 void AnsiToUnicode(wchar_t *szTarget,const char *szSource,int iTargetSize);

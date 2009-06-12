@@ -19,6 +19,8 @@
 #include "stdafx.h"
 #include "resource.h"
 #include "MainFrm.h"
+#include "../../Common/Exception.h"
+#include "../../Common/FileUtil.h"
 #include "ProgressDlg.h"
 #include "SimpleProgressDlg.h"
 #include "SplashWindow.h"
@@ -46,6 +48,58 @@ CMainFrame *g_pMainFrame = NULL;
 CProgressDlg *g_pProgressDlg = NULL;
 CSimpleProgressDlg *g_pSimpleProgressDlg = NULL;
 CLogDlg *g_pLogDlg = NULL;
+
+#ifdef _DEBUG
+const ckcore::tchar SAVE_ENGLISH_STRINGS_PARAM[] = _T("-englishstrings ");
+
+static int SaveEnglishStrings(const TCHAR * const szFileName)
+{
+	try
+	{
+		const ckcore::tchar BLANKS[] = _T(" \t");
+		ckcore::tstring FileName(szFileName);
+		TrimStr(FileName,BLANKS);
+
+		if (FileName.empty())
+			throw ir_error(_T("Missing filename."));
+
+		ckcore::File File(FileName.c_str());
+
+		if (!File.open(ckcore::File::ckOPEN_WRITE))
+			throw ir_error(_T("Error opening file for writing."));
+
+#ifdef UNICODE
+		// Write byte order mark.
+		unsigned short usBOM = BOM_UTF32BE;
+		File.write(&usBOM,2);
+#endif
+		const ckcore::tchar CRLF[] = ckT("\r\n");
+
+        WriteString(File,CRLF);
+        WriteString(File,ckT("[strings]"));
+        WriteString(File,CRLF);
+
+		for (unsigned i = 0; i < _countof(g_szStringTable); ++i)
+		{
+			const TCHAR * const szEnglishStr = g_szStringTable[i];
+
+			if (szEnglishStr[0] == _T('\0'))
+				continue;
+
+			ckcore::tstring Str = SlowFormatStr(_T("0x%04x=%s%s"),i,szEnglishStr,CRLF);
+			WriteString(File,Str.c_str());
+		}
+
+		ATLVERIFY(true == File.close());
+	}
+	catch (const std::exception &e)
+	{
+		RethrowWithPrefix(e,_T("Error processing command-line option %s: "),SAVE_ENGLISH_STRINGS_PARAM);
+	}
+	
+	return 0;
+}
+#endif
 
 void PerformDeviceScan()
 {
@@ -234,6 +288,12 @@ INT_PTR ParseAndRun(LPTSTR lpstrCmdLine,int nCmdShow = SW_SHOWDEFAULT)
 
 		return false;
 	}
+#ifdef _DEBUG
+	else if (!lstrncmp(lpstrCmdLine,SAVE_ENGLISH_STRINGS_PARAM,_countof(SAVE_ENGLISH_STRINGS_PARAM) - 1))
+	{
+		return SaveEnglishStrings(lpstrCmdLine + _countof(SAVE_ENGLISH_STRINGS_PARAM) - 1);
+	}
+#endif
 	// General, open file.
 	else if (lpstrCmdLine[0] != '\0')
 	{
@@ -274,121 +334,142 @@ INT_PTR ParseAndRun(LPTSTR lpstrCmdLine,int nCmdShow = SW_SHOWDEFAULT)
 
 int WINAPI _tWinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPTSTR lpstrCmdLine,int nCmdShow)
 {
+	try
+	{
 #ifdef _DEBUG
-	// In debug builds, generate a memory leak report on exit.
-	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+		// In debug builds, generate a memory leak report on exit.
+		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 
-	HRESULT hRes = ::CoInitialize(NULL);
-	// If you are running on NT 4.0 or higher you can use the following call instead to 
-	// make the EXE free threaded. This means that calls come in on a random RPC thread.
-	//	HRESULT hRes = ::CoInitializeEx(NULL, COINIT_MULTITHREADED);
-	ATLASSERT(SUCCEEDED(hRes));
+		HRESULT hRes = ::CoInitialize(NULL);
+		// If you are running on NT 4.0 or higher you can use the following call instead to 
+		// make the EXE free threaded. This means that calls come in on a random RPC thread.
+		//	HRESULT hRes = ::CoInitializeEx(NULL, COINIT_MULTITHREADED);
+		ATLASSERT(SUCCEEDED(hRes));
 
-	// This resolves ATL window thunking problem when Microsoft Layer for Unicode (MSLU) is used.
-	::DefWindowProc(NULL,0,0,0L);
+		// This resolves ATL window thunking problem when Microsoft Layer for Unicode (MSLU) is used.
+		::DefWindowProc(NULL,0,0,0L);
 
-	AtlInitCommonControls(ICC_COOL_CLASSES | ICC_BAR_CLASSES);
+		AtlInitCommonControls(ICC_COOL_CLASSES | ICC_BAR_CLASSES);
 
-	hRes = _Module.Init(NULL,hInstance);
-	ATLASSERT(SUCCEEDED(hRes));
+		hRes = _Module.Init(NULL,hInstance);
+		ATLASSERT(SUCCEEDED(hRes));
 
-	INT_PTR nRet;
+		INT_PTR nRet;
+		CLogDlg LogDlg;  // After LogDlg.Create() we must call LogDlg.DestroyWindow(),
+		                 // even if an exception is thrown. Otherwise, the application
+		                 // will crash on shutdown.
 
-	try	// Also acts as scope for variable 'MainFrame' etc.
-	{
-		// In order for it to work under Visual Studio 2005 Express / ATL 3.0,
-		// the constructor for CMainFrame etc. must run after _Module.Init() has been
-		// called, and the destructor must run before _Module.Term().
-		CMainFrame MainFrame;
-		CProgressDlg ProgressDlg;
-		CSimpleProgressDlg SimpleProgressDlg;
-		CLogDlg LogDlg;
-
-		g_pMainFrame = &MainFrame;
-		g_pProgressDlg = &ProgressDlg;
-		g_pSimpleProgressDlg = &SimpleProgressDlg;
-		g_pLogDlg = &LogDlg;
-
-		// Load the configuration.
-		g_SettingsManager.Load();
-
-		// Create the log dialog.
-		g_pLogDlg->Create(HWND_DESKTOP);
-
-		// Translate some of the string tables.
-		lngTranslateTables();
-
-		// Initialize, SCSI buses etc.
-		if (g_DeviceManager.LoadConfiguration())
+		try	// Also acts as scope for variable 'MainFrame' etc.
 		{
-			if (g_GlobalSettings.m_bAutoCheckBus)
+			// In order for it to work under Visual Studio 2005 Express / ATL 3.0,
+			// the constructor for CMainFrame etc. must run after _Module.Init() has been
+			// called, and the destructor must run before _Module.Term().
+			CMainFrame MainFrame;
+			CProgressDlg ProgressDlg;
+			CSimpleProgressDlg SimpleProgressDlg;
+
+			g_pMainFrame = &MainFrame;
+			g_pProgressDlg = &ProgressDlg;
+			g_pSimpleProgressDlg = &SimpleProgressDlg;
+			g_pLogDlg = &LogDlg;
+
+			// Load the configuration.
+			g_SettingsManager.Load();
+
+			// Create the log dialog.
+			LogDlg.Create(HWND_DESKTOP);
+
+			// Translate some of the string tables.
+			lngTranslateTables();
+
+			// Initialize, SCSI buses etc.
+			if (g_DeviceManager.LoadConfiguration())
 			{
-				if (!g_DeviceManager.VerifyConfiguration())
+				if (g_GlobalSettings.m_bAutoCheckBus)
 				{
-					if (lngMessageBox(HWND_DESKTOP,INIT_FOUNDDEVICES,GENERAL_QUESTION,MB_YESNO | MB_ICONQUESTION) == IDYES)
-						PerformDeviceScan();
+					if (!g_DeviceManager.VerifyConfiguration())
+					{
+						if (lngMessageBox(HWND_DESKTOP,INIT_FOUNDDEVICES,GENERAL_QUESTION,MB_YESNO | MB_ICONQUESTION) == IDYES)
+							PerformDeviceScan();
+					}
 				}
 			}
-		}
-		else
-		{
-			// If we failed to load drive configuration we scan the busses while
-			// displaying the splash screen.
-			PerformDeviceScan();
-		}
-
-		// Load the codecs.
-		TCHAR szCodecPath[MAX_PATH];
-		GetModuleFileName(NULL,szCodecPath,MAX_PATH - 1);
-
-		ExtractFilePath(szCodecPath);
-		lstrcat(szCodecPath,_T("Codecs\\"));
-
-		if (!g_CodecManager.LoadCodecs(szCodecPath))
-		{
-			if (g_GlobalSettings.m_bCodecWarning)
+			else
 			{
-				CInfoDlg InfoDlg(&g_GlobalSettings.m_bCodecWarning,lngGetString(ERROR_LOADCODECS),INFODLG_NOCANCEL | INFODLG_ICONWARNING);
-				InfoDlg.DoModal();
+				// If we failed to load drive configuration we scan the busses while
+				// displaying the splash screen.
+				PerformDeviceScan();
 			}
+
+			// Load the codecs.
+			TCHAR szCodecPath[MAX_PATH];
+			GetModuleFileName(NULL,szCodecPath,MAX_PATH - 1);
+
+			ExtractFilePath(szCodecPath);
+			lstrcat(szCodecPath,_T("Codecs\\"));
+
+			if (!g_CodecManager.LoadCodecs(szCodecPath))
+			{
+				if (g_GlobalSettings.m_bCodecWarning)
+				{
+					CInfoDlg InfoDlg(&g_GlobalSettings.m_bCodecWarning,lngGetString(ERROR_LOADCODECS),INFODLG_NOCANCEL | INFODLG_ICONWARNING);
+					InfoDlg.DoModal();
+				}
+			}
+
+			// Display the main window.
+			nRet = ParseAndRun(lpstrCmdLine,nCmdShow);
+
+			// Save the devices configuration.
+			g_DeviceManager.SaveConfiguration();
+
+			// Remove any temporary files.
+			g_TempManager.CleanUp();
+
+			// Destroy the log dialog.
+			if (LogDlg.IsWindow())
+				LogDlg.DestroyWindow();
+		}
+		catch ( ... )
+		{
+			// If someone tries to touch g_pMainFrame etc. after the object has been destroyed,
+			// we need to find out.
+			g_pMainFrame = NULL;
+			g_pProgressDlg = NULL;
+			g_pSimpleProgressDlg = NULL;
+			g_pLogDlg = NULL;
+
+			// Destroy the log dialog.
+			if (LogDlg.IsWindow())
+				LogDlg.DestroyWindow();
+
+			_Module.Term();
+			::CoUninitialize();
+
+			throw;
 		}
 
-		// Display the main window.
-		nRet = ParseAndRun(lpstrCmdLine,nCmdShow);
-
-		// Save the devices configuration.
-		g_DeviceManager.SaveConfiguration();
-
-		// Remove any temporary files.
-		g_TempManager.CleanUp();
-
-		// Destroy the log dialog.
-		if (g_pLogDlg->IsWindow())
-			g_pLogDlg->DestroyWindow();
-    }
-	catch ( ... )
-	{
 		// If someone tries to touch g_pMainFrame etc. after the object has been destroyed,
 		// we need to find out.
 		g_pMainFrame = NULL;
 		g_pProgressDlg = NULL;
 		g_pSimpleProgressDlg = NULL;
 		g_pLogDlg = NULL;
-		throw;
+
+		_Module.Term();
+		::CoUninitialize();
+
+		return (int)nRet;
 	}
-
-	// If someone tries to touch g_pMainFrame etc. after the object has been destroyed,
-	// we need to find out.
-	g_pMainFrame = NULL;
-	g_pProgressDlg = NULL;
-	g_pSimpleProgressDlg = NULL;
-	g_pLogDlg = NULL;
-
-	_Module.Term();
-	::CoUninitialize();
-
-	return (int)nRet;
+	catch (const std::exception &e)
+	{
+		ATLVERIFY(0 != MessageBox(NULL,
+			                      GetExceptMsg(e).c_str(),
+			                      lngGetString(GENERAL_ERROR),
+			                      MB_OK | MB_ICONERROR | MB_APPLMODAL));
+		return 1;
+	}
 }
 
 void ProcessMessages()
