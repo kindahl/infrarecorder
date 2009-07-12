@@ -107,9 +107,11 @@ public:
 		unsigned char ucTrackNumber,bool bIgnoreErr,const TCHAR *szFilePath);
 	bool ReadFullTOC(CCore2Device *pDevice,const TCHAR *szFileName);
 	int CreateImage(ckcore::OutStream &OutStream,ckfilesystem::FileSet &Files,
-		ckcore::Progress &Progress,std::map<tstring,tstring> *pFilePathMap = NULL);
+		ckcore::Progress &Progress,bool bFailOnError,
+		std::map<tstring,tstring> *pFilePathMap = NULL);
 	int CreateImage(const TCHAR *szFullPath,ckfilesystem::FileSet &Files,		// Wrapper.
-		ckcore::Progress &Progress,std::map<tstring,tstring> *pFilePathMap = NULL);
+		ckcore::Progress &Progress,bool bFailOnError,
+		std::map<tstring,tstring> *pFilePathMap = NULL);
 	int EstimateImageSize(ckfilesystem::FileSet &Files,ckcore::Progress &Progress,	// Wrapper.
 		unsigned __int64 &uiImageSize);
 };

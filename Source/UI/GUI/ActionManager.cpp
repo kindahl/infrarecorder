@@ -93,7 +93,8 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 
 			g_pProgressDlg->notify(ckcore::Progress::ckINFORMATION,lngGetString(PROGRESS_BEGINDISCIMAGE));
 
-			iResult = g_Core2.CreateImage(ImageFile.name().c_str(),Files,*g_pProgressDlg,g_BurnImageSettings.m_bVerify ? &FilePathMap : NULL);
+			iResult = g_Core2.CreateImage(ImageFile.name().c_str(),Files,*g_pProgressDlg,
+										  true,g_BurnImageSettings.m_bVerify ? &FilePathMap : NULL);
 			g_pProgressDlg->set_progress(100);
 
 			switch (iResult)
@@ -704,7 +705,7 @@ DWORD WINAPI CActionManager::CreateImageThread(LPVOID lpThreadParameter)
 
 	g_pProgressDlg->notify(ckcore::Progress::ckINFORMATION,lngGetString(PROGRESS_BEGINDISCIMAGE));
 
-	int iResult = g_Core2.CreateImage(szFileName,Files,*g_pProgressDlg);
+	int iResult = g_Core2.CreateImage(szFileName,Files,*g_pProgressDlg,true);
 	g_pProgressDlg->set_progress(100);
 	g_pProgressDlg->NotifyCompleted();
 

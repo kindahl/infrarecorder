@@ -1014,7 +1014,8 @@ bool CCore2::ReadFullTOC(CCore2Device *pDevice,const TCHAR *szFileName)
 }
 
 int CCore2::CreateImage(ckcore::OutStream &OutStream,ckfilesystem::FileSet &Files,
-						ckcore::Progress &Progress,std::map<tstring,tstring> *pFilePathMap)
+						ckcore::Progress &Progress,bool bFailOnError,
+						std::map<tstring,tstring> *pFilePathMap)
 {
 	ckfilesystem::FileSystem::Type FileSysType;
 	switch (g_ProjectSettings.m_iFileSystem)
@@ -1101,7 +1102,7 @@ int CCore2::CreateImage(ckcore::OutStream &OutStream,ckfilesystem::FileSet &File
 	if (g_ProjectSettings.m_bMultiSession)
 		ulSectorOffset = (unsigned long)g_ProjectSettings.m_uiNextWritableAddr;
 
-	ckfilesystem::FileSystemWriter FileSysWriter(*g_pLogDlg,FileSys);
+	ckfilesystem::FileSystemWriter FileSysWriter(*g_pLogDlg,FileSys,bFailOnError);
 	int iResult = FileSysWriter.write(OutStream,Progress,ulSectorOffset);
 
 	if (pFilePathMap != NULL)
@@ -1114,7 +1115,8 @@ int CCore2::CreateImage(ckcore::OutStream &OutStream,ckfilesystem::FileSet &File
 	A wrapper method for the function above.
 */
 int CCore2::CreateImage(const TCHAR *szFullPath,ckfilesystem::FileSet &Files,
-						ckcore::Progress &Progress,std::map<tstring,tstring> *pFilePathMap)
+						ckcore::Progress &Progress,bool bFailOnError,
+						std::map<tstring,tstring> *pFilePathMap)
 {
 	ckcore::FileOutStream FileStream(szFullPath);
 	if (!FileStream.open())
@@ -1123,14 +1125,14 @@ int CCore2::CreateImage(const TCHAR *szFullPath,ckfilesystem::FileSet &Files,
 		return RESULT_FAIL;
 	}
 
-	return CreateImage(FileStream,Files,Progress,pFilePathMap);
+	return CreateImage(FileStream,Files,Progress,bFailOnError,pFilePathMap);
 }
 
 int CCore2::EstimateImageSize(ckfilesystem::FileSet &Files,ckcore::Progress &Progress,
 							  unsigned __int64 &uiImageSize)
 {
 	ckcore::NullStream OutStream;
-	int iResult = CreateImage(OutStream,Files,Progress);
+	int iResult = CreateImage(OutStream,Files,Progress,true);
 
 	uiImageSize = OutStream.written();
 	return iResult;

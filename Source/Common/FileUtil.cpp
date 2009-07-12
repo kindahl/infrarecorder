@@ -17,13 +17,15 @@
  */
 
 #include "stdafx.h"
+#include <ckcore/types.hh>
 #include <ckcore/string.hh>
 #include "Exception.h"
 #include "FileUtil.h"
 
 void WriteString(ckcore::File &File,const ckcore::tchar *szString)
 {
-	const ckcore::tuint32 uiByteCount = ckcore::string::astrlen(szString) * sizeof(ckcore::tchar);
+	const ckcore::tuint32 uiByteCount =
+		static_cast<ckcore::tuint32>(ckcore::string::astrlen(szString) * sizeof(ckcore::tchar));
 	
 	if (uiByteCount != File.write(szString,uiByteCount))
 		throw ir_error(ckT("Error writing to the file."));	// FIXME: Improve message output.

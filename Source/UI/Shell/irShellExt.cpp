@@ -17,6 +17,7 @@
  */
 
 #include "stdafx.h"
+#include <ckcore/types.hh>
 #include "irShellExt.h"
 #include "../../Common/StringUtil.h"
 #include "StringTable.h"
@@ -74,15 +75,8 @@ bool CirShellExt::IsSeparatorItem(HMENU hMenu,unsigned int uiPosition)
 */
 bool CirShellExt::IsProjectFile(const TCHAR *szFileName)
 {
-	TCHAR szFileExt[MAX_PATH - 4];
-
-	if (ExtractFileExt(szFileName,szFileExt))
-	{
-		if (!lstrcmp(szFileExt,_T(".irp")))
-			return true;
-	}
-
-	return false;
+	ckcore::Path FilePath(szFileName);
+	return !lstrcmpi(FilePath.ext_name().c_str(),ckT("irp"));
 }
 
 STDMETHODIMP CirShellExt::Initialize(LPCITEMIDLIST pidlFolder,

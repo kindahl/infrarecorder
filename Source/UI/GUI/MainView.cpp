@@ -285,7 +285,7 @@ void CMainView::DrawHintBar(HDC hDC,RECT &rcHintBar)
 
 	HFONT hOldFont = (HFONT)SelectObject(hDC,AtlGetDefaultGuiFont());
 
-	DrawText(hDC,m_HintMsg.c_str(),m_HintMsg.size(),&rcText,
+	DrawText(hDC,m_HintMsg.c_str(),static_cast<int>(m_HintMsg.size()),&rcText,
 			 DT_LEFT | DT_END_ELLIPSIS | DT_SINGLELINE | DT_VCENTER);
 
 	if (hOldFont != NULL)

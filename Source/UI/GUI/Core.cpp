@@ -2195,7 +2195,8 @@ DWORD WINAPI CCore::CreateCompImageThread(LPVOID lpThreadParameter)
 {
 	CCompImageParams *pParams = (CCompImageParams *)lpThreadParameter;
 
-	g_Core2.CreateImage(pParams->m_Process,pParams->m_Files,pParams->m_Progress);
+	g_Core2.CreateImage(pParams->m_Process,pParams->m_Files,
+						pParams->m_Progress,false);
 
 	return 0;
 }

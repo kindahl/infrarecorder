@@ -1665,7 +1665,7 @@ void CTreeManager::GetLocalPathList(ckfilesystem::FileSet &Files,CProjectNode *p
 		}
 
 		Files.insert(ckfilesystem::FileDescriptor(szInternalFilePath,
-			pItemData->szFullPath,0,ucFlags,pData));
+					 pItemData->szFullPath,ucFlags,pData));
 	}
 
 	std::list <CItemData *>::iterator itFileObject;
@@ -1699,7 +1699,7 @@ void CTreeManager::GetLocalPathList(ckfilesystem::FileSet &Files,CProjectNode *p
 		}
 
 		Files.insert(ckfilesystem::FileDescriptor(szInternalFilePath,
-			pItemData->szFullPath,pItemData->uiSize,ucFlags,pData));
+					 pItemData->szFullPath,ucFlags,pData));
 	}
 
 	// If the folder does not have children, add it manually.
@@ -1730,7 +1730,7 @@ void CTreeManager::GetLocalPathList(ckfilesystem::FileSet &Files,CProjectNode *p
 		}
 
 		Files.insert(ckfilesystem::FileDescriptor(szInternalFilePath,szEmptyFolder,
-			0,ucFlags,pData));
+					 ucFlags,pData));
 	}
 }
 
