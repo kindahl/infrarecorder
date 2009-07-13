@@ -12,6 +12,12 @@
 <div id="content">
 	<p>Version 0.47.0.0</p>
 	<ul>
+		<li>Updated InfraRecorder projects not to store file size information that
+		    potentially could cause write errors.</li>
+		<li>Added safety net preventing non-recoverable read errors to affect
+		    integrity of other files during recording operation.</li>
+		<li>Updated InfraRecorder to lock files on hard drive during file system
+		    creation in order to avoid inconsistency errors.</li>
 		<li>Added support for importing data from file lists like M3U.</li>
 		<li>Added command line options for selecting default project and media
 		    type.</a>

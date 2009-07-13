@@ -24,6 +24,9 @@
 #include "TempManager.h"
 #include "Settings.h"
 #include "ProjectManager.h"
+#include "LangUtil.h"
+#include "AudioUtil.h"
+#include "InfraRecorder.h"
 #include "TreeManager.h"
 
 CTreeManager g_TreeManager;
@@ -1383,8 +1386,6 @@ void CTreeManager::SaveLocalNodeFileData(CXmlProcessor *pXml,CProjectNode *pNode
 			ULARGE_INTEGER iLocalFileTime;
 			memcpy(&iLocalFileTime,&LocalFileTime,sizeof(FILETIME));
 			pXml->AddElement(_T("FileTime"),(__int64)iLocalFileTime.QuadPart);
-
-			pXml->AddElement(_T("FileSize"),(__int64)pItemData->uiSize);
 		pXml->LeaveElement();
 	}
 }
@@ -1433,11 +1434,9 @@ void CTreeManager::SaveNodeAudioData(CXmlProcessor *pXml,CProjectNode *pRootNode
 
 			pXml->AddElement(_T("InternalName"),szInternalName);
 			pXml->AddElement(_T("FullPath"),pItemData->szFullPath);
-			pXml->AddElement(_T("FileSize"),(__int64)pItemData->uiSize);
 
 			if (pItemData->HasAudioData())
 			{
-				pXml->AddElement(_T("TrackLength"),(__int64)pItemData->GetAudioData()->uiTrackLength);
 				pXml->AddElement(_T("TrackTitle"),pItemData->GetAudioData()->szTrackTitle);
 				pXml->AddElement(_T("TrackArtist"),pItemData->GetAudioData()->szTrackArtist);
 			}
@@ -1455,14 +1454,6 @@ bool CTreeManager::LoadNodeFileData(CXmlProcessor *pXml,CProjectNode *pRootNode)
 		if (!pXml->EnterElement(i))
 			return false;
 
-		/*bool bIsFolder = false;
-		pXml->GetSafeElementAttrValue(_T("folder"),&bIsFolder);
-
-		bool bIsBootImage = false;
-		pXml->GetSafeElementAttrValue(_T("bootimage"),&bIsBootImage);
-
-		bool bIsLocked = false;
-		pXml->GetSafeElementAttrValue(_T("locked"),&bIsLocked);*/
 		int iFlags = 0;
 		pXml->GetSafeElementAttrValue(_T("flags"),&iFlags);
 
@@ -1473,6 +1464,16 @@ bool CTreeManager::LoadNodeFileData(CXmlProcessor *pXml,CProjectNode *pRootNode)
 		lstrcat(szInternalName,szFullName);
 
 		pXml->GetSafeElementData(_T("FullPath"),szFullName,MAX_PATH - 1);
+
+		// Check that the file exist.
+		if (!(iFlags & PROJECTITEM_FLAG_ISFOLDER) && !ckcore::File::exist(szFullName))
+		{
+			MessageBox(*g_pMainFrame,SlowFormatStr(lngGetString(WARNING_MISSPROJFILE),szFullName).c_str(),
+					   lngGetString(GENERAL_WARNING),MB_OK | MB_ICONWARNING);
+
+			pXml->LeaveElement();
+			continue;
+		}
 
 		// File time.
 		ULARGE_INTEGER iLocalFileTime;
@@ -1493,10 +1494,6 @@ bool CTreeManager::LoadNodeFileData(CXmlProcessor *pXml,CProjectNode *pRootNode)
 
 			CProjectNode *pNode = AddPath(szTemp);
 
-			//MessageBox(NULL,pNode->pItemData->GetFilePath(),szTemp,MB_OK);
-
-			/*if (bIsLocked)
-				pNode->pItemData->ucFlags |= PROJECTITEM_FLAG_ISLOCKED;*/
 			pNode->pItemData->ucFlags = (unsigned char)iFlags;
 
 			lstrcpy(pNode->pItemData->szFullPath,szFullName);
@@ -1510,11 +1507,6 @@ bool CTreeManager::LoadNodeFileData(CXmlProcessor *pXml,CProjectNode *pRootNode)
 		{
 			CItemData *pItemData = new CItemData();
 
-			/*if (bIsBootImage)
-				pItemData->ucFlags |= PROJECTITEM_FLAG_ISBOOTIMAGE;
-
-			if (bIsLocked)
-				pItemData->ucFlags |= PROJECTITEM_FLAG_ISLOCKED;*/
 			pItemData->ucFlags = (unsigned char)iFlags;
 
 			// Paths.
@@ -1549,8 +1541,7 @@ bool CTreeManager::LoadNodeFileData(CXmlProcessor *pXml,CProjectNode *pRootNode)
 			FileTimeToDosDateTime(&LocalFileTime,&pItemData->usFileDate,&pItemData->usFileTime);
 
 			// Size.
-			pXml->GetSafeElementData(_T("FileSize"),&iTemp);
-			pItemData->uiSize = iTemp;
+			pItemData->uiSize = ckcore::File::size(szFullName);
 
 			pCurrentNode->m_Files.push_back(pItemData);
 		}
@@ -1561,7 +1552,9 @@ bool CTreeManager::LoadNodeFileData(CXmlProcessor *pXml,CProjectNode *pRootNode)
 	return true;
 }
 
-bool CTreeManager::LoadNodeAudioData(CXmlProcessor *pXml,CProjectNode *pRootNode)
+// FIXME: This function actually duplicates functionallity from the project manager.
+bool CTreeManager::LoadNodeAudioData(CXmlProcessor *pXml,CProjectNode *pRootNode,
+									 int iProjectType)
 {
 	TCHAR szInternalName[MAX_PATH];
 	TCHAR szFullName[MAX_PATH];
@@ -1590,20 +1583,64 @@ bool CTreeManager::LoadNodeAudioData(CXmlProcessor *pXml,CProjectNode *pRootNode
 
 		lstrcpy(pItemData->szFullPath,szFullName);
 
-		// Size.
-		__int64 iSizeTemp = 0;
-		pXml->GetSafeElementData(_T("FileSize"),&iSizeTemp);
-		pItemData->uiSize = iSizeTemp;
-
-		// Length.
-		if (pXml->EnterElement(_T("TrackLength")))
+		// Check that the file exist.
+		if (!ckcore::File::exist(szFullName))
 		{
-			pXml->LeaveElement();
+			MessageBox(*g_pMainFrame,SlowFormatStr(lngGetString(WARNING_MISSPROJFILE),szFullName).c_str(),
+					   lngGetString(GENERAL_WARNING),MB_OK | MB_ICONWARNING);
 
-			__int64 iLengthTemp = 0;
-			pXml->GetSafeElementData(_T("TrackLength"),&iLengthTemp);
-			pItemData->GetAudioData()->uiTrackLength = iLengthTemp;
+			pXml->LeaveElement();
+			continue;
 		}
+
+		// Check file encoding.
+		bool bEncoded = false;
+		unsigned __int64 uiDuration = 0;
+
+		// If the audio file is not a Wave file, try to find a codec that can handle it.
+		if (GetAudioFormat(szFullName) != AUDIOFORMAT_WAVE)
+		{
+			// Audio file information.
+			int iNumChannels = -1;
+			int iSampleRate = -1;
+			int iBitRate = -1;
+
+			for (unsigned int i = 0; i < g_CodecManager.m_Codecs.size(); i++)
+			{
+				// We're only interested in decoders.
+				if ((g_CodecManager.m_Codecs[i]->irc_capabilities() & IRC_HAS_DECODER) == 0)
+					continue;
+
+				if (g_CodecManager.m_Codecs[i]->irc_decode_init(szFullName,iNumChannels,
+					iSampleRate,iBitRate,uiDuration))
+				{
+					// Exit the decoder immediately since we don't want to decode the file yet.
+					g_CodecManager.m_Codecs[i]->irc_decode_exit();
+					bEncoded = true;
+					break;
+				}
+			}
+
+			if (!bEncoded)
+			{
+				lngMessageBox(*g_pMainFrame,FAILURE_UNSUPAUDIO,GENERAL_ERROR,MB_OK | MB_ICONERROR);
+
+				pXml->LeaveElement();
+				continue;
+			}
+		}
+
+		// Track length.
+		if (bEncoded)
+			pItemData->GetAudioData()->uiTrackLength = uiDuration;
+		else
+			pItemData->GetAudioData()->uiTrackLength = GetAudioLength(szFullName);
+
+		// Track size.
+		if (iProjectType == PROJECTTYPE_MIXED)	// Count using the Mode-1 sector size since the spacemeter in these projects are based on that disc size.
+			pItemData->uiSize = (pItemData->GetAudioData()->uiTrackLength / 1000) * 75 * 2048;
+		else
+			pItemData->uiSize = pItemData->GetAudioData()->uiTrackLength;
 
 		// Track information.
 		if (pXml->EnterElement(_T("TrackTitle")))

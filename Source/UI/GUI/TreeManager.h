@@ -267,7 +267,7 @@ public:
 	void SaveNodeFileData(CXmlProcessor *pXml,CProjectNode *pRootNode);
 	void SaveNodeAudioData(CXmlProcessor *pXml,CProjectNode *pRootNode);
 	bool LoadNodeFileData(CXmlProcessor *pXml,CProjectNode *pRootNode);
-	bool LoadNodeAudioData(CXmlProcessor *pXml,CProjectNode *pRootNode);
+	bool LoadNodeAudioData(CXmlProcessor *pXml,CProjectNode *pRootNode,int iProjectType);
 
 	void GetPathList(ckfilesystem::FileSet &Files,CProjectNode *pRootNode,int iPathStripLen = 0);
 

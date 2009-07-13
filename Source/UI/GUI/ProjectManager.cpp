@@ -452,10 +452,15 @@ bool CProjectManager::CFileTransaction::
 		if (pTargetNode == NULL)
 			pTargetNode = g_TreeManager.GetCurrentNode();
 
-		if (g_ProjectManager.m_iViewType == PROJECTVIEWTYPE_DATA)
+		if (g_ProjectManager.m_iViewType == PROJECTVIEWTYPE_DATA &&
+			pTargetNode != g_ProjectManager.m_pMixAudioNode)
+		{
 			AddDataFile(pTargetNode,szFullPath);
+		}
 		else
+		{
 			AddAudioFile(pTargetNode,szFullPath);
+		}
 
 		g_TreeManager.Refresh();
 	}
@@ -1308,7 +1313,7 @@ bool CProjectManager::LoadProjectData(CXmlProcessor *pXml)
 			if (!pXml->EnterElement(_T("Audio")))
 				return true;
 
-			g_TreeManager.LoadNodeAudioData(pXml,g_TreeManager.GetRootNode());
+			g_TreeManager.LoadNodeAudioData(pXml,g_TreeManager.GetRootNode(),PROJECTTYPE_AUDIO);
 
 			pXml->LeaveElement();
 			break;
@@ -1324,7 +1329,7 @@ bool CProjectManager::LoadProjectData(CXmlProcessor *pXml)
 			if (!pXml->EnterElement(_T("Audio")))
 				return true;
 
-			g_TreeManager.LoadNodeAudioData(pXml,m_pMixAudioNode);
+			g_TreeManager.LoadNodeAudioData(pXml,m_pMixAudioNode,PROJECTTYPE_MIXED);
 
 			pXml->LeaveElement();
 			break;
