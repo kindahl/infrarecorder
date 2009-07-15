@@ -239,6 +239,10 @@ LRESULT CProjectPropBootPage::OnListRemove(WORD wNotifyCode,WORD wID,HWND hWndCt
 {
 	bHandled = false;
 
+	CProjectBootImage *pBootImage =
+		reinterpret_cast<CProjectBootImage *>(m_ListView.GetItemData(m_ListView.GetSelectedIndex()));
+	g_ProjectSettings.m_BootImages.remove(pBootImage);
+
 	// Deltete the item from the list view.
 	m_ListView.DeleteItem(m_ListView.GetSelectedIndex());
 
