@@ -17,6 +17,7 @@
  */
 
 #include "stdafx.h"
+#include <comdef.h>
 #include <ckcore/string.hh>
 #include "StringUtil.h"
 #include "Exception.h"
@@ -80,6 +81,26 @@ void RethrowWithPrefix(const std::exception &e,const ckcore::tchar *const szForm
 	va_end(args);
 
     const ckcore::tstring ErrMsg = GetExceptMsg(e);
+    Msg.append(ErrMsg);
+
+    throw ir_error(Msg.c_str());
+}
+
+ir_error CreateIrErrorFromHresult(const HRESULT hRes,const ckcore::tchar *const szPrefixFormatStr,...)
+{
+    ckcore::tstring Msg;
+
+	if (szPrefixFormatStr != NULL)
+	{
+		va_list args;
+		va_start(args,szPrefixFormatStr);
+
+		SlowFormatStrV(Msg,szPrefixFormatStr,args);
+
+		va_end(args);
+	}
+
+    const ckcore::tstring ErrMsg = _com_error(hRes).ErrorMessage();
     Msg.append(ErrMsg);
 
     throw ir_error(Msg.c_str());

@@ -1081,9 +1081,8 @@ LRESULT CMainFrame::OnCreate(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandle
 	}
 
 	// Initialize drag and drop.
-	OleInitialize(NULL);
-	RegisterDragDrop(m_ProjectTreeView,m_ProjectTreeView.m_pDropTarget);
-	RegisterDragDrop(m_ProjectListView,m_ProjectListView.m_pDropTarget);
+	ATLVERIFY(SUCCEEDED(RegisterDragDrop(m_ProjectTreeView,m_ProjectTreeView.m_pDropTarget)));
+	ATLVERIFY(SUCCEEDED(RegisterDragDrop(m_ProjectListView,m_ProjectListView.m_pDropTarget)));
 
 	// Translate the window.
 	Translate();
@@ -1170,9 +1169,8 @@ LRESULT CMainFrame::OnDestroy(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandl
 		EnableAutoRun(true);
 
 	// Uninitialize the shell list view drag and drop.
-	RevokeDragDrop(m_ProjectListView);
-	RevokeDragDrop(m_ProjectTreeView);
-	OleUninitialize();
+	ATLVERIFY(SUCCEEDED(RevokeDragDrop(m_ProjectListView)));
+	ATLVERIFY(SUCCEEDED(RevokeDragDrop(m_ProjectTreeView)));
 
 	// Save the configuration.
 	g_SettingsManager.Save();

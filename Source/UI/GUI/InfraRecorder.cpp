@@ -341,11 +341,11 @@ int WINAPI _tWinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPTSTR lpstrCmd
 		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 
-		HRESULT hRes = ::CoInitialize(NULL);
-		// If you are running on NT 4.0 or higher you can use the following call instead to 
-		// make the EXE free threaded. This means that calls come in on a random RPC thread.
-		//	HRESULT hRes = ::CoInitializeEx(NULL, COINIT_MULTITHREADED);
-		ATLASSERT(SUCCEEDED(hRes));
+		// We need to call OleInitialize(), instead of CoInitialize(),
+		// because the main frame will be calling RegisterDragDrop() later.
+		HRESULT hRes = OleInitialize(NULL);
+		if (!SUCCEEDED(hRes))
+			throw CreateIrErrorFromHresult(hRes,_T("Error during OleInitialize: " ));
 
 		// This resolves ATL window thunking problem when Microsoft Layer for Unicode (MSLU) is used.
 		::DefWindowProc(NULL,0,0,0L);
@@ -445,9 +445,9 @@ int WINAPI _tWinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPTSTR lpstrCmd
 				LogDlg.DestroyWindow();
 
 			_Module.Term();
-			::CoUninitialize();
+			OleUninitialize();
 
-			throw;
+			return (int)nRet;
 		}
 
 		// If someone tries to touch g_pMainFrame etc. after the object has been destroyed,
@@ -458,7 +458,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPTSTR lpstrCmd
 		g_pLogDlg = NULL;
 
 		_Module.Term();
-		::CoUninitialize();
+		OleUninitialize();
 
 		return (int)nRet;
 	}
