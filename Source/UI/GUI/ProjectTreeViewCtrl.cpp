@@ -48,6 +48,8 @@ bool CProjectTreeViewDropTarget::OnDragOver(POINTL ptCursor)
 
 bool CProjectTreeViewDropTarget::OnDrop(POINTL ptCursor,IDataObject *pDataObject)
 {
+	CWaitCursor WaitCursor;		// This displays the hourglass cursor.
+
 	TVHITTESTINFO tvHit;
 	tvHit.pt.x = ptCursor.x;
 	tvHit.pt.y = ptCursor.y;

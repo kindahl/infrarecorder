@@ -59,6 +59,8 @@ bool CProjectListViewDropTarget::OnDragOver(POINTL ptCursor)
 
 bool CProjectListViewDropTarget::OnDrop(POINTL ptCursor,IDataObject *pDataObject)
 {
+	CWaitCursor WaitCursor;		// This displays the hourglass cursor.
+
 	LVHITTESTINFO lvHit;
 	lvHit.pt.x = ptCursor.x;
 	lvHit.pt.y = ptCursor.y;
@@ -271,6 +273,8 @@ LRESULT CProjectListViewCtrl::OnKeyDown(UINT uMsg,WPARAM wParam,LPARAM lParam,BO
 
 LRESULT CProjectListViewCtrl::OnDropFiles(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
+	CWaitCursor WaitCursor;		// This displays the hourglass cursor.
+
 	HDROP hDrop = (HDROP)wParam;
 
 	POINT ptDrop;

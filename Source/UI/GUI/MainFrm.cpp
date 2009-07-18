@@ -2693,6 +2693,8 @@ LRESULT CMainFrame::OnFileExit(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHan
 
 LRESULT CMainFrame::OnAdd(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
+	CWaitCursor WaitCursor;		// This displays the hourglass cursor.
+
 	CIDA *pData = m_pShellListView->BeginGetItems(wID == ID_ADD_SELECTED);
 	if (pData == NULL)
 		return 0;
@@ -2730,6 +2732,8 @@ LRESULT CMainFrame::OnImport(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandl
 
 	if (FileDialog.DoModal() == IDOK)
 	{
+		CWaitCursor WaitCursor;		// This displays the hourglass cursor.
+
 		if (!g_ProjectManager.Import(FileDialog.m_szFileName))
 			lngMessageBox(m_hWnd,ERROR_PROJECT_IMPORT,GENERAL_ERROR,MB_OK | MB_ICONERROR);
 	}
@@ -3093,6 +3097,8 @@ LRESULT CMainFrame::OnAppAbout(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHan
 
 LRESULT CMainFrame::OnShellPaste(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
+	CWaitCursor WaitCursor;		// This displays the hourglass cursor.
+
 	if (OpenClipboard())
 	{
 		if (IsClipboardFormatAvailable(CF_HDROP))
