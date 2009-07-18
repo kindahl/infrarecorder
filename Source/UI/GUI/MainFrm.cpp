@@ -1203,7 +1203,14 @@ LRESULT CMainFrame::OnDestroy(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandl
 	if (m_hMainSmallImageList)
 		ImageList_Destroy(m_hMainSmallImageList);
 
-	bHandled = false;
+	// If we don't call PostQuitMessage() ourselves,
+	// CFrameWindowImplBase::OnDestroy() will do it for us,
+	// but then the application will end with exit code 1,
+	// and applications which terminate normally should
+	// actually end with exit code 0.
+	ATLASSERT( bHandled );  // Should have been set by WTL.
+	PostQuitMessage(0);
+
 	return 0;
 }
 
