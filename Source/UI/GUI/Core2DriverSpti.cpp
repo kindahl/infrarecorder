@@ -195,8 +195,9 @@ bool CCore2DriverSpti::Open(TCHAR cDriveLetter)
 	szDriveString[4] = cDriveLetter;
 
 	// Create the device connection.
-	m_hDevice = CreateFile(szDriveString,GENERIC_WRITE | GENERIC_READ,
-		FILE_SHARE_READ | FILE_SHARE_WRITE,NULL,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);
+	m_hDevice = CreateFile(szDriveString,GENERIC_READ | GENERIC_WRITE,
+						   FILE_SHARE_READ | FILE_SHARE_WRITE,
+						   NULL,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);
 
 	return m_hDevice != INVALID_HANDLE_VALUE;
 }

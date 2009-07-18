@@ -2832,6 +2832,9 @@ LRESULT CMainFrame::OnActionsFixatedisc(WORD wNotifyCode,WORD wID,HWND hWndCtl,B
 
 LRESULT CMainFrame::OnActionsDiscInfo(UINT uNotifyCode,int nID,CWindow wnd)
 {
+	// GetVolumeInformation() [see below] can take some time.
+	CWaitCursor WaitCursor;		// This displays the hourglass cursor.
+
 	tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(m_iDriveMenuDeviceMap[nID - MENU_DISCINFO_IDBASE]);
 
 	TCHAR szDriveLetter[4];

@@ -414,13 +414,33 @@ bool CCore2::GetProfile(CCore2Device *pDevice,unsigned short &usProfile)
 
 	ucCdb[0] = SCSI_GET_CONFIGURATION;
 	ucCdb[8] = 0x08;	// Allocation length.
-	ucCdb[9] = 0;		// UPDATE: Also changed from 9 to 10 below.
+	ucCdb[9] = 0x00;
 
 	if (!pDevice->Transport(ucCdb,10,ucBuffer,8))
 		return false;
 
 	usProfile = ucBuffer[6] << 8 | ucBuffer[7];
 	return true;
+
+	/*Uchar	cbuf[8];
+
+	register struct	scg_cmd	*scmd = scgp->scmd;
+
+	fillbytes((caddr_t)scmd, sizeof (*scmd), '\0');
+	scmd->addr = cbuf;
+	scmd->size = sizeof(cbuf);
+	scmd->flags = SCG_RECV_DATA | SCG_DISRE_ENA;
+	scmd->cdb_len = 10;
+	scmd->sense_len = 18;
+
+	ucCdb[0] = SCSI_GET_CONFIGURATION;
+	ucCdb[1] = (scg_lun(scgp) << 5) & 0x07;
+	ucCdb[2] = 0;
+	ucCdb[3] = 0;
+	ucCdb[4] = 0;
+	ucCdb[5] = 0;
+	ucCdb[7] = (8 >> 8) & 0xFF;
+	ucCdb[8] = 8 & 0xFF*/
 }
 
 bool CCore2::GetFeatureSupport(CCore2Device *pDevice,unsigned short usFeature,

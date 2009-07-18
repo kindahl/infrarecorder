@@ -197,7 +197,6 @@ bool CCopyDiscGeneralPage::InitRecorderMedia()
 	// 1 or 2 (Track at Once or Session at Once). On DVD-R media, the Test
 	// Write bit is valid only for Write Type 0 or 2 (Incremental or
 	// Disc-at-once). This is completely disregarded at the moment.
-
 	bool bSupportedProfile = false;
 	switch (usProfile)
 	{

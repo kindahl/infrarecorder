@@ -27,6 +27,8 @@ const TCHAR *g_szHelpFile = _T("InfraRecorder.chm");
 
 const TCHAR *lngGetString(unsigned int uiID)
 {
+	ATLASSERT( uiID < _countof(g_szStringTable) );
+
 	// Try to load translated string.
 	if (g_LanguageSettings.m_pLngProcessor != NULL)
 	{	

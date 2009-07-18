@@ -232,7 +232,7 @@ bool CBurnImageGeneralPage::InitRecorderMedia()
 			lsprintf(szBuffer,_T("%gx"),GetDispSpeed(usProfile,Speeds[i]));
 			m_WriteSpeedCombo.AddString(szBuffer);
 			m_WriteSpeedCombo.SetItemData(m_WriteSpeedCombo.GetCount() - 1,
-				/*Speeds[i]*/(int)GetDispSpeed(usProfile,Speeds[i]));
+				(int)GetDispSpeed(usProfile,Speeds[i]));
 			// It would be nice if one could ppass floating point numbers as
 			// write speed to cdrecord/wodim!
 		}
