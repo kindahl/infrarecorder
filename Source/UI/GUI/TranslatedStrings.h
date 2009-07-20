@@ -26,7 +26,7 @@
 
 	TRSTR(INIT_SCANBUS /* 0x0014 */, _T("Scanning SCSI/IDE bus..."))
 	TRSTR(INIT_LOADCAPABILITIES /* 0x0015 */, _T("Loading device capabilities..."))
-	TRSTR(INIT_LOADINFOEX /* 0x0016 */, _T("Loading extended device information..."))
+	TRSTR(STRINGTABLE_PLACEHOLDER0 /* 0x0016 */, _T(""))
 	TRSTR(INIT_FOUNDDEVICES /* 0x0017 */, _T("InfraRecorder has detected changes in your hardware configuration. Would you like to update your device configuration now?"))
 	TRSTR(INIT_DEVICECD /* 0x0018 */, _T("Initializing device..."))
 	TRSTR(INIT_TRACK /* 0x0019 */, _T("Loading information from track %d."))
@@ -356,7 +356,7 @@
 	TRSTR(TOOLBAR_DEVICES /* 0x0127 */,		   _T("Devices"))
 	TRSTR(TOOLBAR_HELP /* 0x0128 */,			   _T("Help"))
 	TRSTR(TOOLBAR_ABOUT /* 0x0129 */,			   _T("About"))
-	TRSTR(ERROR_OPENDEVICE /* 0x012a */,		   _T("Unable to open device, can not continue."))
+	TRSTR(STRINGTABLE_PLACEHOLDER4 /* 0x012a */,		   _T(""))
 	TRSTR(MEDIA_INSERTBLANK /* 0x012b */,		   _T("(please insert a blank disc)"))
 	TRSTR(INFO_INSERTBLANK /* 0x012c */,		   _T("Please insert the blank disc which should be recorded."))
 	TRSTR(INFO_INSERTSOURCE /* 0x012d */,		   _T("Please insert the source disc that should be copied."))

@@ -17,8 +17,8 @@
  */
 
 #pragma once
+#include <ckmmc/device.hh>
 #include "DiscGeneralPage.h"
-#include "Core2Device.h"
 
 class CDiscDlg : public CPropertySheetImpl<CDiscDlg>
 {
@@ -28,7 +28,7 @@ private:
 	CDiscGeneralPage m_GeneralPage;
 
 public:
-	CDiscDlg(const TCHAR *szTitle,const TCHAR *szDiscLabel,CCore2DeviceAddress *pDeviceAddress);
+	CDiscDlg(const TCHAR *szTitle,const TCHAR *szDiscLabel,ckmmc::Device &Device);
 	~CDiscDlg();
 
 	BEGIN_MSG_MAP(CDiscDlg)

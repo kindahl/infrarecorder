@@ -29,7 +29,7 @@ private:
 	CDeviceAdvancedPage m_AdvancedPage;
 
 public:
-	CDeviceDlg(UINT_PTR uiDeviceIndex,const TCHAR *szTitle);
+	CDeviceDlg(ckmmc::Device &Device,const TCHAR *szTitle);
 	~CDeviceDlg();
 
 	BEGIN_MSG_MAP(CDeviceDlg)

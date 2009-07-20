@@ -16,8 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <ckmmc/devicemanager.hh>
 #include "../../Common/CodecManager.h"
 
 void ProcessMessages();
 
 extern CCodecManager g_CodecManager;
+extern ckmmc::DeviceManager g_DeviceManager;

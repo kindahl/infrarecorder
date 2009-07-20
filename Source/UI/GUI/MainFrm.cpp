@@ -39,11 +39,10 @@
 #include "DiscDlg.h"
 #include "Scsi.h"
 #include "ImportSessionDlg.h"
-#include "DriveLetterDlg.h"
-#include "Core2DriverAspi.h"
 #include "Core2Stream.h"
 #include "ProjectDropSource.h"
 #include "FilesDataObject.h"
+#include "DeviceUtil.h"
 #include "MainFrm.h"
 
 CMainFrame::CMainFrame() : m_pShellListView(NULL),m_bWelcomePane(false)
@@ -862,22 +861,20 @@ void CMainFrame::FillDriveMenus()
 		RemoveMenu(hEjectMenu,i,MF_BYPOSITION);
 	}
 
-	if (g_DeviceManager.GetDeviceCount() > 0)
+	if (g_DeviceManager.devices().size() > 0)
 	{
-		for (unsigned int i = 0; i < g_DeviceManager.GetDeviceCount(); i++)
+		std::vector<ckmmc::Device *>::const_iterator it;
+		for (it = g_DeviceManager.devices().begin(); it !=
+			g_DeviceManager.devices().end(); it++)
 		{
-			if (!g_DeviceManager.IsDeviceReader(i))
-				continue;
+			ckmmc::Device *pDevice = *it;
 
-			tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(i);
+			ckcore::tstring DeviceName = NDeviceUtil::GetDeviceName(*pDevice);
 
-			TCHAR szDeviceName[128];
-			g_DeviceManager.GetDeviceName(pDeviceInfo,szDeviceName);
+			AppendMenu(hDiscMenu,MF_STRING,MENU_DISCINFO_IDBASE + iMenuIndex,DeviceName.c_str());
+			AppendMenu(hEjectMenu,MF_STRING,MENU_EJECTDISC_IDBASE + iMenuIndex,DeviceName.c_str());
 
-			AppendMenu(hDiscMenu,MF_STRING,MENU_DISCINFO_IDBASE + iMenuIndex,szDeviceName);
-			AppendMenu(hEjectMenu,MF_STRING,MENU_EJECTDISC_IDBASE + iMenuIndex,szDeviceName);
-
-			m_iDriveMenuDeviceMap[iMenuIndex] = i;
+			m_DriveMenuDeviceMap[iMenuIndex] = pDevice;
 			
 			// Increase the menu index counter.
 			iMenuIndex++;
@@ -1206,7 +1203,7 @@ LRESULT CMainFrame::OnDestroy(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandl
 	// but then the application will end with exit code 1,
 	// and applications which terminate normally should
 	// actually end with exit code 0.
-	ATLASSERT( bHandled );  // Should have been set by WTL.
+	ATLASSERT(bHandled);  // Should have been set by WTL.
 	PostQuitMessage(0);
 
 	return 0;
@@ -2844,10 +2841,10 @@ LRESULT CMainFrame::OnActionsDiscInfo(UINT uNotifyCode,int nID,CWindow wnd)
 	// GetVolumeInformation() [see below] can take some time.
 	CWaitCursor WaitCursor;		// This displays the hourglass cursor.
 
-	tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(m_iDriveMenuDeviceMap[nID - MENU_DISCINFO_IDBASE]);
+	ckmmc::Device *pDevice = m_DriveMenuDeviceMap[nID - MENU_DISCINFO_IDBASE];
 
 	TCHAR szDriveLetter[4];
-	szDriveLetter[0] = pDeviceInfo->Address.m_cDriveLetter;
+	szDriveLetter[0] = pDevice->address().device_[0];
 	szDriveLetter[1] = ':';
 	szDriveLetter[2] = '\\';
 	szDriveLetter[3] = '\0';
@@ -2874,7 +2871,7 @@ LRESULT CMainFrame::OnActionsDiscInfo(UINT uNotifyCode,int nID,CWindow wnd)
 		szTitle[lstrlen(szTitle) - 2] = szDriveLetter[0];
 	}
 
-	CDiscDlg DiscDlg(szTitle,szDiscLabel,&pDeviceInfo->Address);
+	CDiscDlg DiscDlg(szTitle,szDiscLabel,*pDevice);
 	DiscDlg.DoModal();
 
 	return 0;
@@ -2923,25 +2920,19 @@ LRESULT CMainFrame::OnActionsImportsession(WORD wNotifyCode,WORD wID,HWND hWndCt
 		}
 
 		// Import the new session.
-		tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(ImportSessionDlg.m_uiDeviceIndex);
-
-		CCore2Device Device;
-		if (!Device.Open(&pDeviceInfo->Address))
-		{
-			g_pLogDlg->print_line(_T("  Error: Failed to open device when trying to import session."));
-			return 0;
-		}
+		ckmmc::Device *pDevice = ImportSessionDlg.m_pSelDevice;
+		ATLASSERT(pDevice != NULL);
 		
 		CCore2Info Info;
 		CCore2TrackInfo TrackInfo;
-		if (!Info.ReadTrackInformation(&Device,CCore2Info::TIT_TRACK,0xFF,&TrackInfo))
+		if (!Info.ReadTrackInformation(*pDevice,CCore2Info::TIT_TRACK,0xFF,&TrackInfo))
 		{
 			g_pLogDlg->print_line(_T("  Error: Failed to read track information when trying to import session."));
 			return 0;
 		}
 
 		// Import file tree.
-		CCore2InStream InStream(g_pLogDlg,&Device,0,
+		CCore2InStream InStream(g_pLogDlg,*pDevice,0,
 			ImportSessionDlg.m_pSelTrackData->m_ulTrackAddr + ImportSessionDlg.m_pSelTrackData->m_ulTrackLen);
 
 		ckfilesystem::Iso9660Reader Reader(*g_pLogDlg);
@@ -2959,7 +2950,7 @@ LRESULT CMainFrame::OnActionsImportsession(WORD wNotifyCode,WORD wID,HWND hWndCt
 		g_ProjectSettings.m_uiImportTrackAddr = ImportSessionDlg.m_pSelTrackData->m_ulTrackAddr;
 		g_ProjectSettings.m_uiImportTrackLen = ImportSessionDlg.m_pSelTrackData->m_ulTrackLen;
 		g_ProjectSettings.m_uiNextWritableAddr = TrackInfo.m_ulNextWritableAddr;
-		g_ProjectSettings.m_uiDeviceIndex = ImportSessionDlg.m_uiDeviceIndex;
+		g_ProjectSettings.m_pDevice = ImportSessionDlg.m_pSelDevice;
 		g_ProjectSettings.m_iIsoFormat = 1;	// Mode 2 (multi-session)
 
 		g_pLogDlg->print_line(_T("  Imported session: %I64d-%I64d, %I64d."),
@@ -2973,9 +2964,9 @@ LRESULT CMainFrame::OnActionsImportsession(WORD wNotifyCode,WORD wID,HWND hWndCt
 
 LRESULT CMainFrame::OnActionsEjectDisc(UINT uNotifyCode,int nID,CWindow wnd)
 {
-	tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(m_iDriveMenuDeviceMap[nID - MENU_EJECTDISC_IDBASE]);
+	ckmmc::Device *pDevice = m_DriveMenuDeviceMap[nID - MENU_EJECTDISC_IDBASE];
 
-	if (!g_Core.EjectDisc(pDeviceInfo,false))
+	if (!g_Core.EjectDisc(*pDevice,false))
 		lngMessageBox(HWND_DESKTOP,FAILURE_CDRTOOLS,GENERAL_ERROR,MB_OK | MB_ICONERROR);
 
 	return 0;

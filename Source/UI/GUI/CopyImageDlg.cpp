@@ -25,13 +25,10 @@
 #include "Scsi.h"
 
 CCopyImageDlg::CCopyImageDlg(bool bAppMode) :
+	m_bCentered(false),m_bAppMode(bAppMode),m_pSrcDevice(NULL),
 	CPropertySheetImpl<CCopyImageDlg>(lngGetString(COPYIMAGE_TITLE),0,NULL),
 	m_ReadPage(true,true)
 {
-	m_bCentered = false;
-	m_bAppMode = bAppMode;
-	m_uiSourceDeviceIndex = 0;
-
 	m_psh.dwFlags |= PSH_NOAPPLYNOW | PSH_HASHELP | PSH_NOCONTEXTHELP;
 
 	AddPage(m_GeneralPage);
@@ -67,18 +64,18 @@ LRESULT CCopyImageDlg::OnShowWindow(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &
 	return 0;
 }
 
-LRESULT CCopyImageDlg::OnSetDeviceIndex(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
+LRESULT CCopyImageDlg::OnSetDevice(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
-	m_uiSourceDeviceIndex = (unsigned int)lParam;
+	m_pSrcDevice = reinterpret_cast<ckmmc::Device *>(lParam);
 
 	bHandled = TRUE;
 	return 0;
 }
 
-LRESULT CCopyImageDlg::OnGetDeviceIndex(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
+LRESULT CCopyImageDlg::OnGetDevice(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
 	bHandled = TRUE;
-	return m_uiSourceDeviceIndex;
+	return reinterpret_cast<LRESULT>(m_pSrcDevice);
 }
 
 LRESULT CCopyImageDlg::OnCheckMediaBroadcast(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)

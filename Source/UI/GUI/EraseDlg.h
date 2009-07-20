@@ -17,8 +17,8 @@
  */
 
 #pragma once
+#include <ckmmc/device.hh>
 #include "resource.h"
-#include "DeviceManager.h"
 #include "Core2.h"
 
 class CEraseDlg : public CDialogImpl<CEraseDlg>
@@ -32,7 +32,6 @@ private:
 	CComboBox m_RecorderCombo;
 	CComboBox m_MethodCombo;
 	CComboBox m_SpeedCombo;
-	CCore2Device m_CurDevice;
 
 	enum
 	{
@@ -53,8 +52,6 @@ public:
 
 	BEGIN_MSG_MAP(CEraseDlg)
 		MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
-		MESSAGE_HANDLER(WM_DESTROY,OnDestroy)
-		//MESSAGE_HANDLER(WM_DEVICECHANGE,OnDeviceChange)
 		MESSAGE_HANDLER(WM_TIMER,OnTimer)
 		COMMAND_HANDLER(IDC_RECORDERCOMBO,CBN_SELCHANGE,OnRecorderChange)
 
@@ -65,8 +62,6 @@ public:
 	END_MSG_MAP()
 
 	LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnDestroy(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	//LRESULT OnDeviceChange(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 	LRESULT OnTimer(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 	LRESULT OnRecorderChange(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
 

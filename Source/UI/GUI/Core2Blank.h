@@ -17,7 +17,7 @@
  */
 
 #pragma once
-#include "Core2Device.h"
+#include <ckmmc/device.hh>
 #include "AdvancedProgress.h"
 
 class CCore2Blank
@@ -26,6 +26,6 @@ public:
 	CCore2Blank();
 	~CCore2Blank();
 
-	bool Blank(CCore2Device *pDevice,CAdvancedProgress *pProgress,
+	bool Blank(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 		int iMethod,bool bForce,bool bSimulate);
 };

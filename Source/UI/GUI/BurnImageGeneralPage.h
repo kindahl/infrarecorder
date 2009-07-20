@@ -35,7 +35,6 @@ private:
 	CComboBox m_WriteSpeedCombo;
 	CComboBox m_WriteMethodCombo;
 	CComboBox m_NumCopiesCombo;
-	CCore2Device m_CurDevice;
 
 	enum
 	{
@@ -60,7 +59,6 @@ public:
 
 	BEGIN_MSG_MAP(CBurnImageGeneralPage)
 		MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
-		MESSAGE_HANDLER(WM_DESTROY,OnDestroy)
 		MESSAGE_HANDLER(WM_TIMER,OnTimer)
 		COMMAND_HANDLER(IDC_RECORDERCOMBO,CBN_SELCHANGE,OnRecorderChange)
 		COMMAND_HANDLER(IDC_REFRESHBUTTON,BN_CLICKED,OnRefresh)
@@ -70,7 +68,6 @@ public:
 	END_MSG_MAP()
 
 	LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnDestroy(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 	LRESULT OnTimer(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 	LRESULT OnRecorderChange(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
 	LRESULT OnRefresh(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);

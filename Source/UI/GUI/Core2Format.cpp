@@ -32,7 +32,7 @@ CCore2Format::~CCore2Format()
 {
 }
 
-bool CCore2Format::WaitBkgndFormat(CCore2Device *pDevice,CAdvancedProgress *pProgress)
+bool CCore2Format::WaitBkgndFormat(ckmmc::Device &Device,CAdvancedProgress *pProgress)
 {
 	// Initialize buffers.
 	unsigned char ucCdb[16];
@@ -57,13 +57,17 @@ bool CCore2Format::WaitBkgndFormat(CCore2Device *pDevice,CAdvancedProgress *pPro
 			{
 				// It's safe to abort the format process at this stage. We just need to
 				// close the current track.
-				g_Core2.CloseTrackSession(pDevice,0,0,true);
+				g_Core2.CloseTrackSession(Device,0,0,true);
 				return false;
 			}
 
 			unsigned char ucResult;
-			if (!pDevice->TransportWithSense(ucCdb,6,NULL,0,ucSense,ucResult))
+			if (!Device.transport_with_sense(ucCdb,6,NULL,0,
+											 ckmmc::Device::ckTM_READ,ucSense,
+											 ucResult))
+			{
 				return false;
+			}
 
 			// Check if we're done.
 			if (ucResult == SCSISTAT_GOOD)
@@ -101,7 +105,7 @@ bool CCore2Format::WaitBkgndFormat(CCore2Device *pDevice,CAdvancedProgress *pPro
 	return true;
 }
 
-bool CCore2Format::FormatUnit(CCore2Device *pDevice,CAdvancedProgress *pProgress,bool bFull)
+bool CCore2Format::FormatUnit(ckmmc::Device &Device,CAdvancedProgress *pProgress,bool bFull)
 {
 	g_pLogDlg->print_line(_T("CCore2Format::FormatUnit"));
 
@@ -118,7 +122,7 @@ bool CCore2Format::FormatUnit(CCore2Device *pDevice,CAdvancedProgress *pProgress
 	ucCdb[4] = 192;
 	ucCdb[5] = 0;
 
-	if (!pDevice->Transport(ucCdb,6,ucBuffer,192))
+	if (!Device.transport(ucCdb,6,ucBuffer,192,ckmmc::Device::ckTM_READ))
 		return false;
 
 	// Make sure the device type is a CDROM.
@@ -130,7 +134,7 @@ bool CCore2Format::FormatUnit(CCore2Device *pDevice,CAdvancedProgress *pProgress
 	ucCdb[0] = SCSI_GET_CONFIGURATION;
 	ucCdb[8] = 0x08;
 
-	if (!pDevice->Transport(ucCdb,9,ucBuffer,192))
+	if (!Device.transport(ucCdb,9,ucBuffer,192,ckmmc::Device::ckTM_READ))
 		return false;
 
 	unsigned short usProfile = ucBuffer[6] << 8 | ucBuffer[7];
@@ -150,7 +154,7 @@ bool CCore2Format::FormatUnit(CCore2Device *pDevice,CAdvancedProgress *pProgress
 	ucCdb[8] = 0x04;
 	ucCdb[9] = 0x00;
 
-	if (!pDevice->Transport(ucCdb,10,ucBuffer,192))
+	if (!Device.transport(ucCdb,10,ucBuffer,192,ckmmc::Device::ckTM_READ))
 		return false;
 
 	unsigned char ucCapListLen = ucBuffer[3];
@@ -169,8 +173,11 @@ bool CCore2Format::FormatUnit(CCore2Device *pDevice,CAdvancedProgress *pProgress
 	ucCdb[8] = (ucCapListLen + 0x04) & 0xFF;
 	ucCdb[9] = 0x00;
 
-	if (!pDevice->Transport(ucCdb,10,ucBuffer,ucCapListLen + 0x04))
+	if (!Device.transport(ucCdb,10,ucBuffer,ucCapListLen + 0x04,
+						  ckmmc::Device::ckTM_READ))
+	{
 		return false;
+	}
 
 	// Locate the appropriate formattable capacity descriptor.
 	unsigned int uiFmtDescOffset = 0;
@@ -224,7 +231,7 @@ bool CCore2Format::FormatUnit(CCore2Device *pDevice,CAdvancedProgress *pProgress
 
 	// Handle any unhandled events.
 	unsigned char ucEvents;
-	if (g_Core2.HandleEvents(pDevice,pProgress,ucEvents))
+	if (g_Core2.HandleEvents(Device,pProgress,ucEvents))
 	{
 		g_pLogDlg->print_line(_T("  Handled events: 0x%.2X"),ucEvents);
 	}
@@ -252,13 +259,14 @@ bool CCore2Format::FormatUnit(CCore2Device *pDevice,CAdvancedProgress *pProgress
 		lngGetString(WRITEMODE_REAL));
 	pProgress->set_status(lngGetString(STATUS_FORMAT));
 
-	if (!pDevice->Transport(ucCdb,6,ucBuffer + uiFmtDescOffset,12,CCore2Device::DATAMODE_WRITE))
+	if (!Device.transport(ucCdb,6,ucBuffer + uiFmtDescOffset,12,
+						  ckmmc::Device::ckTM_WRITE))
 	{
 		pProgress->notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_FORMAT));
 		return false;
 	}
 
-	if (!g_Core2.WaitForUnit(pDevice,pProgress))
+	if (!g_Core2.WaitForUnit(Device,pProgress))
 		return false;
 
 	// Stop the background format process (DVD+RW only).
@@ -270,17 +278,17 @@ bool CCore2Format::FormatUnit(CCore2Device *pDevice,CAdvancedProgress *pProgress
 			pProgress->AllowCancel(true);
 			pProgress->set_status(lngGetString(STATUS_FORMATBKGND));
 
-			if (!WaitBkgndFormat(pDevice,pProgress))
+			if (!WaitBkgndFormat(Device,pProgress))
 				return false;
 		}
 
 		// Stop the background format.
 		pProgress->set_status(lngGetString(STATUS_CLOSETRACK));
 
-		if (!g_Core2.CloseTrackSession(pDevice,0x00,0x00,true))
+		if (!g_Core2.CloseTrackSession(Device,0x00,0x00,true))
 			pProgress->notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_STOPBKGNDFORMAT));
 
-		if (!g_Core2.WaitForUnit(pDevice,pProgress))
+		if (!g_Core2.WaitForUnit(Device,pProgress))
 			return false;
 	}
 

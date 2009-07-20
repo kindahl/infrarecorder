@@ -17,8 +17,7 @@
  */
 
 #include "stdafx.h"
-#include "BurnImageGeneralPage.h"
-#include "DeviceManager.h"
+#include "InfraRecorder.h"
 #include "CtrlMessages.h"
 #include "cdrtoolsParseStrings.h"
 #include "../../Common/StringUtil.h"
@@ -27,9 +26,11 @@
 #include "LangUtil.h"
 #include "InfoDlg.h"
 #include "TransUtil.h"
+#include "DeviceUtil.h"
 #include "Core2Util.h"
 #include "WinVer.h"
 #include "VisualStyles.h"
+#include "BurnImageGeneralPage.h"
 
 CBurnImageGeneralPage::CBurnImageGeneralPage(bool bImageHasTOC,bool bEnableOnFly,
 											 bool bEnableVerify)
@@ -143,10 +144,6 @@ bool CBurnImageGeneralPage::Translate()
 
 bool CBurnImageGeneralPage::InitRecorderMedia()
 {
-	// Make sure that the device is open.
-	if (!m_CurDevice.IsOpen())
-		return false;
-
 	if (m_uiParentTitleLen == 0)
 		m_uiParentTitleLen = GetParentWindow(this).GetWindowTextLength();
 
@@ -154,12 +151,13 @@ bool CBurnImageGeneralPage::InitRecorderMedia()
 	GetParentWindow(this).GetWindowText(szBuffer,m_uiParentTitleLen + 1);
 
 	// Open the device.
-	UINT_PTR uiDeviceIndex = m_RecorderCombo.GetItemData(m_RecorderCombo.GetCurSel());
-	tDeviceCap *pDeviceCap = g_DeviceManager.GetDeviceCap(uiDeviceIndex);
+	ckmmc::Device *pDevice =
+		reinterpret_cast<ckmmc::Device *>(m_RecorderCombo.GetItemData(
+										  m_RecorderCombo.GetCurSel()));
 
 	// Get current profile.
 	unsigned short usProfile = PROFILE_NONE;
-	if (!g_Core2.GetProfile(&m_CurDevice,usProfile))
+	if (!g_Core2.GetProfile(*pDevice,usProfile))
 		return false;
 
 	// Note: On CD-R/RW media the Test Write bit is valid only for Write Type
@@ -198,7 +196,7 @@ bool CBurnImageGeneralPage::InitRecorderMedia()
 			bSupportedProfile = true;
 
 			// Enable simulation if supported by recorder.
-			::EnableWindow(GetDlgItem(IDC_SIMULATECHECK),pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_TESTWRITING);
+			::EnableWindow(GetDlgItem(IDC_SIMULATECHECK),pDevice->support(ckmmc::Device::ckDEVICE_TEST_WRITE));
 			break;
 
 		case PROFILE_NONE:
@@ -224,7 +222,7 @@ bool CBurnImageGeneralPage::InitRecorderMedia()
 
 		// Other supported write speeds.
 		std::vector<unsigned int> Speeds;
-		if (!g_Core2.GetMediaWriteSpeeds(&m_CurDevice,Speeds))
+		if (!g_Core2.GetMediaWriteSpeeds(*pDevice,Speeds))
 			return false;
 
 		for (unsigned int i = 0; i < Speeds.size(); i++)
@@ -239,7 +237,7 @@ bool CBurnImageGeneralPage::InitRecorderMedia()
 
 		// Write modes.
 		unsigned char ucWriteModes = 0;
-		g_Core2.GetMediaWriteModes(&m_CurDevice,ucWriteModes);
+		g_Core2.GetMediaWriteModes(*pDevice,ucWriteModes);
 
 		if (ucWriteModes == 0)
 			return false;
@@ -272,6 +270,10 @@ bool CBurnImageGeneralPage::InitRecorderMedia()
 
 void CBurnImageGeneralPage::SuggestWriteMethod()
 {
+	ckmmc::Device *pDevice =
+		reinterpret_cast<ckmmc::Device *>(m_RecorderCombo.GetItemData(
+										  m_RecorderCombo.GetCurSel()));
+
 	// Suggest the best raw write method if the image has an associated TOC file.
 	if (m_bImageHasTOC)
 	{
@@ -280,46 +282,43 @@ void CBurnImageGeneralPage::SuggestWriteMethod()
 		// write modes are supported a warning message is displayed.
 		int uiStrID = -1;
 
-		if (m_CurDevice.IsOpen())
+		unsigned char ucWriteModes = 0;
+		g_Core2.GetMediaWriteModes(*pDevice,ucWriteModes);
+		if (ucWriteModes & CCore2::WRITEMODE_RAW96R)
+			uiStrID = WRITEMODE_RAW96R;
+		else if (ucWriteModes & CCore2::WRITEMODE_RAW16)
+			uiStrID = WRITEMODE_RAW16;
+
+		const TCHAR *szStr = lngGetString(uiStrID);
+		if (uiStrID != -1)
 		{
-			unsigned char ucWriteModes = 0;
-			g_Core2.GetMediaWriteModes(&m_CurDevice,ucWriteModes);
-			if (ucWriteModes & CCore2::WRITEMODE_RAW96R)
-				uiStrID = WRITEMODE_RAW96R;
-			else if (ucWriteModes & CCore2::WRITEMODE_RAW16)
-				uiStrID = WRITEMODE_RAW16;
+			TCHAR szItemText[128];
 
-			const TCHAR *szStr = lngGetString(uiStrID);
-			if (uiStrID != -1)
+			for (int i = 0; i < m_WriteMethodCombo.GetCount(); i++)
 			{
-				TCHAR szItemText[128];
+				if (m_WriteMethodCombo.GetLBTextLen(i) >= (sizeof(szItemText) / sizeof(TCHAR)))
+					continue;
 
-				for (int i = 0; i < m_WriteMethodCombo.GetCount(); i++)
+				m_WriteMethodCombo.GetLBText(i,szItemText);
+				if (!lstrcmp(szItemText,szStr))
 				{
-					if (m_WriteMethodCombo.GetLBTextLen(i) >= (sizeof(szItemText) / sizeof(TCHAR)))
-						continue;
-
-					m_WriteMethodCombo.GetLBText(i,szItemText);
-					if (!lstrcmp(szItemText,szStr))
-					{
-						m_WriteMethodCombo.SetCurSel(i);
-						break;
-					}
+					m_WriteMethodCombo.SetCurSel(i);
+					break;
 				}
 			}
-			else
-			{
-				// No good raw writing mode found.
-				MessageBox(lngGetString(WARNING_CLONEWRITEMETHOD),lngGetString(GENERAL_WARNING),
-					MB_OK | MB_ICONWARNING);
-			}
+		}
+		else
+		{
+			// No good raw writing mode found.
+			MessageBox(lngGetString(WARNING_CLONEWRITEMETHOD),lngGetString(GENERAL_WARNING),
+				MB_OK | MB_ICONWARNING);
 		}
 	}
 	else if (g_ProjectSettings.m_bMultiSession)
 	{
 		// Suggest the TAO write mode for multi-session discs if available.
 		unsigned char ucWriteModes = 0;
-		g_Core2.GetMediaWriteModes(&m_CurDevice,ucWriteModes);
+		g_Core2.GetMediaWriteModes(*pDevice,ucWriteModes);
 		if (ucWriteModes & CCore2::WRITEMODE_TAO)
 		{
 			const TCHAR *szStr = lngGetString(WRITEMODE_TAO);
@@ -429,7 +428,9 @@ bool CBurnImageGeneralPage::OnApply()
 	g_BurnImageSettings.m_bFixate = IsDlgButtonChecked(IDC_FIXATECHECK) == TRUE;
 
 	// For internal use only.
-	g_BurnImageSettings.m_iRecorder = m_RecorderCombo.GetItemData(m_RecorderCombo.GetCurSel());
+	g_BurnImageSettings.m_pRecorder =
+		reinterpret_cast<ckmmc::Device *>(m_RecorderCombo.GetItemData(
+										  m_RecorderCombo.GetCurSel()));
 	g_BurnImageSettings.m_uiWriteSpeed = m_WriteSpeedCombo.GetItemData(m_WriteSpeedCombo.GetCurSel());
 
 	TCHAR szBuffer[32];
@@ -483,19 +484,15 @@ LRESULT CBurnImageGeneralPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lPara
 	SendMessage(GetDlgItem(IDC_ICONSTATIC),STM_SETICON,(WPARAM)m_hIcon,0L);
 
 	// Recorder combo box.
-	for (unsigned int i = 0; i < g_DeviceManager.GetDeviceCount(); i++)
+	std::vector<ckmmc::Device *>::const_iterator it;
+	for (it = g_DeviceManager.devices().begin(); it !=
+		g_DeviceManager.devices().end(); it++)
 	{
-		// We only want to add recorder to the list.
-		if (!g_DeviceManager.IsDeviceRecorder(i))
-			continue;
+		ckmmc::Device *pDevice = *it;
 
-		tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(i);
-
-		TCHAR szDeviceName[128];
-		g_DeviceManager.GetDeviceName(pDeviceInfo,szDeviceName);
-
-		m_RecorderCombo.AddString(szDeviceName);
-		m_RecorderCombo.SetItemData(m_RecorderCombo.GetCount() - 1,i);
+		m_RecorderCombo.AddString(NDeviceUtil::GetDeviceName(*pDevice).c_str());
+		m_RecorderCombo.SetItemData(m_RecorderCombo.GetCount() - 1,
+									reinterpret_cast<DWORD_PTR>(pDevice));
 	}
 
 	if (m_RecorderCombo.GetCount() == 0)
@@ -564,36 +561,26 @@ LRESULT CBurnImageGeneralPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lPara
 	return TRUE;
 }
 
-LRESULT CBurnImageGeneralPage::OnDestroy(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
-{
-	m_CurDevice.Close();
-	return TRUE;
-}
-
 LRESULT CBurnImageGeneralPage::OnTimer(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
-	if (m_CurDevice.IsOpen())
-	{
-		// Check for media change.
-		if (g_Core2.CheckMediaChange(&m_CurDevice))
-			CheckRecorderMedia();
-	}
+	ckmmc::Device *pDevice =
+		reinterpret_cast<ckmmc::Device *>(m_RecorderCombo.GetItemData(
+										  m_RecorderCombo.GetCurSel()));
+
+	// Check for media change.
+	if (g_Core2.CheckMediaChange(*pDevice))
+		CheckRecorderMedia();
 
 	return TRUE;
 }
 
 LRESULT CBurnImageGeneralPage::OnRecorderChange(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
-	UINT_PTR uiDeviceIndex = m_RecorderCombo.GetItemData(m_RecorderCombo.GetCurSel());
-	::SendMessage(GetParent(),WM_SETDEVICEINDEX,0,(LPARAM)uiDeviceIndex);
+	ckmmc::Device *pDevice =
+		reinterpret_cast<ckmmc::Device *>(m_RecorderCombo.GetItemData(
+										  m_RecorderCombo.GetCurSel()));
 
-	tDeviceCap *pDeviceCap = g_DeviceManager.GetDeviceCap(uiDeviceIndex);
-	tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(uiDeviceIndex);
-
-	// Open the new device.
-	m_CurDevice.Close();
-	if (!m_CurDevice.Open(&pDeviceInfo->Address))
-		return 0;
+	::SendMessage(GetParent(),WM_SETDEVICE,0,reinterpret_cast<LPARAM>(pDevice));
 
 	// Kill any already running timers.
 	::KillTimer(m_hWnd,TIMER_ID);
@@ -603,7 +590,7 @@ LRESULT CBurnImageGeneralPage::OnRecorderChange(WORD wNotifyCode,WORD wID,HWND h
 	CheckRecorderMedia();
 
 	// General.
-	::EnableWindow(GetDlgItem(IDC_BUPCHECK),pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_BUFRECORDING);
+	::EnableWindow(GetDlgItem(IDC_BUPCHECK),pDevice->support(ckmmc::Device::ckDEVICE_BUP));
 
 	bHandled = false;
 	return 0;

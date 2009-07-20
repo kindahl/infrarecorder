@@ -18,7 +18,7 @@
 
 #pragma once
 #include <vector>
-#include "Core2Device.h"
+#include <ckmmc/device.hh>
 
 class CCore2TrackInfo
 {
@@ -134,18 +134,18 @@ public:
 	~CCore2Info();
 
 	// Closely related to SCSI MMC functions.
-	bool ReadCapacity(CCore2Device *pDevice,unsigned long &ulBlockAddress,
+	bool ReadCapacity(ckmmc::Device &Device,unsigned long &ulBlockAddress,
 		unsigned long &ulBlockLength);
-	bool ReadTrackInformation(CCore2Device *pDevice,eTrackInfoType InfoType,
+	bool ReadTrackInformation(ckmmc::Device &Device,eTrackInfoType InfoType,
 		unsigned long ulTrackAddr,CCore2TrackInfo *pTrackInfo);
-	bool ReadDiscInformation(CCore2Device *pDevice,CCore2DiscInfo *pDiscInfo);
-	bool ReadPhysFmtInfo(CCore2Device *pDevice,CCore2PhysFmtInfo *pPhysInfo);
-	bool ReadTOC(CCore2Device *pDevice,unsigned char &ucFirstTrackNumber,
+	bool ReadDiscInformation(ckmmc::Device &Device,CCore2DiscInfo *pDiscInfo);
+	bool ReadPhysFmtInfo(ckmmc::Device &Device,CCore2PhysFmtInfo *pPhysInfo);
+	bool ReadTOC(ckmmc::Device &Device,unsigned char &ucFirstTrackNumber,
 		unsigned char &ucLastTrackNumber,std::vector<CCore2TOCTrackDesc> &Tracks);
-	bool ReadSI(CCore2Device *pDevice,unsigned char &ucFirstSessNumber,
+	bool ReadSI(ckmmc::Device &Device,unsigned char &ucFirstSessNumber,
 		unsigned char &ucLastSessNumber,unsigned long &ulLastSessFirstTrackPos);
 
-	bool GetTotalDiscCapacity(CCore2Device *pDevice,unsigned __int64 &uiUsedBytes,
+	bool GetTotalDiscCapacity(ckmmc::Device &Device,unsigned __int64 &uiUsedBytes,
 		unsigned __int64 &uiFreeBytes);
-	bool GetDiscDVDRegion(CCore2Device *pDevice,unsigned char &ucRegion);
+	bool GetDiscDVDRegion(ckmmc::Device &Device,unsigned char &ucRegion);
 };

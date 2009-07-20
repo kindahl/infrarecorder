@@ -17,10 +17,12 @@
  */
 
 #include "stdafx.h"
+#include "InfraRecorder.h"
 #include "EraseDlg.h"
 #include "StringTable.h"
 #include "Settings.h"
 #include "LangUtil.h"
+#include "DeviceUtil.h"
 #include "Core2Util.h"
 #include "WinVer.h"
 #include "VisualStyles.h"
@@ -84,10 +86,6 @@ bool CEraseDlg::Translate()
 
 bool CEraseDlg::InitRecorderMedia()
 {
-	// Make sure that the current device has been successfully opened.
-	if (!m_CurDevice.IsOpen())
-		return false;
-
 	if (m_uiRecorderTextLen == 0)
 		m_uiRecorderTextLen = ::GetWindowTextLength(GetDlgItem(IDC_RECORDERSTATIC));
 
@@ -97,16 +95,14 @@ bool CEraseDlg::InitRecorderMedia()
 	// Empty the method combo box.
 	m_MethodCombo.ResetContent();
 
-	// Open the device.
-	UINT_PTR uiDeviceIndex = m_RecorderCombo.GetItemData(m_RecorderCombo.GetCurSel());
-	tDeviceCap *pDeviceCap = g_DeviceManager.GetDeviceCap(uiDeviceIndex);
+	ckmmc::Device *pDevice =
+		reinterpret_cast<ckmmc::Device *>(m_RecorderCombo.GetItemData(
+										  m_RecorderCombo.GetCurSel()));
 
 	// Get current profile.
 	unsigned short usProfile = PROFILE_NONE;
-	if (!g_Core2.GetProfile(&m_CurDevice,usProfile))
+	if (!g_Core2.GetProfile(*pDevice,usProfile))
 		return false;
-
-	//g_LogDlg.AddLine(_T("  Current profile: 0x%.2X"),usProfile);
 
 	bool bSupportedProfile = false;
 	switch (usProfile)
@@ -125,7 +121,8 @@ bool CEraseDlg::InitRecorderMedia()
 			bSupportedProfile = true;
 
 			// Enable simulation if supported by the recorder.
-			::EnableWindow(GetDlgItem(IDC_SIMULATECHECK),pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_TESTWRITING);
+			::EnableWindow(GetDlgItem(IDC_SIMULATECHECK),
+						   pDevice->support(ckmmc::Device::ckDEVICE_TEST_WRITE));
 
 			// Enable force erase.
 			::EnableWindow(GetDlgItem(IDC_FORCECHECK),FALSE);
@@ -224,7 +221,7 @@ bool CEraseDlg::InitRecorderMedia()
 
 		// Write speeds.
 		std::vector<unsigned int> Speeds;
-		if (!g_Core2.GetMediaWriteSpeeds(&m_CurDevice,Speeds))
+		if (!g_Core2.GetMediaWriteSpeeds(*pDevice,Speeds))
 			return false;
 
 		for (unsigned int i = 0; i < Speeds.size(); i++)
@@ -345,19 +342,19 @@ LRESULT CEraseDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHan
 	InitRefreshButton();
 
 	// Recorder combo box.
-	for (unsigned int i = 0; i < g_DeviceManager.GetDeviceCount(); i++)
+	std::vector<ckmmc::Device *>::const_iterator it;
+	for (it = g_DeviceManager.devices().begin(); it !=
+		g_DeviceManager.devices().end(); it++)
 	{
+		ckmmc::Device *pDevice = *it;
+
 		// We only want to add recorder to the list.
-		if (!g_DeviceManager.IsDeviceRecorder(i))
+		if (!pDevice->recorder())
 			continue;
 
-		tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(i);
-
-		TCHAR szDeviceName[128];
-		g_DeviceManager.GetDeviceName(pDeviceInfo,szDeviceName);
-
-		m_RecorderCombo.AddString(szDeviceName);
-		m_RecorderCombo.SetItemData(m_RecorderCombo.GetCount() - 1,i);
+		m_RecorderCombo.AddString(NDeviceUtil::GetDeviceName(*pDevice).c_str());
+		m_RecorderCombo.SetItemData(m_RecorderCombo.GetCount() - 1,
+									reinterpret_cast<DWORD_PTR>(pDevice));
 	}
 
 	if (m_RecorderCombo.GetCount() == 0)
@@ -392,58 +389,15 @@ LRESULT CEraseDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHan
 	return TRUE;
 }
 
-LRESULT CEraseDlg::OnDestroy(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
-{
-	m_CurDevice.Close();
-	return TRUE;
-}
-
-/*LRESULT CEraseDlg::OnDeviceChange(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
-{
-	PDEV_BROADCAST_HDR lpdb = (PDEV_BROADCAST_HDR)lParam; 
-
-	if (wParam == DBT_DEVICEARRIVAL || wParam == DBT_DEVICEREMOVECOMPLETE)
-	{
-		// See if we are dealing with a CD-unit.
-		if (lpdb->dbch_devicetype == DBT_DEVTYP_VOLUME)
-		{
-			PDEV_BROADCAST_VOLUME lpdbv = (PDEV_BROADCAST_VOLUME)lpdb;
-
-			if (lpdbv->dbcv_flags & DBTF_MEDIA)
-			{
-				// Find the drive letter from the unit mask.
-				unsigned int uiMask = lpdbv->dbcv_unitmask;
-				char c;
-
-				for (c = 0; c < 26; c++)
-				{
-					if (uiMask & 0x01)
-						break;
-
-					uiMask = uiMask >> 1;
-				} 
-
-				// Check if the current drive has changed.
-				tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(
-					m_RecorderCombo.GetItemData(m_RecorderCombo.GetCurSel()));
-
-				if (pDeviceInfo->Address.m_cDriveLetter == (c + 'A'))
-					CheckRecorderMedia();
-			}
-		}
-	}
-
-	return TRUE;
-}*/
-
 LRESULT CEraseDlg::OnTimer(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
-	if (m_CurDevice.IsOpen())
-	{
-		// Check for media change.
-		if (g_Core2.CheckMediaChange(&m_CurDevice))
-			CheckRecorderMedia();
-	}
+	ckmmc::Device *pDevice =
+		reinterpret_cast<ckmmc::Device *>(m_RecorderCombo.GetItemData(
+										  m_RecorderCombo.GetCurSel()));
+
+	// Check for media change.
+	if (g_Core2.CheckMediaChange(*pDevice))
+		CheckRecorderMedia();
 
 	return TRUE;
 }
@@ -452,13 +406,9 @@ LRESULT CEraseDlg::OnRecorderChange(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL 
 {
 	// Enable/disable the simulation checkbox depending on if the selected recorder
 	// supports that operation.
-	tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(
-		m_RecorderCombo.GetItemData(m_RecorderCombo.GetCurSel()));
-
-	// Open the new device.
-	m_CurDevice.Close();
-	if (!m_CurDevice.Open(&pDeviceInfo->Address))
-		return 0;
+	ckmmc::Device *pDevice =
+		reinterpret_cast<ckmmc::Device *>(m_RecorderCombo.GetItemData(
+										  m_RecorderCombo.GetCurSel()));
 
 	// Kill any already running timers.
 	::KillTimer(m_hWnd,TIMER_ID);
@@ -480,7 +430,9 @@ LRESULT CEraseDlg::OnOK(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 	g_EraseSettings.m_bSimulate = IsDlgButtonChecked(IDC_SIMULATECHECK) == TRUE;
 
 	// For internal use only.
-	g_EraseSettings.m_iRecorder = m_RecorderCombo.GetItemData(m_RecorderCombo.GetCurSel());
+	g_EraseSettings.m_pRecorder =
+		reinterpret_cast<ckmmc::Device *>(m_RecorderCombo.GetItemData(
+										  m_RecorderCombo.GetCurSel()));
 	g_EraseSettings.m_uiSpeed = (unsigned int)m_SpeedCombo.GetItemData(m_SpeedCombo.GetCurSel());
 
 	EndDialog(wID);

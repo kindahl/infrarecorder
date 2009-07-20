@@ -21,6 +21,7 @@
 #include "../../Common/StringUtil.h"
 #include "StringTable.h"
 #include "LangUtil.h"
+#include "DeviceUtil.h"
 #include "Settings.h"
 
 CSimpleProgressDlg::CSimpleProgressDlg() : m_pProcess(NULL),m_bAppMode(false),
@@ -174,13 +175,12 @@ bool CSimpleProgressDlg::cancelled()
 	return m_bCancelled;
 }
 
-void CSimpleProgressDlg::SetDevice(const TCHAR *szDevice)
+void CSimpleProgressDlg::SetDevice(ckmmc::Device &Device)
 {
-	TCHAR szDeviceStr[128];
-	lstrcpy(szDeviceStr,lngGetString(PROGRESS_DEVICE));
-	lstrcat(szDeviceStr,szDevice);
+	ckcore::tstring DeviceStr = lngGetString(PROGRESS_DEVICE);
+	DeviceStr += NDeviceUtil::GetDeviceName(Device);
 
-	SetDlgItemText(IDC_DEVICESTATIC,szDeviceStr);
+	SetDlgItemText(IDC_DEVICESTATIC,DeviceStr.c_str());
 }
 
 void CSimpleProgressDlg::NotifyCompleted()

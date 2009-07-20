@@ -17,17 +17,15 @@
  */
 
 #include "stdafx.h"
-#include "DeviceAdvancedPage.h"
-#include "DeviceManager.h"
 #include "StringTable.h"
 #include "LangUtil.h"
 #include "Settings.h"
 #include "cdrtoolsParseStrings.h"
+#include "DeviceAdvancedPage.h"
 
-CDeviceAdvancedPage::CDeviceAdvancedPage()
+CDeviceAdvancedPage::CDeviceAdvancedPage(ckmmc::Device &Device) :
+	m_Device(Device)
 {
-	m_uiDeviceIndex = 0;
-
 	// If set to true the list view will not accept any item changes, that
 	// includes both selection and checking.
 	m_bLockAdvList = false;
@@ -69,11 +67,6 @@ bool CDeviceAdvancedPage::Translate()
 	return true;
 }
 
-void CDeviceAdvancedPage::SetDeviceIndex(UINT_PTR uiDeviceIndex)
-{
-	m_uiDeviceIndex = uiDeviceIndex;
-}
-
 LRESULT CDeviceAdvancedPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
 	// Fill the list view.
@@ -82,135 +75,126 @@ LRESULT CDeviceAdvancedPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,
 	m_ListView.SetExtendedListViewStyle(LVS_EX_CHECKBOXES);
 
 	m_ListView.AddColumn(_T(""),0);
-	m_ListView.SetColumnWidth(0,299);
-
-	tDeviceCap *pDeviceCap = g_DeviceManager.GetDeviceCap(m_uiDeviceIndex);
-	tDeviceInfoEx *pDeviceInfoEx = g_DeviceManager.GetDeviceInfoEx(m_uiDeviceIndex);
+	m_ListView.SetColumnWidth(0,370);
 
 	// General.
 	unsigned int uiItemCount = 0;
 	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_MODE2FORM1));
-	m_ListView.SetCheckState(uiItemCount++,pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_READMODE2FORM1);
+	m_ListView.SetCheckState(uiItemCount++,m_Device.support(ckmmc::Device::ckDEVICE_MODE_2_FORM_1));
 
 	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_MODE2FORM2));
-	m_ListView.SetCheckState(uiItemCount++,pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_READMODE2FORM2);
+	m_ListView.SetCheckState(uiItemCount++,m_Device.support(ckmmc::Device::ckDEVICE_MODE_2_FORM_2));
 
 	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_READDIGAUDIO));
-	m_ListView.SetCheckState(uiItemCount++,pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_READDIGITALAUDIO);
+	m_ListView.SetCheckState(uiItemCount++,m_Device.support(ckmmc::Device::ckDEVICE_CDDA_SUPPORTED));
 
-	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_READMULTSESSION));
-	m_ListView.SetCheckState(uiItemCount++,pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_READMULTISESSION);
-
-	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_READFIXPACKET));
-	m_ListView.SetCheckState(uiItemCount++,pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_READFIXEDPACKET);
-
-	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_READBARCODE));
-	m_ListView.SetCheckState(uiItemCount++,pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_READCDBARCODE);
-
-	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_READRWSUBCODE));
-	m_ListView.SetCheckState(uiItemCount++,pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_READRWSUBCODE);
-
-	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_READRAWPWSC));
-	m_ListView.SetCheckState(uiItemCount++,pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_READRAWPWSUBCODE);
-
-	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_SIMULATION));
-	m_ListView.SetCheckState(uiItemCount++,pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_TESTWRITING);
-
-	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_BUFRECORDING));
-	m_ListView.SetCheckState(uiItemCount++,pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_BUFRECORDING);
-
-	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_C2EP));
-	m_ListView.SetCheckState(uiItemCount++,pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_C2EP);
-
-	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_EJECTCDSS));
-	m_ListView.SetCheckState(uiItemCount++,pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_EJECTCDSS);
-
-	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_CHANGEDISCSIDE));
-	m_ListView.SetCheckState(uiItemCount++,pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_CHANGEDISCSIDE);
-
-	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_INDIVIDUALDP));
-	m_ListView.SetCheckState(uiItemCount++,pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_INDIVIDUALDP);
-
-	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_RETURNCDCN));
-	m_ListView.SetCheckState(uiItemCount++,pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_RETURNCDCN);
-
-	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_RETURNCDISRC));
-	m_ListView.SetCheckState(uiItemCount++,pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_RETURNCDISRC);
-
-	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_DELIVCOMPOSITE));
-	m_ListView.SetCheckState(uiItemCount++,pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_DELIVERCOMPOSITE);
-
-	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_PLAYAUDIOCD));
-	m_ListView.SetCheckState(uiItemCount++,pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_PLAYAUDIOCD);
-
-	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_HASLESIC));
-	m_ListView.SetCheckState(uiItemCount++,pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_HASLESIC);
-
-	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_LMOPU));
-	m_ListView.SetCheckState(uiItemCount++,pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_LMOPU);
-
-	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_ALLOWML));
-	m_ListView.SetCheckState(uiItemCount++,pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_ALLOWML);
-
-	// Digital audio.
-	if (pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_READDIGITALAUDIO)
+	if (m_Device.support(ckmmc::Device::ckDEVICE_CDDA_SUPPORTED))
 	{
 		m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_RESTARTNSDARA));
-		m_ListView.SetCheckState(uiItemCount++,pDeviceCap->uiDigitalAudio & DEVICEMANAGER_CAP_RESTARTNSDARA);
+		m_ListView.SetCheckState(uiItemCount++,m_Device.support(ckmmc::Device::ckDEVICE_CDDA_ACCURATE));
 	}
 
-	// RW.
-	if (pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_READRWSUBCODE)
+	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_READMULTSESSION));
+	m_ListView.SetCheckState(uiItemCount++,m_Device.support(ckmmc::Device::ckDEVICE_MULTI_SESSION));
+
+	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_READFIXPACKET));
+	m_ListView.SetCheckState(uiItemCount++,m_Device.support(ckmmc::Device::ckDEVICE_METHOD_2));
+
+	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_READBARCODE));
+	m_ListView.SetCheckState(uiItemCount++,m_Device.support(ckmmc::Device::ckDEVICE_READ_BAR_CODE));
+
+	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_READRWSUBCODE));
+	m_ListView.SetCheckState(uiItemCount++,m_Device.support(ckmmc::Device::ckDEVICE_RW_SUPPORTED));
+
+	if (m_Device.support(ckmmc::Device::ckDEVICE_RW_SUPPORTED))
 	{
-		m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_RETURNRWSUBCODE));
-		m_ListView.SetCheckState(uiItemCount++,pDeviceCap->uiRW & DEVICEMANAGER_CAP_RETURNRWSUBCODE);
+		m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_READRAWPWSC));
+		m_ListView.SetCheckState(uiItemCount++,m_Device.support(ckmmc::Device::ckDEVICE_RW_DEINT_CORR));
 	}
 
-	// Audio.
-	if (pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_PLAYAUDIOCD)
+	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_SIMULATION));
+	m_ListView.SetCheckState(uiItemCount++,m_Device.support(ckmmc::Device::ckDEVICE_TEST_WRITE));
+
+	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_BUFRECORDING));
+	m_ListView.SetCheckState(uiItemCount++,m_Device.support(ckmmc::Device::ckDEVICE_BUP));
+
+	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_C2EP));
+	m_ListView.SetCheckState(uiItemCount++,m_Device.support(ckmmc::Device::ckDEVICE_C2_POINTERS));
+
+	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_EJECTCDSS));
+	m_ListView.SetCheckState(uiItemCount++,m_Device.support(ckmmc::Device::ckDEVICE_EJECT));
+
+	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_CHANGEDISCSIDE));
+	m_ListView.SetCheckState(uiItemCount++,m_Device.support(ckmmc::Device::ckDEVICE_CHANGE_SIDES));
+
+	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_INDIVIDUALDP));
+	m_ListView.SetCheckState(uiItemCount++,m_Device.support(ckmmc::Device::ckDEVICE_CHANGE_DISC_PRSNT));
+
+	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_RETURNCDCN));
+	m_ListView.SetCheckState(uiItemCount++,m_Device.support(ckmmc::Device::ckDEVICE_UPC));
+
+	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_RETURNCDISRC));
+	m_ListView.SetCheckState(uiItemCount++,m_Device.support(ckmmc::Device::ckDEVICE_ISRC));
+
+	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_DELIVCOMPOSITE));
+	m_ListView.SetCheckState(uiItemCount++,m_Device.support(ckmmc::Device::ckDEVICE_COMPOSITE));
+
+	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_PLAYAUDIOCD));
+	m_ListView.SetCheckState(uiItemCount++,m_Device.support(ckmmc::Device::ckDEVICE_AUDIO_PLAY));
+
+	if (m_Device.support(ckmmc::Device::ckDEVICE_AUDIO_PLAY))
 	{
 		m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_INDIVIDUALVC));
-		m_ListView.SetCheckState(uiItemCount++,pDeviceCap->uiAudio & DEVICEMANAGER_CAP_INDIVIDUALVC);
+		m_ListView.SetCheckState(uiItemCount++,m_Device.support(ckmmc::Device::ckDEVICE_SEP_CHAN_VOL));
 
 		m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_INDEPENDENTMUTE));
-		m_ListView.SetCheckState(uiItemCount++,pDeviceCap->uiAudio & DEVICEMANAGER_CAP_INDEPENDENTMUTE);
+		m_ListView.SetCheckState(uiItemCount++,m_Device.support(ckmmc::Device::ckDEVICE_SEP_CHAN_MUTE));
 
 		m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_DOPORT1));
-		m_ListView.SetCheckState(uiItemCount++,pDeviceCap->uiAudio & DEVICEMANAGER_CAP_DOPORT1);
+		m_ListView.SetCheckState(uiItemCount++,m_Device.support(ckmmc::Device::ckDEVICE_DIGITAL_PORT_1));
 
 		m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_DOPORT2));
-		m_ListView.SetCheckState(uiItemCount++,pDeviceCap->uiAudio & DEVICEMANAGER_CAP_DOPORT2);
+		m_ListView.SetCheckState(uiItemCount++,m_Device.support(ckmmc::Device::ckDEVICE_DIGITAL_PORT_2));
 
 		// Digital output.
-		if ((pDeviceCap->uiAudio & DEVICEMANAGER_CAP_DOPORT1) ||
-			(pDeviceCap->uiAudio & DEVICEMANAGER_CAP_DOPORT2))
+		if (m_Device.support(ckmmc::Device::ckDEVICE_DIGITAL_PORT_1) ||
+			m_Device.support(ckmmc::Device::ckDEVICE_DIGITAL_PORT_2))
 		{
 			m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_DOSENDDIGDAT));
-			m_ListView.SetCheckState(uiItemCount++,pDeviceCap->uiDigitalOutput & DEVICEMANAGER_CAP_DOSENDDIGDAT);
+			m_ListView.SetCheckState(uiItemCount++,m_Device.support(ckmmc::Device::ckDEVICE_LSBF));
 
 			m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_DOSETLRCK));
-			m_ListView.SetCheckState(uiItemCount++,pDeviceCap->uiDigitalOutput & DEVICEMANAGER_CAP_DOSETLRCK);
+			m_ListView.SetCheckState(uiItemCount++,m_Device.support(ckmmc::Device::ckDEVICE_RCK));
 
 			m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_HASVALIDDATA));
-			m_ListView.SetCheckState(uiItemCount++,pDeviceCap->uiDigitalOutput & DEVICEMANAGER_CAP_HASVALIDDATA);
+			m_ListView.SetCheckState(uiItemCount++,m_Device.support(ckmmc::Device::ckDEVICE_BCKF));
 		}
 	}
 
+	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_HASLESIC));
+	m_ListView.SetCheckState(uiItemCount++,m_Device.support(ckmmc::Device::ckDEVICE_SSS));
+
+	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_LMOPU));
+	m_ListView.SetCheckState(uiItemCount++,m_Device.support(ckmmc::Device::ckDEVICE_PREVENT_JUMPER));
+
+	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_ALLOWML));
+	m_ListView.SetCheckState(uiItemCount++,m_Device.support(ckmmc::Device::ckDEVICE_LOCK));
+
 	// Write methods.
 	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_SAO));
-	m_ListView.SetCheckState(uiItemCount++,strstr(pDeviceInfoEx->szWriteModes,CDRTOOLS_WRITEMODES_SAO) != NULL);
+	m_ListView.SetCheckState(uiItemCount++,m_Device.support(ckmmc::Device::ckWM_SAO));
 
 	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_TAO));
-	m_ListView.SetCheckState(uiItemCount++,strstr(pDeviceInfoEx->szWriteModes,CDRTOOLS_WRITEMODES_TAO) != NULL);
+	m_ListView.SetCheckState(uiItemCount++,m_Device.support(ckmmc::Device::ckWM_TAO));
 
 	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_RAW96R));
-	m_ListView.SetCheckState(uiItemCount++,strstr(pDeviceInfoEx->szWriteModes,CDRTOOLS_WRITEMODES_RAW96R) != NULL);
+	m_ListView.SetCheckState(uiItemCount++,m_Device.support(ckmmc::Device::ckWM_RAW96R));
 
 	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_RAW16));
-	m_ListView.SetCheckState(uiItemCount++,strstr(pDeviceInfoEx->szWriteModes,CDRTOOLS_WRITEMODES_RAW16) != NULL);
+	m_ListView.SetCheckState(uiItemCount++,m_Device.support(ckmmc::Device::ckWM_RAW16));
 
 	m_ListView.AddItem(uiItemCount,0,lngGetString(ADVPROP_RAW96P));
-	m_ListView.SetCheckState(uiItemCount++,strstr(pDeviceInfoEx->szWriteModes,CDRTOOLS_WRITEMODES_RAW96P) != NULL);
+	m_ListView.SetCheckState(uiItemCount++,m_Device.support(ckmmc::Device::ckWM_RAW96P));
 
 	m_bLockAdvList = true;
 

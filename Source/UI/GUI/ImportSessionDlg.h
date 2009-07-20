@@ -19,7 +19,6 @@
 #pragma once
 #include <vector>
 #include "resource.h"
-#include "Core2Device.h"
 
 class CImportSessionDlg : public CDialogImpl<CImportSessionDlg>
 {
@@ -46,7 +45,7 @@ private:
 	CComboBox m_TrackCombo;
 
 	bool Translate();
-	bool UpdateDiscInfo(CCore2Device *pDevice);
+	bool UpdateDiscInfo(ckmmc::Device &Device);
 
 	void ResetDiscInfo();
 
@@ -56,7 +55,7 @@ public:
 	// Data members that can be accessed from another object when the dialog
 	// has closed.
 	unsigned __int64 m_uiAllocatedSize;
-	UINT_PTR m_uiDeviceIndex;
+	ckmmc::Device *m_pSelDevice;
 	CTrackData *m_pSelTrackData;
 
 	CImportSessionDlg();

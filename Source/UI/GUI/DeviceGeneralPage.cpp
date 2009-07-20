@@ -17,18 +17,17 @@
  */
 
 #include "stdafx.h"
-#include "DeviceGeneralPage.h"
+#include <ckmmc/util.hh>
+#include "DeviceUtil.h"
 #include "StringTable.h"
 #include "LangUtil.h"
 #include "Settings.h"
 #include "InfoDlg.h"
+#include "DeviceGeneralPage.h"
 
-CDeviceGeneralPage::CDeviceGeneralPage()
+CDeviceGeneralPage::CDeviceGeneralPage(ckmmc::Device &Device) :
+	m_hIcon(NULL),m_Device(Device)
 {
-	m_uiDeviceIndex = 0;
-
-	m_hIcon = NULL;
-
 	// Try to load translated string.
 	if (g_LanguageSettings.m_pLngProcessor != NULL)
 	{	
@@ -80,18 +79,13 @@ bool CDeviceGeneralPage::Translate()
 	return true;
 }
 
-void CDeviceGeneralPage::SetDeviceIndex(UINT_PTR uiDeviceIndex)
+void CDeviceGeneralPage::PrintDeviceType(ckmmc::Device &Device)
 {
-	m_uiDeviceIndex = uiDeviceIndex;
-}
-
-void CDeviceGeneralPage::PrintDeviceType(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap)
-{
-	if ((pDeviceCap->uiMedia & DEVICEMANAGER_CAP_WRITECDR) ||
-		(pDeviceCap->uiMedia & DEVICEMANAGER_CAP_WRITECDRW))
+	if (Device.support(ckmmc::Device::ckDEVICE_WRITE_CDR) ||
+		Device.support(ckmmc::Device::ckDEVICE_WRITE_CDRW))
 	{
-		if ((pDeviceCap->uiMedia & DEVICEMANAGER_CAP_WRITEDVDR) ||
-			(pDeviceCap->uiMedia & DEVICEMANAGER_CAP_WRITEDVDRAM))
+		if (Device.support(ckmmc::Device::ckDEVICE_WRITE_DVDR) ||
+			Device.support(ckmmc::Device::ckDEVICE_WRITE_DVDRAM))
 		{
 			SetDlgItemText(IDC_TYPESTATIC,lngGetString(DEVICETYPE_DVDRECORDER));
 		}
@@ -102,9 +96,9 @@ void CDeviceGeneralPage::PrintDeviceType(tDeviceInfo *pDeviceInfo,tDeviceCap *pD
 	}
 	else
 	{
-		if ((pDeviceCap->uiMedia & DEVICEMANAGER_CAP_READDVDR) ||
-			(pDeviceCap->uiMedia & DEVICEMANAGER_CAP_READDVDROM) ||
-			(pDeviceCap->uiMedia & DEVICEMANAGER_CAP_READDVDRAM))
+		if (Device.support(ckmmc::Device::ckDEVICE_READ_DVDROM) ||
+			Device.support(ckmmc::Device::ckDEVICE_READ_DVDR) ||
+			Device.support(ckmmc::Device::ckDEVICE_READ_DVDRAM))
 		{
 			SetDlgItemText(IDC_TYPESTATIC,lngGetString(DEVICETYPE_DVDREADER));
 		}
@@ -117,6 +111,8 @@ void CDeviceGeneralPage::PrintDeviceType(tDeviceInfo *pDeviceInfo,tDeviceCap *pD
 
 LRESULT CDeviceGeneralPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
+	ATLASSERT(m_pDevice != 0);
+
 	// Create the icon.
 	HINSTANCE hInstance = LoadLibrary(_T("shell32.dll"));
 		m_hIcon = (HICON)LoadImage(hInstance,MAKEINTRESOURCE(12),IMAGE_ICON,GetSystemMetrics(SM_CXICON),GetSystemMetrics(SM_CYICON),LR_DEFAULTCOLOR);
@@ -125,96 +121,110 @@ LRESULT CDeviceGeneralPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,B
 	SendMessage(GetDlgItem(IDC_ICONSTATIC),STM_SETICON,(WPARAM)m_hIcon,0L);
 
 	// Display the information.
-	tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(m_uiDeviceIndex);
-	tDeviceCap *pDeviceCap = g_DeviceManager.GetDeviceCap(m_uiDeviceIndex);
-	TCHAR szBuffer[128];
-
-	g_DeviceManager.GetDeviceName(pDeviceInfo,szBuffer);
-	TCHAR szDriveLetter[8];
-	lsprintf(szDriveLetter,_T(" (%C:)"),pDeviceInfo->Address.m_cDriveLetter);
-	lstrcat(szBuffer,szDriveLetter);
-	SetDlgItemText(IDC_NAMESTATIC,szBuffer);
+	SetDlgItemText(IDC_NAMESTATIC,NDeviceUtil::GetDeviceName(m_Device).c_str());
 
 	// Type.
-	PrintDeviceType(pDeviceInfo,pDeviceCap);
+	PrintDeviceType(m_Device);
 
 	// Location.
-	lsnprintf_s(szBuffer,128,lngGetString(PROPERTIES_DEVICELOC),pDeviceInfo->Address.m_iBus,
-		pDeviceInfo->Address.m_iTarget,pDeviceInfo->Address.m_iLun);
+	TCHAR szBuffer[128];
+	lsnprintf_s(szBuffer,128,lngGetString(PROPERTIES_DEVICELOC),m_Device.address().bus_,
+				m_Device.address().target_,m_Device.address().lun_);
 	SetDlgItemText(IDC_LOCATIONSTATIC,szBuffer);
 
 	// Buffer size.
-	lsprintf(szBuffer,_T("%d kB"),pDeviceCap->uiBufferSize);
+	lsprintf(szBuffer,_T("%d kB"),m_Device.property(ckmmc::Device::ckPROP_BUFFER_SIZE));
 	SetDlgItemText(IDC_BUFFERSTATIC,szBuffer);
 
 	// Max read speed.
-	lsprintf(szBuffer,_T("%d kB/s (CD: %dx, DVD: %dx)"),pDeviceCap->uiMaxSpeeds[3],pDeviceCap->uiMaxSpeeds[4],pDeviceCap->uiMaxSpeeds[5]);
+	ckcore::tuint32 max_read_speed = m_Device.property(ckmmc::Device::ckPROP_MAX_READ_SPD);
+	lsprintf(szBuffer,_T("%d sectors/s (CD: %sx, DVD: %sx)"),
+			 max_read_speed,
+			 ckmmc::util::sec_to_disp_speed(max_read_speed,
+											ckmmc::Device::ckPROFILE_CDROM).c_str(),
+			 ckmmc::util::sec_to_disp_speed(max_read_speed,
+											ckmmc::Device::ckPROFILE_DVDROM).c_str());
 	SetDlgItemText(IDC_MAXREADSTATIC,szBuffer);
 
 	// Max write speed.
-	lsprintf(szBuffer,_T("%d kB/s (CD: %dx, DVD: %dx)"),pDeviceCap->uiMaxSpeeds[0],pDeviceCap->uiMaxSpeeds[1],pDeviceCap->uiMaxSpeeds[2]);
+	ckcore::tuint32 max_write_speed = m_Device.property(ckmmc::Device::ckPROP_MAX_WRITE_SPD);
+	lsprintf(szBuffer,_T("%d sectors/s (CD: %sx, DVD: %sx)"),
+			 max_write_speed,
+			 ckmmc::util::sec_to_disp_speed(max_write_speed,
+											ckmmc::Device::ckPROFILE_CDROM).c_str(),
+			 ckmmc::util::sec_to_disp_speed(max_write_speed,
+											ckmmc::Device::ckPROFILE_DVDROM).c_str());
 	SetDlgItemText(IDC_MAXWRITESTATIC,szBuffer);
 
-	if (pDeviceCap->uiMaxSpeeds[0] == 0)
-		::EnableWindow(GetDlgItem(IDC_WRITESPEEDSPIN),FALSE);
-
 	// Read media.
-	::SendMessage(GetDlgItem(IDC_READCDRCHECK),BM_SETCHECK,(pDeviceCap->uiMedia & DEVICEMANAGER_CAP_READCDR) ? BST_INDETERMINATE : BST_UNCHECKED,0);
-	::SendMessage(GetDlgItem(IDC_READCDRWCHECK),BM_SETCHECK,(pDeviceCap->uiMedia & DEVICEMANAGER_CAP_READCDRW) ? BST_INDETERMINATE : BST_UNCHECKED,0);
-	::SendMessage(GetDlgItem(IDC_READDVDRCHECK),BM_SETCHECK,(pDeviceCap->uiMedia & DEVICEMANAGER_CAP_READDVDR) ? BST_INDETERMINATE : BST_UNCHECKED,0);
-	::SendMessage(GetDlgItem(IDC_READDVDRAMCHECK),BM_SETCHECK,(pDeviceCap->uiMedia & DEVICEMANAGER_CAP_READDVDRAM) ? BST_INDETERMINATE : BST_UNCHECKED,0);
-	::SendMessage(GetDlgItem(IDC_READDVDROMCHECK),BM_SETCHECK,(pDeviceCap->uiMedia & DEVICEMANAGER_CAP_READDVDROM) ? BST_INDETERMINATE : BST_UNCHECKED,0);
+	::SendMessage(GetDlgItem(IDC_READCDRCHECK),BM_SETCHECK,
+				  m_Device.support(ckmmc::Device::ckDEVICE_READ_CDR) ?
+				  BST_INDETERMINATE : BST_UNCHECKED,0);
+	::SendMessage(GetDlgItem(IDC_READCDRWCHECK),BM_SETCHECK,
+				  m_Device.support(ckmmc::Device::ckDEVICE_READ_CDRW) ?
+				  BST_INDETERMINATE : BST_UNCHECKED,0);
+	::SendMessage(GetDlgItem(IDC_READDVDRCHECK),BM_SETCHECK,
+				  m_Device.support(ckmmc::Device::ckDEVICE_READ_DVDR) ?
+				  BST_INDETERMINATE : BST_UNCHECKED,0);
+	::SendMessage(GetDlgItem(IDC_READDVDRAMCHECK),BM_SETCHECK,
+				  m_Device.support(ckmmc::Device::ckDEVICE_READ_DVDRAM) ?
+				  BST_INDETERMINATE : BST_UNCHECKED,0);
+	::SendMessage(GetDlgItem(IDC_READDVDROMCHECK),BM_SETCHECK,
+				  m_Device.support(ckmmc::Device::ckDEVICE_READ_DVDROM) ?
+				  BST_INDETERMINATE : BST_UNCHECKED,0);
+	::SendMessage(GetDlgItem(IDC_READDVDPLUSRCHECK),BM_SETCHECK,
+		m_Device.support(ckmmc::Device::ckDEVICE_READ_DVDPLUSR) ?
+				  BST_INDETERMINATE : BST_UNCHECKED,0);
+	::SendMessage(GetDlgItem(IDC_READDVDPLUSRWCHECK),BM_SETCHECK,
+				  m_Device.support(ckmmc::Device::ckDEVICE_READ_DVDPLUSRW) ?
+				  BST_INDETERMINATE : BST_UNCHECKED,0);
+	::SendMessage(GetDlgItem(IDC_READDVDPLUSRDLCHECK),BM_SETCHECK,
+				  m_Device.support(ckmmc::Device::ckDEVICE_READ_DVDPLUSR_DL) ?
+				  BST_INDETERMINATE : BST_UNCHECKED,0);
+	::SendMessage(GetDlgItem(IDC_READDVDPLUSRWDLCHECK),BM_SETCHECK,
+				  m_Device.support(ckmmc::Device::ckDEVICE_READ_DVDPLUSRW_DL) ?
+				  BST_INDETERMINATE : BST_UNCHECKED,0);
+	::SendMessage(GetDlgItem(IDC_READBDCHECK),BM_SETCHECK,
+				  m_Device.support(ckmmc::Device::ckDEVICE_READ_BD) ?
+				  BST_INDETERMINATE : BST_UNCHECKED,0);
+	::SendMessage(GetDlgItem(IDC_READHDDVDCHECK),BM_SETCHECK,
+				  m_Device.support(ckmmc::Device::ckDEVICE_READ_HDDVD) ?
+				  BST_INDETERMINATE : BST_UNCHECKED,0);
 
 	// Write media.
-	::SendMessage(GetDlgItem(IDC_WRITECDRCHECK),BM_SETCHECK,(pDeviceCap->uiMedia & DEVICEMANAGER_CAP_WRITECDR) ? BST_INDETERMINATE : BST_UNCHECKED,0);
-	::SendMessage(GetDlgItem(IDC_WRITECDRWCHECK),BM_SETCHECK,(pDeviceCap->uiMedia & DEVICEMANAGER_CAP_WRITECDRW) ? BST_INDETERMINATE : BST_UNCHECKED,0);
-	::SendMessage(GetDlgItem(IDC_WRITEDVDRCHECK),BM_SETCHECK,(pDeviceCap->uiMedia & DEVICEMANAGER_CAP_WRITEDVDR) ? BST_INDETERMINATE : BST_UNCHECKED,0);
-	::SendMessage(GetDlgItem(IDC_WRITEDVDRAMCHECK),BM_SETCHECK,(pDeviceCap->uiMedia & DEVICEMANAGER_CAP_WRITEDVDRAM) ? BST_INDETERMINATE : BST_UNCHECKED,0);
+	::SendMessage(GetDlgItem(IDC_WRITECDRCHECK),BM_SETCHECK,
+				  m_Device.support(ckmmc::Device::ckDEVICE_WRITE_CDR) ?
+				  BST_INDETERMINATE : BST_UNCHECKED,0);
+	::SendMessage(GetDlgItem(IDC_WRITECDRWCHECK),BM_SETCHECK,
+				  m_Device.support(ckmmc::Device::ckDEVICE_WRITE_CDRW) ?
+				  BST_INDETERMINATE : BST_UNCHECKED,0);
+	::SendMessage(GetDlgItem(IDC_WRITEDVDRCHECK),BM_SETCHECK,
+				  m_Device.support(ckmmc::Device::ckDEVICE_WRITE_DVDR) ?
+				  BST_INDETERMINATE : BST_UNCHECKED,0);
+	::SendMessage(GetDlgItem(IDC_WRITEDVDRAMCHECK),BM_SETCHECK,
+				  m_Device.support(ckmmc::Device::ckDEVICE_WRITE_DVDRAM) ?
+				  BST_INDETERMINATE : BST_UNCHECKED,0);
+	::SendMessage(GetDlgItem(IDC_WRITEDVDPLUSRCHECK),BM_SETCHECK,
+				  m_Device.support(ckmmc::Device::ckDEVICE_WRITE_DVDPLUSR) ?
+				  BST_INDETERMINATE : BST_UNCHECKED,0);
+	::SendMessage(GetDlgItem(IDC_WRITEDVDPLUSRWCHECK),BM_SETCHECK,
+				  m_Device.support(ckmmc::Device::ckDEVICE_WRITE_DVDPLUSRW) ?
+				  BST_INDETERMINATE : BST_UNCHECKED,0);
+	::SendMessage(GetDlgItem(IDC_WRITEDVDPLUSRDLCHECK),BM_SETCHECK,
+				  m_Device.support(ckmmc::Device::ckDEVICE_WRITE_DVDPLUSR_DL) ?
+				  BST_INDETERMINATE : BST_UNCHECKED,0);
+	::SendMessage(GetDlgItem(IDC_WRITEDVDPLUSRWDLCHECK),BM_SETCHECK,
+				  m_Device.support(ckmmc::Device::ckDEVICE_WRITE_DVDPLUSRW_DL) ?
+				  BST_INDETERMINATE : BST_UNCHECKED,0);
+	::SendMessage(GetDlgItem(IDC_WRITEBDCHECK),BM_SETCHECK,
+				  m_Device.support(ckmmc::Device::ckDEVICE_WRITE_BD) ?
+				  BST_INDETERMINATE : BST_UNCHECKED,0);
+	::SendMessage(GetDlgItem(IDC_WRITEHDDVDCHECK),BM_SETCHECK,
+				  m_Device.support(ckmmc::Device::ckDEVICE_WRITE_HDDVD) ?
+				  BST_INDETERMINATE : BST_UNCHECKED,0);
 
 	// Translate the window.
 	Translate();
-
-	return TRUE;
-}
-
-LRESULT CDeviceGeneralPage::OnWriteSpeedSpin(int idCtrl,LPNMHDR pNMH,BOOL &bHandled)
-{
-	NMUPDOWN *lpnmud = (NMUPDOWN *)pNMH;
-
-	// Display a warning message.
-	if (g_GlobalSettings.m_bWriteSpeedWarning)
-	{
-		CInfoDlg InfoDlg(&g_GlobalSettings.m_bWriteSpeedWarning,lngGetString(INFO_WRITESPEED),INFODLG_ICONWARNING);
-		if (InfoDlg.DoModal() == IDCANCEL)
-			return TRUE;
-	}
-
-	TCHAR szBuffer[128];
-	tDeviceCap *pDeviceCap = g_DeviceManager.GetDeviceCap(m_uiDeviceIndex);
-
-	float f1CD = (float)pDeviceCap->uiMaxSpeeds[0]/pDeviceCap->uiMaxSpeeds[1];
-
-	if (lpnmud->iDelta < 0)
-	{
-		if (pDeviceCap->uiMaxSpeeds[1] < 2147483647)	// cdrecord uses signed integers.
-		{
-			pDeviceCap->uiMaxSpeeds[0] += (unsigned int)f1CD;
-			pDeviceCap->uiMaxSpeeds[1] += 1;
-			pDeviceCap->uiMaxSpeeds[2] = pDeviceCap->uiMaxSpeeds[0]/1385;
-		}
-	}
-	else
-	{
-		if (pDeviceCap->uiMaxSpeeds[1] > 1)
-		{
-			pDeviceCap->uiMaxSpeeds[0] -= (unsigned int)f1CD;
-			pDeviceCap->uiMaxSpeeds[1] -= 1;
-			pDeviceCap->uiMaxSpeeds[2] = pDeviceCap->uiMaxSpeeds[0]/1385;
-		}
-	}
-
-	lsprintf(szBuffer,_T("%d kB/s (CD: %dx, DVD: %dx)"),pDeviceCap->uiMaxSpeeds[0],pDeviceCap->uiMaxSpeeds[1],pDeviceCap->uiMaxSpeeds[2]);
-	SetDlgItemText(IDC_MAXWRITESTATIC,szBuffer);
 
 	return TRUE;
 }

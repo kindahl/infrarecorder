@@ -31,7 +31,7 @@ CCore2Blank::~CCore2Blank()
 {
 }
 
-bool CCore2Blank::Blank(CCore2Device *pDevice,CAdvancedProgress *pProgress,
+bool CCore2Blank::Blank(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 						int iMethod,bool bForce,bool bSimulate)
 {
 	g_pLogDlg->print_line(_T("CCore2Blank::Blank"));
@@ -67,7 +67,7 @@ bool CCore2Blank::Blank(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 
 	// Handle any unhandled events.
 	unsigned char ucEvents;
-	if (g_Core2.HandleEvents(pDevice,pProgress,ucEvents))
+	if (g_Core2.HandleEvents(Device,pProgress,ucEvents))
 	{
 		g_pLogDlg->print_line(_T("  Handled events: 0x%.2X"),ucEvents);
 	}
@@ -92,15 +92,19 @@ bool CCore2Blank::Blank(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 	pProgress->set_status(lngGetString(STATUS_ERASE));
 
 	// Worst case scenario if the immed flag has no effect (DVD-RW DL at 1x).
-	pDevice->SetNextTimeOut(60 * 120);
+	Device.timeout(60 * 120);
 
-	if (!pDevice->Transport(ucCdb,12,NULL,0))
+	if (!Device.transport(ucCdb,12,NULL,0,ckmmc::Device::ckTM_READ))
 	{
+		Device.timeout(60);
+
 		pProgress->notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_ERASE));
 		return false;
 	}
 
-	if (!g_Core2.WaitForUnit(pDevice,pProgress))
+	Device.timeout(60);
+
+	if (!g_Core2.WaitForUnit(Device,pProgress))
 		return false;
 
 	pProgress->notify(ckcore::Progress::ckINFORMATION,lngGetString(SUCCESS_ERASE));

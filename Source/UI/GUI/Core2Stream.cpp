@@ -20,9 +20,9 @@
 #include "Core2Read.h"
 #include "Core2Stream.h"
 
-CCore2InStream::CCore2InStream(ckcore::Log *pLog,CCore2Device *pDevice,
+CCore2InStream::CCore2InStream(ckcore::Log *pLog,ckmmc::Device &Device,
 							   unsigned long ulStartBlock,unsigned long ulEndBlock) :
-	m_pLog(pLog),m_pDevice(pDevice),m_ReadFunc(pDevice,&m_Stream),m_ulStartBlock(ulStartBlock),
+	m_pLog(pLog),m_Device(Device),m_ReadFunc(Device,&m_Stream),m_ulStartBlock(ulStartBlock),
 	m_ulEndBlock(ulEndBlock),m_ulCurBlock(ulStartBlock)
 {
 	m_ulBufferData = 0;
@@ -76,7 +76,7 @@ unsigned long CCore2InStream::BytesToFrame(unsigned __int64 uiBytes)
 bool CCore2InStream::FillBuffer()
 {
 	unsigned long ulNumFrames = GetSafeFrameReadCount();
-	if (!m_Read.ReadData(m_pDevice,NULL,&m_ReadFunc,m_ulCurBlock,ulNumFrames,false))
+	if (!m_Read.ReadData(m_Device,NULL,&m_ReadFunc,m_ulCurBlock,ulNumFrames,false))
 	{
 		m_pLog->print_line(_T("  Error: Unable to read user data from disc (%u, %u)."),
 			m_ulCurBlock,ulNumFrames);

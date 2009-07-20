@@ -18,7 +18,6 @@
 
 #pragma once
 #include "resource.h"
-#include "DeviceManager.h"
 
 class CFixateDlg : public CDialogImpl<CFixateDlg>
 {

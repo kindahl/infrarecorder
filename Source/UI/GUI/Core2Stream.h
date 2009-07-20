@@ -75,7 +75,7 @@ private:
 	unsigned long m_ulCurBlock;
 
 	ckcore::Log *m_pLog;
-	CCore2Device *m_pDevice;
+	ckmmc::Device &m_Device;
 
 	Core2ReadFunction::CReadUserData m_ReadFunc;
 	CCore2Read m_Read;
@@ -85,7 +85,7 @@ private:
 	bool FillBuffer();
 
 public:
-	CCore2InStream(ckcore::Log *pLog,CCore2Device *pDevice,
+	CCore2InStream(ckcore::Log *pLog,ckmmc::Device &Device,
 		unsigned long ulStartBlock,unsigned long ulEndBlock);
 	~CCore2InStream();
 

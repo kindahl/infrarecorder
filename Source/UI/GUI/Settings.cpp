@@ -80,7 +80,6 @@ bool CGlobalSettings::Save(CXmlProcessor *pXml)
 
 	pXml->AddElement(_T("Global"),_T(""),true);
 		pXml->AddElement(_T("AutoRunCheck"),m_bAutoRunCheck);
-		pXml->AddElement(_T("AutoCheckBus"),m_bAutoCheckBus);
 		pXml->AddElement(_T("Log"),m_bLog);
 		pXml->AddElement(_T("RememberShell"),m_bRememberShell);
 		pXml->AddElement(_T("CopyWarning"),m_bCopyWarning);
@@ -130,7 +129,6 @@ bool CGlobalSettings::Load(CXmlProcessor *pXml)
 		return false;
 
 	pXml->GetSafeElementData(_T("AutoRunCheck"),&m_bAutoRunCheck);
-	pXml->GetSafeElementData(_T("AutoCheckBus"),&m_bAutoCheckBus);
 	pXml->GetSafeElementData(_T("Log"),&m_bLog);
 	pXml->GetSafeElementData(_T("RememberShell"),&m_bRememberShell);
 	pXml->GetSafeElementData(_T("CopyWarning"),&m_bCopyWarning);

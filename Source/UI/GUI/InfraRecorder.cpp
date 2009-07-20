@@ -24,7 +24,6 @@
 #include "ProgressDlg.h"
 #include "SimpleProgressDlg.h"
 #include "SplashWindow.h"
-#include "DeviceManager.h"
 #include "LogDlg.h"
 #include "Settings.h"
 #include "SettingsManager.h"
@@ -37,11 +36,11 @@
 
 CAppModule _Module;
 
-// Enable splash screen.
-#define SHOW_SPLASH
-
 // Global codec manager object.
 CCodecManager g_CodecManager;
+
+// Global device manager object.
+ckmmc::DeviceManager g_DeviceManager;
 
 // Global pointers to GUI objects owned by this file.
 CMainFrame *g_pMainFrame = NULL;
@@ -103,46 +102,14 @@ static int SaveEnglishStrings(const TCHAR * const szFileName)
 
 void PerformDeviceScan()
 {
-#ifdef SHOW_SPLASH
-	// Display the slash screen.
-	CSplashWindow *pSplashWindow = new CSplashWindow();
+	CSplashWindow SplashWindow;
 
 	RECT rcDefault = { 0,0,200,200 };
-	pSplashWindow->Create(NULL,rcDefault);
-	pSplashWindow->SetMaxProgress(3);
+	SplashWindow.Create(NULL,rcDefault);
 
-	// Scan SCSI/IDE busses.
-	pSplashWindow->SetInfoText(lngGetString(INIT_SCANBUS));
-#endif
-	bool bScanBusRes = g_DeviceManager.ScanBus();
-#ifdef SHOW_SPLASH
-	pSplashWindow->SetProgress(1);
+	g_DeviceManager.scan(&SplashWindow);
 
-	// Load device capabilities.
-	pSplashWindow->SetInfoText(lngGetString(INIT_LOADCAPABILITIES));
-#endif
-	bool bLoadCap = g_DeviceManager.LoadCapabilities();
-#ifdef SHOW_SPLASH
-	pSplashWindow->SetProgress(2);
-
-	// Load extended device infomation.
-	pSplashWindow->SetInfoText(lngGetString(INIT_LOADINFOEX));
-#endif
-	bool bLoadInfoEx = g_DeviceManager.LoadExInfo();
-#ifdef SHOW_SPLASH
-	pSplashWindow->SetProgress(3);
-
-	pSplashWindow->DestroyWindow();
-	delete pSplashWindow;
-#endif
-
-	// Check of we failed to scan the bus.
-	if (!bScanBusRes)
-		lngMessageBox(HWND_DESKTOP,FAILURE_SCANBUS,GENERAL_ERROR,MB_OK | MB_ICONERROR);
-	else if (!bLoadCap)
-		lngMessageBox(HWND_DESKTOP,FAILURE_LOADCAP,GENERAL_ERROR,MB_OK | MB_ICONERROR);
-	else if (!bLoadInfoEx)
-		lngMessageBox(HWND_DESKTOP,FAILURE_LOADINFOEX,GENERAL_ERROR,MB_OK | MB_ICONERROR);
+	SplashWindow.DestroyWindow();
 }
 
 int Run(LPTSTR lpstrCmdLine = NULL,int nCmdShow = SW_SHOWDEFAULT)
@@ -384,23 +351,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPTSTR lpstrCmd
 			lngTranslateTables();
 
 			// Initialize, SCSI buses etc.
-			if (g_DeviceManager.LoadConfiguration())
-			{
-				if (g_GlobalSettings.m_bAutoCheckBus)
-				{
-					if (!g_DeviceManager.VerifyConfiguration())
-					{
-						if (lngMessageBox(HWND_DESKTOP,INIT_FOUNDDEVICES,GENERAL_QUESTION,MB_YESNO | MB_ICONQUESTION) == IDYES)
-							PerformDeviceScan();
-					}
-				}
-			}
-			else
-			{
-				// If we failed to load drive configuration we scan the busses while
-				// displaying the splash screen.
-				PerformDeviceScan();
-			}
+			PerformDeviceScan();
 
 			// Load the codecs.
 			TCHAR szCodecPath[MAX_PATH];
@@ -420,9 +371,6 @@ int WINAPI _tWinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPTSTR lpstrCmd
 
 			// Display the main window.
 			nRet = ParseAndRun(lpstrCmdLine,nCmdShow);
-
-			// Save the devices configuration.
-			g_DeviceManager.SaveConfiguration();
 
 			// Remove any temporary files.
 			g_TempManager.CleanUp();

@@ -17,33 +17,12 @@
  */
 
 #pragma once
-#include "resource.h"
+#include <ckcore/types.hh>
+#include <ckmmc/device.hh>
 
-class CDriveLetterDlg : public CDialogImpl<CDriveLetterDlg>
+namespace NDeviceUtil
 {
-private:
-	CComboBox m_DriveCombo;
-	TCHAR m_cDriveLetter;
-
-	bool Translate();
-	void FillDriveCombo();
-
-public:
-	enum { IDD = IDD_DRIVELETTERDLG };
-
-	CDriveLetterDlg();
-	~CDriveLetterDlg();
-
-	TCHAR GetDriveLetter();
-
-	BEGIN_MSG_MAP(CDriveLetterDlg)
-		MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
-
-		COMMAND_ID_HANDLER(IDOK,OnOK)
-		COMMAND_ID_HANDLER(IDCANCEL,OnCancel)
-	END_MSG_MAP()
-
-	LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnOK(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
-	LRESULT OnCancel(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+	ckcore::tstring GetDeviceAddr(const ckmmc::Device &device);
+	std::string GetDeviceAddrA(const ckmmc::Device &device);
+	ckcore::tstring GetDeviceName(const ckmmc::Device &device);
 };

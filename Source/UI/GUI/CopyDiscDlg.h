@@ -27,8 +27,8 @@ class CCopyDiscDlg : public CPropertySheetImpl<CCopyDiscDlg>
 private:
 	bool m_bCentered;
 	bool m_bAppMode;
-	unsigned int m_uiSourceDeviceIndex;
-	unsigned int m_uiTargetDeviceIndex;
+	ckmmc::Device *m_pSrcDevice;
+	ckmmc::Device *m_pDstDevice;
 
 	CCopyDiscGeneralPage m_GeneralPage;
 	CBurnAdvancedPage m_AdvancedPage;
@@ -40,15 +40,15 @@ public:
 
 	BEGIN_MSG_MAP(CCopyDiscDlg)
 		MESSAGE_HANDLER(WM_SHOWWINDOW,OnShowWindow)
-		MESSAGE_HANDLER(WM_SETDEVICEINDEX,OnSetDeviceIndex)
-		MESSAGE_HANDLER(WM_GETDEVICEINDEX,OnGetDeviceIndex)
+		MESSAGE_HANDLER(WM_SETDEVICE,OnSetDevice)
+		MESSAGE_HANDLER(WM_GETDEVICE,OnGetDevice)
 		MESSAGE_HANDLER(WM_SETCLONEMODE,OnSetCloneMode)
 
 		CHAIN_MSG_MAP(CPropertySheetImpl<CCopyDiscDlg>)
 	END_MSG_MAP()
 
 	LRESULT OnShowWindow(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnSetDeviceIndex(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnGetDeviceIndex(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+	LRESULT OnSetDevice(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+	LRESULT OnGetDevice(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 	LRESULT OnSetCloneMode(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 };

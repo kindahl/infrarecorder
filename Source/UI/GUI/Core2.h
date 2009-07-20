@@ -22,10 +22,10 @@
 #include <ckcore/stream.hh>
 #include <ckfilesystem/sectorstream.hh>
 #include <ckfilesystem/fileset.hh>
+#include <ckmmc/device.hh>
 #include "../../Common/StringUtil.h"
 #include "Scsi.h"
 #include "AdvancedProgress.h"
-#include "Core2Device.h"
 
 class CCore2
 {
@@ -74,38 +74,37 @@ public:
 		ERASE_BLANK_SESSION
 	};
 
-	bool HandleEvents(CCore2Device *pDevice,CAdvancedProgress *pProgress,
+	bool HandleEvents(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 		unsigned char &ucHandledEvents);
-	bool WaitForUnit(CCore2Device *pDevice,CAdvancedProgress *pProgress);
-	//bool UnitReady(CCore2Device *pDevice);
-	eMediaChange CheckMediaChange(CCore2Device *pDevice);
+	bool WaitForUnit(ckmmc::Device &Device,CAdvancedProgress *pProgress);
+	eMediaChange CheckMediaChange(ckmmc::Device &Device);
 
-	bool LockMedia(CCore2Device *pDevice,bool bLock);
-	bool StartStopUnit(CCore2Device *pDevice,eLoadMedia Action,bool bImmed);
-	bool CloseTrackSession(CCore2Device *pDevice,unsigned char ucCloseFunction,
+	bool LockMedia(ckmmc::Device &Device,bool bLock);
+	bool StartStopUnit(ckmmc::Device &Device,eLoadMedia Action,bool bImmed);
+	bool CloseTrackSession(ckmmc::Device &Device,unsigned char ucCloseFunction,
 		unsigned short usTrackNumber,bool bImmed);
 
-	bool GetProfile(CCore2Device *pDevice,unsigned short &usProfile);
-	bool GetFeatureSupport(CCore2Device *pDevice,unsigned short usFeature,
+	bool GetProfile(ckmmc::Device &Device,unsigned short &usProfile);
+	bool GetFeatureSupport(ckmmc::Device &Device,unsigned short usFeature,
 		bool &bSupportFeature);
-	bool GetMediaWriteSpeeds(CCore2Device *pDevice,std::vector<unsigned int> &Speeds);
-	bool GetMaxReadSpeed(CCore2Device *pDevice,unsigned short &usSpeed);
-	bool GetMaxSpeeds(CCore2Device *pDevice,unsigned short &usReadSpeed,
+	bool GetMediaWriteSpeeds(ckmmc::Device &Device,std::vector<unsigned int> &Speeds);
+	bool GetMaxReadSpeed(ckmmc::Device &Device,unsigned short &usSpeed);
+	bool GetMaxSpeeds(ckmmc::Device &Device,unsigned short &usReadSpeed,
 		unsigned short &usWriteSpeed);
-	bool GetMediaWriteModes(CCore2Device *pDevice,unsigned char &ucWriteModes);
+	bool GetMediaWriteModes(ckmmc::Device &Device,unsigned char &ucWriteModes);
 
-	bool SetDiscSpeeds(CCore2Device *pDevice,unsigned short usReadSpeed,
+	bool SetDiscSpeeds(ckmmc::Device &Device,unsigned short usReadSpeed,
 		unsigned short usWriteSpeed);
 
-	bool UpdateModePage5(CCore2Device *pDevice,bool bTestWrite,
+	bool UpdateModePage5(ckmmc::Device &Device,bool bTestWrite,
 		eWriteMode WriteMode = WRITEMODE_DONTCHANGE,bool bSilent = false);
 
 	// Primary functions.
-	bool EraseDisc(CCore2Device *pDevice,CAdvancedProgress *pProgress,int iMethod,
+	bool EraseDisc(ckmmc::Device &Device,CAdvancedProgress *pProgress,int iMethod,
 		bool bForce,bool bEject,bool bSimulate,unsigned int uiSpeed);
-	bool ReadDataTrack(CCore2Device *pDevice,CAdvancedProgress *pProgress,
+	bool ReadDataTrack(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 		unsigned char ucTrackNumber,bool bIgnoreErr,const TCHAR *szFilePath);
-	bool ReadFullTOC(CCore2Device *pDevice,const TCHAR *szFileName);
+	bool ReadFullTOC(ckmmc::Device &Device,const TCHAR *szFileName);
 	int CreateImage(ckcore::OutStream &OutStream,ckfilesystem::FileSet &Files,
 		ckcore::Progress &Progress,bool bFailOnError,
 		std::map<tstring,tstring> *pFilePathMap = NULL);

@@ -24,11 +24,11 @@
 #include "TransUtil.h"
 #include "Core2.h"
 
-CDiscGeneralPage::CDiscGeneralPage(const TCHAR *szDiscLabel,CCore2DeviceAddress *pDeviceAddress)
+CDiscGeneralPage::CDiscGeneralPage(const TCHAR *szDiscLabel,ckmmc::Device &Device) :
+	m_Device(Device)
 {
 	m_hIcon = NULL;
 
-	m_pDeviceAddress = pDeviceAddress;
 	lstrcpy(m_szDiscLabel,szDiscLabel);
 
 	// Try to load translated string.
@@ -304,10 +304,9 @@ LRESULT CDiscGeneralPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOO
 	SetDlgItemText(IDC_NAMESTATIC,m_szDiscLabel);
 
 	CCore2Info Info;
-	CCore2Device Device;
 	unsigned short usProfile;
 
-	if (Device.Open(m_pDeviceAddress) && g_Core2.GetProfile(&Device,usProfile))
+	if (g_Core2.GetProfile(m_Device,usProfile))
 	{
 		DisplayDiscType(usProfile);
 
@@ -322,7 +321,7 @@ LRESULT CDiscGeneralPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOO
 		{
 			// Book type.
 			CCore2PhysFmtInfo PhysInfo;
-			if (Info.ReadPhysFmtInfo(&Device,&PhysInfo))
+			if (Info.ReadPhysFmtInfo(m_Device,&PhysInfo))
 				DisplayBookType(PhysInfo.m_ucDiscCategory,PhysInfo.m_ucPartVersion);
 			else
 				SetDlgItemText(IDC_BOOKSTATIC,lngGetString(DISC_UNKNOWN));
@@ -330,7 +329,7 @@ LRESULT CDiscGeneralPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOO
 			// Region.
 			unsigned char ucRegion = 0;
 
-			if (Info.GetDiscDVDRegion(&Device,ucRegion))
+			if (Info.GetDiscDVDRegion(m_Device,ucRegion))
 			{
 				if (ucRegion == 0)
 					SetDlgItemText(IDC_REGIONSTATIC,lngGetString(DISC_NOREGION));
@@ -366,7 +365,7 @@ LRESULT CDiscGeneralPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOO
 		}
 
 		CCore2DiscInfo DiscInfo;
-		if (Info.ReadDiscInformation(&Device,&DiscInfo))
+		if (Info.ReadDiscInformation(m_Device,&DiscInfo))
 		{
 			// Tracks.
 			lsprintf(szSmallBuffer,_T("%d"),DiscInfo.m_usLastSessLstTrack - (DiscInfo.m_usLastSessFstTrack - 1));
@@ -382,7 +381,7 @@ LRESULT CDiscGeneralPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOO
 			// Space.
 			unsigned __int64 uiUsedSize = 0;
 			unsigned __int64 uiFreeSize = 0;
-			if (Info.GetTotalDiscCapacity(&Device,uiUsedSize,uiFreeSize))
+			if (Info.GetTotalDiscCapacity(m_Device,uiUsedSize,uiFreeSize))
 			{
 				FormatBytes(szSmallBuffer,uiUsedSize);
 				lsprintf(szSmallBuffer + lstrlen(szSmallBuffer),_T(" (%I64d Bytes)"),uiUsedSize);

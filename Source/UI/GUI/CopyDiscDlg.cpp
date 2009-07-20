@@ -17,21 +17,17 @@
  */
 
 #include "stdafx.h"
-#include "CopyDiscDlg.h"
 #include "StringTable.h"
 #include "LangUtil.h"
+#include "CopyDiscDlg.h"
 
 CCopyDiscDlg::CCopyDiscDlg(bool bAppMode) :
+	m_bCentered(false),m_bAppMode(bAppMode),
+	m_pSrcDevice(NULL),m_pDstDevice(NULL),
 	CPropertySheetImpl<CCopyDiscDlg>(lngGetString(COPYDISC_TITLE),0,NULL),
 	m_GeneralPage(),
 	m_ReadPage(false,false)
 {
-	m_bCentered = false;
-	m_bAppMode = bAppMode;
-
-	m_uiSourceDeviceIndex = 0;
-	m_uiTargetDeviceIndex = 0;
-
 	m_psh.dwFlags |= PSH_NOAPPLYNOW | PSH_HASHELP | PSH_NOCONTEXTHELP;
 
 	AddPage(m_GeneralPage);
@@ -68,21 +64,21 @@ LRESULT CCopyDiscDlg::OnShowWindow(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &b
 	return 0;
 }
 
-LRESULT CCopyDiscDlg::OnSetDeviceIndex(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
+LRESULT CCopyDiscDlg::OnSetDevice(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
 	if (wParam == 1)
-		m_uiSourceDeviceIndex = (unsigned int)lParam;
+		m_pSrcDevice = reinterpret_cast<ckmmc::Device *>(lParam);
 	else
-		m_uiTargetDeviceIndex = (unsigned int)lParam;
+		m_pDstDevice = reinterpret_cast<ckmmc::Device *>(lParam);
 
 	bHandled = TRUE;
 	return 0;
 }
 
-LRESULT CCopyDiscDlg::OnGetDeviceIndex(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
+LRESULT CCopyDiscDlg::OnGetDevice(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
 	bHandled = TRUE;
-	return wParam == 1 ? m_uiSourceDeviceIndex : m_uiTargetDeviceIndex;
+	return reinterpret_cast<LRESULT>(wParam == 1 ? m_pSrcDevice : m_pDstDevice);
 }
 
 LRESULT CCopyDiscDlg::OnSetCloneMode(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)

@@ -27,15 +27,14 @@
 
 namespace Core2ReadFunction
 {
-	CReadFunction::CReadFunction(CCore2Device *pDevice)
+	CReadFunction::CReadFunction(ckmmc::Device &Device) : m_Device(Device)
 	{
-		m_pDevice = pDevice;
 	}
 
 	bool CReadFunction::ReadCD(unsigned char *pBuffer,unsigned long ulAddress,unsigned long ulBlockCount,
 							   eMainChannelData MCD,eSubChannelData SCD,eC2ErrorInfo ErrorInfo)
 	{
-		if (m_pDevice == NULL || pBuffer == NULL)
+		if (pBuffer == NULL)
 			return false;
 
 		// Initialize buffers.
@@ -68,20 +67,23 @@ namespace Core2ReadFunction
 				break;
 		}
 
-		if (!m_pDevice->Transport(ucCdb,12,pBuffer,ulBlockCount * /*CORE2_READ_MAXFRAMESIZE*/GetFrameSize()))
+		if (!m_Device.transport(ucCdb,12,pBuffer,ulBlockCount * GetFrameSize(),
+								ckmmc::Device::ckTM_READ))
+		{
 			return false;
+		}
 
 		return true;
 	}
 
-	CReadUserData::CReadUserData(CCore2Device *pDevice,ckcore::OutStream *pOutStream) :
-		CReadFunction(pDevice),m_pOutStream(pOutStream)
+	CReadUserData::CReadUserData(ckmmc::Device &Device,ckcore::OutStream *pOutStream) :
+		CReadFunction(Device),m_pOutStream(pOutStream)
 	{
 		// Get the block size in bytes (the frame only contains the user data in this case).
 		CCore2Info Core2Info;
 		unsigned long ulBlockAddress = 0;
 
-		if (!Core2Info.ReadCapacity(pDevice,ulBlockAddress,m_ulFrameSize))
+		if (!Core2Info.ReadCapacity(Device,ulBlockAddress,m_ulFrameSize))
 		{
 			m_ulFrameSize = 2048;
 			g_pLogDlg->print_line(_T("  Error: Unable to obtain disc block information, impossible to continue."));
@@ -110,8 +112,8 @@ namespace Core2ReadFunction
 		return m_ulFrameSize;
 	}
 
-	CReadC2::CReadC2(CCore2Device *pDevice) :
-		CReadFunction(pDevice)
+	CReadC2::CReadC2(ckmmc::Device &Device) :
+		CReadFunction(Device)
 	{
 		m_ulErrSecCount = 0;
 		m_ulErrByteCount = 0;
@@ -207,7 +209,7 @@ CCore2Read::~CCore2Read()
 	--------------------------
 	Tries various methods to successfully re-read the sector at the specified address.
 */
-bool CCore2Read::RetryReadBlock(CCore2Device *pDevice,CAdvancedProgress *pProgress,
+bool CCore2Read::RetryReadBlock(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 								Core2ReadFunction::CReadFunction *pReadFunction,
 								unsigned char *pBuffer,unsigned long ulAddress)
 {
@@ -226,7 +228,7 @@ bool CCore2Read::RetryReadBlock(CCore2Device *pDevice,CAdvancedProgress *pProgre
 				return false;
 		}
 
-		g_Core2.WaitForUnit(pDevice,pProgress);
+		g_Core2.WaitForUnit(Device,pProgress);
 
 		// Read the first 10 sectors without seeking.
 		if (i > 10)
@@ -242,7 +244,7 @@ bool CCore2Read::RetryReadBlock(CCore2Device *pDevice,CAdvancedProgress *pProgre
 				pReadFunction->Read(ucDummyBuffer,rand() % ulAddress,1);
 			}
 
-			g_Core2.WaitForUnit(pDevice,pProgress);
+			g_Core2.WaitForUnit(Device,pProgress);
 		}
 
 		// Re-read the requested sector.
@@ -253,7 +255,7 @@ bool CCore2Read::RetryReadBlock(CCore2Device *pDevice,CAdvancedProgress *pProgre
 	return false;
 }
 
-bool CCore2Read::ReadData(CCore2Device *pDevice,CAdvancedProgress *pProgress,
+bool CCore2Read::ReadData(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 						  Core2ReadFunction::CReadFunction *pReadFunction,unsigned long ulStartBlock,
 						  unsigned long ulNumBlocks,bool bIgnoreErr)
 {
@@ -261,7 +263,7 @@ bool CCore2Read::ReadData(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 
 	// Make sure that the device supports this operation.
 	bool bSupportFeature = false;
-	if (!g_Core2.GetFeatureSupport(pDevice,FEATURE_MULTIREAD,bSupportFeature))
+	if (!g_Core2.GetFeatureSupport(Device,FEATURE_MULTIREAD,bSupportFeature))
 		g_pLogDlg->print_line(_T("  Warning: Unable to check device support for feature 0x%.4X."),FEATURE_MULTIREAD);
 	if (!bSupportFeature)
 	{
@@ -269,7 +271,7 @@ bool CCore2Read::ReadData(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 		return false;
 	}
 
-	if (!g_Core2.GetFeatureSupport(pDevice,FEATURE_CD_READ,bSupportFeature))
+	if (!g_Core2.GetFeatureSupport(Device,FEATURE_CD_READ,bSupportFeature))
 		g_pLogDlg->print_line(_T("  Warning: Unable to check device support for feature 0x%.4X."),FEATURE_CD_READ);
 	if (!bSupportFeature)
 	{
@@ -282,7 +284,7 @@ bool CCore2Read::ReadData(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 
 	// Make sure that a disc is inserted.
 	unsigned short usProfile = PROFILE_NONE;
-	g_Core2.GetProfile(pDevice,usProfile);
+	g_Core2.GetProfile(Device,usProfile);
 	if (usProfile == PROFILE_NONE)
 	{
 		g_pLogDlg->print_line(_T("  Error: No disc inserted."));
@@ -341,7 +343,7 @@ bool CCore2Read::ReadData(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 					return false;
 				}
 
-				if (!RetryReadBlock(pDevice,pProgress,pReadFunction,pReadBuffer + j * pReadFunction->GetFrameSize(),l + j))
+				if (!RetryReadBlock(Device,pProgress,pReadFunction,pReadBuffer + j * pReadFunction->GetFrameSize(),l + j))
 				{
 					g_pLogDlg->print_line(_T("    Retry on sector %u failed."),l+j);
 

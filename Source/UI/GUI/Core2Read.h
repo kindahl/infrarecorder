@@ -18,7 +18,7 @@
 
 #pragma once
 #include <ckcore/stream.hh>
-#include "Core2Device.h"
+#include <ckmmc/device.hh>
 #include "AdvancedProgress.h"
 
 #define CORE2_READ_RETRYCOUNT			1
@@ -30,7 +30,7 @@ namespace Core2ReadFunction
 	class CReadFunction
 	{
 	private:
-		CCore2Device *m_pDevice;
+		ckmmc::Device &m_Device;
 
 	protected:
 		enum eMainChannelData
@@ -57,7 +57,7 @@ namespace Core2ReadFunction
 			eMainChannelData MCD,eSubChannelData SCD,eC2ErrorInfo ErrorInfo);
 
 	public:
-		CReadFunction(CCore2Device *pDevice);
+		CReadFunction(ckmmc::Device &Device);
 
 		virtual bool Read(unsigned char *pBuffer,unsigned long ulAddress,
 			unsigned long ulBlockCount) = 0;
@@ -72,7 +72,7 @@ namespace Core2ReadFunction
 		unsigned long m_ulFrameSize;
 
 	public:
-		CReadUserData(CCore2Device *pDevice,ckcore::OutStream *pOutStream);
+		CReadUserData(ckmmc::Device &Device,ckcore::OutStream *pOutStream);
 		~CReadUserData();
 
 		bool Read(unsigned char *pBuffer,unsigned long ulAddress,
@@ -95,7 +95,7 @@ namespace Core2ReadFunction
 		unsigned char NumBits(unsigned char ucData);
 
 	public:
-		CReadC2(CCore2Device *pDevice);
+		CReadC2(ckmmc::Device &Device);
 		~CReadC2();
 
 		bool Read(unsigned char *pBuffer,unsigned long ulAddress,
@@ -115,7 +115,7 @@ private:
 		SUBCHANNELDATA_DEINTERLEAVED_RW
 	};
 
-	bool RetryReadBlock(CCore2Device *pDevice,CAdvancedProgress *pProgress,
+	bool RetryReadBlock(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 		Core2ReadFunction::CReadFunction *pReadFunction,unsigned char *pBuffer,
 		unsigned long ulAddress);
 
@@ -123,7 +123,7 @@ public:
 	CCore2Read();
 	~CCore2Read();
 
-	bool ReadData(CCore2Device *pDevice,CAdvancedProgress *pProgress,
+	bool ReadData(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 		Core2ReadFunction::CReadFunction *pReadFunction,unsigned long ulStartBlock,
 		unsigned long ulNumBlocks,bool bIgnoreErr);
 };

@@ -17,6 +17,7 @@
  */
 
 #pragma once
+#include <ckmmc/devicemanager.hh>
 
 #define SPLASHWINDOW_TEXT_SPACING				2
 #define SPLASHWINDOW_TEXT_MAXLENGTH				64
@@ -41,7 +42,8 @@
 
 typedef BOOL (WINAPI *tUpdateLayeredWindow)(HWND hWnd,HDC hdcDst,POINT *pptDst,SIZE *psize,HDC hdcSrc,POINT *pptSrc,COLORREF crKey,BLENDFUNCTION *pblend,DWORD dwFlags);
 
-class CSplashWindow : public CWindowImpl<CSplashWindow,CWindow,CWinTraits<WS_POPUP | WS_VISIBLE,WS_EX_TOOLWINDOW> >
+class CSplashWindow : public CWindowImpl<CSplashWindow,CWindow,CWinTraits<WS_POPUP | WS_VISIBLE,WS_EX_TOOLWINDOW> >,
+	public ckmmc::DeviceManager::ScanCallback
 {
 private:
 	CBitmap m_SplashBitmap;
@@ -67,6 +69,16 @@ private:
 	void LoadBitmap();
 	void LoadTransparentBitmap();
 
+	void SetInfoText(const TCHAR *szInfoText);
+	void SetMaxProgress(unsigned int uiMaxProgress);
+	void SetProgress(unsigned int uiProgress);
+
+	/*
+	 * ckmmc::DeviceManager::ScanCallback interface.
+	 */
+	void event_status(ckmmc::DeviceManager::ScanCallback::Status Status);
+	bool event_device(ckmmc::Device::Address &Addr);
+
 public:
 	CSplashWindow();
 	~CSplashWindow();
@@ -78,8 +90,4 @@ public:
 
 	LRESULT OnCreate(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 	LRESULT OnPaint(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-
-	void SetInfoText(const TCHAR *szInfoText);
-	void SetMaxProgress(unsigned int uiMaxProgress);
-	void SetProgress(unsigned int uiProgress);
 };

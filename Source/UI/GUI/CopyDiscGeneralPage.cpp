@@ -17,21 +17,21 @@
  */
 
 #include "stdafx.h"
-#include "CopyDiscGeneralPage.h"
+#include "InfraRecorder.h"
 #include "StringTable.h"
 #include "Settings.h"
 #include "LangUtil.h"
-#include "DeviceManager.h"
 #include "CtrlMessages.h"
 #include "cdrtoolsParseStrings.h"
 #include "WaitDlg.h"
 #include "Scsi.h"
 #include "TransUtil.h"
+#include "DeviceUtil.h"
 #include "Core2Util.h"
-#include "DriveLetterDlg.h"
 #include "WinVer.h"
 #include "VisualStyles.h"
 #include "InfoDlg.h"
+#include "CopyDiscGeneralPage.h"
 
 CCopyDiscGeneralPage::CCopyDiscGeneralPage()
 {
@@ -174,23 +174,19 @@ bool CCopyDiscGeneralPage::Translate()
 
 bool CCopyDiscGeneralPage::InitRecorderMedia()
 {
-	// Make sure that the device is open.
-	if (!m_CurDevice.IsOpen())
-		return false;
-
 	if (m_uiParentTitleLen == 0)
 		m_uiParentTitleLen = GetParentWindow(this).GetWindowTextLength();
 
 	TCHAR szBuffer[256];
 	GetParentWindow(this).GetWindowText(szBuffer,m_uiParentTitleLen + 1);
 
-	// Open the device.
-	UINT_PTR uiDeviceIndex = m_TargetCombo.GetItemData(m_TargetCombo.GetCurSel());
-	tDeviceCap *pDeviceCap = g_DeviceManager.GetDeviceCap(uiDeviceIndex);
+	ckmmc::Device *pDevice =
+		reinterpret_cast<ckmmc::Device *>(m_TargetCombo.GetItemData(
+										  m_TargetCombo.GetCurSel()));
 
 	// Get current profile.
 	unsigned short usProfile = PROFILE_NONE;
-	if (!g_Core2.GetProfile(&m_CurDevice,usProfile))
+	if (!g_Core2.GetProfile(*pDevice,usProfile))
 		return false;
 
 	// Note: On CD-R/RW media the Test Write bit is valid only for Write Type
@@ -229,7 +225,7 @@ bool CCopyDiscGeneralPage::InitRecorderMedia()
 			bSupportedProfile = true;
 
 			// Enable simulation if supported by recorder.
-			::EnableWindow(GetDlgItem(IDC_SIMULATECHECK),pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_TESTWRITING);
+			::EnableWindow(GetDlgItem(IDC_SIMULATECHECK),pDevice->support(ckmmc::Device::ckDEVICE_TEST_WRITE));
 			break;
 
 		case PROFILE_NONE:
@@ -255,7 +251,7 @@ bool CCopyDiscGeneralPage::InitRecorderMedia()
 
 		// Other supported write speeds.
 		std::vector<unsigned int> Speeds;
-		if (!g_Core2.GetMediaWriteSpeeds(&m_CurDevice,Speeds))
+		if (!g_Core2.GetMediaWriteSpeeds(*pDevice,Speeds))
 			return false;
 
 		for (unsigned int i = 0; i < Speeds.size(); i++)
@@ -270,7 +266,7 @@ bool CCopyDiscGeneralPage::InitRecorderMedia()
 
 		// Write modes.
 		unsigned char ucWriteModes = 0;
-		g_Core2.GetMediaWriteModes(&m_CurDevice,ucWriteModes);
+		g_Core2.GetMediaWriteModes(*pDevice,ucWriteModes);
 
 		if (ucWriteModes == 0)
 			return false;
@@ -374,15 +370,23 @@ bool CCopyDiscGeneralPage::OnApply()
 	g_BurnImageSettings.m_bPadTracks = IsDlgButtonChecked(IDC_PADCHECK) == TRUE;
 	g_BurnImageSettings.m_bFixate = IsDlgButtonChecked(IDC_FIXATECHECK) == TRUE;
 
-	if (g_CopyDiscSettings.m_bOnFly && !AnalyzeDriveMedia(m_SourceCombo.GetItemData(m_SourceCombo.GetCurSel())))
+	ckmmc::Device *pSrcDevice =
+		reinterpret_cast<ckmmc::Device *>(m_SourceCombo.GetItemData(
+										  m_SourceCombo.GetCurSel()));
+
+	if (g_CopyDiscSettings.m_bOnFly && !AnalyzeDriveMedia(*pSrcDevice))
 	{
 		MessageBox(_T("Unable to get source drive media information. Can not continue."),lngGetString(GENERAL_ERROR),MB_OK | MB_ICONERROR);
 		return false;
 	}
 
 	// For internal use only.
-	g_CopyDiscSettings.m_iSource = m_SourceCombo.GetItemData(m_SourceCombo.GetCurSel());
-	g_CopyDiscSettings.m_iTarget = m_TargetCombo.GetItemData(m_TargetCombo.GetCurSel());
+	g_CopyDiscSettings.m_pSource =
+		reinterpret_cast<ckmmc::Device *>(m_SourceCombo.GetItemData(
+										  m_SourceCombo.GetCurSel()));
+	g_CopyDiscSettings.m_pTarget =
+		reinterpret_cast<ckmmc::Device *>(m_TargetCombo.GetItemData(
+										  m_TargetCombo.GetCurSel()));
 
 	g_BurnImageSettings.m_uiWriteSpeed = m_WriteSpeedCombo.GetItemData(m_WriteSpeedCombo.GetCurSel());
 	
@@ -428,20 +432,16 @@ LRESULT CCopyDiscGeneralPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam
 	// Set the refresh button icon.
 	InitRefreshButton();
 
-	TCHAR szDeviceName[128];
-
 	// Source combo box.
-	for (unsigned int i = 0; i < g_DeviceManager.GetDeviceCount(); i++)
+	std::vector<ckmmc::Device *>::const_iterator it;
+	for (it = g_DeviceManager.devices().begin(); it !=
+		g_DeviceManager.devices().end(); it++)
 	{
-		// We only want to add recorder to the list.
-		if (!g_DeviceManager.IsDeviceReader(i))
-			continue;
+		ckmmc::Device *pDevice = *it;
 
-		tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(i);
-		g_DeviceManager.GetDeviceName(pDeviceInfo,szDeviceName);
-
-		m_SourceCombo.AddString(szDeviceName);
-		m_SourceCombo.SetItemData(m_SourceCombo.GetCount() - 1,i);
+		m_SourceCombo.AddString(NDeviceUtil::GetDeviceName(*pDevice).c_str());
+		m_SourceCombo.SetItemData(m_SourceCombo.GetCount() - 1,
+								  reinterpret_cast<DWORD_PTR>(pDevice));
 	}
 
 	if (m_SourceCombo.GetCount() == 0)
@@ -453,17 +453,18 @@ LRESULT CCopyDiscGeneralPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam
 	m_SourceCombo.SetCurSel(0);
 
 	// Target combo box.
-	for (unsigned int i = 0; i < g_DeviceManager.GetDeviceCount(); i++)
+	for (it = g_DeviceManager.devices().begin(); it !=
+		g_DeviceManager.devices().end(); it++)
 	{
+		ckmmc::Device *pDevice = *it;
+
 		// We only want to add recorder to the list.
-		if (!g_DeviceManager.IsDeviceRecorder(i))
+		if (!pDevice->recorder())
 			continue;
 
-		tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(i);
-		g_DeviceManager.GetDeviceName(pDeviceInfo,szDeviceName);
-
-		m_TargetCombo.AddString(szDeviceName);
-		m_TargetCombo.SetItemData(m_TargetCombo.GetCount() - 1,i);
+		m_TargetCombo.AddString(NDeviceUtil::GetDeviceName(*pDevice).c_str());
+		m_TargetCombo.SetItemData(m_TargetCombo.GetCount() - 1,
+								  reinterpret_cast<DWORD_PTR>(pDevice));
 	}
 
 	if (m_TargetCombo.GetCount() == 0)
@@ -514,20 +515,15 @@ LRESULT CCopyDiscGeneralPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam
 	return TRUE;
 }
 
-LRESULT CCopyDiscGeneralPage::OnDestroy(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
-{
-	m_CurDevice.Close();
-	return TRUE;
-}
-
 LRESULT CCopyDiscGeneralPage::OnTimer(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
-	if (m_CurDevice.IsOpen())
-	{
-		// Check for media change.
-		if (g_Core2.CheckMediaChange(&m_CurDevice))
-			CheckRecorderMedia();
-	}
+	ckmmc::Device *pDstDevice =
+		reinterpret_cast<ckmmc::Device *>(m_TargetCombo.GetItemData(
+										  m_TargetCombo.GetCurSel()));
+
+	// Check for media change.
+	if (g_Core2.CheckMediaChange(*pDstDevice))
+		CheckRecorderMedia();
 
 	return TRUE;
 }
@@ -538,11 +534,8 @@ unsigned long CCopyDiscGeneralPage::MSFToLBA(unsigned long ulMin,unsigned long u
 	return ((ulMin * 60 * 75) + (ulSec * 75) + ulFrame - 150);
 }
 
-bool CCopyDiscGeneralPage::AnalyzeDriveMedia(UINT_PTR uiDeviceIndex)
+bool CCopyDiscGeneralPage::AnalyzeDriveMedia(ckmmc::Device &Device)
 {
-	// Get device information.
-	tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(uiDeviceIndex);
-
 	// Rescan the bus.
 	CWaitDlg WaitDlg;
 	WaitDlg.Create(m_hWnd);
@@ -551,7 +544,7 @@ bool CCopyDiscGeneralPage::AnalyzeDriveMedia(UINT_PTR uiDeviceIndex)
 		WaitDlg.SetMessage(lngGetString(INIT_DEVICECD));
 
 		TCHAR szDriveLetter[3];
-		szDriveLetter[0] = pDeviceInfo->Address.m_cDriveLetter;
+		szDriveLetter[0] = Device.address().device_[0];
 		szDriveLetter[1] = ':';
 		szDriveLetter[2] = '\0';
 
@@ -572,14 +565,18 @@ bool CCopyDiscGeneralPage::AnalyzeDriveMedia(UINT_PTR uiDeviceIndex)
 
 LRESULT CCopyDiscGeneralPage::OnSourceChange(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
-	UINT_PTR uiSourceDevIndex = m_SourceCombo.GetItemData(m_SourceCombo.GetCurSel());
-	UINT_PTR uiTargetDevIndex = m_TargetCombo.GetItemData(m_TargetCombo.GetCurSel());
+	ckmmc::Device *pSrcDevice =
+		reinterpret_cast<ckmmc::Device *>(m_SourceCombo.GetItemData(
+										  m_SourceCombo.GetCurSel()));
+	ckmmc::Device *pDstDevice =
+		reinterpret_cast<ckmmc::Device *>(m_TargetCombo.GetItemData(
+										  m_TargetCombo.GetCurSel()));
 
-	::SendMessage(GetParent(),WM_SETDEVICEINDEX,1,(LPARAM)uiSourceDevIndex);
+	::SendMessage(GetParent(),WM_SETDEVICE,1,reinterpret_cast<LPARAM>(pSrcDevice));
 
 	// Disable/enable the record on the fly button.
-	::EnableWindow(GetDlgItem(IDC_ONFLYCHECK),uiSourceDevIndex != uiTargetDevIndex);
-	if (uiSourceDevIndex == uiTargetDevIndex)
+	::EnableWindow(GetDlgItem(IDC_ONFLYCHECK),pSrcDevice != pDstDevice);
+	if (pSrcDevice == pDstDevice)
 		CheckDlgButton(IDC_ONFLYCHECK,false);
 
 	BOOL bDummy;
@@ -599,18 +596,14 @@ LRESULT CCopyDiscGeneralPage::OnTargetChange(WORD wNotifyCode,WORD wID,HWND hWnd
 	// over the place and wonder why nothing happens.
 	CWaitCursor WaitCursor;		// This displays the hourglass cursor.
 
-	UINT_PTR uiSourceDevIndex = m_SourceCombo.GetItemData(m_SourceCombo.GetCurSel());
-	UINT_PTR uiTargetDevIndex = m_TargetCombo.GetItemData(m_TargetCombo.GetCurSel());
+	ckmmc::Device *pSrcDevice =
+		reinterpret_cast<ckmmc::Device *>(m_SourceCombo.GetItemData(
+										  m_SourceCombo.GetCurSel()));
+	ckmmc::Device *pDstDevice =
+		reinterpret_cast<ckmmc::Device *>(m_TargetCombo.GetItemData(
+										  m_TargetCombo.GetCurSel()));
 
-	::SendMessage(GetParent(),WM_SETDEVICEINDEX,0,(LPARAM)uiTargetDevIndex);
-
-	tDeviceCap *pDeviceCap = g_DeviceManager.GetDeviceCap(uiTargetDevIndex);
-	tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(uiTargetDevIndex);
-
-	// Open the new device.
-	m_CurDevice.Close();
-	if (!m_CurDevice.Open(&pDeviceInfo->Address))
-		return 0;
+	::SendMessage(GetParent(),WM_SETDEVICE,0,reinterpret_cast<LPARAM>(pDstDevice));
 
 	// Kill any already running timers.
 	::KillTimer(m_hWnd,TIMER_ID);
@@ -620,7 +613,8 @@ LRESULT CCopyDiscGeneralPage::OnTargetChange(WORD wNotifyCode,WORD wID,HWND hWnd
 	CheckRecorderMedia();
 
 	// General.
-	::EnableWindow(GetDlgItem(IDC_BUPCHECK),pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_BUFRECORDING);
+	::EnableWindow(GetDlgItem(IDC_BUPCHECK),
+				   pDstDevice->support(ckmmc::Device::ckDEVICE_BUP));
 
 	// Suggest an appropriate write method if necessary.
 	BOOL bDummy;
@@ -630,8 +624,8 @@ LRESULT CCopyDiscGeneralPage::OnTargetChange(WORD wNotifyCode,WORD wID,HWND hWnd
 		m_WriteMethodCombo.SetCurSel(0);
 
 	// Disable/enable the record on the fly button.
-	::EnableWindow(GetDlgItem(IDC_ONFLYCHECK),uiSourceDevIndex != uiTargetDevIndex);
-	if (uiSourceDevIndex == uiTargetDevIndex)
+	::EnableWindow(GetDlgItem(IDC_ONFLYCHECK),pSrcDevice != pDstDevice);
+	if (pSrcDevice == pDstDevice)
 		CheckDlgButton(IDC_ONFLYCHECK,false);
 
 	OnFlyCheck(NULL,NULL,NULL,bDummy);
@@ -678,45 +672,46 @@ LRESULT CCopyDiscGeneralPage::OnCloneCheck(WORD wNotifyCode,WORD wID,HWND hWndCt
 	{
 		::SendMessage(GetParent(),WM_SETCLONEMODE,TRUE,0);
 
+		ckmmc::Device *pDstDevice =
+		reinterpret_cast<ckmmc::Device *>(m_TargetCombo.GetItemData(
+										  m_TargetCombo.GetCurSel()));
+
 		// Check for supported write modes. Raw96r has the highest priority, if
 		// that's not support the raw16 mode is recommended, if none of the mentioned
 		// write modes are supported a warning message is displayed.
 		int uiStrID = -1;
 
-		if (m_CurDevice.IsOpen())
+		unsigned char ucWriteModes = 0;
+		g_Core2.GetMediaWriteModes(*pDstDevice,ucWriteModes);
+		if (ucWriteModes & CCore2::WRITEMODE_RAW96R)
+			uiStrID = WRITEMODE_RAW96R;
+		else if (ucWriteModes & CCore2::WRITEMODE_RAW16)
+			uiStrID = WRITEMODE_RAW16;
+
+		const TCHAR *szStr = lngGetString(uiStrID);
+
+		if (uiStrID != -1)
 		{
-			unsigned char ucWriteModes = 0;
-			g_Core2.GetMediaWriteModes(&m_CurDevice,ucWriteModes);
-			if (ucWriteModes & CCore2::WRITEMODE_RAW96R)
-				uiStrID = WRITEMODE_RAW96R;
-			else if (ucWriteModes & CCore2::WRITEMODE_RAW16)
-				uiStrID = WRITEMODE_RAW16;
+			TCHAR szItemText[128];
 
-			const TCHAR *szStr = lngGetString(uiStrID);
-
-			if (uiStrID != -1)
+			for (int i = 0; i < m_WriteMethodCombo.GetCount(); i++)
 			{
-				TCHAR szItemText[128];
+				if (m_WriteMethodCombo.GetLBTextLen(i) >= (sizeof(szItemText) / sizeof(TCHAR)))
+					continue;
 
-				for (int i = 0; i < m_WriteMethodCombo.GetCount(); i++)
+				m_WriteMethodCombo.GetLBText(i,szItemText);
+				if (!lstrcmp(szItemText,szStr))
 				{
-					if (m_WriteMethodCombo.GetLBTextLen(i) >= (sizeof(szItemText) / sizeof(TCHAR)))
-						continue;
-
-					m_WriteMethodCombo.GetLBText(i,szItemText);
-					if (!lstrcmp(szItemText,szStr))
-					{
-						m_WriteMethodCombo.SetCurSel(i);
-						break;
-					}
+					m_WriteMethodCombo.SetCurSel(i);
+					break;
 				}
 			}
-			else
-			{
-				// No good raw writing mode found.
-				MessageBox(lngGetString(WARNING_CLONEWRITEMETHOD),lngGetString(GENERAL_WARNING),
-					MB_OK | MB_ICONWARNING);
-			}
+		}
+		else
+		{
+			// No good raw writing mode found.
+			MessageBox(lngGetString(WARNING_CLONEWRITEMETHOD),lngGetString(GENERAL_WARNING),
+				MB_OK | MB_ICONWARNING);
 		}
 	}
 	else

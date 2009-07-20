@@ -17,6 +17,7 @@
  */
 
 #include "stdafx.h"
+#include <ckcore/convert.hh>
 #include "cdrtoolsParseStrings.h"
 #include "../../Common/StringContainer.h"
 #include "StringTable.h"
@@ -25,6 +26,7 @@
 #include "LangUtil.h"
 #include "WinVer.h"
 #include "TempManager.h"
+#include "DeviceUtil.h"
 #include "Core2.h"
 #include "Core.h"
 
@@ -950,14 +952,15 @@ void CCore::event_finished()
 	};
 }
 
-bool CCore::EjectDisc(tDeviceInfo *pDeviceInfo,bool bWaitForProcess)
+bool CCore::EjectDisc(ckmmc::Device &Device,bool bWaitForProcess)
 {
 	// Initialize log.
 	if (g_GlobalSettings.m_bLog)
 	{
 		g_pLogDlg->print_line(_T("CCore::EjectDisc"));
-		g_pLogDlg->print_line(_T("  [%d,%d,%d] %s %s %s"),pDeviceInfo->Address.m_iBus,pDeviceInfo->Address.m_iTarget,
-			pDeviceInfo->Address.m_iLun,pDeviceInfo->szVendor,pDeviceInfo->szIdentification,pDeviceInfo->szRevision);
+		g_pLogDlg->print_line(_T("  [%d,%d,%d] %s"),Device.address().bus_,
+							  Device.address().target_,Device.address().lun_,
+							  Device.name());
 	}
 
 	// Initialize this object.
@@ -970,22 +973,20 @@ bool CCore::EjectDisc(tDeviceInfo *pDeviceInfo,bool bWaitForProcess)
 	CommandLine += g_GlobalSettings.m_szCDRToolsPath;
 	CommandLine += _T(CORE_WRITEAPP);
 	CommandLine += _T("\" -eject dev=");
-
-	TCHAR szDeviceAdr[32];
-	g_DeviceManager.GetDeviceAddr(pDeviceInfo,szDeviceAdr);
-	CommandLine += szDeviceAdr;
+	CommandLine += NDeviceUtil::GetDeviceAddr(Device);
 
 	return SafeLaunch(CommandLine,bWaitForProcess);
 }
 
-bool CCore::LoadDisc(tDeviceInfo *pDeviceInfo,bool bWaitForProcess)
+bool CCore::LoadDisc(ckmmc::Device &Device,bool bWaitForProcess)
 {
 	// Initialize log.
 	if (g_GlobalSettings.m_bLog)
 	{
 		g_pLogDlg->print_line(_T("CCore::LoadDisc"));
-		g_pLogDlg->print_line(_T("  [%d,%d,%d] %s %s %s"),pDeviceInfo->Address.m_iBus,pDeviceInfo->Address.m_iTarget,
-			pDeviceInfo->Address.m_iLun,pDeviceInfo->szVendor,pDeviceInfo->szIdentification,pDeviceInfo->szRevision);
+		g_pLogDlg->print_line(_T("  [%d,%d,%d] %s"),Device.address().bus_,
+							  Device.address().target_,Device.address().lun_,
+							  Device.name());
 	}
 
 	// Initialize this object.
@@ -998,25 +999,23 @@ bool CCore::LoadDisc(tDeviceInfo *pDeviceInfo,bool bWaitForProcess)
 	CommandLine += g_GlobalSettings.m_szCDRToolsPath;
 	CommandLine += _T(CORE_WRITEAPP);
 	CommandLine += _T("\" -load dev=");
-
-	TCHAR szDeviceAdr[32];
-	g_DeviceManager.GetDeviceAddr(pDeviceInfo,szDeviceAdr);
-	CommandLine += szDeviceAdr;
+	CommandLine += NDeviceUtil::GetDeviceAddr(Device);
 
 	return SafeLaunch(CommandLine,bWaitForProcess);
 }
 
-bool CCore::EraseDisc(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,CAdvancedProgress *pProgress,
+bool CCore::EraseDisc(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 					  int iMode,bool bForce,bool bEject,bool bSimulate)
 {
 	// Initialize log.
 	if (g_GlobalSettings.m_bLog)
 	{
 		g_pLogDlg->print_line(_T("CCore::EraseDisc"));
-		g_pLogDlg->print_line(_T("  [%d,%d,%d] %s %s %s"),pDeviceInfo->Address.m_iBus,pDeviceInfo->Address.m_iTarget,
-			pDeviceInfo->Address.m_iLun,pDeviceInfo->szVendor,pDeviceInfo->szIdentification,pDeviceInfo->szRevision);
+		g_pLogDlg->print_line(_T("  [%d,%d,%d] %s"),Device.address().bus_,
+							  Device.address().target_,Device.address().lun_,
+							  Device.name());
 		g_pLogDlg->print_line(_T("  Mode = %d, Force = %d, Eject = %d, Simulate = %d."),
-			iMode,(int)bForce,(int)bEject,(int)bSimulate);
+							  iMode,(int)bForce,(int)bEject,(int)bSimulate);
 	}
 
 	// Initialize this object.
@@ -1049,38 +1048,36 @@ bool CCore::EraseDisc(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,CAdvancedP
 			break;
 	}
 
-	TCHAR szBuffer[32];
-	g_DeviceManager.GetDeviceAddr(pDeviceInfo,szBuffer);
-	CommandLine += szBuffer;
+	CommandLine += NDeviceUtil::GetDeviceAddr(Device);
 
+	TCHAR szBuffer[64];
 	lsprintf(szBuffer,_T(" gracetime=%d"),g_GlobalSettings.m_iGraceTime);
 	CommandLine += szBuffer;
 
 	if (bForce)
 		CommandLine += _T(" -force");
 
-	if (bEject)
+	if (Device.support(ckmmc::Device::ckDEVICE_EJECT) && bEject)
 		CommandLine += _T(" -eject");
 
-	if (pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_TESTWRITING)
-	{
-		if (bSimulate)
-			CommandLine += _T(" -dummy");
-	}
+	if (Device.support(ckmmc::Device::ckDEVICE_TEST_WRITE) && bSimulate)
+		CommandLine += _T(" -dummy");
 
 	return SafeLaunch(CommandLine,false);
 }
 
-bool CCore::FixateDisc(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,CAdvancedProgress *pProgress,
+bool CCore::FixateDisc(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 					   bool bEject,bool bSimulate)
 {
 	// Initialize log.
 	if (g_GlobalSettings.m_bLog)
 	{
 		g_pLogDlg->print_line(_T("CCore::FixateDisc"));
-		g_pLogDlg->print_line(_T("  [%d,%d,%d] %s %s %s"),pDeviceInfo->Address.m_iBus,pDeviceInfo->Address.m_iTarget,
-			pDeviceInfo->Address.m_iLun,pDeviceInfo->szVendor,pDeviceInfo->szIdentification,pDeviceInfo->szRevision);
-		g_pLogDlg->print_line(_T("  Eject = %d, Simulate = %d."),(int)bEject,(int)bSimulate);
+		g_pLogDlg->print_line(_T("  [%d,%d,%d] %s"),Device.address().bus_,
+							  Device.address().target_,Device.address().lun_,
+							  Device.name());
+		g_pLogDlg->print_line(_T("  Eject = %d, Simulate = %d."),
+							  (int)bEject,(int)bSimulate);
 	}
 
 	// Initialize this object.
@@ -1093,36 +1090,31 @@ bool CCore::FixateDisc(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,CAdvanced
 	CommandLine += g_GlobalSettings.m_szCDRToolsPath;
 	CommandLine += _T(CORE_WRITEAPP);
 	CommandLine += _T("\" -v -fix dev=");
+	CommandLine += NDeviceUtil::GetDeviceAddr(Device);
 
-	TCHAR szBuffer[32];
-	g_DeviceManager.GetDeviceAddr(pDeviceInfo,szBuffer);
-	CommandLine += szBuffer;
-
+	TCHAR szBuffer[64];
 	lsprintf(szBuffer,_T(" gracetime=%d"),g_GlobalSettings.m_iGraceTime);
 	CommandLine += szBuffer;
 
-	if (bEject)
+	if (Device.support(ckmmc::Device::ckDEVICE_EJECT) && bEject)
 		CommandLine += _T(" -eject");
 
-	if (pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_TESTWRITING)
-	{
-		if (bSimulate)
-			CommandLine += _T(" -dummy");
-	}
+	if (Device.support(ckmmc::Device::ckDEVICE_TEST_WRITE) && bSimulate)
+		CommandLine += _T(" -dummy");
 
 	return SafeLaunch(CommandLine,false);
 }
 
-bool CCore::BurnImage(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
-					  tDeviceInfoEx *pDeviceInfoEx,CAdvancedProgress *pProgress,
+bool CCore::BurnImage(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 					  const TCHAR *szFileName,bool bWaitForProcess,bool bCloneMode)
 {
 	// Initialize log.
 	if (g_GlobalSettings.m_bLog)
 	{
 		g_pLogDlg->print_line(_T("CCore::BurnImage"));
-		g_pLogDlg->print_line(_T("  [%d,%d,%d] %s %s %s"),pDeviceInfo->Address.m_iBus,pDeviceInfo->Address.m_iTarget,
-			pDeviceInfo->Address.m_iLun,pDeviceInfo->szVendor,pDeviceInfo->szIdentification,pDeviceInfo->szRevision);
+		g_pLogDlg->print_line(_T("  [%d,%d,%d] %s"),Device.address().bus_,
+							  Device.address().target_,Device.address().lun_,
+							  Device.name());
 		g_pLogDlg->print_line(_T("  File = %s."),szFileName);
 		g_pLogDlg->print_line(_T("  Eject = %d, Simulate = %d, BUP = %d, Pad tracks = %d, Close = %d, Overburn = %d, Swab = %d, Ignore size = %d, Immed = %d, Audio master = %d, Forcespeed = %d, VariRec (enabled) = %d, VariRec (value) = %d, Clone = %d."),
 			(int)g_BurnImageSettings.m_bEject,
@@ -1159,15 +1151,13 @@ bool CCore::BurnImage(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	CommandLine += g_GlobalSettings.m_szCDRToolsPath;
 	CommandLine += _T(CORE_WRITEAPP);
 	CommandLine += _T("\" -v dev=");
-
-	TCHAR szBuffer[32];
-	g_DeviceManager.GetDeviceAddr(pDeviceInfo,szBuffer);
-	CommandLine += szBuffer;
+	CommandLine += NDeviceUtil::GetDeviceAddr(Device);
 
 	// Clone.
 	if (bCloneMode)
 		CommandLine += _T(" -clone");
 
+	TCHAR szBuffer[64];
 	lsprintf(szBuffer,_T(" gracetime=%d"),g_GlobalSettings.m_iGraceTime);
 	CommandLine += szBuffer;
 
@@ -1179,17 +1169,17 @@ bool CCore::BurnImage(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	}
 
 	// Eject.
-	if (pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_EJECTCDSS)
+	if (Device.support(ckmmc::Device::ckDEVICE_EJECT) &&
+		g_BurnImageSettings.m_bEject)
 	{
-		if (g_BurnImageSettings.m_bEject)
-			CommandLine += _T(" -eject");
+		CommandLine += _T(" -eject");
 	}
 
 	// Simulation.
-	if (pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_TESTWRITING)
+	if (Device.support(ckmmc::Device::ckDEVICE_TEST_WRITE) &&
+		g_BurnImageSettings.m_bSimulate)
 	{
-		if (g_BurnImageSettings.m_bSimulate)
-			CommandLine += _T(" -dummy");
+		CommandLine += _T(" -dummy");
 	}
 
 	// Write method.
@@ -1225,7 +1215,7 @@ bool CCore::BurnImage(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	bool bUseDriverOpts = false;
 
 	// Buffer underrun protection.
-	if (pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_BUFRECORDING)
+	if (Device.support(ckmmc::Device::ckDEVICE_BUP))
 	{
 		bUseDriverOpts = true;
 
@@ -1236,7 +1226,7 @@ bool CCore::BurnImage(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	}
 
 	// Audio master.
-	if (strstr(pDeviceInfoEx->szWriteFlags,CDRTOOLS_WRITEFLAGS_AUDIOMASTER))
+	if (Device.support(ckmmc::Device::ckDEVICE_AUDIO_MASTER))
 	{
 		if (g_BurnAdvancedSettings.m_bAudioMaster)
 		{
@@ -1246,7 +1236,7 @@ bool CCore::BurnImage(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	}
 
 	// Forcespeed.
-	if (strstr(pDeviceInfoEx->szWriteFlags,CDRTOOLS_WRITEFLAGS_FORCESPEED))
+	if (Device.support(ckmmc::Device::ckDEVICE_FORCE_SPEED))
 	{
 		if (!g_BurnAdvancedSettings.m_bForceSpeed)
 		{
@@ -1256,7 +1246,7 @@ bool CCore::BurnImage(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	}
 
 	// VariRec.
-	if (strstr(pDeviceInfoEx->szWriteFlags,CDRTOOLS_WRITEFLAGS_VARIREC))
+	if (Device.support(ckmmc::Device::ckDEVICE_VARIREC))
 	{
 		if (g_BurnAdvancedSettings.m_bVariRec)
 		{
@@ -1285,12 +1275,9 @@ bool CCore::BurnImage(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	if (g_BurnAdvancedSettings.m_bOverburn)
 		CommandLine += _T(" -overburn");
 
-	// Swap audio byte order.
-	if (strstr(pDeviceInfoEx->szWriteFlags,CDRTOOLS_WRITEFLAGS_SWABAUDIO))
-	{
-		if (g_BurnAdvancedSettings.m_bSwab)
-			CommandLine += _T(" -swab");
-	}
+	// Swap audio byte order. FIXME: Should possibly check for support before selecting.
+	if (g_BurnAdvancedSettings.m_bSwab)
+		CommandLine += _T(" -swab");
 
 	// Ignore size.
 	if (g_BurnAdvancedSettings.m_bIgnoreSize)
@@ -1328,10 +1315,9 @@ bool CCore::BurnImage(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	return SafeLaunch(CommandLine,bWaitForProcess);
 }
 
-bool CCore::BurnTracks(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
-					  tDeviceInfoEx *pDeviceInfoEx,CAdvancedProgress *pProgress,
-					  const TCHAR *szDataTrack,std::vector<TCHAR *> &AudioTracks,
-					  const TCHAR *szAudioText,int iDataMode,int iMode,bool bWaitForProcess)
+bool CCore::BurnTracks(ckmmc::Device &Device,CAdvancedProgress *pProgress,
+					   const TCHAR *szDataTrack,std::vector<TCHAR *> &AudioTracks,
+					   const TCHAR *szAudioText,int iDataMode,int iMode,bool bWaitForProcess)
 {
 	// This function behaves different from almost all the others using
 	// m_bOperationRes. It actually assumes a successfull writing until proved
@@ -1342,8 +1328,9 @@ bool CCore::BurnTracks(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	if (g_GlobalSettings.m_bLog)
 	{
 		g_pLogDlg->print_line(_T("CCore::BurnTracks"));
-		g_pLogDlg->print_line(_T("  [%d,%d,%d] %s %s %s"),pDeviceInfo->Address.m_iBus,pDeviceInfo->Address.m_iTarget,
-			pDeviceInfo->Address.m_iLun,pDeviceInfo->szVendor,pDeviceInfo->szIdentification,pDeviceInfo->szRevision);
+		g_pLogDlg->print_line(_T("  [%d,%d,%d] %s"),Device.address().bus_,
+							  Device.address().target_,Device.address().lun_,
+							  Device.name());
 
 		if (szDataTrack != NULL)
 			g_pLogDlg->print_line(_T("  File = %s."),szDataTrack);
@@ -1397,11 +1384,9 @@ bool CCore::BurnTracks(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	CommandLine += g_GlobalSettings.m_szCDRToolsPath;
 	CommandLine += _T(CORE_WRITEAPP);
 	CommandLine += _T("\" -v dev=");
+	CommandLine += NDeviceUtil::GetDeviceAddr(Device);
 
-	TCHAR szBuffer[32];
-	g_DeviceManager.GetDeviceAddr(pDeviceInfo,szBuffer);
-	CommandLine += szBuffer;
-
+	TCHAR szBuffer[64];
 	lsprintf(szBuffer,_T(" gracetime=%d"),g_GlobalSettings.m_iGraceTime);
 	CommandLine += szBuffer;
 
@@ -1413,15 +1398,18 @@ bool CCore::BurnTracks(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	}
 
 	// Eject.
-	if (pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_TESTWRITING)
+	if (Device.support(ckmmc::Device::ckDEVICE_EJECT) &&
+		g_BurnImageSettings.m_bEject)
 	{
-		if (g_BurnImageSettings.m_bEject)
-			CommandLine += _T(" -eject");
+		CommandLine += _T(" -eject");
 	}
 
 	// Simulation.
-	if (g_BurnImageSettings.m_bSimulate)
+	if (Device.support(ckmmc::Device::ckDEVICE_TEST_WRITE) &&
+		g_BurnImageSettings.m_bSimulate)
+	{
 		CommandLine += _T(" -dummy");
+	}
 
 	// Write method.
 	switch (g_BurnImageSettings.m_iWriteMethod)
@@ -1456,7 +1444,7 @@ bool CCore::BurnTracks(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	bool bUseDriverOpts = false;
 
 	// Buffer underrun protection.
-	if (pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_BUFRECORDING)
+	if (Device.support(ckmmc::Device::ckDEVICE_BUP))
 	{
 		bUseDriverOpts = true;
 
@@ -1467,7 +1455,7 @@ bool CCore::BurnTracks(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	}
 
 	// Audio master.
-	if (strstr(pDeviceInfoEx->szWriteFlags,CDRTOOLS_WRITEFLAGS_AUDIOMASTER))
+	if (Device.support(ckmmc::Device::ckDEVICE_AUDIO_MASTER))
 	{
 		if (g_BurnAdvancedSettings.m_bAudioMaster)
 		{
@@ -1477,7 +1465,7 @@ bool CCore::BurnTracks(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	}
 
 	// Forcespeed.
-	if (strstr(pDeviceInfoEx->szWriteFlags,CDRTOOLS_WRITEFLAGS_FORCESPEED))
+	if (Device.support(ckmmc::Device::ckDEVICE_FORCE_SPEED))
 	{
 		if (!g_BurnAdvancedSettings.m_bForceSpeed)
 		{
@@ -1487,7 +1475,7 @@ bool CCore::BurnTracks(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	}
 
 	// VariRec.
-	if (strstr(pDeviceInfoEx->szWriteFlags,CDRTOOLS_WRITEFLAGS_VARIREC))
+	if (Device.support(ckmmc::Device::ckDEVICE_VARIREC))
 	{
 		if (g_BurnAdvancedSettings.m_bVariRec)
 		{
@@ -1516,12 +1504,9 @@ bool CCore::BurnTracks(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	if (g_BurnAdvancedSettings.m_bOverburn)
 		CommandLine += _T(" -overburn");
 
-	// Swap audio byte order.
-	if (strstr(pDeviceInfoEx->szWriteFlags,CDRTOOLS_WRITEFLAGS_SWABAUDIO))
-	{
-		if (g_BurnAdvancedSettings.m_bSwab)
-			CommandLine += _T(" -swab");
-	}
+	// Swap audio byte order. // FIXME: Should probably check for support before selecting.
+	if (g_BurnAdvancedSettings.m_bSwab)
+		CommandLine += _T(" -swab");
 
 	// Ignore size.
 	if (g_BurnAdvancedSettings.m_bIgnoreSize)
@@ -1596,11 +1581,10 @@ bool CCore::BurnTracks(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	return SafeLaunch(CommandLine,bWaitForProcess);
 }
 
-bool CCore::BurnImage(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
-					  tDeviceInfoEx *pDeviceInfoEx,CAdvancedProgress *pProgress,
+bool CCore::BurnImage(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 					  const TCHAR *szFileName,bool bCloneMode)
 {
-	return BurnImage(pDeviceInfo,pDeviceCap,pDeviceInfoEx,pProgress,szFileName,false,bCloneMode);
+	return BurnImage(Device,pProgress,szFileName,false,bCloneMode);
 }
 
 /*
@@ -1609,20 +1593,18 @@ bool CCore::BurnImage(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	Same as the function above except that it will not return untill the process
 	has ended.
 */
-bool CCore::BurnImageEx(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
-						tDeviceInfoEx *pDeviceInfoEx,CAdvancedProgress *pProgress,
+bool CCore::BurnImageEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 						const TCHAR *szFileName,bool bCloneMode)
 {
-	return BurnImage(pDeviceInfo,pDeviceCap,pDeviceInfoEx,pProgress,szFileName,true,bCloneMode);
+	return BurnImage(Device,pProgress,szFileName,true,bCloneMode);
 }
 
-bool CCore::BurnTracks(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
-					   tDeviceInfoEx *pDeviceInfoEx,CAdvancedProgress *pProgress,
+bool CCore::BurnTracks(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 					   const TCHAR *szDataTrack,std::vector<TCHAR *> &AudioTracks,
 					   const TCHAR *szAudioText,int iDataMode)
 {
-	return BurnTracks(pDeviceInfo,pDeviceCap,pDeviceInfoEx,pProgress,szDataTrack,
-		AudioTracks,szAudioText,iDataMode,MODE_BURNIMAGE,true);
+	return BurnTracks(Device,pProgress,szDataTrack,AudioTracks,szAudioText,
+					  iDataMode,MODE_BURNIMAGE,true);
 }
 
 /*
@@ -1632,14 +1614,15 @@ bool CCore::BurnTracks(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	allows for more operations to be performed in the same progress window. It
 	also has extra return values.
 */
-int CCore::BurnTracksEx(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
-						 tDeviceInfoEx *pDeviceInfoEx,CAdvancedProgress *pProgress,
-						 const TCHAR *szDataTrack,std::vector<TCHAR *> &AudioTracks,
-						 const TCHAR *szAudioText,int iDataMode)
+int CCore::BurnTracksEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,
+						const TCHAR *szDataTrack,std::vector<TCHAR *> &AudioTracks,
+						const TCHAR *szAudioText,int iDataMode)
 {
-	if (!BurnTracks(pDeviceInfo,pDeviceCap,pDeviceInfoEx,pProgress,szDataTrack,
-		AudioTracks,szAudioText,iDataMode,MODE_BURNIMAGEEX,true))
+	if (!BurnTracks(Device,pProgress,szDataTrack,AudioTracks,szAudioText,
+					iDataMode,MODE_BURNIMAGEEX,true))
+	{
 		return RESULT_INTERNALERROR;
+	}
 
 	return m_bOperationRes ? RESULT_OK : RESULT_EXTERNALERROR;
 }
@@ -1650,10 +1633,10 @@ int CCore::BurnTracksEx(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	Reads a track from the CD and stores the raw binary content in the file
 	named szFileName.
 */
-bool CCore::ReadDataTrack(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,
-						   const TCHAR *szFileName,unsigned int uiTrackNumber,
-						   unsigned long ulStartSector,unsigned long ulEndSector,
-						   int iMode,bool bWaitForProcess)
+bool CCore::ReadDataTrack(ckmmc::Device &Device,CAdvancedProgress *pProgress,
+						  const TCHAR *szFileName,unsigned int uiTrackNumber,
+						  unsigned long ulStartSector,unsigned long ulEndSector,
+						  int iMode,bool bWaitForProcess)
 {
 	m_bOperationRes = false;
 
@@ -1662,8 +1645,9 @@ bool CCore::ReadDataTrack(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,
 	{
 		g_pLogDlg->print_line(_T("CCore::ReadDataTrack"));
 		g_pLogDlg->print_line(_T("  File = %s."),szFileName);
-		g_pLogDlg->print_line(_T("  [%d,%d,%d] %s %s %s"),pDeviceInfo->Address.m_iBus,pDeviceInfo->Address.m_iTarget,
-			pDeviceInfo->Address.m_iLun,pDeviceInfo->szVendor,pDeviceInfo->szIdentification,pDeviceInfo->szRevision);
+		g_pLogDlg->print_line(_T("  [%d,%d,%d] %s"),Device.address().bus_,
+							  Device.address().target_,Device.address().lun_,
+							  Device.name());
 		g_pLogDlg->print_line(_T("  Start = %d, End = %d."),ulStartSector,ulEndSector);
 	}
 
@@ -1683,13 +1667,10 @@ bool CCore::ReadDataTrack(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,
 	CommandLine += g_GlobalSettings.m_szCDRToolsPath;
 	CommandLine += _T(CORE_READAPP);
 	CommandLine += _T("\" dev=");
-
-	// Device address.
-	TCHAR szBuffer[64];
-	g_DeviceManager.GetDeviceAddr(pDeviceInfo,szBuffer);
-	CommandLine += szBuffer;
+	CommandLine += NDeviceUtil::GetDeviceAddr(Device);
 
     // Sector range.
+	TCHAR szBuffer[128];
 	lsprintf(szBuffer,_T(" sectors=%d-%d"),ulStartSector,ulEndSector);
 	CommandLine += szBuffer;
 
@@ -1701,26 +1682,30 @@ bool CCore::ReadDataTrack(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,
 	return SafeLaunch(CommandLine,bWaitForProcess);
 }
 
-bool CCore::ReadDataTrack(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,
-						 const TCHAR *szFileName,unsigned int uiTrackNumber,
-						 unsigned long ulStartSector,unsigned long ulEndSector)
+bool CCore::ReadDataTrack(ckmmc::Device &Device,CAdvancedProgress *pProgress,
+						  const TCHAR *szFileName,unsigned int uiTrackNumber,
+						  unsigned long ulStartSector,unsigned long ulEndSector)
 {
-	return ReadDataTrack(pDeviceInfo,pProgress,szFileName,uiTrackNumber,ulStartSector,ulEndSector,MODE_READDATATRACK,true);
+	return ReadDataTrack(Device,pProgress,szFileName,uiTrackNumber,
+						 ulStartSector,ulEndSector,MODE_READDATATRACK,true);
 }
 
-int CCore::ReadDataTrackEx(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,
+int CCore::ReadDataTrackEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 						   const TCHAR *szFileName,unsigned int uiTrackNumber,
 						   unsigned long ulStartSector,unsigned long ulEndSector)
 {
-	if (!ReadDataTrack(pDeviceInfo,pProgress,szFileName,uiTrackNumber,ulStartSector,ulEndSector,MODE_READDATATRACKEX,true))
+	if (!ReadDataTrack(Device,pProgress,szFileName,uiTrackNumber,ulStartSector,
+					   ulEndSector,MODE_READDATATRACKEX,true))
+	{
 		return RESULT_INTERNALERROR;
+	}
 
 	return m_bOperationRes ? RESULT_OK : RESULT_EXTERNALERROR;
 }
 
 /*
 */
-bool CCore::ReadAudioTrack(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,
+bool CCore::ReadAudioTrack(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 						   const TCHAR *szFileName,unsigned int uiTrackNumber,
 						   int iMode,bool bWaitForProcess)
 {
@@ -1731,8 +1716,9 @@ bool CCore::ReadAudioTrack(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress
 	{
 		g_pLogDlg->print_line(_T("CCore::ReadAudioTrack"));
 		g_pLogDlg->print_line(_T("  File = %s."),szFileName);
-		g_pLogDlg->print_line(_T("  [%d,%d,%d] %s %s %s"),pDeviceInfo->Address.m_iBus,pDeviceInfo->Address.m_iTarget,
-			pDeviceInfo->Address.m_iLun,pDeviceInfo->szVendor,pDeviceInfo->szIdentification,pDeviceInfo->szRevision);
+		g_pLogDlg->print_line(_T("  [%d,%d,%d] %s"),Device.address().bus_,
+							  Device.address().target_,Device.address().lun_,
+							  Device.name());
 	}
 
 	// Initialize this object.
@@ -1748,16 +1734,13 @@ bool CCore::ReadAudioTrack(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress
 	CommandLine += g_GlobalSettings.m_szCDRToolsPath;
 	CommandLine += _T(CORE_AUDIOAPP);
 	CommandLine += _T("\" -D ");
-
-	// Device address.
-	TCHAR szBuffer[64];
-	g_DeviceManager.GetDeviceAddr(pDeviceInfo,szBuffer);
-	CommandLine += szBuffer;
+	CommandLine += NDeviceUtil::GetDeviceAddr(Device);
 
 	// Miscellaneous.
 	CommandLine += _T(" -I generic_scsi -x -B -O wav -g -H");
 
 	// Track.
+	TCHAR szBuffer[128];
 	lsprintf(szBuffer,_T(" -t %d+%d"),uiTrackNumber,uiTrackNumber);
 	CommandLine += szBuffer;
 
@@ -1769,16 +1752,20 @@ bool CCore::ReadAudioTrack(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress
 	return SafeLaunch(CommandLine,bWaitForProcess);
 }
 
-bool CCore::ReadAudioTrack(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,const TCHAR *szFileName,
-						   unsigned int uiTrackNumber)
+bool CCore::ReadAudioTrack(ckmmc::Device &Device,CAdvancedProgress *pProgress,
+						   const TCHAR *szFileName,unsigned int uiTrackNumber)
 {
-	return ReadAudioTrack(pDeviceInfo,pProgress,szFileName,uiTrackNumber,MODE_READAUDIOTRACK,true);
+	return ReadAudioTrack(Device,pProgress,szFileName,uiTrackNumber,
+						  MODE_READAUDIOTRACK,true);
 }
-int CCore::ReadAudioTrackEx(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,const TCHAR *szFileName,
+int CCore::ReadAudioTrackEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,const TCHAR *szFileName,
 							unsigned int uiTrackNumber)
 {
-	if (!ReadAudioTrack(pDeviceInfo,pProgress,szFileName,uiTrackNumber,MODE_READAUDIOTRACKEX,true))
+	if (!ReadAudioTrack(Device,pProgress,szFileName,uiTrackNumber,
+						MODE_READAUDIOTRACKEX,true))
+	{
 		return RESULT_INTERNALERROR;
+	}
 
 	return m_bOperationRes ? RESULT_OK : RESULT_EXTERNALERROR;
 }
@@ -1788,7 +1775,7 @@ int CCore::ReadAudioTrackEx(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgres
 	----------------
 	Scans the selected track for CRC and C2 errors.
 */
-bool CCore::ScanTrack(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,
+bool CCore::ScanTrack(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 					  unsigned int uiTrackNumber,unsigned long ulStartSector,
 					  unsigned long ulEndSector,int iMode,bool bWaitForProcess)
 {
@@ -1798,8 +1785,9 @@ bool CCore::ScanTrack(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,
 	if (g_GlobalSettings.m_bLog)
 	{
 		g_pLogDlg->print_line(_T("CCore::ScanTrack"));
-		g_pLogDlg->print_line(_T("  [%d,%d,%d] %s %s %s"),pDeviceInfo->Address.m_iBus,pDeviceInfo->Address.m_iTarget,
-			pDeviceInfo->Address.m_iLun,pDeviceInfo->szVendor,pDeviceInfo->szIdentification,pDeviceInfo->szRevision);
+		g_pLogDlg->print_line(_T("  [%d,%d,%d] %s"),Device.address().bus_,
+							  Device.address().target_,Device.address().lun_,
+							  Device.name());
 		g_pLogDlg->print_line(_T("  Start = %d, End = %d."),ulStartSector,ulEndSector);
 	}
 
@@ -1819,30 +1807,31 @@ bool CCore::ScanTrack(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,
 	CommandLine += g_GlobalSettings.m_szCDRToolsPath;
 	CommandLine += _T(CORE_READAPP);
 	CommandLine += _T("\" -c2scan dev=");
-
-	// Device address.
-	TCHAR szBuffer[64];
-	g_DeviceManager.GetDeviceAddr(pDeviceInfo,szBuffer);
-	CommandLine += szBuffer;
+	CommandLine += NDeviceUtil::GetDeviceAddr(Device);
 
     // Sector range.
+	TCHAR szBuffer[128];
 	lsprintf(szBuffer,_T(" sectors=%d-%d"),ulStartSector,ulEndSector);
 	CommandLine += szBuffer;
 
 	return SafeLaunch(CommandLine,bWaitForProcess);
 }
 
-bool CCore::ScanTrack(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,unsigned int uiTrackNumber,
+bool CCore::ScanTrack(ckmmc::Device &Device,CAdvancedProgress *pProgress,unsigned int uiTrackNumber,
 					  unsigned long ulStartSector,unsigned long ulEndSector)
 {
-	return ScanTrack(pDeviceInfo,pProgress,uiTrackNumber,ulStartSector,ulEndSector,MODE_SCANTRACK,true);
+	return ScanTrack(Device,pProgress,uiTrackNumber,ulStartSector,ulEndSector,
+					 MODE_SCANTRACK,true);
 }
 
-int CCore::ScanTrackEx(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,unsigned int uiTrackNumber,
+int CCore::ScanTrackEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,unsigned int uiTrackNumber,
 					   unsigned long ulStartSector,unsigned long ulEndSector)
 {
-	if (!ScanTrack(pDeviceInfo,pProgress,uiTrackNumber,ulStartSector,ulEndSector,MODE_SCANTRACKEX,true))
+	if (!ScanTrack(Device,pProgress,uiTrackNumber,ulStartSector,ulEndSector,
+				   MODE_SCANTRACKEX,true))
+	{
 		return RESULT_INTERNALERROR;
+	}
 
 	return m_bOperationRes ? RESULT_OK : RESULT_EXTERNALERROR;
 }
@@ -1854,18 +1843,19 @@ int CCore::ScanTrackEx(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,uns
 	g_BurnImageSettings, g_BurnAdvancedSettings and g_ReadSettings (m_bIgnoreErr
 	only) objects.
 */
-bool CCore::CopyDisc(tDeviceInfo *pSourceDeviceInfo,tDeviceInfo *pTargetDeviceInfo,
-					 tDeviceCap *pTargetDeviceCap,tDeviceInfoEx *pTargetDeviceInfoEx,
+bool CCore::CopyDisc(ckmmc::Device &SrcDevice,ckmmc::Device &DstDevice,
 					 CAdvancedProgress *pProgress)
 {
 	// Initialize log.
 	if (g_GlobalSettings.m_bLog)
 	{
 		g_pLogDlg->print_line(_T("CCore::CopyDisc"));
-		g_pLogDlg->print_line(_T("  Source: [%d,%d,%d] %s %s %s"),pSourceDeviceInfo->Address.m_iBus,pSourceDeviceInfo->Address.m_iTarget,
-			pSourceDeviceInfo->Address.m_iLun,pSourceDeviceInfo->szVendor,pSourceDeviceInfo->szIdentification,pSourceDeviceInfo->szRevision);
-		g_pLogDlg->print_line(_T("  Target: [%d,%d,%d] %s %s %s"),pTargetDeviceInfo->Address.m_iBus,pTargetDeviceInfo->Address.m_iTarget,
-			pTargetDeviceInfo->Address.m_iLun,pTargetDeviceInfo->szVendor,pTargetDeviceInfo->szIdentification,pTargetDeviceInfo->szRevision);
+		g_pLogDlg->print_line(_T("  Source: [%d,%d,%d] %s"),SrcDevice.address().bus_,
+							  SrcDevice.address().target_,SrcDevice.address().lun_,
+							  SrcDevice.name());
+		g_pLogDlg->print_line(_T("  Target: [%d,%d,%d] %s"),DstDevice.address().bus_,
+							  DstDevice.address().target_,DstDevice.address().lun_,
+							  DstDevice.name());
 		g_pLogDlg->print_line(_T("  Eject = %d, Simulate = %d, BUP = %d, Pad tracks = %d, Close = %d, Overburn = %d, Swab = %d, Ignore size = %d, Immed = %d, Audio master = %d, Forcespeed = %d, VariRec (enabled) = %d, VariRec (value) = %d, Ignore read errors = %d."),
 			(int)g_BurnImageSettings.m_bEject,
 			(int)g_BurnImageSettings.m_bSimulate,
@@ -1902,11 +1892,10 @@ bool CCore::CopyDisc(tDeviceInfo *pSourceDeviceInfo,tDeviceInfo *pTargetDeviceIn
 	CommandLine += " -v dev=";
 
 	// Source device.
-	char szBuffer[32];
-	g_DeviceManager.GetDeviceAddrA(pSourceDeviceInfo,szBuffer);
-	CommandLine += szBuffer;
+	CommandLine += NDeviceUtil::GetDeviceAddrA(SrcDevice);
 
 	// Speed.
+	char szBuffer[64];
 	if (g_BurnImageSettings.m_uiWriteSpeed != -1)
 	{
 		sprintf(szBuffer," speed=%d",g_BurnImageSettings.m_uiWriteSpeed);
@@ -1923,9 +1912,7 @@ bool CCore::CopyDisc(tDeviceInfo *pSourceDeviceInfo,tDeviceInfo *pTargetDeviceIn
 	// Write app related.
 	CommandLine += CORE_WRITEAPP;
 	CommandLine += " -v dev=";
-
-	g_DeviceManager.GetDeviceAddrA(pTargetDeviceInfo,szBuffer);
-	CommandLine += szBuffer;
+	CommandLine += NDeviceUtil::GetDeviceAddrA(DstDevice);
 
 	sprintf(szBuffer," gracetime=%d",g_GlobalSettings.m_iGraceTime);
 	CommandLine += szBuffer;
@@ -1938,15 +1925,18 @@ bool CCore::CopyDisc(tDeviceInfo *pSourceDeviceInfo,tDeviceInfo *pTargetDeviceIn
 	}
 
 	// Eject.
-	if (pTargetDeviceCap->uiGeneral & DEVICEMANAGER_CAP_TESTWRITING)
+	if (DstDevice.support(ckmmc::Device::ckDEVICE_EJECT) &&
+		g_BurnImageSettings.m_bEject)
 	{
-		if (g_BurnImageSettings.m_bEject)
-			CommandLine += " -eject";
+		CommandLine += " -eject";
 	}
 
 	// Simulation.
-	if (g_BurnImageSettings.m_bSimulate)
+	if (DstDevice.support(ckmmc::Device::ckDEVICE_TEST_WRITE) &&
+		g_BurnImageSettings.m_bSimulate)
+	{
 		CommandLine += " -dummy";
+	}
 
 	// Write method.
 	switch (g_BurnImageSettings.m_iWriteMethod)
@@ -1981,7 +1971,7 @@ bool CCore::CopyDisc(tDeviceInfo *pSourceDeviceInfo,tDeviceInfo *pTargetDeviceIn
 	bool bUseDriverOpts = false;
 
 	// Buffer underrun protection.
-	if (pTargetDeviceCap->uiGeneral & DEVICEMANAGER_CAP_BUFRECORDING)
+	if (DstDevice.support(ckmmc::Device::ckDEVICE_BUP))
 	{
 		bUseDriverOpts = true;
 
@@ -1992,7 +1982,7 @@ bool CCore::CopyDisc(tDeviceInfo *pSourceDeviceInfo,tDeviceInfo *pTargetDeviceIn
 	}
 
 	// Audio master.
-	if (strstr(pTargetDeviceInfoEx->szWriteFlags,CDRTOOLS_WRITEFLAGS_AUDIOMASTER))
+	if (DstDevice.support(ckmmc::Device::ckDEVICE_AUDIO_MASTER))
 	{
 		if (g_BurnAdvancedSettings.m_bAudioMaster)
 		{
@@ -2002,7 +1992,7 @@ bool CCore::CopyDisc(tDeviceInfo *pSourceDeviceInfo,tDeviceInfo *pTargetDeviceIn
 	}
 
 	// Forcespeed.
-	if (strstr(pTargetDeviceInfoEx->szWriteFlags,CDRTOOLS_WRITEFLAGS_FORCESPEED))
+	if (DstDevice.support(ckmmc::Device::ckDEVICE_FORCE_SPEED))
 	{
 		if (!g_BurnAdvancedSettings.m_bForceSpeed)
 		{
@@ -2012,7 +2002,7 @@ bool CCore::CopyDisc(tDeviceInfo *pSourceDeviceInfo,tDeviceInfo *pTargetDeviceIn
 	}
 
 	// VariRec.
-	if (strstr(pTargetDeviceInfoEx->szWriteFlags,CDRTOOLS_WRITEFLAGS_VARIREC))
+	if (DstDevice.support(ckmmc::Device::ckDEVICE_VARIREC))
 	{
 		if (g_BurnAdvancedSettings.m_bVariRec)
 		{
@@ -2041,12 +2031,9 @@ bool CCore::CopyDisc(tDeviceInfo *pSourceDeviceInfo,tDeviceInfo *pTargetDeviceIn
 	if (g_BurnAdvancedSettings.m_bOverburn)
 		CommandLine += " -overburn";
 
-	// Swap audio byte order.
-	if (strstr(pTargetDeviceInfoEx->szWriteFlags,CDRTOOLS_WRITEFLAGS_SWABAUDIO))
-	{
-		if (g_BurnAdvancedSettings.m_bSwab)
-			CommandLine += " -swab";
-	}
+	// Swap audio byte order. // FIXME: Should probably check for support before selecting.
+	if (g_BurnAdvancedSettings.m_bSwab)
+		CommandLine += " -swab";
 
 	// Ignore size.
 	if (g_BurnAdvancedSettings.m_bIgnoreSize)
@@ -2120,7 +2107,7 @@ bool CCore::CopyDisc(tDeviceInfo *pSourceDeviceInfo,tDeviceInfo *pTargetDeviceIn
 	Reads a disc to a disc image. This function is configured through the
 	g_ReadSettings object.
 */
-bool CCore::ReadDisc(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,const TCHAR *szFileName,
+bool CCore::ReadDisc(ckmmc::Device &Device,CAdvancedProgress *pProgress,const TCHAR *szFileName,
 					 int iMode,bool bWaitForProcess)
 {
 	m_bOperationRes = false;
@@ -2130,8 +2117,9 @@ bool CCore::ReadDisc(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,const
 	{
 		g_pLogDlg->print_line(_T("CCore::ReadDisc"));
 		g_pLogDlg->print_line(_T("  File = %s."),szFileName);
-		g_pLogDlg->print_line(_T("  [%d,%d,%d] %s %s %s"),pDeviceInfo->Address.m_iBus,pDeviceInfo->Address.m_iTarget,
-			pDeviceInfo->Address.m_iLun,pDeviceInfo->szVendor,pDeviceInfo->szIdentification,pDeviceInfo->szRevision);
+		g_pLogDlg->print_line(_T("  [%d,%d,%d] %s"),Device.address().bus_,
+							  Device.address().target_,Device.address().lun_,
+							  Device.name());
 		g_pLogDlg->print_line(_T("  Ignore read errors = %d, Clone = %d, Speed = %d."),
 			(int)g_ReadSettings.m_bIgnoreErr,
 			(int)g_ReadSettings.m_bClone,
@@ -2152,11 +2140,7 @@ bool CCore::ReadDisc(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,const
 	CommandLine += g_GlobalSettings.m_szCDRToolsPath;
 	CommandLine += _T(CORE_READAPP);
 	CommandLine += _T("\" dev=");
-
-	// Device address.
-	TCHAR szBuffer[64];
-	g_DeviceManager.GetDeviceAddr(pDeviceInfo,szBuffer);
-	CommandLine += szBuffer;
+	CommandLine += NDeviceUtil::GetDeviceAddr(Device);
 
 	// Ignore read errors.
 	if (g_ReadSettings.m_bIgnoreErr)
@@ -2168,7 +2152,10 @@ bool CCore::ReadDisc(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,const
 
 	// Speed.
 	if (g_ReadSettings.m_iReadSpeed != -1)
+	{
+		TCHAR szBuffer[64];
 		lsprintf(szBuffer,_T(" speed=%d"),g_ReadSettings.m_iReadSpeed);
+	}
 
 	// File name.
 	CommandLine += _T(" f=\"");
@@ -2178,14 +2165,14 @@ bool CCore::ReadDisc(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,const
 	return SafeLaunch(CommandLine,bWaitForProcess);
 }
 
-bool CCore::ReadDisc(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,const TCHAR *szFileName)
+bool CCore::ReadDisc(ckmmc::Device &Device,CAdvancedProgress *pProgress,const TCHAR *szFileName)
 {
-	return ReadDisc(pDeviceInfo,pProgress,szFileName,MODE_READDISC,false);
+	return ReadDisc(Device,pProgress,szFileName,MODE_READDISC,false);
 }
 
-int CCore::ReadDiscEx(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,const TCHAR *szFileName)
+int CCore::ReadDiscEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,const TCHAR *szFileName)
 {
-	if (!ReadDisc(pDeviceInfo,pProgress,szFileName,MODE_READDISCEX,true))
+	if (!ReadDisc(Device,pProgress,szFileName,MODE_READDISCEX,true))
 		return RESULT_INTERNALERROR;
 
 	return m_bOperationRes ? RESULT_OK : RESULT_EXTERNALERROR;
@@ -2225,10 +2212,10 @@ DWORD WINAPI CCore::NextCopyThread(LPVOID lpThreadParameter)
 	Burns a compilation on the fly to a disc. This function is configured through
 	the g_BurnImageSettings and g_ProjectSettings object.
 */
-bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
-		tDeviceInfoEx *pDeviceInfoEx,CAdvancedProgress *pProgress,ckcore::Progress &Progress,
-		ckfilesystem::FileSet &Files,std::vector<TCHAR *> &AudioTracks,
-		const TCHAR *szAudioText,int iDataMode,unsigned __int64 uiDataBytes,int iMode)
+bool CCore::BurnCompilation(ckmmc::Device &Device,CAdvancedProgress *pProgress,
+							ckcore::Progress &Progress,ckfilesystem::FileSet &Files,
+							std::vector<TCHAR *> &AudioTracks,const TCHAR *szAudioText,
+							int iDataMode,unsigned __int64 uiDataBytes,int iMode)
 {
 	m_bOperationRes = true;
 
@@ -2236,8 +2223,9 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	if (g_GlobalSettings.m_bLog)
 	{
 		g_pLogDlg->print_line(_T("CCore::BurnCompilation"));
-		g_pLogDlg->print_line(_T("  [%d,%d,%d] %s %s %s"),pDeviceInfo->Address.m_iBus,pDeviceInfo->Address.m_iTarget,
-			pDeviceInfo->Address.m_iLun,pDeviceInfo->szVendor,pDeviceInfo->szIdentification,pDeviceInfo->szRevision);
+		g_pLogDlg->print_line(_T("  [%d,%d,%d] %s"),Device.address().bus_,
+							  Device.address().target_,Device.address().lun_,
+							  Device.name());
 		g_pLogDlg->print_line(_T("  Eject = %d, Simulate = %d, BUP = %d, Pad tracks = %d, Close = %d, Overburn = %d, Swab = %d, Ignore size = %d, Immed = %d, Audio master = %d, Forcespeed = %d, VariRec (enabled) = %d, VariRec (value) = %d, Data bytes %I64d."),
 			(int)g_BurnImageSettings.m_bEject,
 			(int)g_BurnImageSettings.m_bSimulate,
@@ -2285,11 +2273,9 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	CommandLine += g_GlobalSettings.m_szCDRToolsPath;
 	CommandLine += _T(CORE_WRITEAPP);
 	CommandLine += _T("\" -v dev=");
+	CommandLine += NDeviceUtil::GetDeviceAddr(Device);
 
 	TCHAR szBuffer[64];
-	g_DeviceManager.GetDeviceAddr(pDeviceInfo,szBuffer);
-	CommandLine += szBuffer;
-
 	lsprintf(szBuffer,_T(" gracetime=%d"),g_GlobalSettings.m_iGraceTime);
 	CommandLine += szBuffer;
 
@@ -2301,15 +2287,18 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	}
 
 	// Eject.
-	if (pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_TESTWRITING)
+	if (Device.support(ckmmc::Device::ckDEVICE_EJECT) &&
+		g_BurnImageSettings.m_bEject)
 	{
-		if (g_BurnImageSettings.m_bEject)
 			CommandLine += _T(" -eject");
 	}
 
 	// Simulation.
-	if (g_BurnImageSettings.m_bSimulate)
+	if (Device.support(ckmmc::Device::ckDEVICE_TEST_WRITE) &&
+		g_BurnImageSettings.m_bSimulate)
+	{
 		CommandLine += _T(" -dummy");
+	}
 
 	// Write method.
 	switch (g_BurnImageSettings.m_iWriteMethod)
@@ -2348,7 +2337,7 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	bool bUseDriverOpts = false;
 
 	// Buffer underrun protection.
-	if (pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_BUFRECORDING)
+	if (Device.support(ckmmc::Device::ckDEVICE_BUP))
 	{
 		bUseDriverOpts = true;
 
@@ -2359,7 +2348,7 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	}
 
 	// Audio master.
-	if (strstr(pDeviceInfoEx->szWriteFlags,CDRTOOLS_WRITEFLAGS_AUDIOMASTER))
+	if (Device.support(ckmmc::Device::ckDEVICE_AUDIO_MASTER))
 	{
 		if (g_BurnAdvancedSettings.m_bAudioMaster)
 		{
@@ -2369,7 +2358,7 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	}
 
 	// Forcespeed.
-	if (strstr(pDeviceInfoEx->szWriteFlags,CDRTOOLS_WRITEFLAGS_FORCESPEED))
+	if (Device.support(ckmmc::Device::ckDEVICE_FORCE_SPEED))
 	{
 		if (!g_BurnAdvancedSettings.m_bForceSpeed)
 		{
@@ -2379,7 +2368,7 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	}
 
 	// VariRec.
-	if (strstr(pDeviceInfoEx->szWriteFlags,CDRTOOLS_WRITEFLAGS_VARIREC))
+	if (Device.support(ckmmc::Device::ckDEVICE_VARIREC))
 	{
 		if (g_BurnAdvancedSettings.m_bVariRec)
 		{
@@ -2408,12 +2397,9 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	if (g_BurnAdvancedSettings.m_bOverburn)
 		CommandLine += _T(" -overburn");
 
-	// Swap audio byte order.
-	if (strstr(pDeviceInfoEx->szWriteFlags,CDRTOOLS_WRITEFLAGS_SWABAUDIO))
-	{
-		if (g_BurnAdvancedSettings.m_bSwab)
-			CommandLine += _T(" -swab");
-	}
+	// Swap audio byte order. // FIXME: Should probably check for support before selecting.
+	if (g_BurnAdvancedSettings.m_bSwab)
+		CommandLine += _T(" -swab");
 
 	// Ignore size.
 	if (g_BurnAdvancedSettings.m_bIgnoreSize)
@@ -2497,23 +2483,25 @@ bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
 	return SafeLaunch(CommandLine,true);
 }
 
-bool CCore::BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
-		tDeviceInfoEx *pDeviceInfoEx,CAdvancedProgress *pProgress,ckcore::Progress &Progress,
-		ckfilesystem::FileSet &Files,std::vector<TCHAR *> &AudioTracks,
-		const TCHAR *szAudioText,int iMode,unsigned __int64 uiDataBytes)
+bool CCore::BurnCompilation(ckmmc::Device &Device,CAdvancedProgress *pProgress,
+							ckcore::Progress &Progress,ckfilesystem::FileSet &Files,
+							std::vector<TCHAR *> &AudioTracks,const TCHAR *szAudioText,
+							int iMode,unsigned __int64 uiDataBytes)
 {
-	return BurnCompilation(pDeviceInfo,pDeviceCap,pDeviceInfoEx,pProgress,Progress,Files,
-		AudioTracks,szAudioText,iMode,uiDataBytes,MODE_BURNIMAGE);
+	return BurnCompilation(Device,pProgress,Progress,Files,AudioTracks,
+						   szAudioText,iMode,uiDataBytes,MODE_BURNIMAGE);
 }
 
-int CCore::BurnCompilationEx(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
-		tDeviceInfoEx *pDeviceInfoEx,CAdvancedProgress *pProgress,ckcore::Progress &Progress,
-		ckfilesystem::FileSet &Files,std::vector<TCHAR *> &AudioTracks,
-		const TCHAR *szAudioText,int iMode,unsigned __int64 uiDataBytes)
+int CCore::BurnCompilationEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,
+							 ckcore::Progress &Progress,ckfilesystem::FileSet &Files,
+							 std::vector<TCHAR *> &AudioTracks,const TCHAR *szAudioText,
+							 int iMode,unsigned __int64 uiDataBytes)
 {
-	if (!BurnCompilation(pDeviceInfo,pDeviceCap,pDeviceInfoEx,pProgress,Progress,Files,
-		AudioTracks,szAudioText,iMode,uiDataBytes,MODE_BURNIMAGEEX))
+	if (!BurnCompilation(Device,pProgress,Progress,Files,AudioTracks,szAudioText,
+						 iMode,uiDataBytes,MODE_BURNIMAGEEX))
+	{
 		return RESULT_INTERNALERROR;		
+	}
 
 	return m_bOperationRes ? RESULT_OK : RESULT_EXTERNALERROR;
 }

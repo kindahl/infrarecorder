@@ -41,7 +41,7 @@ CCore2::~CCore2()
 {
 }
 
-bool CCore2::HandleEvents(CCore2Device *pDevice,CAdvancedProgress *pProgress,
+bool CCore2::HandleEvents(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 						  unsigned char &ucHandledEvents)
 {
 	ucHandledEvents = 0;
@@ -63,7 +63,7 @@ bool CCore2::HandleEvents(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 		ucCdb[8] = sizeof(ucEvent);
 		ucCdb[9] = 0x00;
 
-		if (!pDevice->Transport(ucCdb,10,ucEvent,sizeof(ucEvent)))
+		if (!Device.transport(ucCdb,10,ucEvent,sizeof(ucEvent),ckmmc::Device::ckTM_READ))
 			return false;
 
 		ucEvents = ucEvent[3];
@@ -97,7 +97,7 @@ bool CCore2::HandleEvents(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 
 					g_pLogDlg->print_line(_T("  The drive is not in active state."));
 
-					if (!StartStopUnit(pDevice,LOADMEDIA_START,false))
+					if (!StartStopUnit(Device,LOADMEDIA_START,false))
 					{
 						if (pProgress != NULL)
 							pProgress->notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_NOMEDIA));
@@ -136,7 +136,7 @@ bool CCore2::HandleEvents(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 	return true;
 }
 
-bool CCore2::WaitForUnit(CCore2Device *pDevice,CAdvancedProgress *pProgress)
+bool CCore2::WaitForUnit(ckmmc::Device &Device,CAdvancedProgress *pProgress)
 {
 	// Initialize buffers.
 	unsigned char ucCdb[16];
@@ -153,8 +153,11 @@ bool CCore2::WaitForUnit(CCore2Device *pDevice,CAdvancedProgress *pProgress)
 		Sleep(1000);
 
 		unsigned char ucResult;
-		if (!pDevice->TransportWithSense(ucCdb,6,NULL,0,ucSense,ucResult))
+		if (!Device.transport_with_sense(ucCdb,6,NULL,0,ckmmc::Device::ckTM_READ,
+										 ucSense,ucResult))
+		{
 			return false;
+		}
 
 		// Check if we're done.
 		if (ucResult == SCSISTAT_GOOD)
@@ -180,9 +183,8 @@ bool CCore2::WaitForUnit(CCore2Device *pDevice,CAdvancedProgress *pProgress)
 			if (pProgress != NULL && pProgress->cancelled())
 			{
 				// Stop the unit and unlock the media.
-				//StartStopUnit(pDevice,LOADMEDIA_STOP,true);
-				CloseTrackSession(pDevice,0,0,true);
-				LockMedia(pDevice,false);
+				CloseTrackSession(Device,0,0,true);
+				LockMedia(Device,false);
 				return false;
 			}
 
@@ -207,7 +209,7 @@ bool CCore2::WaitForUnit(CCore2Device *pDevice,CAdvancedProgress *pProgress)
 	return true;
 }
 
-CCore2::eMediaChange CCore2::CheckMediaChange(CCore2Device *pDevice)
+CCore2::eMediaChange CCore2::CheckMediaChange(ckmmc::Device &Device)
 {
 	unsigned char ucCdb[16];
 	memset(ucCdb,0,sizeof(ucCdb));
@@ -221,8 +223,11 @@ CCore2::eMediaChange CCore2::CheckMediaChange(CCore2Device *pDevice)
 	ucCdb[8] = sizeof(ucEvent);
 	ucCdb[9] = 0x00;
 
-	if (!pDevice->Transport(ucCdb,10,ucEvent,sizeof(ucEvent)))
+	if (!Device.transport(ucCdb,10,ucEvent,sizeof(ucEvent),
+						  ckmmc::Device::ckTM_READ))
+	{
 		return MEDIACHANGE_NOCHANGE;
+	}
 
 	unsigned char ucEventCode = ucEvent[4] & 0x0F;
 	switch (ucEventCode)
@@ -244,45 +249,8 @@ CCore2::eMediaChange CCore2::CheckMediaChange(CCore2Device *pDevice)
 	return MEDIACHANGE_NOCHANGE;
 }
 
-/*bool CCore2::UnitReady(CCore2Device *pDevice)
+bool CCore2::LockMedia(ckmmc::Device &Device,bool bLock)
 {
-	// Initialize buffers.
-	unsigned char ucCdb[16];
-	memset(ucCdb,0,sizeof(ucCdb));
-
-	unsigned char ucSense[24];
-	memset(ucSense,0,sizeof(ucSense));
-
-	// Prepare command.
-	ucCdb[0] = SCSI_TEST_UNIT_READY;
-
-	unsigned char ucResult;
-	if (!pDevice->TransportWithSense(ucCdb,6,NULL,0,ucSense,ucResult))
-		return false;
-
-	// Check if we're done.
-	if (ucResult == SCSISTAT_GOOD)
-		return true;
-
-	if ((ucSense[2] & 0x0F) == 0x6)
-	{
-		unsigned char ucResult;
-		if (!pDevice->TransportWithSense(ucCdb,6,NULL,0,ucSense,ucResult))
-			return false;
-
-		// Check if we're done.
-		if (ucResult == SCSISTAT_GOOD)
-			return true;
-	}
-
-	return false;
-}*/
-
-bool CCore2::LockMedia(CCore2Device *pDevice,bool bLock)
-{
-	if (pDevice == NULL)
-		return false;
-
 	// Initialize buffers.
 	unsigned char ucCdb[16];
 	memset(ucCdb,0,sizeof(ucCdb));
@@ -291,17 +259,14 @@ bool CCore2::LockMedia(CCore2Device *pDevice,bool bLock)
 	ucCdb[4] = (unsigned char)bLock;
 	ucCdb[5] = 0x00;
 
-	if (!pDevice->Transport(ucCdb,6,NULL,0))
+	if (!Device.transport(ucCdb,6,NULL,0,ckmmc::Device::ckTM_READ))
 		return false;
 
 	return true;
 }
 
-bool CCore2::StartStopUnit(CCore2Device *pDevice,eLoadMedia Action,bool bImmed)
+bool CCore2::StartStopUnit(ckmmc::Device &Device,eLoadMedia Action,bool bImmed)
 {
-	if (pDevice == NULL)
-		return false;
-
 	// Initialize buffers.
 	unsigned char ucCdb[16];
 	memset(ucCdb,0,sizeof(ucCdb));
@@ -315,8 +280,11 @@ bool CCore2::StartStopUnit(CCore2Device *pDevice,eLoadMedia Action,bool bImmed)
 	ucCdb[5] = 0x00;
 
 	unsigned char ucResult = 0;
-	if (!pDevice->TransportWithSense(ucCdb,6,NULL,0,ucSense,ucResult))
+	if (!Device.transport_with_sense(ucCdb,6,NULL,0,ckmmc::Device::ckTM_READ,
+									 ucSense,ucResult))
+	{
 		return false;
+	}
 
 	if (ucResult != SCSISTAT_GOOD)
 	{
@@ -334,7 +302,7 @@ bool CCore2::StartStopUnit(CCore2Device *pDevice,eLoadMedia Action,bool bImmed)
 						if (Action != LOADMEDIA_LOAD)
 						{
 							g_pLogDlg->print_line(_T("  Warning: Unable to start media, trying to manually load it."));
-							return StartStopUnit(pDevice,LOADMEDIA_LOAD,bImmed);
+							return StartStopUnit(Device,LOADMEDIA_LOAD,bImmed);
 						}
 						break;
 				}
@@ -374,12 +342,9 @@ bool CCore2::StartStopUnit(CCore2Device *pDevice,eLoadMedia Action,bool bImmed)
 	return true;
 }
 
-bool CCore2::CloseTrackSession(CCore2Device *pDevice,unsigned char ucCloseFunction,
+bool CCore2::CloseTrackSession(ckmmc::Device &Device,unsigned char ucCloseFunction,
 							   unsigned short usTrackNumber,bool bImmed)
 {
-	if (pDevice == NULL)
-		return false;
-
 	if (ucCloseFunction > 0x07)
 		return false;
 
@@ -394,17 +359,14 @@ bool CCore2::CloseTrackSession(CCore2Device *pDevice,unsigned char ucCloseFuncti
 	ucCdb[5] = static_cast<unsigned char>(usTrackNumber & 0xFF);
 	ucCdb[9] = 0x00;
 
-	if (!pDevice->Transport(ucCdb,10,NULL,0))
+	if (!Device.transport(ucCdb,10,NULL,0,ckmmc::Device::ckTM_READ))
 		return false;
 
 	return true;
 }
 
-bool CCore2::GetProfile(CCore2Device *pDevice,unsigned short &usProfile)
+bool CCore2::GetProfile(ckmmc::Device &Device,unsigned short &usProfile)
 {
-	if (pDevice == NULL)
-		return false;
-
 	// Initialize buffers.
 	unsigned char ucBuffer[8];
 	memset(ucBuffer,0,sizeof(ucBuffer));
@@ -416,39 +378,17 @@ bool CCore2::GetProfile(CCore2Device *pDevice,unsigned short &usProfile)
 	ucCdb[8] = 0x08;	// Allocation length.
 	ucCdb[9] = 0x00;
 
-	if (!pDevice->Transport(ucCdb,10,ucBuffer,8))
+	if (!Device.transport(ucCdb,10,ucBuffer,8,ckmmc::Device::ckTM_READ))
 		return false;
 
 	usProfile = ucBuffer[6] << 8 | ucBuffer[7];
 	return true;
-
-	/*Uchar	cbuf[8];
-
-	register struct	scg_cmd	*scmd = scgp->scmd;
-
-	fillbytes((caddr_t)scmd, sizeof (*scmd), '\0');
-	scmd->addr = cbuf;
-	scmd->size = sizeof(cbuf);
-	scmd->flags = SCG_RECV_DATA | SCG_DISRE_ENA;
-	scmd->cdb_len = 10;
-	scmd->sense_len = 18;
-
-	ucCdb[0] = SCSI_GET_CONFIGURATION;
-	ucCdb[1] = (scg_lun(scgp) << 5) & 0x07;
-	ucCdb[2] = 0;
-	ucCdb[3] = 0;
-	ucCdb[4] = 0;
-	ucCdb[5] = 0;
-	ucCdb[7] = (8 >> 8) & 0xFF;
-	ucCdb[8] = 8 & 0xFF*/
 }
 
-bool CCore2::GetFeatureSupport(CCore2Device *pDevice,unsigned short usFeature,
+bool CCore2::GetFeatureSupport(ckmmc::Device &Device,unsigned short usFeature,
 							   bool &bSupportFeature)
 {
 	bSupportFeature = false;
-	if (pDevice == NULL)
-		return false;
 
 	// Initialize buffers.
 	unsigned char ucBuffer[8 + 64];
@@ -464,7 +404,7 @@ bool CCore2::GetFeatureSupport(CCore2Device *pDevice,unsigned short usFeature,
 	ucCdb[8] = 0x48;	// Allocation length.
 	ucCdb[9] = 0;
 
-	if (!pDevice->Transport(ucCdb,10,ucBuffer,72))
+	if (!Device.transport(ucCdb,10,ucBuffer,72,ckmmc::Device::ckTM_READ))
 		return false;
 
 	unsigned short usReadFeature = ((unsigned short)ucBuffer[8] << 8) | ucBuffer[9];
@@ -473,12 +413,9 @@ bool CCore2::GetFeatureSupport(CCore2Device *pDevice,unsigned short usFeature,
 	return true;
 }
 
-bool CCore2::GetMediaWriteSpeeds(CCore2Device *pDevice,
+bool CCore2::GetMediaWriteSpeeds(ckmmc::Device &Device,
 								 std::vector<unsigned int> &Speeds)
 {
-	if (pDevice == NULL)
-		return false;
-
 	// Initialize buffers.
 	unsigned char ucBuffer[1024];
 	memset(ucBuffer,0,sizeof(ucBuffer));
@@ -498,10 +435,10 @@ bool CCore2::GetMediaWriteSpeeds(CCore2Device *pDevice,
 	// Fall back on this (obsolete) method if unable to fetch the speeds using the
 	// method above.
 	unsigned short usReadSpeed,usWriteSpeed;
-	if (GetMaxSpeeds(pDevice,usReadSpeed,usWriteSpeed))
+	if (GetMaxSpeeds(Device,usReadSpeed,usWriteSpeed))
 	{
 		unsigned short usProfile;
-		if (GetProfile(pDevice,usProfile))
+		if (GetProfile(Device,usProfile))
 			GetSpeeds(usProfile,usWriteSpeed,Speeds);
 		else
 			Speeds.push_back(usWriteSpeed);
@@ -513,11 +450,8 @@ bool CCore2::GetMediaWriteSpeeds(CCore2Device *pDevice,
 	return true;
 }
 
-bool CCore2::GetMaxReadSpeed(CCore2Device *pDevice,unsigned short &usSpeed)
+bool CCore2::GetMaxReadSpeed(ckmmc::Device &Device,unsigned short &usSpeed)
 {
-	if (pDevice == NULL)
-		return false;
-
 	// Initialize buffers.
 	unsigned char ucBuffer[192];
 	memset(ucBuffer,0,sizeof(ucBuffer));
@@ -532,8 +466,11 @@ bool CCore2::GetMaxReadSpeed(CCore2Device *pDevice,unsigned short &usSpeed)
 	ucCdb[8] = sizeof(ucBuffer) & 0xFF;		// Allocation length (LSB).
 	ucCdb[9] = 0x00;
 
-	if (!pDevice->Transport(ucCdb,10,ucBuffer,sizeof(ucBuffer)))
+	if (!Device.transport(ucCdb,10,ucBuffer,sizeof(ucBuffer),
+						  ckmmc::Device::ckTM_READ))
+	{
 		return false;
+	}
 
 	if ((ucBuffer[8] & 0x3F) != 0x2A)
 		return false;
@@ -542,12 +479,9 @@ bool CCore2::GetMaxReadSpeed(CCore2Device *pDevice,unsigned short &usSpeed)
 	return true;
 }
 
-bool CCore2::GetMaxSpeeds(CCore2Device *pDevice,unsigned short &usReadSpeed,
+bool CCore2::GetMaxSpeeds(ckmmc::Device &Device,unsigned short &usReadSpeed,
 						  unsigned short &usWriteSpeed)
 {
-	if (pDevice == NULL)
-		return false;
-
 	// Initialize buffers.
 	unsigned char ucBuffer[192];
 	memset(ucBuffer,0,sizeof(ucBuffer));
@@ -562,8 +496,11 @@ bool CCore2::GetMaxSpeeds(CCore2Device *pDevice,unsigned short &usReadSpeed,
 	ucCdb[8] = sizeof(ucBuffer) & 0xFF;		// Allocation length (LSB).
 	ucCdb[9] = 0x00;
 
-	if (!pDevice->Transport(ucCdb,10,ucBuffer,sizeof(ucBuffer)))
+	if (!Device.transport(ucCdb,10,ucBuffer,sizeof(ucBuffer),
+						  ckmmc::Device::ckTM_READ))
+	{
 		return false;
+	}
 
 	usReadSpeed = ((unsigned short)ucBuffer[8 + 8] << 8) | ucBuffer[8 + 9];
 	usWriteSpeed = ((unsigned short)ucBuffer[8 + 18] << 8) | ucBuffer[8 + 19];
@@ -578,61 +515,34 @@ bool CCore2::GetMaxSpeeds(CCore2Device *pDevice,unsigned short &usReadSpeed,
 	return true;
 }
 
-bool CCore2::GetMediaWriteModes(CCore2Device *pDevice,unsigned char &ucWriteModes)
+bool CCore2::GetMediaWriteModes(ckmmc::Device &Device,unsigned char &ucWriteModes)
 {
 	ucWriteModes = 0;
 
 	unsigned short usProfile = 0;
-	GetProfile(pDevice,usProfile);
+	GetProfile(Device,usProfile);
 
-	/*switch (usProfile)
-	{
-		case PROFILE_CDROM:
-		case PROFILE_CDR:
-		case PROFILE_CDRW:
-			if (UpdateModePage5(pDevice,false,WRITEMODE_TAO,true))
-				ucWriteModes |= WRITEMODE_TAO;
-			if (UpdateModePage5(pDevice,false,WRITEMODE_RAW96R,true))
-				ucWriteModes |= WRITEMODE_RAW96R;
-			if (UpdateModePage5(pDevice,false,WRITEMODE_RAW16,true))
-				ucWriteModes |= WRITEMODE_RAW16;
-			if (UpdateModePage5(pDevice,false,WRITEMODE_RAW96P,true))
-				ucWriteModes |= WRITEMODE_RAW96P;
-
-		default:
-			if (UpdateModePage5(pDevice,false,WRITEMODE_PACKET,true))
-					ucWriteModes |= WRITEMODE_PACKET;
-			if (UpdateModePage5(pDevice,false,WRITEMODE_SAO,true))
-					ucWriteModes |= WRITEMODE_SAO;
-			if (UpdateModePage5(pDevice,false,WRITEMODE_LAYERJUMP,true))
-					ucWriteModes |= WRITEMODE_LAYERJUMP;
-			break;
-	}*/
-
-	if (UpdateModePage5(pDevice,false,WRITEMODE_TAO,true))
+	if (UpdateModePage5(Device,false,WRITEMODE_TAO,true))
 		ucWriteModes |= WRITEMODE_TAO;
-	if (UpdateModePage5(pDevice,false,WRITEMODE_RAW96R,true))
+	if (UpdateModePage5(Device,false,WRITEMODE_RAW96R,true))
 		ucWriteModes |= WRITEMODE_RAW96R;
-	if (UpdateModePage5(pDevice,false,WRITEMODE_RAW16,true))
+	if (UpdateModePage5(Device,false,WRITEMODE_RAW16,true))
 		ucWriteModes |= WRITEMODE_RAW16;
-	if (UpdateModePage5(pDevice,false,WRITEMODE_RAW96P,true))
+	if (UpdateModePage5(Device,false,WRITEMODE_RAW96P,true))
 		ucWriteModes |= WRITEMODE_RAW96P;
-	if (UpdateModePage5(pDevice,false,WRITEMODE_PACKET,true))
+	if (UpdateModePage5(Device,false,WRITEMODE_PACKET,true))
 		ucWriteModes |= WRITEMODE_PACKET;
-	if (UpdateModePage5(pDevice,false,WRITEMODE_SAO,true))
+	if (UpdateModePage5(Device,false,WRITEMODE_SAO,true))
 		ucWriteModes |= WRITEMODE_SAO;
-	if (UpdateModePage5(pDevice,false,WRITEMODE_LAYERJUMP,true))
+	if (UpdateModePage5(Device,false,WRITEMODE_LAYERJUMP,true))
 		ucWriteModes |= WRITEMODE_LAYERJUMP;
 	
 	return true;
 }
 
-bool CCore2::SetDiscSpeeds(CCore2Device *pDevice,unsigned short usReadSpeed,
+bool CCore2::SetDiscSpeeds(ckmmc::Device &Device,unsigned short usReadSpeed,
 						   unsigned short usWriteSpeed)
 {
-	if (pDevice == NULL)
-		return false;
-
 	// Initialize buffers.
 	unsigned char ucCdb[16];
 	memset(ucCdb,0,sizeof(ucCdb));
@@ -644,7 +554,7 @@ bool CCore2::SetDiscSpeeds(CCore2Device *pDevice,unsigned short usReadSpeed,
 	ucCdb[ 5] = static_cast<unsigned char>(usWriteSpeed & 0xFF);
 	ucCdb[11] = 0x08;
 
-	if (!pDevice->Transport(ucCdb,12,NULL,0))
+	if (!Device.transport(ucCdb,12,NULL,0,ckmmc::Device::ckTM_READ))
 		return false;
 
 	return true;
@@ -658,11 +568,9 @@ bool CCore2::SetDiscSpeeds(CCore2Device *pDevice,unsigned short usReadSpeed,
 	@param bSilent if true, the function will not output any error to the log if it failed.
 	@return true if the mode page was successfully updated, false otherwise.
 */
-bool CCore2::UpdateModePage5(CCore2Device *pDevice,bool bTestWrite,eWriteMode WriteMode,bool bSilent)
+bool CCore2::UpdateModePage5(ckmmc::Device &Device,bool bTestWrite,
+							 eWriteMode WriteMode,bool bSilent)
 {
-	if (pDevice == NULL)
-		return false;
-
 	// Initialize buffers.
 	unsigned char ucBuffer[128];
 	memset(ucBuffer,0,sizeof(ucBuffer));
@@ -677,8 +585,11 @@ bool CCore2::UpdateModePage5(CCore2Device *pDevice,bool bTestWrite,eWriteMode Wr
 	ucCdb[8] = sizeof(ucBuffer) & 0xFF;	// Allocation length (LSB).
 	ucCdb[9] = 0x00;
 
-	if (!pDevice->Transport(ucCdb,10,ucBuffer,sizeof(ucBuffer)))
+	if (!Device.transport(ucCdb,10,ucBuffer,sizeof(ucBuffer),
+						  ckmmc::Device::ckTM_READ))
+	{
 		return false;
+	}
 
 	if ((ucBuffer[8] & 0x3F) != 0x05)
 		return false;
@@ -763,8 +674,11 @@ bool CCore2::UpdateModePage5(CCore2Device *pDevice,bool bTestWrite,eWriteMode Wr
 
 	if (!bSilent)
 	{
-		if (!pDevice->Transport(ucCdb,10,ucBuffer,usFileListSize,CCore2Device::DATAMODE_WRITE))
+		if (!Device.transport(ucCdb,10,ucBuffer,usFileListSize,
+							  ckmmc::Device::ckTM_WRITE))
+		{
 			return false;
+		}
 	}
 	else
 	{
@@ -772,9 +686,11 @@ bool CCore2::UpdateModePage5(CCore2Device *pDevice,bool bTestWrite,eWriteMode Wr
 		memset(ucSense,0,sizeof(ucSense));
 
 		unsigned char ucResult = 0;
-		if (!pDevice->TransportWithSense(ucCdb,10,ucBuffer,usFileListSize,ucSense,
-			ucResult,CCore2Device::DATAMODE_WRITE))
+		if (!Device.transport_with_sense(ucCdb,10,ucBuffer,usFileListSize,
+										 ckmmc::Device::ckTM_WRITE,ucSense,ucResult))
+		{
 			return false;
+		}
 
 		if (ucResult != SCSISTAT_GOOD)
 			return false;
@@ -783,9 +699,9 @@ bool CCore2::UpdateModePage5(CCore2Device *pDevice,bool bTestWrite,eWriteMode Wr
 	return true;
 }
 
-bool CCore2::EraseDisc(CCore2Device *pDevice,CAdvancedProgress *pProgress,
-					  int iMethod,bool bForce,bool bEject,bool bSimulate,
-					  unsigned int uiSpeed)
+bool CCore2::EraseDisc(ckmmc::Device &Device,CAdvancedProgress *pProgress,
+					   int iMethod,bool bForce,bool bEject,bool bSimulate,
+					   unsigned int uiSpeed)
 {
 	// Initialize log.
 	if (g_GlobalSettings.m_bLog)
@@ -802,28 +718,19 @@ bool CCore2::EraseDisc(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 	pProgress->AllowCancel(false);
 	pProgress->SetRealMode(!bSimulate);
 
-	// Load and start the recorder.
-	/*if (!StartStopUnit(pDevice,LOADMEDIA_LOAD,false))
-	{
-		g_pLogDlg->print_line(_T("  Error: Unable to load and start the media."));
-		pProgress->AddLogEntry(CAdvancedProgress::LT_ERROR,lngGetString(FAILURE_NOMEDIA));
-		return false;
-	}*/
-
 	// Turn test writing on if selected.
-	if (!UpdateModePage5(pDevice,bSimulate))
+	if (!UpdateModePage5(Device,bSimulate))
 		g_pLogDlg->print_line(_T("  Warning: Unable to update code page 0x05."));
 
 // Disabled until these routines are concidered stable enough.
 #if 0
-//#ifndef _DEBUG
 	// Lock the media.
 	if (!LockMedia(pDevice,true))
 		g_pLogDlg->print_line(_T("  Warning: Unable to lock device media."));
 #endif
 
 	// Set write speed.
-	if (!SetDiscSpeeds(pDevice,0xFFFF,(unsigned short)uiSpeed))
+	if (!SetDiscSpeeds(Device,0xFFFF,(unsigned short)uiSpeed))
 		g_pLogDlg->print_line(_T("  Warning: Unable to set disc erase speed."));
 
 	bool bResult = false;
@@ -833,7 +740,7 @@ bool CCore2::EraseDisc(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 		case ERASE_FORMAT_FULL:
 			{
 				CCore2Format Core2Format;
-				bResult = Core2Format.FormatUnit(pDevice,pProgress,iMethod == ERASE_FORMAT_FULL);
+				bResult = Core2Format.FormatUnit(Device,pProgress,iMethod == ERASE_FORMAT_FULL);
 			}
 			break;
 
@@ -843,26 +750,26 @@ bool CCore2::EraseDisc(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 		case ERASE_BLANK_SESSION:
 			{
 				CCore2Blank Core2Blank;
-				bResult = Core2Blank.Blank(pDevice,pProgress,iMethod,bForce,bSimulate);
+				bResult = Core2Blank.Blank(Device,pProgress,iMethod,bForce,bSimulate);
 			}
 			break;
 	}
 
 	// Unlock the media.
-	if (!LockMedia(pDevice,false))
+	if (!LockMedia(Device,false))
 		g_pLogDlg->print_line(_T("  Warning: Unable to unlock device media."));
 
 	// Eject the media (if requested).
 	if (bResult && bEject)
 	{
-		if (!StartStopUnit(pDevice,LOADMEDIA_EJECT,true))
+		if (!StartStopUnit(Device,LOADMEDIA_EJECT,true))
 			g_pLogDlg->print_line(_T("  Warning: Unable to eject media."));
 	}
 
 	return bResult;
 }
 
-bool CCore2::ReadDataTrack(CCore2Device *pDevice,CAdvancedProgress *pProgress,
+bool CCore2::ReadDataTrack(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 						   unsigned char ucTrackNumber,bool bIgnoreErr,const TCHAR *szFilePath)
 {
 	// Initialize log.
@@ -880,16 +787,16 @@ bool CCore2::ReadDataTrack(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 
 	// Print the maximum read speed (for diagnostics purposes).
 	unsigned short usMaxReadSpeed = 0;
-	if (GetMaxReadSpeed(pDevice,usMaxReadSpeed))
+	if (GetMaxReadSpeed(Device,usMaxReadSpeed))
 		g_pLogDlg->print_line(_T("  Maximum read speed: %d KiB/s."),usMaxReadSpeed);
 
-	if (!SetDiscSpeeds(pDevice,0xFFFF,0xFFFF))
+	if (!SetDiscSpeeds(Device,0xFFFF,0xFFFF))
 		g_pLogDlg->print_line(_T("  Warning: Unable to set the device read speed."));
 
 	unsigned char ucFirstTrackNumber = 0,ucLastTrackNumber = 0;
 	std::vector<CCore2TOCTrackDesc> Tracks;
 
-	if (Info.ReadTOC(pDevice,ucFirstTrackNumber,ucLastTrackNumber,Tracks))
+	if (Info.ReadTOC(Device,ucFirstTrackNumber,ucLastTrackNumber,Tracks))
 	{
 		g_pLogDlg->print_line(_T("  First and last disc track number: %d, %d."),
 			ucFirstTrackNumber,ucLastTrackNumber);
@@ -911,7 +818,7 @@ bool CCore2::ReadDataTrack(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 	unsigned long ulTrackAddr = Tracks[ucTrackNumber - 1].m_ulTrackAddr;
 
 	CCore2TrackInfo TrackInfo;
-	if (!Info.ReadTrackInformation(pDevice,CCore2Info::TIT_LBA,ulTrackAddr,&TrackInfo))
+	if (!Info.ReadTrackInformation(Device,CCore2Info::TIT_LBA,ulTrackAddr,&TrackInfo))
 	{
 		g_pLogDlg->print_line(_T("  Error: Unable to read track information."));
 		return false;
@@ -921,25 +828,6 @@ bool CCore2::ReadDataTrack(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 
 	// Always assume a post-gap of 150 sectors. This may be a bad idea.
 	ulTrackSize -= 150;
-	/*if (ucTrackNumber < Tracks.size())
-	{
-		CCore2TrackInfo NextTrackInfo;
-		if (Info.ReadTrackInformation(pDevice,Tracks[ucTrackNumber].m_ulTrackAddr,&NextTrackInfo))
-		{
-			// Check if the next track is an audio track.
-			if ((NextTrackInfo.m_ucDataMode & 0x0C) != 0x04)
-			{
-				// According to the yellow book, a data track that's followed by an audio
-				// track has atleast 150 sectors of post-gap.
-				ulTrackSize -= 150;
-			}
-		}
-		else
-		{
-			g_pLogDlg->print_line(_T("  Warning: Unable to read information about the next track."));
-		}
-	}*/
-
 	g_pLogDlg->print_line(_T("  Track span: %d-%d."),ulTrackAddr,ulTrackAddr + ulTrackSize);
 
 	unsigned long ulMin = (ulTrackSize + 150)/(60*75);
@@ -973,10 +861,10 @@ bool CCore2::ReadDataTrack(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 		return false;
 	}
 
-	Core2ReadFunction::CReadUserData ReadFunc(pDevice,&OutStream);
+	Core2ReadFunction::CReadUserData ReadFunc(Device,&OutStream);
 
 	// Start reading the selected sectors from the disc.
-	bool bResult = Read.ReadData(pDevice,pProgress,&ReadFunc,ulTrackAddr,ulTrackSize,bIgnoreErr);
+	bool bResult = Read.ReadData(Device,pProgress,&ReadFunc,ulTrackAddr,ulTrackSize,bIgnoreErr);
 	OutStream.close();
 
 	if (bResult)
@@ -990,11 +878,8 @@ bool CCore2::ReadDataTrack(CCore2Device *pDevice,CAdvancedProgress *pProgress,
 	-------------------
 	Reads the full TOC and saves the data into a cdrtools compatible file.
 */
-bool CCore2::ReadFullTOC(CCore2Device *pDevice,const TCHAR *szFileName)
+bool CCore2::ReadFullTOC(ckmmc::Device &Device,const TCHAR *szFileName)
 {
-	if (pDevice == NULL)
-		return false;
-
 	// Initialize buffers.
 	unsigned char ucBuffer[4 + 2048];		// It feels stupid to allocate this much memory when
 											// only 2 bytes of data is needed. The problem is that
@@ -1012,8 +897,11 @@ bool CCore2::ReadFullTOC(CCore2Device *pDevice,const TCHAR *szFileName)
 	ucCdb[8] = sizeof(ucBuffer) & 0xFF;		// Allocation length (LSB).
 	ucCdb[9] = 0;
 
-	if (!pDevice->Transport(ucCdb,10,ucBuffer,sizeof(ucBuffer)))
+	if (!Device.transport(ucCdb,10,ucBuffer,sizeof(ucBuffer),
+						  ckmmc::Device::ckTM_READ))
+	{
 		return false;
+	}
 
 	// Save the data to the specified file name.
 	ckcore::File File(szFileName);

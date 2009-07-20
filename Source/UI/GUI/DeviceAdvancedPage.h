@@ -17,13 +17,14 @@
  */
 
 #pragma once
+#include <ckmmc/device.hh>
 #include "resource.h"
 #include "TitleTipListViewCtrl.h"
 
 class CDeviceAdvancedPage : public CPropertyPageImpl<CDeviceAdvancedPage>
 {
 private:
-	UINT_PTR m_uiDeviceIndex;
+	ckmmc::Device &m_Device;
 	bool m_bLockAdvList;
 	CTitleTipListViewCtrl m_ListView;
 
@@ -32,10 +33,8 @@ private:
 public:
 	enum { IDD = IDD_PROPPAGE_DEVICEADVANCED };
 
-	CDeviceAdvancedPage();
+	CDeviceAdvancedPage(ckmmc::Device &Device);
 	~CDeviceAdvancedPage();
-
-	void SetDeviceIndex(UINT_PTR uiDeviceIndex);
 
 	BEGIN_MSG_MAP(CDeviceAdvancedPage)
 		MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)

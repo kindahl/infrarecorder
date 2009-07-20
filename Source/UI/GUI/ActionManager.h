@@ -35,8 +35,8 @@ private:
 	static DWORD WINAPI CopyDiscThread(LPVOID lpThreadParameter);
 	static DWORD WINAPI EraseThread(LPVOID lpThreadParameter);
 
-	void QuickErase(INT_PTR iRecorder);
-	bool QuickEraseQuery(INT_PTR iRecorder,HWND hWndParent);
+	void QuickErase(ckmmc::Device &Device);
+	bool QuickEraseQuery(ckmmc::Device &Device,HWND hWndParent);
 
 public:
 	CActionManager();

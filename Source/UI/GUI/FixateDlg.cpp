@@ -17,11 +17,12 @@
  */
 
 #include "stdafx.h"
-#include "FixateDlg.h"
-#include "../../Common/StringUtil.h"
+#include "InfraRecorder.h"
 #include "StringTable.h"
+#include "DeviceUtil.h"
 #include "Settings.h"
 #include "LangUtil.h"
+#include "FixateDlg.h"
 
 CFixateDlg::CFixateDlg(bool bAppMode)
 {
@@ -73,21 +74,6 @@ LRESULT CFixateDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHa
 {
 	CenterWindow(GetParent());
 
-	// Add the window to the task bar and add a minimize button to the dialog if
-	// the windows is in application mode.
-	/*if (m_bAppMode)
-	{
-		ModifyStyle(WS_POPUPWINDOW | WS_DLGFRAME | DS_MODALFRAME,(WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX) | WS_OVERLAPPED,0);
-		ModifyStyleEx(WS_EX_DLGMODALFRAME,WS_EX_APPWINDOW,0);
-
-		// Set icons.
-		HICON hIcon = (HICON)::LoadImage(_Module.GetResourceInstance(),MAKEINTRESOURCE(IDR_MAINFRAME), 
-			IMAGE_ICON,::GetSystemMetrics(SM_CXICON),::GetSystemMetrics(SM_CYICON),LR_DEFAULTCOLOR);
-		SetIcon(hIcon,TRUE);
-		HICON hIconSmall = (HICON)::LoadImage(_Module.GetResourceInstance(),MAKEINTRESOURCE(IDR_MAINFRAME), 
-			IMAGE_ICON,::GetSystemMetrics(SM_CXSMICON),::GetSystemMetrics(SM_CYSMICON),LR_DEFAULTCOLOR);
-		SetIcon(hIconSmall,FALSE);
-	}*/
 	if (m_bAppMode)
 	{
 		ModifyStyle(0,WS_MINIMIZEBOX | WS_SYSMENU);
@@ -102,19 +88,19 @@ LRESULT CFixateDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHa
 	m_RecorderCombo = GetDlgItem(IDC_RECORDERCOMBO);
 
 	// Recorder combo box.
-	for (unsigned int i = 0; i < g_DeviceManager.GetDeviceCount(); i++)
+	std::vector<ckmmc::Device *>::const_iterator it;
+	for (it = g_DeviceManager.devices().begin(); it !=
+		g_DeviceManager.devices().end(); it++)
 	{
+		ckmmc::Device *pDevice = *it;
+
 		// We only want to add recorder to the list.
-		if (!g_DeviceManager.IsDeviceRecorder(i))
+		if (!pDevice->recorder())
 			continue;
 
-		tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(i);
-
-		TCHAR szDeviceName[128];
-		g_DeviceManager.GetDeviceName(pDeviceInfo,szDeviceName);
-
-		m_RecorderCombo.AddString(szDeviceName);
-		m_RecorderCombo.SetItemData(m_RecorderCombo.GetCount() - 1,i);
+		m_RecorderCombo.AddString(NDeviceUtil::GetDeviceName(*pDevice).c_str());
+		m_RecorderCombo.SetItemData(m_RecorderCombo.GetCount() - 1,
+									reinterpret_cast<DWORD_PTR>(pDevice));
 	}
 
 	if (m_RecorderCombo.GetCount() == 0)
@@ -130,8 +116,10 @@ LRESULT CFixateDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHa
 
 	// Enable/disable the simulation checkbox depending on if the selected recorder
 	// supports that operation.
-	tDeviceCap *pDeviceCap = g_DeviceManager.GetDeviceCap(m_RecorderCombo.GetItemData(0));
-	::EnableWindow(GetDlgItem(IDC_SIMULATECHECK),pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_TESTWRITING);
+	ckmmc::Device *pDevice =
+		reinterpret_cast<ckmmc::Device *>(m_RecorderCombo.GetItemData(0));
+	::EnableWindow(GetDlgItem(IDC_SIMULATECHECK),
+				   pDevice->support(ckmmc::Device::ckDEVICE_TEST_WRITE));
 
 	// Setup the default settings.
 	CheckDlgButton(IDC_EJECTCHECK,g_FixateSettings.m_bEject);
@@ -147,10 +135,12 @@ LRESULT CFixateDlg::OnRecorderChange(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL
 {
 	// Enable/disable the simulation checkbox depending on if the selected recorder
 	// supports that operation.
-	tDeviceCap *pDeviceCap = g_DeviceManager.GetDeviceCap(
-		m_RecorderCombo.GetItemData(m_RecorderCombo.GetCurSel()));
+	ckmmc::Device *pDevice =
+		reinterpret_cast<ckmmc::Device *>(m_RecorderCombo.GetItemData(
+										  m_RecorderCombo.GetCurSel()));
 
-	::EnableWindow(GetDlgItem(IDC_SIMULATECHECK),pDeviceCap->uiGeneral & DEVICEMANAGER_CAP_TESTWRITING);
+	::EnableWindow(GetDlgItem(IDC_SIMULATECHECK),
+				   pDevice->support(ckmmc::Device::ckDEVICE_TEST_WRITE));
 
 	bHandled = false;
 	return 0;
@@ -163,7 +153,9 @@ LRESULT CFixateDlg::OnOK(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 	g_FixateSettings.m_bSimulate = IsDlgButtonChecked(IDC_SIMULATECHECK) == 1;
 
 	// For internal use only.
-	g_FixateSettings.m_iRecorder = m_RecorderCombo.GetItemData(m_RecorderCombo.GetCurSel());
+	g_FixateSettings.m_pRecorder =
+		reinterpret_cast<ckmmc::Device *>(m_RecorderCombo.GetItemData(
+										  m_RecorderCombo.GetCurSel()));
 
 	EndDialog(wID);
 	return FALSE;

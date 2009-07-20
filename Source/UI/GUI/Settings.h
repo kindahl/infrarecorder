@@ -18,6 +18,7 @@
 
 #pragma once
 #include <list>
+#include <ckmmc/device.hh>
 #include "../../Common/StringUtil.h"
 #include "../../Common/XmlProcessor.h"
 #include "../../Common/LngProcessor.h"
@@ -85,7 +86,6 @@ class CGlobalSettings : public ISettings
 {
 public:
 	bool m_bAutoRunCheck;
-	bool m_bAutoCheckBus;
 	bool m_bLog;
 	bool m_bRememberShell;
 	bool m_bCopyWarning;		// Display the warning message about audio discs when trying to copy a disc.
@@ -114,7 +114,6 @@ public:
 	CGlobalSettings()
 	{
 		m_bAutoRunCheck = true;
-		m_bAutoCheckBus = true;
 		m_bLog = true;
 		m_bRememberShell = true;
 		m_bCopyWarning = true;
@@ -218,7 +217,7 @@ public:
 	bool m_bSimulate;
 
 	// For internal use only, should never be saved.
-	INT_PTR m_iRecorder;
+	ckmmc::Device *m_pRecorder;
 	unsigned int m_uiSpeed;
 
 	CEraseSettings()
@@ -228,6 +227,7 @@ public:
 		m_bEject = true;
 		m_bSimulate = false;
 
+		m_pRecorder = NULL;
 		m_uiSpeed = 0xFFFFFFFF;		// Maximum.
 	}
 
@@ -242,12 +242,14 @@ public:
 	bool m_bSimulate;
 
 	// For internal use only, should never be saved.
-	INT_PTR m_iRecorder;
+	ckmmc::Device *m_pRecorder;
 
 	CFixateSettings()
 	{
 		m_bEject = true;
 		m_bSimulate = false;
+
+		m_pRecorder = NULL;
 	}
 
 	bool Save(CXmlProcessor *pXml);
@@ -266,7 +268,7 @@ public:
 	bool m_bFixate;
 
 	// For internal use only, should never be saved.
-	UINT_PTR m_iRecorder;
+	ckmmc::Device *m_pRecorder;
 	int m_iWriteMethod;
 	INT_PTR m_uiWriteSpeed;	// Multiple of the audio speed. -1 = maximum speed.
 	long m_lNumCopies;
@@ -282,6 +284,7 @@ public:
 		m_bFixate = true;
 
 		// For internal use only, should never be saved.
+		m_pRecorder= NULL;
 		m_lNumCopies = 1;
 	}
 
@@ -344,7 +347,7 @@ public:
 	unsigned __int64 m_uiImportTrackAddr;
 	unsigned __int64 m_uiImportTrackLen;
 	unsigned __int64 m_uiNextWritableAddr;
-	UINT_PTR m_uiDeviceIndex;
+	ckmmc::Device *m_pDevice;
 
 	CProjectSettings()
 	{
@@ -415,7 +418,7 @@ public:
 		m_uiImportTrackAddr = 0;
 		m_uiImportTrackLen = 0;
 		m_uiNextWritableAddr = 0;
-		m_uiDeviceIndex = 0;
+		m_pDevice = NULL;
 	}
 
 	bool Save(CXmlProcessor *pXml);
@@ -429,8 +432,8 @@ public:
 	bool m_bClone;
 
 	// For internal use only, should never be saved.
-	INT_PTR m_iSource;
-	INT_PTR m_iTarget;
+	ckmmc::Device *m_pSource;
+	ckmmc::Device *m_pTarget;
 
 	// Size of the source drive media in sectors.
 	unsigned __int64 m_uiSourceSize;
@@ -440,6 +443,8 @@ public:
 		m_bOnFly = false;
 		m_bClone = true;
 
+		m_pSource = NULL;
+		m_pTarget = NULL;
 		m_uiSourceSize = 0;
 	}
 

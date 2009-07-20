@@ -22,6 +22,7 @@
 #include "LangUtil.h"
 #include "Settings.h"
 #include "InfraRecorder.h"
+#include "DeviceUtil.h"
 #include "ProgressDlg.h"
 
 CProgressDlg::CProgressDlg() : m_pProcess(NULL),m_bAppMode(false),
@@ -236,16 +237,18 @@ bool CProgressDlg::cancelled()
 
 void CProgressDlg::SetDevice(const TCHAR *szDevice)
 {
-	TCHAR szDeviceStr[128];
-	lstrcpy(szDeviceStr,lngGetString(PROGRESS_DEVICE));
+	ckcore::tstring DeviceStr = lngGetString(PROGRESS_DEVICE);
+	DeviceStr += szDevice;
 
-	unsigned int uiFreeSpace = sizeof(szDeviceStr)/sizeof(TCHAR) - lstrlen(szDeviceStr) - 1;
-	if ((unsigned int)lstrlen(szDevice) > uiFreeSpace)
-		lstrncat(szDeviceStr,szDevice,uiFreeSpace);
-	else
-		lstrcat(szDeviceStr,szDevice);
+	SetDlgItemText(IDC_DEVICESTATIC,DeviceStr.c_str());
+}
 
-	SetDlgItemText(IDC_DEVICESTATIC,szDeviceStr);
+void CProgressDlg::SetDevice(ckmmc::Device &Device)
+{
+	ckcore::tstring DeviceStr = lngGetString(PROGRESS_DEVICE);
+	DeviceStr += NDeviceUtil::GetDeviceName(Device);
+
+	SetDlgItemText(IDC_DEVICESTATIC,DeviceStr.c_str());
 }
 
 void CProgressDlg::NotifyCompleted()

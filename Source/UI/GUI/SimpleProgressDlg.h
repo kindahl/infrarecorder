@@ -18,6 +18,7 @@
 
 #pragma once
 #include <ckcore/process.hh>
+#include <ckmmc/device.hh>
 #include "resource.h"
 #include "AdvancedProgress.h"
 #include "Effects.h"
@@ -59,7 +60,7 @@ public:
 	void notify(ckcore::Progress::MessageType Type,const TCHAR *szMessage,...);
 	bool cancelled();
 
-	void SetDevice(const TCHAR *szDevice);
+	void SetDevice(ckmmc::Device &Device);
 
 	void NotifyCompleted();
 

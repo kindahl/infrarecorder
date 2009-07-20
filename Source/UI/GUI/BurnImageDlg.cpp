@@ -22,14 +22,10 @@
 CBurnImageDlg::CBurnImageDlg(const TCHAR *szTitle,bool bImageHasTOC,
 							 bool bEnableOnFly,bool bEnableVerify,
 							 bool bAppMode) :
+	m_bCentered(false),m_bAppMode(bAppMode),m_pDevice(NULL),
 	CPropertySheetImpl<CBurnImageDlg>(szTitle,0,NULL),
 	m_GeneralPage(bImageHasTOC,bEnableOnFly,bEnableVerify)
 {
-	m_bCentered = false;
-	m_bAppMode = bAppMode;
-
-	m_uiDeviceIndex = 0;
-
 	m_psh.dwFlags |= PSH_NOAPPLYNOW | PSH_HASHELP | PSH_NOCONTEXTHELP;
 
 	AddPage(m_GeneralPage);
@@ -65,16 +61,16 @@ LRESULT CBurnImageDlg::OnShowWindow(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &
 	return 0;
 }
 
-LRESULT CBurnImageDlg::OnSetDeviceIndex(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
+LRESULT CBurnImageDlg::OnSetDevice(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
-	m_uiDeviceIndex = (unsigned int)lParam;
+	m_pDevice = reinterpret_cast<ckmmc::Device *>(lParam);
 
 	bHandled = TRUE;
 	return 0;
 }
 
-LRESULT CBurnImageDlg::OnGetDeviceIndex(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
+LRESULT CBurnImageDlg::OnGetDevice(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
 	bHandled = TRUE;
-	return m_uiDeviceIndex;
+	return reinterpret_cast<LRESULT>(m_pDevice);
 }

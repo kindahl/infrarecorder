@@ -26,7 +26,7 @@ class CBurnImageDlg : public CPropertySheetImpl<CBurnImageDlg>
 private:
 	bool m_bCentered;
 	bool m_bAppMode;
-	unsigned int m_uiDeviceIndex;
+	ckmmc::Device *m_pDevice;
 
 	CBurnImageGeneralPage m_GeneralPage;
 	CBurnAdvancedPage m_AdvancedPage;
@@ -38,13 +38,13 @@ public:
 
 	BEGIN_MSG_MAP(CBurnImageDlg)
 		MESSAGE_HANDLER(WM_SHOWWINDOW,OnShowWindow)
-		MESSAGE_HANDLER(WM_SETDEVICEINDEX,OnSetDeviceIndex)
-		MESSAGE_HANDLER(WM_GETDEVICEINDEX,OnGetDeviceIndex)
+		MESSAGE_HANDLER(WM_SETDEVICE,OnSetDevice)
+		MESSAGE_HANDLER(WM_GETDEVICE,OnGetDevice)
 
 		CHAIN_MSG_MAP(CPropertySheetImpl<CBurnImageDlg>)
 	END_MSG_MAP()
 
 	LRESULT OnShowWindow(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnSetDeviceIndex(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnGetDeviceIndex(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+	LRESULT OnSetDevice(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+	LRESULT OnGetDevice(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 };

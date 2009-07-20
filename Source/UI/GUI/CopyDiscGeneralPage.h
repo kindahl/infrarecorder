@@ -32,7 +32,6 @@ private:
 	CComboBox m_TargetCombo;
 	CComboBox m_WriteSpeedCombo;
 	CComboBox m_WriteMethodCombo;
-	CCore2Device m_CurDevice;
 
 	// This vectors holds the IDs of all controls located below the burn on the fly
 	// warning label. These controls will be moved to make the translated text fit
@@ -47,7 +46,7 @@ private:
 
 	bool Translate();
 	bool InitRecorderMedia();
-	bool AnalyzeDriveMedia(UINT_PTR uiDeviceIndex);
+	bool AnalyzeDriveMedia(ckmmc::Device &Device);
 	void InitRefreshButton();
 	void CheckRecorderMedia();
 
@@ -64,7 +63,6 @@ public:
 
 	BEGIN_MSG_MAP(CCopyDiscGeneralPage)
 		MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
-		MESSAGE_HANDLER(WM_DESTROY,OnDestroy)
 		MESSAGE_HANDLER(WM_TIMER,OnTimer)
 		COMMAND_HANDLER(IDC_SOURCECOMBO,CBN_SELCHANGE,OnSourceChange)
 		COMMAND_HANDLER(IDC_TARGETCOMBO,CBN_SELCHANGE,OnTargetChange)
@@ -77,7 +75,6 @@ public:
 	END_MSG_MAP()
 
 	LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnDestroy(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 	LRESULT OnTimer(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 
 	LRESULT OnSourceChange(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);

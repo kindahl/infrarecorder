@@ -76,7 +76,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="htmlhelp.lib winmm.lib ckcored.lib ckfilesystemd.lib libpng.lib zlib.lib"
+				AdditionalDependencies="htmlhelp.lib winmm.lib ckcored.lib ckfilesystemd.lib ckmmcd.lib libpng.lib zlib.lib"
 				OutputFile="../../../Binary32/$(ProjectName).exe"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
@@ -167,7 +167,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="htmlhelp.lib winmm.lib ckcored.lib ckfilesystemd.lib libpng.lib zlib.lib"
+				AdditionalDependencies="htmlhelp.lib winmm.lib ckcored.lib ckfilesystemd.lib ckmmcd.lib libpng.lib zlib.lib"
 				OutputFile="../../../Binary64/$(ProjectName).exe"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
@@ -260,7 +260,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="htmlhelp.lib winmm.lib ckcore.lib ckfilesystem.lib libpng.lib zlib.lib"
+				AdditionalDependencies="htmlhelp.lib winmm.lib ckcore.lib ckfilesystem.lib ckmmc.lib libpng.lib zlib.lib"
 				OutputFile="../../../Binary32/$(ProjectName).exe"
 				LinkIncremental="1"
 				SubSystem="2"
@@ -352,7 +352,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="htmlhelp.lib winmm.lib ckcore.lib ckfilesystem.lib libpng.lib zlib.lib"
+				AdditionalDependencies="htmlhelp.lib winmm.lib ckcore.lib ckfilesystem.lib ckmmc.lib libpng.lib zlib.lib"
 				OutputFile="../../../Binary64/$(ProjectName).exe"
 				LinkIncremental="1"
 				SubSystem="2"
@@ -444,7 +444,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="htmlhelp.lib winmm.lib ckcore.lib ckfilesystem.lib libpng.lib zlib.lib"
+				AdditionalDependencies="htmlhelp.lib winmm.lib ckcore.lib ckfilesystem.lib ckmmc.lib libpng.lib zlib.lib"
 				OutputFile="../../../Binary32P/$(ProjectName).exe"
 				LinkIncremental="1"
 				SubSystem="2"
@@ -536,7 +536,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="htmlhelp.lib winmm.lib ckcore.lib ckfilesystem.lib libpng.lib zlib.lib"
+				AdditionalDependencies="htmlhelp.lib winmm.lib ckcore.lib ckfilesystem.lib ckmmc.lib libpng.lib zlib.lib"
 				OutputFile="../../../Binary64P/$(ProjectName).exe"
 				LinkIncremental="1"
 				SubSystem="2"
@@ -664,18 +664,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Core2Device.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Core2DriverAspi.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Core2DriverSpti.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\Core2Format.cpp"
 				>
 			</File>
@@ -736,11 +724,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\DeviceManager.cpp"
+				RelativePath=".\DevicesDlg.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\DevicesDlg.cpp"
+				RelativePath=".\DeviceUtil.cpp"
 				>
 			</File>
 			<File
@@ -761,10 +749,6 @@
 			</File>
 			<File
 				RelativePath=".\DoubleBufferedStatic.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\DriveLetterDlg.cpp"
 				>
 			</File>
 			<File
@@ -1149,18 +1133,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Core2Device.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Core2DriverAspi.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Core2DriverSpti.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Core2Format.h"
 				>
 			</File>
@@ -1225,11 +1197,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\DeviceManager.h"
+				RelativePath=".\DevicesDlg.h"
 				>
 			</File>
 			<File
-				RelativePath=".\DevicesDlg.h"
+				RelativePath=".\DeviceUtil.h"
 				>
 			</File>
 			<File
@@ -1250,10 +1222,6 @@
 			</File>
 			<File
 				RelativePath=".\DoubleBufferedStatic.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DriveLetterDlg.h"
 				>
 			</File>
 			<File

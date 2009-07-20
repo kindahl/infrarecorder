@@ -17,20 +17,20 @@
  */
 
 #include "stdafx.h"
+#include <ckmmc/devicemanager.hh>
 #include "../../Common/StringUtil.h"
-#include "DeviceManager.h"
 #include "StringTable.h"
 #include "Scsi.h"
 #include "WaitDlg.h"
 #include "WinVer.h"
 #include "ProgressDlg.h"
 #include "InfraRecorder.h"
+#include "DeviceUtil.h"
 #include "Core.h"
 #include "Core2.h"
 #include "LangUtil.h"
 #include "Settings.h"
 #include "SaveTracksDlg.h"
-#include "DriveLetterDlg.h"
 #include "TracksDlg.h"
 
 CTracksDlg::CTracksDlg(bool bAppMode)
@@ -212,19 +212,15 @@ LRESULT CTracksDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHa
 	// Recorder combo box.
 	m_DeviceCombo = GetDlgItem(IDC_DEVICECOMBO);
 
-	for (unsigned int i = 0; i < g_DeviceManager.GetDeviceCount(); i++)
+	std::vector<ckmmc::Device *>::const_iterator it;
+	for (it = g_DeviceManager.devices().begin(); it !=
+		g_DeviceManager.devices().end(); it++)
 	{
-		// We only want to add readers and recorders to the list.
-		if (!g_DeviceManager.IsDeviceReader(i))
-			continue;
+		const ckmmc::Device *pDevice = *it;
 
-		tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(i);
-
-		TCHAR szDeviceName[128];
-		g_DeviceManager.GetDeviceName(pDeviceInfo,szDeviceName);
-
-		m_DeviceCombo.AddString(szDeviceName);
-		m_DeviceCombo.SetItemData(m_DeviceCombo.GetCount() - 1,i);
+		m_DeviceCombo.AddString(NDeviceUtil::GetDeviceName(*pDevice).c_str());
+		m_DeviceCombo.SetItemData(m_DeviceCombo.GetCount() - 1,
+								  reinterpret_cast<DWORD_PTR>(pDevice));
 	}
 
 	if (m_DeviceCombo.GetCount() == 0)
@@ -260,11 +256,11 @@ LRESULT CTracksDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHa
 LRESULT CTracksDlg::OnDeviceChange(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
 	// MCI_STATUS_MEDIA_PRESENT?
-
 	bHandled = false;
 
-	tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(
-		m_DeviceCombo.GetItemData(m_DeviceCombo.GetCurSel()));
+	ckmmc::Device *pDevice =
+		reinterpret_cast<ckmmc::Device *>(m_DeviceCombo.GetItemData(
+										  m_DeviceCombo.GetCurSel()));
 
 	// Empty the list view and disable the toolbar buttons.
 	m_ListView.DeleteAllItems();
@@ -280,7 +276,7 @@ LRESULT CTracksDlg::OnDeviceChange(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &
 		WaitDlg.SetMessage(lngGetString(INIT_DEVICECD));
 
 		TCHAR szDriveLetter[3];
-		szDriveLetter[0] = pDeviceInfo->Address.m_cDriveLetter;
+		szDriveLetter[0] = pDevice->address().device_[0];
 		szDriveLetter[1] = ':';
 		szDriveLetter[2] = '\0';
 	
@@ -537,13 +533,9 @@ unsigned long WINAPI CTracksDlg::ReadTrackThread(LPVOID lpThreadParameter)
 {
 	CTracksDlg *pTracksDlg = (CTracksDlg *)lpThreadParameter;
 
-	// Get device information.
-	tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(pTracksDlg->m_DeviceCombo.GetItemData(
-			pTracksDlg->m_DeviceCombo.GetCurSel()));
-
-	CCore2Device Device;
-	if (!Device.Open(&pDeviceInfo->Address))
-		return 0;
+	ckmmc::Device *pDevice =
+		reinterpret_cast<ckmmc::Device *>(pTracksDlg->m_DeviceCombo.GetItemData(
+										  pTracksDlg->m_DeviceCombo.GetCurSel()));
 
 	// Get the selected tracks.
 	TCHAR szTextBuffer[32];
@@ -586,7 +578,7 @@ unsigned long WINAPI CTracksDlg::ReadTrackThread(LPVOID lpThreadParameter)
 		{
 			if (bData)
 			{
-				bool bResult = g_Core2.ReadDataTrack(&Device,g_pProgressDlg,
+				bool bResult = g_Core2.ReadDataTrack(*pDevice,g_pProgressDlg,
 													 static_cast<unsigned char>(iItemIndex + 1),
 													 true,szFilePath);
 
@@ -608,7 +600,7 @@ unsigned long WINAPI CTracksDlg::ReadTrackThread(LPVOID lpThreadParameter)
 			{
 				if (pTracksDlg->m_pEncoder != NULL)
 				{
-					if (g_Core.ReadAudioTrackEx(pDeviceInfo,g_pProgressDlg,szFilePath,iItemIndex + 1) != RESULT_OK)
+					if (g_Core.ReadAudioTrackEx(*pDevice,g_pProgressDlg,szFilePath,iItemIndex + 1) != RESULT_OK)
 					{
 						ckcore::File::remove(szFilePath);
 						return 0;
@@ -629,7 +621,7 @@ unsigned long WINAPI CTracksDlg::ReadTrackThread(LPVOID lpThreadParameter)
 				}
 				else
 				{
-					if (!g_Core.ReadAudioTrack(pDeviceInfo,g_pProgressDlg,szFilePath,iItemIndex + 1))
+					if (!g_Core.ReadAudioTrack(*pDevice,g_pProgressDlg,szFilePath,iItemIndex + 1))
 					{
 						ckcore::File::remove(szFilePath);
 						return 0;
@@ -641,7 +633,7 @@ unsigned long WINAPI CTracksDlg::ReadTrackThread(LPVOID lpThreadParameter)
 		{
 			if (bData)
 			{
-				if (g_Core2.ReadDataTrack(&Device,g_pProgressDlg,static_cast<unsigned char>(iItemIndex + 1),
+				if (g_Core2.ReadDataTrack(*pDevice,g_pProgressDlg,static_cast<unsigned char>(iItemIndex + 1),
 										  true,szFilePath))
 				{
 					g_pProgressDlg->set_progress(0);
@@ -658,7 +650,7 @@ unsigned long WINAPI CTracksDlg::ReadTrackThread(LPVOID lpThreadParameter)
 			}
 			else
 			{
-				if (g_Core.ReadAudioTrackEx(pDeviceInfo,g_pProgressDlg,szFilePath,iItemIndex + 1) != RESULT_OK)
+				if (g_Core.ReadAudioTrackEx(*pDevice,g_pProgressDlg,szFilePath,iItemIndex + 1) != RESULT_OK)
 				{
 					ckcore::File::remove(szFilePath);
 					return 0;
@@ -698,9 +690,9 @@ unsigned long WINAPI CTracksDlg::ScanTrackThread(LPVOID lpThreadParameter)
 {
 	CTracksDlg *pTracksDlg = (CTracksDlg *)lpThreadParameter;
 
-	// Get device information.
-	tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(pTracksDlg->m_DeviceCombo.GetItemData(
-			pTracksDlg->m_DeviceCombo.GetCurSel()));
+	ckmmc::Device *pDevice =
+		reinterpret_cast<ckmmc::Device *>(pTracksDlg->m_DeviceCombo.GetItemData(
+										  pTracksDlg->m_DeviceCombo.GetCurSel()));
 
 	// Get the selected tracks.
 	unsigned long ulAddress;
@@ -723,13 +715,19 @@ unsigned long WINAPI CTracksDlg::ScanTrackThread(LPVOID lpThreadParameter)
 		// Check if we're on the last track. We need to know when to finish the progress window.
 		if (uiCurTrack == uiSelCount)
 		{
-			if (!g_Core.ScanTrack(pDeviceInfo,g_pProgressDlg,iItemIndex + 1,ulAddress,ulAddress + ulLength))
+			if (!g_Core.ScanTrack(*pDevice,g_pProgressDlg,iItemIndex + 1,
+								  ulAddress,ulAddress + ulLength))
+			{
 				return 0;
+			}
 		}
 		else
 		{
-			if (g_Core.ScanTrackEx(pDeviceInfo,g_pProgressDlg,iItemIndex + 1,ulAddress,ulAddress + ulLength) != RESULT_OK)
+			if (g_Core.ScanTrackEx(*pDevice,g_pProgressDlg,iItemIndex + 1,
+								   ulAddress,ulAddress + ulLength) != RESULT_OK)
+			{
 				return 0;
+			}
 		}
 
 		uiCurTrack++;
@@ -745,8 +743,9 @@ LRESULT CTracksDlg::OnReadTrack(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHa
 	CSaveTracksDlg SaveTracksDlg;
 	if (SaveTracksDlg.DoModal() == IDOK)
 	{
-		tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(m_DeviceCombo.GetItemData(
-			m_DeviceCombo.GetCurSel()));
+		ckmmc::Device *pDevice =
+			reinterpret_cast<ckmmc::Device *>(m_DeviceCombo.GetItemData(
+											  m_DeviceCombo.GetCurSel()));
 
 		// Disable the main frame.
 		EnableWindow(false);
@@ -763,10 +762,7 @@ LRESULT CTracksDlg::OnReadTrack(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHa
 		ProcessMessages();
 
 		// Set the device information.
-		TCHAR szDeviceName[128];
-		g_DeviceManager.GetDeviceName(pDeviceInfo,szDeviceName);
-
-		g_pProgressDlg->SetDevice(szDeviceName);
+		g_pProgressDlg->SetDevice(*pDevice);
 		g_pProgressDlg->set_status(lngGetString(PROGRESS_INIT));
 
 		lstrcpy(m_szFolderPath,g_SaveTracksSettings.m_szTarget);
@@ -784,8 +780,9 @@ LRESULT CTracksDlg::OnReadTrack(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHa
 
 LRESULT CTracksDlg::OnVerifyTrack(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
-	tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(m_DeviceCombo.GetItemData(
-		m_DeviceCombo.GetCurSel()));
+	ckmmc::Device *pDevice =
+		reinterpret_cast<ckmmc::Device *>(m_DeviceCombo.GetItemData(
+										  m_DeviceCombo.GetCurSel()));
 
 	// Disable the main frame.
 	EnableWindow(false);
@@ -802,10 +799,7 @@ LRESULT CTracksDlg::OnVerifyTrack(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &b
 	ProcessMessages();
 
 	// Set the device information.
-	TCHAR szDeviceName[128];
-	g_DeviceManager.GetDeviceName(pDeviceInfo,szDeviceName);
-
-	g_pProgressDlg->SetDevice(szDeviceName);
+	g_pProgressDlg->SetDevice(*pDevice);
 	g_pProgressDlg->set_status(lngGetString(PROGRESS_INIT));
 
 	// Create the new thread.

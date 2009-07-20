@@ -19,8 +19,8 @@
 #include "stdafx.h"
 #include "DiscDlg.h"
 
-CDiscDlg::CDiscDlg(const TCHAR *szTitle,const TCHAR *szDiscLabel,CCore2DeviceAddress *pDeviceAddress) :
-	CPropertySheetImpl<CDiscDlg>(szTitle,0,NULL),m_GeneralPage(szDiscLabel,pDeviceAddress)
+CDiscDlg::CDiscDlg(const TCHAR *szTitle,const TCHAR *szDiscLabel,ckmmc::Device &Device) :
+	CPropertySheetImpl<CDiscDlg>(szTitle,0,NULL),m_GeneralPage(szDiscLabel,Device)
 {
 	m_bCentered = false;
 

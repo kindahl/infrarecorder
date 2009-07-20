@@ -19,7 +19,6 @@
 #include "stdafx.h"
 #include "BurnAdvancedPage.h"
 #include "CtrlMessages.h"
-#include "DeviceManager.h"
 #include "cdrtoolsParseStrings.h"
 #include "Settings.h"
 #include "StringTable.h"
@@ -136,13 +135,17 @@ LRESULT CBurnAdvancedPage::OnShowWindow(UINT uMsg,WPARAM wParam,LPARAM lParam,BO
 {
 	if ((BOOL)wParam == TRUE)
 	{
-		tDeviceInfoEx *pDeviceInfoEx = g_DeviceManager.GetDeviceInfoEx(::SendMessage(GetParent(),WM_GETDEVICEINDEX,0,0));
+		ckmmc::Device *pDevice =
+			reinterpret_cast<ckmmc::Device *>(::SendMessage(GetParent(),WM_GETDEVICE,0,0));
 
-		::EnableWindow(GetDlgItem(IDC_SWABCHECK),strstr(pDeviceInfoEx->szWriteFlags,CDRTOOLS_WRITEFLAGS_SWABAUDIO) != NULL);
-		::EnableWindow(GetDlgItem(IDC_AUDIOMASTERCHECK),strstr(pDeviceInfoEx->szWriteFlags,CDRTOOLS_WRITEFLAGS_AUDIOMASTER) != NULL);
-		::EnableWindow(GetDlgItem(IDC_FORCESPEEDCHECK),strstr(pDeviceInfoEx->szWriteFlags,CDRTOOLS_WRITEFLAGS_FORCESPEED) != NULL);
+		::EnableWindow(GetDlgItem(IDC_SWABCHECK),TRUE);
+		::EnableWindow(GetDlgItem(IDC_AUDIOMASTERCHECK),
+					   pDevice->support(ckmmc::Device::ckDEVICE_AUDIO_MASTER));
 
-		bool bVariRec = strstr(pDeviceInfoEx->szWriteFlags,CDRTOOLS_WRITEFLAGS_VARIREC) != NULL;
+		::EnableWindow(GetDlgItem(IDC_FORCESPEEDCHECK),
+					   pDevice->support(ckmmc::Device::ckDEVICE_FORCE_SPEED));
+
+		bool bVariRec = pDevice->support(ckmmc::Device::ckDEVICE_VARIREC);
 		::EnableWindow(GetDlgItem(IDC_VARIRECCHECK),bVariRec);
 		::EnableWindow(GetDlgItem(IDC_VARIRECSLIDER),bVariRec);
 	}

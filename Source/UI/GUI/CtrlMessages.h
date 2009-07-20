@@ -19,24 +19,24 @@
 #pragma once
 
 /*
-	WM_SETDEVICEINDEX
-	-----------------
-	Sets the device index variable to the value of lParam.
+	WM_SETDEVICE
+	------------
+	Sets the device to the device pointer of lParam.
 	Supported windows: CBurnImageDlg and CCopyDiscDlg.
 	If wParam = 1  when sending to a CCopyDiscDlg window the source device
 	index is set instead of the (default) target device index.
 */
-#define WM_SETDEVICEINDEX				WM_APP +  0
+#define WM_SETDEVICE					WM_APP +  0
 
 /*
-	WM_GETDEVICEINDEX
-	-----------------
-	Returns the value of the device index variable.
+	WM_GETDEVICE
+	------------
+	Returns the device pointer.
 	Supported windows: CBurnImageDlg and CCopyDiscDlg.
 	If wParam = 1 when sending to a CCopyDiscDlg window the source device index
 	is returned instead of the target device index (which is default).
 */
-#define WM_GETDEVICEINDEX				WM_APP +  1
+#define WM_GETDEVICE					WM_APP +  1
 
 /*
 	WM_SETCLONEMODE
@@ -84,7 +84,7 @@
 	WM_CHECKMEDIA_BROADCAST
 	-----------------------
 	Sent to a window parent to make it broad cast a WM_CHECKMEDIA message to all
-	it's children (pages only). lParam is the index of the currently selected
+	it's children (pages only). lParam is the pointer to the currently selected
 	device.
 */
 #define WM_CHECKMEDIA_BROADCAST			WM_APP + 17
@@ -93,7 +93,7 @@
 	WM_CHECKMEDIA
 	-------------
 	Sent to a page whenever the media information should be updated. lParam is the
-	index of the currently selected device.
+	device pointer to the currently selected device.
 */
 #define WM_CHECKMEDIA					WM_APP + 18
 

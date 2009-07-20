@@ -29,12 +29,9 @@ CCore2Info::~CCore2Info()
 {
 }
 
-bool CCore2Info::ReadCapacity(CCore2Device *pDevice,unsigned long &ulBlockAddress,
+bool CCore2Info::ReadCapacity(ckmmc::Device &Device,unsigned long &ulBlockAddress,
 						  unsigned long &ulBlockLength)
 {
-	if (pDevice == NULL)
-		return false;
-
 	// Initialize buffers.
 	unsigned char ucBuffer[8];
 	memset(ucBuffer,0,sizeof(ucBuffer));
@@ -45,7 +42,7 @@ bool CCore2Info::ReadCapacity(CCore2Device *pDevice,unsigned long &ulBlockAddres
 	ucCdb[0] = SCSI_READ_CAPACITY;
 	ucCdb[9] = 0;
 
-	if (!pDevice->Transport(ucCdb,10,ucBuffer,8))
+	if (!Device.transport(ucCdb,10,ucBuffer,8,ckmmc::Device::ckTM_READ))
 		return false;
 
 	ulBlockAddress = ((unsigned long)ucBuffer[0] << 24) | ((unsigned long)ucBuffer[1] << 16) |
@@ -56,10 +53,10 @@ bool CCore2Info::ReadCapacity(CCore2Device *pDevice,unsigned long &ulBlockAddres
 	return true;
 }
 
-bool CCore2Info::ReadTrackInformation(CCore2Device *pDevice,eTrackInfoType InfoType,
+bool CCore2Info::ReadTrackInformation(ckmmc::Device &Device,eTrackInfoType InfoType,
 									  unsigned long ulTrackAddr,CCore2TrackInfo *pTrackInfo)
 {
-	if (pDevice == NULL || pTrackInfo == NULL)
+	if (pTrackInfo == NULL)
 		return false;
 
 	// Initialize buffers.
@@ -80,8 +77,11 @@ bool CCore2Info::ReadTrackInformation(CCore2Device *pDevice,eTrackInfoType InfoT
 	ucCdb[8] = sizeof(ucBuffer) & 0xFF;		// Allocation length (LSB).
 	ucCdb[9] = 0;
 
-	if (!pDevice->Transport(ucCdb,10,ucBuffer,sizeof(ucBuffer)))
+	if (!Device.transport(ucCdb,10,ucBuffer,sizeof(ucBuffer),
+						  ckmmc::Device::ckTM_READ))
+	{
 		return false;
+	}
 
 	// Check if we received to much data.
 	unsigned short usDataLength = ((unsigned short)ucBuffer[0] << 8) | ucBuffer[1];
@@ -118,9 +118,9 @@ bool CCore2Info::ReadTrackInformation(CCore2Device *pDevice,eTrackInfoType InfoT
 	return true;
 }
 
-bool CCore2Info::ReadDiscInformation(CCore2Device *pDevice,CCore2DiscInfo *pDiscInfo)
+bool CCore2Info::ReadDiscInformation(ckmmc::Device &Device,CCore2DiscInfo *pDiscInfo)
 {
-	if (pDevice == NULL || pDiscInfo == NULL)
+	if (pDiscInfo == NULL)
 		return false;
 
 	// Initialize buffers.
@@ -136,7 +136,7 @@ bool CCore2Info::ReadDiscInformation(CCore2Device *pDevice,CCore2DiscInfo *pDisc
 	ucCdb[8] = 0x00;
 	ucCdb[9] = 0x00;
 
-	if (!pDevice->Transport(ucCdb,10,ucBuffer,2048))
+	if (!Device.transport(ucCdb,10,ucBuffer,2048,ckmmc::Device::ckTM_READ))
 		return false;
 
 	pDiscInfo->m_ucLastSessStatus = (ucBuffer[2] >> 2) & 0x03;
@@ -162,9 +162,9 @@ bool CCore2Info::ReadDiscInformation(CCore2Device *pDevice,CCore2DiscInfo *pDisc
 	return true;
 }
 
-bool CCore2Info::ReadPhysFmtInfo(CCore2Device *pDevice,CCore2PhysFmtInfo *pPhysInfo)
+bool CCore2Info::ReadPhysFmtInfo(ckmmc::Device &Device,CCore2PhysFmtInfo *pPhysInfo)
 {
-	if (pDevice == NULL || pPhysInfo == NULL)
+	if (pPhysInfo == NULL)
 		return false;
 
 	// Initialize buffers.
@@ -180,7 +180,7 @@ bool CCore2Info::ReadPhysFmtInfo(CCore2Device *pDevice,CCore2PhysFmtInfo *pPhysI
 	ucCdb[ 9] = 0x08;
 	ucCdb[11] = 0x00;
 
-	if (!pDevice->Transport(ucCdb,12,ucBuffer,192))
+	if (!Device.transport(ucCdb,12,ucBuffer,192,ckmmc::Device::ckTM_READ))
 		return false;
 
 	//uiBookType = ucBuffer[4] & 0xFF;
@@ -201,12 +201,9 @@ bool CCore2Info::ReadPhysFmtInfo(CCore2Device *pDevice,CCore2PhysFmtInfo *pPhysI
 	return true;
 }
 
-bool CCore2Info::ReadTOC(CCore2Device *pDevice,unsigned char &ucFirstTrackNumber,
+bool CCore2Info::ReadTOC(ckmmc::Device &Device,unsigned char &ucFirstTrackNumber,
 						 unsigned char &ucLastTrackNumber,std::vector<CCore2TOCTrackDesc> &Tracks)
 {
-	if (pDevice == NULL)
-		return false;
-
 	// Initialize buffers.
 	unsigned char ucBuffer[4 + 2048];		// It feels stupid to allocate this much memory when
 											// only 2 bytes of data is needed. The problem is that
@@ -224,8 +221,11 @@ bool CCore2Info::ReadTOC(CCore2Device *pDevice,unsigned char &ucFirstTrackNumber
 	ucCdb[8] = sizeof(ucBuffer) & 0xFF;		// Allocation length (LSB).
 	ucCdb[9] = 0;
 
-	if (!pDevice->Transport(ucCdb,10,ucBuffer,sizeof(ucBuffer)))
+	if (!Device.transport(ucCdb,10,ucBuffer,sizeof(ucBuffer),
+						  ckmmc::Device::ckTM_READ))
+	{
 		return false;
+	}
 
 	unsigned short usDataLen = ((unsigned short)ucBuffer[0] << 8) | ucBuffer[1];
 	if (usDataLen < 2)
@@ -251,13 +251,10 @@ bool CCore2Info::ReadTOC(CCore2Device *pDevice,unsigned char &ucFirstTrackNumber
 /*
 	Read session information.
 */
-bool CCore2Info::ReadSI(CCore2Device *pDevice,unsigned char &ucFirstSessNumber,
+bool CCore2Info::ReadSI(ckmmc::Device &Device,unsigned char &ucFirstSessNumber,
 						unsigned char &ucLastSessNumber,
 						unsigned long &ulLastSessFirstTrackPos)
 {
-	if (pDevice == NULL)
-		return false;
-
 	// Initialize buffers.
 	unsigned char ucBuffer[4 + 2048];		// It feels stupid to allocate this much memory when
 											// only 2 bytes of data is needed. The problem is that
@@ -275,8 +272,11 @@ bool CCore2Info::ReadSI(CCore2Device *pDevice,unsigned char &ucFirstSessNumber,
 	ucCdb[8] = sizeof(ucBuffer) & 0xFF;		// Allocation length (LSB).
 	ucCdb[9] = 0;
 
-	if (!pDevice->Transport(ucCdb,10,ucBuffer,sizeof(ucBuffer)))
+	if (!Device.transport(ucCdb,10,ucBuffer,sizeof(ucBuffer),
+						  ckmmc::Device::ckTM_READ))
+	{
 		return false;
+	}
 
 	unsigned short usDataLen = ((unsigned short)ucBuffer[0] << 8) | ucBuffer[1];
 	if (usDataLen < 2)
@@ -298,7 +298,7 @@ bool CCore2Info::ReadSI(CCore2Device *pDevice,unsigned char &ucFirstSessNumber,
 	unformatted/blank (free) on the disc mounted on the specified device. The function
 	returns true of successfull, false otherwise.
 */
-bool CCore2Info::GetTotalDiscCapacity(CCore2Device *pDevice,unsigned __int64 &uiUsedBytes,
+bool CCore2Info::GetTotalDiscCapacity(ckmmc::Device &Device,unsigned __int64 &uiUsedBytes,
 									  unsigned __int64 &uiFreeBytes)
 {
 	g_pLogDlg->print_line(_T("CCore2Info::GetTotalDiscCapacity"));
@@ -318,7 +318,7 @@ bool CCore2Info::GetTotalDiscCapacity(CCore2Device *pDevice,unsigned __int64 &ui
 	ucCdb[0] = SCSI_GET_CONFIGURATION;
 	ucCdb[8] = 0x08;
 
-	if (!pDevice->Transport(ucCdb,9,ucBuffer,192))
+	if (!Device.transport(ucCdb,9,ucBuffer,192,ckmmc::Device::ckTM_READ))
 		return false;
 
 	unsigned short usProfile = ucBuffer[6] << 8 | ucBuffer[7];
@@ -354,7 +354,7 @@ bool CCore2Info::GetTotalDiscCapacity(CCore2Device *pDevice,unsigned __int64 &ui
 	ucCdb[8] = 0x04;
 	ucCdb[9] = 0x00;
 
-	if (!pDevice->Transport(ucCdb,10,ucBuffer,192))
+	if (!Device.transport(ucCdb,10,ucBuffer,192,ckmmc::Device::ckTM_READ))
 		return false;
 
 	unsigned char ucCapListLen = ucBuffer[3];
@@ -373,8 +373,11 @@ bool CCore2Info::GetTotalDiscCapacity(CCore2Device *pDevice,unsigned __int64 &ui
 	ucCdb[8] = (ucCapListLen + 0x04) & 0xFF;
 	ucCdb[9] = 0x00;
 
-	if (!pDevice->Transport(ucCdb,10,ucBuffer,ucCapListLen + 0x04))
+	if (!Device.transport(ucCdb,10,ucBuffer,ucCapListLen + 0x04,
+						  ckmmc::Device::ckTM_READ))
+	{
 		return false;
+	}
 
 	if ((ucBuffer[8] & 0x03) == 0x03)	// No media present or unknown capacity.
 	{
@@ -402,7 +405,7 @@ bool CCore2Info::GetTotalDiscCapacity(CCore2Device *pDevice,unsigned __int64 &ui
 	return true;
 }
 
-bool CCore2Info::GetDiscDVDRegion(CCore2Device *pDevice,unsigned char &ucRegion)
+bool CCore2Info::GetDiscDVDRegion(ckmmc::Device &Device,unsigned char &ucRegion)
 {
 	// Initialize buffers.
 	unsigned char ucBuffer[8];
@@ -417,7 +420,7 @@ bool CCore2Info::GetDiscDVDRegion(CCore2Device *pDevice,unsigned char &ucRegion)
 	ucCdb[ 9] = 0x08;
 	ucCdb[11] = 0x00;
 
-	if (!pDevice->Transport(ucCdb,12,ucBuffer,8))
+	if (!Device.transport(ucCdb,12,ucBuffer,8,ckmmc::Device::ckTM_READ))
 		return false;
 
 	unsigned char ucRegMask = ucBuffer[5];

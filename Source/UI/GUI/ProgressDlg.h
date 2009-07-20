@@ -18,6 +18,7 @@
 
 #pragma once
 #include <ckcore/process.hh>
+#include <ckmmc/device.hh>
 #include "resource.h"
 #include "AdvancedProgress.h"
 #include "DoubleBufferedStatic.h"
@@ -73,6 +74,7 @@ public:
 	bool cancelled();
 
 	void SetDevice(const TCHAR *szDevice);
+	void SetDevice(ckmmc::Device &Device);
 
 	void NotifyCompleted();
 

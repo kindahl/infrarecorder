@@ -19,14 +19,14 @@
 #include "stdafx.h"
 #include "DeviceDlg.h"
 
-CDeviceDlg::CDeviceDlg(UINT_PTR uiDeviceIndex,const TCHAR *szTitle) : CPropertySheetImpl<CDeviceDlg>(szTitle,0,NULL)
+CDeviceDlg::CDeviceDlg(ckmmc::Device &Device,const TCHAR *szTitle) :
+	CPropertySheetImpl<CDeviceDlg>(szTitle,0,NULL),
+	m_GeneralPage(Device),m_AdvancedPage(Device)
 {
 	m_bCentered = false;
 
 	m_psh.dwFlags |= PSH_NOAPPLYNOW | PSH_NOCONTEXTHELP;
 
-	m_GeneralPage.SetDeviceIndex(uiDeviceIndex);
-	m_AdvancedPage.SetDeviceIndex(uiDeviceIndex);
 	AddPage(m_GeneralPage);
 	AddPage(m_AdvancedPage);
 }

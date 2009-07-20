@@ -19,7 +19,6 @@
 #include "stdafx.h"
 #include "ReadOptionsPage.h"
 #include "CtrlMessages.h"
-#include "DeviceManager.h"
 #include "StringTable.h"
 #include "LangUtil.h"
 #include "Settings.h"
@@ -27,6 +26,7 @@
 #include "Core2.h"
 #include "Core2Util.h"
 #include "WinVer.h"
+#include "InfraRecorder.h"
 #include "VisualStyles.h"
 
 CReadOptionsPage::CReadOptionsPage(bool bEnableClone,bool bEnableSpeed)
@@ -120,8 +120,9 @@ void CReadOptionsPage::OnHelp()
 
 void CReadOptionsPage::UpdateSpeeds()
 {
-	tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(
-		::SendMessage(GetParent(),WM_GETDEVICEINDEX,1,0));
+	// FIXME: Change to pointer.
+	ckmmc::Device &Device =
+		*reinterpret_cast<ckmmc::Device *>(::SendMessage(GetParent(),WM_GETDEVICE,1,0));
 
 	// Maximum read speed.
 	m_ReadSpeedCombo.ResetContent();
@@ -129,29 +130,26 @@ void CReadOptionsPage::UpdateSpeeds()
 	m_ReadSpeedCombo.SetItemData(0,0xFFFFFFFF);
 	m_ReadSpeedCombo.SetCurSel(0);
 
-	CCore2Device Device;
-	if (Device.Open(&pDeviceInfo->Address))
+	
+	// Get current profile.
+	unsigned short usProfile = PROFILE_NONE;
+	if (g_Core2.GetProfile(Device,usProfile) && usProfile != PROFILE_NONE)
 	{
-		// Get current profile.
-		unsigned short usProfile = PROFILE_NONE;
-		if (g_Core2.GetProfile(&Device,usProfile) && usProfile != PROFILE_NONE)
+		// List a few other read speeds.
+		unsigned short usMaxSpeed = 0;
+		if (g_Core2.GetMaxReadSpeed(Device,usMaxSpeed))
 		{
-			// List a few other read speeds.
-			unsigned short usMaxSpeed = 0;
-			if (g_Core2.GetMaxReadSpeed(&Device,usMaxSpeed))
+			std::vector<unsigned int> Speeds;
+			if (GetDispSpeeds((unsigned int)GetDispSpeed(usProfile,usMaxSpeed),Speeds))
 			{
-				std::vector<unsigned int> Speeds;
-				if (GetDispSpeeds((unsigned int)GetDispSpeed(usProfile,usMaxSpeed),Speeds))
+				TCHAR szBuffer[64];
+				for (unsigned int i = 0; i < Speeds.size(); i++)
 				{
-					TCHAR szBuffer[64];
-					for (unsigned int i = 0; i < Speeds.size(); i++)
-					{
-						lsprintf(szBuffer,_T("%dx"),Speeds[i]);
-						m_ReadSpeedCombo.AddString(szBuffer);
-						m_ReadSpeedCombo.SetItemData(m_ReadSpeedCombo.GetCount() - 1,Speeds[i]);
-						// It would be nice if one could ppass floating point numbers as
-						// write speed to cdrecord/wodim!
-					}
+					lsprintf(szBuffer,_T("%dx"),Speeds[i]);
+					m_ReadSpeedCombo.AddString(szBuffer);
+					m_ReadSpeedCombo.SetItemData(m_ReadSpeedCombo.GetCount() - 1,Speeds[i]);
+					// It would be nice if one could ppass floating point numbers as
+					// write speed to cdrecord/wodim!
 				}
 			}
 		}

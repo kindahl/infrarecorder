@@ -17,15 +17,16 @@
  */
 
 #include "stdafx.h"
-#include "CopyImageGeneralPage.h"
+#include "InfraRecorder.h"
 #include "Settings.h"
 #include "StringTable.h"
-#include "DeviceManager.h"
 #include "LangUtil.h"
 #include "CtrlMessages.h"
 #include "TransUtil.h"
 #include "WinVer.h"
 #include "VisualStyles.h"
+#include "DeviceUtil.h"
+#include "CopyImageGeneralPage.h"
 
 CCopyImageGeneralPage::CCopyImageGeneralPage()
 {
@@ -145,7 +146,9 @@ void CCopyImageGeneralPage::InitRefreshButton()
 bool CCopyImageGeneralPage::OnApply()
 {
 	// For internal use only.
-	g_CopyDiscSettings.m_iSource = m_SourceCombo.GetItemData(m_SourceCombo.GetCurSel());
+	g_CopyDiscSettings.m_pSource =
+		reinterpret_cast<ckmmc::Device *>(m_SourceCombo.GetItemData(
+										  m_SourceCombo.GetCurSel()));
 
 	GetDlgItemText(IDC_IMAGEEDIT,m_szFileName,MAX_PATH - 1);
 
@@ -172,19 +175,15 @@ LRESULT CCopyImageGeneralPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lPara
 	InitRefreshButton();
 
 	// Source combo box.
-	for (unsigned int i = 0; i < g_DeviceManager.GetDeviceCount(); i++)
+	std::vector<ckmmc::Device *>::const_iterator it;
+	for (it = g_DeviceManager.devices().begin(); it !=
+		g_DeviceManager.devices().end(); it++)
 	{
-		// We only want to add cdroms to the list.
-		if (!g_DeviceManager.IsDeviceReader(i))
-			continue;
+		ckmmc::Device *pDevice = *it;
 
-		tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(i);
-
-		TCHAR szDeviceName[128];
-		g_DeviceManager.GetDeviceName(pDeviceInfo,szDeviceName);
-
-		m_SourceCombo.AddString(szDeviceName);
-		m_SourceCombo.SetItemData(m_SourceCombo.GetCount() - 1,i);
+		m_SourceCombo.AddString(NDeviceUtil::GetDeviceName(*pDevice).c_str());
+		m_SourceCombo.SetItemData(m_SourceCombo.GetCount() - 1,
+								  reinterpret_cast<DWORD_PTR>(pDevice));
 	}
 
 	if (m_SourceCombo.GetCount() == 0)
@@ -211,22 +210,18 @@ LRESULT CCopyImageGeneralPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lPara
 	return TRUE;
 }
 
-LRESULT CCopyImageGeneralPage::OnDestroy(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
-{
-	m_CurDevice.Close();
-	return TRUE;
-}
-
 LRESULT CCopyImageGeneralPage::OnTimer(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
-	if (m_CurDevice.IsOpen())
+	ckmmc::Device *pDevice =
+		reinterpret_cast<ckmmc::Device *>(m_SourceCombo.GetItemData(m_SourceCombo.GetCurSel()));
+
+	ATLASSERT(sizeof(ckmmc::Device *) == sizeof(LPARAM));
+
+	// Check for media change.
+	if (g_Core2.CheckMediaChange(*pDevice))
 	{
-		// Check for media change.
-		if (g_Core2.CheckMediaChange(&m_CurDevice))
-		{
-			GetParentWindow(this).SendMessage(WM_CHECKMEDIA_BROADCAST,0,
-				m_SourceCombo.GetItemData(m_SourceCombo.GetCurSel()));
-		}
+		GetParentWindow(this).SendMessage(WM_CHECKMEDIA_BROADCAST,0,
+										  reinterpret_cast<LPARAM>(pDevice));
 	}
 
 	return TRUE;
@@ -234,16 +229,11 @@ LRESULT CCopyImageGeneralPage::OnTimer(UINT uMsg,WPARAM wParam,LPARAM lParam,BOO
 
 LRESULT CCopyImageGeneralPage::OnSourceChange(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
-	UINT_PTR uiSourceDevIndex = m_SourceCombo.GetItemData(m_SourceCombo.GetCurSel());
+	ckmmc::Device *pSrcDevice =
+		reinterpret_cast<ckmmc::Device *>(m_SourceCombo.GetItemData(
+										  m_SourceCombo.GetCurSel()));
 
-	::SendMessage(GetParent(),WM_SETDEVICEINDEX,1,(LPARAM)uiSourceDevIndex);
-
-	tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(uiSourceDevIndex);
-
-	// Open the new device.
-	m_CurDevice.Close();
-	if (!m_CurDevice.Open(&pDeviceInfo->Address))
-		return 0;
+	::SendMessage(GetParent(),WM_SETDEVICE,1,reinterpret_cast<LPARAM>(pSrcDevice));
 
 	// Kill any already running timers.
 	::KillTimer(m_hWnd,TIMER_ID);

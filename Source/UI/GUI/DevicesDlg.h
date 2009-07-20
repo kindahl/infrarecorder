@@ -17,7 +17,9 @@
  */
 
 #pragma once
+#include <ckmmc/devicemanager.hh>
 #include "resource.h"
+#include "WaitDlg.h"
 
 class CDevicesDlg : public CDialogImpl<CDevicesDlg>
 {
@@ -47,6 +49,18 @@ private:
 
 			return lResult;
 		}
+	};
+
+	class ScanCallback : public ckmmc::DeviceManager::ScanCallback
+	{
+	private:
+		CWaitDlg &m_WaitDlg;
+
+	public:
+		ScanCallback(CWaitDlg &WaitDlg) : m_WaitDlg(WaitDlg) {}
+
+		void event_status(ckmmc::DeviceManager::ScanCallback::Status Status);
+		bool event_device(ckmmc::Device::Address &Addr);
 	};
 
 	HIMAGELIST m_hListImageList;

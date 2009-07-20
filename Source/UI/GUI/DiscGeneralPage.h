@@ -17,8 +17,8 @@
  */
 
 #pragma once
+#include <ckmmc/device.hh>
 #include "resource.h"
-#include "Core2Device.h"
 #include "Core2Info.h"
 
 class CDiscGeneralPage : public CPropertyPageImpl<CDiscGeneralPage>
@@ -26,7 +26,7 @@ class CDiscGeneralPage : public CPropertyPageImpl<CDiscGeneralPage>
 private:
 	HICON m_hIcon;
 
-	CCore2DeviceAddress *m_pDeviceAddress;
+	ckmmc::Device &m_Device;
 	TCHAR m_szDiscLabel[64];
 
 	bool Translate();
@@ -38,7 +38,7 @@ private:
 public:
 	enum { IDD = IDD_PROPPAGE_DISCGENERAL };
 
-	CDiscGeneralPage(const TCHAR *szDiscLabel,CCore2DeviceAddress *pDeviceAddress);
+	CDiscGeneralPage(const TCHAR *szDiscLabel,ckmmc::Device &Device);
 	~CDiscGeneralPage();
 
 	BEGIN_MSG_MAP(CDiscGeneralPage)

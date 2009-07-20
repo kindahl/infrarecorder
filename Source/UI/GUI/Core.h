@@ -20,8 +20,8 @@
 #include <vector>
 #include <ckcore/process.hh>
 #include <ckfilesystem/fileset.hh>
+#include <ckmmc/device.hh>
 #include "../../Common/StringUtil.h"
-#include "DeviceManager.h"
 #include "AdvancedProgress.h"
 
 #define CORE_IGNORE_ERRORINFOMESSAGES		// Should we ignore error information message (copyright etc.)?
@@ -117,26 +117,24 @@ private:
 	static DWORD WINAPI CreateCompImageThread(LPVOID lpThreadParameter);
 	static DWORD WINAPI NextCopyThread(LPVOID lpThreadParameter);
 
-	bool BurnImage(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
-		tDeviceInfoEx *pDeviceInfoEx,CAdvancedProgress *pProgress,
+	bool BurnImage(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 		const TCHAR *szFileName,bool bWaitForProcess,bool bCloneMode);
-	bool BurnTracks(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
-		tDeviceInfoEx *pDeviceInfoEx,CAdvancedProgress *pProgress,
+	bool BurnTracks(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 		const TCHAR *szDataTrack,std::vector<TCHAR *> &AudioTracks,
 		const TCHAR *szAudioText,int iDataMode,int iMode,bool bWaitForProcess);
-	bool ReadDataTrack(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,const TCHAR *szFileName,
+	bool ReadDataTrack(ckmmc::Device &Device,CAdvancedProgress *pProgress,const TCHAR *szFileName,
 		unsigned int uiTrackNumber,unsigned long ulStartSector,unsigned long ulEndSector,
 		int iMode,bool bWaitForProcess);
-	bool ReadAudioTrack(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,const TCHAR *szFileName,
+	bool ReadAudioTrack(ckmmc::Device &Device,CAdvancedProgress *pProgress,const TCHAR *szFileName,
 		unsigned int uiTrackNumber,int iMode,bool bWaitForProcess);
-	bool ScanTrack(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,unsigned int uiTrackNumber,
+	bool ScanTrack(ckmmc::Device &Device,CAdvancedProgress *pProgress,unsigned int uiTrackNumber,
 		unsigned long ulStartSector,unsigned long ulEndSector,int iMode,bool bWaitForProcess);
-	bool ReadDisc(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,const TCHAR *szFileName,
+	bool ReadDisc(ckmmc::Device &Device,CAdvancedProgress *pProgress,const TCHAR *szFileName,
 		int iMode,bool bWaitForProcess);
-	bool BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
-		tDeviceInfoEx *pDeviceInfoEx,CAdvancedProgress *pProgress,ckcore::Progress &Progress,
-		ckfilesystem::FileSet &Files,std::vector<TCHAR *> &AudioTracks,
-		const TCHAR *szAudioText,int iDataMode,unsigned __int64 uiDataBytes,int iMode);
+	bool BurnCompilation(ckmmc::Device &Device,CAdvancedProgress *pProgress,
+		ckcore::Progress &Progress,ckfilesystem::FileSet &Files,
+		std::vector<TCHAR *> &AudioTracks,const TCHAR *szAudioText,int iDataMode,
+		unsigned __int64 uiDataBytes,int iMode);
 
 	enum eMode
 	{
@@ -168,48 +166,41 @@ public:
 	CCore();
 	~CCore();
 
-	bool EjectDisc(tDeviceInfo *pDeviceInfo,bool bWaitForProcess);
-	bool LoadDisc(tDeviceInfo *pDeviceInfo,bool bWaitForProcess);
-	bool EraseDisc(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
-		CAdvancedProgress *pProgress,int iMode,bool bForce,bool bEject,bool bSimulate);
-	bool FixateDisc(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
-		CAdvancedProgress *pProgress,bool bEject,bool bSimulate);
-	bool BurnImage(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
-		tDeviceInfoEx *pDeviceInfoEx,CAdvancedProgress *pProgress,const TCHAR *szFileName,
-		bool bCloneMode);
-	bool BurnImageEx(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
-		tDeviceInfoEx *pDeviceInfoEx,CAdvancedProgress *pProgress,const TCHAR *szFileName,
-		bool bCloneMode);
-	bool BurnTracks(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
-		tDeviceInfoEx *pDeviceInfoEx,CAdvancedProgress *pProgress,
+	bool EjectDisc(ckmmc::Device &Device,bool bWaitForProcess);
+	bool LoadDisc(ckmmc::Device &Device,bool bWaitForProcess);
+	bool EraseDisc(ckmmc::Device &Device,CAdvancedProgress *pProgress,
+		int iMode,bool bForce,bool bEject,bool bSimulate);
+	bool FixateDisc(ckmmc::Device &Device,CAdvancedProgress *pProgress,
+		bool bEject,bool bSimulate);
+	bool BurnImage(ckmmc::Device &Device,CAdvancedProgress *pProgress,
+		const TCHAR *szFileName,bool bCloneMode);
+	bool BurnImageEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,
+		const TCHAR *szFileName,bool bCloneMode);
+	bool BurnTracks(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 		const TCHAR *szDataTrack,std::vector<TCHAR *> &AudioTracks,
 		const TCHAR *szAudioText,int iDataMode);
-	int BurnTracksEx(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
-		tDeviceInfoEx *pDeviceInfoEx,CAdvancedProgress *pProgress,
+	int BurnTracksEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 		const TCHAR *szDataTrack,std::vector<TCHAR *> &AudioTracks,
 		const TCHAR *szAudioText,int iDataMode);
-	bool ReadDataTrack(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,const TCHAR *szFileName,
+	bool ReadDataTrack(ckmmc::Device &Device,CAdvancedProgress *pProgress,const TCHAR *szFileName,
 		unsigned int uiTrackNumber,unsigned long ulStartSector,unsigned long ulEndSector);
-	int ReadDataTrackEx(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,const TCHAR *szFileName,
+	int ReadDataTrackEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,const TCHAR *szFileName,
 		unsigned int uiTrackNumber,unsigned long ulStartSector,unsigned long ulEndSector);
-	bool ReadAudioTrack(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,const TCHAR *szFileName,
+	bool ReadAudioTrack(ckmmc::Device &Device,CAdvancedProgress *pProgress,const TCHAR *szFileName,
 		unsigned int uiTrackNumber);
-	int ReadAudioTrackEx(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,const TCHAR *szFileName,
+	int ReadAudioTrackEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,const TCHAR *szFileName,
 		unsigned int uiTrackNumber);
-	bool ScanTrack(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,unsigned int uiTrackNumber,
+	bool ScanTrack(ckmmc::Device &Device,CAdvancedProgress *pProgress,unsigned int uiTrackNumber,
 		unsigned long ulStartSector,unsigned long ulEndSector);
-	int ScanTrackEx(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,unsigned int uiTrackNumber,
+	int ScanTrackEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,unsigned int uiTrackNumber,
 		unsigned long ulStartSector,unsigned long ulEndSector);
-	bool CopyDisc(tDeviceInfo *pSourceDeviceInfo,tDeviceInfo *pTargetDeviceInfo,
-		tDeviceCap *pTargetDeviceCap,tDeviceInfoEx *pTargetDeviceInfoEx,CAdvancedProgress *pProgress);
-	bool ReadDisc(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,const TCHAR *szFileName);
-	int ReadDiscEx(tDeviceInfo *pDeviceInfo,CAdvancedProgress *pProgress,const TCHAR *szFileName);
-	bool BurnCompilation(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
-		tDeviceInfoEx *pDeviceInfoEx,CAdvancedProgress *pProgress,ckcore::Progress &Progress,
-		ckfilesystem::FileSet &Files,std::vector<TCHAR *> &AudioTracks,
+	bool CopyDisc(ckmmc::Device &SrcDevice,ckmmc::Device &DstDevice,CAdvancedProgress *pProgress);
+	bool ReadDisc(ckmmc::Device &Device,CAdvancedProgress *pProgress,const TCHAR *szFileName);
+	int ReadDiscEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,const TCHAR *szFileName);
+	bool BurnCompilation(ckmmc::Device &Device,CAdvancedProgress *pProgress,
+		ckcore::Progress &Progress,ckfilesystem::FileSet &Files,std::vector<TCHAR *> &AudioTracks,
 		const TCHAR *szAudioText,int iMode,unsigned __int64 uiDataBytes);
-	int BurnCompilationEx(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap,
-		tDeviceInfoEx *pDeviceInfoEx,CAdvancedProgress *pProgress,ckcore::Progress &Progress,
+	int BurnCompilationEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,ckcore::Progress &Progress,
 		ckfilesystem::FileSet &Files,std::vector<TCHAR *> &AudioTracks,
 		const TCHAR *szAudioText,int iMode,unsigned __int64 uiDataBytes);
 };

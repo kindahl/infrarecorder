@@ -17,17 +17,17 @@
  */
 
 #pragma once
-#include "Core2Device.h"
+#include <ckmmc/device.hh>
 #include "AdvancedProgress.h"
 
 class CCore2Format
 {
 private:
-	bool WaitBkgndFormat(CCore2Device *pDevice,CAdvancedProgress *pProgress);
+	bool WaitBkgndFormat(ckmmc::Device &Device,CAdvancedProgress *pProgress);
 
 public:
 	CCore2Format();
 	~CCore2Format();
 
-	bool FormatUnit(CCore2Device *pDevice,CAdvancedProgress *pProgress,bool bFull);
+	bool FormatUnit(ckmmc::Device &Device,CAdvancedProgress *pProgress,bool bFull);
 };

@@ -17,9 +17,11 @@
  */
 
 #include "stdafx.h"
-#include "resource.h"
 #include "../../Common/GraphUtil.h"
+#include "resource.h"
 #include "InfraRecorder.h"
+#include "StringTable.h"
+#include "LangUtil.h"
 #include "SplashWindow.h"
 
 CSplashWindow::CSplashWindow()
@@ -284,4 +286,25 @@ void CSplashWindow::LoadTransparentBitmap()
 			pPixel += 4;
 		}
 	}
+}
+
+void CSplashWindow::event_status(ckmmc::DeviceManager::ScanCallback::Status Status)
+{
+	if (Status == ckmmc::DeviceManager::ScanCallback::ckEVENT_DEV_SCAN)
+	{
+		SetMaxProgress(2);
+
+		SetInfoText(lngGetString(INIT_SCANBUS));
+		SetProgress(1);
+	}
+	else if (Status == ckmmc::DeviceManager::ScanCallback::ckEVENT_DEV_CAP)
+	{
+		SetInfoText(lngGetString(INIT_LOADCAPABILITIES));
+		SetProgress(2);
+	}
+}
+
+bool CSplashWindow::event_device(ckmmc::Device::Address &Addr)
+{
+	return true;
 }

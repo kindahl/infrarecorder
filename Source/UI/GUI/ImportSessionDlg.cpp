@@ -20,17 +20,16 @@
 #include "StringTable.h"
 #include "Settings.h"
 #include "LangUtil.h"
-#include "DeviceManager.h"
 #include "WaitDlg.h"
 #include "Scsi.h"
-#include "DriveLetterDlg.h"
+#include "DeviceUtil.h"
 #include "Core2Info.h"
 #include "LogDlg.h"
+#include "InfraRecorder.h"
 #include "ImportSessionDlg.h"
 
-CImportSessionDlg::CImportSessionDlg()
+CImportSessionDlg::CImportSessionDlg() : m_pSelDevice(NULL),m_pSelTrackData(NULL)
 {
-	m_pSelTrackData = NULL;
 }
 
 CImportSessionDlg::~CImportSessionDlg()
@@ -69,21 +68,15 @@ bool CImportSessionDlg::Translate()
 	return true;
 }
 
-bool CImportSessionDlg::UpdateDiscInfo(CCore2Device *pDevice)
+bool CImportSessionDlg::UpdateDiscInfo(ckmmc::Device &Device)
 {
 	g_pLogDlg->print_line(_T("CImportSessionDlg::UpdateDiscInfo"));
-
-	if (pDevice == NULL)
-	{
-		g_pLogDlg->print_line(_T("  Error: No device specified."));
-		return false;
-	}
 
 	unsigned char ucFirstTrackNumber = 0,ucLastTrackNumber = 0;
 	std::vector<CCore2TOCTrackDesc> Tracks;
 
 	CCore2Info Info;
-	if (Info.ReadTOC(pDevice,ucFirstTrackNumber,ucLastTrackNumber,Tracks))
+	if (Info.ReadTOC(Device,ucFirstTrackNumber,ucLastTrackNumber,Tracks))
 	{
 		g_pLogDlg->print_line(_T("  First and last disc track number: %d, %d."),
 			ucFirstTrackNumber,ucLastTrackNumber);
@@ -94,7 +87,7 @@ bool CImportSessionDlg::UpdateDiscInfo(CCore2Device *pDevice)
 		std::vector<CCore2TOCTrackDesc>::const_iterator itTrack;
 		for (itTrack = Tracks.begin(); itTrack != Tracks.end(); itTrack++)
 		{
-			if (!Info.ReadTrackInformation(pDevice,CCore2Info::TIT_LBA,itTrack->m_ulTrackAddr,&TrackInfo))
+			if (!Info.ReadTrackInformation(Device,CCore2Info::TIT_LBA,itTrack->m_ulTrackAddr,&TrackInfo))
 			{
 				g_pLogDlg->print_line(_T("  Error: Unable to read information about track %d."),itTrack->m_ucTrackNumber);
 				return false;
@@ -133,19 +126,15 @@ LRESULT CImportSessionDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BO
 	m_TrackCombo = GetDlgItem(IDC_TRACKCOMBO);
 
 	// Device combo box.
-	for (unsigned int i = 0; i < g_DeviceManager.GetDeviceCount(); i++)
+	std::vector<ckmmc::Device *>::const_iterator it;
+	for (it = g_DeviceManager.devices().begin(); it !=
+		g_DeviceManager.devices().end(); it++)
 	{
-		// We only want to add recorder to the list.
-		if (!g_DeviceManager.IsDeviceReader(i))
-			continue;
+		const ckmmc::Device *pDevice = *it;
 
-		tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(i);
-
-		TCHAR szDeviceName[128];
-		g_DeviceManager.GetDeviceName(pDeviceInfo,szDeviceName);
-
-		m_DeviceCombo.AddString(szDeviceName);
-		m_DeviceCombo.SetItemData(m_DeviceCombo.GetCount() - 1,i);
+		m_DeviceCombo.AddString(NDeviceUtil::GetDeviceName(*pDevice).c_str());
+		m_DeviceCombo.SetItemData(m_DeviceCombo.GetCount() - 1,
+								  reinterpret_cast<DWORD_PTR>(pDevice));
 	}
 
 	if (m_DeviceCombo.GetCount() == 0)
@@ -176,8 +165,9 @@ LRESULT CImportSessionDlg::OnDeviceChange(WORD wNotifyCode,WORD wID,HWND hWndCtl
 {
 	bHandled = false;
 
-	tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(
-		m_DeviceCombo.GetItemData(m_DeviceCombo.GetCurSel()));
+	ckmmc::Device *pDevice =
+		reinterpret_cast<ckmmc::Device *>(m_DeviceCombo.GetItemData(
+										  m_DeviceCombo.GetCurSel()));
 
 	// Rescan the bus.
 	CWaitDlg WaitDlg;
@@ -186,11 +176,10 @@ LRESULT CImportSessionDlg::OnDeviceChange(WORD wNotifyCode,WORD wID,HWND hWndCtl
 		// Initialize device.
 		WaitDlg.SetMessage(lngGetString(INIT_DEVICECD));
 
-		CCore2Device Device;
 		CCore2Info Info;
 		CCore2DiscInfo DiscInfo;
 
-		if (Device.Open(&pDeviceInfo->Address) && Info.ReadDiscInformation(&Device,&DiscInfo))
+		if (Info.ReadDiscInformation(*pDevice,&DiscInfo))
 		{
 			// UPDATE: This does not seem to work on DVD+RW discs.
 			//::EnableWindow(GetDlgItem(IDOK),DiscInfo.m_ucDiscStatus == CCore2DiscInfo::DS_INCOMPLETE);
@@ -200,7 +189,7 @@ LRESULT CImportSessionDlg::OnDeviceChange(WORD wNotifyCode,WORD wID,HWND hWndCtl
 			unsigned __int64 uiUsedBytes = 0;
 			unsigned __int64 uiFreeBytes = 0;
 
-			if (Info.GetTotalDiscCapacity(&Device,uiUsedBytes,uiFreeBytes))
+			if (Info.GetTotalDiscCapacity(*pDevice,uiUsedBytes,uiFreeBytes))
 			{
 				m_uiAllocatedSize = uiUsedBytes;
 
@@ -216,7 +205,7 @@ LRESULT CImportSessionDlg::OnDeviceChange(WORD wNotifyCode,WORD wID,HWND hWndCtl
 
 			// Delete any  previous track data.
 			ResetDiscInfo();
-			UpdateDiscInfo(&Device);
+			UpdateDiscInfo(*pDevice);
 
 			m_TrackCombo.ResetContent();
 			if (m_TrackData.size() == 0)
@@ -267,7 +256,9 @@ LRESULT CImportSessionDlg::OnDeviceChange(WORD wNotifyCode,WORD wID,HWND hWndCtl
 
 LRESULT CImportSessionDlg::OnOK(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
-	m_uiDeviceIndex = m_DeviceCombo.GetItemData(m_DeviceCombo.GetCurSel());
+	m_pSelDevice =
+		reinterpret_cast<ckmmc::Device *>(m_DeviceCombo.GetItemData(
+										  m_DeviceCombo.GetCurSel()));
 	m_pSelTrackData = (CTrackData *)m_TrackCombo.GetItemData(m_TrackCombo.GetCurSel());
 
 	EndDialog(wID);

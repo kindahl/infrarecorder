@@ -28,7 +28,6 @@ private:
 	HIMAGELIST m_hRefreshImageList;
 
 	CComboBox m_SourceCombo;
-	CCore2Device m_CurDevice;
 
 	// File name of the target image file.
 	TCHAR m_szFileName[MAX_PATH];
@@ -53,7 +52,6 @@ public:
 
 	BEGIN_MSG_MAP(CCopyImageGeneralPage)
 		MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
-		MESSAGE_HANDLER(WM_DESTROY,OnDestroy)
 		MESSAGE_HANDLER(WM_TIMER,OnTimer)
 		COMMAND_HANDLER(IDC_SOURCECOMBO,CBN_SELCHANGE,OnSourceChange)
 		COMMAND_HANDLER(IDC_REFRESHBUTTON,BN_CLICKED,OnRefresh)
@@ -63,7 +61,6 @@ public:
 	END_MSG_MAP()
 
 	LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnDestroy(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 	LRESULT OnTimer(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 
 	LRESULT OnSourceChange(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);

@@ -17,29 +17,26 @@
  */
 
 #pragma once
+#include <ckmmc/device.hh>
 #include "resource.h"
-#include "DeviceManager.h"
 
 class CDeviceGeneralPage : public CPropertyPageImpl<CDeviceGeneralPage>
 {
 private:
 	HICON m_hIcon;
-	UINT_PTR m_uiDeviceIndex;
+	ckmmc::Device &m_Device;
 
 	bool Translate();
-	void PrintDeviceType(tDeviceInfo *pDeviceInfo,tDeviceCap *pDeviceCap);
+	void PrintDeviceType(ckmmc::Device &Device);
 
 public:
 	enum { IDD = IDD_PROPPAGE_DEVICEGENERAL };
 
-	CDeviceGeneralPage();
+	CDeviceGeneralPage(ckmmc::Device &Device);
 	~CDeviceGeneralPage();
-
-	void SetDeviceIndex(UINT_PTR uiDeviceIndex);
 
 	BEGIN_MSG_MAP(CDeviceGeneralPage)
 		MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
-		NOTIFY_HANDLER(IDC_WRITESPEEDSPIN,UDN_DELTAPOS,OnWriteSpeedSpin)
 
 		CHAIN_MSG_MAP(CPropertyPageImpl<CDeviceGeneralPage>)
 	END_MSG_MAP()

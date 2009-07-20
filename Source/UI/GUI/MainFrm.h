@@ -123,7 +123,7 @@ private:
 	// Uses to keep track of the device index (in the device manager) from the
 	// drive menus. For some reason it's not possible to retrieve the data member
 	// of a menu item when it has been clicked on.
-	int m_iDriveMenuDeviceMap[MENU_DRIVEMENU_MAX];
+	ckmmc::Device *m_DriveMenuDeviceMap[MENU_DRIVEMENU_MAX];
 
 	// Is set to true if changing the tree selection is allowed.
 	bool m_bEnableTreeSelection;

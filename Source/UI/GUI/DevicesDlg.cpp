@@ -17,14 +17,31 @@
  */
 
 #include "stdafx.h"
-#include "DevicesDlg.h"
-#include "DeviceManager.h"
-#include "DeviceDlg.h"
-#include "WaitDlg.h"
 #include "../../Common/StringUtil.h"
+#include "InfraRecorder.h"
+#include "DeviceDlg.h"
 #include "StringTable.h"
 #include "Settings.h"
 #include "LangUtil.h"
+#include "DeviceUtil.h"
+#include "DevicesDlg.h"
+
+void CDevicesDlg::ScanCallback::event_status(ckmmc::DeviceManager::ScanCallback::Status Status)
+{
+	if (Status == ckmmc::DeviceManager::ScanCallback::ckEVENT_DEV_SCAN)
+	{
+		m_WaitDlg.SetMessage(lngGetString(INIT_SCANBUS));
+	}
+	else if (Status == ckmmc::DeviceManager::ScanCallback::ckEVENT_DEV_CAP)
+	{
+		m_WaitDlg.SetMessage(lngGetString(INIT_LOADCAPABILITIES));
+	}
+}
+
+bool CDevicesDlg::ScanCallback::event_device(ckmmc::Device::Address &Addr)
+{
+	return true;
+}
 
 CDevicesDlg::CDevicesDlg()
 {
@@ -61,8 +78,6 @@ bool CDevicesDlg::Translate()
 		SetDlgItemText(IDC_RESCANBUTTON,szStrValue);
 	if (pLng->GetValuePtr(IDC_INFOSTATIC,szStrValue))
 		SetDlgItemText(IDC_INFOSTATIC,szStrValue);
-	if (pLng->GetValuePtr(IDC_AUTOSCANCHECK,szStrValue))
-		SetDlgItemText(IDC_AUTOSCANCHECK,szStrValue);
 
 	return true;
 }
@@ -71,34 +86,33 @@ void CDevicesDlg::FillListView()
 {
 	int iItemCount = 0;
 
-	for (unsigned int i = 0; i < g_DeviceManager.GetDeviceCount(); i++)
+	std::vector<ckmmc::Device *>::const_iterator it;
+	for (it = g_DeviceManager.devices().begin(); it !=
+		g_DeviceManager.devices().end(); it++)
 	{
-		if (!g_DeviceManager.IsDeviceReader(i))
-			continue;
-
-		tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(i);
+		ckmmc::Device *pDevice = *it;
 
 		TCHAR szBuffer[64];
 
-		if (pDeviceInfo->Address.m_iBus == -1 || pDeviceInfo->Address.m_iTarget == -1 ||
-			pDeviceInfo->Address.m_iLun == -1)
+		if (pDevice->address().bus_ == -1 || pDevice->address().target_ == -1 ||
+			pDevice->address().lun_ == -1)
 		{
 			m_ListView.AddItem(iItemCount,0,_T("[?,?,?]"),0);
 		}
 		else
 		{
-			lsprintf(szBuffer,_T("[%d,%d,%d]"),pDeviceInfo->Address.m_iBus,
-				pDeviceInfo->Address.m_iTarget,pDeviceInfo->Address.m_iLun);
+			lsprintf(szBuffer,_T("[%d,%d,%d]"),pDevice->address().bus_,
+					 pDevice->address().target_,pDevice->address().lun_);
 			m_ListView.AddItem(iItemCount,0,szBuffer,0);
 		}
 
-		lsprintf(szBuffer,_T("%c:"),pDeviceInfo->Address.m_cDriveLetter);
-		m_ListView.AddItem(iItemCount,1,szBuffer,0);
+		lsprintf(szBuffer,_T("%c:"),pDevice->address().device_[0]);
 
-		m_ListView.AddItem(iItemCount,2,pDeviceInfo->szVendor,0);
-		m_ListView.AddItem(iItemCount,3,pDeviceInfo->szIdentification,0);
-		m_ListView.AddItem(iItemCount,4,pDeviceInfo->szRevision,0);
-		m_ListView.SetItemData(iItemCount,i);
+		m_ListView.AddItem(iItemCount,1,szBuffer,0);
+		m_ListView.AddItem(iItemCount,2,pDevice->vendor(),0);
+		m_ListView.AddItem(iItemCount,3,pDevice->identifier(),0);
+		m_ListView.AddItem(iItemCount,4,pDevice->revision(),0);
+		m_ListView.SetItemData(iItemCount,reinterpret_cast<DWORD_PTR>(pDevice));
 
 		iItemCount++;
 	}
@@ -145,8 +159,6 @@ LRESULT CDevicesDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bH
 	// Fill the list view.
 	FillListView();
 
-	CheckDlgButton(IDC_AUTOSCANCHECK,g_GlobalSettings.m_bAutoCheckBus);
-
 	// Translate the window.
 	Translate();
 
@@ -166,17 +178,14 @@ LRESULT CDevicesDlg::OnListDblClick(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled)
 {
 	if (m_ListView.GetSelectedCount() > 0)
 	{
-		UINT_PTR uiDeviceIndex = m_ListView.GetItemData(m_ListView.GetSelectedIndex());
-		tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(uiDeviceIndex);
+		ckmmc::Device *pDevice =
+			reinterpret_cast<ckmmc::Device *>(m_ListView.GetItemData(
+											  m_ListView.GetSelectedIndex()));
 
-		TCHAR szDeviceName[128];
-		g_DeviceManager.GetDeviceName(pDeviceInfo,szDeviceName);
-		
-		TCHAR szTitle[128];
-		lstrcpy(szTitle,lngGetString(PROPERTIES_TITLE));
-		lstrcat(szTitle,szDeviceName);
+		ckcore::tstring Title = lngGetString(PROPERTIES_TITLE);
+		Title += NDeviceUtil::GetDeviceName(*pDevice);
 
-		CDeviceDlg DeviceDlg(uiDeviceIndex,szTitle);
+		CDeviceDlg DeviceDlg(*pDevice,Title.c_str());
 		DeviceDlg.DoModal();
 	}
 
@@ -186,8 +195,6 @@ LRESULT CDevicesDlg::OnListDblClick(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled)
 
 LRESULT CDevicesDlg::OnOK(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
-	g_GlobalSettings.m_bAutoCheckBus = IsDlgButtonChecked(IDC_AUTOSCANCHECK) == TRUE;
-
 	EndDialog(wID);
 	return FALSE;
 }
@@ -201,16 +208,8 @@ LRESULT CDevicesDlg::OnRescan(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHand
 	CWaitDlg WaitDlg;
 	WaitDlg.Create(m_hWnd);
 	WaitDlg.ShowWindow(SW_SHOW);
-		g_DeviceManager.Reset();
-
-		WaitDlg.SetMessage(lngGetString(INIT_SCANBUS));
-		g_DeviceManager.ScanBus();
-
-		WaitDlg.SetMessage(lngGetString(INIT_LOADCAPABILITIES));
-		g_DeviceManager.LoadCapabilities();
-
-		WaitDlg.SetMessage(lngGetString(INIT_LOADINFOEX));
-		g_DeviceManager.LoadExInfo();
+		ScanCallback Callback(WaitDlg);
+		g_DeviceManager.scan(&Callback);
 	WaitDlg.DestroyWindow();
 
 	// Fill the list view.
