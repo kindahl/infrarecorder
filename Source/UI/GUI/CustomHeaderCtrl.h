@@ -17,7 +17,7 @@
  */
 
 #pragma once
-#include "resource.h"
+#include "Resource.h"
 #include "CtrlMessages.h"
 
 #if (_WIN32_WINNT < 0x501)

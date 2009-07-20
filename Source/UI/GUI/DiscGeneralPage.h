@@ -18,7 +18,7 @@
 
 #pragma once
 #include <ckmmc/device.hh>
-#include "resource.h"
+#include "Resource.h"
 #include "Core2Info.h"
 
 class CDiscGeneralPage : public CPropertyPageImpl<CDiscGeneralPage>
@@ -31,7 +31,7 @@ private:
 
 	bool Translate();
 
-	void DisplayDiscType(unsigned short usProfile);
+	void DisplayDiscType(ckmmc::Device::Profile Profile);
 	void DisplayBookType(unsigned char ucBookType,unsigned char ucBookRev);
 	void DisplayStatus(CCore2DiscInfo *pDiscInfo);
 

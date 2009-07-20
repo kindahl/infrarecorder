@@ -17,7 +17,7 @@
  */
 
 #include "stdafx.h"
-#include "resource.h"
+#include "Resource.h"
 #include "CustomMultiButton.h"
 
 CCustomMultiButton::CCustomMultiButton(long lCtrlMainId,long lCtrlSub1Id,long lCtrlSub2Id,

@@ -17,7 +17,7 @@
  */
 
 #pragma once
-#include "resource.h"
+#include "Resource.h"
 #include "TreeManager.h"
 
 class CConfirmFileReplaceDlg : public CDialogImpl<CConfirmFileReplaceDlg>

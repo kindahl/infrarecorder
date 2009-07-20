@@ -17,7 +17,7 @@
  */
 
 #include "stdafx.h"
-#include "resource.h"
+#include "Resource.h"
 #include "MainFrm.h"
 #include "../../Common/Exception.h"
 #include "../../Common/FileUtil.h"

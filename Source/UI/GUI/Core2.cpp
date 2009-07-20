@@ -233,16 +233,22 @@ CCore2::eMediaChange CCore2::CheckMediaChange(ckmmc::Device &Device)
 	switch (ucEventCode)
 	{
 		case 1:
+			Device.refresh();
 			return MEDIACHANGE_EJECTREQUEST;
 		case 2:
+			Device.refresh();
 			return MEDIACHANGE_NEWMEDIA;
 		case 3:
+			Device.refresh();
 			return MEDIACHANGE_MEDIAREMOVAL;
 		case 4:
+			Device.refresh();
 			return MEDIACHANGE_MEDIACHANGED;
 		case 5:
+			Device.refresh();
 			return MEDIACHANGE_BGFORMAT_COMPLETED;
 		case 6:
+			Device.refresh();
 			return MEDIACHANGE_BGFORMAT_RESTARTED;
 	}
 
@@ -365,181 +371,6 @@ bool CCore2::CloseTrackSession(ckmmc::Device &Device,unsigned char ucCloseFuncti
 	return true;
 }
 
-bool CCore2::GetProfile(ckmmc::Device &Device,unsigned short &usProfile)
-{
-	// Initialize buffers.
-	unsigned char ucBuffer[8];
-	memset(ucBuffer,0,sizeof(ucBuffer));
-
-	unsigned char ucCdb[16];
-	memset(ucCdb,0,sizeof(ucCdb));
-
-	ucCdb[0] = SCSI_GET_CONFIGURATION;
-	ucCdb[8] = 0x08;	// Allocation length.
-	ucCdb[9] = 0x00;
-
-	if (!Device.transport(ucCdb,10,ucBuffer,8,ckmmc::Device::ckTM_READ))
-		return false;
-
-	usProfile = ucBuffer[6] << 8 | ucBuffer[7];
-	return true;
-}
-
-bool CCore2::GetFeatureSupport(ckmmc::Device &Device,unsigned short usFeature,
-							   bool &bSupportFeature)
-{
-	bSupportFeature = false;
-
-	// Initialize buffers.
-	unsigned char ucBuffer[8 + 64];
-	memset(ucBuffer,0,sizeof(ucBuffer));
-
-	unsigned char ucCdb[16];
-	memset(ucCdb,0,sizeof(ucCdb));
-
-	ucCdb[0] = SCSI_GET_CONFIGURATION;
-	ucCdb[1] = 0x02;	// Only return feature descriptor if the feature is supported.
-	ucCdb[2] = static_cast<unsigned char>(usFeature >> 8);
-	ucCdb[3] = static_cast<unsigned char>(usFeature & 0xFF);
-	ucCdb[8] = 0x48;	// Allocation length.
-	ucCdb[9] = 0;
-
-	if (!Device.transport(ucCdb,10,ucBuffer,72,ckmmc::Device::ckTM_READ))
-		return false;
-
-	unsigned short usReadFeature = ((unsigned short)ucBuffer[8] << 8) | ucBuffer[9];
-	bSupportFeature = usReadFeature == usFeature;
-
-	return true;
-}
-
-bool CCore2::GetMediaWriteSpeeds(ckmmc::Device &Device,
-								 std::vector<unsigned int> &Speeds)
-{
-	// Initialize buffers.
-	unsigned char ucBuffer[1024];
-	memset(ucBuffer,0,sizeof(ucBuffer));
-
-	unsigned char ucCdb[16];
-	memset(ucCdb,0,sizeof(ucCdb));
-
-	// Execute the command.
-	unsigned short usNumDescriptors = sizeof(ucBuffer) / 16;
-
-	ucCdb[ 0] = SCSI_GET_PERFORMANCE;
-	ucCdb[ 8] = static_cast<unsigned char>(usNumDescriptors << 8);
-	ucCdb[ 9] = static_cast<unsigned char>(usNumDescriptors & 0xFF);
-	ucCdb[10] = 0x03;		// Write speed descriptors.
-	ucCdb[11] = 0x00;
-
-	// Fall back on this (obsolete) method if unable to fetch the speeds using the
-	// method above.
-	unsigned short usReadSpeed,usWriteSpeed;
-	if (GetMaxSpeeds(Device,usReadSpeed,usWriteSpeed))
-	{
-		unsigned short usProfile;
-		if (GetProfile(Device,usProfile))
-			GetSpeeds(usProfile,usWriteSpeed,Speeds);
-		else
-			Speeds.push_back(usWriteSpeed);
-
-		return true;
-	}
-
-	// The latest fallback  by returning true is to allow the maximum speed only.
-	return true;
-}
-
-bool CCore2::GetMaxReadSpeed(ckmmc::Device &Device,unsigned short &usSpeed)
-{
-	// Initialize buffers.
-	unsigned char ucBuffer[192];
-	memset(ucBuffer,0,sizeof(ucBuffer));
-
-	unsigned char ucCdb[16];
-	memset(ucCdb,0,sizeof(ucCdb));
-
-	// Read the current code page information.
-	ucCdb[0] = SCSI_MODE_SENSE10;
-	ucCdb[2] = 0x2A;						// Defined in MMC-2 standard (5.5.10).
-	ucCdb[7] = sizeof(ucBuffer) >> 8;		// Allocation length (MSB).
-	ucCdb[8] = sizeof(ucBuffer) & 0xFF;		// Allocation length (LSB).
-	ucCdb[9] = 0x00;
-
-	if (!Device.transport(ucCdb,10,ucBuffer,sizeof(ucBuffer),
-						  ckmmc::Device::ckTM_READ))
-	{
-		return false;
-	}
-
-	if ((ucBuffer[8] & 0x3F) != 0x2A)
-		return false;
-
-	usSpeed = ((unsigned short)ucBuffer[8 + 8] << 8) | ucBuffer[8 + 9];
-	return true;
-}
-
-bool CCore2::GetMaxSpeeds(ckmmc::Device &Device,unsigned short &usReadSpeed,
-						  unsigned short &usWriteSpeed)
-{
-	// Initialize buffers.
-	unsigned char ucBuffer[192];
-	memset(ucBuffer,0,sizeof(ucBuffer));
-
-	unsigned char ucCdb[16];
-	memset(ucCdb,0,sizeof(ucCdb));
-
-	// Read the current code page information.
-	ucCdb[0] = SCSI_MODE_SENSE10;
-	ucCdb[2] = 0x2A;						// Defined in MMC-2 standard (5.5.10).
-	ucCdb[7] = sizeof(ucBuffer) >> 8;		// Allocation length (MSB).
-	ucCdb[8] = sizeof(ucBuffer) & 0xFF;		// Allocation length (LSB).
-	ucCdb[9] = 0x00;
-
-	if (!Device.transport(ucCdb,10,ucBuffer,sizeof(ucBuffer),
-						  ckmmc::Device::ckTM_READ))
-	{
-		return false;
-	}
-
-	usReadSpeed = ((unsigned short)ucBuffer[8 + 8] << 8) | ucBuffer[8 + 9];
-	usWriteSpeed = ((unsigned short)ucBuffer[8 + 18] << 8) | ucBuffer[8 + 19];
-
-	if ((ucBuffer[8] & 0x3F) != 0x2A)
-	{
-		g_pLogDlg->print_line(_T("  Warning: Received wrong code page 0x%.2X (expected 0x2A)."),ucBuffer[8]);
-		g_pLogDlg->print_line(_T("  Debug: Read speed is %d, write speed is %d."),usReadSpeed,usWriteSpeed);
-		return false;
-	}
-
-	return true;
-}
-
-bool CCore2::GetMediaWriteModes(ckmmc::Device &Device,unsigned char &ucWriteModes)
-{
-	ucWriteModes = 0;
-
-	unsigned short usProfile = 0;
-	GetProfile(Device,usProfile);
-
-	if (UpdateModePage5(Device,false,WRITEMODE_TAO,true))
-		ucWriteModes |= WRITEMODE_TAO;
-	if (UpdateModePage5(Device,false,WRITEMODE_RAW96R,true))
-		ucWriteModes |= WRITEMODE_RAW96R;
-	if (UpdateModePage5(Device,false,WRITEMODE_RAW16,true))
-		ucWriteModes |= WRITEMODE_RAW16;
-	if (UpdateModePage5(Device,false,WRITEMODE_RAW96P,true))
-		ucWriteModes |= WRITEMODE_RAW96P;
-	if (UpdateModePage5(Device,false,WRITEMODE_PACKET,true))
-		ucWriteModes |= WRITEMODE_PACKET;
-	if (UpdateModePage5(Device,false,WRITEMODE_SAO,true))
-		ucWriteModes |= WRITEMODE_SAO;
-	if (UpdateModePage5(Device,false,WRITEMODE_LAYERJUMP,true))
-		ucWriteModes |= WRITEMODE_LAYERJUMP;
-	
-	return true;
-}
-
 bool CCore2::SetDiscSpeeds(ckmmc::Device &Device,unsigned short usReadSpeed,
 						   unsigned short usWriteSpeed)
 {
@@ -569,7 +400,7 @@ bool CCore2::SetDiscSpeeds(ckmmc::Device &Device,unsigned short usReadSpeed,
 	@return true if the mode page was successfully updated, false otherwise.
 */
 bool CCore2::UpdateModePage5(ckmmc::Device &Device,bool bTestWrite,
-							 eWriteMode WriteMode,bool bSilent)
+							 bool bSilent)
 {
 	// Initialize buffers.
 	unsigned char ucBuffer[128];
@@ -600,67 +431,6 @@ bool CCore2::UpdateModePage5(ckmmc::Device &Device,bool bTestWrite,
 		ucBuffer[8 + 2] |= 0x10;
 	else
 		ucBuffer[8 + 2] &= ~0x10;
-
-	if (WriteMode != WRITEMODE_DONTCHANGE)
-	{
-		ucBuffer[8 + 2] &= ~0x0F;	// Write type.
-		ucBuffer[8 + 3] &= ~0x0F;	// Track mode.
-		ucBuffer[8 + 4] &= ~0x0F;	// Data block.
-
-		switch (WriteMode)
-		{
-			case WRITEMODE_PACKET:
-				ucBuffer[8 + 2] |= WRITETYPE_PACKET;
-				ucBuffer[8 + 3] |= TRACKMODE_DATA | TRACKMODE_INCREMENTAL;
-				ucBuffer[8 + 4] |= DATABLOCK_MODE1;
-
-				// Variable packet size.
-				ucBuffer[8 + 3] &= ~0x20;
-
-				// Zero packet size (since it's varible).
-				ucBuffer[8 + 10] = 0;
-				ucBuffer[8 + 11] = 0;
-				ucBuffer[8 + 12] = 0;
-				ucBuffer[8 + 13] = 0;
-				break;
-
-			case WRITEMODE_TAO:
-				ucBuffer[8 + 2] |= WRITETYPE_TAO;
-				ucBuffer[8 + 3] |= TRACKMODE_DATA;
-				ucBuffer[8 + 4] |= DATABLOCK_MODE1;
-				break;
-
-			case WRITEMODE_SAO:
-				ucBuffer[8 + 2] |= WRITETYPE_SAO;
-				ucBuffer[8 + 3] |= TRACKMODE_DATA;
-				ucBuffer[8 + 4] |= DATABLOCK_MODE1;
-				break;
-
-			case WRITEMODE_RAW96R:
-				ucBuffer[8 + 2] |= WRITETYPE_RAW;
-				ucBuffer[8 + 3] |= TRACKMODE_DATA;
-				ucBuffer[8 + 4] |= DATABLOCK_RAW_PW_R;
-				break;
-
-			case WRITEMODE_RAW16:
-				ucBuffer[8 + 2] |= WRITETYPE_RAW;
-				ucBuffer[8 + 3] |= TRACKMODE_DATA;
-				ucBuffer[8 + 4] |= DATABLOCK_RAW_PQ;
-				break;
-
-			case WRITEMODE_RAW96P:
-				ucBuffer[8 + 2] |= WRITETYPE_RAW;
-				ucBuffer[8 + 3] |= TRACKMODE_DATA;
-				ucBuffer[8 + 4] |= DATABLOCK_RAW_PW;
-				break;
-
-			case WRITEMODE_LAYERJUMP:
-				ucBuffer[8 + 2] |= WRITETYPE_LAYERJUMP;
-				ucBuffer[8 + 3] |= TRACKMODE_DATA;
-				ucBuffer[8 + 4] |= DATABLOCK_RAW_PW_R;
-				break;
-		}
-	}
 
 	// Send the updated code page.
 	unsigned short usFileListSize = (ucBuffer[0] << 8 | ucBuffer[1]) + 2;
@@ -786,9 +556,8 @@ bool CCore2::ReadDataTrack(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 	CCore2Read Read;
 
 	// Print the maximum read speed (for diagnostics purposes).
-	unsigned short usMaxReadSpeed = 0;
-	if (GetMaxReadSpeed(Device,usMaxReadSpeed))
-		g_pLogDlg->print_line(_T("  Maximum read speed: %d KiB/s."),usMaxReadSpeed);
+	ckcore::tuint32 uiMaxReadSpeed = Device.property(ckmmc::Device::ckPROP_MAX_READ_SPD);
+	g_pLogDlg->print_line(_T("  Maximum read speed: %d KiB/s."),uiMaxReadSpeed);
 
 	if (!SetDiscSpeeds(Device,0xFFFF,0xFFFF))
 		g_pLogDlg->print_line(_T("  Warning: Unable to set the device read speed."));
@@ -844,7 +613,7 @@ bool CCore2::ReadDataTrack(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 	for (it = Tracks.begin(); it != Tracks.end(); it++)
 	{
 		CCore2TrackInfo TrackInfo;
-		if (Info.ReadTrackInformation(pDevice,CCore2Info::TIT_LBA,(*it).m_ulTrackAddr,&TrackInfo))
+		if (Info.ReadTrackInformation(Device,CCore2Info::TIT_LBA,(*it).m_ulTrackAddr,&TrackInfo))
 		{
 			unsigned long ulMin = (TrackInfo.m_ulTrackSize + 150)/(60*75);
 			unsigned long ulSec = (TrackInfo.m_ulTrackSize + 150 - ulMin * 60 * 75)/75;

@@ -17,7 +17,7 @@
  */
 
 #include "stdafx.h"
-#include "resource.h"
+#include "Resource.h"
 #include "AboutDlg.h"
 #include "../../Common/StringUtil.h"
 #include "InfraRecorder.h"

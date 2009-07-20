@@ -17,7 +17,7 @@
  */
 
 #include "stdafx.h"
-#include "resource.h"
+#include "Resource.h"
 #include "PngFile.h"
 
 CPngFile::CPngFile() : m_ulWidth(0),m_ulHeight(0),m_pRowData(NULL)

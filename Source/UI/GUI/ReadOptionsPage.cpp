@@ -17,6 +17,7 @@
  */
 
 #include "stdafx.h"
+#include <ckmmc/util.hh>
 #include "ReadOptionsPage.h"
 #include "CtrlMessages.h"
 #include "StringTable.h"
@@ -120,7 +121,6 @@ void CReadOptionsPage::OnHelp()
 
 void CReadOptionsPage::UpdateSpeeds()
 {
-	// FIXME: Change to pointer.
 	ckmmc::Device &Device =
 		*reinterpret_cast<ckmmc::Device *>(::SendMessage(GetParent(),WM_GETDEVICE,1,0));
 
@@ -130,28 +130,19 @@ void CReadOptionsPage::UpdateSpeeds()
 	m_ReadSpeedCombo.SetItemData(0,0xFFFFFFFF);
 	m_ReadSpeedCombo.SetCurSel(0);
 
-	
 	// Get current profile.
-	unsigned short usProfile = PROFILE_NONE;
-	if (g_Core2.GetProfile(Device,usProfile) && usProfile != PROFILE_NONE)
+	ckmmc::Device::Profile Profile = Device.profile();
+	if (Profile != ckmmc::Device::ckPROFILE_NONE)
 	{
-		// List a few other read speeds.
-		unsigned short usMaxSpeed = 0;
-		if (g_Core2.GetMaxReadSpeed(Device,usMaxSpeed))
+		const std::vector<ckcore::tuint32> &ReadSpeeds = Device.read_speeds();
+
+		std::vector<ckcore::tuint32>::const_iterator it;
+		for (it = ReadSpeeds.begin(); it != ReadSpeeds.end(); it++)
 		{
-			std::vector<unsigned int> Speeds;
-			if (GetDispSpeeds((unsigned int)GetDispSpeed(usProfile,usMaxSpeed),Speeds))
-			{
-				TCHAR szBuffer[64];
-				for (unsigned int i = 0; i < Speeds.size(); i++)
-				{
-					lsprintf(szBuffer,_T("%dx"),Speeds[i]);
-					m_ReadSpeedCombo.AddString(szBuffer);
-					m_ReadSpeedCombo.SetItemData(m_ReadSpeedCombo.GetCount() - 1,Speeds[i]);
-					// It would be nice if one could ppass floating point numbers as
-					// write speed to cdrecord/wodim!
-				}
-			}
+			m_ReadSpeedCombo.AddString(ckmmc::util::sec_to_disp_speed(*it,Profile).c_str());
+			m_ReadSpeedCombo.SetItemData(m_ReadSpeedCombo.GetCount() - 1,
+				static_cast<DWORD_PTR>(ckmmc::util::sec_to_human_speed(*it,
+									   ckmmc::Device::ckPROFILE_CDR)));
 		}
 	}
 }

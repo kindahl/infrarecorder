@@ -17,7 +17,7 @@
  */
 
 #pragma once
-#include "resource.h"
+#include "Resource.h"
 #include "InfraRecorder.h"
 
 class CTracksDlg : public CDialogImpl<CTracksDlg>

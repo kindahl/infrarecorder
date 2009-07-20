@@ -17,6 +17,7 @@
  */
 
 #include "stdafx.h"
+#include <comutil.h>
 #include "../../Common/StringUtil.h"
 #include "StringTable.h"
 #include "LangUtil.h"
@@ -24,6 +25,8 @@
 #include "InfraRecorder.h"
 #include "DeviceUtil.h"
 #include "ProgressDlg.h"
+
+static const int SUBITEM_TEXT = 1;
 
 CProgressDlg::CProgressDlg() : m_pProcess(NULL),m_bAppMode(false),
 	m_bRealMode(false),m_bCancelled(false),m_hWndHost(NULL),m_ucPercent(0),
@@ -224,9 +227,9 @@ void CProgressDlg::notify(ckcore::Progress::MessageType Type,const TCHAR *szMess
 #else
 	_vsnprintf(m_szStringBuffer,PROGRESS_STRINGBUFFER_SIZE - 1,szMessage,args);
 #endif
-	m_ListView.AddItem(iItemIndex,1,m_szStringBuffer);
+	m_ListView.AddItem(iItemIndex,SUBITEM_TEXT,m_szStringBuffer);
 
-	m_ListView.SetColumnWidth(1,LVSCW_AUTOSIZE);
+	m_ListView.SetColumnWidth(SUBITEM_TEXT,LVSCW_AUTOSIZE);
 	m_ListView.EnsureVisible(iItemIndex,false);
 }
 
@@ -404,4 +407,18 @@ LRESULT CProgressDlg::OnCancel(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHan
 	::ShowWindow(GetDlgItem(IDC_RELOADBUTTON),SW_HIDE);
 
 	return TRUE;
+}
+
+LRESULT CProgressDlg::OnListViewDblClick(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled)
+{
+	ATLASSERT(iCtrlID == IDC_MESSAGELIST);
+	LPNMITEMACTIVATE pItemActivate = (LPNMITEMACTIVATE)pNMH;
+
+	_bstr_t LineText;
+	m_ListView.GetItemText(pItemActivate->iItem,SUBITEM_TEXT,LineText.GetBSTR());
+
+	MessageBox(LineText,_T("Log line"),MB_OK | MB_ICONINFORMATION);
+
+	bHandled = TRUE;
+	return 0;
 }

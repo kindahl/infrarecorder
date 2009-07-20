@@ -17,7 +17,7 @@
  */
 
 #include "stdafx.h"
-#include "resource.h"
+#include "Resource.h"
 #include "CustomButton.h"
 
 CCustomButton::CCustomButton(unsigned short usCoverPng,int iCoverLeft,int iCoverRight) :

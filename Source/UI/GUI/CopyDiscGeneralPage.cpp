@@ -17,6 +17,7 @@
  */
 
 #include "stdafx.h"
+#include <ckmmc/util.hh>
 #include "InfraRecorder.h"
 #include "StringTable.h"
 #include "Settings.h"
@@ -180,55 +181,54 @@ bool CCopyDiscGeneralPage::InitRecorderMedia()
 	TCHAR szBuffer[256];
 	GetParentWindow(this).GetWindowText(szBuffer,m_uiParentTitleLen + 1);
 
-	ckmmc::Device *pDevice =
-		reinterpret_cast<ckmmc::Device *>(m_TargetCombo.GetItemData(
-										  m_TargetCombo.GetCurSel()));
+	ckmmc::Device &Device =
+		*reinterpret_cast<ckmmc::Device *>(m_TargetCombo.GetItemData(
+										   m_TargetCombo.GetCurSel()));
 
 	// Get current profile.
-	unsigned short usProfile = PROFILE_NONE;
-	if (!g_Core2.GetProfile(*pDevice,usProfile))
-		return false;
+	ckmmc::Device::Profile Profile = Device.profile();
 
 	// Note: On CD-R/RW media the Test Write bit is valid only for Write Type
 	// 1 or 2 (Track at Once or Session at Once). On DVD-R media, the Test
 	// Write bit is valid only for Write Type 0 or 2 (Incremental or
 	// Disc-at-once). This is completely disregarded at the moment.
 	bool bSupportedProfile = false;
-	switch (usProfile)
+	switch (Profile)
 	{
-		case PROFILE_DVDRAM:
-		case PROFILE_DVDPLUSRW:
-		case PROFILE_DVDPLUSRW_DL:
-		case PROFILE_DVDMINUSRW_RESTOV:
-		case PROFILE_DVDMINUSRW_SEQ:
-		case PROFILE_DVDPLUSR:
-		case PROFILE_DVDPLUSR_DL:
+		case ckmmc::Device::ckPROFILE_DVDRAM:
+		case ckmmc::Device::ckPROFILE_DVDPLUSRW:
+		case ckmmc::Device::ckPROFILE_DVDPLUSRW_DL:
+		case ckmmc::Device::ckPROFILE_DVDMINUSRW_RESTOV:
+		case ckmmc::Device::ckPROFILE_DVDMINUSRW_SEQ:
+		case ckmmc::Device::ckPROFILE_DVDPLUSR:
+		case ckmmc::Device::ckPROFILE_DVDPLUSR_DL:
 			// Not sure about these:
-		case PROFILE_BDROM:
-		case PROFILE_BDR_SRM:
-		case PROFILE_BDR_RRM:
-		case PROFILE_BDRE:
-		case PROFILE_HDDVDROM:
-		case PROFILE_HDDVDR:
-		case PROFILE_HDDVDRAM:
+		case ckmmc::Device::ckPROFILE_BDROM:
+		case ckmmc::Device::ckPROFILE_BDR_SRM:
+		case ckmmc::Device::ckPROFILE_BDR_RRM:
+		case ckmmc::Device::ckPROFILE_BDRE:
+		case ckmmc::Device::ckPROFILE_HDDVDROM:
+		case ckmmc::Device::ckPROFILE_HDDVDR:
+		case ckmmc::Device::ckPROFILE_HDDVDRAM:
 			bSupportedProfile = true;
 
 			// Disable simulation (not supported for DVD+RW media).
 			::EnableWindow(GetDlgItem(IDC_SIMULATECHECK),FALSE);
 			break;
 
-		case PROFILE_CDR:
-		case PROFILE_CDRW:
-		case PROFILE_DVDMINUSR_SEQ:
-		case PROFILE_DVDMINUSR_DL_SEQ:
-		case PROFILE_DVDMINUSR_DL_JUMP:
+		case ckmmc::Device::ckPROFILE_CDR:
+		case ckmmc::Device::ckPROFILE_CDRW:
+		case ckmmc::Device::ckPROFILE_DVDMINUSR_SEQ:
+		case ckmmc::Device::ckPROFILE_DVDMINUSR_DL_SEQ:
+		case ckmmc::Device::ckPROFILE_DVDMINUSR_DL_JUMP:
 			bSupportedProfile = true;
 
 			// Enable simulation if supported by recorder.
-			::EnableWindow(GetDlgItem(IDC_SIMULATECHECK),pDevice->support(ckmmc::Device::ckDEVICE_TEST_WRITE));
+			::EnableWindow(GetDlgItem(IDC_SIMULATECHECK),
+						   Device.support(ckmmc::Device::ckDEVICE_TEST_WRITE));
 			break;
 
-		case PROFILE_NONE:
+		case ckmmc::Device::ckPROFILE_NONE:
 			lstrcat(szBuffer,_T(" "));
 			lstrcat(szBuffer,lngGetString(MEDIA_INSERTBLANK));
 			break;
@@ -250,41 +250,31 @@ bool CCopyDiscGeneralPage::InitRecorderMedia()
 		m_WriteSpeedCombo.SetCurSel(0);
 
 		// Other supported write speeds.
-		std::vector<unsigned int> Speeds;
-		if (!g_Core2.GetMediaWriteSpeeds(*pDevice,Speeds))
-			return false;
-
-		for (unsigned int i = 0; i < Speeds.size(); i++)
+		const std::vector<ckcore::tuint32> &WriteSpeeds = Device.write_speeds();
+		std::vector<ckcore::tuint32>::const_iterator it;
+		for (it = WriteSpeeds.begin(); it != WriteSpeeds.end(); it++)
 		{
-			lsprintf(szBuffer,_T("%gx"),GetDispSpeed(usProfile,Speeds[i]));
-			m_WriteSpeedCombo.AddString(szBuffer);
+			m_WriteSpeedCombo.AddString(ckmmc::util::sec_to_disp_speed(*it,Profile).c_str());
 			m_WriteSpeedCombo.SetItemData(m_WriteSpeedCombo.GetCount() - 1,
-				/*Speeds[i]*/(int)GetDispSpeed(usProfile,Speeds[i]));
-			// It would be nice if one could ppass floating point numbers as
-			// write speed to cdrecord/wodim!
+										  static_cast<DWORD_PTR>(ckmmc::util::sec_to_human_speed(*it,
+																 ckmmc::Device::ckPROFILE_CDR)));
 		}
 
 		// Write modes.
-		unsigned char ucWriteModes = 0;
-		g_Core2.GetMediaWriteModes(*pDevice,ucWriteModes);
-
-		if (ucWriteModes == 0)
-			return false;
-
 		m_WriteMethodCombo.ResetContent();
 
-		if (ucWriteModes & CCore2::WRITEMODE_SAO)
+		if (Device.support(ckmmc::Device::ckWM_SAO))
 			m_WriteMethodCombo.AddString(lngGetString(WRITEMODE_SAO));
-		if (ucWriteModes & CCore2::WRITEMODE_TAO)
+		if (Device.support(ckmmc::Device::ckWM_TAO))
 		{
 			m_WriteMethodCombo.AddString(lngGetString(WRITEMODE_TAO));
 			m_WriteMethodCombo.AddString(lngGetString(WRITEMODE_TAONOPREGAP));
 		}
-		if (ucWriteModes & CCore2::WRITEMODE_RAW96R)
+		if (Device.support(ckmmc::Device::ckWM_RAW96R))
 			m_WriteMethodCombo.AddString(lngGetString(WRITEMODE_RAW96R));
-		if (ucWriteModes & CCore2::WRITEMODE_RAW16)
+		if (Device.support(ckmmc::Device::ckWM_RAW16))
 			m_WriteMethodCombo.AddString(lngGetString(WRITEMODE_RAW16));
-		if (ucWriteModes & CCore2::WRITEMODE_RAW96P)
+		if (Device.support(ckmmc::Device::ckWM_RAW96P))
 			m_WriteMethodCombo.AddString(lngGetString(WRITEMODE_RAW96P));
 
 		m_WriteMethodCombo.SetCurSel(0);
@@ -672,20 +662,18 @@ LRESULT CCopyDiscGeneralPage::OnCloneCheck(WORD wNotifyCode,WORD wID,HWND hWndCt
 	{
 		::SendMessage(GetParent(),WM_SETCLONEMODE,TRUE,0);
 
-		ckmmc::Device *pDstDevice =
-		reinterpret_cast<ckmmc::Device *>(m_TargetCombo.GetItemData(
-										  m_TargetCombo.GetCurSel()));
+		ckmmc::Device &DstDevice =
+			*reinterpret_cast<ckmmc::Device *>(m_TargetCombo.GetItemData(
+											   m_TargetCombo.GetCurSel()));
 
 		// Check for supported write modes. Raw96r has the highest priority, if
 		// that's not support the raw16 mode is recommended, if none of the mentioned
 		// write modes are supported a warning message is displayed.
 		int uiStrID = -1;
 
-		unsigned char ucWriteModes = 0;
-		g_Core2.GetMediaWriteModes(*pDstDevice,ucWriteModes);
-		if (ucWriteModes & CCore2::WRITEMODE_RAW96R)
+		if (DstDevice.support(ckmmc::Device::ckWM_RAW96R))
 			uiStrID = WRITEMODE_RAW96R;
-		else if (ucWriteModes & CCore2::WRITEMODE_RAW16)
+		else if (DstDevice.support(ckmmc::Device::ckWM_RAW16))
 			uiStrID = WRITEMODE_RAW16;
 
 		const TCHAR *szStr = lngGetString(uiStrID);

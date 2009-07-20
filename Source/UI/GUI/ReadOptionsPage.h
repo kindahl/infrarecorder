@@ -17,7 +17,7 @@
  */
 
 #pragma once
-#include "resource.h"
+#include "Resource.h"
 #include "CtrlMessages.h"
 
 class CReadOptionsPage : public CPropertyPageImpl<CReadOptionsPage>

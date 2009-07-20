@@ -18,7 +18,7 @@
 
 #include "stdafx.h"
 #include "../../Common/GraphUtil.h"
-#include "resource.h"
+#include "Resource.h"
 #include "InfraRecorder.h"
 #include "StringTable.h"
 #include "LangUtil.h"

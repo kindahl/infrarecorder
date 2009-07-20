@@ -494,75 +494,73 @@ DWORD WINAPI CActionManager::CreateImageThread(LPVOID lpThreadParameter)
 void CActionManager::QuickErase(ckmmc::Device &Device)
 {
 	// Get current profile.
-	unsigned short usProfile = PROFILE_NONE;
-	if (g_Core2.GetProfile(Device,usProfile))
+	ckmmc::Device::Profile Profile = Device.profile();
+
+	int iMode = g_EraseSettings.m_iMode;
+	bool bForce = g_EraseSettings.m_bForce;
+	bool bEject = g_EraseSettings.m_bEject;
+	bool bSimulate = g_EraseSettings.m_bSimulate;
+
+	switch (Profile)
 	{
-		int iMode = g_EraseSettings.m_iMode;
-		bool bForce = g_EraseSettings.m_bForce;
-		bool bEject = g_EraseSettings.m_bEject;
-		bool bSimulate = g_EraseSettings.m_bSimulate;
+		case ckmmc::Device::ckPROFILE_DVDPLUSRW:
+		case ckmmc::Device::ckPROFILE_DVDPLUSRW_DL:
+			g_EraseSettings.m_iMode = CCore2::ERASE_FORMAT_QUICK;
+			break;
 
-		switch (usProfile)
-		{
-			case PROFILE_DVDPLUSRW:
-			case PROFILE_DVDPLUSRW_DL:
-				g_EraseSettings.m_iMode = CCore2::ERASE_FORMAT_QUICK;
-				break;
+		case ckmmc::Device::ckPROFILE_DVDRAM:
+			g_EraseSettings.m_iMode = CCore2::ERASE_FORMAT_FULL;
+			break;
 
-			case PROFILE_DVDRAM:
-				g_EraseSettings.m_iMode = CCore2::ERASE_FORMAT_FULL;
-				break;
-
-			//case PROFILE_CDRW:
-			//case PROFILE_DVDMINUSRW_RESTOV:
-			//case PROFILE_DVDMINUSRW_SEQ:
-			default:
-				g_EraseSettings.m_iMode = CCore2::ERASE_BLANK_MINIMAL;
-				break;
-		}
-
-		g_EraseSettings.m_iMode = CCore2::ERASE_BLANK_MINIMAL;
-		g_EraseSettings.m_bForce = true;
-		g_EraseSettings.m_bEject = false;
-		g_EraseSettings.m_bSimulate = false;
-		g_EraseSettings.m_pRecorder = &Device;
-		g_EraseSettings.m_uiSpeed = 0xFFFFFFFF;	// Maximum.
-
-		g_pProgressDlg->SetWindowText(lngGetString(STITLE_ERASE));
-		g_pProgressDlg->set_status(lngGetString(PROGRESS_INIT));
-
-		// Set the device information.
-		g_pProgressDlg->SetDevice(Device);
-
-		// Create the new erase thread.
-		unsigned long ulThreadID = 0;
-		HANDLE hThread = ::CreateThread(NULL,0,EraseThread,new CEraseParam(false),0,&ulThreadID);
-
-		// Wait for the thread to finish.
-		while (true)
-		{
-			if (WaitForSingleObject(hThread,100) == WAIT_TIMEOUT)
-			{
-				ProcessMessages();
-				Sleep(100);
-			}
-			else
-			{
-				break;
-			}
-		}
-
-		::CloseHandle(hThread);
-
-		g_pProgressDlg->Reset();
-		g_pProgressDlg->AllowCancel(true);
-
-		// Restore settings.
-		g_EraseSettings.m_iMode = iMode;
-		g_EraseSettings.m_bForce = bForce;
-		g_EraseSettings.m_bEject = bEject;
-		g_EraseSettings.m_bSimulate = bSimulate;
+		//case ckmmc::Device::ckPROFILE_CDRW:
+		//case ckmmc::Device::ckPROFILE_DVDMINUSRW_RESTOV:
+		//case ckmmc::Device::ckPROFILE_DVDMINUSRW_SEQ:
+		default:
+			g_EraseSettings.m_iMode = CCore2::ERASE_BLANK_MINIMAL;
+			break;
 	}
+
+	g_EraseSettings.m_iMode = CCore2::ERASE_BLANK_MINIMAL;
+	g_EraseSettings.m_bForce = true;
+	g_EraseSettings.m_bEject = false;
+	g_EraseSettings.m_bSimulate = false;
+	g_EraseSettings.m_pRecorder = &Device;
+	g_EraseSettings.m_uiSpeed = 0xFFFFFFFF;	// Maximum.
+
+	g_pProgressDlg->SetWindowText(lngGetString(STITLE_ERASE));
+	g_pProgressDlg->set_status(lngGetString(PROGRESS_INIT));
+
+	// Set the device information.
+	g_pProgressDlg->SetDevice(Device);
+
+	// Create the new erase thread.
+	unsigned long ulThreadID = 0;
+	HANDLE hThread = ::CreateThread(NULL,0,EraseThread,new CEraseParam(false),0,&ulThreadID);
+
+	// Wait for the thread to finish.
+	while (true)
+	{
+		if (WaitForSingleObject(hThread,100) == WAIT_TIMEOUT)
+		{
+			ProcessMessages();
+			Sleep(100);
+		}
+		else
+		{
+			break;
+		}
+	}
+
+	::CloseHandle(hThread);
+
+	g_pProgressDlg->Reset();
+	g_pProgressDlg->AllowCancel(true);
+
+	// Restore settings.
+	g_EraseSettings.m_iMode = iMode;
+	g_EraseSettings.m_bForce = bForce;
+	g_EraseSettings.m_bEject = bEject;
+	g_EraseSettings.m_bSimulate = bSimulate;
 }
 
 /**

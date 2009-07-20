@@ -24,10 +24,4 @@
 #define SENSE_ILLEGALMODEFORTHISTRACK	0x03
 #define SENSE_INVALIDPACKETSIZE			0x04
 
-float GetDispSpeed(unsigned short usProfile,unsigned long ulSpeed);
-float GetDispSpeedSEC(unsigned short usProfile,unsigned long ulSpeed);
-bool GetDispSpeeds(unsigned long ulMaxDispSpeed,std::vector<unsigned int> &Speeds);
-bool GetSpeeds(unsigned short usProfile,unsigned long ulMaxSpeed,
-			   std::vector<unsigned int> &Speeds);
-
 unsigned char CheckSense(unsigned char *pSenseBuf);

@@ -164,23 +164,23 @@ bool CDiscGeneralPage::Translate()
 	return true;
 }
 
-void CDiscGeneralPage::DisplayDiscType(unsigned short usProfile)
+void CDiscGeneralPage::DisplayDiscType(ckmmc::Device::Profile Profile)
 {
-	switch (usProfile)
+	switch (Profile)
 	{
-		case PROFILE_CDROM:
+		case ckmmc::Device::ckPROFILE_CDROM:
 			SetDlgItemText(IDC_TYPESTATIC,_T("CD-ROM")); break;
-		case PROFILE_CDR:
+		case ckmmc::Device::ckPROFILE_CDR:
 			SetDlgItemText(IDC_TYPESTATIC,_T("CD-R")); break;
-		case PROFILE_CDRW:
+		case ckmmc::Device::ckPROFILE_CDRW:
 			SetDlgItemText(IDC_TYPESTATIC,_T("CD-RW")); break;
-		case PROFILE_DVDROM:
+		case ckmmc::Device::ckPROFILE_DVDROM:
 			SetDlgItemText(IDC_TYPESTATIC,_T("DVD-ROM")); break;
-		case PROFILE_DVDMINUSR_SEQ:
+		case ckmmc::Device::ckPROFILE_DVDMINUSR_SEQ:
 			SetDlgItemText(IDC_TYPESTATIC,_T("DVD-R")); break;
-		case PROFILE_DVDRAM:
+		case ckmmc::Device::ckPROFILE_DVDRAM:
 			SetDlgItemText(IDC_TYPESTATIC,_T("DVD-RAM")); break;
-		case PROFILE_DVDMINUSRW_RESTOV:
+		case ckmmc::Device::ckPROFILE_DVDMINUSRW_RESTOV:
 			{
 				TCHAR szBuffer[64];
 				lstrcpy(szBuffer,_T("DVD-RW "));
@@ -189,7 +189,7 @@ void CDiscGeneralPage::DisplayDiscType(unsigned short usProfile)
 				SetDlgItemText(IDC_TYPESTATIC,szBuffer);
 			}
 			break;
-		case PROFILE_DVDMINUSRW_SEQ:
+		case ckmmc::Device::ckPROFILE_DVDMINUSRW_SEQ:
 			{
 				TCHAR szBuffer[64];
 				lstrcpy(szBuffer,_T("DVD-RW "));
@@ -198,30 +198,30 @@ void CDiscGeneralPage::DisplayDiscType(unsigned short usProfile)
 				SetDlgItemText(IDC_TYPESTATIC,szBuffer);
 			}
 			break;
-		case PROFILE_DVDMINUSR_DL_SEQ:
-		case PROFILE_DVDMINUSR_DL_JUMP:
+		case ckmmc::Device::ckPROFILE_DVDMINUSR_DL_SEQ:
+		case ckmmc::Device::ckPROFILE_DVDMINUSR_DL_JUMP:
 			SetDlgItemText(IDC_TYPESTATIC,_T("DVD-R DL")); break;
-		case PROFILE_DVDPLUSRW:
+		case ckmmc::Device::ckPROFILE_DVDPLUSRW:
 			SetDlgItemText(IDC_TYPESTATIC,_T("DVD+RW")); break;
-		case PROFILE_DVDPLUSR:
+		case ckmmc::Device::ckPROFILE_DVDPLUSR:
 			SetDlgItemText(IDC_TYPESTATIC,_T("DVD+R")); break;
-		case PROFILE_DVDPLUSRW_DL:
+		case ckmmc::Device::ckPROFILE_DVDPLUSRW_DL:
 			SetDlgItemText(IDC_TYPESTATIC,_T("DVD+RW DL")); break;
-		case PROFILE_DVDPLUSR_DL:
+		case ckmmc::Device::ckPROFILE_DVDPLUSR_DL:
 			SetDlgItemText(IDC_TYPESTATIC,_T("DVD+R DL")); break;
-		case PROFILE_BDROM:
+		case ckmmc::Device::ckPROFILE_BDROM:
 			SetDlgItemText(IDC_TYPESTATIC,_T("BD-ROM")); break;
-		case PROFILE_BDR_SRM:
+		case ckmmc::Device::ckPROFILE_BDR_SRM:
 			SetDlgItemText(IDC_TYPESTATIC,_T("BD-R SRM")); break;
-		case PROFILE_BDR_RRM:
+		case ckmmc::Device::ckPROFILE_BDR_RRM:
 			SetDlgItemText(IDC_TYPESTATIC,_T("BD-R RRM")); break;
-		case PROFILE_BDRE:
+		case ckmmc::Device::ckPROFILE_BDRE:
 			SetDlgItemText(IDC_TYPESTATIC,_T("BD-RE")); break;
-		case PROFILE_HDDVDROM:
+		case ckmmc::Device::ckPROFILE_HDDVDROM:
 			SetDlgItemText(IDC_TYPESTATIC,_T("HD DVD-ROM")); break;
-		case PROFILE_HDDVDR:
+		case ckmmc::Device::ckPROFILE_HDDVDR:
 			SetDlgItemText(IDC_TYPESTATIC,_T("HD DVD-R")); break;
-		case PROFILE_HDDVDRAM:
+		case ckmmc::Device::ckPROFILE_HDDVDRAM:
 			SetDlgItemText(IDC_TYPESTATIC,_T("HD DVD-RAM")); break;
 		default:
 			SetDlgItemText(IDC_TYPESTATIC,lngGetString(DISC_UNKNOWN)); break;
@@ -304,138 +304,48 @@ LRESULT CDiscGeneralPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOO
 	SetDlgItemText(IDC_NAMESTATIC,m_szDiscLabel);
 
 	CCore2Info Info;
-	unsigned short usProfile;
 
-	if (g_Core2.GetProfile(m_Device,usProfile))
+	ckmmc::Device::Profile Profile = m_Device.profile();
+	DisplayDiscType(Profile);
+
+	// Extra DVD information.
+	unsigned int uiNumLayers = 0;
+	TCHAR szSmallBuffer[64];
+
+	if (Profile == ckmmc::Device::ckPROFILE_DVDROM || Profile == ckmmc::Device::ckPROFILE_DVDMINUSR_SEQ || Profile == ckmmc::Device::ckPROFILE_DVDRAM ||
+		Profile == ckmmc::Device::ckPROFILE_DVDMINUSRW_RESTOV || Profile == ckmmc::Device::ckPROFILE_DVDMINUSRW_SEQ || Profile == ckmmc::Device::ckPROFILE_DVDMINUSR_DL_SEQ ||
+		Profile == ckmmc::Device::ckPROFILE_DVDMINUSR_DL_JUMP || Profile == ckmmc::Device::ckPROFILE_DVDPLUSRW || Profile == ckmmc::Device::ckPROFILE_DVDPLUSR ||
+		Profile == ckmmc::Device::ckPROFILE_DVDPLUSRW_DL || Profile == ckmmc::Device::ckPROFILE_DVDPLUSR_DL)
 	{
-		DisplayDiscType(usProfile);
-
-		// Extra DVD information.
-		unsigned int uiNumLayers = 0;
-		TCHAR szSmallBuffer[64];
-
-		if (usProfile == PROFILE_DVDROM || usProfile == PROFILE_DVDMINUSR_SEQ || usProfile == PROFILE_DVDRAM ||
-			usProfile == PROFILE_DVDMINUSRW_RESTOV || usProfile == PROFILE_DVDMINUSRW_SEQ || usProfile == PROFILE_DVDMINUSR_DL_SEQ ||
-			usProfile == PROFILE_DVDMINUSR_DL_JUMP || usProfile == PROFILE_DVDPLUSRW || usProfile == PROFILE_DVDPLUSR ||
-			usProfile == PROFILE_DVDPLUSRW_DL || usProfile == PROFILE_DVDPLUSR_DL)
-		{
-			// Book type.
-			CCore2PhysFmtInfo PhysInfo;
-			if (Info.ReadPhysFmtInfo(m_Device,&PhysInfo))
-				DisplayBookType(PhysInfo.m_ucDiscCategory,PhysInfo.m_ucPartVersion);
-			else
-				SetDlgItemText(IDC_BOOKSTATIC,lngGetString(DISC_UNKNOWN));
-
-			// Region.
-			unsigned char ucRegion = 0;
-
-			if (Info.GetDiscDVDRegion(m_Device,ucRegion))
-			{
-				if (ucRegion == 0)
-					SetDlgItemText(IDC_REGIONSTATIC,lngGetString(DISC_NOREGION));
-				else
-				{
-					lsprintf(szSmallBuffer,_T("%d"),(int)ucRegion);
-					SetDlgItemText(IDC_REGIONSTATIC,szSmallBuffer);
-				}
-			}
-			else
-				SetDlgItemText(IDC_REGIONSTATIC,lngGetString(DISC_UNKNOWN));
-
-			// Layers
-			lsprintf(szSmallBuffer,_T("%d"),uiNumLayers);
-			SetDlgItemText(IDC_LAYERSTATIC,szSmallBuffer);
-		}
+		// Book type.
+		CCore2PhysFmtInfo PhysInfo;
+		if (Info.ReadPhysFmtInfo(m_Device,&PhysInfo))
+			DisplayBookType(PhysInfo.m_ucDiscCategory,PhysInfo.m_ucPartVersion);
 		else
-		{
-			// Book type.
 			SetDlgItemText(IDC_BOOKSTATIC,lngGetString(DISC_UNKNOWN));
-			::EnableWindow(GetDlgItem(IDC_BOOKSTATIC),false);
-			::EnableWindow(GetDlgItem(IDC_BOOKLABELSTATIC),false);
 
-			// Region.
-			SetDlgItemText(IDC_REGIONSTATIC,lngGetString(DISC_UNKNOWN));
-			::EnableWindow(GetDlgItem(IDC_REGIONSTATIC),false);
-			::EnableWindow(GetDlgItem(IDC_REGIONLABELSTATIC),false);
+		// Region.
+		unsigned char ucRegion = 0;
 
-			// Layers.
-			SetDlgItemText(IDC_LAYERSTATIC,lngGetString(DISC_UNKNOWN));
-			::EnableWindow(GetDlgItem(IDC_LAYERSTATIC),false);
-			::EnableWindow(GetDlgItem(IDC_LAYERLABELSTATIC),false);
-		}
-
-		CCore2DiscInfo DiscInfo;
-		if (Info.ReadDiscInformation(m_Device,&DiscInfo))
+		if (Info.GetDiscDVDRegion(m_Device,ucRegion))
 		{
-			// Tracks.
-			lsprintf(szSmallBuffer,_T("%d"),DiscInfo.m_usLastSessLstTrack - (DiscInfo.m_usLastSessFstTrack - 1));
-			SetDlgItemText(IDC_TRACKSTATIC,szSmallBuffer);
-
-			// Sessions.
-			lsprintf(szSmallBuffer,_T("%d"),DiscInfo.m_usNumSessions);
-			SetDlgItemText(IDC_SESSIONSTATIC,szSmallBuffer);
-
-			// Status.
-			DisplayStatus(&DiscInfo);
-
-			// Space.
-			unsigned __int64 uiUsedSize = 0;
-			unsigned __int64 uiFreeSize = 0;
-			if (Info.GetTotalDiscCapacity(m_Device,uiUsedSize,uiFreeSize))
-			{
-				FormatBytes(szSmallBuffer,uiUsedSize);
-				lsprintf(szSmallBuffer + lstrlen(szSmallBuffer),_T(" (%I64d Bytes)"),uiUsedSize);
-				SetDlgItemText(IDC_USEDSPACESTATIC,szSmallBuffer);
-
-				FormatBytes(szSmallBuffer,uiFreeSize);
-				lsprintf(szSmallBuffer + lstrlen(szSmallBuffer),_T(" (%I64d Bytes)"),uiFreeSize);
-				SetDlgItemText(IDC_FREESPACESTATIC,szSmallBuffer);
-			}
+			if (ucRegion == 0)
+				SetDlgItemText(IDC_REGIONSTATIC,lngGetString(DISC_NOREGION));
 			else
 			{
-				// Used space.
-				SetDlgItemText(IDC_USEDSPACESTATIC,lngGetString(DISC_UNKNOWN));
-				::EnableWindow(GetDlgItem(IDC_USEDSPACESTATIC),false);
-				::EnableWindow(GetDlgItem(IDC_USEDSPACELABELSTATIC),false);
-
-				// Free space.
-				SetDlgItemText(IDC_FREESPACESTATIC,lngGetString(DISC_UNKNOWN));
-				::EnableWindow(GetDlgItem(IDC_FREESPACESTATIC),false);
-				::EnableWindow(GetDlgItem(IDC_FREESPACELABELSTATIC),false);
+				lsprintf(szSmallBuffer,_T("%d"),(int)ucRegion);
+				SetDlgItemText(IDC_REGIONSTATIC,szSmallBuffer);
 			}
 		}
 		else
-		{
-			// Tracks.
-			SetDlgItemText(IDC_TRACKSTATIC,lngGetString(DISC_UNKNOWN));
-			::EnableWindow(GetDlgItem(IDC_TRACKSTATIC),false);
-			::EnableWindow(GetDlgItem(IDC_TRACKLABELSTATIC),false);
+			SetDlgItemText(IDC_REGIONSTATIC,lngGetString(DISC_UNKNOWN));
 
-			// Sessions.
-			SetDlgItemText(IDC_SESSIONSTATIC,lngGetString(DISC_UNKNOWN));
-			::EnableWindow(GetDlgItem(IDC_SESSIONSTATIC),false);
-			::EnableWindow(GetDlgItem(IDC_SESSIONLABELSTATIC),false);
-
-			// Status.
-			SetDlgItemText(IDC_STATUSSTATIC,lngGetString(DISC_UNKNOWN));
-			::EnableWindow(GetDlgItem(IDC_STATUSSTATIC),false);
-			::EnableWindow(GetDlgItem(IDC_STATUSLABELSTATIC),false);
-
-			// Used space.
-			SetDlgItemText(IDC_USEDSPACESTATIC,lngGetString(DISC_UNKNOWN));
-			::EnableWindow(GetDlgItem(IDC_USEDSPACESTATIC),false);
-			::EnableWindow(GetDlgItem(IDC_USEDSPACELABELSTATIC),false);
-
-			// Free space.
-			SetDlgItemText(IDC_FREESPACESTATIC,lngGetString(DISC_UNKNOWN));
-			::EnableWindow(GetDlgItem(IDC_FREESPACESTATIC),false);
-			::EnableWindow(GetDlgItem(IDC_FREESPACELABELSTATIC),false);
-		}
+		// Layers
+		lsprintf(szSmallBuffer,_T("%d"),uiNumLayers);
+		SetDlgItemText(IDC_LAYERSTATIC,szSmallBuffer);
 	}
 	else
 	{
-		SetDlgItemText(IDC_TYPESTATIC,lngGetString(DISC_UNKNOWN));
-
 		// Book type.
 		SetDlgItemText(IDC_BOOKSTATIC,lngGetString(DISC_UNKNOWN));
 		::EnableWindow(GetDlgItem(IDC_BOOKSTATIC),false);
@@ -450,7 +360,50 @@ LRESULT CDiscGeneralPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOO
 		SetDlgItemText(IDC_LAYERSTATIC,lngGetString(DISC_UNKNOWN));
 		::EnableWindow(GetDlgItem(IDC_LAYERSTATIC),false);
 		::EnableWindow(GetDlgItem(IDC_LAYERLABELSTATIC),false);
+	}
 
+	CCore2DiscInfo DiscInfo;
+	if (Info.ReadDiscInformation(m_Device,&DiscInfo))
+	{
+		// Tracks.
+		lsprintf(szSmallBuffer,_T("%d"),DiscInfo.m_usLastSessLstTrack - (DiscInfo.m_usLastSessFstTrack - 1));
+		SetDlgItemText(IDC_TRACKSTATIC,szSmallBuffer);
+
+		// Sessions.
+		lsprintf(szSmallBuffer,_T("%d"),DiscInfo.m_usNumSessions);
+		SetDlgItemText(IDC_SESSIONSTATIC,szSmallBuffer);
+
+		// Status.
+		DisplayStatus(&DiscInfo);
+
+		// Space.
+		unsigned __int64 uiUsedSize = 0;
+		unsigned __int64 uiFreeSize = 0;
+		if (Info.GetTotalDiscCapacity(m_Device,uiUsedSize,uiFreeSize))
+		{
+			FormatBytes(szSmallBuffer,uiUsedSize);
+			lsprintf(szSmallBuffer + lstrlen(szSmallBuffer),_T(" (%I64d Bytes)"),uiUsedSize);
+			SetDlgItemText(IDC_USEDSPACESTATIC,szSmallBuffer);
+
+			FormatBytes(szSmallBuffer,uiFreeSize);
+			lsprintf(szSmallBuffer + lstrlen(szSmallBuffer),_T(" (%I64d Bytes)"),uiFreeSize);
+			SetDlgItemText(IDC_FREESPACESTATIC,szSmallBuffer);
+		}
+		else
+		{
+			// Used space.
+			SetDlgItemText(IDC_USEDSPACESTATIC,lngGetString(DISC_UNKNOWN));
+			::EnableWindow(GetDlgItem(IDC_USEDSPACESTATIC),false);
+			::EnableWindow(GetDlgItem(IDC_USEDSPACELABELSTATIC),false);
+
+			// Free space.
+			SetDlgItemText(IDC_FREESPACESTATIC,lngGetString(DISC_UNKNOWN));
+			::EnableWindow(GetDlgItem(IDC_FREESPACESTATIC),false);
+			::EnableWindow(GetDlgItem(IDC_FREESPACELABELSTATIC),false);
+		}
+	}
+	else
+	{
 		// Tracks.
 		SetDlgItemText(IDC_TRACKSTATIC,lngGetString(DISC_UNKNOWN));
 		::EnableWindow(GetDlgItem(IDC_TRACKSTATIC),false);

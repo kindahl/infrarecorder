@@ -17,7 +17,7 @@
  */
 
 #pragma once
-#include "resource.h"
+#include "Resource.h"
 #include "Settings.h"
 
 class CAddBootImageDlg : public CDialogImpl<CAddBootImageDlg>

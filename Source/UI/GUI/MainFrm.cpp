@@ -20,7 +20,7 @@
 #include <ckcore/filestream.hh>
 #include <ckcore/linereader.hh>
 #include "../../Common/StringUtil.h"
-#include "resource.h"
+#include "Resource.h"
 #include "Settings.h"
 #include "Registry.h"
 #include "LogDlg.h"

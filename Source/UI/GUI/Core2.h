@@ -41,18 +41,6 @@ public:
 		LOADMEDIA_LOAD = 0x03
 	};
 
-	enum eWriteMode
-	{
-		WRITEMODE_DONTCHANGE = 0x00,
-		WRITEMODE_PACKET = 0x01,
-		WRITEMODE_TAO = 0x02,
-		WRITEMODE_SAO = 0x04,
-		WRITEMODE_RAW96R = 0x08,
-		WRITEMODE_RAW16 = 0x10,
-		WRITEMODE_RAW96P = 0x20,
-		WRITEMODE_LAYERJUMP = 0x40
-	};
-
 	enum eMediaChange
 	{
 		MEDIACHANGE_NOCHANGE,
@@ -84,20 +72,10 @@ public:
 	bool CloseTrackSession(ckmmc::Device &Device,unsigned char ucCloseFunction,
 		unsigned short usTrackNumber,bool bImmed);
 
-	bool GetProfile(ckmmc::Device &Device,unsigned short &usProfile);
-	bool GetFeatureSupport(ckmmc::Device &Device,unsigned short usFeature,
-		bool &bSupportFeature);
-	bool GetMediaWriteSpeeds(ckmmc::Device &Device,std::vector<unsigned int> &Speeds);
-	bool GetMaxReadSpeed(ckmmc::Device &Device,unsigned short &usSpeed);
-	bool GetMaxSpeeds(ckmmc::Device &Device,unsigned short &usReadSpeed,
-		unsigned short &usWriteSpeed);
-	bool GetMediaWriteModes(ckmmc::Device &Device,unsigned char &ucWriteModes);
-
 	bool SetDiscSpeeds(ckmmc::Device &Device,unsigned short usReadSpeed,
 		unsigned short usWriteSpeed);
 
-	bool UpdateModePage5(ckmmc::Device &Device,bool bTestWrite,
-		eWriteMode WriteMode = WRITEMODE_DONTCHANGE,bool bSilent = false);
+	bool UpdateModePage5(ckmmc::Device &Device,bool bTestWrite,bool bSilent = false);
 
 	// Primary functions.
 	bool EraseDisc(ckmmc::Device &Device,CAdvancedProgress *pProgress,int iMethod,

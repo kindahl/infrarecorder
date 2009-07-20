@@ -17,6 +17,7 @@
  */
 
 #include "stdafx.h"
+#include <ckmmc/util.hh>
 #include "InfraRecorder.h"
 #include "EraseDlg.h"
 #include "StringTable.h"
@@ -95,19 +96,17 @@ bool CEraseDlg::InitRecorderMedia()
 	// Empty the method combo box.
 	m_MethodCombo.ResetContent();
 
-	ckmmc::Device *pDevice =
-		reinterpret_cast<ckmmc::Device *>(m_RecorderCombo.GetItemData(
+	ckmmc::Device &Device =
+		*reinterpret_cast<ckmmc::Device *>(m_RecorderCombo.GetItemData(
 										  m_RecorderCombo.GetCurSel()));
 
 	// Get current profile.
-	unsigned short usProfile = PROFILE_NONE;
-	if (!g_Core2.GetProfile(*pDevice,usProfile))
-		return false;
-
 	bool bSupportedProfile = false;
-	switch (usProfile)
+
+	ckmmc::Device::Profile Profile = Device.profile();
+	switch (Profile)
 	{
-		case PROFILE_CDRW:
+		case ckmmc::Device::ckPROFILE_CDRW:
 			m_MethodCombo.AddString(lngGetString(BLANKMODE_FULL));
 			m_MethodCombo.AddString(lngGetString(BLANKMODE_MINIMAL));
 			m_MethodCombo.AddString(lngGetString(BLANKMODE_UNCLOSE));
@@ -122,14 +121,14 @@ bool CEraseDlg::InitRecorderMedia()
 
 			// Enable simulation if supported by the recorder.
 			::EnableWindow(GetDlgItem(IDC_SIMULATECHECK),
-						   pDevice->support(ckmmc::Device::ckDEVICE_TEST_WRITE));
+						   Device.support(ckmmc::Device::ckDEVICE_TEST_WRITE));
 
 			// Enable force erase.
 			::EnableWindow(GetDlgItem(IDC_FORCECHECK),FALSE);
 			break;
 
-		case PROFILE_DVDPLUSRW:
-		case PROFILE_DVDPLUSRW_DL:
+		case ckmmc::Device::ckPROFILE_DVDPLUSRW:
+		case ckmmc::Device::ckPROFILE_DVDPLUSRW_DL:
 			m_MethodCombo.AddString(lngGetString(FORMATMODE_QUICK));
 			m_MethodCombo.AddString(lngGetString(FORMATMODE_FULL));
 			m_MethodCombo.SetItemData(0,CCore2::ERASE_FORMAT_QUICK);
@@ -145,7 +144,7 @@ bool CEraseDlg::InitRecorderMedia()
 			::EnableWindow(GetDlgItem(IDC_FORCECHECK),FALSE);
 			break;
 
-		case PROFILE_DVDRAM:
+		case ckmmc::Device::ckPROFILE_DVDRAM:
 			m_MethodCombo.AddString(lngGetString(FORMATMODE_FULL));
 			m_MethodCombo.SetItemData(0,CCore2::ERASE_FORMAT_FULL);
 
@@ -159,8 +158,8 @@ bool CEraseDlg::InitRecorderMedia()
 			::EnableWindow(GetDlgItem(IDC_FORCECHECK),FALSE);
 			break;
 
-		case PROFILE_DVDMINUSRW_RESTOV:
-		case PROFILE_DVDMINUSRW_SEQ:
+		case ckmmc::Device::ckPROFILE_DVDMINUSRW_RESTOV:
+		case ckmmc::Device::ckPROFILE_DVDMINUSRW_SEQ:
 			m_MethodCombo.AddString(lngGetString(FORMATMODE_QUICK));
 			m_MethodCombo.AddString(lngGetString(FORMATMODE_FULL));
 			m_MethodCombo.AddString(lngGetString(BLANKMODE_FULL));
@@ -185,7 +184,7 @@ bool CEraseDlg::InitRecorderMedia()
 			::EnableWindow(GetDlgItem(IDC_FORCECHECK),FALSE);
 			break;
 
-		case PROFILE_NONE:
+		case ckmmc::Device::ckPROFILE_NONE:
 			m_MethodCombo.AddString(lngGetString(MISC_NOTAVAILABLE));
 			m_MethodCombo.SetCurSel(0);
 
@@ -219,16 +218,15 @@ bool CEraseDlg::InitRecorderMedia()
 		::EnableWindow(GetDlgItem(IDC_METHODSTATIC),TRUE);
 		::EnableWindow(GetDlgItem(IDC_SPEEDSTATIC),TRUE);
 
-		// Write speeds.
-		std::vector<unsigned int> Speeds;
-		if (!g_Core2.GetMediaWriteSpeeds(*pDevice,Speeds))
-			return false;
+		const std::vector<ckcore::tuint32> &WriteSpeeds = Device.write_speeds();
 
-		for (unsigned int i = 0; i < Speeds.size(); i++)
+		std::vector<ckcore::tuint32>::const_iterator it;
+		for (it = WriteSpeeds.begin(); it != WriteSpeeds.end(); it++)
 		{
-			lsprintf(szBuffer,_T("%gx"),GetDispSpeed(usProfile,Speeds[i]));
-			m_SpeedCombo.AddString(szBuffer);
-			m_SpeedCombo.SetItemData(m_SpeedCombo.GetCount() - 1,Speeds[i]);
+			m_SpeedCombo.AddString(ckmmc::util::sec_to_disp_speed(*it,Profile).c_str());
+			m_SpeedCombo.SetItemData(m_SpeedCombo.GetCount() - 1,
+									 static_cast<DWORD_PTR>(ckmmc::util::sec_to_human_speed(*it,
+															ckmmc::Device::ckPROFILE_CDR)));
 		}
 	}
 	else
@@ -308,21 +306,6 @@ LRESULT CEraseDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHan
 {
 	CenterWindow(GetParent());
 
-	// Add the window to the task bar and add a minimize button to the dialog if
-	// the windows is in application mode.
-	/*if (m_bAppMode)
-	{
-		ModifyStyle(WS_POPUPWINDOW | WS_DLGFRAME | DS_MODALFRAME,(WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX) | WS_OVERLAPPED,0);
-		ModifyStyleEx(WS_EX_DLGMODALFRAME,WS_EX_APPWINDOW,0);
-
-		// Set icons.
-		HICON hIcon = (HICON)::LoadImage(_Module.GetResourceInstance(),MAKEINTRESOURCE(IDR_MAINFRAME), 
-			IMAGE_ICON,::GetSystemMetrics(SM_CXICON),::GetSystemMetrics(SM_CYICON),LR_DEFAULTCOLOR);
-		SetIcon(hIcon,TRUE);
-		HICON hIconSmall = (HICON)::LoadImage(_Module.GetResourceInstance(),MAKEINTRESOURCE(IDR_MAINFRAME), 
-			IMAGE_ICON,::GetSystemMetrics(SM_CXSMICON),::GetSystemMetrics(SM_CYSMICON),LR_DEFAULTCOLOR);
-		SetIcon(hIconSmall,FALSE);
-	}*/
 	if (m_bAppMode)
 	{
 		ModifyStyle(0,WS_MINIMIZEBOX | WS_SYSMENU);
@@ -404,12 +387,6 @@ LRESULT CEraseDlg::OnTimer(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 
 LRESULT CEraseDlg::OnRecorderChange(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
-	// Enable/disable the simulation checkbox depending on if the selected recorder
-	// supports that operation.
-	ckmmc::Device *pDevice =
-		reinterpret_cast<ckmmc::Device *>(m_RecorderCombo.GetItemData(
-										  m_RecorderCombo.GetCurSel()));
-
 	// Kill any already running timers.
 	::KillTimer(m_hWnd,TIMER_ID);
 	::SetTimer(m_hWnd,TIMER_ID,TIMER_INTERVAL,NULL);

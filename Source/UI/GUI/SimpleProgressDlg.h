@@ -19,7 +19,7 @@
 #pragma once
 #include <ckcore/process.hh>
 #include <ckmmc/device.hh>
-#include "resource.h"
+#include "Resource.h"
 #include "AdvancedProgress.h"
 #include "Effects.h"
 #include "WinVer.h"
@@ -80,6 +80,8 @@ public:
 		COMMAND_ID_HANDLER(IDOK,OnOK)
 		COMMAND_ID_HANDLER(IDCANCEL,OnCancel)
 
+		NOTIFY_HANDLER(IDC_MESSAGELIST,NM_DBLCLK,OnListViewDblClick)
+
 		SMOKE_EVENTS
 	END_MSG_MAP()
 
@@ -87,6 +89,8 @@ public:
 	LRESULT OnReload(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
 	LRESULT OnOK(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
 	LRESULT OnCancel(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+
+	LRESULT OnListViewDblClick(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled);
 
 	SMOKE_IMPL
 };

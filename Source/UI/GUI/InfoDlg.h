@@ -17,7 +17,7 @@
  */
 
 #pragma once
-#include "resource.h"
+#include "Resource.h"
 
 // Flags.
 #define INFODLG_NOCANCEL			1

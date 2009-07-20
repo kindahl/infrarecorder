@@ -17,6 +17,7 @@
  */
 
 #include "stdafx.h"
+#include <ckmmc/util.hh>
 #include "Core2Read.h"
 #include "Core2.h"
 #include "Core2Info.h"
@@ -262,18 +263,13 @@ bool CCore2Read::ReadData(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 	//g_pLogDlg->print_line(_T("CCore2Read::ReadData"));
 
 	// Make sure that the device supports this operation.
-	bool bSupportFeature = false;
-	if (!g_Core2.GetFeatureSupport(Device,FEATURE_MULTIREAD,bSupportFeature))
-		g_pLogDlg->print_line(_T("  Warning: Unable to check device support for feature 0x%.4X."),FEATURE_MULTIREAD);
-	if (!bSupportFeature)
+	if (!Device.support(ckmmc::Device::ckDEVICE_MULTIREAD))
 	{
 		g_pLogDlg->print_line(_T("  Error: The selected device does not support this kind of operation."));
 		return false;
 	}
 
-	if (!g_Core2.GetFeatureSupport(Device,FEATURE_CD_READ,bSupportFeature))
-		g_pLogDlg->print_line(_T("  Warning: Unable to check device support for feature 0x%.4X."),FEATURE_CD_READ);
-	if (!bSupportFeature)
+	if (!Device.support(ckmmc::Device::ckDEVICE_CD_READ))
 	{
 		if (pProgress != NULL)
 			pProgress->notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_NOMEDIA));
@@ -283,9 +279,8 @@ bool CCore2Read::ReadData(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 	}
 
 	// Make sure that a disc is inserted.
-	unsigned short usProfile = PROFILE_NONE;
-	g_Core2.GetProfile(Device,usProfile);
-	if (usProfile == PROFILE_NONE)
+	ckmmc::Device::Profile Profile = Device.profile();
+	if (Profile == ckmmc::Device::ckPROFILE_NONE)
 	{
 		g_pLogDlg->print_line(_T("  Error: No disc inserted."));
 		return false;
@@ -312,7 +307,7 @@ bool CCore2Read::ReadData(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 			if (pProgress != NULL)
 			{
 				pProgress->set_status(lngGetString(STATUS_READTRACK2),
-					GetDispSpeedSEC(usProfile,ulWritten));
+					ckmmc::util::sec_to_human_speed(ulWritten,Profile));
 			}
 
 			ulWritten = 0;

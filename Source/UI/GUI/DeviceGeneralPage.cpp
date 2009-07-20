@@ -111,11 +111,10 @@ void CDeviceGeneralPage::PrintDeviceType(ckmmc::Device &Device)
 
 LRESULT CDeviceGeneralPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
-	ATLASSERT(m_pDevice != 0);
-
 	// Create the icon.
 	HINSTANCE hInstance = LoadLibrary(_T("shell32.dll"));
-		m_hIcon = (HICON)LoadImage(hInstance,MAKEINTRESOURCE(12),IMAGE_ICON,GetSystemMetrics(SM_CXICON),GetSystemMetrics(SM_CYICON),LR_DEFAULTCOLOR);
+		m_hIcon = (HICON)LoadImage(hInstance,MAKEINTRESOURCE(12),IMAGE_ICON,
+								   GetSystemMetrics(SM_CXICON),GetSystemMetrics(SM_CYICON),LR_DEFAULTCOLOR);
 	FreeLibrary(hInstance);
 
 	SendMessage(GetDlgItem(IDC_ICONSTATIC),STM_SETICON,(WPARAM)m_hIcon,0L);
@@ -138,7 +137,7 @@ LRESULT CDeviceGeneralPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,B
 
 	// Max read speed.
 	ckcore::tuint32 max_read_speed = m_Device.property(ckmmc::Device::ckPROP_MAX_READ_SPD);
-	lsprintf(szBuffer,_T("%d sectors/s (CD: %sx, DVD: %sx)"),
+	lsprintf(szBuffer,_T("%d sectors/s (CD: %s, DVD: %s)"),
 			 max_read_speed,
 			 ckmmc::util::sec_to_disp_speed(max_read_speed,
 											ckmmc::Device::ckPROFILE_CDROM).c_str(),
@@ -148,7 +147,7 @@ LRESULT CDeviceGeneralPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,B
 
 	// Max write speed.
 	ckcore::tuint32 max_write_speed = m_Device.property(ckmmc::Device::ckPROP_MAX_WRITE_SPD);
-	lsprintf(szBuffer,_T("%d sectors/s (CD: %sx, DVD: %sx)"),
+	lsprintf(szBuffer,_T("%d sectors/s (CD: %s, DVD: %s)"),
 			 max_write_speed,
 			 ckmmc::util::sec_to_disp_speed(max_write_speed,
 											ckmmc::Device::ckPROFILE_CDROM).c_str(),

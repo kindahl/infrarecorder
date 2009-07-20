@@ -20,7 +20,7 @@
 #include <vector>
 #include <map>
 #include "../../Common/XmlProcessor.h"
-#include "resource.h"
+#include "Resource.h"
 
 class CToolBarManager
 {
