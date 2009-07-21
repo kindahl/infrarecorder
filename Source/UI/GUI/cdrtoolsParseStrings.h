@@ -18,8 +18,8 @@
 
 #pragma once
 
-#define CDRTOOLS_COPYRIGHT					"Cdrecord-ProDVD-Clone"
-#define CDRTOOLS_COPYRIGHT_LENGTH			21
+#define CDRTOOLS_COPYRIGHT					"Cdrecord-ProDVD-ProBD-Clone"
+#define CDRTOOLS_COPYRIGHT_LENGTH			27
 #define CDRTOOLS_SCSIBUS					"scsibus"
 #define CDRTOOLS_SCSIBUS_LENGTH				7
 #ifdef CDRKIT

@@ -43,6 +43,9 @@
 #include "ProjectDropSource.h"
 #include "FilesDataObject.h"
 #include "DeviceUtil.h"
+
+#include "AboutWindow.h"
+
 #include "MainFrm.h"
 
 CMainFrame::CMainFrame() : m_pShellListView(NULL),m_bWelcomePane(false)
@@ -3078,10 +3081,14 @@ LRESULT CMainFrame::OnHelpHelptopics(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL
 	return 0;
 }
 
+//CAboutWindow AboutWindow;
+
 LRESULT CMainFrame::OnAppAbout(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
 	CAboutDlg AboutDlg;
 	AboutDlg.DoModal();
+
+	//AboutWindow.CreateAndShow(m_hWnd);
 
 	return 0;
 }

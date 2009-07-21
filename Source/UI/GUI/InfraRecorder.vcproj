@@ -580,6 +580,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\AboutWindow.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionManager.cpp"
 				>
 			</File>
@@ -1041,6 +1045,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\AboutWindow.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ActionManager.h"
 				>
 			</File>
@@ -1469,6 +1477,10 @@
 			Name="Resource Files"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;jpg;jpeg;jpe;manifest"
 			>
+			<File
+				RelativePath=".\Resources\About.bmp"
+				>
+			</File>
 			<File
 				RelativePath=".\Resources\Audio.ico"
 				>

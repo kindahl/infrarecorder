@@ -17,13 +17,22 @@
  */
 
 #pragma once
-#include <ckmmc/devicemanager.hh>
 
-#define SPLASHWINDOW_TEXTBKCOLOR				RGB(255,255,255)
+#define ABOUTWINDOW_TEXTCOLOR					RGB(50,50,50)
+#define ABOUTWINDOW_URLCOLOR					RGB(51,100,163)
+
+#define ABOUTWINDOW_URL_LEFT					37
+#define ABOUTWINDOW_URL_TOP						343
+#define ABOUTWINDOW_URL_RIGHT					150
+#define ABOUTWINDOW_URL_BOTTOM					373
 
 #if (_WIN32_WINNT < 0x0500)
 #define WS_EX_LAYERED							0x00080000
 #define ULW_ALPHA								0x00000002
+#endif
+
+#ifndef IDC_HAND
+#define IDC_HAND            MAKEINTRESOURCE(32649)
 #endif
 
 typedef BOOL (WINAPI *tUpdateLayeredWindow)(HWND hWnd,HDC hdcDst,POINT *pptDst,
@@ -31,41 +40,47 @@ typedef BOOL (WINAPI *tUpdateLayeredWindow)(HWND hWnd,HDC hdcDst,POINT *pptDst,
 											COLORREF crKey,BLENDFUNCTION *pblend,
 											DWORD dwFlags);
 
-class CSplashWindow : public CWindowImpl<CSplashWindow,CWindow,CWinTraits<WS_POPUP | WS_VISIBLE,WS_EX_TOOLWINDOW> >,
-	public ckmmc::DeviceManager::ScanCallback
+class CAboutWindow : public CWindowImpl<CAboutWindow,CWindow,CWinTraits<WS_POPUP | WS_VISIBLE,WS_EX_TOOLWINDOW> >
 {
 private:
-	CBitmap m_SplashBitmap;
+	CBitmap m_SplashTmpBitmap;
+	CBitmap m_SplashRefBitmap;
 
-	HBRUSH m_hTextBkBrush;
+	HFONT m_VerFont;
+	HFONT m_UrlFont;
+	bool m_bUrlHover;
 
-	ckcore::tstring m_InfoText;
+	// Updated by the UpdateVersionInfo function.
+	TCHAR m_szVersion[128];
+	ckcore::tstring m_szCdrtoolsVersion;
+
+	void UpdateVersionInfo();
+	void RollbackBitmap();
+	void Render();
 
 	tUpdateLayeredWindow m_pUpdateLayeredWindow;
 	void DrawBitmap(HDC hScreenDC,HDC hMemDC);
-	void DrawText(HDC hDC);
-	void LoadBitmap();
+	void DrawText(HDC hDC,HFONT hFont,RECT *pRect,COLORREF Color,
+				  const TCHAR *szText,int iTextLen);
 
-	void SetInfoText(const TCHAR *szInfoText);
-
-	/*
-	 * ckmmc::DeviceManager::ScanCallback interface.
-	 */
-	void event_status(ckmmc::DeviceManager::ScanCallback::Status Status);
-	bool event_device(ckmmc::Device::Address &Addr);
+	void LoadBitmap(CBitmap &Bitmap);
+	void LoadBitmaps();
 
 public:
-	CSplashWindow();
-	~CSplashWindow();
+	CAboutWindow();
+	~CAboutWindow();
 
-	BEGIN_MSG_MAP(CSplashWindow)
+	BEGIN_MSG_MAP(CAboutWindow)
 		MESSAGE_HANDLER(WM_CREATE,OnCreate)
 		MESSAGE_HANDLER(WM_PAINT,OnPaint)
+		MESSAGE_HANDLER(WM_MOUSEMOVE,OnMouseMove);
+		MESSAGE_HANDLER(WM_LBUTTONDOWN,OnLButtonDown)
 	END_MSG_MAP()
 
 	LRESULT OnCreate(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 	LRESULT OnPaint(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+	LRESULT OnMouseMove(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+	LRESULT OnLButtonDown(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 
-	void SafeCreate();
-	void SafeDestroy();
+	void CreateAndShow(HWND hWndParent);
 };

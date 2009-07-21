@@ -602,30 +602,6 @@ INT_PTR CActionManager::BurnCompilation(HWND hWndParent,bool bAppMode)
 
 	if (iResult == IDOK)
 	{
-		// Open the device to see if the disc is rewritable and not blank.
-		/*bool bErase = false;
-		tDeviceInfo *pDeviceInfo = g_DeviceManager.GetDeviceInfo(g_BurnImageSettings.m_iRecorder);
-		if (!g_ProjectSettings.m_bMultiSession)
-		{
-			CCore2Device Device;
-			if (Device.Open(&pDeviceInfo->Address))
-			{
-				CCore2Info Info;
-				CCore2DiscInfo DiscInfo;
-				if (Info.ReadDiscInformation(&Device,&DiscInfo))
-				{
-					if (DiscInfo.m_ucDiscStatus != CCore2DiscInfo::DS_EMTPY &&
-						DiscInfo.m_ucFlags & CCore2DiscInfo::FLAG_ERASABLE)
-					{
-						if (lngMessageBox(hWndParent,MISC_ERASENONEMPTY,GENERAL_QUESTION,
-							MB_YESNO | MB_ICONQUESTION) == IDYES)
-						{
-							bErase = true;
-						}
-					}
-				}
-			}
-		}*/
 		// Check if we should erase the disc.
 		bool bErase = QuickEraseQuery(*g_BurnImageSettings.m_pRecorder,hWndParent);
 

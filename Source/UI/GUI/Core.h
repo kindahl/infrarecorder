@@ -74,6 +74,9 @@ private:
 	tstring m_LastCmdLine;
 	bool m_bLastWaitForProcess;
 
+	// Used when quering version information.
+	ckcore::tstring m_Version;
+
 	void Initialize(int iMode,CAdvancedProgress *pProgress = NULL);
 	void Reinitialize();
 	void CreateBatchFile(const char *szChangeDir,const char *szCommandLine,TCHAR *szBatchPath);
@@ -94,6 +97,7 @@ private:
 	void ReadAudioTrackOutput(const char *szBuffer);
 	void ScanTrackOutput(const char *szBuffer);
 	void ReadDiscOutput(const char *szBuffer);
+	void VersionOutput(const char *szBuffer);
 
 	// Inherited events.
 	void event_output(const std::string &block);
@@ -150,7 +154,8 @@ private:
 		MODE_SCANTRACK,
 		MODE_SCANTRACKEX,
 		MODE_READDISC,
-		MODE_READDISCEX
+		MODE_READDISCEX,
+		MODE_VERSION
 	};
 
 	enum eStatusMode
@@ -203,6 +208,7 @@ public:
 	int BurnCompilationEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,ckcore::Progress &Progress,
 		ckfilesystem::FileSet &Files,std::vector<TCHAR *> &AudioTracks,
 		const TCHAR *szAudioText,int iMode,unsigned __int64 uiDataBytes);
+	ckcore::tstring CdrtoolsVersion();
 };
 
 extern CCore g_Core;

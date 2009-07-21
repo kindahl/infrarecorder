@@ -1,6 +1,6 @@
 // Microsoft Visual C++ generated resource script.
 //
-#include "Resource.h"
+#include "resource.h"
 
 #define APSTUDIO_READONLY_SYMBOLS
 /////////////////////////////////////////////////////////////////////////////
@@ -1344,9 +1344,9 @@ IDB_MAINSMALLBITMAP     BITMAP                  "Resources\\MainSmall.bmp"
 IDB_MAINSMALLBITMAP_    BITMAP                  "Resources\\MainSmall_.bmp"
 IDB_MAINLARGEBITMAP     BITMAP                  "Resources\\MainLarge.bmp"
 IDB_MAINLARGEBITMAP_    BITMAP                  "Resources\\MainLarge_.bmp"
-IDB_SPLASHBITMAP_       BITMAP                  "Resources\\Splash_.bmp"
 IDB_PANECLOSEBITMAP     BITMAP                  "Resources\\PaneClose.bmp"
 IDB_LOGOSMALLBITMAP     BITMAP                  "Resources\\LogoSmall.bmp"
+IDB_ABOUTBITMAP         BITMAP                  "Resources\\About.bmp"
 #endif    // Swedish resources
 /////////////////////////////////////////////////////////////////////////////
 
@@ -1357,8 +1357,7 @@ IDB_LOGOSMALLBITMAP     BITMAP                  "Resources\\LogoSmall.bmp"
 //
 // Generated from the TEXTINCLUDE 3 resource.
 //
-
-
+
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
 

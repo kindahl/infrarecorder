@@ -55,7 +55,6 @@
 #define IDD_INFODLG                     231
 #define IDD_PROPPAGE_DISCGENERAL        232
 #define IDD_IMPORTSESSIONDLG            233
-#define IDB_SPLASHBITMAP_               234
 #define IDI_PROJECTICON                 238
 #define IDD_SAVETRACKSDLG               239
 #define IDD_PROPPAGE_READOPTIONS        240
@@ -91,6 +90,8 @@
 #define IDR_WIZARDREADPNG               294
 #define IDR_WIZARDVIDEOPNG              295
 #define IDR_WIZARDWRITEPNG              296
+#define IDB_BITMAP2                     297
+#define IDB_ABOUTBITMAP                 297
 #define IDC_TOTALPROGRESS               1000
 #define IDC_TOTALSTATIC                 1001
 #define IDC_MESSAGELIST                 1004
@@ -399,7 +400,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        297
+#define _APS_NEXT_RESOURCE_VALUE        298
 #define _APS_NEXT_COMMAND_VALUE         32844
 #define _APS_NEXT_CONTROL_VALUE         1229
 #define _APS_NEXT_SYMED_VALUE           101

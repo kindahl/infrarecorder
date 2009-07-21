@@ -102,14 +102,14 @@ static int SaveEnglishStrings(const TCHAR * const szFileName)
 
 void PerformDeviceScan()
 {
+	// Launch the splash window by the safe function because splash screens
+	// are not supported on systems older than Windows 2000.
 	CSplashWindow SplashWindow;
-
-	RECT rcDefault = { 0,0,200,200 };
-	SplashWindow.Create(NULL,rcDefault);
+	SplashWindow.SafeCreate();
 
 	g_DeviceManager.scan(&SplashWindow);
 
-	SplashWindow.DestroyWindow();
+	SplashWindow.SafeDestroy();
 }
 
 int Run(LPTSTR lpstrCmdLine = NULL,int nCmdShow = SW_SHOWDEFAULT)

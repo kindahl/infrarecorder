@@ -26,14 +26,7 @@
 
 CSplashWindow::CSplashWindow()
 {
-	m_szInfoText[0] = '\0';
-	m_uiInfoTextLen = 0;
-
-	m_hBarBorderBrush = ::CreateSolidBrush(SPLASHWINDOW_BORDERCOLOR);
-	n_hTextBkBrush = ::CreateSolidBrush(SPLASHWINDOW_TEXTBKCOLOR);
-
-	m_iProgressBarPos = 0;
-	m_iProgressBarSegSize = 0;
+	m_hTextBkBrush = ::CreateSolidBrush(SPLASHWINDOW_TEXTBKCOLOR);
 
 	// Load the function dynamically.
 	HMODULE hUser32 = GetModuleHandle(_T("USER32.DLL"));
@@ -41,15 +34,12 @@ CSplashWindow::CSplashWindow()
 
 	// Load a 32-bit transparent bitmap for Windows 2000 and newer systems.
 	if (m_pUpdateLayeredWindow != NULL)
-		LoadTransparentBitmap();
-	else
 		LoadBitmap();
 }
 
 CSplashWindow::~CSplashWindow()
 {
-	::DeleteObject(m_hBarBorderBrush);
-	::DeleteObject(n_hTextBkBrush);
+	::DeleteObject(m_hTextBkBrush);
 }
 
 LRESULT CSplashWindow::OnCreate(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
@@ -59,12 +49,6 @@ LRESULT CSplashWindow::OnCreate(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHan
 	SetWindowPos(HWND_TOPMOST,0,0,sSplashBitmap.cx,sSplashBitmap.cy,SWP_NOMOVE);
 
 	CenterWindow(HWND_DESKTOP);
-
-	int iBottom = sSplashBitmap.cy - SPLASHWINDOW_BARINDENT_BOTTOM;
-	m_rcProgressBar.left = SPLASHWINDOW_BARINDENT_LEFT;
-	m_rcProgressBar.top = iBottom - SPLASHWINDOW_BAR_HEIGHT;
-	m_rcProgressBar.right = sSplashBitmap.cx - SPLASHWINDOW_BARINDENT_RIGHT;
-	m_rcProgressBar.bottom = iBottom;
 
 	// For per-pixel alpha transparency the window needs to be layered.
 	if (m_pUpdateLayeredWindow != NULL)
@@ -77,29 +61,17 @@ LRESULT CSplashWindow::OnPaint(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHand
 {
 	CPaintDC dc(m_hWnd);
 
+	if (m_pUpdateLayeredWindow == NULL)
+		return 0;
+
 	RECT rcClient;
 	GetClientRect(&rcClient);
 
 	HDC hMemDC = CreateCompatibleDC(dc);
 	HBITMAP hOldBitmap = (HBITMAP)SelectObject(hMemDC,m_SplashBitmap);
 
-	if (m_pUpdateLayeredWindow != NULL)
-	{
-		// Draw the text.
-		DrawTransparentText(hMemDC);
-
-		DrawTransparentBitmap(dc,hMemDC);
-	}
-	else
-	{
-		// Draw the progresbar.
-		DrawProgressBar(hMemDC,&rcClient);
-
-		// Draw the text.
-		DrawText(hMemDC);
-
-		BitBlt(dc,0,0,rcClient.right,rcClient.bottom,hMemDC,0,0,SRCCOPY);
-	}
+	DrawText(hMemDC);
+	DrawBitmap(dc,hMemDC);
 
 	SelectObject(hMemDC,hOldBitmap);
 
@@ -109,7 +81,7 @@ LRESULT CSplashWindow::OnPaint(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHand
 	return 0;
 }
 
-void CSplashWindow::DrawTransparentBitmap(HDC hScreenDC,HDC hMemDC)
+void CSplashWindow::DrawBitmap(HDC hScreenDC,HDC hMemDC)
 {
 	SIZE sSplashBitmap;
 	m_SplashBitmap.GetSize(sSplashBitmap);
@@ -134,45 +106,17 @@ void CSplashWindow::DrawText(HDC hDC)
 
 	// Calculate the text height.
 	SIZE sTextSize;
-	GetTextExtentPoint32(hDC,m_szInfoText,m_uiInfoTextLen,&sTextSize);
-
-	RECT rcText = m_rcProgressBar;
-	rcText.top -= sTextSize.cy + SPLASHWINDOW_TEXT_SPACING;
-	rcText.bottom = m_rcProgressBar.top;
-
-	// Do the actual drawing.
-	FillRect(hDC,&rcText,n_hTextBkBrush);
-
-	::SetBkColor(hDC,SPLASHWINDOW_TEXTBKCOLOR);
-	::SetTextColor(hDC,::GetSysColor(COLOR_WINDOWTEXT));
-
-	::DrawText(hDC,m_szInfoText,m_uiInfoTextLen,&rcText,
-		DT_LEFT | DT_END_ELLIPSIS | DT_SINGLELINE);
-
-	SelectObject(hDC,hOldFont);
-}
-
-void CSplashWindow::DrawTransparentText(HDC hDC)
-{
-	HFONT hOldFont = (HFONT)SelectObject(hDC,AtlGetDefaultGuiFont());
-
-	// Calculate the text height.
-	SIZE sTextSize;
-	GetTextExtentPoint32(hDC,m_szInfoText,m_uiInfoTextLen,&sTextSize);
-
-	/*RECT rcText = m_rcProgressBar;
-	rcText.top -= sTextSize.cy + SPLASHWINDOW_TEXT_SPACING;
-	rcText.bottom = m_rcProgressBar.top;*/
+	GetTextExtentPoint32(hDC,m_InfoText.c_str(),m_InfoText.size(),&sTextSize);
 
 	RECT rcText = { 33,125,280,125 + sTextSize.cy };
 
 	// Do the actual drawing.
-	FillRect(hDC,&rcText,n_hTextBkBrush);
+	FillRect(hDC,&rcText,m_hTextBkBrush);
 
 	::SetBkColor(hDC,SPLASHWINDOW_TEXTBKCOLOR);
 	::SetTextColor(hDC,::GetSysColor(COLOR_WINDOWTEXT));
 
-	::DrawText(hDC,m_szInfoText,m_uiInfoTextLen,&rcText,
+	::DrawText(hDC,m_InfoText.c_str(),m_InfoText.size(),&rcText,
 		DT_LEFT | DT_END_ELLIPSIS | DT_SINGLELINE);
 
 	SelectObject(hDC,hOldFont);
@@ -203,64 +147,18 @@ void CSplashWindow::DrawTransparentText(HDC hDC)
 	}
 }
 
-void CSplashWindow::DrawProgressBar(HDC hDC,RECT *pClientRect)
-{
-	RECT rcBar = m_rcProgressBar;
-
-	FillRect(hDC,&rcBar,m_hBarBorderBrush);
-
-	ContractRect(&rcBar,1);
-
-	// First we draw the background.
-	rcBar.left += m_iProgressBarPos;
-	DrawVertGradientRect(hDC,&rcBar,SPLASHWINDOW_BARCOLOR_TOP,SPLASHWINDOW_BARCOLOR_BOTTOM);
-
-	// Next we draw progress.
-	rcBar.left -= m_iProgressBarPos;
-	rcBar.right = m_iProgressBarPos + SPLASHWINDOW_BARINDENT_LEFT + 1;
-	DrawVertGradientRect(hDC,&rcBar,SPLASHWINDOW_BARCOLOR_PROGRESSTOP,SPLASHWINDOW_BARCOLOR_PROGRESSBOTTOM);
-}
-
 void CSplashWindow::SetInfoText(const TCHAR *szInfoText)
 {
-	lstrcpy(m_szInfoText,szInfoText);
-	m_uiInfoTextLen = lstrlen(szInfoText);
+	m_InfoText = szInfoText;
 
-	// The text should most probably not be larger than 42 pixels.
-	RECT rcText = m_rcProgressBar;
-	rcText.top -= 42 + SPLASHWINDOW_TEXT_SPACING;
-	InvalidateRect(&rcText);
-
-	// Process the message queue.
-	ProcessMessages();
-}
-
-void CSplashWindow::SetMaxProgress(unsigned int uiMaxProgress)
-{
-	RECT rcClient;
-	GetClientRect(&rcClient);
-
-	int iProgressBarWidth = rcClient.right - SPLASHWINDOW_BARINDENT_LEFT - SPLASHWINDOW_BARINDENT_RIGHT - 2;
-	m_iProgressBarSegSize = iProgressBarWidth/uiMaxProgress;
-}
-
-void CSplashWindow::SetProgress(unsigned int uiProgress)
-{
-	m_iProgressBarPos = uiProgress * m_iProgressBarSegSize;
-
-	InvalidateRect(&m_rcProgressBar);
+	// Force redraw.
+	InvalidateRect(NULL);
 
 	// Process the message queue.
 	ProcessMessages();
 }
 
 void CSplashWindow::LoadBitmap()
-{
-	// Load the bitmap.
-	m_SplashBitmap.LoadBitmap(IDB_SPLASHBITMAP_);
-}
-
-void CSplashWindow::LoadTransparentBitmap()
 {
 	// Load the bitmap.
 	HBITMAP hBitmap = (HBITMAP)LoadImage(_Module.GetModuleInstance(),MAKEINTRESOURCE(IDB_SPLASHBITMAP),
@@ -291,20 +189,22 @@ void CSplashWindow::LoadTransparentBitmap()
 void CSplashWindow::event_status(ckmmc::DeviceManager::ScanCallback::Status Status)
 {
 	if (Status == ckmmc::DeviceManager::ScanCallback::ckEVENT_DEV_SCAN)
-	{
-		SetMaxProgress(2);
-
 		SetInfoText(lngGetString(INIT_SCANBUS));
-		SetProgress(1);
-	}
 	else if (Status == ckmmc::DeviceManager::ScanCallback::ckEVENT_DEV_CAP)
-	{
 		SetInfoText(lngGetString(INIT_LOADCAPABILITIES));
-		SetProgress(2);
-	}
 }
 
 bool CSplashWindow::event_device(ckmmc::Device::Address &Addr)
 {
 	return true;
+}
+
+void CSplashWindow::SafeCreate()
+{
+	Create(HWND_DESKTOP,NULL);
+}
+
+void CSplashWindow::SafeDestroy()
+{
+	DestroyWindow();
 }
