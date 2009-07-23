@@ -158,22 +158,6 @@ IDR_MAINFRAME           ICON                    "Resources\\InfraRecorder.ico"
 // Dialog
 //
 
-IDD_ABOUTBOX DIALOGEX 0, 0, 239, 202
-STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "About"
-FONT 8, "MS Sans Serif", 0, 0, 0x0
-BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,182,181,50,14
-    CONTROL         "",IDC_WHITESTATIC,"Static",SS_WHITERECT,0,0,239,171
-    CONTROL         277,IDC_LOGOSTATIC,"Static",SS_BITMAP | SS_REALSIZEIMAGE,0,0,146,49
-    LTEXT           "Copyright © 2006-2009 Christian Kindahl\n\nInfraRecorder comes with absolutely no warranty. This is free software, and you are welcome to redistribute it under certain conditions; please see License.txt for more information.",IDC_INFOSTATIC,7,52,225,43
-    CONTROL         "",IDC_BEVELSTATIC2,"Static",SS_ETCHEDHORZ | WS_GROUP,0,171,239,1,WS_EX_STATICEDGE
-    LTEXT           "Installed codecs (double-click to view copyright note):",IDC_CODECSSTATIC,7,100,170,8
-    CONTROL         "",IDC_CODECLIST,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,111,225,53
-    PUSHBUTTON      "Website",IDC_WEBSITEBUTTON,7,181,50,14
-    EDITTEXT        IDC_VERSIONEDIT,147,4,85,27,ES_RIGHT | ES_MULTILINE | ES_AUTOHSCROLL | ES_READONLY | NOT WS_BORDER,WS_EX_TRANSPARENT
-END
-
 IDD_PROPPAGE_DEVICEGENERAL DIALOGEX 0, 0, 274, 234
 STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_DISABLED | WS_CAPTION
 CAPTION "General"
@@ -525,14 +509,6 @@ END
 #ifdef APSTUDIO_INVOKED
 GUIDELINES DESIGNINFO 
 BEGIN
-    IDD_ABOUTBOX, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 232
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 195
-    END
-
     IDD_PROPPAGE_DEVICEGENERAL, DIALOG
     BEGIN
         LEFTMARGIN, 7
@@ -1345,7 +1321,6 @@ IDB_MAINSMALLBITMAP_    BITMAP                  "Resources\\MainSmall_.bmp"
 IDB_MAINLARGEBITMAP     BITMAP                  "Resources\\MainLarge.bmp"
 IDB_MAINLARGEBITMAP_    BITMAP                  "Resources\\MainLarge_.bmp"
 IDB_PANECLOSEBITMAP     BITMAP                  "Resources\\PaneClose.bmp"
-IDB_LOGOSMALLBITMAP     BITMAP                  "Resources\\LogoSmall.bmp"
 IDB_ABOUTBITMAP         BITMAP                  "Resources\\About.bmp"
 #endif    // Swedish resources
 /////////////////////////////////////////////////////////////////////////////

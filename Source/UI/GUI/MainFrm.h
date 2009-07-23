@@ -18,7 +18,6 @@
 
 #pragma once
 #include <atlcrack.h>	// COMMAND_RANGE_HANDLER_EX
-#include "AboutDlg.h"
 #include "MainView.h"
 #include "SpaceMeter.h"
 #include "ProjectTreeViewCtrl.h"

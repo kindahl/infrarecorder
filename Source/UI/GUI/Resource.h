@@ -2,7 +2,6 @@
 // Microsoft Visual C++ generated include file.
 // Used by InfraRecorder.rc
 //
-#define IDD_ABOUTBOX                    100
 #define IDD_PROPPAGE_DEVICEGENERAL      106
 #define IDR_MAINFRAME                   128
 #define ID_VIEW_UPLEVEL                 129
@@ -70,7 +69,6 @@
 #define IDD_PROPPAGE_PROJECTPROPUDF     250
 #define IDB_PANECLOSEBITMAP             251
 #define IDB_BITMAP1                     275
-#define IDB_LOGOSMALLBITMAP             277
 #define IDR_WELCOMELOGOPNG              278
 #define IDR_BUTTONFPNG                  279
 #define IDR_BUTTONHPNG                  280
@@ -119,7 +117,6 @@
 #define IDC_BROWSEBUTTON                1018
 #define IDC_DIAGNOSTICSBUTTON           1018
 #define IDC_YESALLBUTTON                1018
-#define IDC_WEBSITEBUTTON               1018
 #define ID_SAVEASBUTTON                 1019
 #define IDC_DEVICELIST                  1020
 #define IDC_INFOSTATIC                  1021
@@ -258,11 +255,8 @@
 #define IDC_USEDSPACELABELSTATIC        1151
 #define IDC_FREESPACESTATIC             1152
 #define IDC_FREESPACELABELSTATIC        1153
-#define IDC_LOGOSTATIC                  1154
-#define IDC_WHITESTATIC                 1155
 #define IDC_HELPBUTTON                  1157
 #define IDC_VERSIONSTATIC               1160
-#define IDC_VERSIONEDIT                 1160
 #define IDC_ASSOCIATECHECK              1161
 #define IDC_CLONECHECK                  1161
 #define IDC_NOREADERRCHECK              1161
@@ -273,8 +267,6 @@
 #define IDC_AUDIOFORMATSTATIC           1166
 #define IDC_AUDIOFORMATCOMBO            1167
 #define IDC_AUDIOFORMATBUTTON           1168
-#define IDC_CODECSSTATIC                1169
-#define IDC_CODECLIST                   1170
 #define IDC_FIFOGROUPSTATIC             1171
 #define IDC_FIFOINFOSTATIC              1172
 #define IDC_FIFOEDIT                    1173

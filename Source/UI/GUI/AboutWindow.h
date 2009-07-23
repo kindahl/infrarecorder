@@ -54,6 +54,8 @@ private:
 	TCHAR m_szVersion[128];
 	ckcore::tstring m_szCdrtoolsVersion;
 
+	HWND m_hWndParent;
+
 	void UpdateVersionInfo();
 	void RollbackBitmap();
 	void Render();
@@ -84,3 +86,5 @@ public:
 
 	void CreateAndShow(HWND hWndParent);
 };
+
+extern CAboutWindow *g_pAboutWnd;

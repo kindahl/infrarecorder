@@ -32,6 +32,7 @@
 #include "ActionManager.h"
 #include "TempManager.h"
 #include "InfoDlg.h"
+#include "AboutWindow.h"
 #include "InfraRecorder.h"
 
 CAppModule _Module;
@@ -43,10 +44,11 @@ CCodecManager g_CodecManager;
 ckmmc::DeviceManager g_DeviceManager;
 
 // Global pointers to GUI objects owned by this file.
+CLogDlg *g_pLogDlg = NULL;
 CMainFrame *g_pMainFrame = NULL;
 CProgressDlg *g_pProgressDlg = NULL;
 CSimpleProgressDlg *g_pSimpleProgressDlg = NULL;
-CLogDlg *g_pLogDlg = NULL;
+CAboutWindow *g_pAboutWnd = NULL;
 
 #ifdef _DEBUG
 const ckcore::tchar SAVE_ENGLISH_STRINGS_PARAM[] = _T("-englishstrings ");
@@ -335,11 +337,13 @@ int WINAPI _tWinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPTSTR lpstrCmd
 			CMainFrame MainFrame;
 			CProgressDlg ProgressDlg;
 			CSimpleProgressDlg SimpleProgressDlg;
+			CAboutWindow AboutWnd;
 
+			g_pLogDlg = &LogDlg;
 			g_pMainFrame = &MainFrame;
 			g_pProgressDlg = &ProgressDlg;
 			g_pSimpleProgressDlg = &SimpleProgressDlg;
-			g_pLogDlg = &LogDlg;
+			g_pAboutWnd = &AboutWnd;
 
 			// Load the configuration.
 			g_SettingsManager.Load();
@@ -383,10 +387,11 @@ int WINAPI _tWinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPTSTR lpstrCmd
 		{
 			// If someone tries to touch g_pMainFrame etc. after the object has been destroyed,
 			// we need to find out.
+			g_pLogDlg = NULL;
 			g_pMainFrame = NULL;
 			g_pProgressDlg = NULL;
 			g_pSimpleProgressDlg = NULL;
-			g_pLogDlg = NULL;
+			g_pAboutWnd = NULL;
 
 			// Destroy the log dialog.
 			if (LogDlg.IsWindow())
@@ -400,10 +405,11 @@ int WINAPI _tWinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPTSTR lpstrCmd
 
 		// If someone tries to touch g_pMainFrame etc. after the object has been destroyed,
 		// we need to find out.
+		g_pLogDlg = NULL;
 		g_pMainFrame = NULL;
 		g_pProgressDlg = NULL;
 		g_pSimpleProgressDlg = NULL;
-		g_pLogDlg = NULL;
+		g_pAboutWnd = NULL;
 
 		_Module.Term();
 		OleUninitialize();

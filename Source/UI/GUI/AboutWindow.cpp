@@ -47,10 +47,12 @@ tCdrtoolsChecksumVer g_CdrtoolsChecksumVer[1] =
 	{ 0xd47a1004,_T("2.01.01.a61") }
 };
 
-CAboutWindow::CAboutWindow() : m_bUrlHover(false),m_pUpdateLayeredWindow(NULL)
+CAboutWindow::CAboutWindow() :
+	m_VerFont(NULL),m_UrlFont(NULL),m_bUrlHover(false),
+	m_hWndParent(NULL),
+	m_pUpdateLayeredWindow(NULL)
 {
 	m_VerFont = AtlCreateBoldFont(AtlGetDefaultGuiFont());
-	m_UrlFont = NULL;
 	
 	LOGFONT lf = { 0 };
 	if (::GetObject(AtlGetDefaultGuiFont(),sizeof(LOGFONT),&lf) == sizeof(LOGFONT))
@@ -65,10 +67,6 @@ CAboutWindow::CAboutWindow() : m_bUrlHover(false),m_pUpdateLayeredWindow(NULL)
 	// Load the function dynamically.
 	HMODULE hUser32 = GetModuleHandle(_T("USER32.DLL"));
 	m_pUpdateLayeredWindow = (tUpdateLayeredWindow)GetProcAddress(hUser32,"UpdateLayeredWindow");
-
-	// Load a 32-bit transparent bitmap for Windows 2000 and newer systems.
-	if (m_pUpdateLayeredWindow != NULL)
-		LoadBitmaps();
 }
 
 CAboutWindow::~CAboutWindow()
@@ -163,6 +161,10 @@ void CAboutWindow::UpdateVersionInfo()
 
 LRESULT CAboutWindow::OnCreate(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
+	// Load a 32-bit transparent bitmap for Windows 2000 and newer systems.
+	if (m_pUpdateLayeredWindow != NULL)
+		LoadBitmaps();
+
 	SIZE sSplashBitmap;
 	m_SplashTmpBitmap.GetSize(sSplashBitmap);
 	SetWindowPos(HWND_TOPMOST,0,0,sSplashBitmap.cx,sSplashBitmap.cy,SWP_NOMOVE);
@@ -424,6 +426,10 @@ LRESULT CAboutWindow::OnLButtonDown(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &
 					   NULL,NULL,SW_SHOW);
 	}
 
+	// Re-enable the parent window.
+	if (m_hWndParent != NULL)
+		::EnableWindow(m_hWndParent,TRUE);
+
 	DestroyWindow();
 	return 0;
 }
@@ -436,6 +442,10 @@ void CAboutWindow::CreateAndShow(HWND hWndParent)
 	// have a simple message box for compatibility.
 	if (m_pUpdateLayeredWindow != NULL)
 	{
+		// Disable the parent window.
+		m_hWndParent = hWndParent;
+		::EnableWindow(m_hWndParent,FALSE);
+
 		Create(hWndParent,NULL);
 		ShowWindow(true);
 		Render();
