@@ -94,6 +94,7 @@ public:
 	bool m_bWriteSpeedWarning;	// Display a warning when changing the write speed of a recorder.
 	bool m_bCodecWarning;		// Display a warning when a codec failed to load.
 	bool m_bFixateWarning;		// Display a warning when trying to disable disc fixation.
+	bool m_bNoDevWarning;		// Display a warning when no devices are found in the system.
 	bool m_bSmoke;
 	bool m_bShowWizard;
 	int m_iGraceTime;
@@ -122,6 +123,7 @@ public:
 		m_bWriteSpeedWarning = true;
 		m_bCodecWarning = true;
 		m_bFixateWarning = true;
+		m_bNoDevWarning = true;
 		m_bSmoke = true;
 		m_bShowWizard = true;
 		m_iGraceTime = 5;			// Five seconds by default.

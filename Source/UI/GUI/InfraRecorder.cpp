@@ -112,6 +112,17 @@ void PerformDeviceScan()
 	g_DeviceManager.scan(&SplashWindow);
 
 	SplashWindow.SafeDestroy();
+
+	if (g_DeviceManager.devices().size() == 0)
+	{
+		if (g_GlobalSettings.m_bNoDevWarning)
+		{
+			CInfoDlg InfoDlg(&g_GlobalSettings.m_bNoDevWarning,
+							 lngGetString(WARNING_NODEVICES),
+							 INFODLG_NOCANCEL | INFODLG_ICONWARNING);
+			InfoDlg.DoModal();
+		}
+	}
 }
 
 int Run(LPTSTR lpstrCmdLine = NULL,int nCmdShow = SW_SHOWDEFAULT)

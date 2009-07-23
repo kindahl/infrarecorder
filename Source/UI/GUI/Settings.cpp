@@ -88,6 +88,7 @@ bool CGlobalSettings::Save(CXmlProcessor *pXml)
 		pXml->AddElement(_T("WriteSpeedWarning"),m_bWriteSpeedWarning);
 		pXml->AddElement(_T("CodecWarning"),m_bCodecWarning);
 		pXml->AddElement(_T("FixateWarning"),m_bFixateWarning);
+		pXml->AddElement(_T("NoDevWarning"),m_bNoDevWarning);
 		pXml->AddElement(_T("Smoke"),m_bSmoke);
 		pXml->AddElement(_T("Wizard"),m_bShowWizard);
 		pXml->AddElement(_T("GraceTime"),m_iGraceTime);
@@ -137,6 +138,7 @@ bool CGlobalSettings::Load(CXmlProcessor *pXml)
 	pXml->GetSafeElementData(_T("WriteSpeedWarning"),&m_bWriteSpeedWarning);
 	pXml->GetSafeElementData(_T("CodecWarning"),&m_bCodecWarning);
 	pXml->GetSafeElementData(_T("FixateWarning"),&m_bFixateWarning);
+	pXml->GetSafeElementData(_T("NoDevWarning"),&m_bNoDevWarning);
 	pXml->GetSafeElementData(_T("Smoke"),&m_bSmoke);
 	pXml->GetSafeElementData(_T("Wizard"),&m_bShowWizard);
 	pXml->GetSafeElementData(_T("GraceTime"),&m_iGraceTime);
