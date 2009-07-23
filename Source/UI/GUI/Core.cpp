@@ -368,6 +368,8 @@ void CCore::ErrorOutputCDRECORD(const char *szBuffer)
 	#endif
 		else if (!strncmp(szBuffer,CDRTOOLS_TURNINGBFON,CDRTOOLS_TURNINGBFON_LENGTH))
 			return;
+		else if (!strncmp(szBuffer,CDRTOOLS_FIFO,CDRTOOLS_FIFO_LENGTH))
+			return;
 		else
 		{
 			m_pProgress->notify(ckcore::Progress::ckEXTERNAL,
@@ -889,8 +891,14 @@ void CCore::event_output(const std::string &block)
 
 void CCore::event_finished()
 {
+	ckcore::tuint32 uiExitCode = 0;
+	exit_code(uiExitCode);
+
 	if (g_GlobalSettings.m_bLog)
+	{
 		g_pLogDlg->print_line(_T("CCore::ProcessEnded"));
+		g_pLogDlg->print_line(_T("  Process exited with code: %d."),uiExitCode);
+	}
 
 	switch (m_iMode)
 	{
@@ -905,13 +913,13 @@ void CCore::event_finished()
 		case MODE_SCANTRACK:
 		case MODE_READDISC:
 			m_pProgress->set_progress(100);
-			m_pProgress->set_status(lngGetString(PROGRESS_DONE));
+			m_pProgress->set_status(lngGetString(uiExitCode == 0 ? PROGRESS_DONE : PROGRESS_FAILED));
 			m_pProgress->NotifyCompleted();
 			break;
 
 		case MODE_BURNIMAGE:
 			m_pProgress->set_progress(100);
-			m_pProgress->set_status(lngGetString(PROGRESS_DONE));
+			m_pProgress->set_status(lngGetString(uiExitCode == 0 ? PROGRESS_DONE : PROGRESS_FAILED));
 
 			if (m_lNumCopies <= 0 || !Relaunch())
 				m_pProgress->NotifyCompleted();
@@ -929,7 +937,7 @@ void CCore::event_finished()
 			else
 			{
 				m_pProgress->set_progress(100);
-				m_pProgress->set_status(lngGetString(PROGRESS_DONE));
+				m_pProgress->set_status(lngGetString(uiExitCode == 0 ? PROGRESS_DONE : PROGRESS_FAILED));
 				m_pProgress->NotifyCompleted();
 			}
 			break;
@@ -944,7 +952,7 @@ void CCore::event_finished()
 				else
 				{
 					m_pProgress->set_progress(100);
-					m_pProgress->set_status(lngGetString(PROGRESS_DONE));
+					m_pProgress->set_status(lngGetString(uiExitCode == 0 ? PROGRESS_DONE : PROGRESS_FAILED));
 					m_pProgress->NotifyCompleted();
 				}
 			}
@@ -1624,7 +1632,11 @@ int CCore::BurnTracksEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 		return RESULT_INTERNALERROR;
 	}
 
-	return m_bOperationRes ? RESULT_OK : RESULT_EXTERNALERROR;
+	ckcore::tuint32 uiExitCode = 0;
+	exit_code(uiExitCode);
+
+	return uiExitCode == 0 ? RESULT_OK : RESULT_EXTERNALERROR;
+	//return m_bOperationRes ? RESULT_OK : RESULT_EXTERNALERROR;
 }
 
 /*
@@ -1700,7 +1712,11 @@ int CCore::ReadDataTrackEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 		return RESULT_INTERNALERROR;
 	}
 
-	return m_bOperationRes ? RESULT_OK : RESULT_EXTERNALERROR;
+	ckcore::tuint32 uiExitCode = 0;
+	exit_code(uiExitCode);
+
+	return uiExitCode == 0 ? RESULT_OK : RESULT_EXTERNALERROR;
+	//return m_bOperationRes ? RESULT_OK : RESULT_EXTERNALERROR;
 }
 
 /*
@@ -1767,7 +1783,11 @@ int CCore::ReadAudioTrackEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,c
 		return RESULT_INTERNALERROR;
 	}
 
-	return m_bOperationRes ? RESULT_OK : RESULT_EXTERNALERROR;
+	ckcore::tuint32 uiExitCode = 0;
+	exit_code(uiExitCode);
+
+	return uiExitCode == 0 ? RESULT_OK : RESULT_EXTERNALERROR;
+	//return m_bOperationRes ? RESULT_OK : RESULT_EXTERNALERROR;
 }
 
 /*
@@ -1833,7 +1853,11 @@ int CCore::ScanTrackEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,unsign
 		return RESULT_INTERNALERROR;
 	}
 
-	return m_bOperationRes ? RESULT_OK : RESULT_EXTERNALERROR;
+	ckcore::tuint32 uiExitCode = 0;
+	exit_code(uiExitCode);
+
+	return uiExitCode == 0 ? RESULT_OK : RESULT_EXTERNALERROR;
+	//return m_bOperationRes ? RESULT_OK : RESULT_EXTERNALERROR;
 }
 
 /*
@@ -2175,7 +2199,11 @@ int CCore::ReadDiscEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,const T
 	if (!ReadDisc(Device,pProgress,szFileName,MODE_READDISCEX,true))
 		return RESULT_INTERNALERROR;
 
-	return m_bOperationRes ? RESULT_OK : RESULT_EXTERNALERROR;
+	ckcore::tuint32 uiExitCode = 0;
+	exit_code(uiExitCode);
+
+	return uiExitCode == 0 ? RESULT_OK : RESULT_EXTERNALERROR;
+	//return m_bOperationRes ? RESULT_OK : RESULT_EXTERNALERROR;
 }
 
 DWORD WINAPI CCore::CreateCompImageThread(LPVOID lpThreadParameter)
@@ -2503,5 +2531,9 @@ int CCore::BurnCompilationEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 		return RESULT_INTERNALERROR;		
 	}
 
-	return m_bOperationRes ? RESULT_OK : RESULT_EXTERNALERROR;
+	ckcore::tuint32 uiExitCode = 0;
+	exit_code(uiExitCode);
+
+	return uiExitCode == 0 ? RESULT_OK : RESULT_EXTERNALERROR;
+	//return m_bOperationRes ? RESULT_OK : RESULT_EXTERNALERROR;
 }

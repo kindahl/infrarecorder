@@ -583,7 +583,6 @@ unsigned long WINAPI CTracksDlg::ReadTrackThread(LPVOID lpThreadParameter)
 													 true,szFilePath);
 
 				g_pProgressDlg->set_progress(100);
-				g_pProgressDlg->set_status(lngGetString(PROGRESS_DONE));
 				g_pProgressDlg->NotifyCompleted();
 
 				if (bResult)
@@ -592,6 +591,7 @@ unsigned long WINAPI CTracksDlg::ReadTrackThread(LPVOID lpThreadParameter)
 				}
 				else
 				{
+					g_pProgressDlg->set_status(lngGetString(PROGRESS_FAILED));
 					ckcore::File::remove(szFilePath);
 					return 0;
 				}
@@ -643,7 +643,7 @@ unsigned long WINAPI CTracksDlg::ReadTrackThread(LPVOID lpThreadParameter)
 					ckcore::File::remove(szFilePath);
 
 					g_pProgressDlg->set_progress(100);
-					g_pProgressDlg->set_status(lngGetString(PROGRESS_DONE));
+					g_pProgressDlg->set_status(lngGetString(PROGRESS_FAILED));
 					g_pProgressDlg->NotifyCompleted();
 					return 0;
 				}
