@@ -116,6 +116,9 @@ void CCore::CreateBatchFile(const char *szChangeDir,const char *szCommandLine,TC
 
 bool CCore::SafeLaunch(tstring &CommandLine,bool bWaitForProcess)
 {
+	if (g_GlobalSettings.m_bLog)
+		g_pLogDlg->print_line(_T("  Command line to run: %s"),CommandLine.c_str());
+
 	if (m_lNumCopies > 0)
 		m_lNumCopies--;
 

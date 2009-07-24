@@ -446,7 +446,7 @@ void CAboutWindow::CreateAndShow(HWND hWndParent)
 		m_hWndParent = hWndParent;
 		::EnableWindow(m_hWndParent,FALSE);
 
-		Create(hWndParent,NULL);
+		Create(hWndParent,CWindow::rcDefault);  
 		ShowWindow(true);
 		Render();
 	}

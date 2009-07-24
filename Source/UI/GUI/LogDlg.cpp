@@ -268,6 +268,16 @@ LRESULT CLogDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandl
 	DlgResize_Init(true,true,WS_CLIPCHILDREN);
 
 	m_LogEdit = GetDlgItem(IDC_LOGEDIT);
+
+	// The edit control can hold a maximum of 30,000 characters by default,
+	// and that's too little when for example the ISO 9600 file system starts
+	// generating warnings for many files in the project.
+	const UINT uiMaxCharCount = 1 * 1024 * 1024;
+	m_LogEdit.SetLimitText(uiMaxCharCount);
+	// There is no error indication, so manually check that the new value
+	// was actually accepted.
+	ATLASSERT(uiMaxCharCount == m_LogEdit.GetLimitText());
+
 	m_DiagButton.SubclassWindow(GetDlgItem(IDC_DIAGNOSTICSBUTTON));
 
 	// Initialize the log.
