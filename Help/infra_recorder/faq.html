@@ -1,0 +1,51 @@
+<html>
+<head>
+<title>Frequently Asked Questions</title>
+<link rel="stylesheet" media="screen" type="text/css" href="../style.css">
+<script type="text/javascript" language="JavaScript" src="../stylescript.js"></script>
+</head>
+<body scroll="no">
+<div id="header">
+	<div id="location">InfraRecorder</div>
+	<div id="topic">Frequently Asked Questions</div>
+</div>
+<div id="content">
+	<p>For a more up-to-date list of questions and answers, please visit
+	   <a href="http://infrarecorder.org">http://infrarecorder.org</a>.</p>
+	<p><strong>InfraRecorder does not my disc devices, how do I solve this 
+	           problem?</strong>
+	   <br/>This is most likely a permission issue. By default InfraRecorder
+	        uses an interface called SPTI to access disc devices. On Windows
+	        2000, XP and 2003 systems administrator permissions are required in
+	        order to use SPTI.</p>
+	<p>If you want to allow limited user accounts to access disc devices using
+	   SPTI, please do the following when logged in as an administrator:</p>
+	<ol>
+	    <li><span>Navigate "Start" then "Run" in the Windows
+	              start-menu.</span></li>
+	    <li><span>Type "secpol.msc" without the quotes and press the OK
+	              button.</span></li>
+	    <li><span>Navigate "Local Policies" then "Security Options" in the
+	              tree.</span></li>
+	    <li><span>Change "Devices: Restrict CD-ROM access to locally logged-on
+	              user only" item from "Disabled" to "Enabled.".</span></li>
+	</ol>
+	<p>Please note that some versions of Windows (Windows XP home for example)
+	   does not have "secpol.msc". If using such a system please do the
+	   following instead (while logged in as an administrator):</p>
+	<ol>
+	    <li><span>Navigate "Start" then "Run" in the Windows
+	              start-menu.</span></li>
+	    <li><span>Type "regedit" without the quotes and press the OK
+	              button.</span></li>
+	    <li><span>Navigate "HKEY_LOCAL_MACHINE", "SOFTWARE", "Microsoft",
+	              "Windows NT", "CurrentVersion" and finally "Winlogon" in the
+	              tree</span></li>
+	    <li><span>In the selected path, add a string value named
+	              "allocatecdroms" with the value "1" (without the
+	              quotes). If the string value already exist with the value
+	              "0", simply change it to "1".</span></li>
+	</ol>
+</div>
+</body>
+</html>

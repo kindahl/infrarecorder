@@ -56,6 +56,11 @@
 			<param name="Local" value="infra_recorder\installation.html">
 			<param name="URL" value="infra_recorder\installation.html">
 			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="FAQ">
+			<param name="Local" value="infra_recorder\faq.html">
+			<param name="ImageNumber" value="9">
+			</OBJECT>
 	</UL>
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="How to Use?">

@@ -61,6 +61,11 @@
 		<param name="Local" value="how_to_use\erase_disc.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="FAQ">
+		<param name="Name" value="FAQ">
+		<param name="Local" value="infra_recorder\faq.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Feature Overview">
 		<param name="Name" value="Feature Overview">
 		<param name="Local" value="infra_recorder\feature_overview.html">
