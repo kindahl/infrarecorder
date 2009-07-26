@@ -97,7 +97,8 @@ void CCore::Reinitialize()
 void CCore::CreateBatchFile(const char *szChangeDir,const char *szCommandLine,TCHAR *szBatchPath)
 {
 	// FIXME: This is not very nice.
-	ckcore::File BatchFile = ckcore::File::temp(g_GlobalSettings.m_szTempPath);
+	ckcore::File BatchFile = ckcore::File::temp(g_GlobalSettings.m_szTempPath,
+												ckT("InfraRecorder"));
 	lstrcpy(szBatchPath,BatchFile.name().c_str());
 
 	// Delete the generated temporary file since we need a batch file.

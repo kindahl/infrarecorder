@@ -201,7 +201,7 @@ bool CSplashWindow::event_device(ckmmc::Device::Address &Addr)
 
 void CSplashWindow::SafeCreate()
 {
-	Create(HWND_DESKTOP,NULL);
+	Create(HWND_DESKTOP,CWindow::rcDefault);
 }
 
 void CSplashWindow::SafeDestroy()

@@ -925,6 +925,8 @@ bool CMainFrame::SaveProjectAs()
 
 	if (FileDialog.DoModal() == IDOK)
 	{
+		CWaitCursor WaitCursor;		// This displays the hourglass cursor.
+
 		lstrcpy(m_szProjectFile,FileDialog.m_szFileName);
 
 		// Save the project.
@@ -955,7 +957,11 @@ bool CMainFrame::SaveProjectPrompt()
 					if (!SaveProjectAs())
 						return false;
 				else
+				{
+					CWaitCursor WaitCursor;		// This displays the hourglass cursor.
+
 					g_ProjectManager.SaveProject(m_szProjectFile);
+				}
 				break;
 
 			case IDCANCEL:
@@ -1087,6 +1093,8 @@ LRESULT CMainFrame::OnCreate(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandle
 
 	if (m_szProjectFile[0] != '\0')
 	{
+		CWaitCursor WaitCursor;		// This displays the hourglass cursor.
+
 		if (g_ProjectManager.LoadProject(m_szProjectFile))
 		{
 			// Update the view.
@@ -2635,6 +2643,8 @@ LRESULT CMainFrame::OnFileOpen(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHan
 		// Disable the welcome screen if active.
 		ShowWelcomePane(false);
 
+		CWaitCursor WaitCursor;		// This displays the hourglass cursor.
+
 		if (g_ProjectManager.LoadProject(FileDialog.m_szFileName))
 		{
 			// Update the view.
@@ -2653,7 +2663,11 @@ LRESULT CMainFrame::OnFileSave(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHan
 	if (m_szProjectFile[0] == '\0')
 		SaveProjectAs();
 	else
+	{
+		CWaitCursor WaitCursor;		// This displays the hourglass cursor.
+
 		g_ProjectManager.SaveProject(m_szProjectFile);
+	}
 
 	return 0;
 }

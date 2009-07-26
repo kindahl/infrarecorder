@@ -53,7 +53,8 @@ CActionManager::~CActionManager()
 DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 {
 	int iProjectType = g_ProjectManager.GetProjectType(),iResult = 0;
-	ckcore::File ImageFile = ckcore::File::temp(g_GlobalSettings.m_szTempPath);
+	ckcore::File ImageFile = ckcore::File::temp(g_GlobalSettings.m_szTempPath,
+												ckT("InfraRecorder"));
 
 	// Make sure that the disc will not be ejected before beeing verified.
 	bool bEject = g_BurnImageSettings.m_bEject;
@@ -226,7 +227,8 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 					// Check if any audio information has been edited.
 					if (g_TreeManager.HasExtraAudioData(g_ProjectManager.GetMixAudioRootNode()))
 					{
-						ckcore::File AudioTextFile = ckcore::File::temp(g_GlobalSettings.m_szTempPath);
+						ckcore::File AudioTextFile = ckcore::File::temp(g_GlobalSettings.m_szTempPath,
+																		ckT("InfraRecorder"));
 
 						if (g_ProjectManager.SaveCDText(AudioTextFile.name().c_str()))
 							pAudioText = AudioTextFile.name().c_str();
@@ -294,7 +296,8 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 					// Check if any audio information has been edited.
 					if (g_TreeManager.HasExtraAudioData(g_TreeManager.GetRootNode()))
 					{
-						ckcore::File AudioTextFile = ckcore::File::temp(g_GlobalSettings.m_szTempPath);
+						ckcore::File AudioTextFile = ckcore::File::temp(g_GlobalSettings.m_szTempPath,
+																		ckT("InfraRecorder"));
 
 						if (g_ProjectManager.SaveCDText(AudioTextFile.name().c_str()))
 							pAudioText = AudioTextFile.name().c_str();
@@ -823,7 +826,8 @@ DWORD WINAPI CActionManager::CopyDiscOnFlyThread(LPVOID lpThreadParameter)
 
 DWORD WINAPI CActionManager::CopyDiscThread(LPVOID lpThreadParameter)
 {
-	ckcore::File ImageFile = ckcore::File::temp(g_GlobalSettings.m_szTempPath);
+	ckcore::File ImageFile = ckcore::File::temp(g_GlobalSettings.m_szTempPath,
+												ckT("InfraRecorder"));
 
 	// Set the status information.
 	g_pProgressDlg->SetWindowText(lngGetString(STITLE_CREATEIMAGE));

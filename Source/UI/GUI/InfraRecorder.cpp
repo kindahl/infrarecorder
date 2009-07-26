@@ -263,6 +263,8 @@ INT_PTR ParseAndRun(LPTSTR lpstrCmdLine,int nCmdShow = SW_SHOWDEFAULT)
 	}
 	else if (!lstrncmp(lpstrCmdLine,_T("-burnproject "),13))
 	{
+		CWaitCursor WaitCursor;		// This displays the hourglass cursor.
+
 		if (g_ProjectManager.LoadProject(lpstrCmdLine + 13))
 			return g_ActionManager.BurnCompilation(NULL,true);
 
