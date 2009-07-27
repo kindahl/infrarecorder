@@ -18,12 +18,12 @@
 
 #include "stdafx.h"
 #include <ckcore/directory.hh>
-#include "LogDlg.h"
 #include "StringTable.h"
 #include "LangUtil.h"
 #include "Settings.h"
 #include "Diagnostics.h"
 #include "WinVer.h"
+#include "LogDlg.h"
 
 // FIXME: No arrow is used, not enough space.
 CLogDlg::CLogDlg() : m_DiagButton(IDR_DIAGNOSTICSMENU,false),

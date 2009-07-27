@@ -18,12 +18,12 @@
 
 #include "stdafx.h"
 #include <comutil.h>
-#include "SimpleProgressDlg.h"
 #include "../../Common/StringUtil.h"
 #include "StringTable.h"
 #include "LangUtil.h"
 #include "DeviceUtil.h"
 #include "Settings.h"
+#include "SimpleProgressDlg.h"
 
 static const int SUBITEM_TEXT = 1;
 
@@ -229,6 +229,8 @@ void CSimpleProgressDlg::StartSmoke()
 
 LRESULT CSimpleProgressDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
+	DlgResize_Init();
+
 	CenterWindow(GetParent());
 
 	// If we're in application mode, add a minimize button to the window.

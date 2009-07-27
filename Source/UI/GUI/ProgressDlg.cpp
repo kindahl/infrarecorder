@@ -311,6 +311,8 @@ void CProgressDlg::StartSmoke()
 
 LRESULT CProgressDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
+	DlgResize_Init();
+
 	CenterWindow(GetParent());
 
 	// If we're in application mode, add a minimize button to the window.

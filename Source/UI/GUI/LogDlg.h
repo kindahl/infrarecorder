@@ -31,7 +31,8 @@
 #define LOG_WRITEBUFFER_SIZE		1024
 #define LOG_LINEBUFFER_SIZE			512
 
-class CLogDlg : public CDialogImpl<CLogDlg>,public CDialogResize<CLogDlg>,public ckcore::Log
+class CLogDlg : public CDialogImpl<CLogDlg>,public CDialogResize<CLogDlg>,
+				public ckcore::Log
 {
 private:
 	CEdit m_LogEdit;

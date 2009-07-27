@@ -24,8 +24,10 @@
 #include "Effects.h"
 #include "WinVer.h"
 
-class CSimpleProgressDlg : public CDialogImpl<CSimpleProgressDlg>,public CAdvancedProgress,
-	public CMessageFilter, public CIdleHandler
+class CSimpleProgressDlg : public CDialogImpl<CSimpleProgressDlg>,
+						   public CDialogResize<CSimpleProgressDlg>,
+						   public CAdvancedProgress,public CMessageFilter,
+						   public CIdleHandler
 {
 private:
 	HIMAGELIST m_hListImageList;
@@ -83,7 +85,20 @@ public:
 		NOTIFY_HANDLER(IDC_MESSAGELIST,NM_DBLCLK,OnListViewDblClick)
 
 		SMOKE_EVENTS
+
+		CHAIN_MSG_MAP(CDialogResize<CSimpleProgressDlg>)
 	END_MSG_MAP()
+
+	// Resize maps.
+	BEGIN_DLGRESIZE_MAP(CSimpleProgressDlg)
+		DLGRESIZE_CONTROL(IDC_STATUSSTATIC,DLSZ_SIZE_X)
+		DLGRESIZE_CONTROL(IDC_MESSAGELIST,DLSZ_SIZE_X | DLSZ_SIZE_Y)
+		DLGRESIZE_CONTROL(IDC_BEVELSTATIC,DLSZ_SIZE_X | DLSZ_MOVE_Y)
+		DLGRESIZE_CONTROL(IDC_DEVICESTATIC,DLSZ_SIZE_X | DLSZ_MOVE_Y)
+		DLGRESIZE_CONTROL(IDOK,DLSZ_MOVE_X | DLSZ_MOVE_Y)
+		DLGRESIZE_CONTROL(IDCANCEL,DLSZ_MOVE_X | DLSZ_MOVE_Y)
+		DLGRESIZE_CONTROL(IDC_RELOADBUTTON,DLSZ_MOVE_X | DLSZ_MOVE_Y)
+	END_DLGRESIZE_MAP()
 
 	LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 	LRESULT OnReload(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
