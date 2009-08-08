@@ -37,7 +37,7 @@
  */
 typedef struct
 {
-	ckcore::tint32 uiChecksum;
+	ckcore::tuint32 uiChecksum;
 	const TCHAR *szVersion;
 } tCdrtoolsChecksumVer;
 

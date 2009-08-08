@@ -66,8 +66,7 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 	if (iProjectType == PROJECTTYPE_DATA ||
 		iProjectType == PROJECTTYPE_MIXED)
 	{
-		ckfilesystem::FileComparator FileComp(g_ProjectSettings.m_iFileSystem == FILESYSTEM_DVDVIDEO);
-		ckfilesystem::FileSet Files(FileComp);
+		ckfilesystem::FileSet Files;
 		
 		switch (iProjectType)
 		{
@@ -175,9 +174,7 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 					unsigned __int64 uiDataSize = 0;
 					g_pProgressDlg->set_status(lngGetString(PROGRESS_ESTIMAGESIZE));
 
-					ckfilesystem::FileComparator FileComp(g_ProjectSettings.m_iFileSystem == FILESYSTEM_DVDVIDEO);
-					ckfilesystem::FileSet Files(FileComp);
-
+					ckfilesystem::FileSet Files;
 					g_TreeManager.GetPathList(Files,g_TreeManager.GetRootNode());
 
 					iResult = g_Core2.EstimateImageSize(Files,*g_pProgressDlg,uiDataSize);
@@ -243,9 +240,7 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 					unsigned __int64 uiDataSize = 0;
 					g_pProgressDlg->set_status(lngGetString(PROGRESS_ESTIMAGESIZE));
 
-					ckfilesystem::FileComparator FileComp(g_ProjectSettings.m_iFileSystem == FILESYSTEM_DVDVIDEO);
-					ckfilesystem::FileSet Files(FileComp);
-
+					ckfilesystem::FileSet Files;
 					g_TreeManager.GetPathList(Files,g_ProjectManager.GetMixDataRootNode(),
 						lstrlen(g_ProjectManager.GetMixDataRootNode()->pItemData->GetFileName()) + 1);
 
@@ -437,8 +432,7 @@ DWORD WINAPI CActionManager::CreateImageThread(LPVOID lpThreadParameter)
 {
 	TCHAR *szFileName = (TCHAR *)lpThreadParameter;
 
-	ckfilesystem::FileComparator FileComp(g_ProjectSettings.m_iFileSystem == FILESYSTEM_DVDVIDEO);
-	ckfilesystem::FileSet Files(FileComp);
+	ckfilesystem::FileSet Files;
 	
 	switch (g_ProjectManager.GetProjectType())
 	{
