@@ -390,12 +390,12 @@ public:
 	void Reset()
 	{
 		m_iFileSystem = FILESYSTEM_ISO9660;
-		m_iIsoLevel = 0;
+		m_iIsoLevel = 2;
 		m_iIsoFormat = 0;
 		m_bJoliet = true;
 		m_bJolietLongNames = true;
 		m_bOmitVerNum = false;
-		m_bDeepDirs = false;
+		m_bDeepDirs = true;
 
 		m_szLabel[0] = '\0';
 		m_szPublisher[0] = '\0';
