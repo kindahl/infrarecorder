@@ -256,7 +256,7 @@ LRESULT CAboutWindow::OnPaint(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandl
 	RECT rcCdrtools = { 37,260,390,320 };
 	DrawText(hMemDC,AtlGetDefaultGuiFont(),&rcCdrtools,ABOUTWINDOW_TEXTCOLOR,
 			 ABOUT_STR(_T("InfraRecorder uses cdrecord, readcd and cdda2wav from ")
-					   _T("the Cdrtools software suite. Cdrtools copyright © ")
+					   _T("the cdrtools software suite. cdrtools copyright © ")
 					   _T("1995-2009 Jörg Schilling.")));
 
 	RECT rcCdrtoolsVer = { 37,300,390,330 };

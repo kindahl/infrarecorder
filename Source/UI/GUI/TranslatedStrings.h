@@ -380,7 +380,7 @@
 	TRSTR(INFO_NEXTCOPY /* 0x013b */, _T("Please insert a new blank disc to create another copy."))
 	TRSTR(INFO_CREATECOPY /* 0x013c */, _T("Creating copy %d of %d."))
 
-	// Added version 0.47.
+	// Added version 0.50.
 	TRSTR(ERROR_PROJECT_IMPORT /* 0x013d */, _T("Unable to import, does the selected source file exist?"))
 	TRSTR(ERROR_PROJECT_IMPORT_FILE /* 0x013e */, _T("Could not import the file \"%s\"."))
 	TRSTR(COLUMN_DRIVE /* 0x013f */, _T("Drive"))
