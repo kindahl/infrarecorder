@@ -9,9 +9,8 @@ The InfraRecorder source code can be obtained from http://infrarecorder.org
 
 In order to compile InfraRecorder you will need the following libraries:
  1. WTL: http://wtl.sourceforge.net
- 2. ckCore: http://code.kindahl.com
- 3. ckFileSystem: http://code.kindahl.com
- 4. libpng: http://www.libpng.org
+ 2. ckCore, ckFileSystem and ckMMC: http://code.kindahl.com
+ 3. libpng: http://www.libpng.org
 
 InfraRecorder uses cdrtools, sources can be found at:
 http://cdrecord.berlios.de/
