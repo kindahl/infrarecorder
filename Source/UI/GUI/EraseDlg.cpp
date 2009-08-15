@@ -100,6 +100,8 @@ bool CEraseDlg::InitRecorderMedia()
 		*reinterpret_cast<ckmmc::Device *>(m_RecorderCombo.GetItemData(
 										  m_RecorderCombo.GetCurSel()));
 
+	Device.refresh();
+
 	// Get current profile.
 	bool bSupportedProfile = false;
 

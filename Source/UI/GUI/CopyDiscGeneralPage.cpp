@@ -185,6 +185,8 @@ bool CCopyDiscGeneralPage::InitRecorderMedia()
 		*reinterpret_cast<ckmmc::Device *>(m_TargetCombo.GetItemData(
 										   m_TargetCombo.GetCurSel()));
 
+	Device.refresh();
+
 	// Get current profile.
 	ckmmc::Device::Profile Profile = Device.profile();
 

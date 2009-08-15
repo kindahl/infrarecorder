@@ -151,10 +151,12 @@ bool CBurnImageGeneralPage::InitRecorderMedia()
 	TCHAR szBuffer[256];
 	GetParentWindow(this).GetWindowText(szBuffer,m_uiParentTitleLen + 1);
 
-	// Open the device.
+	// Obtain the device.
 	ckmmc::Device &Device =
 		*reinterpret_cast<ckmmc::Device *>(m_RecorderCombo.GetItemData(
 										  m_RecorderCombo.GetCurSel()));
+
+	Device.refresh();
 
 	// Get current profile.
 	ckmmc::Device::Profile Profile = Device.profile();
