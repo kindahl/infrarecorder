@@ -251,7 +251,7 @@ LRESULT CAboutWindow::OnPaint(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandl
 
 	RECT rcThanks = { 37,230,390,260 };
 	DrawText(hMemDC,AtlGetDefaultGuiFont(),&rcThanks,ABOUTWINDOW_TEXTCOLOR,
-			 ABOUT_STR(_T("Special thanks to Ruben Diez for his contributions.")));
+			 ABOUT_STR(_T("Special thanks to R. Diez for his contributions.")));
 
 	RECT rcCdrtools = { 37,260,390,320 };
 	DrawText(hMemDC,AtlGetDefaultGuiFont(),&rcCdrtools,ABOUTWINDOW_TEXTCOLOR,
