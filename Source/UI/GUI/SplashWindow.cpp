@@ -106,7 +106,8 @@ void CSplashWindow::DrawText(HDC hDC)
 
 	// Calculate the text height.
 	SIZE sTextSize;
-	GetTextExtentPoint32(hDC,m_InfoText.c_str(),m_InfoText.size(),&sTextSize);
+	GetTextExtentPoint32(hDC,m_InfoText.c_str(),
+						 static_cast<int>(m_InfoText.size()),&sTextSize);
 
 	RECT rcText = { 33,125,280,125 + sTextSize.cy };
 
@@ -116,8 +117,9 @@ void CSplashWindow::DrawText(HDC hDC)
 	::SetBkColor(hDC,SPLASHWINDOW_TEXTBKCOLOR);
 	::SetTextColor(hDC,::GetSysColor(COLOR_WINDOWTEXT));
 
-	::DrawText(hDC,m_InfoText.c_str(),m_InfoText.size(),&rcText,
-		DT_LEFT | DT_END_ELLIPSIS | DT_SINGLELINE);
+	::DrawText(hDC,m_InfoText.c_str(),
+			   static_cast<int>(m_InfoText.size()),&rcText,
+			   DT_LEFT | DT_END_ELLIPSIS | DT_SINGLELINE);
 
 	SelectObject(hDC,hOldFont);
 	

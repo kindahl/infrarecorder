@@ -66,6 +66,11 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 	if (iProjectType == PROJECTTYPE_DATA ||
 		iProjectType == PROJECTTYPE_MIXED)
 	{
+		// Set the status information.
+		g_pProgressDlg->SetWindowText(lngGetString(STITLE_PREPOPERATION));
+		g_pProgressDlg->SetDevice(_T(""));
+		g_pProgressDlg->set_status(lngGetString(STATUS_GATHER_FILE_INFO));
+
 		ckfilesystem::FileSet Files;
 		
 		switch (iProjectType)
@@ -80,6 +85,7 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 				break;
 
 			default:
+				ATLASSERT( false );
 				return 0;
 		};
 

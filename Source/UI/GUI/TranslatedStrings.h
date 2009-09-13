@@ -388,3 +388,7 @@
 	TRSTR(CANNOT_CREATE_DIR_PATH  /* 0x0141 */, _T("Cannot create directory \"%s\"." ))
 	TRSTR(WARNING_MISSPROJFILE /* 0x0142 */, _T("The project file \"%s\" could not be found on your computer. It will be removed from the project."))
 	TRSTR(WARNING_NODEVICES /* 0x0143 */, _T("InfraRecorder was unable to find any disc devices in your system.\n\nPlease note that Windows 2000, XP and 2003 systems require administrator permissions to access disc devices. Often this can be circumvented by changing your system settings. Please consult the InfraRecorder FAQ in the manual for further information."))
+
+	// Added version <future version>.
+	TRSTR(STITLE_PREPOPERATION /* 0x0144 */, _T("Preparing Operation"))
+	TRSTR(STATUS_GATHER_FILE_INFO /* 0x0145 */, _T("Gathering project file information."))
