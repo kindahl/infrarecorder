@@ -13,57 +13,57 @@
 	<p>This topic covers the burn/recording options that appear on various places
 	   in InfraRecorder, for example when you want to burn a custom compilation,
 	   a disc image, or copy a disc.</p>
-	<p>Altough these options are accessable in many different contexts as
+	<p>Although these options are accessable in many different contexts, as
 	   mentioned above, they are always presented in a similar way:</p>
 	<p><img src="../images/screenshot_burn.png"></p>
 	<h1>General Settings</h1>
 	<h2>On The Fly</h2>
-	<p>When recording on the fly the file system will be generated while recording
+	<p>When recording on the fly, the file system will be generated while recording,
 	   which may increase the risk of write errors. If this option is turned off a
 	   temporary disc image will first be created on the hard drive and then
-	   recorded to the disc. The preffered setting is usally off, it should
-	   generally only be enabled when you are low on disc space.</p>
+	   recorded to the disc. The preferred setting is usually off; it should
+	   generally be enabled only when you are low on disc space.</p>
 	<h2>Verify the Disc After Writing</h2>
 	<p>Enabling this option will cause InfraRecorder to perform a CRC
-	   comparison between the files on your harddrive and the files on the newly
-	   recorded disc to make sure that all files have been written to the disc
+	   comparison between the files on your hard drive and the files on the newly
+	   recorded disc, to make sure that all files have been written to the disc
 	   without any problems.</p>
 	<h2>Write Speed</h2>
-	<p>Select the write speed to use when recording the disc. Selecting the <em>
-	   Maximum</em> option will automatically select the highest speed that the
+	<p>Select the write speed to use when recording the disc. Selecting the
+	   <em>Maximum</em> option will automatically select the highest speed that the
 	   recorder is capable of.</p>
 	<h2>Write Method</h2>
 	<p>This option selects what method that you want to use when recording the
 	   disc. Only the options that your recorder supports will be available in the
 	   combo box.</p>
 	<p><em>Session-At-Once (SAO)</em> often refered to as Disc-At-Once (DAO)
-	   writes all of the data (including lead-in and lead-out) in one pass. Not
-	   allowing any interruptions in the data stream. Additional session/data can
-	   not be added at a later time. Please note that DVDs must be written using
-           this method.</p>
-	<p><em>Track-At-Once (TAO)</em> writes each track independently which requires
-	   link blocks between two tracks. Older recorders often forces a two second
-	   pause (pregap) between two tracks whereas newer recorders often can adjust
+	   writes all of the data (including lead-in and lead-out) in one pass, not
+	   allowing any interruptions in the data stream. Additional session/data
+	   cannot be added at a later time. Please note that DVDs must be written using
+	   this method.</p>
+	<p><em>Track-At-Once (TAO)</em> writes each track independently, which requires
+	   link blocks between two tracks. Older recorders often force a two second
+	   pause (pregap) between two tracks, whereas newer recorders often can adjust
 	   the amount of pregap data (see the option described below).</p>
 	<p><em>TAO with zero pregap</em> uses the Track-At-Once method described above
-	   and tries to set the pregap data length to zero, reducing the number of
-	   link blocks between the tracks to a minimal amount.</p>
+	   and tries to set the pregap data length to zero, minimizing the number of
+	   link blocks between the tracks.</p>
 	<p><em>Raw writing (raw96r)</em> writes data in raw mode using 2352 byte
-	   sectors plus 96 bytes of raw P-W subchannel data resulting in a sector size
-	   of 2448 bytes. This is the preferred raw writing mode since it gives the
+	   sectors plus 96 bytes of raw P-W subchannel data, resulting in a sector size
+	   of 2448 bytes. This is the preferred raw writing mode, since it gives the
 	   best control over the CD writing process.</p>
 	<p><em>Raw writing (raw16)</em> writes data in raw mode using 2352 bytes
-	   sectors plus 16 bytes of P-Q subchannel data resulting in a sector size of
+	   sectors plus 16 bytes of P-Q subchannel data, resulting in a sector size of
 	   2368 bytes. If a recorder does not support the raw96r raw writing mode,
 	   this is the preferred raw writing mode. This write method does not support
 	   CD-Text.</p>
-	<p><em>Raw writine (raw96p)</em> writes data in raw mode using 2352 byte
-	   sectors plus 96 bytes of raw P-W subchannel data resulting in a sector size
-	   of 2448 bytes. This is the less preferred raw writing mode, mainly because	
-	   only a very few recorders support it and some of these recorders have bugs
+	<p><em>Raw writing (raw96p)</em> writes data in raw mode using 2352 byte
+	   sectors plus 96 bytes of raw P-W subchannel data, resulting in a sector size
+	   of 2448 bytes. This is the less preferred raw writing mode, mainly because
+	   very few recorders support it and some of these recorders have bugs
 	   in the firmware implementation. Don't use this method if your recorder
 	   supports the raw96r or raw16 raw writing method.</p>
-	<p><font color="#FF0000">Important: Please note that raw write methods
+	<p><font color="#FF0000">Important: Please note that raw writing methods
 	   requires significantly more CPU-time than the other write methods. If your
 	   CPU is too slow you might get problems with buffer underruns.</font></p>
 	<h2>Other Options</h2>
@@ -73,40 +73,40 @@
 	   not.</p>
 	<p><em>Buffer underrun protection</em> is a feature in most newer recorders
 	   which allows the writing process to continue even if a buffer underrun
-	   error occurr. This feature often have different names by different vendors,
-	   for example: Yamaha Lossless-Link, Sanyo	BURN-Proof, Ricoh Just-Link, etc.
+	   error occurr. This feature often has different names by different vendors,
+	   for example: Yamaha Lossless-Link, Sanyo BURN-Proof, Ricoh Just-Link, etc.
 	   </p>
-	<p>The <em>Pad data tracks</em> option will when enabled cause 15 sectors
-	   containing zeros to be written after each data track and audio track data
-	   to be padded to be a multiple of 2352 bytes. The reason why you might want
-	   to enable this option is if your CD-reader has problems reading the last
-	   sectors of a track or if you intend to use the disc on a Linux ISO-9660
-	   filesystem with the read ahead bug.<p>
+	<p>The <em>Pad data tracks</em> option will cause each data track to be
+	   followed by 15 sectors containing zeros, and audio track data
+	   to be padded to be a multiple of 2352 bytes. You might want to enable
+	   this option is if your CD-reader has problems reading the last sectors of a
+	   track or if you intend to use the disc on a Linux ISO-9660 filesystem with
+	   the read ahead bug.</p>
 	<p>Disabling the <em>Close the disc after writing option</em> will cause the
 	   last session (if using SAO mode) or track (if using a TAO mode) not to be
-	   closed. This can be usefull if you want to record a CD in
+	   closed. This can be useful if you want to record a CD in
 	   multiple steps.</p>
 	<p><font color="#FF0000">Important: Creating a non-closed disc is not the
 	   same as creating a multi-session disc.</font></p>
 	<hr>
 	<h1><a name="advanced">Advanced Settings</a></h1>
 	<p>The <em>Allow overburning</em> option allows you to write more than the
-	   official size to a medium. The fact is that most blank media can hold more
-	   space than the official size, as the official size of the lead-out area on
-	   a disc is 90 seconds (6750 sectors) and a disc usually works if there are
-	   at only 150 sectors of lead-out. All media may be overburned by atleast 88
-	   seconds (6600 sectors). Most recorders can only do overburning using the
-	   SAO and raw write methods. Some recorders does not allow you to do as much
-	   overburning as you would like and limits the size of a disc to certain
+	   official size to a medium. Most blank media can hold more space
+	   than the official size, as the official size of the lead-out area on
+	   a disc is 90 seconds (6750 sectors) and a disc usually works with only 150
+	   sectors of lead-out. All media may be overburned by at least 88
+	   seconds (6600 sectors). Most recorders can do overburning only with the
+	   SAO and raw write methods. Some recorders limit
+	   overburning and limit a disc to certain
 	   size. This problem may be circumvented by writing the CD in raw mode
-	   because this way the recorder has no chance to find the medium size before
-	   starting the recording process.</h2>
-	<p>When the <em>Swap audio byte order</em> option is enabled audio data is
-	   assumed to be in byte-swapped (little-endian) order. Some type of recorders
+	   , which gives the recorder no chance to find the medium size before
+	   starting the recording process.</p>
+	<p>When the <em>Swap audio byte order</em> option is enabled, audio data is
+	   assumed to be in byte-swapped (little-endian) order. Some types of recorders
 	   for example from Yamaha, Sony and the new SCSI-3/MMC recorders require
 	   audio data to be presented in little-endian order, while other recorders
 	   require audio data to be presented in big-endian (network) byte order
-	   normally used by the SCSI protocoll. The byte order required by your
+	   normally used by the SCSI protocol. The byte order required by your
 	   recorder will automatically be detected. The only time you may want to use
 	   this option is if your data stream is in Intel (little-endian) order.</p>
 	<p><em>Ignore medium size</em> can be enabled when you want to ignore the
@@ -116,19 +116,19 @@
 	   the IMMED flag for certain SCSI commands. Setting the IMMED flag will
 	   request the commands to return immediateley while the operation proceeds in
 	   the background, making the bus usable for other devices and avoiding a
-	   system freeze. This can be usefull on broken system with ATAPI harddisk and
-	   CD/DVD-writer or the same bus or with SCSI systems that don't use
+	   system freeze. This can be useful on broken systems with ATAPI hard disk and
+	   CD/DVD-writer on the same bus or with SCSI systems that don't use
 	   disconnect/reconnect. These systems will freeze while blanking or closing
-	   a disc or while the recorder is filling up a session to the minimum amount.
+	   a disc, or while the recorder is filling up a session to the minimum amount.
 	   Please note that not all recorders support the IMMED flag.</p>
 	<p><em>Yamaha Audio Master Q. R.</em> is a feature which is used to create
 	   high quality audio discs that have less reading problems in Hi-Fi players.
 	   It is implemented as a variant of the SAO write mode so it will only work
 	   if you select the Session-At-Once (SAO) write method. This feature does not
-	   work with all writing speeds and does not allow the same amount of data to
-	   be written to a disc due to that fact that the pits on the CD will be
+	   work with all writing speeds and reduces the amount of data that can
+	   be written to a disc, because the pits on the CD will be
 	   larger than normal. If this feature is enabled, a 74 minute CD will have
-	   the capacity of 63 minutes and a 80 minute CD will have the capacity
+	   the capacity of 63 minutes, and an 80 minute CD will have the capacity
 	   reduced to 68 minutes. This feature also works with data discs.</p>
 	<p>The <em>Forcespeed mode</em> option forces the drive to use the selected
 	   write speed no matter of the quality of the medium. Normally modern drives
