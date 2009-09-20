@@ -908,6 +908,14 @@ BEGIN
     END
 END
 
+IDR_SHELLTREEMENU MENU 
+BEGIN
+    POPUP "Popup Menu"
+    BEGIN
+        MENUITEM "&Properties", ID_POPUPMENU_SHELLTREE_PROPERTIES
+    END
+END
+
 IDR_DIAGNOSTICSMENU MENU 
 BEGIN
     POPUP ""
@@ -1335,4 +1343,3 @@ IDB_ABOUTBITMAP         BITMAP                  "Resources\\About.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
-

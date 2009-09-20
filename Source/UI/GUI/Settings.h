@@ -42,7 +42,23 @@
 #define TOOLBAR_ICON_SMALL				0
 #define TOOLBAR_ICON_LARGE				1
 
-#define FIFO_MAX						128
+// FIFO_MAX was previously set to 128 MiB, which I found to be too low nowadays.
+// Just think of the 4.7 GiB on a DVD, or the upcoming 25 GiB on a Blu-ray,
+// those devices can write 128 MiB in a few of seconds. However,
+// the hardware buffers on the recorders are still ridiculously small,
+// and I don't like constantly relying on the standard hardware buffer underrun protection
+// (BURN-Proof, SafeBurn and so on), because they tend to cause small errors and
+// they hope that the error correction will compensate.
+//
+// There seems to be some FIFO size limit in cdrecord (version 2.01.01a61 under Cygwin,
+// bundled with InfraRecorder 0.50 as of Sept 2009), but it's not well documented.
+// I've done some tests under Windows XP & Vista, and 850 MiB seems to be fine, but 900 MiB fails.
+// The chosen 800 MiB limit is just some arbitrary number below those figures.
+// This is the error message you get if you set it too high:
+//  [...]/binary32/cdrtools/cdrecord: Cannot allocate memory. Cannot get mmap for 1047592960 Bytes on /dev/zero.
+// It seems strange that cdrecord needs to mmap /dev/zero for that purpose, but maybe that'll
+// change in the future.
+#define FIFO_MAX						800  // In MiB.
 #define FIFO_MIN						4
 
 #define FILESYSTEM_ISO9660				0

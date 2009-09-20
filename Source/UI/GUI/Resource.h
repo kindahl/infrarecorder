@@ -90,6 +90,7 @@
 #define IDR_WIZARDWRITEPNG              296
 #define IDB_BITMAP2                     297
 #define IDB_ABOUTBITMAP                 297
+#define IDR_SHELLTREEMENU               298
 #define IDC_TOTALPROGRESS               1000
 #define IDC_TOTALSTATIC                 1001
 #define IDC_MESSAGELIST                 1004
@@ -387,13 +388,14 @@
 #define ID_NEWPROJECT_DATACD32841       32841
 #define ID_NEWPROJECT_DATACDMS          32842
 #define ID_EDIT_IMPORT                  32843
+#define ID_POPUPMENU_SHELLTREE_PROPERTIES 32844
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        298
-#define _APS_NEXT_COMMAND_VALUE         32844
+#define _APS_NEXT_COMMAND_VALUE         32845
 #define _APS_NEXT_CONTROL_VALUE         1229
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

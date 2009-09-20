@@ -167,6 +167,8 @@ private:
 	bool ItemExist(HTREEITEM hParentItem,LPITEMIDLIST pidl);
 	HTREEITEM FindItemFromPath(LPITEMIDLIST pidl);
 
+	void DisplayContextMenuOnShellTree(POINT ptPos,bool bWasWithKeyboard);
+
 public:
 	DECLARE_FRAME_WND_CLASS(NULL,IDR_MAINFRAME)
 
@@ -185,10 +187,12 @@ public:
 	CProjectListViewCtrl m_ProjectListView;
 	HMENU m_hProjListSelMenu;
 	HMENU m_hProjListNoSelMenu;
+	CMenu m_ShellTreeMenu;
 
 	// PIDL helper object.
 	CPidlHelper m_PidlHelp;
 
+private:
 	virtual BOOL PreTranslateMessage(MSG *pMsg)
 	{
 		if (!m_bEnableAccel)
@@ -222,6 +226,7 @@ public:
 		return FALSE;
 	}
 
+public:
 	void ShowWelcomePane(bool bShow)
 	{
 		m_bWelcomePane = bShow;
@@ -293,6 +298,7 @@ public:
 		UPDATE_ELEMENT(ID_VIEW_DETAILS,UPDUI_MENUPOPUP)
 	END_UPDATE_UI_MAP()
 
+private:
 #if _ATL_VER <= 0x0300
 	BEGIN_MSG_MAP_EX(CMainFrame)
 #else
@@ -303,6 +309,7 @@ public:
 		MESSAGE_HANDLER(WM_CLOSE,OnClose)
 		MESSAGE_HANDLER(WM_SHELLCHANGE,OnShellChange)
 		MESSAGE_HANDLER(WM_GETISHELLBROWSER,OnGetIShellBrowser)
+		MESSAGE_HANDLER(WM_CONTEXTMENU,OnContextMenu)
 
 		// Shell list view.
 		MESSAGE_HANDLER(WM_SLVC_BROWSEOBJECT,OnSLVBrowseObject)
@@ -316,6 +323,7 @@ public:
 		NOTIFY_HANDLER(IDC_SHELLTREEVIEW,TVN_DELETEITEM,OnSTVDeleteItem)
 		NOTIFY_HANDLER(IDC_SHELLTREEVIEW,TVN_SELCHANGED,OnSTVSelChanged)
 		NOTIFY_HANDLER(IDC_SHELLTREEVIEW,TVN_BEGINDRAG,OnSTVBeginDrag)
+		NOTIFY_HANDLER(IDC_SHELLTREEVIEW,NM_RCLICK,OnSTVRClick)
 
 		// Project tree view.
 		NOTIFY_HANDLER(IDC_PROJECTTREEVIEW,TVN_GETDISPINFO,OnPTVGetDispInfo)
@@ -403,6 +411,9 @@ public:
 		// Help menu.
 		COMMAND_ID_HANDLER(ID_HELP_HELPTOPICS,OnHelpHelptopics)
 		COMMAND_ID_HANDLER(ID_APP_ABOUT,OnAppAbout)
+		
+		// Shell tree popup menu.
+		COMMAND_ID_HANDLER(ID_POPUPMENU_SHELLTREE_PROPERTIES,OnShellTreeProperties)
 
 		// Project list popup menu.
 		COMMAND_ID_HANDLER(ID_POPUPMENU_PROPERTIES,OnFileProjectproperties)
@@ -423,6 +434,7 @@ public:
 	LRESULT OnClose(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 	LRESULT OnShellChange(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 	LRESULT OnGetIShellBrowser(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+	LRESULT OnContextMenu(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 
 	// Shell list view.
 	LRESULT OnSLVBrowseObject(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
@@ -435,6 +447,7 @@ public:
 	LRESULT OnSTVDeleteItem(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled);
 	LRESULT OnSTVSelChanged(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled);
 	LRESULT OnSTVBeginDrag(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled);
+	LRESULT OnSTVRClick(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled);
 
 	LRESULT OnPTVGetDispInfo(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled);
 	LRESULT OnPTVSelChanging(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled);
@@ -468,6 +481,7 @@ public:
 	LRESULT OnFileOpen(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
 	LRESULT OnFileSave(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
 	LRESULT OnFileSaveAs(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+	LRESULT OnShellTreeProperties(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
 	LRESULT OnFileProjectproperties(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
 	LRESULT OnFileExit(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
 

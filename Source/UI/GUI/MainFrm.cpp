@@ -20,6 +20,7 @@
 #include <ckcore/filestream.hh>
 #include <ckcore/linereader.hh>
 #include "../../Common/StringUtil.h"
+#include "../../Common/Exception.h"
 #include "Resource.h"
 #include "Settings.h"
 #include "Registry.h"
@@ -439,6 +440,7 @@ void CMainFrame::InitializeProjectView(unsigned int uiSplitterPos)
 	// Create the list view menus.
 	m_hProjListSelMenu = LoadMenu(_Module.GetResourceInstance(),MAKEINTRESOURCE(IDR_PROJLISTSELMENU));
 	m_hProjListNoSelMenu = LoadMenu(_Module.GetResourceInstance(),MAKEINTRESOURCE(IDR_PROJLISTNOSELMENU));
+	ATLVERIFY(NULL != m_ShellTreeMenu.LoadMenu(IDR_SHELLTREEMENU));
 
 	// Make the view style check items to radio items.
 	CMenuItemInfo mii;
@@ -1291,6 +1293,111 @@ LRESULT CMainFrame::OnGetIShellBrowser(UINT uMsg,WPARAM wParam,LPARAM lParam,BOO
 	return (LRESULT)m_pShellListView;
 }
 
+
+LRESULT CMainFrame::OnContextMenu(UINT uMsg,WPARAM wParam,LPARAM lParam,
+								  BOOL &bHandled)
+{
+	try
+	{
+		ATLASSERT(uMsg == WM_CONTEXTMENU);
+
+		// At this point WM_CONTEXTMENU comes normally from the m_SpaceMeterView window,
+		// which I don't really understand.
+		//
+		// In the case of the shell tree, our implementation of OnSTVRClick()
+		// calls this routine directly with the right window handle.
+		//
+		// If the user calls up the context menu with the keyboard (with Shift+F10
+		// or the context-menu key on modern keyboards), we still get the
+		// m_SpaceMeterView window handle, so we need handle this case as an exception.
+		POINT ptPos;
+		ptPos.x = GET_X_LPARAM(lParam);
+		ptPos.y = GET_Y_LPARAM(lParam);
+		const bool bWasWithKeyboard = (ptPos.x == -1) && (ptPos.y == -1);
+
+		if (bWasWithKeyboard)
+		{
+			// I couldn't think of anything better than the focus
+			// in order to find out whether the user was on the shell tree.
+			if (GetFocus() == m_ShellTreeView.m_hWnd)
+			{
+				DisplayContextMenuOnShellTree(ptPos,bWasWithKeyboard);
+				bHandled = TRUE;
+				return 0;
+			}
+
+			// FIXME: I've noticed that the project tree does not respond
+			//        to Shift+F10, this would be the place to fix it.
+		}
+		else
+		{
+			if (HWND(wParam) == m_ShellTreeView.m_hWnd)
+			{
+				DisplayContextMenuOnShellTree(ptPos,bWasWithKeyboard);
+				bHandled = TRUE;
+				return 0;
+			}
+		}
+
+		// At this point, we are not handling this WM_CONTEXTMENU message,
+		// but somebody else probably will.
+	}
+	catch (const std::exception &e)
+	{
+		// After displaying the error message box, this message
+		// should probably not be processed any further.
+		bHandled = TRUE;
+
+		ATLVERIFY(IDOK == MessageBox(GetExceptMsg(e).c_str(),
+			                         lngGetString(GENERAL_ERROR),
+			                         MB_OK | MB_ICONERROR));
+	}
+
+	return 0;
+}
+
+void CMainFrame::DisplayContextMenuOnShellTree(POINT ptPos,bool bWasWithKeyboard)
+{
+	const HTREEITEM hSelectedItem = m_ShellTreeView.GetSelectedItem();
+
+	if (hSelectedItem == NULL)
+	{
+		// Theoretically possible, but I haven't found yet a 'normal' way to get here.
+		ATLASSERT(false);
+		return;
+	}
+
+	if (bWasWithKeyboard)
+	{
+		// It's possible to scroll the item out of view with the mouse,
+		// and then call up the context menu with the keyboard.
+		m_ShellTreeView.EnsureVisible(hSelectedItem);
+
+		RECT rcItem;
+		if (FALSE == m_ShellTreeView.GetItemRect(hSelectedItem,&rcItem,TRUE))
+			throw ir_error(_T("GetItemRect: "));
+
+		// This "half-way" calculation emulates more or less what Windows Explorer does,
+		// but there is probably a better, "canonical" way to calculate this position.
+		const int iHalfHeight = (rcItem.bottom - rcItem.top) / 2;
+		ptPos.x = rcItem.left + iHalfHeight;
+		ptPos.y = rcItem.top  + iHalfHeight;
+
+		if (FALSE == m_ShellTreeView.ClientToScreen(&ptPos))
+		{
+			throw CreateIrErrorFromHresult(GetLastError(),_T("ClientToScreen: "));
+		}
+	}
+
+	// We should display here the full shell context menu with CDefFolderMenu_Create2(),
+	// but that's rather difficult. Until I've figured out how to do it,
+	// we'll have to make do with this tiny pop-up menu.
+	if (0 == m_ShellTreeMenu.GetSubMenu(0).TrackPopupMenuEx(0,ptPos.x,ptPos.y,m_hWnd,NULL))
+	{
+		throw CreateIrErrorFromHresult(GetLastError(),_T("TrackPopupMenuEx: "));
+	}
+}
+
 LRESULT CMainFrame::OnSLVBrowseObject(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
 	HWND hWnd = (HWND)lParam;
@@ -1969,6 +2076,57 @@ LRESULT CMainFrame::OnSTVBeginDrag(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled)
 
 	pDropSource->Release();
 	pDataObject->Release();
+
+	return 0;
+}
+
+LRESULT CMainFrame::OnSTVRClick(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled)
+{
+	try
+	{
+		// Code inspired by this FAQ question:
+		//   Why don't I get a WM_CONTEXTMENU message when I right click in a Tree Control?
+		//   http://vcfaq.mvps.org/mfc/6.htm
+		ATLASSERT(pNMH->hwndFrom == m_ShellTreeView.m_hWnd);
+
+		// Whether we succeed or fail, we are the only place to process this notification.
+		bHandled = TRUE;	
+
+		// Get the mouse cursor position.
+		const DWORD dwPos = GetMessagePos();
+
+		POINT ptPos;
+		ptPos.x = GET_X_LPARAM(dwPos);
+		ptPos.y = GET_Y_LPARAM(dwPos);
+
+		// Convert to screen co-ords for hit testing.
+		if (FALSE == m_ShellTreeView.ScreenToClient(&ptPos))
+		{
+			throw CreateIrErrorFromHresult(GetLastError(),_T("ScreenToClient: "));
+		}
+
+		UINT uHitTestFlags;
+		const HTREEITEM hHitItem = m_ShellTreeView.HitTest(ptPos,&uHitTestFlags);
+
+		// Did the click occur on an item?
+		if ((hHitItem != NULL) && (uHitTestFlags & TVHT_ONITEM))
+		{
+			// Select the item only if we are going to open the pop-up menu
+			// for it. This is the same behaviour I've observed with Windows Explorer.
+			ATLVERIFY(TRUE == m_ShellTreeView.SelectItem(hHitItem));
+
+			// Simulate WM_CONTEXTMENU.
+			BOOL bOnContextMenuHandled = FALSE;
+			OnContextMenu(WM_CONTEXTMENU,WPARAM(pNMH->hwndFrom),dwPos,bOnContextMenuHandled);
+			ATLASSERT(bOnContextMenuHandled == TRUE);
+		}
+	}
+	catch (const std::exception &e)
+	{
+		ATLVERIFY(IDOK == MessageBox(GetExceptMsg(e).c_str(),
+			                         lngGetString(GENERAL_ERROR),
+			                         MB_OK | MB_ICONERROR));
+	}
 
 	return 0;
 }
@@ -2678,7 +2836,82 @@ LRESULT CMainFrame::OnFileSaveAs(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bH
 	return 0;
 }
 
-LRESULT CMainFrame::OnFileProjectproperties(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
+LRESULT CMainFrame::OnShellTreeProperties(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
+{
+	try
+	{
+		// Whether we fail or not, this message should not be processed any further.
+		bHandled = TRUE;
+
+		const HTREEITEM hSelectedItem = m_ShellTreeView.GetSelectedItem();
+
+		if (hSelectedItem == NULL)
+		{
+			// This command comes from the pop-up menu, which should only
+			// come up on a selected item.
+			ATLASSERT(false);
+			return 0;
+		}
+
+		const CShellTreeItemInfo * const pItemInfo =
+			(const CShellTreeItemInfo *)m_ShellTreeView.GetItemData(hSelectedItem);
+
+		if (pItemInfo == NULL)
+		{
+			ATLASSERT(false);
+			return 0;
+		}
+
+		SHELLEXECUTEINFO Sei;
+		ZeroMemory(&Sei,sizeof(Sei));
+		Sei.cbSize= sizeof(Sei);
+
+		// The MSDN documentation states the following:
+		//   With multiple monitors, if you specify an HWND
+		//   and set the lpVerb member of lpExecInfo to "Properties",
+		//   any windows created by ShellExecuteEx may not appear
+		//   in the correct position. 
+		// However, no advice is offered on how to fix this problem.
+		// I guess we could specify the monitor to open on,
+		// but I wouldn't be able to test such code since I only have one monitor.
+		Sei.hwnd   = m_hWnd;
+		Sei.lpVerb = _T("properties");
+
+		// Not all shell objects have a "properties" verb, for some
+		// of them (like the Control Panel) you'll get an error message
+		// (even if you set the SEE_MASK_FLAG_NO_UI flag).
+		// MSDN article "Launching Applications" explains how to look
+		// in the Registry in order to determinate what verbs are available.
+		// However, I don't think that's worth the effort, because
+		// we should be displaying the full shell context menu
+		// with CDefFolderMenu_Create2() instead, and all efforts should be
+		// channelled to that end.
+		Sei.fMask    = SEE_MASK_INVOKEIDLIST;
+		Sei.lpIDList = pItemInfo->pidlFullyQual;
+
+		if (TRUE != ShellExecuteEx(&Sei))
+		{
+			// ShellExecuteEx seems to display its own Messagebox on error,
+			// and apparently we never come here.
+			// I tried SEE_MASK_FLAG_NO_UI and it had no effect,
+			// and other people have also reported that this flag
+			// does not seem to work.
+			throw CreateIrErrorFromHresult(GetLastError(),_T("ShellExecuteEx: "));
+		}
+	}
+	catch (const std::exception &e)
+	{
+		ATLVERIFY(IDOK == MessageBox(GetExceptMsg(e).c_str(),
+			                         lngGetString(GENERAL_ERROR),
+			                         MB_OK | MB_ICONERROR));
+
+	}
+
+	return 0;
+}
+
+LRESULT CMainFrame::OnFileProjectproperties(WORD wNotifyCode,WORD wID,
+											HWND hWndCtl,BOOL &bHandled)
 {
 	CProjectPropDlg ProjectPropDlg;
 	if (ProjectPropDlg.DoModal() == IDOK)
@@ -2697,7 +2930,8 @@ LRESULT CMainFrame::OnFileProjectproperties(WORD wNotifyCode,WORD wID,HWND hWndC
 	return 0;
 }
 
-LRESULT CMainFrame::OnFileExit(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
+LRESULT CMainFrame::OnFileExit(WORD wNotifyCode,WORD wID,HWND hWndCtl,
+							   BOOL &bHandled)
 {
 	PostMessage(WM_CLOSE);
 	return 0;
