@@ -105,3 +105,12 @@ ir_error CreateIrErrorFromHresult(const HRESULT hRes,const ckcore::tchar *const 
 
     throw ir_error(Msg.c_str());
 }
+
+ir_error CreateInternalError(const tchar *file,int line)
+{
+	ckcore::tstringstream Msg;
+	Msg << _T("Internal error in ") << file << _T(" at line ") << line
+		<< _T(".");
+
+	throw ir_error(Msg.str().c_str());
+}

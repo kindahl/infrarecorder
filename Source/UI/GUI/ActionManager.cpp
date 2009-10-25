@@ -85,7 +85,7 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 				break;
 
 			default:
-				ATLASSERT( false );
+				ATLASSERT(false);
 				return 0;
 		};
 

@@ -20,6 +20,7 @@
 #include <ckcore/filestream.hh>
 #include <ckcore/nullstream.hh>
 #include <ckfilesystem/filesystemwriter.hh>
+#include "../../Common/Exception.h"
 #include "Core2.h"
 #include "Core2Format.h"
 #include "Core2Blank.h"
@@ -716,6 +717,10 @@ int CCore2::CreateImage(ckcore::OutStream &OutStream,ckfilesystem::FileSet &File
 		case FILESYSTEM_UDF:
 			FileSysType = ckfilesystem::FileSystem::TYPE_UDF;			
 			break;
+
+		default:
+			ATLASSERT(false);
+			CreateInternalError(_T(__FILE__),__LINE__);
 	}
 
 	ckfilesystem::Iso9660::InterLevel InterchangeLevel;
@@ -736,6 +741,9 @@ int CCore2::CreateImage(ckcore::OutStream &OutStream,ckfilesystem::FileSet &File
 		case 3:
 			InterchangeLevel = ckfilesystem::Iso9660::ISO9660_1999;
 			break;
+
+		default:
+			ATLASSERT(false);
 	}
 
 	ckfilesystem::FileSystem FileSys(FileSysType,Files);

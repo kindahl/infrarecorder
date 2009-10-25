@@ -38,6 +38,22 @@ class CProgressDlg : public CDialogImpl<CProgressDlg>,
 					 public CAdvancedProgress
 {
 private:
+	#if(WINVER < 0x0500)
+
+		typedef struct {
+			UINT  cbSize;
+			HWND  hwnd;
+			DWORD dwFlags;
+			UINT  uCount;
+			DWORD dwTimeout;
+		} FLASHWINFO, *PFLASHWINFO;
+
+	#endif  // #if(WINVER < 0x0500)
+
+	typedef BOOL (WINAPI *PointerToFlashWindowEx)(PFLASHWINFO);
+	PointerToFlashWindowEx m_pFlashWindowEx;
+	bool m_bNeedToFocusOkButton;
+
 	HIMAGELIST m_hListImageList;
 	CListViewCtrl m_ListView;
 	CDoubleBufferedStatic m_TotalStatic;
@@ -93,6 +109,7 @@ public:
 private:
 	BEGIN_MSG_MAP(CProgressDlg)
 		MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
+		MESSAGE_HANDLER(WM_ACTIVATE,OnActivate)
 
 		COMMAND_ID_HANDLER(IDC_RELOADBUTTON,OnReload)
 		COMMAND_ID_HANDLER(IDOK,OnOK)
@@ -121,6 +138,7 @@ private:
 	END_DLGRESIZE_MAP()
 
 	LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+	LRESULT OnActivate(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 
 	LRESULT OnReload(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
 	LRESULT OnOK(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);

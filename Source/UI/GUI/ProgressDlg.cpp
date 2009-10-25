@@ -30,7 +30,7 @@ static const int SUBITEM_TEXT = 1;
 
 CProgressDlg::CProgressDlg() : m_pProcess(NULL),m_bAppMode(false),
 	m_bRealMode(false),m_bCancelled(false),m_hWndHost(NULL),m_ucPercent(0),
-	m_szHostTitle(NULL)
+	m_szHostTitle(NULL),m_pFlashWindowEx(NULL),m_bNeedToFocusOkButton(false)
 {
 	// Load the icons.
 	m_hListImageList = ImageList_Create(16,16,ILC_COLOR32,0,4);
@@ -39,6 +39,23 @@ CProgressDlg::CProgressDlg() : m_pProcess(NULL),m_bAppMode(false),
 	ImageList_AddIcon(m_hListImageList,LoadIcon(NULL,IDI_WARNING));
 	ImageList_AddIcon(m_hListImageList,LoadIcon(NULL,IDI_ERROR));
 	ImageList_AddIcon(m_hListImageList,LoadIcon(NULL,IDI_WINLOGO));
+
+
+	// The MSDN documentation states that FlashWindowEx() is only
+	// available in Windows 2000 and later. However, MS KB article ID 254339
+	// states that you can use this API in Windows 98 too.
+	const HMODULE hUser32 = GetModuleHandle(_T("USER32.DLL"));
+	if (hUser32 == NULL)
+	{
+		ATLASSERT(false);  // This should never happen at this point.
+	}
+	else
+	{
+		m_pFlashWindowEx = (PointerToFlashWindowEx)GetProcAddress(hUser32,"FlashWindowEx");
+
+		// This should never happen at this point.
+		ATLASSERT(m_pFlashWindowEx != NULL);
+	}
 
 	SMOKE_INIT
 }
@@ -257,7 +274,20 @@ void CProgressDlg::SetDevice(ckmmc::Device &Device)
 void CProgressDlg::NotifyCompleted()
 {
 	::EnableWindow(GetDlgItem(IDOK),true);
-	SendMessage(WM_NEXTDLGCTL,(WPARAM)::GetDlgItem(m_hWnd,IDOK),0);	// Change default focus to the OK button.
+	if ( GetForegroundWindow() == m_hWnd )
+	{
+		// Change default focus to the OK button. We can only do this
+		// if this window is active. Otherwise, this call will not
+		// make it active, but will still trigger a WM_ACTIVATE message
+		// to this window.
+		// Later on, when this window does get active, it will not
+		// get the corresponding WM_ACTIVATE and we won't be able
+		// to stop the flashing if necessary, see OnActivate() below.
+		SendMessage(WM_NEXTDLGCTL,(WPARAM)::GetDlgItem(m_hWnd,IDOK),0);
+	}
+	else
+		m_bNeedToFocusOkButton = true;
+
 	::EnableWindow(GetDlgItem(IDCANCEL),false);
 
 	if (m_bCancelled)
@@ -276,6 +306,98 @@ void CProgressDlg::NotifyCompleted()
 	}
 
 	SMOKE_STOP
+
+	// Recording a CD can take some time, and the user may switch to
+	// another application meanwhile and not notice when the CD is finished.
+	// Therefore, at the end of the process, we prompt for
+	// the user's attention by making the window and taskbar icon flash.
+	//
+	// Calling SetForegroundWindow() or SetActiveWindow()
+	// should have an equivalent effect according to the documentation,
+	// but it does not seem to do the trick, we need to call
+	// FlashWindow().
+	// We don't want to start flashing if this window is the active one
+	// at the moment. We also need to stop the flashing if the window
+	// wasn't active and the user reacts to the flashing and clicks on it.
+	//
+	// Rather than flashing, it would be better to display a balloon notification
+	// on the task bar, but that's only available from Windows XP onwards.
+
+	if ( m_pFlashWindowEx != NULL && GetForegroundWindow() != m_hWnd )
+	{
+		FLASHWINFO fi1;
+		ZeroMemory(&fi1, sizeof(fi1));
+
+		fi1.cbSize = sizeof(fi1);
+		fi1.hwnd = m_hWnd;
+		fi1.dwFlags = 1; // FLASHW_CAPTION. The taskbar icon belongs to the main window.
+		fi1.uCount = 5;
+		fi1.dwTimeout = 0;
+
+		m_pFlashWindowEx( &fi1 );
+
+		if ( !m_bAppMode )
+		{
+			FLASHWINFO fi2;
+			ZeroMemory(&fi2, sizeof(fi2));
+
+			fi2.cbSize = sizeof(fi2);
+			fi2.hwnd = GetParentWindow(this).m_hWnd;
+			fi2.dwFlags = 2; // FLASHW_TRAY
+			fi2.uCount = 5;
+			fi2.dwTimeout = 0;
+
+			m_pFlashWindowEx( &fi2 );
+		}
+	}
+}
+
+LRESULT CProgressDlg::OnActivate(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
+{
+	const UINT nState = LOWORD(wParam);
+
+	// If this window is getting activated...
+	if (nState != WA_INACTIVE)
+	{
+		// Stop the window flashing. The window may never have flashed,
+		// or may have flashed but may have stopped flashing after the given
+		// flash count, but that doesn't matter.
+		if (m_pFlashWindowEx != NULL)
+		{
+			FLASHWINFO fi1;
+			ZeroMemory(&fi1,sizeof(fi1));
+
+			fi1.cbSize = sizeof(fi1);
+			fi1.hwnd = m_hWnd;
+			fi1.dwFlags = 0; // FLASHW_STOP
+			fi1.uCount = 0;
+			fi1.dwTimeout = 0;
+
+			m_pFlashWindowEx(&fi1);
+
+			if (!m_bAppMode)
+			{
+				FLASHWINFO fi2;
+				ZeroMemory(&fi2,sizeof(fi2));
+
+				fi2.cbSize = sizeof(fi2);
+				fi2.hwnd = GetParentWindow(this).m_hWnd;
+				fi2.dwFlags = 0; // FLASHW_STOP
+				fi2.uCount = 0;
+				fi2.dwTimeout = 0;
+
+				m_pFlashWindowEx(&fi2);
+			}
+		}
+
+		if (m_bNeedToFocusOkButton)
+		{
+			SendMessage(WM_NEXTDLGCTL,(WPARAM)::GetDlgItem(m_hWnd,IDOK),0);	// Change default focus to the OK button.
+			m_bNeedToFocusOkButton = false;
+		}
+	}
+
+	return 0;
 }
 
 void CProgressDlg::SetBuffer(int iPercent)
