@@ -691,7 +691,7 @@ bool CCore2::ReadFullTOC(ckmmc::Device &Device,const TCHAR *szFileName)
 	return true;
 }
 
-int CCore2::CreateImage(ckcore::OutStream &OutStream,ckfilesystem::FileSet &Files,
+int CCore2::CreateImage(ckcore::OutStream &OutStream,const ckfilesystem::FileSet &Files,
 						ckcore::Progress &Progress,bool bFailOnError,
 						std::map<tstring,tstring> *pFilePathMap)
 {
@@ -799,7 +799,7 @@ int CCore2::CreateImage(ckcore::OutStream &OutStream,ckfilesystem::FileSet &File
 /*
 	A wrapper method for the function above.
 */
-int CCore2::CreateImage(const TCHAR *szFullPath,ckfilesystem::FileSet &Files,
+int CCore2::CreateImage(const TCHAR *szFullPath,const ckfilesystem::FileSet &Files,
 						ckcore::Progress &Progress,bool bFailOnError,
 						std::map<tstring,tstring> *pFilePathMap)
 {
@@ -813,7 +813,7 @@ int CCore2::CreateImage(const TCHAR *szFullPath,ckfilesystem::FileSet &Files,
 	return CreateImage(FileStream,Files,Progress,bFailOnError,pFilePathMap);
 }
 
-int CCore2::EstimateImageSize(ckfilesystem::FileSet &Files,ckcore::Progress &Progress,
+int CCore2::EstimateImageSize(const ckfilesystem::FileSet &Files,ckcore::Progress &Progress,
 							  unsigned __int64 &uiImageSize)
 {
 	ckcore::NullStream OutStream;

@@ -83,13 +83,13 @@ public:
 	bool ReadDataTrack(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 		unsigned char ucTrackNumber,bool bIgnoreErr,const TCHAR *szFilePath);
 	bool ReadFullTOC(ckmmc::Device &Device,const TCHAR *szFileName);
-	int CreateImage(ckcore::OutStream &OutStream,ckfilesystem::FileSet &Files,
+	int CreateImage(ckcore::OutStream &OutStream,const ckfilesystem::FileSet &Files,
 		ckcore::Progress &Progress,bool bFailOnError,
 		std::map<tstring,tstring> *pFilePathMap = NULL);
-	int CreateImage(const TCHAR *szFullPath,ckfilesystem::FileSet &Files,		// Wrapper.
+	int CreateImage(const TCHAR *szFullPath,const ckfilesystem::FileSet &Files,		// Wrapper.
 		ckcore::Progress &Progress,bool bFailOnError,
 		std::map<tstring,tstring> *pFilePathMap = NULL);
-	int EstimateImageSize(ckfilesystem::FileSet &Files,ckcore::Progress &Progress,	// Wrapper.
+	int EstimateImageSize(const ckfilesystem::FileSet &Files,ckcore::Progress &Progress,	// Wrapper.
 		unsigned __int64 &uiImageSize);
 };
 
