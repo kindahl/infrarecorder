@@ -720,7 +720,7 @@ int CCore2::CreateImage(ckcore::OutStream &OutStream,ckfilesystem::FileSet &File
 
 		default:
 			ATLASSERT(false);
-			CreateInternalError(_T(__FILE__),__LINE__);
+			throw CreateIrInternalError(_T(__FILE__),__LINE__);
 	}
 
 	ckfilesystem::Iso9660::InterLevel InterchangeLevel;

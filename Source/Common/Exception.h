@@ -36,4 +36,4 @@ public:
 ckcore::tstring GetExceptMsg(const std::exception &e);
 void RethrowWithPrefix(const std::exception &e,const ckcore::tchar *szFormatStr,...);
 ir_error CreateIrErrorFromHresult(HRESULT hRes,const ckcore::tchar *szPrefixFormatStr,...);
-ir_error CreateInternalError(const ckcore::tchar *file,int line);
+ir_error CreateIrInternalError(const ckcore::tchar *file,int line);
