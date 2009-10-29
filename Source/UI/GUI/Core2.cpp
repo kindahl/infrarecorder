@@ -744,6 +744,7 @@ int CCore2::CreateImage(ckcore::OutStream &OutStream,const ckfilesystem::FileSet
 
 		default:
 			ATLASSERT(false);
+			throw CreateIrInternalError(_T(__FILE__),__LINE__);
 	}
 
 	ckfilesystem::FileSystem FileSys(FileSysType,Files);

@@ -19,6 +19,7 @@
 #include "stdafx.h"
 #include <comdef.h>
 #include <ckcore/string.hh>
+#include <ckcore/exception.hh>
 #include "StringUtil.h"
 #include "Exception.h"
 
@@ -60,6 +61,11 @@ ckcore::tstring GetExceptMsg(const std::exception &e)
 
     if (pE != NULL)
 		return pE->lwhat();
+
+	const ckcore::Exception2 *const pE2 = dynamic_cast<const ckcore::Exception2 *>(&e);
+
+    if (pE2 != NULL)
+		return pE2->message();
 
 	return ckcore::string::ansi_to_auto<1024>(pE->what());
 }

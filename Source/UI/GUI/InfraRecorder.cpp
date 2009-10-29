@@ -413,7 +413,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPTSTR lpstrCmd
 			_Module.Term();
 			OleUninitialize();
 
-			return (int)nRet;
+			throw;
 		}
 
 		// If someone tries to touch g_pMainFrame etc. after the object has been destroyed,
