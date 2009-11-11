@@ -207,7 +207,7 @@
 
 	// Sucess messages.
 	TRSTR(SUCCESS_ERASE /* 0x00ab */,       _T("The disc was successfully erased."))
-	TRSTR(SUCCESS_WRITE /* 0x00ac */,		 _T("The data were successfully written to the disc."))// FIXME: Obsolete.
+	TRSTR(SUCCESS_WRITE /* 0x00ac */,		 _T("The data was successfully written to the disc."))// FIXME: Obsolete.
 	TRSTR(SUCCESS_FIXATE /* 0x00ad */,		 _T("The disc was successfully closed."))				// FIXME: Obsolete.
 	TRSTR(SUCCESS_CREATEIMAGE /* 0x00ae */, _T("The disc image was successfully created."))
 	TRSTR(SUCCESS_READTRACK /* 0x00af */,	 _T("Done reading track %d."))
