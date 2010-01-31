@@ -1,0 +1,195 @@
+<?xml version="1.0"?>
+
+<!--General Configuration-->
+<?define Arch="x64"?>
+<?define ProductName="InfraRecorder"?>
+<?define VerMajor="0"?>
+<?define VerMinor="50"?>
+<?define VerRev="00"?>
+<?define VerBuild="00"?>
+
+<!--Main Definitions-->
+<?if $(var.Arch)="x64"?>
+  <?define CpuId="2"?>
+  <?define ProgramFolder="ProgramFiles64Folder"?>
+  <?define VerPostStr=" (x64 edition)"?>
+  <?define Is64="yes"?>
+  <?define Platforms="x64"?>
+<?else?>
+  <?define CpuId="1"?>
+  <?define ProgramFolder="ProgramFilesFolder"?>
+  <?define VerPostStr=""?>
+  <?define Is64="no"?>
+  <?define Platforms="Intel"?>
+<?endif?>
+
+<!--<?define BaseId="2C22EA92-CB30-4933-9B67-A7A0582DBEA4"?>-->
+<?define BaseId="2C22EA92-CB30-493$(var.CpuId)"?>
+<?define BaseVerId="$(var.BaseId)-0$(var.VerMajor)$(var.VerMinor)-$(var.VerRev)$(var.VerBuild)"?>
+<?define ProductId="$(var.BaseVerId)01000000"?>
+<?define PackageId="$(var.BaseVerId)02000000"?>
+<?define BaseCompId="$(var.BaseVerId)0300"?>
+<?define UpgradeCode="$(var.BaseId)-0000-000004000000"?>
+
+<!--Component IDs-->
+<?define CompMain="$(var.BaseCompId)0000"?>
+<?define CompShellExt="$(var.BaseCompId)0002"?>
+<?define CompCodecs="$(var.BaseCompId)0003"?>
+<?define CompLang="$(var.BaseCompId)0004"?>
+<?define CompCdrtools="$(var.BaseCompId)0005"?>
+<?define CompDoc="$(var.BaseCompId)0006"?>
+<?define CompHelp="$(var.BaseCompId)0007"?>
+<?define CompEffects="$(var.BaseCompId)0008"?>
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product
+    Id="$(var.ProductId)"
+    Name="$(var.ProductName) $(var.VerMajor).$(var.VerMinor)$(var.VerPostStr)"
+    Language="1033"
+    Version="$(var.VerMajor).$(var.VerMinor).$(var.VerRev).$(var.VerBuild)"
+    Manufacturer="Christian Kindahl"
+    UpgradeCode="$(var.UpgradeCode)">
+    
+  <Package
+    Id="$(var.PackageId)"
+    Description="$(var.ProductName)$(var.VerPostStr)"
+    Comments="$(var.ProductName)$(var.VerPostStr)"
+    Manufacturer="Christian Kindahl"
+    InstallerVersion="200"
+    Compressed="yes"
+    Platforms="$(var.Platforms)"/>
+
+  <Media Id="1" Cabinet="InfraRecorder.cab" EmbedCab="yes" CompressionLevel="high"/>
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <!--<Directory Id="ProgramMenuFolder"/>-->
+      <!--<Property Id="ALLUSERS" Value="1"/>-->
+
+      <Directory Id="$(var.ProgramFolder)" Name="Files">
+        <Directory Id="INSTALLDIR" Name="InfraRecorder">
+          <Component Id="Main" Guid="$(var.CompMain)" DiskId="1" Win64="$(var.Is64)">
+            <File Id="InfraRecorder.exe" Name="InfraRecorder.exe" Source="../Binary64/InfraRecorder.exe">
+              <Shortcut Id="StartMenuInfraRecorderShortcut" Directory="InfraProgramMenu" Name="InfraRecorder" Advertise="yes"/>
+            </File>
+            <RemoveFolder Id="MyRemFolder" Directory="InfraProgramMenu" On="uninstall"/>
+          </Component>
+
+          <Component Id="ShellExt" Guid="$(var.CompShellExt)" DiskId="1" Win64="$(var.Is64)">
+            <File Id="irShell.dll" Name="irShell.dll" Source="../Binary64/irShell.dll"/>
+          </Component>
+
+          <Component Id="Effects" Guid="$(var.CompEffects)" DiskId="1" Win64="$(var.Is64)">
+            <File Id="ckEffects.exe" Name="ckEffects.exe" Source="../Binary64/ckEffects.exe"/>
+          </Component>
+
+          <Component Id="Doc" Guid="$(var.CompDoc)" DiskId="1" Win64="$(var.Is64)">
+            <File Id="Readme.txt" Name="Readme.txt" Source="../Readme.txt"/>
+            <File Id="License.txt" Name="License.txt" Source="../License.txt"/>
+          </Component>
+
+          <Component Id="Help" Guid="$(var.CompHelp)" DiskId="1" Win64="$(var.Is64)">
+            <File Id="InfraRecorder.chm" Name="InfraRecorder.chm" Source="../Help/InfraRecorder.chm">
+              <Shortcut Id="StartMenuHelpShortcut" Directory="InfraProgramMenu" Name="InfraRecorder Help" Advertise="yes"/>
+            </File>
+          </Component>
+
+          <Directory Id="cdrtools" Name="cdrtools">
+            <Component Id="Cdrtools" Guid="$(var.CompCdrtools)" DiskId="1" Win64="$(var.Is64)">
+              <File Id="cdda2wav.exe" Name="cdda2wav.exe" Source="../Binary64/cdrtools/cdda2wav.exe"/>
+              <File Id="cdrecord.exe" Name="cdrecord.exe" Source="../Binary64/cdrtools/cdrecord.exe"/>
+              <File Id="COPYING" Name="COPYING" Source="../Binary64/cdrtools/COPYING"/>
+              <File Id="cygwin1.dll" Name="cygwin1.dll" Source="../Binary64/cdrtools/cygwin1.dll"/>
+              <File Id="readcd.exe" Name="readcd.exe" Source="../Binary64/cdrtools/readcd.exe"/>
+            </Component>
+          </Directory>
+
+          <Directory Id="Codecs" Name="Codecs">
+            <Component Id="Codecs" Guid="$(var.CompCodecs)" DiskId="1" Win64="$(var.Is64)">
+              <File Id="irWave.irc" Name="irWave.irc" Source="../Binary64/Codecs/irWave.irc"/>
+              <File Id="irWMA.irc" Name="irWMA.irc" Source="../Binary64/Codecs/irWMA.irc"/>
+            </Component>
+          </Directory>
+
+          <Directory Id="Languages" Name="Languages">
+            <Component Id="Lang" Guid="$(var.CompLang)" DiskId="1" Win64="$(var.Is64)">
+              <File Id="Arabic.irl" Name="Arabic.irl" Source="../Binary64/Languages/Arabic.irl"/>
+              <File Id="Armenian.irl" Name="Armenian.irl" Source="../Binary64/Languages/Armenian.irl"/>
+              <File Id="Basque.irl" Name="Basque.irl" Source="../Binary64/Languages/Basque.irl"/>
+              <File Id="Bosnian.irl" Name="Bosnian.irl" Source="../Binary64/Languages/Bosnian.irl"/>
+              <File Id="Bulgarian.irl" Name="Bulgarian.irl" Source="../Binary64/Languages/Bulgarian.irl"/>
+              <File Id="Catalan.irl" Name="Catalan.irl" Source="../Binary64/Languages/Catalan.irl"/>
+              <File Id="Chinese_Simplified.irl" Name="Chinese (Simplified).irl" Source="../Binary64/Languages/Chinese (Simplified).irl"/>
+              <File Id="Chinese_Traditional.irl" Name="Chinese (Traditional).irl" Source="../Binary64/Languages/Chinese (Traditional).irl"/>
+              <File Id="Croatian.irl" Name="Croatian.irl" Source="../Binary64/Languages/Croatian.irl"/>
+              <File Id="Czech.irl" Name="Czech.irl" Source="../Binary64/Languages/Czech.irl"/>
+              <File Id="Danish.irl" Name="Danish.irl" Source="../Binary64/Languages/Danish.irl"/>
+              <File Id="Dutch.irl" Name="Dutch.irl" Source="../Binary64/Languages/Dutch.irl"/>
+              <File Id="Farsi.irl" Name="Farsi.irl" Source="../Binary64/Languages/Farsi.irl"/>
+              <File Id="Finnish.irl" Name="Finnish.irl" Source="../Binary64/Languages/Finnish.irl"/>
+              <File Id="French.irl" Name="French.irl" Source="../Binary64/Languages/French.irl"/>
+              <File Id="Galician.irl" Name="Galician.irl" Source="../Binary64/Languages/Galician.irl"/>
+              <File Id="German.irl" Name="German.irl" Source="../Binary64/Languages/German.irl"/>
+              <File Id="German.chm" Name="German.chm" Source="../Binary64/Languages/German.chm"/>
+              <File Id="Greek.irl" Name="Greek.irl" Source="../Binary64/Languages/Greek.irl"/>
+              <File Id="Hebrew.irl" Name="Hebrew.irl" Source="../Binary64/Languages/Hebrew.irl"/>
+              <File Id="Hungarian.irl" Name="Hungarian.irl" Source="../Binary64/Languages/Hungarian.irl"/>
+              <File Id="Indonesian.irl" Name="Indonesian.irl" Source="../Binary64/Languages/Indonesian.irl"/>
+              <File Id="Italian.irl" Name="Italian.irl" Source="../Binary64/Languages/Italian.irl"/>
+              <File Id="Japanese.irl" Name="Japanese.irl" Source="../Binary64/Languages/Japanese.irl"/>
+              <File Id="Korean.irl" Name="Korean.irl" Source="../Binary64/Languages/Korean.irl"/>
+              <File Id="Latvian.irl" Name="Latvian.irl" Source="../Binary64/Languages/Latvian.irl"/>
+              <File Id="Lithuanian.irl" Name="Lithuanian.irl" Source="../Binary64/Languages/Lithuanian.irl"/>
+              <File Id="Norwegian.irl" Name="Norwegian.irl" Source="../Binary64/Languages/Norwegian.irl"/>
+              <File Id="Polish.irl" Name="Polish.irl" Source="../Binary64/Languages/Polish.irl"/>
+              <File Id="Portuguese.irl" Name="Portuguese.irl" Source="../Binary64/Languages/Portuguese.irl"/>
+              <File Id="Portuguese_Brazilian.irl" Name="Portuguese (Brazilian).irl" Source="../Binary64/Languages/Portuguese (Brazilian).irl"/>
+              <File Id="Romanian.irl" Name="Romanian.irl" Source="../Binary64/Languages/Romanian.irl"/>
+              <File Id="Russian.irl" Name="Russian.irl" Source="../Binary64/Languages/Russian.irl"/>
+              <File Id="Russian.chm" Name="Russian.chm" Source="../Binary64/Languages/Russian.chm"/>
+              <File Id="Serbian_Cyrillic.irl" Name="Serbian (Cyrillic).irl" Source="../Binary64/Languages/Serbian (Cyrillic).irl"/>
+              <File Id="Serbian_Latin.irl" Name="Serbian (Latin).irl" Source="../Binary64/Languages/Serbian (Latin).irl"/>
+              <File Id="Slovak.irl" Name="Slovak.irl" Source="../Binary64/Languages/Slovak.irl"/>
+              <File Id="Slovenian.irl" Name="Slovenian.irl" Source="../Binary64/Languages/Slovenian.irl"/>
+              <File Id="Spanish.irl" Name="Spanish.irl" Source="../Binary64/Languages/Spanish.irl"/>
+              <File Id="Swedish.irl" Name="Swedish.irl" Source="../Binary64/Languages/Swedish.irl"/>
+              <File Id="Thai.irl" Name="Thai.irl" Source="../Binary64/Languages/Thai.irl"/>
+              <File Id="Thai.chm" Name="Thai.chm" Source="../Binary64/Languages/Thai.chm"/>
+              <File Id="Turkish.irl" Name="Turkish.irl" Source="../Binary64/Languages/Turkish.irl"/>
+              <File Id="Turkish.chm" Name="Turkish.chm" Source="../Binary64/Languages/Turkish.chm"/>
+              <File Id="Ukrainian.irl" Name="Ukrainian.irl" Source="../Binary64/Languages/Ukrainian.irl"/>
+              <File Id="Ukrainian.chm" Name="Ukrainian.chm" Source="../Binary64/Languages/Ukrainian.chm"/>
+            </Component>
+          </Directory>
+        </Directory>
+      </Directory>
+
+      <Directory Id="ProgramMenuFolder" Name="Programs">
+        <Directory Id="InfraProgramMenu" Name="InfraRecorder"/>
+      </Directory>
+    </Directory>
+
+    <Feature Id="Full" Title="InfraRecorder" Description="The complete package."
+             Display="expand" Level="1" ConfigurableDirectory="INSTALLDIR"
+             Absent="disallow" AllowAdvertise="no">
+      <Feature Id="Program" Title="Program files" Description="The core files required to use InfraRecorder." Level="1"
+               Absent="disallow" AllowAdvertise="no">
+        <ComponentRef Id="Main"/>
+        <ComponentRef Id="ShellExt"/>
+        <ComponentRef Id="Effects"/>
+        <ComponentRef Id="Cdrtools"/>
+        <ComponentRef Id="Codecs"/>
+        <ComponentRef Id="Doc"/>
+        <ComponentRef Id="Help"/>
+      </Feature>
+      <Feature Id="LanguageFiles" Title="Localization files" Description="Language files used for supporting different languages in InfraRecorder."
+               Level="1" AllowAdvertise="no">
+        <ComponentRef Id="Lang"/>
+      </Feature>
+    </Feature>
+
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR"/>
+    <UIRef Id="WixUI_InstallDir"/>
+    <WixVariable Id="WixUILicenseRtf" Value="../License.rtf"/>
+
+  </Product>
+</Wix>
