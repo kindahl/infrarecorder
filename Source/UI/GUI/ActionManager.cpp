@@ -63,6 +63,30 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 	// Used for locating the files on the disc when verifying.
 	std::map<tstring,tstring> FilePathMap;
 
+	// Files to burn.
+	ckfilesystem::FileSet Files;
+	
+	switch (iProjectType)
+	{
+		case PROJECTTYPE_DATA:
+			g_TreeManager.GetPathList(Files,g_TreeManager.GetRootNode());
+			break;
+
+		case PROJECTTYPE_MIXED:
+			g_TreeManager.GetPathList(Files,g_ProjectManager.GetMixDataRootNode(),
+				lstrlen(g_ProjectManager.GetMixDataRootNode()->pItemData->GetFileName()) + 1);
+			break;
+
+		case PROJECTTYPE_AUDIO:
+			// Audio discs do not have files to burn.
+			break;
+
+		default:
+			ATLASSERT(false);
+			return 0;
+	};
+
+
 	if (iProjectType == PROJECTTYPE_DATA ||
 		iProjectType == PROJECTTYPE_MIXED)
 	{
@@ -70,24 +94,6 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 		g_pProgressDlg->SetWindowText(lngGetString(STITLE_PREPOPERATION));
 		g_pProgressDlg->SetDevice(_T(""));
 		g_pProgressDlg->set_status(lngGetString(STATUS_GATHER_FILE_INFO));
-
-		ckfilesystem::FileSet Files;
-		
-		switch (iProjectType)
-		{
-			case PROJECTTYPE_DATA:
-				g_TreeManager.GetPathList(Files,g_TreeManager.GetRootNode());
-				break;
-
-			case PROJECTTYPE_MIXED:
-				g_TreeManager.GetPathList(Files,g_ProjectManager.GetMixDataRootNode(),
-					lstrlen(g_ProjectManager.GetMixDataRootNode()->pItemData->GetFileName()) + 1);
-				break;
-
-			default:
-				ATLASSERT(false);
-				return 0;
-		};
 
 		// Create a temporary disc image if not burning on the fly.
 		if (!g_BurnImageSettings.m_bOnFly)
@@ -122,6 +128,9 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 
 					ImageFile.remove();
 					return 0;
+
+				default:
+					ATLASSERT( false );
 			};
 		}
 	}
@@ -164,6 +173,13 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 				return 0;
 			}
 			break;
+
+		case PROJECTTYPE_DATA:
+			// No audio tracks to decode.
+			break;
+
+		default:
+			ATLASSERT( false );
 	}
 
 	// Start the burn process.
@@ -179,9 +195,6 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 					// Try to estimate the file system size before burning the compilation.
 					unsigned __int64 uiDataSize = 0;
 					g_pProgressDlg->set_status(lngGetString(PROGRESS_ESTIMAGESIZE));
-
-					ckfilesystem::FileSet Files;
-					g_TreeManager.GetPathList(Files,g_TreeManager.GetRootNode());
 
 					iResult = g_Core2.EstimateImageSize(Files,*g_pProgressDlg,uiDataSize);
 
@@ -245,10 +258,6 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 					// Try to estimate the file system size before burning the compilation.
 					unsigned __int64 uiDataSize = 0;
 					g_pProgressDlg->set_status(lngGetString(PROGRESS_ESTIMAGESIZE));
-
-					ckfilesystem::FileSet Files;
-					g_TreeManager.GetPathList(Files,g_ProjectManager.GetMixDataRootNode(),
-						lstrlen(g_ProjectManager.GetMixDataRootNode()->pItemData->GetFileName()) + 1);
 
 					iResult = g_Core2.EstimateImageSize(Files,*g_pProgressDlg,uiDataSize);
 
@@ -318,6 +327,9 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 						AudioTracks,pAudioText,0);
 				}
 				break;
+
+			default:
+				ATLASSERT( false );
 		};
 
 		// Handle the result.
