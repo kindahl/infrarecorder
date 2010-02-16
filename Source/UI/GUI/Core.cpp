@@ -2245,7 +2245,7 @@ DWORD WINAPI CCore::NextCopyThread(LPVOID lpThreadParameter)
 	the g_BurnImageSettings and g_ProjectSettings object.
 */
 bool CCore::BurnCompilation(ckmmc::Device &Device,CAdvancedProgress *pProgress,
-							ckcore::Progress &Progress,ckfilesystem::FileSet &Files,
+							ckcore::Progress &Progress,const ckfilesystem::FileSet &Files,
 							std::vector<TCHAR *> &AudioTracks,const TCHAR *szAudioText,
 							int iDataMode,unsigned __int64 uiDataBytes,int iMode)
 {
@@ -2516,7 +2516,7 @@ bool CCore::BurnCompilation(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 }
 
 bool CCore::BurnCompilation(ckmmc::Device &Device,CAdvancedProgress *pProgress,
-							ckcore::Progress &Progress,ckfilesystem::FileSet &Files,
+							ckcore::Progress &Progress,const ckfilesystem::FileSet &Files,
 							std::vector<TCHAR *> &AudioTracks,const TCHAR *szAudioText,
 							int iMode,unsigned __int64 uiDataBytes)
 {
@@ -2525,7 +2525,7 @@ bool CCore::BurnCompilation(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 }
 
 int CCore::BurnCompilationEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,
-							 ckcore::Progress &Progress,ckfilesystem::FileSet &Files,
+							 ckcore::Progress &Progress,const ckfilesystem::FileSet &Files,
 							 std::vector<TCHAR *> &AudioTracks,const TCHAR *szAudioText,
 							 int iMode,unsigned __int64 uiDataBytes)
 {

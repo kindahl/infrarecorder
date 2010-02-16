@@ -109,10 +109,10 @@ private:
 	public:
 		ckcore::Process &m_Process;
 		ckcore::Progress &m_Progress;
-		ckfilesystem::FileSet &m_Files;
+		const ckfilesystem::FileSet &m_Files;
 
 		CCompImageParams(ckcore::Process &Process,ckcore::Progress &Progress,
-			ckfilesystem::FileSet &Files) : m_Process(Process),
+			const ckfilesystem::FileSet &Files) : m_Process(Process),
 			m_Progress(Progress),m_Files(Files)
 		{
 		}
@@ -136,7 +136,7 @@ private:
 	bool ReadDisc(ckmmc::Device &Device,CAdvancedProgress *pProgress,const TCHAR *szFileName,
 		int iMode,bool bWaitForProcess);
 	bool BurnCompilation(ckmmc::Device &Device,CAdvancedProgress *pProgress,
-		ckcore::Progress &Progress,ckfilesystem::FileSet &Files,
+		ckcore::Progress &Progress,const ckfilesystem::FileSet &Files,
 		std::vector<TCHAR *> &AudioTracks,const TCHAR *szAudioText,int iDataMode,
 		unsigned __int64 uiDataBytes,int iMode);
 
@@ -203,10 +203,10 @@ public:
 	bool ReadDisc(ckmmc::Device &Device,CAdvancedProgress *pProgress,const TCHAR *szFileName);
 	int ReadDiscEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,const TCHAR *szFileName);
 	bool BurnCompilation(ckmmc::Device &Device,CAdvancedProgress *pProgress,
-		ckcore::Progress &Progress,ckfilesystem::FileSet &Files,std::vector<TCHAR *> &AudioTracks,
+		ckcore::Progress &Progress,const ckfilesystem::FileSet &Files,std::vector<TCHAR *> &AudioTracks,
 		const TCHAR *szAudioText,int iMode,unsigned __int64 uiDataBytes);
 	int BurnCompilationEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,ckcore::Progress &Progress,
-		ckfilesystem::FileSet &Files,std::vector<TCHAR *> &AudioTracks,
+		const ckfilesystem::FileSet &Files,std::vector<TCHAR *> &AudioTracks,
 		const TCHAR *szAudioText,int iMode,unsigned __int64 uiDataBytes);
 	ckcore::tstring CdrtoolsVersion();
 };
