@@ -1701,8 +1701,15 @@ void CTreeManager::GetLocalPathList(ckfilesystem::FileSet &Files,CProjectNode *p
 			pData = pItemData->GetIsoData();
 		}
 
-		Files.insert(ckfilesystem::FileDescriptor(szInternalFilePath,
-					 pItemData->szFullPath,ucFlags,pData));
+		// If the insertion fails, the auto_ptr will automatically release the memory.
+		std::auto_ptr< ckfilesystem::FileDescriptor > fd(
+			new ckfilesystem::FileDescriptor(
+					szInternalFilePath,
+					pItemData->szFullPath,
+					ucFlags,
+					pData ) );
+		Files.insert( fd.get() );
+		fd.release();
 	}
 
 	std::list <CItemData *>::iterator itFileObject;
@@ -1735,8 +1742,15 @@ void CTreeManager::GetLocalPathList(ckfilesystem::FileSet &Files,CProjectNode *p
 			pData = pItemData->GetIsoData();
 		}
 
-		Files.insert(ckfilesystem::FileDescriptor(szInternalFilePath,
-					 pItemData->szFullPath,ucFlags,pData));
+		// If the insertion fails, the auto_ptr will automatically release the memory.
+		std::auto_ptr< ckfilesystem::FileDescriptor > fd(
+			new ckfilesystem::FileDescriptor(
+					szInternalFilePath,
+					pItemData->szFullPath,
+					ucFlags,
+					pData ) );
+		Files.insert( fd.get() );
+		fd.release();
 	}
 
 	// If the folder does not have children, add it manually.
@@ -1766,8 +1780,15 @@ void CTreeManager::GetLocalPathList(ckfilesystem::FileSet &Files,CProjectNode *p
 			pData = pNode->pItemData->GetIsoData();
 		}
 
-		Files.insert(ckfilesystem::FileDescriptor(szInternalFilePath,szEmptyFolder,
-					 ucFlags,pData));
+		// If the insertion fails, the auto_ptr will automatically release the memory.
+		std::auto_ptr< ckfilesystem::FileDescriptor > fd(
+			new ckfilesystem::FileDescriptor(
+					szInternalFilePath,
+					szEmptyFolder,
+					ucFlags,
+					pData ) );
+		Files.insert( fd.get() );
+		fd.release();
 	}
 }
 
