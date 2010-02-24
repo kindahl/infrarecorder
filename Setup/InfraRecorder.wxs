@@ -139,6 +139,7 @@
               <File Id="Korean.irl" Name="Korean.irl" Source="../Binary64/Languages/Korean.irl"/>
               <File Id="Latvian.irl" Name="Latvian.irl" Source="../Binary64/Languages/Latvian.irl"/>
               <File Id="Lithuanian.irl" Name="Lithuanian.irl" Source="../Binary64/Languages/Lithuanian.irl"/>
+              <File Id="Macedonian.irl" Name="Macedonian.irl" Source="../Binary64/Languages/Macedonian.irl"/>
               <File Id="Norwegian.irl" Name="Norwegian.irl" Source="../Binary64/Languages/Norwegian.irl"/>
               <File Id="Polish.irl" Name="Polish.irl" Source="../Binary64/Languages/Polish.irl"/>
               <File Id="Portuguese.irl" Name="Portuguese.irl" Source="../Binary64/Languages/Portuguese.irl"/>

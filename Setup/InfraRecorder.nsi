@@ -159,6 +159,7 @@ FunctionEnd
   !insertmacro MUI_LANGUAGE "Korean"
   !insertmacro MUI_LANGUAGE "Latvian"
   !insertmacro MUI_LANGUAGE "Lithuanian"
+  !insertmacro MUI_LANGUAGE "Macedonian"
   !insertmacro MUI_LANGUAGE "Norwegian"
   !insertmacro MUI_LANGUAGE "Polish"
   !insertmacro MUI_LANGUAGE "Portuguese"
@@ -582,6 +583,18 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_LITHUANIAN} "Sukuria ikonа б greito paleidimo juostа."
   LangString DESC_SecLang ${LANG_LITHUANIAN} "Kalbos failai reikalingi norint kad InfraRecorder vartotojo sаsaja dirbtш skirtingomis kalbomis."
 
+  ;Language strings (Macedonian)
+  LangString NAME_SecCore ${LANG_MACEDONIAN} "Основни податотеки на InfraRecorder (задолжително)"
+  LangString NAME_SecStartShortcut ${LANG_MACEDONIAN} "Икони во стартното мени"
+  LangString NAME_SecDeskShortcut ${LANG_MACEDONIAN} "Икона на работната површина"
+  LangString NAME_SecQuickShortcut ${LANG_MACEDONIAN} "Икона во лентата за брзо пуштање"
+  LangString NAME_SecLang ${LANG_MACEDONIAN} "Јазични податотеки"
+  LangString DESC_SecCore ${LANG_MACEDONIAN} "Основните податотеки потребни за работењето на InfraRecorder."
+  LangString DESC_SecStartShortcut ${LANG_MACEDONIAN} "Додава икони во стартното мени за лесен пристап."
+  LangString DESC_SecDeskShortcut ${LANG_MACEDONIAN} "Додава икона на работната површина."
+  LangString DESC_SecQuickShortcut ${LANG_MACEDONIAN} "Додава икона во лентата за брзо пуштање."
+  LangString DESC_SecLang ${LANG_MACEDONIAN} "Јазични податотеки со разни јазици за интерфејсот на InfraRecorder."
+
   ;Language strings (Norwegian)
   LangString NAME_SecCore ${LANG_NORWEGIAN} "InfraRecorder kjernefiler (obligatorisk)"
   LangString NAME_SecStartShortcut ${LANG_NORWEGIAN} "Snarvei i startmenyen"
@@ -904,6 +917,7 @@ Section $(NAME_SecLang) SecLang
   File "..\Binary32\Languages\Korean.irl"
   File "..\Binary32\Languages\Latvian.irl"
   File "..\Binary32\Languages\Lithuanian.irl"
+  File "..\Binary32\Languages\Macedonian.irl"
   File "..\Binary32\Languages\Norwegian.irl"
   File "..\Binary32\Languages\Polish.irl"
   File "..\Binary32\Languages\Portuguese.irl"
@@ -951,6 +965,7 @@ Section $(NAME_SecLang) SecLang
   File "..\BinaryA\Languages\Korean.irl"
   File "..\BinaryA\Languages\Latvian.irl"
   File "..\BinaryA\Languages\Lithuanian.irl"
+  File "..\BinaryA\Languages\Macedonian.irl"
   File "..\BinaryA\Languages\Norwegian.irl"
   File "..\BinaryA\Languages\Polish.irl"
   File "..\BinaryA\Languages\Portuguese.irl"
@@ -1050,6 +1065,9 @@ Section $(NAME_SecLang) SecLang
       ${Break}
     ${Case} "lithuanian"; 1063
       StrCpy $LANGUAGE ${LANG_LITHUANIAN}
+      ${Break}
+    ${Case} "macedonian"
+      StrCpy $LANGUAGE ${LANG_MACEDONIAN}
       ${Break}
     ${Case} "norwegian"; 1044
       StrCpy $LANGUAGE ${LANG_NORWEGIAN}
@@ -1179,6 +1197,9 @@ Section $(NAME_SecLang) SecLang
       ${Break}
     ${Case} ${LANG_LITHUANIAN}	; 1063
       StrCpy $0 "Lithuanian.irl"
+      ${Break}
+    ${Case} ${LANG_MACEDONAIN}
+      StrCpy $0 "Macedonian.irl"
       ${Break}
     ${Case} ${LANG_NORWEGIAN}	; 1044
       StrCpy $0 "Norwegian.irl"
