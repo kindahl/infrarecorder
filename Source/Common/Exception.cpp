@@ -23,32 +23,6 @@
 #include "StringUtil.h"
 #include "Exception.h"
 
-ir_error::ir_error(const ckcore::tchar *const szErrMsg) : m_ErrMsg(szErrMsg)
-{
-}
-
-ir_error::ir_error(const ckcore::tstring &ErrMsg) : m_ErrMsg(ErrMsg)
-{
-}
-
-/**
- * Returns the error message.
- * @return The error message.
- */
-const ckcore::tchar *ir_error::lwhat(void) const throw()
-{
-	return m_ErrMsg.c_str();
-}
-
-const char *ir_error::what(void) const throw()
-{
-    // Please use the wrapper GetExceptErrMsg() instead of calling what()
-	// on objects derived from std::exception .
-    ATLASSERT(false);
-
-    return "Internal error: No ANSI message available.";
-}
-
 /**
  * Returns the exception message of the given exception object. The function
  * tests if the exception is an ir_error and in that case returns its message.
@@ -57,17 +31,12 @@ const char *ir_error::what(void) const throw()
  */
 ckcore::tstring GetExceptMsg(const std::exception &e)
 {
-    const ir_error *const pE = dynamic_cast<const ir_error *>(&e);
-
-    if (pE != NULL)
-		return pE->lwhat();
-
 	const ckcore::Exception2 *const pE2 = dynamic_cast<const ckcore::Exception2 *>(&e);
 
     if (pE2 != NULL)
 		return pE2->message();
 
-	return ckcore::string::ansi_to_auto<1024>(pE->what());
+	return ckcore::string::ansi_to_auto<1024>(e.what());
 }
 
 /**

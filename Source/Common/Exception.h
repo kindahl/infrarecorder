@@ -18,20 +18,10 @@
 
 #pragma once
 #include <ckcore/types.hh>
+#include <ckcore/exception.hh>
 
-class ir_error : public std::exception
-{
-private:
-    ckcore::tstring m_ErrMsg;
-
-public:
-	ir_error(const ckcore::tchar *const szErrMsg);
-	ir_error(const ckcore::tstring &ErrMsg);
-	virtual ~ir_error() {};
-
-    virtual const char *what(void) const throw();
-	const ckcore::tchar *lwhat(void) const throw();
-};
+// Temporary typedef until all code moves to ckcore::Exception2
+typedef ckcore::Exception2 ir_error;
 
 ckcore::tstring GetExceptMsg(const std::exception &e);
 void RethrowWithPrefix(const std::exception &e,const ckcore::tchar *szFormatStr,...);
