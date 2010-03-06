@@ -23,7 +23,4 @@
 // Temporary typedef until all code moves to ckcore::Exception2
 typedef ckcore::Exception2 ir_error;
 
-ckcore::tstring GetExceptMsg(const std::exception &e);
-void RethrowWithPrefix(const std::exception &e,const ckcore::tchar *szFormatStr,...);
-ir_error CreateIrErrorFromHresult(HRESULT hRes,const ckcore::tchar *szPrefixFormatStr,...);
 ir_error CreateIrInternalError(const ckcore::tchar *file,int line);

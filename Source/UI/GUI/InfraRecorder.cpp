@@ -95,7 +95,7 @@ static int SaveEnglishStrings(const TCHAR * const szFileName)
 	}
 	catch (const std::exception &e)
 	{
-		RethrowWithPrefix(e,_T("Error processing command-line option %s: "),SAVE_ENGLISH_STRINGS_PARAM);
+		ckcore::rethrow_with_pfx(e,_T("Error processing command-line option %s: "),SAVE_ENGLISH_STRINGS_PARAM);
 	}
 	
 	return 0;
@@ -327,7 +327,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPTSTR lpstrCmd
 		// because the main frame will be calling RegisterDragDrop() later.
 		HRESULT hRes = OleInitialize(NULL);
 		if (!SUCCEEDED(hRes))
-			throw CreateIrErrorFromHresult(hRes,_T("Error during OleInitialize: " ));
+			ckcore::throw_from_hresult(hRes,_T("Error during OleInitialize: " ));
 
 		// This resolves ATL window thunking problem when Microsoft Layer for Unicode (MSLU) is used.
 		::DefWindowProc(NULL,0,0,0L);
@@ -432,7 +432,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPTSTR lpstrCmd
 	catch (const std::exception &e)
 	{
 		ATLVERIFY(0 != MessageBox(NULL,
-			                      GetExceptMsg(e).c_str(),
+			                      ckcore::get_except_msg(e).c_str(),
 			                      lngGetString(GENERAL_ERROR),
 			                      MB_OK | MB_ICONERROR | MB_APPLMODAL));
 		return 1;

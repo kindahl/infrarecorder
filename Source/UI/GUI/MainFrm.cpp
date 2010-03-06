@@ -1348,7 +1348,7 @@ LRESULT CMainFrame::OnContextMenu(UINT uMsg,WPARAM wParam,LPARAM lParam,
 		// should probably not be processed any further.
 		bHandled = TRUE;
 
-		ATLVERIFY(IDOK == MessageBox(GetExceptMsg(e).c_str(),
+		ATLVERIFY(IDOK == MessageBox(ckcore::get_except_msg(e).c_str(),
 			                         lngGetString(GENERAL_ERROR),
 			                         MB_OK | MB_ICONERROR));
 	}
@@ -1385,7 +1385,7 @@ void CMainFrame::DisplayContextMenuOnShellTree(POINT ptPos,bool bWasWithKeyboard
 
 		if (FALSE == m_ShellTreeView.ClientToScreen(&ptPos))
 		{
-			throw CreateIrErrorFromHresult(GetLastError(),_T("ClientToScreen: "));
+			ckcore::throw_from_hresult(GetLastError(),_T("ClientToScreen: "));
 		}
 	}
 
@@ -1394,7 +1394,7 @@ void CMainFrame::DisplayContextMenuOnShellTree(POINT ptPos,bool bWasWithKeyboard
 	// we'll have to make do with this tiny pop-up menu.
 	if (0 == m_ShellTreeMenu.GetSubMenu(0).TrackPopupMenuEx(0,ptPos.x,ptPos.y,m_hWnd,NULL))
 	{
-		throw CreateIrErrorFromHresult(GetLastError(),_T("TrackPopupMenuEx: "));
+		ckcore::throw_from_hresult(GetLastError(),_T("TrackPopupMenuEx: "));
 	}
 }
 
@@ -2102,7 +2102,7 @@ LRESULT CMainFrame::OnSTVRClick(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled)
 		// Convert to screen co-ords for hit testing.
 		if (FALSE == m_ShellTreeView.ScreenToClient(&ptPos))
 		{
-			throw CreateIrErrorFromHresult(GetLastError(),_T("ScreenToClient: "));
+			ckcore::throw_from_hresult(GetLastError(),_T("ScreenToClient: "));
 		}
 
 		UINT uHitTestFlags;
@@ -2123,7 +2123,7 @@ LRESULT CMainFrame::OnSTVRClick(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled)
 	}
 	catch (const std::exception &e)
 	{
-		ATLVERIFY(IDOK == MessageBox(GetExceptMsg(e).c_str(),
+		ATLVERIFY(IDOK == MessageBox(ckcore::get_except_msg(e).c_str(),
 			                         lngGetString(GENERAL_ERROR),
 			                         MB_OK | MB_ICONERROR));
 	}
@@ -2896,12 +2896,12 @@ LRESULT CMainFrame::OnShellTreeProperties(WORD wNotifyCode,WORD wID,HWND hWndCtl
 			// I tried SEE_MASK_FLAG_NO_UI and it had no effect,
 			// and other people have also reported that this flag
 			// does not seem to work.
-			throw CreateIrErrorFromHresult(GetLastError(),_T("ShellExecuteEx: "));
+			ckcore::throw_from_hresult(GetLastError(),_T("ShellExecuteEx: "));
 		}
 	}
 	catch (const std::exception &e)
 	{
-		ATLVERIFY(IDOK == MessageBox(GetExceptMsg(e).c_str(),
+		ATLVERIFY(IDOK == MessageBox(ckcore::get_except_msg(e).c_str(),
 			                         lngGetString(GENERAL_ERROR),
 			                         MB_OK | MB_ICONERROR));
 

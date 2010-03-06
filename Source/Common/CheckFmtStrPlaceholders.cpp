@@ -307,8 +307,8 @@ void CFmtStrPlaceholderAnalysis::AnalyzeFormatString(const ckcore::tchar * const
         }
         catch (const std::exception &e)
         {
-            RethrowWithPrefix(e,_T("Error at line position %d: "),
-                              placeholderStart - szFmtStr + 1);
+			ckcore::rethrow_with_pfx(e,_T("Error at line position %d: "),
+                                     placeholderStart - szFmtStr + 1);
         }
     }
 
@@ -375,7 +375,7 @@ void ComparePlaceholdersInTranslatedStr(const ckcore::tchar * const szSectionNam
         }
         catch (const std::exception &e)
         {
-            RethrowWithPrefix(e,_T("Error parsing the reference string: "));
+            ckcore::rethrow_with_pfx(e,_T("Error parsing the reference string: "));
         }
 
         try
@@ -384,14 +384,14 @@ void ComparePlaceholdersInTranslatedStr(const ckcore::tchar * const szSectionNam
         }
         catch ( const std::exception &e)
         {
-            RethrowWithPrefix(e,_T("Error parsing the translated string: "));
+            ckcore::rethrow_with_pfx(e,_T("Error parsing the translated string: "));
         }
 
         CFmtStrPlaceholderAnalysis::ComparePlaceholderAnalyses(pAnalysis1,pAnalysis2);
     }
     catch (const std::exception &e)
     {
-        RethrowWithPrefix(e,_T("Error in section [%s], string ID 0x%X: "),
-                          szSectionName,uStringId);
+        ckcore::rethrow_with_pfx(e,_T("Error in section [%s], string ID 0x%X: "),
+                                 szSectionName,uStringId);
     }
 }
