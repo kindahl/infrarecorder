@@ -19,8 +19,8 @@
 #include "stdafx.h"
 #include <ckcore/filestream.hh>
 #include <ckcore/linereader.hh>
+#include <ckcore/exception.hh>
 #include "../../Common/StringUtil.h"
-#include "../../Common/Exception.h"
 #include "Resource.h"
 #include "Settings.h"
 #include "Registry.h"
@@ -1375,7 +1375,7 @@ void CMainFrame::DisplayContextMenuOnShellTree(POINT ptPos,bool bWasWithKeyboard
 
 		RECT rcItem;
 		if (FALSE == m_ShellTreeView.GetItemRect(hSelectedItem,&rcItem,TRUE))
-			throw ir_error(_T("GetItemRect: "));
+			throw ckcore::Exception2(_T("GetItemRect: "));
 
 		// This "half-way" calculation emulates more or less what Windows Explorer does,
 		// but there is probably a better, "canonical" way to calculate this position.

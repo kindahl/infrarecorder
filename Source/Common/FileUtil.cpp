@@ -19,7 +19,7 @@
 #include "stdafx.h"
 #include <ckcore/types.hh>
 #include <ckcore/string.hh>
-#include "Exception.h"
+#include <ckcore/exception.hh>
 #include "FileUtil.h"
 
 void WriteString(ckcore::File &File,const ckcore::tchar *szString)
@@ -28,5 +28,5 @@ void WriteString(ckcore::File &File,const ckcore::tchar *szString)
 		static_cast<ckcore::tuint32>(ckcore::string::astrlen(szString) * sizeof(ckcore::tchar));
 	
 	if (uiByteCount != File.write(szString,uiByteCount))
-		throw ir_error(ckT("Error writing to the file."));	// FIXME: Improve message output.
+		throw ckcore::Exception2(ckT("Error writing to the file."));	// FIXME: Improve message output.
 }

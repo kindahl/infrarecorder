@@ -19,8 +19,8 @@
 #include "stdafx.h"
 #include <ckcore/filestream.hh>
 #include <ckcore/nullstream.hh>
+#include <ckcore/exception.hh>
 #include <ckfilesystem/filesystemwriter.hh>
-#include "../../Common/Exception.h"
 #include "Core2.h"
 #include "Core2Format.h"
 #include "Core2Blank.h"
@@ -720,7 +720,7 @@ int CCore2::CreateImage(ckcore::OutStream &OutStream,const ckfilesystem::FileSet
 
 		default:
 			ATLASSERT(false);
-			throw CreateIrInternalError(_T(__FILE__),__LINE__);
+			ckcore::throw_internal_error(_T(__FILE__),__LINE__);
 	}
 
 	ckfilesystem::Iso9660::InterLevel InterchangeLevel;
@@ -744,7 +744,7 @@ int CCore2::CreateImage(ckcore::OutStream &OutStream,const ckfilesystem::FileSet
 
 		default:
 			ATLASSERT(false);
-			throw CreateIrInternalError(_T(__FILE__),__LINE__);
+			ckcore::throw_internal_error(_T(__FILE__),__LINE__);
 	}
 
 	ckfilesystem::FileSystem FileSys(FileSysType,Files);

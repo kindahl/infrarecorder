@@ -19,7 +19,7 @@
 #include "stdafx.h"
 #include "CheckFmtStrPlaceholders.h"	// Include file for this module comes first.
 #include "StringUtil.h"
-#include "Exception.h"
+#include <ckcore/exception.hh>
 
 #define MAX_PARAM_POSITION ((unsigned)100)
 
@@ -55,12 +55,12 @@ void CFmtStrPlaceholderAnalysis::InsertPlaceholder(
     ATLASSERT(uPlaceholderStrLen > 0);
 
     if (uPlaceholderPos < 1 || uPlaceholderPos > MAX_PARAM_POSITION)
-        throw ir_error(SlowFormatStr( _T("Invalid placeholder number %u."),uPlaceholderPos).c_str());
+        throw ckcore::Exception2(SlowFormatStr( _T("Invalid placeholder number %u."),uPlaceholderPos).c_str());
 
     if (m_uPlaceholderCount > 0)
     {
         if (m_bPositionalPlaceholders != bIsPositionalPlaceholder)
-            throw ir_error(_T("Cannot mix positional and non-positional placeholders."));
+            throw ckcore::Exception2(_T("Cannot mix positional and non-positional placeholders."));
     }
 
     m_bPositionalPlaceholders = bIsPositionalPlaceholder;
@@ -81,7 +81,7 @@ void CFmtStrPlaceholderAnalysis::InsertPlaceholder(
     // the extra complication that would add to this testing class. Fortunately,
 	// this feature is rarely used.
     if (!plh->m_Placeholder.empty())
-        throw ir_error(SlowFormatStr(_T("Placeholder %u already used."),uPlaceholderPos).c_str());
+        throw ckcore::Exception2(SlowFormatStr(_T("Placeholder %u already used."),uPlaceholderPos).c_str());
     
     plh->m_Placeholder.insert(plh->m_Placeholder.begin(),
                               szPlaceholderStr,szPlaceholderStr + uPlaceholderStrLen);
@@ -219,7 +219,7 @@ static bool ReadPositionalParam(const ckcore::tchar ** const p,unsigned * const 
         uVal += *scan - _T('0');
 
         if (uVal > MAX_PARAM_POSITION)
-            throw ir_error(_T("Integer too big parsing the positional parameter."));
+            throw ckcore::Exception2(_T("Integer too big parsing the positional parameter."));
 
         ++scan;
     }
@@ -268,7 +268,7 @@ void CFmtStrPlaceholderAnalysis::AnalyzeFormatString(const ckcore::tchar * const
         try
         {
             if (*p == _T('\0'))
-                throw ir_error(_T("Invalid placeholder at the end of the string."));
+                throw ckcore::Exception2(_T("Invalid placeholder at the end of the string."));
 
             const bool bIsPositionalParam = ReadPositionalParam(&p,&uPlaceholderPos);
 
@@ -303,7 +303,7 @@ void CFmtStrPlaceholderAnalysis::AnalyzeFormatString(const ckcore::tchar * const
                 continue;
             }
 
-            throw ir_error(_T("Invalid or unsupported placeholder."));
+            throw ckcore::Exception2(_T("Invalid or unsupported placeholder."));
         }
         catch (const std::exception &e)
         {
@@ -322,7 +322,7 @@ void CFmtStrPlaceholderAnalysis::AnalyzeFormatString(const ckcore::tchar * const
     for (unsigned i = 0; i < m_uPlaceholderCount; ++i)
     {
         if (m_Placeholders[i] == NULL || m_Placeholders[i]->m_Placeholder.empty())
-            throw ir_error(SlowFormatStr(_T("Positional argument %u not referenced in the format string."),i + 1).c_str());
+            throw ckcore::Exception2(SlowFormatStr(_T("Positional argument %u not referenced in the format string."),i + 1).c_str());
     }
 }
 
@@ -332,13 +332,13 @@ void CFmtStrPlaceholderAnalysis::ComparePlaceholderAnalyses(const CFmtStrPlaceho
     // NOTE: This method is static.
     if (pAnalysis1->m_uPlaceholderCount != pAnalysis2->m_uPlaceholderCount)
     {
-        throw ir_error(_T("The strings being compared do not contain the same number of placeholders."));
+        throw ckcore::Exception2(_T("The strings being compared do not contain the same number of placeholders."));
     }
 
     if (pAnalysis1->m_uPlaceholderCount > 0 &&
         pAnalysis1->m_bPositionalPlaceholders != pAnalysis2->m_bPositionalPlaceholders)
     {
-        throw ir_error(_T("The strings being compared are not using the same type of placeholders (positional vs non-positional)."));
+        throw ckcore::Exception2(_T("The strings being compared are not using the same type of placeholders (positional vs non-positional)."));
     }
 
     for (unsigned int i = 0; i < pAnalysis1->m_uPlaceholderCount; ++i)
@@ -348,7 +348,7 @@ void CFmtStrPlaceholderAnalysis::ComparePlaceholderAnalyses(const CFmtStrPlaceho
 
         if (plh1->m_Placeholder != plh2->m_Placeholder)
         {
-            throw ir_error(
+            throw ckcore::Exception2(
                     SlowFormatStr(_T("Placeholder number %u in the second string (\"%s\") differs from the corresponding one in the first string (\"%s\")."),
                                   i + 1,
                                   plh2->m_Placeholder.c_str(),

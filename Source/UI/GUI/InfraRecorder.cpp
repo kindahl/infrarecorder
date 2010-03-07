@@ -19,7 +19,7 @@
 #include "stdafx.h"
 #include "Resource.h"
 #include "MainFrm.h"
-#include "../../Common/Exception.h"
+#include <ckcore/exception.hh>
 #include "../../Common/FileUtil.h"
 #include "ProgressDlg.h"
 #include "SimpleProgressDlg.h"
@@ -62,12 +62,12 @@ static int SaveEnglishStrings(const TCHAR * const szFileName)
 		TrimStr(FileName,BLANKS);
 
 		if (FileName.empty())
-			throw ir_error(_T("Missing filename."));
+			throw ckcore::Exception2(_T("Missing filename."));
 
 		ckcore::File File(FileName.c_str());
 
 		if (!File.open(ckcore::File::ckOPEN_WRITE))
-			throw ir_error(_T("Error opening file for writing."));
+			throw ckcore::Exception2(_T("Error opening file for writing."));
 
 #ifdef UNICODE
 		// Write byte order mark.
