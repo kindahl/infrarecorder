@@ -19,6 +19,7 @@
 #pragma once
 #include <atlcrack.h>	// COMMAND_RANGE_HANDLER_EX
 #include "VisualStyles.h"
+#include "CtrlMessages.h"
 
 #define SPACEMETER_BAR_HEIGHT				10
 #define SPACEMETER_BARINDENT_NORMAL			2
@@ -133,6 +134,8 @@ private:
 	void UpdateMeter(int iClientWidth);
 	void UpdateToolTip();
 
+	bool m_bIsUpdatePending;
+
 public:
 	DECLARE_WND_CLASS(_T("ckSpaceMeter"));
 
@@ -148,10 +151,9 @@ public:
 
 	void SetDisplayMode(int iDisplayMode);
 	
-	void ForceRedraw();
-
 	void Initialize();
 
+private:
 #if _ATL_VER <= 0x0300
 	BEGIN_MSG_MAP_EX(CSpaceMeter)
 #else
@@ -163,6 +165,7 @@ public:
 		MESSAGE_HANDLER(WM_ERASEBKGND,OnEraseBkgnd)
 		MESSAGE_HANDLER(WM_RBUTTONDOWN,OnRButtonDown)
 		//MESSAGE_HANDLER(WM_MOUSEMOVE,OnMouseMove)
+		MESSAGE_HANDLER(WMU_SPACE_METER_DELAYED_UPDATE,OnDelayedUpdate)
 		MESSAGE_RANGE_HANDLER(WM_MOUSEFIRST,WM_MOUSELAST,OnMouseMove)
 		NOTIFY_CODE_HANDLER(TTN_GETDISPINFO,OnGetDispInfo)
 
@@ -175,7 +178,10 @@ public:
 	LRESULT OnEraseBkgnd(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 	LRESULT OnRButtonDown(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 	LRESULT OnMouseMove(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+	LRESULT OnDelayedUpdate(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 	LRESULT OnGetDispInfo(int idCtrl,LPNMHDR pnmh,BOOL &bHandled);
 
 	LRESULT OnPopupMenuClick(UINT uNotifyCode,int nID,CWindow wnd);
+
+	void RequestDelayedUpdate();
 };

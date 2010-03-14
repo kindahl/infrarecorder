@@ -111,3 +111,6 @@
 	file system identifier as defined in Settings.h.
 */
 #define WM_SETFILESYSTEM				WM_APP + 20
+
+// Used by class CSpaceMeter.
+#define WMU_SPACE_METER_DELAYED_UPDATE	WM_APP + 21

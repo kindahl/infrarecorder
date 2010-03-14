@@ -50,11 +50,59 @@ CActionManager::~CActionManager()
 {
 }
 
+static void RemoveTempTracks ( std::vector<TCHAR *> & TempTracks )
+{
+	for ( std::vector <TCHAR *>::iterator it = TempTracks.begin();
+		  it != TempTracks.end();
+		  ++it )
+	{
+		const TCHAR * const elem = *it;
+		ckcore::File::remove(elem);
+		delete [] elem;
+	}
+
+	TempTracks.clear();
+}
+
+
 DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 {
-	int iProjectType = g_ProjectManager.GetProjectType(),iResult = 0;
-	ckcore::File ImageFile = ckcore::File::temp(g_GlobalSettings.m_szTempPath,
-												ckT("InfraRecorder"));
+	struct CLocalData
+	{
+		// The destructor frees these variables automatically.
+		ckcore::File ImageFile;
+		ckfilesystem::FileSet Files;  // Files to burn.
+		std::vector<TCHAR *> TempTracks;
+		const TCHAR *pAudioText;
+
+		CLocalData ( void )
+			: ImageFile( g_BurnImageSettings.m_bOnFly
+							? ckcore::Path() // 'ImageFile' variable not used.
+							: ckcore::File::temp(g_GlobalSettings.m_szTempPath,
+												 ckT("InfraRecorder") )
+						  )
+		    , pAudioText( NULL )
+		{}
+
+		~CLocalData ( void )
+		{
+			if (!g_BurnImageSettings.m_bOnFly)
+				ImageFile.remove();
+
+			ckfilesystem::DestroyFileSet( Files );
+
+			RemoveTempTracks(TempTracks);
+
+			// Remove the CD-Text file.
+			if (pAudioText != NULL)
+				ckcore::File::remove(pAudioText);
+		}
+	} LocalData;
+	
+
+	int iProjectType = g_ProjectManager.GetProjectType();
+	int iResult = 0;
+
 
 	// Make sure that the disc will not be ejected before beeing verified.
 	bool bEject = g_BurnImageSettings.m_bEject;
@@ -63,403 +111,321 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 	// Used for locating the files on the disc when verifying.
 	std::map<tstring,tstring> FilePathMap;
 
-	// Files to burn.
-	ckfilesystem::FileSet Files;
-
-	try
+	switch (iProjectType)
 	{
-		switch (iProjectType)
-		{
-			case PROJECTTYPE_DATA:
-				g_TreeManager.GetPathList(Files,g_TreeManager.GetRootNode());
-				break;
+		case PROJECTTYPE_DATA:
+			g_TreeManager.GetPathList(LocalData.Files,g_TreeManager.GetRootNode());
+			break;
 
-			case PROJECTTYPE_MIXED:
-				g_TreeManager.GetPathList(Files,g_ProjectManager.GetMixDataRootNode(),
-					lstrlen(g_ProjectManager.GetMixDataRootNode()->pItemData->GetFileName()) + 1);
-				break;
+		case PROJECTTYPE_MIXED:
+			g_TreeManager.GetPathList(LocalData.Files,g_ProjectManager.GetMixDataRootNode(),
+				lstrlen(g_ProjectManager.GetMixDataRootNode()->pItemData->GetFileName()) + 1);
+			break;
 
-			case PROJECTTYPE_AUDIO:
-				// Audio discs do not have files to burn.
-				break;
+		case PROJECTTYPE_AUDIO:
+			// Audio discs do not have files to burn.
+			break;
 
-			default:
-				ATLASSERT(false);
-				ckfilesystem::DestroyFileSet( Files );
-				return 0;
-		};
+		default:
+			ATLASSERT(false);
+			return 0;
+	};
 
 
-		if (iProjectType == PROJECTTYPE_DATA ||
-			iProjectType == PROJECTTYPE_MIXED)
+	if (iProjectType == PROJECTTYPE_DATA ||
+		iProjectType == PROJECTTYPE_MIXED)
+	{
+		// Set the status information.
+		g_pProgressDlg->SetWindowText(lngGetString(STITLE_PREPOPERATION));
+		g_pProgressDlg->SetDevice(_T(""));
+		g_pProgressDlg->set_status(lngGetString(STATUS_GATHER_FILE_INFO));
+
+		// Create a temporary disc image if not burning on the fly.
+		if (!g_BurnImageSettings.m_bOnFly)
 		{
 			// Set the status information.
-			g_pProgressDlg->SetWindowText(lngGetString(STITLE_PREPOPERATION));
-			g_pProgressDlg->SetDevice(_T(""));
-			g_pProgressDlg->set_status(lngGetString(STATUS_GATHER_FILE_INFO));
+			g_pProgressDlg->SetWindowText(lngGetString(STITLE_CREATEIMAGE));
+			g_pProgressDlg->SetDevice(lngGetString(PROGRESS_IMAGEDEVICE));
+			g_pProgressDlg->set_status(lngGetString(STATUS_WRITEIMAGE));
 
-			// Create a temporary disc image if not burning on the fly.
-			if (!g_BurnImageSettings.m_bOnFly)
+			g_pProgressDlg->notify(ckcore::Progress::ckINFORMATION,lngGetString(PROGRESS_BEGINDISCIMAGE));
+
+			iResult = g_Core2.CreateImage(LocalData.ImageFile.name().c_str(),LocalData.Files,*g_pProgressDlg,
+										  true,g_BurnImageSettings.m_bVerify ? &FilePathMap : NULL);
+			g_pProgressDlg->set_progress(100);
+
+			switch (iResult)
 			{
-				// Set the status information.
-				g_pProgressDlg->SetWindowText(lngGetString(STITLE_CREATEIMAGE));
-				g_pProgressDlg->SetDevice(lngGetString(PROGRESS_IMAGEDEVICE));
-				g_pProgressDlg->set_status(lngGetString(STATUS_WRITEIMAGE));
+				case RESULT_OK:
+					g_pProgressDlg->notify(ckcore::Progress::ckINFORMATION,lngGetString(SUCCESS_CREATEIMAGE));
+					break;
 
-				g_pProgressDlg->notify(ckcore::Progress::ckINFORMATION,lngGetString(PROGRESS_BEGINDISCIMAGE));
-
-				iResult = g_Core2.CreateImage(ImageFile.name().c_str(),Files,*g_pProgressDlg,
-											  true,g_BurnImageSettings.m_bVerify ? &FilePathMap : NULL);
-				g_pProgressDlg->set_progress(100);
-
-				switch (iResult)
-				{
-					case RESULT_OK:
-						g_pProgressDlg->notify(ckcore::Progress::ckINFORMATION,lngGetString(SUCCESS_CREATEIMAGE));
-						break;
-
-					case RESULT_CANCEL:
-						g_pProgressDlg->NotifyCompleted();
-
-						ImageFile.remove();
-						ckfilesystem::DestroyFileSet( Files );
-						return 0;
-
-					case RESULT_FAIL:
-						g_pProgressDlg->set_status(lngGetString(PROGRESS_FAILED));
-						g_pProgressDlg->notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_CREATEIMAGE));
-						g_pProgressDlg->NotifyCompleted();
-
-						ImageFile.remove();
-						ckfilesystem::DestroyFileSet( Files );
-						return 0;
-
-					default:
-						ATLASSERT( false );
-				};
-			}
-		}
-
-		g_pProgressDlg->set_progress(0);
-
-		ckmmc::Device &Device = *g_BurnImageSettings.m_pRecorder;
-
-		// Set the status information.
-		g_pProgressDlg->SetWindowText(lngGetString(STITLE_BURNCOMPILATION));
-		g_pProgressDlg->SetDevice(Device);
-
-		std::vector<TCHAR *> AudioTracks;
-		std::vector<TCHAR *> TempTracks;
-		const TCHAR *pAudioText = NULL;
-
-		// Decode any encoded tracks in audio and mixed-mode projects.
-		g_pProgressDlg->set_status(lngGetString(PROGRESS_DECODETRACKS));
-		switch (iProjectType)
-		{
-			case PROJECTTYPE_MIXED:
-			case PROJECTTYPE_AUDIO:
-				g_ProjectManager.GetAudioTracks(AudioTracks);
-
-				// Decode any audio tracks that might be encoded.
-				if (!g_ProjectManager.DecodeAudioTracks(AudioTracks,TempTracks,g_pProgressDlg))
-				{
+				case RESULT_CANCEL:
 					g_pProgressDlg->NotifyCompleted();
-
-					// Remove any temporary tracks.
-					for (unsigned int i = 0; i < TempTracks.size(); i++)
-					{
-						ckcore::File::remove(TempTracks[i]);
-
-						std::vector <TCHAR *>::iterator itObject = TempTracks.begin() + i;
-						delete [] *itObject;
-					}
-
-					TempTracks.clear();
-					ckfilesystem::DestroyFileSet( Files );
 					return 0;
-				}
-				break;
 
-			case PROJECTTYPE_DATA:
-				// No audio tracks to decode.
-				break;
-
-			default:
-				ATLASSERT( false );
-		}
-
-		// Start the burn process.
-		for (long i = 0; i < g_BurnImageSettings.m_lNumCopies; i++)
-		{
-			bool bLast = i == (g_BurnImageSettings.m_lNumCopies - 1);
-			g_pProgressDlg->set_status(lngGetString(PROGRESS_INIT));
-			switch (iProjectType)
-			{
-				case PROJECTTYPE_DATA:
-					if (g_BurnImageSettings.m_bOnFly)
-					{
-						// Try to estimate the file system size before burning the compilation.
-						unsigned __int64 uiDataSize = 0;
-						g_pProgressDlg->set_status(lngGetString(PROGRESS_ESTIMAGESIZE));
-
-						iResult = g_Core2.EstimateImageSize(Files,*g_pProgressDlg,uiDataSize);
-
-						g_pProgressDlg->set_progress(100);
-
-						if (iResult == RESULT_OK)
-						{
-							// Reset the status.
-							g_pProgressDlg->set_status(lngGetString(PROGRESS_INIT));
-
-							if (g_BurnImageSettings.m_bVerify || !bLast)
-							{
-								iResult = (int)g_Core.BurnCompilationEx(Device,g_pProgressDlg,*g_pProgressDlg,Files,
-									AudioTracks,NULL,g_ProjectSettings.m_iIsoFormat,uiDataSize);
-							}
-							else
-							{
-								iResult = (int)g_Core.BurnCompilation(Device,g_pProgressDlg,*g_pProgressDlg,Files,
-									AudioTracks,NULL,g_ProjectSettings.m_iIsoFormat,uiDataSize);
-							}
-						}
-						else if (iResult == RESULT_FAIL)
-						{
-							g_pProgressDlg->notify(ckcore::Progress::ckERROR,lngGetString(ERROR_ESTIMAGESIZE));
-						}
-					}
-					else
-					{
-						if (g_BurnImageSettings.m_bVerify || !bLast)
-						{
-							iResult = (int)g_Core.BurnTracksEx(Device,g_pProgressDlg,ImageFile.name().c_str(),
-								AudioTracks,NULL,g_ProjectSettings.m_iIsoFormat);
-						}
-						else
-						{
-							iResult = (int)g_Core.BurnTracks(Device,g_pProgressDlg,ImageFile.name().c_str(),
-								AudioTracks,NULL,g_ProjectSettings.m_iIsoFormat);
-						}
-					}
-					break;
-
-				case PROJECTTYPE_MIXED:
-					// Save CD-Text information.
-					if (AudioTracks.size() > 0)
-					{
-						// Check if any audio information has been edited.
-						if (g_TreeManager.HasExtraAudioData(g_ProjectManager.GetMixAudioRootNode()))
-						{
-							ckcore::File AudioTextFile = ckcore::File::temp(g_GlobalSettings.m_szTempPath,
-																			ckT("InfraRecorder"));
-
-							if (g_ProjectManager.SaveCDText(AudioTextFile.name().c_str()))
-								pAudioText = AudioTextFile.name().c_str();
-							else
-								lngMessageBox(HWND_DESKTOP,FAILURE_CREATECDTEXT,GENERAL_ERROR,MB_OK | MB_ICONERROR);
-						}
-					}
-
-					if (g_BurnImageSettings.m_bOnFly)
-					{
-						// Try to estimate the file system size before burning the compilation.
-						unsigned __int64 uiDataSize = 0;
-						g_pProgressDlg->set_status(lngGetString(PROGRESS_ESTIMAGESIZE));
-
-						iResult = g_Core2.EstimateImageSize(Files,*g_pProgressDlg,uiDataSize);
-
-						g_pProgressDlg->set_progress(100);
-
-						if (iResult == RESULT_OK)
-						{
-							// Reset the status.
-							g_pProgressDlg->set_status(lngGetString(PROGRESS_INIT));
-
-							if (g_BurnImageSettings.m_bVerify || !bLast)
-							{
-								iResult = (int)g_Core.BurnCompilationEx(Device,g_pProgressDlg,*g_pProgressDlg,Files,
-									AudioTracks,pAudioText,g_ProjectSettings.m_iIsoFormat,uiDataSize);
-							}
-							else
-							{
-								iResult = (int)g_Core.BurnCompilation(Device,g_pProgressDlg,*g_pProgressDlg,Files,
-									AudioTracks,pAudioText,g_ProjectSettings.m_iIsoFormat,uiDataSize);
-							}
-						}
-						else if (iResult == RESULT_FAIL)
-						{
-							g_pProgressDlg->notify(ckcore::Progress::ckERROR,lngGetString(ERROR_ESTIMAGESIZE));
-						}
-					}
-					else
-					{
-						if (g_BurnImageSettings.m_bVerify || !bLast)
-						{
-							iResult = (int)g_Core.BurnTracksEx(Device,g_pProgressDlg,ImageFile.name().c_str(),
-								AudioTracks,pAudioText,g_ProjectSettings.m_iIsoFormat);
-						}
-						else
-						{
-							iResult = (int)g_Core.BurnTracks(Device,g_pProgressDlg,ImageFile.name().c_str(),
-								AudioTracks,pAudioText,g_ProjectSettings.m_iIsoFormat);
-						}
-					}
-					break;
-
-				case PROJECTTYPE_AUDIO:
-					// Save CD-Text information.
-					if (AudioTracks.size() > 0)
-					{
-						// Check if any audio information has been edited.
-						if (g_TreeManager.HasExtraAudioData(g_TreeManager.GetRootNode()))
-						{
-							ckcore::File AudioTextFile = ckcore::File::temp(g_GlobalSettings.m_szTempPath,
-																			ckT("InfraRecorder"));
-
-							if (g_ProjectManager.SaveCDText(AudioTextFile.name().c_str()))
-								pAudioText = AudioTextFile.name().c_str();
-							else
-								lngMessageBox(HWND_DESKTOP,FAILURE_CREATECDTEXT,GENERAL_ERROR,MB_OK | MB_ICONERROR);
-						}
-					}
-
-					if (bLast)
-					{
-						iResult = (int)g_Core.BurnTracks(Device,g_pProgressDlg,NULL,
-							AudioTracks,pAudioText,0);
-					}
-					else
-					{
-						iResult = (int)g_Core.BurnTracksEx(Device,g_pProgressDlg,NULL,
-							AudioTracks,pAudioText,0);
-					}
-					break;
+				case RESULT_FAIL:
+					g_pProgressDlg->set_status(lngGetString(PROGRESS_FAILED));
+					g_pProgressDlg->notify(ckcore::Progress::ckERROR,lngGetString(FAILURE_CREATEIMAGE));
+					g_pProgressDlg->NotifyCompleted();
+					return 0;
 
 				default:
 					ATLASSERT( false );
 			};
+		}
+	}
 
-			// Handle the result.
-			if (!iResult)
+	g_pProgressDlg->set_progress(0);
+
+	ckmmc::Device &Device = *g_BurnImageSettings.m_pRecorder;
+
+	// Set the status information.
+	g_pProgressDlg->SetWindowText(lngGetString(STITLE_BURNCOMPILATION));
+	g_pProgressDlg->SetDevice(Device);
+
+	std::vector<TCHAR *> AudioTracks;
+
+	// Decode any encoded tracks in audio and mixed-mode projects.
+	g_pProgressDlg->set_status(lngGetString(PROGRESS_DECODETRACKS));
+	switch (iProjectType)
+	{
+		case PROJECTTYPE_MIXED:
+		case PROJECTTYPE_AUDIO:
+			g_ProjectManager.GetAudioTracks(AudioTracks);
+
+			// Decode any audio tracks that might be encoded.
+			if (!g_ProjectManager.DecodeAudioTracks(AudioTracks,LocalData.TempTracks,g_pProgressDlg))
 			{
-				g_pProgressDlg->set_status(lngGetString(PROGRESS_CANCELED));
-				g_pProgressDlg->notify(ckcore::Progress::ckWARNING,lngGetString(PROGRESS_CANCELED));
 				g_pProgressDlg->NotifyCompleted();
-
-				lngMessageBox(HWND_DESKTOP,FAILURE_CDRTOOLS,GENERAL_ERROR,MB_OK | MB_ICONERROR);
-				ckfilesystem::DestroyFileSet( Files );
 				return 0;
 			}
-			else if (iResult == RESULT_OK)
-			{
-				// If the recording was successfull, verify the disc.
-				if (g_BurnImageSettings.m_bVerify)
-				{
-					// We need to reload the drive media.
-					g_pProgressDlg->set_status(lngGetString(PROGRESS_RELOADMEDIA));
+			break;
 
-					g_Core2.StartStopUnit(Device,CCore2::LOADMEDIA_EJECT,false);
-					if (!g_Core2.StartStopUnit(Device,CCore2::LOADMEDIA_LOAD,false))
-						lngMessageBox(*g_pProgressDlg,INFO_RELOAD,GENERAL_INFORMATION,MB_OK | MB_ICONINFORMATION);
+		case PROJECTTYPE_DATA:
+			// No audio tracks to decode.
+			break;
 
-					// Set the device information.
-					g_pProgressDlg->SetDevice(Device);
-					g_pProgressDlg->set_status(lngGetString(PROGRESS_INIT));
-					g_pProgressDlg->SetWindowText(lngGetString(STITLE_VERIFYDISC));
+		default:
+			ATLASSERT( false );
+	}
 
-					// Get the device drive letter.
-					TCHAR szDriveLetter[3];
-					szDriveLetter[0] = Device.address().device_[0];
-					szDriveLetter[1] = ':';
-					szDriveLetter[2] = '\0';
-
-					// Validate the project files.
-					g_ProjectManager.VerifyCompilation(g_pProgressDlg,szDriveLetter,FilePathMap);
-
-					// We're done.
-					g_pProgressDlg->set_progress(100);
-					g_pProgressDlg->set_status(lngGetString(PROGRESS_DONE));
-					g_pProgressDlg->NotifyCompleted();
-				}
-
-				// Eject the disc if requested.
-				if (bEject)
-					g_Core.EjectDisc(Device,false);
-			}
-
-			if (!bLast)
-			{
-				g_pProgressDlg->set_progress(0);
-
-				if (!g_pProgressDlg->RequestNextDisc())
-				{
-					g_pProgressDlg->NotifyCompleted();
-					break;
-				}
-
-				TCHAR szBuffer[128];
-				lsprintf(szBuffer,lngGetString(INFO_CREATECOPY),
-					i + 2,
-					g_BurnImageSettings.m_lNumCopies);
-				g_pProgressDlg->notify(ckcore::Progress::ckINFORMATION,szBuffer);
-			}
-		}
-
-		// Remove temporary data.
+	// Start the burn process.
+	for (long i = 0; i < g_BurnImageSettings.m_lNumCopies; i++)
+	{
+		bool bLast = i == (g_BurnImageSettings.m_lNumCopies - 1);
+		g_pProgressDlg->set_status(lngGetString(PROGRESS_INIT));
 		switch (iProjectType)
 		{
 			case PROJECTTYPE_DATA:
-				if (!g_BurnImageSettings.m_bOnFly)
-					ImageFile.remove();
+				if (g_BurnImageSettings.m_bOnFly)
+				{
+					// Try to estimate the file system size before burning the compilation.
+					unsigned __int64 uiDataSize = 0;
+					g_pProgressDlg->set_status(lngGetString(PROGRESS_ESTIMAGESIZE));
+
+					iResult = g_Core2.EstimateImageSize(LocalData.Files,*g_pProgressDlg,uiDataSize);
+
+					g_pProgressDlg->set_progress(100);
+
+					if (iResult == RESULT_OK)
+					{
+						// Reset the status.
+						g_pProgressDlg->set_status(lngGetString(PROGRESS_INIT));
+
+						if (g_BurnImageSettings.m_bVerify || !bLast)
+						{
+							iResult = (int)g_Core.BurnCompilationEx(Device,g_pProgressDlg,*g_pProgressDlg,LocalData.Files,
+								AudioTracks,NULL,g_ProjectSettings.m_iIsoFormat,uiDataSize);
+						}
+						else
+						{
+							iResult = (int)g_Core.BurnCompilation(Device,g_pProgressDlg,*g_pProgressDlg,LocalData.Files,
+								AudioTracks,NULL,g_ProjectSettings.m_iIsoFormat,uiDataSize);
+						}
+					}
+					else if (iResult == RESULT_FAIL)
+					{
+						g_pProgressDlg->notify(ckcore::Progress::ckERROR,lngGetString(ERROR_ESTIMAGESIZE));
+					}
+				}
+				else
+				{
+					if (g_BurnImageSettings.m_bVerify || !bLast)
+					{
+						iResult = (int)g_Core.BurnTracksEx(Device,g_pProgressDlg,LocalData.ImageFile.name().c_str(),
+							AudioTracks,NULL,g_ProjectSettings.m_iIsoFormat);
+					}
+					else
+					{
+						iResult = (int)g_Core.BurnTracks(Device,g_pProgressDlg,LocalData.ImageFile.name().c_str(),
+							AudioTracks,NULL,g_ProjectSettings.m_iIsoFormat);
+					}
+				}
 				break;
 
 			case PROJECTTYPE_MIXED:
-				if (!g_BurnImageSettings.m_bOnFly)
-					ImageFile.remove();
-
-				// Remove any temporary tracks.
-				for (unsigned int i = 0; i < TempTracks.size(); i++)
+				// Save CD-Text information.
+				if (AudioTracks.size() > 0)
 				{
-					ckcore::File::remove(TempTracks[i]);
+					// Check if any audio information has been edited.
+					if (g_TreeManager.HasExtraAudioData(g_ProjectManager.GetMixAudioRootNode()))
+					{
+						ckcore::File AudioTextFile = ckcore::File::temp(g_GlobalSettings.m_szTempPath,
+																		ckT("InfraRecorder"));
 
-					std::vector <TCHAR *>::iterator itObject = TempTracks.begin() + i;
-					delete [] *itObject;
+						if (g_ProjectManager.SaveCDText(AudioTextFile.name().c_str()))
+							LocalData.pAudioText = AudioTextFile.name().c_str();
+						else
+							lngMessageBox(HWND_DESKTOP,FAILURE_CREATECDTEXT,GENERAL_ERROR,MB_OK | MB_ICONERROR);
+					}
 				}
 
-				TempTracks.clear();
+				if (g_BurnImageSettings.m_bOnFly)
+				{
+					// Try to estimate the file system size before burning the compilation.
+					unsigned __int64 uiDataSize = 0;
+					g_pProgressDlg->set_status(lngGetString(PROGRESS_ESTIMAGESIZE));
 
-				// Remove the CD-Text file.
-				if (pAudioText != NULL)
-					ckcore::File::remove(pAudioText);
+					iResult = g_Core2.EstimateImageSize(LocalData.Files,*g_pProgressDlg,uiDataSize);
+
+					g_pProgressDlg->set_progress(100);
+
+					if (iResult == RESULT_OK)
+					{
+						// Reset the status.
+						g_pProgressDlg->set_status(lngGetString(PROGRESS_INIT));
+
+						if (g_BurnImageSettings.m_bVerify || !bLast)
+						{
+							iResult = (int)g_Core.BurnCompilationEx(Device,g_pProgressDlg,*g_pProgressDlg,LocalData.Files,
+								AudioTracks,LocalData.pAudioText,g_ProjectSettings.m_iIsoFormat,uiDataSize);
+						}
+						else
+						{
+							iResult = (int)g_Core.BurnCompilation(Device,g_pProgressDlg,*g_pProgressDlg,LocalData.Files,
+								AudioTracks,LocalData.pAudioText,g_ProjectSettings.m_iIsoFormat,uiDataSize);
+						}
+					}
+					else if (iResult == RESULT_FAIL)
+					{
+						g_pProgressDlg->notify(ckcore::Progress::ckERROR,lngGetString(ERROR_ESTIMAGESIZE));
+					}
+				}
+				else
+				{
+					if (g_BurnImageSettings.m_bVerify || !bLast)
+					{
+						iResult = (int)g_Core.BurnTracksEx(Device,g_pProgressDlg,LocalData.ImageFile.name().c_str(),
+							AudioTracks,LocalData.pAudioText,g_ProjectSettings.m_iIsoFormat);
+					}
+					else
+					{
+						iResult = (int)g_Core.BurnTracks(Device,g_pProgressDlg,LocalData.ImageFile.name().c_str(),
+							AudioTracks,LocalData.pAudioText,g_ProjectSettings.m_iIsoFormat);
+					}
+				}
 				break;
 
 			case PROJECTTYPE_AUDIO:
-				// Remove any temporary tracks.
-				for (unsigned int i = 0; i < TempTracks.size(); i++)
+				// Save CD-Text information.
+				if (AudioTracks.size() > 0)
 				{
-					ckcore::File::remove(TempTracks[i]);
+					// Check if any audio information has been edited.
+					if (g_TreeManager.HasExtraAudioData(g_TreeManager.GetRootNode()))
+					{
+						ckcore::File AudioTextFile = ckcore::File::temp(g_GlobalSettings.m_szTempPath,
+																		ckT("InfraRecorder"));
 
-					std::vector <TCHAR *>::iterator itObject = TempTracks.begin() + i;
-					delete [] *itObject;
+						if (g_ProjectManager.SaveCDText(AudioTextFile.name().c_str()))
+							LocalData.pAudioText = AudioTextFile.name().c_str();
+						else
+							lngMessageBox(HWND_DESKTOP,FAILURE_CREATECDTEXT,GENERAL_ERROR,MB_OK | MB_ICONERROR);
+					}
 				}
 
-				TempTracks.clear();
-
-				// Remove the CD-Text file.
-				if (pAudioText != NULL)
-					ckcore::File::remove(pAudioText);
+				if (bLast)
+				{
+					iResult = (int)g_Core.BurnTracks(Device,g_pProgressDlg,NULL,
+						AudioTracks,LocalData.pAudioText,0);
+				}
+				else
+				{
+					iResult = (int)g_Core.BurnTracksEx(Device,g_pProgressDlg,NULL,
+						AudioTracks,LocalData.pAudioText,0);
+				}
 				break;
 
 			default:
 				ATLASSERT( false );
+		};
+
+		// Handle the result.
+		if (!iResult)
+		{
+			g_pProgressDlg->set_status(lngGetString(PROGRESS_CANCELED));
+			g_pProgressDlg->notify(ckcore::Progress::ckWARNING,lngGetString(PROGRESS_CANCELED));
+			g_pProgressDlg->NotifyCompleted();
+
+			lngMessageBox(HWND_DESKTOP,FAILURE_CDRTOOLS,GENERAL_ERROR,MB_OK | MB_ICONERROR);
+			return 0;
+		}
+
+		if (iResult == RESULT_OK)
+		{
+			// If the recording was successfull, verify the disc.
+			if (g_BurnImageSettings.m_bVerify)
+			{
+				// We need to reload the drive media.
+				g_pProgressDlg->set_status(lngGetString(PROGRESS_RELOADMEDIA));
+
+				g_Core2.StartStopUnit(Device,CCore2::LOADMEDIA_EJECT,false);
+				if (!g_Core2.StartStopUnit(Device,CCore2::LOADMEDIA_LOAD,false))
+					lngMessageBox(*g_pProgressDlg,INFO_RELOAD,GENERAL_INFORMATION,MB_OK | MB_ICONINFORMATION);
+
+				// Set the device information.
+				g_pProgressDlg->SetDevice(Device);
+				g_pProgressDlg->set_status(lngGetString(PROGRESS_INIT));
+				g_pProgressDlg->SetWindowText(lngGetString(STITLE_VERIFYDISC));
+
+				// Get the device drive letter.
+				TCHAR szDriveLetter[3];
+				szDriveLetter[0] = Device.address().device_[0];
+				szDriveLetter[1] = ':';
+				szDriveLetter[2] = '\0';
+
+				// Validate the project files.
+				g_ProjectManager.VerifyCompilation(g_pProgressDlg,szDriveLetter,FilePathMap);
+
+				// We're done.
+				g_pProgressDlg->set_progress(100);
+				g_pProgressDlg->set_status(lngGetString(PROGRESS_DONE));
+				g_pProgressDlg->NotifyCompleted();
+			}
+
+			// Eject the disc if requested.
+			if (bEject)
+				g_Core.EjectDisc(Device,false);
+		}
+
+		if (!bLast)
+		{
+			g_pProgressDlg->set_progress(0);
+
+			if (!g_pProgressDlg->RequestNextDisc())
+			{
+				g_pProgressDlg->NotifyCompleted();
+				break;
+			}
+
+			TCHAR szBuffer[128];
+			lsprintf(szBuffer,lngGetString(INFO_CREATECOPY),
+				i + 2,
+				g_BurnImageSettings.m_lNumCopies);
+			g_pProgressDlg->notify(ckcore::Progress::ckINFORMATION,szBuffer);
 		}
 	}
-	catch ( ... )
-	{
-		ckfilesystem::DestroyFileSet( Files );
-		throw;
-	}
 
-	ckfilesystem::DestroyFileSet( Files );
 	return 0;
 }
 

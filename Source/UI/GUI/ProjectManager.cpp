@@ -85,7 +85,6 @@ bool CProjectManager::CFileTransaction::AddDataFile(CProjectNode *pParentNode,co
 
 	// Increase the total length counter.
 	g_ProjectManager.m_pSpaceMeter->IncreaseAllocatedSize(pItemData->uiSize);
-	g_ProjectManager.m_pSpaceMeter->ForceRedraw();
 
 	return true;
 }
@@ -143,7 +142,6 @@ CItemData *CProjectManager::CFileTransaction::
 
 	// Increase the total length counter.
 	g_ProjectManager.m_pSpaceMeter->IncreaseAllocatedSize(pItemData->uiSize);
-	g_ProjectManager.m_pSpaceMeter->ForceRedraw();
 
 	return pItemData;
 }
@@ -318,7 +316,6 @@ bool CProjectManager::CFileTransaction::
 
 	// Increase the total length counter.
 	g_ProjectManager.m_pSpaceMeter->IncreaseAllocatedSize(pItemData->uiSize);
-	g_ProjectManager.m_pSpaceMeter->ForceRedraw();
 	return true;
 }
 
@@ -757,7 +754,6 @@ void CProjectManager::NewDataProject(int iDiscMedia)
 		m_pSpaceMeter->SetDiscSize(m_iProjectMedia);
 
 		m_pSpaceMeter->SetAllocatedSize(0);
-		m_pSpaceMeter->ForceRedraw();
 	}
 
 	// Project settings.
@@ -798,7 +794,6 @@ void CProjectManager::NewAudioProject(int iDiscMedia)
 		m_pSpaceMeter->SetDisplayMode(PROJECTVIEWTYPE_AUDIO);
 		m_pSpaceMeter->SetDiscSize(m_iProjectMedia);
 		m_pSpaceMeter->SetAllocatedSize(0);
-		m_pSpaceMeter->ForceRedraw();
 	}
 
 	// Project settings.
@@ -854,7 +849,6 @@ void CProjectManager::NewMixedProject(int iDiscMedia)
 		m_pSpaceMeter->SetDisplayMode(PROJECTVIEWTYPE_DATA);
 		m_pSpaceMeter->SetDiscSize(m_iProjectMedia);
 		m_pSpaceMeter->SetAllocatedSize(0);
-		m_pSpaceMeter->ForceRedraw();
 	}
 
 	// Project settings.
@@ -1045,7 +1039,6 @@ void CProjectManager::RemoveFile(CProjectNode *pParentNode,CItemData *pItemData)
 {
 	// Update the space meter.
 	m_pSpaceMeter->DecreaseAllocatedSize(pItemData->uiSize);
-	m_pSpaceMeter->ForceRedraw();
 
 	// Remove the items.
 	g_TreeManager.RemoveEntry(pParentNode,pItemData);
@@ -1076,8 +1069,6 @@ void CProjectManager::ListRemoveSel()
 		else
 			m_pSpaceMeter->DecreaseAllocatedSize(pItemData->uiSize);
 
-		m_pSpaceMeter->ForceRedraw();
-
 		// Remove the items.
 		g_TreeManager.RemoveEntry(g_TreeManager.GetCurrentNode(),pItemData);
 
@@ -1098,7 +1089,6 @@ void CProjectManager::TreeRemoveNode(CProjectNode *pNode)
 
 	// Update the space meter.
 	m_pSpaceMeter->DecreaseAllocatedSize(g_TreeManager.GetNodeSize(pNode));
-	m_pSpaceMeter->ForceRedraw();
 
 	// Remove the node.
 	g_TreeManager.RemoveEntry(pNode);

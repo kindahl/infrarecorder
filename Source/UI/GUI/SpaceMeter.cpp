@@ -25,6 +25,7 @@
 #include "SpaceMeter.h"
 
 CSpaceMeter::CSpaceMeter()
+	: m_bIsUpdatePending( false )
 {
 	m_iMeterPosition = 0;
 	m_iMeterSegmentSpacing = 0;
@@ -460,6 +461,38 @@ void CSpaceMeter::SetAllocatedSize(unsigned __int64 uiAllocatedSize)
 {
 	m_uiAllocatedSize = uiAllocatedSize;
 
+	RequestDelayedUpdate();
+}
+
+void CSpaceMeter::IncreaseAllocatedSize(unsigned __int64 uiSize)
+{
+	SetAllocatedSize(m_uiAllocatedSize + uiSize);
+}
+
+void CSpaceMeter::DecreaseAllocatedSize(unsigned __int64 uiSize)
+{
+	SetAllocatedSize(m_uiAllocatedSize - uiSize);
+}
+
+void CSpaceMeter::RequestDelayedUpdate()
+{
+	if ( m_bIsUpdatePending )
+		return;
+
+	ATLVERIFY( 0 != PostMessage( WMU_SPACE_METER_DELAYED_UPDATE, 0, 0 ) );
+
+	m_bIsUpdatePending = true;
+}
+
+
+LRESULT CSpaceMeter::OnDelayedUpdate(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
+{
+	ATLASSERT( uMsg == WMU_SPACE_METER_DELAYED_UPDATE );
+	ATLASSERT( wParam == 0 );
+	ATLASSERT( lParam == 0 );
+	
+	m_bIsUpdatePending = false;
+
 	if (m_uiAllocatedSize > m_uiMeterSize)
 		m_iDrawState = SPACEMETER_DRAWSTATE_OUTOFSCOPE;
 	else if (m_uiAllocatedSize > m_uiDiscSize)
@@ -485,16 +518,14 @@ void CSpaceMeter::SetAllocatedSize(unsigned __int64 uiAllocatedSize)
 
 	// Finally update the tooltip text buffer.
 	UpdateToolTip();
-}
 
-void CSpaceMeter::IncreaseAllocatedSize(unsigned __int64 uiSize)
-{
-	SetAllocatedSize(m_uiAllocatedSize + uiSize);
-}
+	// Trigger a repaint.
+	RECT rcSpaceMeter;
+	GetClientRect(&rcSpaceMeter);
+	InvalidateRect(&rcSpaceMeter,true);
 
-void CSpaceMeter::DecreaseAllocatedSize(unsigned __int64 uiSize)
-{
-	SetAllocatedSize(m_uiAllocatedSize - uiSize);
+	bHandled = true;
+	return 0;  // Return value unused.
 }
 
 unsigned __int64 CSpaceMeter::GetAllocatedSize()
@@ -505,14 +536,6 @@ unsigned __int64 CSpaceMeter::GetAllocatedSize()
 void CSpaceMeter::SetDisplayMode(int iDisplayMode)
 {
 	m_iDisplayMode = iDisplayMode;
-}
-
-void CSpaceMeter::ForceRedraw()
-{
-	RECT rcSpaceMeter;
-	GetClientRect(&rcSpaceMeter);
-
-	InvalidateRect(&rcSpaceMeter,true);
 }
 
 void CSpaceMeter::Initialize()
@@ -649,7 +672,6 @@ LRESULT CSpaceMeter::OnPopupMenuClick(UINT uNotifyCode,int nID,CWindow wnd)
 		SetDiscSize(nID + SPACEMETER_POPUPMENU_COUNT);
 	
 	SetAllocatedSize(m_uiAllocatedSize);
-	ForceRedraw();
 
 	return 0;
 }
