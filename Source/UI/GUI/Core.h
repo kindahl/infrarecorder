@@ -28,9 +28,12 @@
 #define CORE_PRINT_UNSUPERRORMESSAGES		// Should we print unhandled/unsupported messages to the log window?
 #define CORE_DVD_SUPPORT					// Is DVD recording supported in this version?
 
-#define RESULT_INTERNALERROR		0
-#define RESULT_OK					1
-#define RESULT_EXTERNALERROR		2
+enum eBurnResult
+{
+	BURNRESULT_OK			 = 0,
+	BURNRESULT_INTERNALERROR = -1,
+	BURNRESULT_EXTERNALERROR = -2
+};
 
 #ifdef CDRKIT
 #define CORE_WRITEAPP				"wodim.exe"
@@ -184,28 +187,28 @@ public:
 	bool BurnTracks(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 		const TCHAR *szDataTrack,std::vector<TCHAR *> &AudioTracks,
 		const TCHAR *szAudioText,int iDataMode);
-	int BurnTracksEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,
+	eBurnResult BurnTracksEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 		const TCHAR *szDataTrack,std::vector<TCHAR *> &AudioTracks,
 		const TCHAR *szAudioText,int iDataMode);
 	bool ReadDataTrack(ckmmc::Device &Device,CAdvancedProgress *pProgress,const TCHAR *szFileName,
 		unsigned int uiTrackNumber,unsigned long ulStartSector,unsigned long ulEndSector);
-	int ReadDataTrackEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,const TCHAR *szFileName,
+	eBurnResult ReadDataTrackEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,const TCHAR *szFileName,
 		unsigned int uiTrackNumber,unsigned long ulStartSector,unsigned long ulEndSector);
 	bool ReadAudioTrack(ckmmc::Device &Device,CAdvancedProgress *pProgress,const TCHAR *szFileName,
 		unsigned int uiTrackNumber);
-	int ReadAudioTrackEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,const TCHAR *szFileName,
+	eBurnResult ReadAudioTrackEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,const TCHAR *szFileName,
 		unsigned int uiTrackNumber);
 	bool ScanTrack(ckmmc::Device &Device,CAdvancedProgress *pProgress,unsigned int uiTrackNumber,
 		unsigned long ulStartSector,unsigned long ulEndSector);
-	int ScanTrackEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,unsigned int uiTrackNumber,
+	eBurnResult ScanTrackEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,unsigned int uiTrackNumber,
 		unsigned long ulStartSector,unsigned long ulEndSector);
 	bool CopyDisc(ckmmc::Device &SrcDevice,ckmmc::Device &DstDevice,CAdvancedProgress *pProgress);
 	bool ReadDisc(ckmmc::Device &Device,CAdvancedProgress *pProgress,const TCHAR *szFileName);
-	int ReadDiscEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,const TCHAR *szFileName);
+	eBurnResult ReadDiscEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,const TCHAR *szFileName);
 	bool BurnCompilation(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 		ckcore::Progress &Progress,const ckfilesystem::FileSet &Files,std::vector<TCHAR *> &AudioTracks,
 		const TCHAR *szAudioText,int iMode,unsigned __int64 uiDataBytes);
-	int BurnCompilationEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,ckcore::Progress &Progress,
+	eBurnResult BurnCompilationEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,ckcore::Progress &Progress,
 		const ckfilesystem::FileSet &Files,std::vector<TCHAR *> &AudioTracks,
 		const TCHAR *szAudioText,int iMode,unsigned __int64 uiDataBytes);
 	ckcore::tstring CdrtoolsVersion();

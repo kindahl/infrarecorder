@@ -1626,20 +1626,20 @@ bool CCore::BurnTracks(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 	allows for more operations to be performed in the same progress window. It
 	also has extra return values.
 */
-int CCore::BurnTracksEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,
+eBurnResult CCore::BurnTracksEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 						const TCHAR *szDataTrack,std::vector<TCHAR *> &AudioTracks,
 						const TCHAR *szAudioText,int iDataMode)
 {
 	if (!BurnTracks(Device,pProgress,szDataTrack,AudioTracks,szAudioText,
 					iDataMode,MODE_BURNIMAGEEX,true))
 	{
-		return RESULT_INTERNALERROR;
+		return BURNRESULT_INTERNALERROR;
 	}
 
 	ckcore::tuint32 uiExitCode = 0;
 	exit_code(uiExitCode);
 
-	return uiExitCode == 0 ? RESULT_OK : RESULT_EXTERNALERROR;
+	return uiExitCode == 0 ? BURNRESULT_OK : BURNRESULT_EXTERNALERROR;
 	//return m_bOperationRes ? RESULT_OK : RESULT_EXTERNALERROR;
 }
 
@@ -1706,21 +1706,21 @@ bool CCore::ReadDataTrack(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 						 ulStartSector,ulEndSector,MODE_READDATATRACK,true);
 }
 
-int CCore::ReadDataTrackEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,
+eBurnResult CCore::ReadDataTrackEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 						   const TCHAR *szFileName,unsigned int uiTrackNumber,
 						   unsigned long ulStartSector,unsigned long ulEndSector)
 {
 	if (!ReadDataTrack(Device,pProgress,szFileName,uiTrackNumber,ulStartSector,
 					   ulEndSector,MODE_READDATATRACKEX,true))
 	{
-		return RESULT_INTERNALERROR;
+		return BURNRESULT_INTERNALERROR;
 	}
 
 	ckcore::tuint32 uiExitCode = 0;
 	exit_code(uiExitCode);
 
-	return uiExitCode == 0 ? RESULT_OK : RESULT_EXTERNALERROR;
-	//return m_bOperationRes ? RESULT_OK : RESULT_EXTERNALERROR;
+	return uiExitCode == 0 ? BURNRESULT_OK : BURNRESULT_EXTERNALERROR;
+	//return m_bOperationRes ? BURNRESULT_OK : BURNRESULT_EXTERNALERROR;
 }
 
 /*
@@ -1778,20 +1778,20 @@ bool CCore::ReadAudioTrack(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 	return ReadAudioTrack(Device,pProgress,szFileName,uiTrackNumber,
 						  MODE_READAUDIOTRACK,true);
 }
-int CCore::ReadAudioTrackEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,const TCHAR *szFileName,
+eBurnResult CCore::ReadAudioTrackEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,const TCHAR *szFileName,
 							unsigned int uiTrackNumber)
 {
 	if (!ReadAudioTrack(Device,pProgress,szFileName,uiTrackNumber,
 						MODE_READAUDIOTRACKEX,true))
 	{
-		return RESULT_INTERNALERROR;
+		return BURNRESULT_INTERNALERROR;
 	}
 
 	ckcore::tuint32 uiExitCode = 0;
 	exit_code(uiExitCode);
 
-	return uiExitCode == 0 ? RESULT_OK : RESULT_EXTERNALERROR;
-	//return m_bOperationRes ? RESULT_OK : RESULT_EXTERNALERROR;
+	return uiExitCode == 0 ? BURNRESULT_OK : BURNRESULT_EXTERNALERROR;
+	//return m_bOperationRes ? BURNRESULT_OK : BURNRESULT_EXTERNALERROR;
 }
 
 /*
@@ -1848,20 +1848,20 @@ bool CCore::ScanTrack(ckmmc::Device &Device,CAdvancedProgress *pProgress,unsigne
 					 MODE_SCANTRACK,true);
 }
 
-int CCore::ScanTrackEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,unsigned int uiTrackNumber,
+eBurnResult CCore::ScanTrackEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,unsigned int uiTrackNumber,
 					   unsigned long ulStartSector,unsigned long ulEndSector)
 {
 	if (!ScanTrack(Device,pProgress,uiTrackNumber,ulStartSector,ulEndSector,
 				   MODE_SCANTRACKEX,true))
 	{
-		return RESULT_INTERNALERROR;
+		return BURNRESULT_INTERNALERROR;
 	}
 
 	ckcore::tuint32 uiExitCode = 0;
 	exit_code(uiExitCode);
 
-	return uiExitCode == 0 ? RESULT_OK : RESULT_EXTERNALERROR;
-	//return m_bOperationRes ? RESULT_OK : RESULT_EXTERNALERROR;
+	return uiExitCode == 0 ? BURNRESULT_OK : BURNRESULT_EXTERNALERROR;
+	//return m_bOperationRes ? BURNRESULT_OK : BURNRESULT_EXTERNALERROR;
 }
 
 /*
@@ -2198,16 +2198,16 @@ bool CCore::ReadDisc(ckmmc::Device &Device,CAdvancedProgress *pProgress,const TC
 	return ReadDisc(Device,pProgress,szFileName,MODE_READDISC,false);
 }
 
-int CCore::ReadDiscEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,const TCHAR *szFileName)
+eBurnResult CCore::ReadDiscEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,const TCHAR *szFileName)
 {
 	if (!ReadDisc(Device,pProgress,szFileName,MODE_READDISCEX,true))
-		return RESULT_INTERNALERROR;
+		return BURNRESULT_INTERNALERROR;
 
 	ckcore::tuint32 uiExitCode = 0;
 	exit_code(uiExitCode);
 
-	return uiExitCode == 0 ? RESULT_OK : RESULT_EXTERNALERROR;
-	//return m_bOperationRes ? RESULT_OK : RESULT_EXTERNALERROR;
+	return uiExitCode == 0 ? BURNRESULT_OK : BURNRESULT_EXTERNALERROR;
+	//return m_bOperationRes ? BURNRESULT_OK : BURNRESULT_EXTERNALERROR;
 }
 
 DWORD WINAPI CCore::CreateCompImageThread(LPVOID lpThreadParameter)
@@ -2524,7 +2524,7 @@ bool CCore::BurnCompilation(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 						   szAudioText,iMode,uiDataBytes,MODE_BURNIMAGE);
 }
 
-int CCore::BurnCompilationEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,
+eBurnResult CCore::BurnCompilationEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 							 ckcore::Progress &Progress,const ckfilesystem::FileSet &Files,
 							 std::vector<TCHAR *> &AudioTracks,const TCHAR *szAudioText,
 							 int iMode,unsigned __int64 uiDataBytes)
@@ -2532,12 +2532,12 @@ int CCore::BurnCompilationEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 	if (!BurnCompilation(Device,pProgress,Progress,Files,AudioTracks,szAudioText,
 						 iMode,uiDataBytes,MODE_BURNIMAGEEX))
 	{
-		return RESULT_INTERNALERROR;		
+		return BURNRESULT_INTERNALERROR;		
 	}
 
 	ckcore::tuint32 uiExitCode = 0;
 	exit_code(uiExitCode);
 
-	return uiExitCode == 0 ? RESULT_OK : RESULT_EXTERNALERROR;
-	//return m_bOperationRes ? RESULT_OK : RESULT_EXTERNALERROR;
+	return uiExitCode == 0 ? BURNRESULT_OK : BURNRESULT_EXTERNALERROR;
+	//return m_bOperationRes ? BURNRESULT_OK : BURNRESULT_EXTERNALERROR;
 }
