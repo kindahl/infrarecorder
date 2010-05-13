@@ -98,7 +98,7 @@ bool CEraseDlg::InitRecorderMedia()
 
 	ckmmc::Device &Device =
 		*reinterpret_cast<ckmmc::Device *>(m_RecorderCombo.GetItemData(
-										  m_RecorderCombo.GetCurSel()));
+										   m_RecorderCombo.GetCurSel()));
 
 	Device.refresh();
 
