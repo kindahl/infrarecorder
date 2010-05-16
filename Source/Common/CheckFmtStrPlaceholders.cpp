@@ -55,7 +55,7 @@ void CFmtStrPlaceholderAnalysis::InsertPlaceholder(
     ATLASSERT(uPlaceholderStrLen > 0);
 
     if (uPlaceholderPos < 1 || uPlaceholderPos > MAX_PARAM_POSITION)
-        throw ckcore::Exception2(SlowFormatStr( _T("Invalid placeholder number %u."),uPlaceholderPos).c_str());
+        throw ckcore::Exception2(ckcore::string::formatstr( _T("Invalid placeholder number %u."),uPlaceholderPos).c_str());
 
     if (m_uPlaceholderCount > 0)
     {
@@ -81,7 +81,7 @@ void CFmtStrPlaceholderAnalysis::InsertPlaceholder(
     // the extra complication that would add to this testing class. Fortunately,
 	// this feature is rarely used.
     if (!plh->m_Placeholder.empty())
-        throw ckcore::Exception2(SlowFormatStr(_T("Placeholder %u already used."),uPlaceholderPos).c_str());
+        throw ckcore::Exception2(ckcore::string::formatstr(_T("Placeholder %u already used."),uPlaceholderPos).c_str());
     
     plh->m_Placeholder.insert(plh->m_Placeholder.begin(),
                               szPlaceholderStr,szPlaceholderStr + uPlaceholderStrLen);
@@ -322,7 +322,7 @@ void CFmtStrPlaceholderAnalysis::AnalyzeFormatString(const ckcore::tchar * const
     for (unsigned i = 0; i < m_uPlaceholderCount; ++i)
     {
         if (m_Placeholders[i] == NULL || m_Placeholders[i]->m_Placeholder.empty())
-            throw ckcore::Exception2(SlowFormatStr(_T("Positional argument %u not referenced in the format string."),i + 1).c_str());
+            throw ckcore::Exception2(ckcore::string::formatstr(_T("Positional argument %u not referenced in the format string."),i + 1).c_str());
     }
 }
 
@@ -349,10 +349,10 @@ void CFmtStrPlaceholderAnalysis::ComparePlaceholderAnalyses(const CFmtStrPlaceho
         if (plh1->m_Placeholder != plh2->m_Placeholder)
         {
             throw ckcore::Exception2(
-                    SlowFormatStr(_T("Placeholder number %u in the second string (\"%s\") differs from the corresponding one in the first string (\"%s\")."),
-                                  i + 1,
-                                  plh2->m_Placeholder.c_str(),
-                                  plh1->m_Placeholder.c_str()).c_str());
+                    ckcore::string::formatstr(_T("Placeholder number %u in the second string (\"%s\") differs from the corresponding one in the first string (\"%s\")."),
+                                              i + 1,
+                                              plh2->m_Placeholder.c_str(),
+                                              plh1->m_Placeholder.c_str()).c_str());
         }
     }
 }

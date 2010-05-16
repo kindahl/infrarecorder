@@ -112,7 +112,7 @@ ckcore::tstring lngSlowFormatStr(const eStringTable TranslatedFormatStr,...)
 	va_list Args;
 	va_start(Args,TranslatedFormatStr);
 
-	SlowFormatStrV(Result,lngGetString(TranslatedFormatStr),Args);
+	ckcore::string::vformatstr(Result,lngGetString(TranslatedFormatStr),Args);
 
 	va_end(Args);
     return Result;

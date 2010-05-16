@@ -87,7 +87,7 @@ static int SaveEnglishStrings(const TCHAR * const szFileName)
 			if (szEnglishStr[0] == _T('\0'))
 				continue;
 
-			ckcore::tstring Str = SlowFormatStr(_T("0x%04x=%s%s"),i,szEnglishStr,CRLF);
+			ckcore::tstring Str = ckcore::string::formatstr(_T("0x%04x=%s%s"),i,szEnglishStr,CRLF);
 			WriteString(File,Str.c_str());
 		}
 

@@ -1468,7 +1468,7 @@ bool CTreeManager::LoadNodeFileData(CXmlProcessor *pXml,CProjectNode *pRootNode)
 		// Check that the file exist.
 		if (!(iFlags & PROJECTITEM_FLAG_ISFOLDER) && !ckcore::File::exist(szFullName))
 		{
-			MessageBox(*g_pMainFrame,SlowFormatStr(lngGetString(WARNING_MISSPROJFILE),szFullName).c_str(),
+			MessageBox(*g_pMainFrame,ckcore::string::formatstr(lngGetString(WARNING_MISSPROJFILE),szFullName).c_str(),
 					   lngGetString(GENERAL_WARNING),MB_OK | MB_ICONWARNING);
 
 			pXml->LeaveElement();
@@ -1586,7 +1586,7 @@ bool CTreeManager::LoadNodeAudioData(CXmlProcessor *pXml,CProjectNode *pRootNode
 		// Check that the file exist.
 		if (!ckcore::File::exist(szFullName))
 		{
-			MessageBox(*g_pMainFrame,SlowFormatStr(lngGetString(WARNING_MISSPROJFILE),szFullName).c_str(),
+			MessageBox(*g_pMainFrame,ckcore::string::formatstr(lngGetString(WARNING_MISSPROJFILE),szFullName).c_str(),
 					   lngGetString(GENERAL_WARNING),MB_OK | MB_ICONWARNING);
 
 			pXml->LeaveElement();
