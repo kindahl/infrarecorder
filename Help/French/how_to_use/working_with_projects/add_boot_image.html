@@ -1,0 +1,46 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="fr"><head><meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type">
+
+<title>Ajouter une image de boot</title><link rel="stylesheet" media="screen" type="text/css" href="../../style.css">
+<script type="text/javascript" language="JavaScript" src="../../stylescript.js"></script></head>
+<body scroll="no">
+<div id="header">
+	<div id="location">Comment faire ?, Travail en projet.</div>
+	<div id="topic">Ajouter une image de boot</div>
+</div>
+<div id="content">
+	<p>Plusieurs options peuvent être définies lorsque vous ajoutez une image de boot à votre projet.</p>
+	<h2>Chemin local</h2>
+	<p>Dans ce champs, vous devez spécifié le chemin local de l'image de boot sélectionnée.
+	   Le chemin est relatif à la racine du disque. Par exemple: /boot/
+	   va créer un répertoire appelé boot à la racine du disque qui contiendra le fichier sélectionné.</p>
+	<h2>Type d'émulation</h2>
+	<p>Cette
+option vous permet de choisir un type d'émulation pour un disque
+bootable de type&nbsp;"El Torino". Si l'émulation choisie est de type <span style="font-style: italic;">disquette</span>, la taille du fichier image de boot doit être exactement la même que celle d'une disquette de&nbsp;<em></em>1200, 1440 ou 2880 Ko.
+	   Si l'émulation est de type <span style="font-style: italic;">disque dur</span>,
+l'image de boot doit impérativement commencer avec un MBR (Section de
+boot principale du disque) qui contient une seule partition. Si aucune
+émulation n'est définie, le système chargera et executera l'image de
+boot sans aucune émulation disque.</p>
+	<h2>Options avancées</h2>
+	<p>L'option <span style="font-style: italic;">Faire une image non bootable</span>
+vous permet d'empêcher de booter sur le CD/DVD. Le système emulera un
+disque à partir l'image de boot sur le CD/DVD, mais bootera sur son
+disque de boot standard.</p>
+	<p>Enabling the <em>Write boot-info-table to the image</em> option will cause
+	   the boot image to be patched at offset 8 with a 54-byte table containing
+	   information about the disc layout. If this option is enabled the local
+	   boot image that you have specified will be patched, so make sure that you
+	   have a backup of this file if it can't be easily regenerated.</p>
+	<p>Le champ <em>Segment </em><em>boot load </em>vous
+permet de définir une adresse de démarrage (en hexadécimale) dans le
+cas où aucune émulation pour les disques bootable "El Torito" discs.</p>
+	<p>Le champ&nbsp; <em>Taille du boot load</em>
+vous permet de définir le nombre de secteurs virtuels (512 octets) à
+charger dans le cas où aucune émulation n'est définie. Il est
+recommandé de charger la totalité du fichier de boot. Certains BIOS sur
+les cartes mère peuvent avoir des problèmes si la taille du boot load
+n'est pas un multiple de 4.</p>
+</div>
+</body></html>

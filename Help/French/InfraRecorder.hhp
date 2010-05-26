@@ -1,0 +1,15 @@
+[OPTIONS]
+Compatibility=1.1 or later
+Compiled file=French.chm
+Contents file=InfraRecorderFR.hhc
+Default topic=infra_recorder\introduction.html
+Display compile progress=No
+Full text search stop list file=fr.stp
+Full-text search=Yes
+Index file=InfraRecorderFR.hhk
+Language=0x809 English (United Kingdom)
+Title=Aide InfraRecorder
+
+
+[INFOTYPES]
+

@@ -1,0 +1,48 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="fr"><head><meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type">
+
+<title>Foire aux Questions</title><link rel="stylesheet" media="screen" type="text/css" href="../style.css">
+<script type="text/javascript" language="JavaScript" src="../stylescript.js"></script></head>
+<body scroll="no">
+<div id="header">
+	<div id="location">InfraRecorder</div>
+	<div id="topic">Foire aux Questions</div>
+</div>
+<div id="content">
+	<p>Pour une liste de questions plus à jour, visitez le site
+	   <a href="http://infrarecorder.org">http://infrarecorder.org</a>.</p>
+	<p><strong>InfraRecorder ne reconnait pas mon graveur. Comment puis-je résoudre le problème ?</strong><br>Il
+s'agit bien souvent d'un problème de permission. Par défaut,
+InfraRecorder utilise une interface appelée SPTI pour accéder aux
+péripharique de gravure. Avec Windows 200, XP et 2003, une permission
+administrateur est requise pour accéder aux périphériques SPTI.</p>
+	<p>Si
+vous souhaitez autoriser aux comptes restreints l'accès au
+périphériques SPTI, vous devez procéder comme suit en étant
+administrateur :</p>
+	<ol>
+	    <li><span>A partir du menu "Démarrer" appelez la commande "Executer".</span></li>
+	    <li><span>Tapez la commande&nbsp;"secpol.msc" (sans les guillemets) et cliquez sur le bouton OK.</span></li>
+	    <li><span>Naviguez dans "Stratégies locale" puis "Options de sécurité".</span></li>
+	    <li><span>Changez
+la stratégie "Périphérique : ne permettre l'accès au CD-ROM qu'aux
+utilisateurs connectés localement" de "Désactivé" en "Activé".</span></li>
+	</ol>
+	<p>Notez
+que certaines versions de Windows (comme Windows XP par exemple) n'ont
+pas de gestionnaire de stratégie "secpol.msc". Dans ce cas, vous devrez
+procéder comme suit en tant qu'administrateur :</p>
+	<ol>
+	    <li><span>A partir du menu "Démarrer" appelez la commande "Executer".</span></li>
+	    <li><span>Tapez la commande&nbsp;"regedit" (sans les guillemets) et cliquez sur le bouton OK.</span></li>
+	    <li><span>Naviguez au sein de l'arborescence "HKEY_LOCAL_MACHINE", "SOFTWARE", "Microsoft",
+	              "Windows NT", "CurrentVersion" et "Winlogon"&nbsp;</span></li>
+	    <li><span>Double
+cliquez sur la valeur de type REG_SZ appelée&nbsp;"allocatecdroms",
+puis rentrez la valeur "1" (sans les guillemets). with the value "1"
+(without the quotes). &nbsp;Si la valeur n'existe pas, vous pouvez la
+créer en cliquant droit, et en suivant le menu "Nouveau&gt;Valeur
+chaîne" avec le nom&nbsp;</span><span>"allocatecdroms", et la valeur "1".</span></li>
+	</ol>
+</div>
+</body></html>

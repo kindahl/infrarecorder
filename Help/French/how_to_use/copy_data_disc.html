@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="fr"><head><meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type">
+
+<title>Copie de disques de données</title><link rel="stylesheet" media="screen" type="text/css" href="../style.css">
+<script type="text/javascript" language="JavaScript" src="../stylescript.js"></script></head>
+<body scroll="no">
+<div id="header">
+	<div id="location">Comment faire ?</div>
+	<div id="topic">Copie de disques de données</div>
+</div>
+<div id="content">
+	<p>Veuillez noter que cette page contient des
+informations sur la marche à suivre pour copier une CD/DVD de données.
+Si vous souhaitez copier un CD audio (ce qui est une procédure
+complètement différente) référez-vous à cette <a href="copy_audio_disc.html">section</a>.</p>
+	<p>Si vous souhaitez copier un disque de données, vous avez deux options qui sont : Voulez-vous
+copier le disque vers un autre disque (par exemple d'un lecteur CD vers
+un graveur CD) ou vers une image disque sur votre disque dur.</p>
+	<h1>Copier vers un autre disque</h1>
+	<dl>
+		<dt>Pour copier un disque directement, utilisez le menu :</dt>
+		<dd><strong>Actions <img src="../images/arrow.png"> Copier le disque <img src="../images/arrow.png"> d'un disque compact...</strong></dd>
+		<dt>ou le bouton de la barre d'outil :</dt>
+		<dd><img src="../images/button_copy.bmp"></dd>
+	</dl>
+	<h2>Source</h2>
+	<p>Sélectionnez le lecteur contenant le CD/DVD que vous souhaitez copier.</p>
+	<h2>Destination</h2>
+	<p>Sélectionnez
+le graveur qui contient le CD/DVD vierge sur lequel sera gravé la
+copie. Si la destination est la même que la source, vous ne pourrez pas
+faire de copie à la volée.</p>
+	<h2>A la volée</h2>
+	<p>L'écriture <em>à la volée</em>
+signifie que les données seront lues du lecteur source et écrites
+directement sur le graveur de destination sans passer par un fichier
+tampon sur votre disque dur (seule une petite quantité de mémoire
+tampon sera allouée). Si votre lecteur source échoue à la lecture de
+certains secteurs de votre disque source, il pourrait ne pas être
+capable d'alimenter assez rapidement le graveur de detination, ce qui
+provoquerait des erreurs d'écriture sur le disque de destination.
+Cependant, la plupart des graveur récent offre des protections de chute
+du tampon à 0 qui devrait protèger le disque de destination si cela
+devait se produire.</p>
+	<p>Si l'option <em>A la volée</em> est
+invalidée, une image temporaire du disque sera créée sur votre disque
+dur. A l'issue de cette opération, l'image disque temporaire sera alors
+gravée sur le disque de destination. Cette opération nécessitera plus
+d'espace disponible sur votre disque dur, mais sera plus sécurisante
+pour l'écriture des données.</p>
+	<h2>Cloner le disque</h2>
+	<p>Lorsque
+cette option est validée, tous les sous-canaux de données ainsi que la
+table d'allocation complète (TOC) du disque source seront également
+copiés sur le disque cible. Cette option doit être valide si vous
+copiez un disque en mode mixte, sans quoi, seule la piste de données
+sera copié. Il est recommandé de copier la destination en mode raw96r.
+Si cette méthode n'est pas supportée par votre graveur, essayez de
+spécifier une méthode d'écriture raw16.</p>
+	<h2>Options de lecture</h2>
+	<p>Les options de lecture sont décrites dans cette <a href="read_options.html">section</a>.</p>
+	<h2>Autres options</h2>
+	<p>Les autres options sont décrites dans cette <a href="burn_options.html">section</a>.</p>
+	<hr>
+	<h1>Copier vers une image disque</h1>
+	<dl>
+		<dt>Pour copier un disque dans un fichier image sur votre disque dur, utilisez le menu :</dt>
+		<dd><strong>Actions <img src="../images/arrow.png">&nbsp;</strong><strong>Copier le disque</strong><strong> <img src="../images/arrow.png"> sur une image disque...</strong></dd>
+	</dl>
+	<h2>Source</h2>
+	<p>Sélectionnez le lecteur source qui contient le CD/DVD que vous souhaitez copier.</p>
+	<h2>Fichier image</h2>
+	<p>Spécifiez
+l'emplacement et le nom du fichier image. Notez que la taille du
+fichier qui sera écrit sur le disque dur sera de la taille du CD/DVD à
+copier. Vous devez donc vous assurer qu'il y a assez de place sur votre
+disque dur.</p><h2>Options de lecture</h2>
+	<p>Les options de lecture sont décrites dans cette <a href="read_options.html">section</a>.</p></div>
+</body></html>

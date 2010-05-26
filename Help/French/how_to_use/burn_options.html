@@ -1,0 +1,166 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="fr"><head><meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type">
+
+<title>Options de gravure</title><link rel="stylesheet" media="screen" type="text/css" href="../style.css">
+<script type="text/javascript" language="JavaScript" src="../stylescript.js"></script></head>
+<body scroll="no">
+<div id="header">
+	<div id="location">Comment faire ?</div>
+	<div id="topic">Options de gravure</div>
+</div>
+<div id="content">
+	<p>Cette section concerne les options de gravure
+qui peuvent être appelées de plusieurs endroit dans InfraRecorder. Par
+exemple, lorsque vous souhaitez votre propre compilation, une image
+disque ou faire une copie d'un disque.</p>
+	<p>Bien que ces options soient accessibles dans différents contextes, l'interface se présente toujours de la même manière :</p>
+	<p><img style="width: 367px; height: 420px;" alt="" src="../images/screenshot_burn.png"></p>
+	<h1>Paramètres généraux</h1>
+	<h2>A la volée</h2>
+	<p>Lorsqu'on
+grave à la volée, tout le système de fichiers sera généré au moment de
+la gravure, ce qui peut augmenter le risque d'erreur d'écriture. Si
+cette option est invalidée, une image temporaire du disque sera générée
+sur le disque dur, puis enregistrée sur le disque à graver. Par défaut,
+cette option est invalide. Elle ne devrait être validé que si vous
+manquez d'espace sur votre disque dur.</p>
+	<h2>Vérifier le disque après écriture</h2>
+	<p>En
+validant cette option, InfraRecorder effectuera une comparaison CRC
+entre les fichiers sources sur votre disque dur, et les fichiers cibles
+qui se trouvent sur le disque qui vient d'être gravé afin de s'assurer
+qu'aucune erreur d'écriture ne s'est produite sur le disque.</p>
+	<h2>Vitesse d'écriture</h2>
+	<p>Sélectionne la vitesse de gravure sur le disque. En sélectionnant l'option <em>
+	   Maximum</em>, la vitesse la plus haute supportée par le disque ou la graveur sera utilisée.</p>
+	<h2>Méthode d'écriture</h2>
+	<p>Cette
+option sélectionne la méthode d'écriture utilisée lors de la gravure du
+disque. Seules les méthodes supportées par votre graveur seront listées.</p>
+	<p><em>Session-At-Once (SAO)</em>
+appelé aussi Disc-At-Once (DAO) , cette méthode écrit toutes les
+données (lead-in et lead-out inclus) en une seule passe. Sans autoriser
+aucune interruption dans le flux de données. Aucune session ou données
+ne peuvent être ajoutées ultérieurement sur le disque. Notez que les
+DVD doivent obligatoirement être gravés suivant cette méthode.</p>
+	<p><em>Track-At-Once (TAO)</em>
+écrit chaque piste indépendemment ce qui requiert des blocs de lien
+entre deux pistes. Les anciens graveurs créent souvent une pause de
+deux secondes entre les piste (appelé pregap) alors que les graveurs
+les plus récents autorisent un ajustement de la durée du pregap (voir
+l'option décrite plus bas).</p>
+	<p><em>TAO pregap zéro</em> utilise
+la méthode&nbsp;Track-At-Once décrite plus haut en essayant de définir
+une durée de pregap à zéro en réduisant au maximum le nombre de blocs
+de lien entre&nbsp; deux pistes.</p>
+	<p><em>Ecriture directe (raw96r)</em>
+écrit les données brutes en utilisant des secteurs de 2352 octets plus
+96 octets du sous canal P-W créant ainsi des secteur de 2448 octets. Il
+s'agit de la méthode la plus courante d'écriture en direct car le
+contrôle de l'écriture sur le CD est bien plus fiable.</p>
+	<p><em>Ecriture directe</em><em>&nbsp;(raw16)</em> écrit
+les données brutes en utilisant des secteurs de 2352 octets plus 16
+octets du sous canal P-Q créant ainsi des secteur de 2368 octets. Cette
+méthode sera utilisé si un graveur ne supporte pas l'écriture directe
+(raw96r). Cette méthode d'écriture ne prendra pas en charge les CD-Text.</p>
+	<p><em>Ecriture directe</em><em>&nbsp;(raw96p)</em><em></em>
+écrit les données brutes en utilisant des secteurs de 2352
+octets plus 96 octets du sous canal P-W créant ainsi des secteur de
+2448 octets. Cette méthode est à éviter dans la mesure où peu de
+graveurs la supportent, et beaucoup de ces graveurs ont des bogues dans
+leur firmware. N'utilisez pas cette méthode sir votre graveur supporte l'écriture directe&nbsp;raw96r ou raw16.</p>
+	<p><font color="#ff0000">Important:
+Notez que l'écriture directe a un besoin de puissance processeur bien
+plus important que pour les autres méthodes. Si votre processeur est
+très lent, vous pouvez rencontrer des problèmes perte de mémoire tampon
+lors de la gravure.</font></p>
+	<h2>Autres options</h2>
+	<p>La validation de l'option&nbsp;<em>Simulation</em>
+va faire en sorte que Infrarecorder va effectuer les opérations
+demandés mais avec le laser du graveur éteint. Cette option est
+recommendé si vous souhaitez vous assurer que la gravure du projet se
+déroulera correctement ou pas.</p>
+	<p><em> Protection "</em><em>Buffer underrun"</em>
+est une focntionnalité présente sur les graveurs les plus récents qui
+autorise la poursuite de la gravure même si la mémoire tampon du
+graveur se vide complètement. Cette fonctionnalité peut avoir des noms
+différents suivant les marques d'équipement avec par exemple: Yamaha
+Lossless-Link, Sanyo BURN-Proof, Ricoh Just-Link, etc. Le nom le plus
+communément rencontré pour cette fonctionnalité est&nbsp;	BURN-Proof.
+	   </p>
+	<p>Si l'option <em>Complète les données des pistes (Pad data tracks)</em>
+est validé, 15 secteurs nulls seront écrit après chaque piste de
+données ou audio. Cette option sera utilisé dans le cas ou votre
+lecteur as des difficultés à lire les derniers secteurs d'une piste.
+Cette option est aussi utile dans le cas ou vous souhaitez utiliser le
+disque avec un système de fichier Linux ISO-9660 contenant un bogue dit
+"read ahead".</p><p>Si vous invalidez l'option <em>Finaliser le disque après écriture</em>,
+la dernière session (si vous utilisez le mode SAO) ou la dernière piste
+(dans le cas d'un mode TAO) ne sera pas fermée. Ceci peut s'avérer
+utile si vous souhaitez graver un CD en plusieurs étapes.</p>
+	<p><font color="#ff0000">Important: La création d'un disque non finalisé ne correspond pas à la création d'un disque multi-session.</font></p>
+	<hr>
+	<h1><a name="advanced">Paramètres avancés</a></h1>
+	<p>L'option&nbsp;<em>Autoriser l'overburning</em>
+permet de graver au dela de la taille officielle du média. Le fait est
+que la plupart des médias vierges peuvent supporter plus que leur
+taille officielle, car la zone allouée au "lead-out" est de 90 secondes
+(soit 6750 secteurs), et qu'un disque fonctionne avec seulement 150
+secteurs affectés au "lead-out". Les médias peuvent ainsi être
+surchargés d'au moins 88 secondes (6600 secteurs). Le majorité des
+graveur ne supporte l'overburning qu'en mode d'écriture SAO ou raw.
+Certains graveur ne vous autorisent pas non plus de surcharger le
+disque comme vous le souhaiteriez, et peuvent limiter la taille du
+disque. Ce problème peut cependant être contourné en gravant en mode
+raw, car dans ce cas, le graveur n'a aucune chance de connaître la
+taille du disque avant le lancement de la gravure. </p><p>Lorsque l'option <span style="font-style: italic;">Echanger l'ordre des octets</span> audio est validée, cela suppose que l'ordre des octets est inversé (little endian). Certains
+modèle de graveurs de Yamaha ou Sony par exemple ainsi que les graveurs
+utilisant les nouvelles interfaces&nbsp;SCSI-3/MMC on besoin d'un mode
+d'adressage des données audio de type little-endian, alors que les
+autres ont besoin que les données audio soit de type big-endian
+(réseau) normalement utiliser par le protocole SCSI. L'ordre
+d'adressage des données audio sera automatiquement détecté. La seule
+condition qui nécessite de valider cette option sera dans le cas d'un
+flux de données Intel (little-endian).</p>
+	<p><em>Ignorer la taille du média</em>
+peut être validée si vous souhaitez passez outre la taille connue du
+média. Cette option doit être utilisée avec précaution. Cette option
+implique un overburning.</p>
+	<p>L'option <em>Positionner le drapeau "SCSI IMMED"</em>
+va imposer un retour immédiat d'une commande SCSI pendant que l'action
+se déroule en arrière plan. Le bus SCSI sera ainsi disponible pour les
+autres périphériques qui s'y trouvent, ce qui évitera au système de se
+figer si le graveur ne répond pas immédiatement. Ceci peut être utile
+sur des vieux systèmes utilisant un disque dur ATAPI et un graveur sur
+le même bus, ou sur un système SCSI qui ne supporte pas le mode
+connecté/déconnecté. Ces systèmes se figerons lors de l'effacement ou
+la cloture d'un disque, ou lors du remplissage de la session avec la
+quantité mini de données. Notez que tous les graveurs supportent le
+drapeau IMMED.</p>
+	<p><em>Yamaha Audio Master Q. R.</em> est une
+fonctionnalité qui permet de créer des disques audio de haute qualité
+avec moins de problèmes de lecture dans les platines CD de salon. Sa
+mise en oeuvre est une variante du mode d'écriture SAO, c'est pourquoi
+vous n'aurez accès à cette option seulement si vous avez sélectionné le
+mode d'écriture session-at-once. Cette option ne fonctionne pas à
+toutes les vitesses de gravure, et n'autorise la même quantité de
+donnée qu'en mode standard à cause du fait que le sillon de gravure
+sera élargi. Si cette option est validé, un CD de 74 minutes verra sa
+capacité réduite à 63 minutes et un CD de 80 minutes descendra à 68
+minutes. Cette fonctionnalité fonctionne également avec les disques de
+données.</p>
+	<p>L'option <em>Forcespeed mode</em> force le graveur à
+utiliser la vitesse sélectionnée sans se soucier de la qualité du
+média. Normallement, le graveur est sensé connaître la vitesse de
+gravure maxi autorisée en fonction du média, et peut réduire la vitesse
+pour assurer la meilleure qualité de gravure. Utilisez cette option
+avec précaution et en connaissance de cause, car habituellement, le
+graveur sait très bien quel média peut être gravé à pleine vitesse.</p>
+	<p>L'option <em>Plextor VariRec write mode</em>
+autorise à l'utilisateur un léger ajustement de la puissance du laser.
+Si cette option est configuré correctement, cela peut réduire le
+jitter, ce qui donnera une meilleure qualité sonore, et diminuera les
+risques d'incompatibilité avec votre lecteur de salon. VariRec ne
+fonctionnne que si la vtesse de gravure est définie x4.</p>
+</div>
+</body></html>

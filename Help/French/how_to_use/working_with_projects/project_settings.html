@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="fr"><head><meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type">
+
+<title>Paramètres projet</title><link rel="stylesheet" media="screen" type="text/css" href="../../style.css">
+<script type="text/javascript" language="JavaScript" src="../../stylescript.js"></script></head>
+<body scroll="no">
+<div id="header">
+	<div id="location">Comment faire ?, Travail en projet.</div>
+	<div id="topic">Paramètres projet</div>
+</div>
+<div id="content">
+	<dl>
+		<dt>Cette section traite des paramètres du projet accessible par le menu:
+		    </dt>
+		<dd><strong>Fichier <img src="../../images/arrow.png"> Propriétés du projet...
+		    </strong></dd>
+	</dl>
+	<h1>Paramètres généraux</h1>
+	<p>Le
+seul paramètre général susceptible d'être modifié est l'étiquette du
+disque. L'étiquette soumise par défaut est basée sur la date et l'heure
+de création du projet. Notez que le nom de l'étiquette est soumis au
+même restriction que celui des fichiers du projet (voir la section <span style="font-style: italic;">Paramètres ISO</span> ci-dessous).
+	   </p>
+	<h1>Paramètres ISO</h1>
+	<h2>Niveau</h2>
+	<p>Cette
+option définit le niveau de conformité à la norme ISO qui définit la
+restriction sur le nom des fichier. Il y a trois niveau de restriction
+gérés par InfraRecorder:</p>
+	<ol>
+		<li><span>Le niveau 1 utilise
+des noms de fichier en format 8.3 (huit caractères avec trois
+caractères pour l'extension), en majuscule, chiffres et caractère
+souligné(underscore). Le nombre maximum de dossiers dans un chemin est
+de huit.</span></li>
+		<li><span>Le niveau 2 autorise des noms de fichiers jusqu'à 31 caractères.</span>
+		    </li>
+		<li><span>Le niveau 3 autorise la fragmentation des fichiers (principalement pour l'écriture par paquets, ou une gravure incrémentale).</span></li>
+		<li><span>Le
+niveau 4 n'existe pas vraiment, mais lorsqu'il est sélectionné, la
+norme&nbsp;ISO-9660:1999 (qui est la norme ISO-9660 version 2) est
+utilisée. Cette norme autorise des noms de fichier jusqu'à 207
+caractères, et la profondeur des chemins peut être supérieure à huit.</span></li>
+	</ol><h2>Format</h2>
+	<p>Cette option spécifie le format utilisé lorsqu'on grave un projet de disque de données. Le<em> Mode 1</em> &nbsp;is normally used when creating
+	   regular non multi-session discs while <em>Mode 2</em> should be used when
+	   creating multi-session discs. <em>Mode 1</em> allows 2048 bytes of data per
+	   sector, <em>Mode 2</em> allows 2336 bytes of data per sector (A CD-ROM
+	   sector is 2352 bytes large).</p>
+	<h2>Autres Options</h2>
+	<p>L'option <em>Utiliser les extensions de nom de fichier Joliet</em>
+ajoute des enregistrements de dossier Joliet dans le disque en plus du
+standard de nom de fichier ISO9660. L'extension Joliet est communément
+utilisée sur les sytèmes Windows, et permet des nom de fichier en
+format unicode avec une longueur maximum de 64 caractères.</p>
+	<p>Si cependant, vous souhaitez utiliser des nom de fichiers plus longs, validez l'option&nbsp;<em>Autoriser plus de&nbsp;64 caractères pour les noms de fichier Joliet</em>.
+Même si cela n'est pas pleinement compatible avec les spécifications
+Joliet, cela fonctionne. Le nombre maximum de caractères est alors
+étendu à 103 caractères.</p>L'option&nbsp;<em>Omettre les numéros de version des fichiers ISO9660</em> est explicite.
+	<p>Validez l'option <em>Utilser les extensions Rock Ridge</em>
+afin de générer des enrgistrement SUSP et RR utilisant le protocole
+Rock Ridge qui décrit en détail les fichiers du système de fichiers
+ISO9660.</p><h1>Champs</h1>
+	<p>Cette section contient des champs qui
+permettent de saisir les informations sur les personnes qui ont créées
+le projet du CD/DVD. Les champs <em>Editeur,&nbsp;</em><em>Preparateur</em>, <em>Système</em> et <em>Ensemble de Volumes</em>
+peuvent éditer directement, les autres champs contiennent souvent des
+nom de fichiers, ce qui limite leur longueur à 36 caractères.</p>
+	<h1>Audio</h1>
+	<p>Cette
+section permet de créer des information CD-Text. Le CD-Text est un
+format qui peut être supporté par certain lecteur CD audio, et qui
+permet d'afficher le nom de l'artiste et des chansons lorsque le disque
+est en lecture. Ces option ne sont valable que dans les projets en mode
+audio ou en mode mixte.</p>
+	<h1>Boot</h1>
+	<dl>
+		<dt>Cette section
+n'est disponible que dans les projets de données, et vous permet de
+spécifier jusqu'à 63 images de boot qui pourront être utilisées pour
+créer un CD/DVD bootable "El Torito". Pour ajouter une image de boot au
+projet, cliquez sur le bouton&nbsp;<em>Ajouter une nouvelle image de boot au projet</em> :</dt>
+		<dd><img src="../../images/button_add.bmp"></dd><dt>Référez-vous à la section <a href="add_boot_image.html">Ajouter une image de boot</a> pour plus d'information.</dt>
+	</dl></div>
+</body></html>

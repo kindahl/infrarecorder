@@ -1,0 +1,380 @@
+<html>
+<head>
+<title>What's New</title>
+<link rel="stylesheet" media="screen" type="text/css" href="../style.css">
+<script type="text/javascript" language="JavaScript" src="../stylescript.js"></script>
+</head>
+<body scroll="no">
+<div id="header">
+	<div id="location">InfraRecorder</div>
+	<div id="topic">What's New?</div>
+</div>
+<div id="content">
+	<p>Version 0.51.0.0</p>
+	<ul>
+		<li>Increased maximum FIFO buffer size from 128 MiB to 800 MiB.</li>
+		<li>Added context menu to explorer tree view.</li>
+		<li>InfraRecorder will now flash on the task bar when an operation has
+		    completed.</li>
+		<li>Added French translation of help file, thanks to Olivier Higelin!</li>
+	</ul>
+	<p>Version 0.50.0.0</p>
+	<ul>
+		<li>Relaxed default project ISO9660 settings.</li>
+		<li>Made progress dialogs resizable for easier reading.</li>
+		<li>Added wait cursors to time consuming operations.</li>
+		<li>Fixed bug causing failed operations to sometimes be reporeted as
+		    successful.</li>
+		<li>Fixed bug causing an error when verifying discs containing single
+		    character file or directory names.</li>
+		<li>Updated cdrtools to version 2.01.01a61.</li>
+		<li>Added support for displaying BluRay and HD-DVD capabilities.</li>
+		<li>Displayed OK button problem should now be gone.</li>
+		<li>Greatly improved device detection speed, devices are now always probed at
+		    startup.</li>
+		<li>Fixed a bug preventing boot images from being removed from projects.</li>
+		<li>Updated InfraRecorder projects not to store file size information that
+		    potentially could cause write errors.</li>
+		<li>Added safety net preventing non-recoverable read errors to affect
+		    integrity of other files during recording operation.</li>
+		<li>Updated InfraRecorder to lock files on hard drive during file system
+		    creation in order to avoid inconsistency errors.</li>
+		<li>Added support for importing data from file lists like M3U.</li>
+		<li>Added command line options for selecting default project and media
+		    type.</a>
+		<li>Fixed a bug causing projects opened by association not to be loaded if
+		    welcome screen was enabled.</li>
+		<li>Added support for using Ctrl+A in the track secion to select all
+		    tracks.</li>
+		<li>The drive letter is now displayed with the name of all CD/DVD
+		    devices.</li>
+		<li>Renamed disc fixation to disc closing.</li>
+		<li>Fixed bugs related to drive letter detection.</li>
+	</ul>
+	<p>Version 0.46.2.0</p>
+	<ul>
+		<li>Fixed a bug causing the disc file system creation process to hang on some
+		    systems (for real this time).</li>
+		<li>Fixed a bug causing a custom temporary directory not to be used.</li>
+		<li>Fixed a start-up maximization bug.</li>
+	</ul>
+	<p>Version 0.46.1.0</p>
+	<ul>
+		<li>Fixed a bug causing the disc file system creation process to hang on some
+		    systems.</li>
+	</ul>
+	<p>Version 0.46.0.0</p>
+	<ul>
+		<li>Minor bugfixes and updates.</li>
+		<li>Added support for recording multiple copies.</li>
+		<li>Added a welcome screen to the InfraRecorder main application and removed
+		    the express application.</li>
+		<li>Solved a bug causing the OK button not to be enabled after erasing or
+		    formatting a disc.
+		<li>Moved all source code to GPL version 3.</li>
+		<li>Removed cdrtools binaries in favor of cdrkit binaries.</li>
+		<li>Improved device detection routines, there should not be any more problems
+		    with wrongly detected drive letters.</li>
+		<li>Included an Indonesian translation, thanks to Andhika Padmawan!</li>
+		<li>Included a Chuvash translation, thanks to Vladimir Kozhevnikov!</li>
+		<li>Fixed a bug causing the express application and shell extension not to be
+		    translated.</li>
+		<li>Updated the portable version of InfraRecorder to store its log files in
+		    the program directory instead of in the the application data folder.</li>
+	</ul>
+	<p>Version 0.45.0.0</p>
+	<ul>
+		<li>Updated cdrtools to version 2.01.01a38.</li>
+		<li>Fixed a bug making InfraRecorder crash when trying to move a folder to
+		    itself.</li>
+		<li>Fixed a bug causing the wrong folder to be opened when double-clicking in
+		    the project list view when a project contained folders with identical
+		    names.</li>
+		<li>Fixed a bug causing the focus not to be returned to the OK button in the
+		    progress dialog after performing an operation.</li>
+		<li>Fixed icon rendering error on Windows XP and newer where display depth is
+		    lower than 32-bits.</li>
+		<li>Changed the option to verify the device configuration at start up to be
+		    enabled by default.</li>
+		<li>Added support for associating InfraRecorder with disc images.</li>
+		<li>Updated the some of the dialog windows to be minimizable and visible on
+		    the task bar when launced by an external application (like irExpress).</li>
+		<li>Fixed a bug causing incorrect file names to be used when verifying
+		    recorded discs.</li>
+		<li>Added functionallity to rename and remove files from imported sessions.</li>
+		<li>Added support for selecting which multi-session track to import.</li>
+		<li>When trying to record to a non-empty rewritable disc, InfraRecorder now
+		    asks if the disc should be erased.</li>
+		<li>When performing an operation the progress is now also displayed in the
+		    taskbar.</li>
+		<li>Reduced memory usage when dealing with projects.</li>
+		<li>Fixed a bug making it impossible to open saved projects containing no
+		    files.</li>
+		<li>Included a Thai translation, thanks to Prasit Kaephukhieo!</li>
+		<li>Improved compatibility with the ISO9660 standard.</li>
+		<li>Added support for creating UDF-only file systems.</li>
+		<li>Added support for Unicode files names in Joliet extension and UDF file
+		    system.</li>
+		<li>Added support for fragmented files in ISO9660 level 3. Files larger than
+		    4 GiB can now be recorded to an ISO9660 file system.</li>
+		<li>Removed mkisofs and isoinfo dependencies.</li>
+		<li>Fixed some bugs related to importing disc sessions.</li>
+		<li>Added properties menu item when right-clicking on the project tree root
+		    node.</li>
+		<li>Added proper flagging of hidden files in the disc file system.</li>
+		<li>Changed the default write method for multi-session projects to TAO.</li>
+		<li>Fixed a bug causing InfraRecorder to crash when renaming project files to
+		    include slash or backslash characters.</li>
+		<li>Added the .img extension to the list of supported disc image extensions.</li>
+		<li>A few cosmetic changes.</li>
+		<li>Included an Arabic translation, thanks to Circoficus!</li>
+		<li>Included a Greek translation, thanks to ”Ù·Ï‹ÙÈÔÚ «. ”Ù·Ï·Ù›ÎÎÔÚ!</li>
+	</ul>
+	<p>Version 0.44.1.0</p>
+	<ul>
+		<li>Introduced alternate ways of fetching recorder write speeds. This solves
+		    the &quot;disabled OK button problem&quot;.</li>
+		<li>Added support for reloading laptop drives (drives that can not
+		    automatically load themselves) before starting the disc verification
+		    process.</li>
+		<li>Corrected a version display error in the log system.</li>
+	</ul>
+	<p>Version 0.44.0.0</p>
+	<ul>
+		<li>Added a warning message when disabling disc fixation since some users
+		    believes that this will create a multi-session disc.</li>
+		<li>It's now possible to perform a disc copy using the same device as source
+		    and target.</li>
+		<li>Updated drive speed detection routines, it should now detect correct
+		    speeds depeding on the inserted media.</li>
+		<li>Improved the media removal/insertion auto detection routines.</li>
+		<li>Added support for switching through the controls of the main view using
+		    the tab key.</li>
+		<li>Fixed a bug causing InfraRecorder to crash on Windows 9x systems when
+		    changing folder in the explorer view.</li>
+		<li>Added menu items for selecting all files and inverting the file selection.</li>
+		<li>Fixed a bug causing negative progress to be displayed in some cases.</li>
+		<li>Updated InfraRecorder to correctly maximize on startup, if closed
+		    maximized.</li>
+		<li>Added a website button to the about window.</li>
+		<li>Fixed a project file rename bug.</li>
+		<li>Made the toolbar customizable in several ways.</li>
+		<li>Improved project file handling, no duplicate files or folders are allowed.</li>
+		<li>The program configuration is now stored in the application data folder.
+		    A new portable version of InfraRecorder has been created where data is
+		    stored in the program folder.</li>
+		<li>Greatly improved drag and drop functionality.</li>
+		<li>Included a Norwegian translation, thanks to Karol Ptasinski!</li>
+		<li>Updated the help file with index and search capabilities.</li>
+		<li>Fixed a bug causing InfraRecorder to try to verify files that where
+		    imported from previous sessions.</li>
+		<li>Fixed a bug causing the disc to be ejected (if requested) before starting
+		    the disc verification process.</li>
+		<li>Fixed a bug causing incompatibility with Windows 9x systems due to a
+		    function call to SHGetFolderPathA.</li>
+	</ul>
+	<p>Version 0.43.1.0</p>
+	<ul>
+		<li>Updated the cdrtools to version 2.01.01a26.</li>
+		<li>Included a Finnish translation, thanks to Rami Aalto!</li>
+		<li>Removed the error message related to ckEffects.exe.</li>
+		<li>Improved the erase feature with support for more recorders.</li>
+		<li>Fixed a bug causing the size and position of the main window not to be
+		    remembered.</li>
+		<li>Fixed a bug causing the explorer view to turn white when double-clicking
+		    on a folder in the explorer list view (Windows XP only).</li>
+		<li>Improved the program log functionality.</li>
+		<li>Fixed a bug making it impossible to import sessions from certain disc types.</li>
+		<li>Improved the explorer view performance. Expanding anything under "My Computer"
+		    in the tree could on some systems result in a long delay because of slow
+		    queries to floppy drives.</li>
+	</ul>
+	<p>Version 0.43.0.0</p>
+	<ul>
+		<li>Fixed a bug raising an exception when re-ordering audio tracks.</li>
+		<li>Added a smoke effect when writing to a disc (requires Windows Vista
+		    Aero to be enabled).</li>
+		<li>Fixed a few bugs causing wrong disc information to be shown in the
+		    disc information window.</li>
+		<li>Various adaptations for Windows Vista.</li>
+		<li>Added support for dropping files into the project tree view.</li>
+		<li>Completely rewritten disc erase/format code. Improved DVD&plusmn;RW and
+		    DVD-RAM support.</li>
+		<li>Included a Catalan translation, thanks to Josep LluÌs Amador Teruel!</li>
+		<li>Included a Galician translation, thanks to Xes˙s EstÈvez!</li>
+		<li>Fixed a bug causing InfraRecorder to have invalid window coordinates
+		    closed while minimized.</li>
+		<li>Included a Romanian translation, thanks to Nicolae Crefelean!</li>
+		<li>Removed the Visual C++ 8 DLL dependencies from the shell extension.</li>
+		<li>Included a Hungarian translation, thanks to Tibor S·rk·ny!</li>
+		<li>Included a Hebrew translation, thanks to Shemesh!</li>
+		<li>Included a Danish translation, thanks to Patrick Fust!</li>
+		<li>Fixed a bug causing all internal SCSI commands not to be executed in
+		    the x64 build of InfraRecorder.</li>
+	</ul>
+	<p>Version 0.42.1.0</p>
+	<ul>
+		<li>The MSI installer used for the x64 release now creates the
+		    start-menu shortcuts in a subfolder.</li>
+		<li>Fixed a bug causing InfraRecorder to crash when cdrecord reported
+		    recording on a track-number higher than the number of tracks to be
+		    recorded.</li>
+		<li>Removed the Visual C++ 8 DLL dependencies from the irWave codec.</li>
+		<li>Fixed a bug causing stack corruption when using the irWMA codec.</li>
+	</ul>
+	<p>Version 0.42.0.0</p>
+	<ul>
+		<li>Available as 64-bit (x64) build.</li>
+		<li>Created a completely new Wave codec to remove the libsndfile
+		    dependency and add support for the x64 compiler.</li>
+		<li>Modifed the translation system to allow translated controls to
+		    automatically resize and move its neightbours when needed.</li>
+		<li>Various changes for Windows Vista compatibility.</li>
+		<li>Modified the WMA codec so it doesn't raise an error message when it
+		    fails to load (if Windows Media Player not installed).</li>
+		<li>Included a Japanese translation, thanks to Nardog!</li>
+		<li>Fixed a bug causing DVD media to always be recorded at maximum
+		    speed.</li>
+		<li>Included a Korean translation, thanks to Jung Jin-ho!</li>
+		<li>Included a Bulgarian translation, thanks to Iliyan Popov!</li>
+		<li>Separated data DVD from data CD projects.</li>
+		<li>Added support for omiting version numbers from ISO9660 file names.</li>
+		<li>Added support for using Rock Ridge extensions without using the Joliet
+		    file name extension.</li>
+		<li>Fixed a bug causing the write speed not to be properly reported on some
+		    recorders.</li>
+		<li>Added support for column sorting.</li>
+		<li>Added support for rearranging audio tracks by drag and drop.</li>
+		<li>Included a Serbian (Cyrillic and Latin) translation, thanks to ozzii!</li>
+		<li>Added support for automatically verifying a disc after it has been
+		    recorded.</li>
+		<li>Made the labels on the progress dialog double buffered to avoid
+		    flickering.</li>
+		<li>Fixed a bug causing the cp1250 code page not to be properly
+		    detected on Czech systems.</li>
+		<li>Added support for creating DVD-Video projects.</li>
+		<li>Included a Slovak translation, thanks to Marek!</li>
+		<li>Fixed a bug causing problems when importing certain seasons from
+		    multi-session discs.</li>
+		<li>Fixed a bug causing project UDF-settings not to be properly reset
+		    when creating a new project.</li>
+		<li>Fixed a bug causing error messages not to be properly displayed when
+		    recording custom projects on the fly.</li>
+		<li>Included a Chinese (Traditional) translation, thanks to Charlie!</li>
+	</ul>
+	<p>Version 0.41.0.0</p>
+	<ul>
+		<li>Fixed a bug causing the space meter to display inaccurate file
+		    sizes on audio files in mixed-mode projects.</li>
+		<li>Due to limitations in the Microsoft Windows 9x Unicode Layer, a
+		    non-unicode version of InfraRecorder is released separateley.</li>
+		<li>Added support for disabling the error message that occurs when a
+		    codec fails to load.</li>
+		<li>Added support for generating DVD-Video compliant filesystems.</li>
+		<li>Added support for UDF.</li>
+		<li>Added support for creating bootable data discs.</li>
+		<li>Fixed a major bug preventing some projects from beeing properly
+		    loaded.</li>
+		<li>Included a Bosnian translation, thanks to Asim Husanovic!</li>
+		<li>Added an option to change the detected write speed of a recorder.</li>
+		<li>Changed the recorder speed management to now allow a larger
+		    number of write speeds below the maximum speed.</li>
+		<li>Added write method information to the advanced device details.</li>
+		<li>Fixed a bug causing a wrong character set to be detected on systems
+		    using code page 1251.</li>
+		<li>Fixed a bug causing bogus unix file permissions to be set when
+		    recording custom projects using the Joliet name extension.</li>
+		<li>Improved the project space meter.</li>
+		<li>Added support for recording custom projects on the fly.</li>
+		<li>Fixed a bug causing a temporary file not to be removed when
+		    copying a disc.</li>
+		<li>Added support for disabling the unsupported character set error
+		    message.</li>
+		<li>Fixed a bug causing the space meter tooltip to display the size
+		    information in bytes instead of minutes when dealing with audio
+		    projects.</li>
+		<li>Included a Slovenian translation, thanks to Frani éiûek!</li>
+		<li>Included a Ukrainian translation and manual, thanks to Serhij Dubyk!</li>
+		<li>The advanced device properties list now correctly displays
+		    titletip when a feature description is to long to be fully
+		    displayed.</li>
+		<li>Fixed a bug causing empty directories to be ignored when creating
+		    and recording custom projects.</li>
+		<li>Fixed a bug causing files that has equal characters in the
+		    file name to raise an error when creating a disc image.</li>
+		<li>Included a Portuguese (Brazilian) translation, thanks to …der Silva!</li>
+		<li>Included a Chinese (Simplified) translation, thanks to DouDeHou!</li>
+		<li>Added more read options (ignore read errors, read
+		    sub-channel data and TOC, read speed).</li>
+		<li>Added support for disc
+		    <a href="../how_to_use/copy_data_disc.html">cloning</a>.</li>
+		<li>Added support for changing the FIFO buffer size.</li>
+		<li>Added support for ISO level 4 which among many thigs
+		    allows directory nesting to be deeper than eight levels.</li>
+	</ul>
+	<p>Version 0.40.0.0</p>
+	<ul>
+		<li>Included a Czech translation, thanks to khagaroth!</li>
+		<li>Improved DVD-support (official cdrtools has DVD support
+		    since version 2.01.01a09).</li>
+		<li>Simulation mode now works when recording to DVDs.</li>
+		<li>Support for blanking DVD+RW media (currently only with
+		    Ricoh based drives).</li>
+		<li>The size and position of the main InfraRecorder window
+		    is now remembered and restored each startup.</li>
+		<li>Included a Basque translation, thanks to David GarcÌa-Abad!</li>
+		<li>Added support for encoding audio tracks to Ogg, WMA and
+		    MP3 (separate package due to patent issue).</li>
+		<li>Fixed a bug causing the wrong tracks to be displayed
+		    when scanning a disc for errors.</li>
+		<li>Added support for decoding MP3, Ogg and WMA audio.</li>
+		<li>Included a German manual, thanks to CE4!</li>
+		<li>Included an Italian translation, thanks to Lorenzo Festa!</li>
+		<li>Fixed bug with message boxes, they should now be modal.</li>
+		<li>Added support for translated manuals.</li>
+		<li>Changed the default simulation value to off.</li>
+		<li>Added an option for changing the temporary folder.</li>
+		<li>Added help documentation on how to make the InfraRecorder
+		    installer perform unattended <a href="installation.html">
+		    installations</a>.</li>
+		<li>The installer now adds an entry to Add/Remove Programs.</li> 
+		<li>Added support for selecting installation language on unattended
+		   installations.</li> 
+		<li>Included a Russian translation and manual, thanks to Roman Starikh!</li>
+		<li>Included a German translation, thanks to Thomas Bigler!</li>
+		<li>Included a Polish translation, thanks to DJD!</li>
+		<li>Included a Turkish translation, thanks to Fatma Akarslan!</li>
+		<li>Included a Croatian translation, thanks to Tibor Keser!</li>
+		<li>Included a Dutch translation, thanks to Patrick!</li>
+	</ul>
+	<p>Version 0.31.0.0</p>
+	<ul>
+		<li>Included a Portuguese translation, thanks to Cesar Baptista!</li>
+		<li>Included a Spanish translation, thanks to Eduardo Leon!</li>
+		<li>Increased the height of all comboboxes in the GUI to prevent unnecessary
+		    scrolling.</li>
+		<li>Fixed some GUI glitches causing black and purple backgrounds on some
+		    graphics (only affected systems older than Windows XP).</li>
+		<li>Added a tooltip to the space meter which displays the project size.</li>
+		<li>Added support for pasting files from Windows Explorer into a project.</li>
+		<li>Fixed a bug allowing multiple sessions to imported to a project.</li>
+	</ul>
+	<p>Version 0.30.0.83</p>
+	<ul>
+		<li>Fixed a bug (static linking to UpdateLayeredWindow in user32.dll) causing
+		    incompatibility with Windows 9x systems.</li>
+	</ul>
+	<p>Version 0.30.0.82 (Beta 2)</p>
+	<ul>
+		<li>Added DVD support by patching cdrecord (WARNING: Simulation mode is known
+		    not to work when burning DVDs).</li>
+		<li>Included a French translation, thanks to Pierre-Jean Coudert!</li>
+		<li>Changed the default write method to SAO because of DVD compatibility.</li>
+		<li>Updated the installer with extra options and multi-language support.</li>
+		<li>Added a couple of new translateable strings for the progress log output.
+		    </li>
+		<li>Made some directory layout changes to the CVS.</li>
+	</ul>
+</div>
+</body>
+</html>

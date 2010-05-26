@@ -1,0 +1,152 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="fr"><head>
+<meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type"><title>Premier projet</title>
+
+<link rel="stylesheet" media="screen" type="text/css" href="../../style.css">
+<script type="text/javascript" language="JavaScript" src="../../stylescript.js"></script></head>
+<body scroll="no">
+<div id="header">
+	<div id="location">Comment faire ?, Travail en projet.</div>
+	<div id="topic">Premier projet</div>
+</div>
+<div id="content">
+	<p>Cette section va vous aider à démarrer avec votre premier projet CD/DVD de donnée personnalisées.
+	   InfraRecorder supporte actuellement quatre types de projets.</p>
+	<p>Les projets&nbsp;<em>CD/DVD de données</em>
+sont utilisés pour créer contenant des fichiers et des
+répertoires&nbsp;(en utilisant le système de fichiers ISO9660) qui peut
+être exploité par presque tout ordinateur. Les disques de données ne
+peuvent contenir autant de données que les disques audios par
+secteurs&nbsp;car le système de fichier stocke également des données de
+contrôle
+et de corrections d'erreur supplémentaires. De ce fait, les disques de
+données peuvent être gravés à une vitesse plus élevées sans perte de
+données ou de qualité. Les disques de données peuvent être gravés en
+plusieurs fois, autorisant ainsi l'ajout de données sur un CD/DVD déjà
+gravé. Référez-vous à <a href="multisession_disc.html">cette section</a>
+	   pour en savoir plus sur ce sujet.</p>
+	<p>Les projets&nbsp;<em>CD </em><em>Audio</em>
+sont utilisés pour créer des disque audios qui peuvent être lu par
+n'importe quelle platine CD de salon (ou d'ordinateur). Les CD audios
+doivent normalement être gravé à une vitesse plus lente que les CD de
+données car ils ne contiennent pas d'informations de contrôle ou de correction d'erreurs.</p>
+	<p>Les projets&nbsp;<em>CD </em><em></em><em>en mode mixte</em>
+sont utilisé pour créer des CD qui contiennent des données sur leur
+première piste avec les mêmes fonctionnalités qu'un CD de données,
+suivi &nbsp;par des piste audios.Un CD mixte sera lu par n'importe
+quelle platine de salon, mais la première piste (celle des données) ne
+sera que du bruit <em></em>.
+	   Les pistes audios seront jouées normalement.</p><p>Les projets&nbsp;<em>DVD vidéo</em>
+sont utilisés pour créer des DVD qui pourront être lu sur une platine
+DVD de salon. Des restrictions d'ordre matérielles peuvent cependant
+empêcher la platine de lire un DVD gravé suivant le type de DVD gravé
+(+R, +RW, -R, -RW). Renseignez vous sur votre platine de salon avant de
+graver un DVD vidéo.</p>
+	<dl>
+		<dt>Pour créer un nouveau projet, utilisez le menu:</dt>
+		<dd><strong>Fichier <img src="../../images/arrow.png"> Nouveau Projet
+		    <img src="../../images/arrow.png"></strong> <span style="font-weight: bold;">&lt;sélectionnez le type de projet que vous souhaitez créer&gt;</span></dd>
+		<dt>Pour ouvrir un projet existant, utilisez le menu:</dt>
+		<dd><strong>File <img src="../../images/arrow.png"> Ouvrir un project...</strong>
+		    </dd>
+		<dt>ou le bouton de la barre d'outils:</dt>
+		<dd><img src="../../images/button_open.bmp"></dd>
+	</dl>
+	<p>Un
+projet InfraRecorder peut être directement gravé sur un CD/DVD
+physique, ou être enregisté dans un fichier image disque. Une image
+disque est un fichier contenant toutes les données ajoutées au projet
+(sauf les pistes audios dans le cas d'un <span style="font-style: italic;">projet audio</span> ou <span style="font-style: italic;">projet mode mixte</span>). Une image disque peut être gravées sur un CD/DVD plus tard. Voir <a href="../burn_image.html">cette section</a> pour plus d'information.</p>
+	<dl>
+		<dt>Pour graver votre projet sur un CD/DVD, vous pouvez utiliser le menu:</dt>
+		<dd><strong>Actions <img src="../../images/arrow.png"> Graver la compilation
+		    <img src="../../images/arrow.png"> D'un disque compact...</strong>
+		    </dd>
+		<dt>ou le bouton de la barre d'outils:</dt>
+		<dd><img src="../../images/button_recordcd.bmp"></dd>
+	</dl>
+	<p>Une description détaillée des options disponible apparaît dans <a href="../burn_options.html">cette section</a>.</p>
+	<h1>Environment</h1>
+	<h2>General</h2>
+	<dl>
+		<dt>La barre d'outil de la <span style="font-style: italic;">Vue Explorateur</span> permet de naviguer dans la vue, et d'ajouter au projet les fichiers ou dossier sélectionnés dans la liste.</dt>
+		<dd><img style="width: 311px; height: 26px;" alt="" src="../../images/toolbar_explorerview.png"></dd>
+	</dl>
+	<dl>
+		<dt>La barre d'outil de la vue&nbsp; <em>Organisation du disque</em> est utilisée pour gérer le projet et naviguer dans le projet.</dt>
+		<dd><img style="width: 320px; height: 26px;" alt="" src="../../images/toolbar_disclayout.png"></dd>
+	</dl>
+	<h2>Gestion des fichiers</h2>
+	<dl>
+		<dt>Le menu <em>Edition</em> est utilisé pour la gestion des fichiers du projet.
+		</dt><dd><img style="width: 248px; height: 197px;" alt="" src="../../images/menu_edit.png"></dd>
+		<dt>Les
+options disponibles dans le menu d'édition (ci-dessus) peuvent être
+appelé à partir de la vue de l'explorateur par appel d'un menu
+contextuel à l'aide d'un clic droit dans la vue. Par exemple, si vous faites un clic droit sur un dossier, ce menu apparaîtra: </dt><dd><img style="width: 170px; height: 101px;" alt="" src="../../images/menu_projectlistview.png"></dd>
+	</dl>
+	<dl>
+		<dt>Si
+vous ajoutez à votre projet plus de données que le média sélectionné ne
+peut en contenir, l'indicateur d'espace en bas de la vue passera au
+rouge: </dt><dd><img src="../../images/spacemeter_full.png"></dd>
+	</dl>
+	<dl>
+		<dt>L'indicateur
+d'espace passera à l'orange si la somme des données du projet excède la
+taille officielle du média, mais pourront probablement tenir si
+l'option <a href="../burn_options.html#advanced">Autoriser l'overburning</a>
+		    est activée:
+		</dt><dd><img src="../../images/spacemeter_warn.png"></dd>
+	</dl>
+	<p>Vous
+pouvez changer la taille de l'indicateur afin de correspondre au disque
+vierge sur lequel vous allez graver votre projet. Pour cela, faites un
+clic droit sur l'indicateur, et sélectionnez le type de média approprié.</p>
+	<hr>
+	<h1>Gestion de fichiers</h1>
+	<h2>Ajout de fichiers</h2>
+	<p>Il y a différents moyens d'ajouter des fichiers à votre projet. Vous pouvez faire un glisser-déposer depuis la <span style="font-style: italic;">vue explorateur</span> ou depuis l'explorateur Windows vers la<span style="font-style: italic;"> vue organisation du disque</span>.&nbsp;
+	  Vous pouvez également naviguer dans la <span style="font-style: italic;">vue explorateur</span> et sélectionner les fichiers que vous souhaitez ajouter à votre projet.</p>
+	<dl>
+		<dt>Lorsque les fichiers désirés sont sélectionnés, vous pouvez utiliser le menu:</dt>
+		<dd><strong>Edition <img src="../../images/arrow.png"> Ajouter
+		    <img src="../../images/arrow.png"> Sélectionné</strong></dd>
+		<dt>ou le bouton de la barre d'outil de la <span style="font-style: italic;">vue explorateur</span>:</dt>
+		<dd><img src="../../images/button_addselected.bmp"></dd>
+	</dl>
+	<p>Vous pouvez également naviguer dans la <span style="font-style: italic;">vue explorateur</span> sur un dossier, et rapidement ajouter tous les dossiers et fichiers contenus dans ce dossier à votre projet.
+	</p><dl>
+		<dt>Pour ajouter tous les fichiers et dossiers dans la <span style="font-style: italic;">vue explorateur</span> active, utilisez le menu:</dt>
+		<dd><strong>Edition <img src="../../images/arrow.png"> Ajouter
+		    <img src="../../images/arrow.png"> Tout</strong></dd>
+		<dt>ou le bouton de la barre d'outil de la <span style="font-style: italic;">vue explorateur</span>:</dt>
+		<dd><img src="../../images/button_addall.bmp"></dd>
+	</dl>
+	<h2>Supprimer des fichiers</h2>
+	<p>Il
+y a plusieurs façons de supprimer des fichiers et des dossiers de votre
+projet. Une façon consiste à sélectionner les fichiers et dossiers dans
+la <span style="font-style: italic;">vue organisation du disque</span> et appuyer sur le touche "suppr" de votre clavier. Vous pouvez également utiliser le menu ou le bouton de la barre d'outil:</p>
+	<dl>
+		<dt>Pour supprimer les fichiers sélectionnés en utilisant le menu:</dt>
+		<dd><strong>Edition <img src="../../images/arrow.png"> Supprimer</strong></dd>
+		<dt>ou le bouton de la barre d'outil de la <span style="font-style: italic;">vue organisation du disque</span>:
+		    </dt>
+		<dd><img src="../../images/button_remove.bmp"></dd>
+	</dl>
+	<h2>Autres opérations</h2>
+	<dl>
+		<dt>Pour renommer un fichier ou un dossier sélectionné, utilisez le menu:</dt>
+		<dd><strong>Edition <img src="../../images/arrow.png"> Renommer</strong></dd>
+		<dt>ou le bouton de la barre d'outil de la <span style="font-style: italic;">vue organisation du disque</span>:</dt>
+		<dd><img src="../../images/button_rename.bmp"></dd>
+	</dl>
+	<dl>
+		<dt>Pour ajouter un dossier vide à votre projet, utilisez le menu:</dt>
+		<dd><strong>Edition <img src="../../images/arrow.png"> Nouveau Dossier</strong></dd>
+		<dt>ou le bouton de la barre d'outil de la <span style="font-style: italic;">vue organisation du disque</span>:</dt>
+		<dd><img src="../../images/button_newfolder.bmp"></dd>
+	</dl>
+</div>
+</body></html>
