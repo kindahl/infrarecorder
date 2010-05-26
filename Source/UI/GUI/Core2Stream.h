@@ -44,7 +44,7 @@ private:
 			m_ulBufferSize = ulBufferSize;
 		}
 
-		ckcore::tint64 write(void *pBuffer,ckcore::tuint32 uiCount)
+		ckcore::tint64 write(const void *pBuffer,ckcore::tuint32 uiCount)
 		{
 			if (m_pBuffer == NULL)
 				return -1;
