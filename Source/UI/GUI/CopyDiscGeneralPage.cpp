@@ -496,7 +496,9 @@ LRESULT CCopyDiscGeneralPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam
 
 	BOOL bDummy;
 	OnFlyCheck(NULL,NULL,NULL,bDummy);
-	OnCloneCheck(NULL,NULL,NULL,bDummy);
+
+	if (::IsWindowEnabled(::GetDlgItem(GetParent(),IDOK)))
+		OnCloneCheck(NULL,NULL,NULL,bDummy);
 
 	// Make sure that the same device is not selected as both target and source.
 	OnSourceChange(NULL,NULL,NULL,bDummy);
