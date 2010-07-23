@@ -389,7 +389,7 @@ STDMETHODIMP CShellListViewCtrl::BrowseObject(LPCITEMIDLIST pidl,UINT wFlags)
 		return E_FAIL;
 
 	// Use the IShellFolder to create a view window
-	FOLDERSETTINGS fs = { FVM_DETAILS,FWF_SNAPTOGRID | FWF_NOICONS };
+	FOLDERSETTINGS fs = { FVM_DETAILS,FWF_SNAPTOGRID/* | FWF_NOICONS*/ };
 
 	if (m_pShellView)
 		m_pShellView->GetCurrentInfo(&fs);
