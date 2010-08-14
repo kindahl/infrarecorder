@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2009 Christian Kindahl
+ * Copyright (C) 2006-2010 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@
 #include "Core.h"
 #include "AboutWindow.h"
 
-#define ABOUT_YEARS			_T("2006-2009")
+#define ABOUT_YEARS			_T("2006-2010")
 #define ABOUT_STR(str)		str,(sizeof(str)/sizeof(TCHAR))-1
 
 /*
