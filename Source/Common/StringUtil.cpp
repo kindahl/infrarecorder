@@ -420,21 +420,37 @@ void UnicodeToAnsi(char *szTarget,const wchar_t *szSource,int iTargetSize)
 
 void GetCygwinFileName(const TCHAR *szFileName,TCHAR *szCygwinFileName)
 {
-	lstrcpy(szCygwinFileName,_T("/cygdrive/"));
-
-	// Copy the drive letter.
-	szCygwinFileName[10] = szFileName[0];
-	szCygwinFileName[11] = '/';
-	szCygwinFileName[12] = '\0';
-
-	lstrcat(szCygwinFileName,szFileName + 3);
-
-	// Replace all backslashes by slashes.
-	unsigned int uiLength = lstrlen(szCygwinFileName);
-	for (unsigned int i = 13; i < uiLength; i++)
+	// Check if UNC path.
+	size_t uiLength = lstrlen(szFileName);
+	if (uiLength > 2 && szFileName[0] == '\\' && szFileName[1] == '\\')
 	{
-		if (szCygwinFileName[i] == '\\')
-			szCygwinFileName[i] = '/';
+		lstrcpy(szCygwinFileName,szFileName);
+
+		// Replace all backslashes by slashes.
+		for (size_t i = 0; i < uiLength; i++)
+		{
+			if (szCygwinFileName[i] == '\\')
+				szCygwinFileName[i] = '/';
+		}
+	}
+	else	// If not UNC path convert to proper cygwin path.
+	{
+		lstrcpy(szCygwinFileName,_T("/cygdrive/"));
+
+		// Copy the drive letter.
+		szCygwinFileName[10] = szFileName[0];
+		szCygwinFileName[11] = '/';
+		szCygwinFileName[12] = '\0';
+
+		lstrcat(szCygwinFileName,szFileName + 3);
+
+		// Replace all backslashes by slashes.
+		uiLength = lstrlen(szCygwinFileName);
+		for (size_t i = 13; i < uiLength; i++)
+		{
+			if (szCygwinFileName[i] == '\\')
+				szCygwinFileName[i] = '/';
+		}
 	}
 }
 

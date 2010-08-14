@@ -370,6 +370,10 @@ void CBurnImageGeneralPage::InitRefreshButton()
 
 void CBurnImageGeneralPage::CheckRecorderMedia()
 {
+	// Check that we have a recorder in the system.
+	if (m_RecorderCombo.GetItemData(m_RecorderCombo.GetCurSel()) == 0)
+		return;
+
 	bool bMediaInit = InitRecorderMedia();
 	if (!bMediaInit)
 	{

@@ -43,6 +43,7 @@ CBurnAdvancedPage::CBurnAdvancedPage()
 
 CBurnAdvancedPage::~CBurnAdvancedPage()
 {
+	Detach();
 }
 
 bool CBurnAdvancedPage::Translate()
