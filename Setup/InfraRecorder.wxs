@@ -88,7 +88,7 @@
           </Component>
 
           <Component Id="Help" Guid="$(var.CompHelp)" DiskId="1" Win64="$(var.Is64)">
-            <File Id="InfraRecorder.chm" Name="InfraRecorder.chm" Source="../Help/InfraRecorder.chm">
+            <File Id="InfraRecorder.chm" Name="InfraRecorder.chm" Source="../Help/English/InfraRecorder.chm">
               <Shortcut Id="StartMenuHelpShortcut" Directory="InfraProgramMenu" Name="InfraRecorder Help" Advertise="yes"/>
             </File>
           </Component>
@@ -127,6 +127,7 @@
               <File Id="Farsi.irl" Name="Farsi.irl" Source="../Binary64/Languages/Farsi.irl"/>
               <File Id="Finnish.irl" Name="Finnish.irl" Source="../Binary64/Languages/Finnish.irl"/>
               <File Id="French.irl" Name="French.irl" Source="../Binary64/Languages/French.irl"/>
+              <File Id="French.chm" Name="French.chm" Source="../Binary64/Languages/French.chm"/>
               <File Id="Galician.irl" Name="Galician.irl" Source="../Binary64/Languages/Galician.irl"/>
               <File Id="German.irl" Name="German.irl" Source="../Binary64/Languages/German.irl"/>
               <File Id="German.chm" Name="German.chm" Source="../Binary64/Languages/German.chm"/>
