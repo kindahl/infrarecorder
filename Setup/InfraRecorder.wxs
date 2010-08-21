@@ -124,6 +124,7 @@
               <File Id="Czech.irl" Name="Czech.irl" Source="../Binary64/Languages/Czech.irl"/>
               <File Id="Danish.irl" Name="Danish.irl" Source="../Binary64/Languages/Danish.irl"/>
               <File Id="Dutch.irl" Name="Dutch.irl" Source="../Binary64/Languages/Dutch.irl"/>
+              <File Id="Estonian.irl" Name="Estonian.irl" Source="../Binary64/Languages/Estonian.irl"/>
               <File Id="Farsi.irl" Name="Farsi.irl" Source="../Binary64/Languages/Farsi.irl"/>
               <File Id="Finnish.irl" Name="Finnish.irl" Source="../Binary64/Languages/Finnish.irl"/>
               <File Id="French.irl" Name="French.irl" Source="../Binary64/Languages/French.irl"/>

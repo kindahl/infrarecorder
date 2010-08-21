@@ -145,6 +145,7 @@ FunctionEnd
   !insertmacro MUI_LANGUAGE "Danish"
   !insertmacro MUI_LANGUAGE "Dutch"
   !insertmacro MUI_LANGUAGE "English"
+  !insertmacro MUI_LANGUAGE "Estonian"
   !insertmacro MUI_LANGUAGE "Farsi"
   !insertmacro MUI_LANGUAGE "Finnish"
   !insertmacro MUI_LANGUAGE "French"
@@ -426,6 +427,18 @@ FunctionEnd
   LangString DESC_SecDeskShortcut ${LANG_ENGLISH} "Adds an icon to your desktop."
   LangString DESC_SecQuickShortcut ${LANG_ENGLISH} "Adds an icon to your quick launch bar."
   LangString DESC_SecLang ${LANG_ENGLISH} "Language files used for supporting different languages in InfraRecorder."
+
+  ;Language strings (Estonian)
+  LangString NAME_SecCore ${LANG_ESTONIAN} "InfraRecorder Core Files (required)"
+  LangString NAME_SecStartShortcut ${LANG_ESTONIAN} "Start Menu Shortcuts"
+  LangString NAME_SecDeskShortcut ${LANG_ESTONIAN} "Desktop Shortcut"
+  LangString NAME_SecQuickShortcut ${LANG_ESTONIAN} "Quick Launch Shortcut"
+  LangString NAME_SecLang ${LANG_ESTONIAN} "Language Files"
+  LangString DESC_SecCore ${LANG_ESTONIAN} "The core files required to use InfraRecorder."
+  LangString DESC_SecStartShortcut ${LANG_ESTONIAN} "Adds icons to your start menu for easy access."
+  LangString DESC_SecDeskShortcut ${LANG_ESTONIAN} "Adds an icon to your desktop."
+  LangString DESC_SecQuickShortcut ${LANG_ESTONIAN} "Adds an icon to your quick launch bar."
+  LangString DESC_SecLang ${LANG_ESTONIAN} "Language files used for supporting different languages in InfraRecorder."
 
   ;Language strings (Farsi)
   LangString NAME_SecCore ${LANG_FARSI} "(›«Ì· Â«Ì Â” Â «Ì‰›—«—òÊ—œ—(÷—Ê—Ì"
@@ -903,6 +916,7 @@ Section $(NAME_SecLang) SecLang
   File "..\Binary32\Languages\Czech.irl"
   File "..\Binary32\Languages\Danish.irl"
   File "..\Binary32\Languages\Dutch.irl"
+  File "..\Binary32\Languages\Estonian.irl"
   File "..\Binary32\Languages\Farsi.irl"
   File "..\Binary32\Languages\Finnish.irl"
   File "..\Binary32\Languages\French.irl"
@@ -952,6 +966,7 @@ Section $(NAME_SecLang) SecLang
   File "..\BinaryA\Languages\Czech.irl"
   File "..\BinaryA\Languages\Danish.irl"
   File "..\BinaryA\Languages\Dutch.irl"
+  File "..\BinaryA\Languages\Estonian.irl"
   File "..\BinaryA\Languages\Farsi.irl"
   File "..\BinaryA\Languages\Finnish.irl"
   File "..\BinaryA\Languages\French.irl"
@@ -1028,6 +1043,9 @@ Section $(NAME_SecLang) SecLang
       ${Break}
     ${Case} "english"	; 1033
       StrCpy $LANGUAGE ${LANG_ENGLISH}
+      ${Break}
+    ${Case} "estonian"
+      StrCpy $LANGUAGE ${LANG_ESTONIAN}
       ${Break}
     ${Case} "farsi"
       StrCpy $LANGUAGE ${LANG_FARSI}
@@ -1160,6 +1178,9 @@ Section $(NAME_SecLang) SecLang
       ${Break}
     ${Case} ${LANG_ENGLISH}	; 1033
       StrCpy $0 ""
+      ${Break}
+    ${Case} ${LANG_ESTONIAN}
+      StrCpy $0 "Estonian.irl"
       ${Break}
     ${Case} ${LANG_FARSI}
       StrCpy $0 "Farsi.irl"
