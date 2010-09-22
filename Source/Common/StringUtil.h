@@ -17,6 +17,7 @@
  */
 
 #pragma once
+#include <ckcore/types.hh>
 
 #ifndef _T
 #define _T TEXT
