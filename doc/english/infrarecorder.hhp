@@ -1,0 +1,14 @@
+[OPTIONS]
+Compatibility=1.1 or later
+Compiled file=infrarecorder.chm
+Contents file=infrarecorder.hhc
+Default topic=infra_recorder\introduction.html
+Display compile progress=No
+Full-text search=Yes
+Index file=infrarecorder.hhk
+Language=0x409 English (United States)
+Title=InfraRecorder Help
+
+
+[INFOTYPES]
+
