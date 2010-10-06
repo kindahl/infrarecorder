@@ -20,7 +20,7 @@
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="$(ProjectDir)..\..\build\$(PlatformName)\$(ConfigurationName)"
-			IntermediateDirectory="Debug"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -200,7 +200,7 @@
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="$(ProjectDir)..\..\build\$(PlatformName)\$(ConfigurationName)"
-			IntermediateDirectory="Release"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -382,7 +382,7 @@
 		<Configuration
 			Name="ReleaseP|Win32"
 			OutputDirectory="$(ProjectDir)..\..\build\$(PlatformName)\$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			ATLMinimizesCRunTimeLibraryUsage="false"
