@@ -17,7 +17,7 @@
  */
 
 #include "stdafx.h"
-#include "CustomHeaderCtrl.h"
+#include "custom_header_ctrl.hh"
 #include "ProjectManager.h"
 #include "TreeManager.h"
 

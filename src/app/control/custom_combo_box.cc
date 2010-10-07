@@ -17,7 +17,7 @@
  */
 
 #include "stdafx.h"
-#include "CustomComboBox.h"
+#include "custom_combo_box.hh"
 
 /*
 	A custom combo box control that provides item icons to the left of the text.

@@ -20,7 +20,7 @@
 #include "Resource.h"
 #include <ckcore/file.hh>
 #include <ckcore/log.hh>
-#include "DropDownButton.h"
+#include "drop_down_button.hh"
 
 #define BOM_UTF8					0xEFBBBF
 #define BOM_UTF32BE					0x0000FEFF

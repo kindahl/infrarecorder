@@ -17,7 +17,7 @@
  */
 
 #include "stdafx.h"
-#include "ShellListViewCtrl.h"
+#include "shell_list_view_ctrl.hh"
 #include "CtrlMessages.h"
 #include "Version.h"
 

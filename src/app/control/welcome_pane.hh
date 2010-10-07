@@ -19,8 +19,8 @@
 #pragma once
 #include <vector>
 #include "PngFile.h"
-#include "CustomButton.h"
-#include "CustomMultiButton.h"
+#include "custom_button.hh"
+#include "custom_multi_button.hh"
 
 class CWelcomePane : public CWindowImpl<CWelcomePane,CWindow>
 {

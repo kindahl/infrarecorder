@@ -22,7 +22,7 @@
 #include "StringTable.h"
 #include "LangUtil.h"
 #include "Version.h"
-#include "SpaceMeter.h"
+#include "space_meter.hh"
 
 CSpaceMeter::CSpaceMeter()
 	: m_bIsUpdatePending( false )

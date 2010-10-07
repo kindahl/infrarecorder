@@ -21,7 +21,7 @@
 #include <ckmmc/device.hh>
 #include "Resource.h"
 #include "AdvancedProgress.h"
-#include "DoubleBufferedStatic.h"
+#include "double_buffered_static.hh"
 #include "Effects.h"
 #include "WinVer.h"
 

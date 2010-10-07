@@ -17,7 +17,7 @@
  */
 
 #include "stdafx.h"
-#include "ProjectListViewCtrl.h"
+#include "project_list_view_ctrl.hh"
 #include "ProjectManager.h"
 #include "Settings.h"
 #include "MainFrm.h"

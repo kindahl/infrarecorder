@@ -21,9 +21,9 @@
 #include <ckcore/crcstream.hh>
 #include <ckfilesystem/filesystemhelper.hh>
 #include <base/XmlProcessor.h>
-#include "SpaceMeter.h"
+#include "space_meter.hh"
 #include "TreeManager.h"
-#include "CustomContainer.h"
+#include "custom_container.hh"
 #include "AdvancedProgress.h"
 #include "ConfirmFileReplaceDlg.h"
 

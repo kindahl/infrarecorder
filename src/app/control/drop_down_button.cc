@@ -17,7 +17,7 @@
  */
 
 #include "stdafx.h"
-#include "DropDownButton.h"
+#include "drop_down_button.hh"
 
 CDropDownButton::CDropDownButton(unsigned int uiMenuID,bool bDrawArrow)
 {

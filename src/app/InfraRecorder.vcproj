@@ -719,75 +719,75 @@
 				Name="control"
 				>
 				<File
-					RelativePath=".\control\CustomButton.cpp"
+					RelativePath=".\control\custom_button.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\control\CustomComboBox.cpp"
+					RelativePath=".\control\custom_combo_box.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\control\CustomContainer.cpp"
+					RelativePath=".\control\custom_container.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\control\CustomEditCtrl.cpp"
+					RelativePath=".\control\custom_edit_ctrl.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\control\CustomHeaderCtrl.cpp"
+					RelativePath=".\control\custom_header_ctrl.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\control\CustomMultiButton.cpp"
+					RelativePath=".\control\custom_multi_button.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\control\CustomToolBarCtrl.cpp"
+					RelativePath=".\control\custom_toolbar_ctrl.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\control\DoubleBufferedStatic.cpp"
+					RelativePath=".\control\double_buffered_static.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\control\DropDownButton.cpp"
+					RelativePath=".\control\drop_down_button.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\control\GradientStatic.cpp"
+					RelativePath=".\control\gradient_static.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\control\LabelContainer.cpp"
+					RelativePath=".\control\label_container.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\control\MiniHtmlCtrl.cpp"
+					RelativePath=".\control\mini_html_ctrl.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\control\ProjectListViewCtrl.cpp"
+					RelativePath=".\control\project_list_view_ctrl.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\control\ProjectTreeViewCtrl.cpp"
+					RelativePath=".\control\project_tree_view_ctrl.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\control\ShellListViewCtrl.cpp"
+					RelativePath=".\control\shell_list_view_ctrl.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\control\SpaceMeter.cpp"
+					RelativePath=".\control\space_meter.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\control\TitleTipListViewCtrl.cpp"
+					RelativePath=".\control\title_tip_list_view_ctrl.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\control\WelcomePane.cpp"
+					RelativePath=".\control\welcome_pane.cc"
 					>
 				</File>
 			</Filter>
@@ -1164,75 +1164,75 @@
 				Name="control"
 				>
 				<File
-					RelativePath=".\control\CustomButton.h"
+					RelativePath=".\control\custom_button.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\control\CustomComboBox.h"
+					RelativePath=".\control\custom_combo_box.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\control\CustomContainer.h"
+					RelativePath=".\control\custom_container.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\control\CustomEditCtrl.h"
+					RelativePath=".\control\custom_edit_ctrl.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\control\CustomHeaderCtrl.h"
+					RelativePath=".\control\custom_header_ctrl.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\control\CustomMultiButton.h"
+					RelativePath=".\control\custom_multi_button.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\control\CustomToolBarCtrl.h"
+					RelativePath=".\control\custom_toolbar_ctrl.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\control\DoubleBufferedStatic.h"
+					RelativePath=".\control\double_buffered_static.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\control\DropDownButton.h"
+					RelativePath=".\control\drop_down_button.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\control\GradientStatic.h"
+					RelativePath=".\control\gradient_static.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\control\LabelContainer.h"
+					RelativePath=".\control\label_container.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\control\MiniHtmlCtrl.h"
+					RelativePath=".\control\mini_html_ctrl.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\control\ProjectListViewCtrl.h"
+					RelativePath=".\control\project_list_view_ctrl.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\control\ProjectTreeViewCtrl.h"
+					RelativePath=".\control\project_tree_view_ctrl.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\control\ShellListViewCtrl.h"
+					RelativePath=".\control\shell_list_view_ctrl.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\control\SpaceMeter.h"
+					RelativePath=".\control\space_meter.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\control\TitleTipListViewCtrl.h"
+					RelativePath=".\control\title_tip_list_view_ctrl.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\control\WelcomePane.h"
+					RelativePath=".\control\welcome_pane.hh"
 					>
 				</File>
 			</Filter>

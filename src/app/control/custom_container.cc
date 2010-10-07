@@ -17,7 +17,7 @@
  */
 
 #include "stdafx.h"
-#include "CustomContainer.h"
+#include "custom_container.hh"
 #include "Settings.h"
 #include "CtrlMessages.h"
 #include "MainFrm.h"

@@ -18,7 +18,7 @@
 
 #pragma once
 #include "Resource.h"
-#include "CustomEditCtrl.h"
+#include "custom_edit_ctrl.hh"
 
 class CNewFileExtDlg : public CDialogImpl<CNewFileExtDlg>
 {

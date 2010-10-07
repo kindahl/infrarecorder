@@ -17,7 +17,7 @@
  */
 
 #include "stdafx.h"
-#include "TitleTipListViewCtrl.h"
+#include "title_tip_list_view_ctrl.hh"
 #include <base/StringUtil.h>
 
 /*

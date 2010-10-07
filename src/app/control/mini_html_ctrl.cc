@@ -19,7 +19,7 @@
 #include "stdafx.h"
 #include <ckcore/file.hh>
 #include <base/StringUtil.h>
-#include "MiniHtmlCtrl.h"
+#include "mini_html_ctrl.hh"
 
 HBRUSH CMiniHtmlCtrl::m_hBackgroundBrush = NULL;
 

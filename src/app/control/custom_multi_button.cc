@@ -18,7 +18,7 @@
 
 #include "stdafx.h"
 #include "Resource.h"
-#include "CustomMultiButton.h"
+#include "custom_multi_button.hh"
 
 CCustomMultiButton::CCustomMultiButton(long lCtrlMainId,long lCtrlSub1Id,long lCtrlSub2Id,
 									   unsigned short usCoverPng,int iCoverLeft,int iCoverRight) :

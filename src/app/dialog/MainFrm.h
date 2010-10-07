@@ -19,22 +19,22 @@
 #pragma once
 #include <atlcrack.h>	// COMMAND_RANGE_HANDLER_EX
 #include "MainView.h"
-#include "SpaceMeter.h"
-#include "ProjectTreeViewCtrl.h"
-#include "ProjectListViewCtrl.h"
-#include "CustomContainer.h"
-#include "LabelContainer.h"
+#include "space_meter.hh"
+#include "project_tree_view_ctrl.hh"
+#include "project_list_view_ctrl.hh"
+#include "custom_container.hh"
+#include "label_container.hh"
 #include "ProjectManager.h"
 #include "PidlHelper.h"
-#include "ShellListViewCtrl.h"
+#include "shell_list_view_ctrl.hh"
 #include "CtrlMessages.h"
 #include "DirectoryMonitor.h"
-#include "CustomHeaderCtrl.h"
+#include "custom_header_ctrl.hh"
 #include "ToolBarManager.h"
-#include "CustomToolBarCtrl.h"
-#include "MiniHtmlCtrl.h"
+#include "custom_toolbar_ctrl.hh"
+#include "mini_html_ctrl.hh"
 #include "Settings.h"
-#include "WelcomePane.h"
+#include "welcome_pane.hh"
 
 // HACK: Enable doublebuffering on XP systems.
 #if (_WIN32_WINNT < 0x501)

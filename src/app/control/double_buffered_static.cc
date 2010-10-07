@@ -17,7 +17,7 @@
  */
 
 #include "stdafx.h"
-#include "DoubleBufferedStatic.h"
+#include "double_buffered_static.hh"
 
 CDoubleBufferedStatic::CDoubleBufferedStatic()
 {

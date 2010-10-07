@@ -17,7 +17,7 @@
  */
 
 #include "stdafx.h"
-#include "ProjectTreeViewCtrl.h"
+#include "project_tree_view_ctrl.hh"
 #include "ProjectManager.h"
 #include "ProjectDataObject.h"
 #include "ProjectDropSource.h"

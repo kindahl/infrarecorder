@@ -17,7 +17,7 @@
  */
 
 #include "stdafx.h"
-#include "CustomToolBarCtrl.h"
+#include "custom_toolbar_ctrl.hh"
 #include "MainFrm.h"
 
 CCustomToolBarCtrl::CCustomToolBarCtrl()

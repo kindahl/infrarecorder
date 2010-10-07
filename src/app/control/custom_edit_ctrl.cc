@@ -17,29 +17,24 @@
  */
 
 #include "stdafx.h"
-#include <base/GraphUtil.h>
-#include "GradientStatic.h"
+#include "custom_edit_ctrl.hh"
 
-CGradientStatic::CGradientStatic(COLORREF TopColor) : m_TopColor(TopColor)
+CCustomEditCtrl::CCustomEditCtrl()
 {
 }
 
-CGradientStatic::~CGradientStatic()
+CCustomEditCtrl::~CCustomEditCtrl()
 {
 }
 
-LRESULT CGradientStatic::OnPaint(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
+/*
+	CCustomEditCtrl::OnChar
+	-----------------------
+	This edit control works like a regular edit control except that it does not
+	allow the | (pipe) character.
+*/
+LRESULT CCustomEditCtrl::OnChar(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
-	LRESULT lResult = DefWindowProc(uMsg,wParam,lParam);
-
-	HDC hDC = GetWindowDC();
-
-	RECT rcClient;
-	GetClientRect(&rcClient);
-
-	DrawVertGradientRect(hDC,&rcClient,m_TopColor,GetSysColor(COLOR_BTNFACE));
-
-	ReleaseDC(hDC);
-
-	return lResult;
+	bHandled = wParam == '|';
+	return 0;
 }

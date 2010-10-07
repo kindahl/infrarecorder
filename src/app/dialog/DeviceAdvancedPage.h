@@ -19,7 +19,7 @@
 #pragma once
 #include <ckmmc/device.hh>
 #include "Resource.h"
-#include "TitleTipListViewCtrl.h"
+#include "title_tip_list_view_ctrl.hh"
 
 class CDeviceAdvancedPage : public CPropertyPageImpl<CDeviceAdvancedPage>
 {

@@ -17,7 +17,7 @@
  */
 
 #include "stdafx.h"
-#include "LabelContainer.h"
+#include "label_container.hh"
 #include <base/GraphUtil.h>
 #include "CtrlMessages.h"
 #include "Version.h"

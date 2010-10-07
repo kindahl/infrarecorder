@@ -24,7 +24,7 @@
 #include "StringTable.h"
 #include "LangUtil.h"
 #include "ActionManager.h"
-#include "WelcomePane.h"
+#include "welcome_pane.hh"
 
 CWelcomePane::CStandardButton::CStandardButton(CWelcomePane *pParent,
 											   unsigned short usImageId,
