@@ -17,7 +17,7 @@
  */
 
 #include "stdafx.hh"
-#include <base/StringUtil.h>
+#include <base/string_util.hh>
 #include "cdrtools_parse_strings.hh"
 #include "log_dlg.hh"
 #include "settings.hh"

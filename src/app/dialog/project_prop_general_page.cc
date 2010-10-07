@@ -17,7 +17,7 @@
  */
 
 #include "stdafx.hh"
-#include <base/StringUtil.h>
+#include <base/string_util.hh>
 #include "project_prop_general_page.hh"
 #include "project_manager.hh"
 #include "string_table.hh"

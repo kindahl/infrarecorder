@@ -21,7 +21,7 @@
 #include <ckcore/directory.hh>
 #include <ckcore/convert.hh>
 #include <ckcore/linereader.hh>
-#include <base/StringUtil.h>
+#include <base/string_util.hh>
 #include "string_table.hh"
 #include "main_frm.hh"
 #include "audio_util.hh"

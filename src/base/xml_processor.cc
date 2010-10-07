@@ -18,8 +18,8 @@
 
 #include <tchar.h>
 #include <windows.h>
-#include "XMLProcessor.h"
-#include "StringConv.h"
+#include "xml_processor.hh"
+#include "string_conv.hh"
 
 #ifdef UNICODE
 const wchar_t CXmlProcessor::m_szXMLHeader[] = _T("<?xml version=\"1.0\" encoding=\"utf-16\" standalone=\"yes\"?>\r\n");

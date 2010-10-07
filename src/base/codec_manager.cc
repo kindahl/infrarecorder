@@ -18,7 +18,7 @@
 
 #include <ckcore/directory.hh>
 #include <ckcore/path.hh>
-#include "CodecManager.h"
+#include "codec_manager.hh"
 
 CCodec::CCodec()
 {

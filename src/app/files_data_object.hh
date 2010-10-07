@@ -18,7 +18,7 @@
 
 #pragma once
 #include <vector>
-#include <base/StringUtil.h>
+#include <base/string_util.hh>
 
 class CFilesDataObject : public IDataObject
 {

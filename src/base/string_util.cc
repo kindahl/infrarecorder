@@ -24,7 +24,7 @@
 #include <windows.h>
 #include <atlbase.h>
 #include <ckcore/types.hh>
-#include "StringUtil.h"
+#include "string_util.hh"
 
 // FIXME: Backslash in the name is missleading.
 TCHAR *IncludeTrailingBackslash(TCHAR *szPath)

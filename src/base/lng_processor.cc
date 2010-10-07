@@ -18,9 +18,9 @@
 
 #include <tchar.h>
 #include <windows.h>
-#include "LNGProcessor.h"
-#include "StringConv.h"
-#include "StringUtil.h"
+#include "lng_processor.hh"
+#include "string_conv.hh"
+#include "string_util.hh"
 
 CLngProcessor::CLngProcessor(const TCHAR *szFullPath) : m_File(szFullPath)
 {

@@ -18,8 +18,8 @@
 
 #include <windows.h>
 #include <atlbase.h>
-#include "CheckFmtStrPlaceholders.h"	// Include file for this module comes first.
-#include "StringUtil.h"
+#include "check_fmt_str_placeholders.hh"	// Include file for this module comes first.
+#include "string_util.hh"
 #include <ckcore/exception.hh>
 
 #define MAX_PARAM_POSITION ((unsigned)100)

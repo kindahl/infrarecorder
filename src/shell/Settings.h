@@ -17,8 +17,8 @@
  */
 
 #pragma once
-#include <base/XmlProcessor.h>
-#include <base/LngProcessor.h>
+#include <base/xml_processor.hh>
+#include <base/lng_processor.hh>
 
 class ISettings
 {

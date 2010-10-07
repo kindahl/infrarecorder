@@ -18,7 +18,7 @@
 
 #include "stdafx.hh"
 #include "label_container.hh"
-#include <base/GraphUtil.h>
+#include <base/graph_util.hh>
 #include "ctrl_messages.hh"
 #include "version.hh"
 #include "visual_styles.hh"

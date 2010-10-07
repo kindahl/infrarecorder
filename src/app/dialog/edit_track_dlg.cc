@@ -17,7 +17,7 @@
  */
 
 #include "stdafx.hh"
-#include <base/StringUtil.h>
+#include <base/string_util.hh>
 #include "edit_track_dlg.hh"
 #include "string_table.hh"
 #include "settings.hh"

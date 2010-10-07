@@ -18,7 +18,7 @@
 
 #pragma once
 #include <vector>
-#include <base/StringUtil.h>
+#include <base/string_util.hh>
 
 #define DOUBLEBUFFEREDSTATIC_RESERVE_LENGTH				256
 

@@ -18,7 +18,7 @@
 
 #include "stdafx.hh"
 #include <math.h>
-#include <base/StringUtil.h>
+#include <base/string_util.hh>
 #include "cd_text.hh"
 
 void CCdText::InitCRC()

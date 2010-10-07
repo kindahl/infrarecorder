@@ -19,7 +19,7 @@
 #pragma once
 #include <vector>
 #include <ckcore/file.hh>
-#include "CustomString.h"
+#include "custom_string.hh"
 
 #define BOM_UTF8				0xEFBBBF
 #define BOM_UTF32BE				0x0000FEFF

@@ -274,39 +274,39 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\CheckFmtStrPlaceholders.cpp"
+				RelativePath=".\check_fmt_str_placeholders.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\CodecManager.cpp"
+				RelativePath=".\codec_manager.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\FileUtil.cpp"
+				RelativePath=".\file_util.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\GraphUtil.cpp"
+				RelativePath=".\graph_util.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\LngProcessor.cpp"
+				RelativePath=".\lng_processor.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\StringContainer.cpp"
+				RelativePath=".\string_container.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\StringConv.cpp"
+				RelativePath=".\string_conv.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\StringUtil.cpp"
+				RelativePath=".\string_util.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\XmlProcessor.cpp"
+				RelativePath=".\xml_processor.cc"
 				>
 			</File>
 		</Filter>
@@ -316,47 +316,47 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\CheckFmtStrPlaceholders.h"
+				RelativePath=".\check_fmt_str_placeholders.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\CodecConst.h"
+				RelativePath=".\codec_const.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\CodecManager.h"
+				RelativePath=".\codec_manager.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\CustomString.h"
+				RelativePath=".\custom_string.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\FileUtil.h"
+				RelativePath=".\file_util.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\GraphUtil.h"
+				RelativePath=".\graph_util.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\LngProcessor.h"
+				RelativePath=".\lng_processor.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\StringContainer.h"
+				RelativePath=".\string_container.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\StringConv.h"
+				RelativePath=".\string_conv.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\StringUtil.h"
+				RelativePath=".\string_util.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\XmlProcessor.h"
+				RelativePath=".\xml_processor.hh"
 				>
 			</File>
 		</Filter>

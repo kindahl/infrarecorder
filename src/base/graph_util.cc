@@ -17,7 +17,7 @@
  */
 
 #include <windows.h>
-#include "GraphUtil.h"
+#include "graph_util.hh"
 
 void DrawVertGradientRect(HDC hDC,RECT *pRect,COLORREF cTop,COLORREF cBottom)
 {

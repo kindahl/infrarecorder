@@ -18,8 +18,8 @@
 
 #include <tchar.h>
 #include <windows.h>
-#include "StringContainer.h"
-#include "CustomString.h"
+#include "string_container.hh"
+#include "custom_string.hh"
 
 CStringContainer::CStringContainer()
 {

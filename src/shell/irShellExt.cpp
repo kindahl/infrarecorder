@@ -18,7 +18,7 @@
 
 #include "stdafx.h"
 #include <ckcore/types.hh>
-#include <base/StringUtil.h>
+#include <base/string_util.hh>
 #include "irShellExt.h"
 #include "StringTable.h"
 #include "LangUtil.h"

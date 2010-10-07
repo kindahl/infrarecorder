@@ -17,7 +17,7 @@
  */
 
 #include <ckmmc/devicemanager.hh>
-#include <base/CodecManager.h>
+#include <base/codec_manager.hh>
 
 void ProcessMessages();
 

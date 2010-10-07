@@ -20,7 +20,7 @@
 #include "Resource.h"
 #include "main_frm.hh"
 #include <ckcore/exception.hh>
-#include <base/FileUtil.h>
+#include <base/file_util.hh>
 #include "progress_dlg.hh"
 #include "simple_progress_dlg.hh"
 #include "splash_window.hh"

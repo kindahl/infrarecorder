@@ -21,7 +21,7 @@
 #include <stdio.h>
 #endif
 #include <ckcore/file.hh>
-#include <base/StringUtil.h>
+#include <base/string_util.hh>
 #include "audio_util.hh"
 
 bool IsWave(const TCHAR *szFileName)

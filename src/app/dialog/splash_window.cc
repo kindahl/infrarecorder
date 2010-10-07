@@ -17,7 +17,7 @@
  */
 
 #include "stdafx.hh"
-#include <base/GraphUtil.h>
+#include <base/graph_util.hh>
 #include "resource.h"
 #include "infrarecorder.hh"
 #include "string_table.hh"

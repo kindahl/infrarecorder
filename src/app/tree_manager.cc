@@ -18,7 +18,7 @@
 
 #include "stdafx.hh"
 #include <queue>
-#include <base/StringUtil.h>
+#include <base/string_util.hh>
 #include "main_frm.hh"
 #include "string_table.hh"
 #include "temp_manager.hh"

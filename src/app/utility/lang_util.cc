@@ -18,7 +18,7 @@
 
 #include "stdafx.hh"
 #include <ckfilesystem/stringtable.hh>
-#include <base/StringUtil.h>
+#include <base/string_util.hh>
 #include "settings.hh"
 #include "string_table.hh"
 #include "lang_util.hh"

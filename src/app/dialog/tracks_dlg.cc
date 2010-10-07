@@ -18,7 +18,7 @@
 
 #include "stdafx.hh"
 #include <ckmmc/devicemanager.hh>
-#include <base/StringUtil.h>
+#include <base/string_util.hh>
 #include "string_table.hh"
 #include "scsi.hh"
 #include "wait_dlg.hh"

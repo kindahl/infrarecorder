@@ -18,8 +18,8 @@
 
 #include "stdafx.h"
 #include <ckcore/directory.hh>
-#include <base/StringUtil.h>
-#include <base/XmlProcessor.h>
+#include <base/string_util.hh>
+#include <base/xml_processor.hh>
 #include "SettingsManager.h"
 #include "StringTable.h"
 #include "LangUtil.h"

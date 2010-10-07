@@ -17,8 +17,8 @@
  */
 
 #include "stdafx.hh"
-#include <base/StringUtil.h>
-#include <base/GraphUtil.h>
+#include <base/string_util.hh>
+#include <base/graph_util.hh>
 #include "string_table.hh"
 #include "lang_util.hh"
 #include "version.hh"

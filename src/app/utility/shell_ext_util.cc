@@ -18,7 +18,7 @@
 
 #include "stdafx.hh"
 #include "shell_ext_util.hh"
-#include <base/StringUtil.h>
+#include <base/string_util.hh>
 
 bool ExecShellExtFunction(const char *szFunctionName)
 {

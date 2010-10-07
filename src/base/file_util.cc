@@ -19,7 +19,7 @@
 #include <ckcore/types.hh>
 #include <ckcore/string.hh>
 #include <ckcore/exception.hh>
-#include "FileUtil.h"
+#include "file_util.hh"
 
 void WriteString(ckcore::File &File,const ckcore::tchar *szString)
 {

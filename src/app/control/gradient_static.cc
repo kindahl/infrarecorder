@@ -17,7 +17,7 @@
  */
 
 #include "stdafx.hh"
-#include <base/GraphUtil.h>
+#include <base/graph_util.hh>
 #include "gradient_static.hh"
 
 CGradientStatic::CGradientStatic(COLORREF TopColor) : m_TopColor(TopColor)

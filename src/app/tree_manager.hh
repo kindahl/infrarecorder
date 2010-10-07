@@ -22,8 +22,8 @@
 #include <ckfilesystem/fileset.hh>
 #include <ckfilesystem/iso9660reader.hh>
 #include <ckfilesystem/iso9660writer.hh>
-#include <base/XmlProcessor.h>
-#include <base/StringContainer.h>
+#include <base/xml_processor.hh>
+#include <base/string_container.hh>
 
 #define PROJECTITEM_FLAG_ISFOLDER					1
 #define PROJECTITEM_FLAG_ISLOCKED					2

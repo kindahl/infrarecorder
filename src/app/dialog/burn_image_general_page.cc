@@ -18,7 +18,7 @@
 
 #include "stdafx.hh"
 #include <ckmmc/util.hh>
-#include <base/StringUtil.h>
+#include <base/string_util.hh>
 #include "infrarecorder.hh"
 #include "ctrl_messages.hh"
 #include "cdrtools_parse_strings.hh"

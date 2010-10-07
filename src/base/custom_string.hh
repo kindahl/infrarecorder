@@ -17,7 +17,7 @@
  */
 
 #pragma once
-#include "StringUtil.h"
+#include "string_util.hh"
 
 #define CSTRING_DEFAULT_LENGTH			256
 #define CSTRING_MEM_INCRATIO			2

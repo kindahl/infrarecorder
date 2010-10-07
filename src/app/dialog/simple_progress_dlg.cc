@@ -18,7 +18,7 @@
 
 #include "stdafx.hh"
 #include <comutil.h>
-#include <base/StringUtil.h>
+#include <base/string_util.hh>
 #include "string_table.hh"
 #include "lang_util.hh"
 #include "device_util.hh"

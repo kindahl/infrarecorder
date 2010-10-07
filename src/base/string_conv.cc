@@ -17,7 +17,7 @@
  */
 
 #include <windows.h>
-#include "StringConv.h"
+#include "string_conv.hh"
 
 int StringToInt(const TCHAR *szString)
 {

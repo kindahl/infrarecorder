@@ -21,7 +21,7 @@
 #include <ckcore/process.hh>
 #include <ckfilesystem/fileset.hh>
 #include <ckmmc/device.hh>
-#include <base/StringUtil.h>
+#include <base/string_util.hh>
 #include "advanced_progress.hh"
 
 #define CORE_IGNORE_ERRORINFOMESSAGES		// Should we ignore error information message (copyright etc.)?

@@ -20,7 +20,7 @@
 #include <vector>
 #include <ckcore/crcstream.hh>
 #include <ckfilesystem/filesystemhelper.hh>
-#include <base/XmlProcessor.h>
+#include <base/xml_processor.hh>
 #include "space_meter.hh"
 #include "tree_manager.hh"
 #include "custom_container.hh"

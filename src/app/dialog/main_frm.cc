@@ -20,7 +20,7 @@
 #include <ckcore/filestream.hh>
 #include <ckcore/linereader.hh>
 #include <ckcore/exception.hh>
-#include <base/StringUtil.h>
+#include <base/string_util.hh>
 #include "resource.h"
 #include "settings.hh"
 #include "registry.hh"

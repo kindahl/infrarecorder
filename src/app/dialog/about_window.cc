@@ -19,8 +19,8 @@
 #include "stdafx.hh"
 #include <ckcore/crcstream.hh>
 #include <ckcore/filestream.hh>
-#include <base/GraphUtil.h>
-#include <base/StringUtil.h>
+#include <base/graph_util.hh>
+#include <base/string_util.hh>
 #include "resource.h"
 #include "settings.hh"
 #include "infrarecorder.hh"

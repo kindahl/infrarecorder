@@ -19,7 +19,7 @@
 #pragma once
 #include <vector>
 #include <map>
-#include <base/XmlProcessor.h>
+#include <base/xml_processor.hh>
 #include "resource.h"
 
 class CToolBarManager

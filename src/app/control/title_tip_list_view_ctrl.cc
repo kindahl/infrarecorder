@@ -18,7 +18,7 @@
 
 #include "stdafx.hh"
 #include "title_tip_list_view_ctrl.hh"
-#include <base/StringUtil.h>
+#include <base/string_util.hh>
 
 /*
 	IMPORTANT: Requires host to chain the message loop.

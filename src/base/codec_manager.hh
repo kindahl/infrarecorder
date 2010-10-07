@@ -18,7 +18,7 @@
 
 #pragma once
 #include <vector>
-#include "CodecConst.h"
+#include "codec_const.hh"
 
 // Local structures.
 class CCodec

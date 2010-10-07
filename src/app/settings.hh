@@ -19,9 +19,9 @@
 #pragma once
 #include <list>
 #include <ckmmc/device.hh>
-#include <base/StringUtil.h>
-#include <base/XmlProcessor.h>
-#include <base/LngProcessor.h>
+#include <base/string_util.hh>
+#include <base/xml_processor.hh>
+#include <base/lng_processor.hh>
 #include "tree_manager.hh"
 
 #define WRITEMETHOD_SAO					0

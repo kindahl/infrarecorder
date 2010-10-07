@@ -18,7 +18,7 @@
 
 #include "stdafx.hh"
 #include "new_file_ext_dlg.hh"
-#include <base/StringUtil.h>
+#include <base/string_util.hh>
 #include "string_table.hh"
 #include "settings.hh"
 

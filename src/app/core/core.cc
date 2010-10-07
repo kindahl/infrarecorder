@@ -18,7 +18,7 @@
 
 #include "stdafx.hh"
 #include <ckcore/convert.hh>
-#include <base/StringContainer.h>
+#include <base/string_container.hh>
 #include "cdrtools_parse_strings.hh"
 #include "string_table.hh"
 #include "settings.hh"

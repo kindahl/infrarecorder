@@ -17,7 +17,7 @@
  */
 
 #include "stdafx.hh"
-#include <base/StringUtil.h>
+#include <base/string_util.hh>
 #include "infrarecorder.hh"
 #include "device_dlg.hh"
 #include "string_table.hh"
