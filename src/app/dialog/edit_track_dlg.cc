@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "stdafx.h"
+#include "stdafx.hh"
 #include <base/StringUtil.h>
 #include "edit_track_dlg.hh"
 #include "string_table.hh"

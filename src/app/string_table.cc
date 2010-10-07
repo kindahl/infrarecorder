@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "stdafx.h"
+#include "stdafx.hh"
 #include "string_table.hh"
 
 const TCHAR *g_szStringTable[END_OF_STRING_TABLE_GUARD] =

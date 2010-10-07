@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "stdafx.h"
+#include "stdafx.hh"
 
 #if (_ATL_VER < 0x0700)
 #include <atlimpl.cpp>

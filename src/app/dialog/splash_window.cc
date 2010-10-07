@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "stdafx.h"
+#include "stdafx.hh"
 #include <base/GraphUtil.h>
 #include "Resource.h"
 #include "infra_recorder.hh"

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "stdafx.h"
+#include "stdafx.hh"
 #include <ckmmc/util.hh>
 #include "infra_recorder.hh"
 #include "erase_dlg.hh"

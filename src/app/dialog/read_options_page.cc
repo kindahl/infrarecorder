@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "stdafx.h"
+#include "stdafx.hh"
 #include <ckmmc/util.hh>
 #include "read_options_page.hh"
 #include "ctrl_messages.hh"

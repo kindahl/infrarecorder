@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "stdafx.h"
+#include "stdafx.hh"
 #include <ckcore/directory.hh>
 #include "main_frm.hh"
 #include "toolbar_manager.hh"

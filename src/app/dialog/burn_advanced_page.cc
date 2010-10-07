@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "stdafx.h"
+#include "stdafx.hh"
 #include "burn_advanced_page.hh"
 #include "ctrl_messages.hh"
 #include "cdrtools_parse_strings.hh"

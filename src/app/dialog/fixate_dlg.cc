@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "stdafx.h"
+#include "stdafx.hh"
 #include "infra_recorder.hh"
 #include "string_table.hh"
 #include "device_util.hh"

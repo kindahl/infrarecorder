@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "stdafx.h"
+#include "stdafx.hh"
 #include "custom_container.hh"
 #include "settings.hh"
 #include "ctrl_messages.hh"

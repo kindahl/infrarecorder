@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "stdafx.h"
+#include "stdafx.hh"
 #include <ckmmc/devicemanager.hh>
 #include <base/StringUtil.h>
 #include "string_table.hh"

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "stdafx.h"
+#include "stdafx.hh"
 #include "burn_image_dlg.hh"
 
 CBurnImageDlg::CBurnImageDlg(const TCHAR *szTitle,bool bImageHasTOC,

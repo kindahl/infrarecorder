@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "stdafx.h"
+#include "stdafx.hh"
 #include "disc_general_page.hh"
 #include "string_table.hh"
 #include "lang_util.hh"

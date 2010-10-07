@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "stdafx.h"
+#include "stdafx.hh"
 #include <base/StringUtil.h>
 #include "project_prop_general_page.hh"
 #include "project_manager.hh"

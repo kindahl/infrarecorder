@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "stdafx.h"
+#include "stdafx.hh"
 #include <ckfilesystem/filesystemwriter.hh>
 #include <ckfilesystem/sectorstream.hh>
 #include "settings.hh"
