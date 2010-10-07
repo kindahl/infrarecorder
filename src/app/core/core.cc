@@ -19,7 +19,7 @@
 #include "stdafx.h"
 #include <ckcore/convert.hh>
 #include <base/StringContainer.h>
-#include "cdrtoolsParseStrings.h"
+#include "cdrtools_parse_strings.hh"
 #include "StringTable.h"
 #include "Settings.h"
 #include "LogDlg.h"
@@ -27,8 +27,8 @@
 #include "Version.h"
 #include "TempManager.h"
 #include "DeviceUtil.h"
-#include "Core2.h"
-#include "Core.h"
+#include "core2.hh"
+#include "core.hh"
 
 // FIXME: How come Windows 95 supports larger command lines than Windows 2000?
 //        Windows 2000 seems to be the only OS that is limited to MAX_PATH.

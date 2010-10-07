@@ -18,7 +18,7 @@
 
 #pragma once
 #include "Resource.h"
-#include "Core2.h"
+#include "core2.hh"
 
 class CCopyImageGeneralPage : public CPropertyPageImpl<CCopyImageGeneralPage>
 {

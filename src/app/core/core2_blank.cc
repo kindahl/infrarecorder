@@ -17,8 +17,8 @@
  */
 
 #include "stdafx.h"
-#include "Core2Blank.h"
-#include "Core2.h"
+#include "core2_blank.hh"
+#include "core2.hh"
 #include "LogDlg.h"
 #include "StringTable.h"
 #include "LangUtil.h"

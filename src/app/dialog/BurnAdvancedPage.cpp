@@ -19,7 +19,7 @@
 #include "stdafx.h"
 #include "BurnAdvancedPage.h"
 #include "CtrlMessages.h"
-#include "cdrtoolsParseStrings.h"
+#include "cdrtools_parse_strings.hh"
 #include "Settings.h"
 #include "StringTable.h"
 #include "LangUtil.h"

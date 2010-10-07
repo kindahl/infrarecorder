@@ -22,7 +22,7 @@
 #include "Settings.h"
 #include "LangUtil.h"
 #include "WaitDlg.h"
-#include "Scsi.h"
+#include "scsi.hh"
 
 CCopyImageDlg::CCopyImageDlg(bool bAppMode) :
 	m_bCentered(false),m_bAppMode(bAppMode),m_pSrcDevice(NULL),

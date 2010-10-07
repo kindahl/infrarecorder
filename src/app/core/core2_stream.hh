@@ -19,7 +19,7 @@
 #pragma once
 #include <ckcore/stream.hh>
 #include <ckcore/log.hh>
-#include "Core2Read.h"
+#include "core2_read.hh"
 
 #define CORE2_INSTREAM_FRAMEFACTOR			10	// We will cache 10 frames in the memory.
 

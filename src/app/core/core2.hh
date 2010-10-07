@@ -24,7 +24,7 @@
 #include <ckfilesystem/fileset.hh>
 #include <ckmmc/device.hh>
 #include <base/StringUtil.h>
-#include "Scsi.h"
+#include "scsi.hh"
 #include "AdvancedProgress.h"
 
 class CCore2

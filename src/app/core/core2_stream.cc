@@ -17,8 +17,8 @@
  */
 
 #include "stdafx.h"
-#include "Core2Read.h"
-#include "Core2Stream.h"
+#include "core2_read.hh"
+#include "core2_stream.hh"
 
 CCore2InStream::CCore2InStream(ckcore::Log *pLog,ckmmc::Device &Device,
 							   unsigned long ulStartBlock,unsigned long ulEndBlock) :

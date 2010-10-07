@@ -19,7 +19,7 @@
 #include "stdafx.h"
 #include <math.h>
 #include <base/StringUtil.h>
-#include "CdText.h"
+#include "cd_text.hh"
 
 void CCdText::InitCRC()
 {

@@ -795,47 +795,47 @@
 				Name="core"
 				>
 				<File
-					RelativePath=".\core\CdText.cpp"
+					RelativePath=".\core\cd_text.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\core\Core.cpp"
+					RelativePath=".\core\core.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\core\Core2.cpp"
+					RelativePath=".\core\core2.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\core\Core2Blank.cpp"
+					RelativePath=".\core\core2_blank.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\core\Core2Format.cpp"
+					RelativePath=".\core\core2_format.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\core\Core2Info.cpp"
+					RelativePath=".\core\core2_info.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\core\Core2Read.cpp"
+					RelativePath=".\core\core2_read.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\core\Core2Stream.cpp"
+					RelativePath=".\core\core2_stream.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\core\Core2Util.cpp"
+					RelativePath=".\core\core2_util.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\core\Diagnostics.cpp"
+					RelativePath=".\core\diagnostics.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\core\Scsi.cpp"
+					RelativePath=".\core\scsi.cc"
 					>
 				</File>
 			</Filter>
@@ -1240,51 +1240,51 @@
 				Name="core"
 				>
 				<File
-					RelativePath=".\core\cdrtoolsParseStrings.h"
+					RelativePath=".\core\cd_text.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\core\CdText.h"
+					RelativePath=".\core\cdrtools_parse_strings.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\core\Core.h"
+					RelativePath=".\core\core.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\core\Core2.h"
+					RelativePath=".\core\core2.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\core\Core2Blank.h"
+					RelativePath=".\core\core2_blank.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\core\Core2Format.h"
+					RelativePath=".\core\core2_format.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\core\Core2Info.h"
+					RelativePath=".\core\core2_info.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\core\Core2Read.h"
+					RelativePath=".\core\core2_read.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\core\Core2Stream.h"
+					RelativePath=".\core\core2_stream.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\core\Core2Util.h"
+					RelativePath=".\core\core2_util.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\core\Diagnostics.h"
+					RelativePath=".\core\diagnostics.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\core\Scsi.h"
+					RelativePath=".\core\scsi.hh"
 					>
 				</File>
 			</Filter>

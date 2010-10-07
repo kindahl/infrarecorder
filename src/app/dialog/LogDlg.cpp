@@ -21,7 +21,7 @@
 #include "StringTable.h"
 #include "LangUtil.h"
 #include "Settings.h"
-#include "Diagnostics.h"
+#include "diagnostics.hh"
 #include "Version.h"
 #include "LogDlg.h"
 

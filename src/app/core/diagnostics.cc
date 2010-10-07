@@ -18,11 +18,11 @@
 
 #include "stdafx.h"
 #include <base/StringUtil.h>
-#include "cdrtoolsParseStrings.h"
+#include "cdrtools_parse_strings.hh"
 #include "LogDlg.h"
 #include "Settings.h"
-#include "Core.h"
-#include "Diagnostics.h"
+#include "core.hh"
+#include "diagnostics.hh"
 
 CDiagnostics g_Diagnostics;
 

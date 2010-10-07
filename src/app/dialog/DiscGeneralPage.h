@@ -19,7 +19,7 @@
 #pragma once
 #include <ckmmc/device.hh>
 #include "Resource.h"
-#include "Core2Info.h"
+#include "core2_info.hh"
 
 class CDiscGeneralPage : public CPropertyPageImpl<CDiscGeneralPage>
 {

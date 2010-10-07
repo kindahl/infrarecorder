@@ -17,9 +17,9 @@
  */
 
 #include "stdafx.h"
-#include "Core2Format.h"
-#include "Core2.h"
-#include "Core2Util.h"
+#include "core2_Format.hh"
+#include "core2.hh"
+#include "core2_util.hh"
 #include "LogDlg.h"
 #include "StringTable.h"
 #include "LangUtil.h"

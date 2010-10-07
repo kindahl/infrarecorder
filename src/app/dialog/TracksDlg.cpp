@@ -20,14 +20,14 @@
 #include <ckmmc/devicemanager.hh>
 #include <base/StringUtil.h>
 #include "StringTable.h"
-#include "Scsi.h"
+#include "scsi.hh"
 #include "WaitDlg.h"
 #include "Version.h"
 #include "ProgressDlg.h"
 #include "InfraRecorder.h"
 #include "DeviceUtil.h"
-#include "Core.h"
-#include "Core2.h"
+#include "core.hh"
+#include "core2.hh"
 #include "LangUtil.h"
 #include "Settings.h"
 #include "SaveTracksDlg.h"

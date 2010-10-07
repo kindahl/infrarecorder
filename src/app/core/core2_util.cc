@@ -17,8 +17,8 @@
  */
 
 #include "stdafx.h"
-#include "Scsi.h"
-#include "Core2Util.h"
+#include "scsi.hh"
+#include "core2_util.hh"
 
 /**
 	Parses the specified sense buffer and returns a value representing the

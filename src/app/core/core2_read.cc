@@ -18,10 +18,10 @@
 
 #include "stdafx.h"
 #include <ckmmc/util.hh>
-#include "Core2Read.h"
-#include "Core2.h"
-#include "Core2Info.h"
-#include "Core2Util.h"
+#include "core2_read.hh"
+#include "core2.hh"
+#include "core2_info.hh"
+#include "core2_util.hh"
 #include "LogDlg.h"
 #include "StringTable.h"
 #include "LangUtil.h"

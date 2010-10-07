@@ -24,7 +24,7 @@
 #include "Settings.h"
 #include "LangUtil.h"
 #include "DeviceUtil.h"
-#include "Core2Util.h"
+#include "core2_util.hh"
 #include "Version.h"
 #include "VisualStyles.h"
 

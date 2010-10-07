@@ -19,7 +19,7 @@
 #pragma once
 #include <ckmmc/device.hh>
 #include "Resource.h"
-#include "Core2.h"
+#include "core2.hh"
 
 class CEraseDlg : public CDialogImpl<CEraseDlg>
 {

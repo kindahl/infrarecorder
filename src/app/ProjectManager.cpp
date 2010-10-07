@@ -26,7 +26,7 @@
 #include "MainFrm.h"
 #include "AudioUtil.h"
 #include "Settings.h"
-#include "CdText.h"
+#include "cd_text.hh"
 #include "LangUtil.h"
 #include "InfraRecorder.h"
 #include "ProjectManager.h"

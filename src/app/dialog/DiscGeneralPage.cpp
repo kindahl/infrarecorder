@@ -22,7 +22,7 @@
 #include "LangUtil.h"
 #include "Settings.h"
 #include "TransUtil.h"
-#include "Core2.h"
+#include "core2.hh"
 
 CDiscGeneralPage::CDiscGeneralPage(const TCHAR *szDiscLabel,ckmmc::Device &Device) :
 	m_Device(Device)

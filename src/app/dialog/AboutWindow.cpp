@@ -25,7 +25,7 @@
 #include "Settings.h"
 #include "InfraRecorder.h"
 #include "Version.h"
-#include "Core.h"
+#include "core.hh"
 #include "AboutWindow.h"
 
 #define ABOUT_YEARS			_T("2006-2010")

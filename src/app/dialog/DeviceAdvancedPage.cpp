@@ -20,7 +20,7 @@
 #include "StringTable.h"
 #include "LangUtil.h"
 #include "Settings.h"
-#include "cdrtoolsParseStrings.h"
+#include "cdrtools_parse_strings.hh"
 #include "DeviceAdvancedPage.h"
 
 CDeviceAdvancedPage::CDeviceAdvancedPage(ckmmc::Device &Device) :

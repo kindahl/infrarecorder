@@ -20,9 +20,9 @@
 #include <ckfilesystem/filesystemwriter.hh>
 #include <ckfilesystem/sectorstream.hh>
 #include "Settings.h"
-#include "Core.h"
-#include "Core2.h"
-#include "Core2Info.h"
+#include "core.hh"
+#include "core2.hh"
+#include "core2_info.hh"
 #include "InfraRecorder.h"
 #include "BurnImageDlg.h"
 #include "CopyDiscDlg.h"
@@ -36,7 +36,7 @@
 #include "StringTable.h"
 #include "LangUtil.h"
 #include "ProjectManager.h"
-#include "Scsi.h"
+#include "scsi.hh"
 #include "LogDlg.h"
 #include "ActionManager.h"
 
