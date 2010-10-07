@@ -20,7 +20,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(ProjectDir)..\..\build\$(PlatformName)\$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)..\..\bin\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
@@ -117,7 +117,7 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="$(ProjectDir)..\..\build\$(PlatformName)\$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)..\..\bin\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
@@ -214,7 +214,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(ProjectDir)..\..\build\$(PlatformName)\$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)..\..\bin\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
@@ -310,7 +310,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="$(ProjectDir)..\..\build\$(PlatformName)\$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)..\..\bin\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
@@ -406,7 +406,7 @@
 		</Configuration>
 		<Configuration
 			Name="ReleaseP|Win32"
-			OutputDirectory="$(ProjectDir)..\..\build\$(PlatformName)\$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)..\..\bin\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
@@ -502,7 +502,7 @@
 		</Configuration>
 		<Configuration
 			Name="ReleaseP|x64"
-			OutputDirectory="$(ProjectDir)..\..\build\$(PlatformName)\$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)..\..\bin\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"

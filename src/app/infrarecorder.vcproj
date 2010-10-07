@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="InfraRecorder"
+	Name="infrarecorder"
 	ProjectGUID="{949B73FF-BD75-47C0-B965-328513C481B4}"
-	RootNamespace="InfraRecorder"
+	RootNamespace="infrarecorder"
 	>
 	<Platforms>
 		<Platform
@@ -19,7 +19,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(ProjectDir)..\..\build\$(PlatformName)\$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)..\..\bin\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
@@ -109,7 +109,7 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="$(ProjectDir)..\..\build\$(PlatformName)\$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)..\..\bin\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
@@ -199,7 +199,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(ProjectDir)..\..\build\$(PlatformName)\$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)..\..\bin\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
@@ -290,7 +290,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="$(ProjectDir)..\..\build\$(PlatformName)\$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)..\..\bin\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
@@ -381,7 +381,7 @@
 		</Configuration>
 		<Configuration
 			Name="ReleaseP|Win32"
-			OutputDirectory="$(ProjectDir)..\..\build\$(PlatformName)\$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)..\..\bin\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
@@ -472,7 +472,7 @@
 		</Configuration>
 		<Configuration
 			Name="ReleaseP|x64"
-			OutputDirectory="$(ProjectDir)..\..\build\$(PlatformName)\$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)..\..\bin\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
@@ -6354,11 +6354,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\resources\project-audio.ico"
+				RelativePath=".\resources\background-splash.bmp"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\wizard\icon-audio_disc.png"
+				RelativePath=".\resources\background-welcome_logo.png"
+				>
+			</File>
+			<File
+				RelativePath=".\resources\button-close.bmp"
 				>
 			</File>
 			<File
@@ -6378,11 +6382,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\resources\wizard\icon-copy_disc.png"
+				RelativePath=".\resources\wizard\icon-audio_disc.png"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\project-data.ico"
+				RelativePath=".\resources\wizard\icon-copy_disc.png"
 				>
 			</File>
 			<File
@@ -6390,43 +6394,31 @@
 				>
 			</File>
 			<File
-				RelativePath=".\resources\project-video.ico"
-				>
-			</File>
-			<File
 				RelativePath=".\resources\icon-main.ico"
 				>
 			</File>
 			<File
+				RelativePath=".\resources\icon-project.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\resources\wizard\icon-read_disc.png"
+				>
+			</File>
+			<File
+				RelativePath=".\resources\icon-refresh.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\resources\wizard\icon-video_disc.png"
+				>
+			</File>
+			<File
+				RelativePath=".\resources\wizard\icon-write_image.png"
+				>
+			</File>
+			<File
 				RelativePath=".\infrarecorder.rc"
-				>
-			</File>
-			<File
-				RelativePath=".\resources\toolbar-main_large.bmp"
-				>
-			</File>
-			<File
-				RelativePath=".\resources\toolbar-main_large_.bmp"
-				>
-			</File>
-			<File
-				RelativePath=".\resources\toolbar-main_small.bmp"
-				>
-			</File>
-			<File
-				RelativePath=".\resources\toolbar-main_small_.bmp"
-				>
-			</File>
-			<File
-				RelativePath=".\resources\toolbar-mini.bmp"
-				>
-			</File>
-			<File
-				RelativePath=".\resources\toolbar-mini_.bmp"
-				>
-			</File>
-			<File
-				RelativePath=".\resources\project-mixed.ico"
 				>
 			</File>
 			<File
@@ -6462,23 +6454,43 @@
 				>
 			</File>
 			<File
-				RelativePath=".\resources\button-close.bmp"
+				RelativePath=".\resources\project-audio.ico"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\icon-project.ico"
+				RelativePath=".\resources\project-data.ico"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\wizard\icon-read_disc.png"
+				RelativePath=".\resources\project-mixed.ico"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\icon-refresh.ico"
+				RelativePath=".\resources\project-video.ico"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\background-splash.bmp"
+				RelativePath=".\resources\toolbar-main_large.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\resources\toolbar-main_large_.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\resources\toolbar-main_small.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\resources\toolbar-main_small_.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\resources\toolbar-mini.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\resources\toolbar-mini_.bmp"
 				>
 			</File>
 			<File
@@ -6487,18 +6499,6 @@
 			</File>
 			<File
 				RelativePath=".\resources\toolbar_track_.bmp"
-				>
-			</File>
-			<File
-				RelativePath=".\resources\wizard\icon-video_disc.png"
-				>
-			</File>
-			<File
-				RelativePath=".\resources\background-welcome_logo.png"
-				>
-			</File>
-			<File
-				RelativePath=".\resources\wizard\icon-write_image.png"
 				>
 			</File>
 		</Filter>
