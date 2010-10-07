@@ -22,7 +22,7 @@
 #include "StringTable.h"
 #include "LangUtil.h"
 #include "TransUtil.h"
-#include "MainFrm.h"
+#include "main_frm.hh"
 
 CToolBarManager g_ToolBarManager;
 

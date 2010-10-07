@@ -18,7 +18,7 @@
 
 #include "stdafx.h"
 #include <ckcore/directory.hh>
-#include "MainFrm.h"
+#include "main_frm.hh"
 #include "ToolBarManager.h"
 #include "Settings.h"
 

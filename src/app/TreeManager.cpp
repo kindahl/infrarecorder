@@ -19,7 +19,7 @@
 #include "stdafx.h"
 #include <queue>
 #include <base/StringUtil.h>
-#include "MainFrm.h"
+#include "main_frm.hh"
 #include "StringTable.h"
 #include "TempManager.h"
 #include "Settings.h"

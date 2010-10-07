@@ -18,21 +18,21 @@
 
 #include "stdafx.h"
 #include "Resource.h"
-#include "MainFrm.h"
+#include "main_frm.hh"
 #include <ckcore/exception.hh>
 #include <base/FileUtil.h>
-#include "ProgressDlg.h"
-#include "SimpleProgressDlg.h"
-#include "SplashWindow.h"
-#include "LogDlg.h"
+#include "progress_dlg.hh"
+#include "simple_progress_dlg.hh"
+#include "splash_window.hh"
+#include "log_dlg.hh"
 #include "Settings.h"
 #include "SettingsManager.h"
 #include "StringTable.h"
 #include "LangUtil.h"
 #include "ActionManager.h"
 #include "TempManager.h"
-#include "InfoDlg.h"
-#include "AboutWindow.h"
+#include "info_dlg.hh"
+#include "about_window.hh"
 #include "InfraRecorder.h"
 
 CAppModule _Module;

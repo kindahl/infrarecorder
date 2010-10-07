@@ -18,7 +18,7 @@
 
 #include "stdafx.h"
 #include "Resource.h"
-#include "MainFrm.h"
+#include "main_frm.hh"
 #include "ProjectManager.h"
 #include "Settings.h"
 #include "StringTable.h"

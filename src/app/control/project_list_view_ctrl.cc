@@ -20,7 +20,7 @@
 #include "project_list_view_ctrl.hh"
 #include "ProjectManager.h"
 #include "Settings.h"
-#include "MainFrm.h"
+#include "main_frm.hh"
 #include "StringTable.h"
 #include "ProjectDropSource.h"
 #include "ProjectDataObject.h"

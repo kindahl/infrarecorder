@@ -18,7 +18,7 @@
 
 #include "stdafx.h"
 #include "scsi.hh"
-#include "LogDlg.h"
+#include "log_dlg.hh"
 #include "core2_info.hh"
 
 CCore2Info::CCore2Info()

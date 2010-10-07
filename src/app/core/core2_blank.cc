@@ -19,7 +19,7 @@
 #include "stdafx.h"
 #include "core2_blank.hh"
 #include "core2.hh"
-#include "LogDlg.h"
+#include "log_dlg.hh"
 #include "StringTable.h"
 #include "LangUtil.h"
 

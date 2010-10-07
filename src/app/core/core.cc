@@ -22,7 +22,7 @@
 #include "cdrtools_parse_strings.hh"
 #include "StringTable.h"
 #include "Settings.h"
-#include "LogDlg.h"
+#include "log_dlg.hh"
 #include "LangUtil.h"
 #include "Version.h"
 #include "TempManager.h"

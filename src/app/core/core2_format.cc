@@ -20,7 +20,7 @@
 #include "core2_Format.hh"
 #include "core2.hh"
 #include "core2_util.hh"
-#include "LogDlg.h"
+#include "log_dlg.hh"
 #include "StringTable.h"
 #include "LangUtil.h"
 

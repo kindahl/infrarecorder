@@ -25,7 +25,7 @@
 #include "TreeManager.h"
 #include "custom_container.hh"
 #include "AdvancedProgress.h"
-#include "ConfirmFileReplaceDlg.h"
+#include "confirm_file_replace_dlg.hh"
 
 // Specifies what column index each data column has.
 #define COLUMN_SUBINDEX_NAME				0

@@ -23,7 +23,7 @@
 #include <ckcore/linereader.hh>
 #include <base/StringUtil.h>
 #include "StringTable.h"
-#include "MainFrm.h"
+#include "main_frm.hh"
 #include "AudioUtil.h"
 #include "Settings.h"
 #include "cd_text.hh"

@@ -20,7 +20,7 @@
 #include "custom_container.hh"
 #include "Settings.h"
 #include "CtrlMessages.h"
-#include "MainFrm.h"
+#include "main_frm.hh"
 
 CCustomContainer::CCustomContainer()
 {

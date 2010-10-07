@@ -843,183 +843,183 @@
 				Name="dialog"
 				>
 				<File
-					RelativePath=".\dialog\AboutWindow.cpp"
+					RelativePath=".\dialog\about_window.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\AddBootImageDlg.cpp"
+					RelativePath=".\dialog\add_boot_image_dlg.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\BurnAdvancedPage.cpp"
+					RelativePath=".\dialog\burn_advanced_page.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\BurnImageDlg.cpp"
+					RelativePath=".\dialog\burn_image_dlg.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\BurnImageGeneralPage.cpp"
+					RelativePath=".\dialog\burn_image_general_page.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\ConfigAdvancedPage.cpp"
+					RelativePath=".\dialog\config_advanced_page.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\ConfigDlg.cpp"
+					RelativePath=".\dialog\config_dlg.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\ConfigGeneralPage.cpp"
+					RelativePath=".\dialog\config_general_page.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\ConfigLanguagePage.cpp"
+					RelativePath=".\dialog\config_language_page.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\ConfigShellExtPage.cpp"
+					RelativePath=".\dialog\config_shell_ext_page.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\ConfirmFileReplaceDlg.cpp"
+					RelativePath=".\dialog\confirm_file_replace_dlg.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\CopyDiscDlg.cpp"
+					RelativePath=".\dialog\copy_disc_dlg.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\CopyDiscGeneralPage.cpp"
+					RelativePath=".\dialog\copy_disc_general_page.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\CopyImageDlg.cpp"
+					RelativePath=".\dialog\copy_image_dlg.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\CopyImageGeneralPage.cpp"
+					RelativePath=".\dialog\copy_image_general_page.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\DeviceAdvancedPage.cpp"
+					RelativePath=".\dialog\device_advanced_page.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\DeviceDlg.cpp"
+					RelativePath=".\dialog\device_dlg.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\DeviceGeneralPage.cpp"
+					RelativePath=".\dialog\device_general_page.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\DevicesDlg.cpp"
+					RelativePath=".\dialog\devices_dlg.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\DiscDlg.cpp"
+					RelativePath=".\dialog\disc_dlg.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\DiscGeneralPage.cpp"
+					RelativePath=".\dialog\disc_general_page.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\EditTrackDlg.cpp"
+					RelativePath=".\dialog\edit_track_dlg.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\EraseDlg.cpp"
+					RelativePath=".\dialog\erase_dlg.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\FixateDlg.cpp"
+					RelativePath=".\dialog\fixate_dlg.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\ImportSessionDlg.cpp"
+					RelativePath=".\dialog\import_session_dlg.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\InfoDlg.cpp"
+					RelativePath=".\dialog\info_dlg.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\LogDlg.cpp"
+					RelativePath=".\dialog\log_dlg.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\MainFrm.cpp"
+					RelativePath=".\dialog\main_frm.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\MainView.cpp"
+					RelativePath=".\dialog\main_view.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\NewFileExtDlg.cpp"
+					RelativePath=".\dialog\new_file_ext_dlg.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\ProgressDlg.cpp"
+					RelativePath=".\dialog\progress_dlg.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\ProjectPropAudioPage.cpp"
+					RelativePath=".\dialog\project_prop_audio_page.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\ProjectPropBootPage.cpp"
+					RelativePath=".\dialog\project_prop_boot_page.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\ProjectPropDlg.cpp"
+					RelativePath=".\dialog\project_prop_dlg.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\ProjectPropFieldsPage.cpp"
+					RelativePath=".\dialog\project_prop_fields_page.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\ProjectPropFileSysPage.cpp"
+					RelativePath=".\dialog\project_prop_file_sys_page.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\ProjectPropGeneralPage.cpp"
+					RelativePath=".\dialog\project_prop_general_page.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\ProjectPropIsoPage.cpp"
+					RelativePath=".\dialog\project_prop_iso_page.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\ProjectPropUdfPage.cpp"
+					RelativePath=".\dialog\project_prop_udf_page.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\ReadOptionsPage.cpp"
+					RelativePath=".\dialog\read_options_page.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\SaveTracksDlg.cpp"
+					RelativePath=".\dialog\save_tracks_dlg.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\SimpleProgressDlg.cpp"
+					RelativePath=".\dialog\simple_progress_dlg.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\SplashWindow.cpp"
+					RelativePath=".\dialog\splash_window.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\TracksDlg.cpp"
+					RelativePath=".\dialog\tracks_dlg.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\WaitDlg.cpp"
+					RelativePath=".\dialog\wait_dlg.cc"
 					>
 				</File>
 			</Filter>
@@ -1292,183 +1292,183 @@
 				Name="dialog"
 				>
 				<File
-					RelativePath=".\dialog\AboutWindow.h"
+					RelativePath=".\dialog\about_window.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\AddBootImageDlg.h"
+					RelativePath=".\dialog\add_boot_image_dlg.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\BurnAdvancedPage.h"
+					RelativePath=".\dialog\burn_advanced_page.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\BurnImageDlg.h"
+					RelativePath=".\dialog\burn_image_dlg.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\BurnImageGeneralPage.h"
+					RelativePath=".\dialog\burn_image_general_page.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\ConfigAdvancedPage.h"
+					RelativePath=".\dialog\config_advanced_page.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\ConfigDlg.h"
+					RelativePath=".\dialog\config_dlg.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\ConfigGeneralPage.h"
+					RelativePath=".\dialog\config_general_page.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\ConfigLanguagePage.h"
+					RelativePath=".\dialog\config_language_page.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\ConfigShellExtPage.h"
+					RelativePath=".\dialog\config_shell_ext_page.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\ConfirmFileReplaceDlg.h"
+					RelativePath=".\dialog\confirm_file_replace_dlg.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\CopyDiscDlg.h"
+					RelativePath=".\dialog\copy_disc_dlg.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\CopyDiscGeneralPage.h"
+					RelativePath=".\dialog\copy_disc_general_page.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\CopyImageDlg.h"
+					RelativePath=".\dialog\copy_image_dlg.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\CopyImageGeneralPage.h"
+					RelativePath=".\dialog\copy_image_general_page.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\DeviceAdvancedPage.h"
+					RelativePath=".\dialog\device_advanced_page.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\DeviceDlg.h"
+					RelativePath=".\dialog\device_dlg.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\DeviceGeneralPage.h"
+					RelativePath=".\dialog\device_general_page.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\DevicesDlg.h"
+					RelativePath=".\dialog\devices_dlg.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\DiscDlg.h"
+					RelativePath=".\dialog\disc_dlg.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\DiscGeneralPage.h"
+					RelativePath=".\dialog\disc_general_page.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\EditTrackDlg.h"
+					RelativePath=".\dialog\edit_track_dlg.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\EraseDlg.h"
+					RelativePath=".\dialog\erase_dlg.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\FixateDlg.h"
+					RelativePath=".\dialog\fixate_dlg.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\ImportSessionDlg.h"
+					RelativePath=".\dialog\import_session_dlg.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\InfoDlg.h"
+					RelativePath=".\dialog\info_dlg.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\LogDlg.h"
+					RelativePath=".\dialog\log_dlg.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\MainFrm.h"
+					RelativePath=".\dialog\main_frm.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\MainView.h"
+					RelativePath=".\dialog\main_view.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\NewFileExtDlg.h"
+					RelativePath=".\dialog\new_file_ext_dlg.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\ProgressDlg.h"
+					RelativePath=".\dialog\progress_dlg.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\ProjectPropAudioPage.h"
+					RelativePath=".\dialog\project_prop_audio_page.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\ProjectPropBootPage.h"
+					RelativePath=".\dialog\project_prop_boot_page.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\ProjectPropDlg.h"
+					RelativePath=".\dialog\project_prop_dlg.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\ProjectPropFieldsPage.h"
+					RelativePath=".\dialog\project_prop_fields_page.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\ProjectPropFileSysPage.h"
+					RelativePath=".\dialog\project_prop_file_sys_page.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\ProjectPropGeneralPage.h"
+					RelativePath=".\dialog\project_prop_general_page.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\ProjectPropIsoPage.h"
+					RelativePath=".\dialog\project_prop_iso_page.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\ProjectPropUdfPage.h"
+					RelativePath=".\dialog\project_prop_udf_page.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\ReadOptionsPage.h"
+					RelativePath=".\dialog\read_options_page.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\SaveTracksDlg.h"
+					RelativePath=".\dialog\save_tracks_dlg.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\SimpleProgressDlg.h"
+					RelativePath=".\dialog\simple_progress_dlg.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\SplashWindow.h"
+					RelativePath=".\dialog\splash_window.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\TracksDlg.h"
+					RelativePath=".\dialog\tracks_dlg.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\dialog\WaitDlg.h"
+					RelativePath=".\dialog\wait_dlg.hh"
 					>
 				</File>
 			</Filter>

@@ -19,7 +19,7 @@
 #include "stdafx.h"
 #include <base/StringUtil.h>
 #include "cdrtools_parse_strings.hh"
-#include "LogDlg.h"
+#include "log_dlg.hh"
 #include "Settings.h"
 #include "core.hh"
 #include "diagnostics.hh"
