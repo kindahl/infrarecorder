@@ -151,7 +151,7 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDR_MAINFRAME           ICON                    "Resources\\InfraRecorder.ico"
+IDR_MAINFRAME           ICON                    "Resources\\icon-main.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -932,12 +932,12 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDI_MIXEDICON           ICON                    "Resources\\Mixed.ico"
-IDI_AUDIOICON           ICON                    "Resources\\Audio.ico"
-IDI_DATAICON            ICON                    "Resources\\Data.ico"
-IDI_DVDVIDEOICON        ICON                    "Resources\\DVDVideo.ico"
-IDI_PROJECTICON         ICON                    "Resources\\Project.ico"
-IDI_REFRESHICON         ICON                    "Resources\\Refresh.ico"
+IDI_MIXEDICON           ICON                    "Resources\\project-mixed.ico"
+IDI_AUDIOICON           ICON                    "Resources\\project-audio.ico"
+IDI_DATAICON            ICON                    "Resources\\project-data.ico"
+IDI_VIDEOICON           ICON                    "Resources\\project-video.ico"
+IDI_PROJECTICON         ICON                    "Resources\\icon-project.ico"
+IDI_REFRESHICON         ICON                    "Resources\\icon-refresh.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1294,42 +1294,42 @@ END
 // PNG
 //
 
-IDR_WELCOMELOGOPNG      PNG                     "Resources\\WelcomeLogo.png"
-IDR_BUTTONFPNG          PNG                     "Resources\\Buttons\\ButtonFocus.png"
-IDR_BUTTONHPNG          PNG                     "Resources\\Buttons\\ButtonHover.png"
-IDR_BUTTONHFPNG         PNG                     "Resources\\Buttons\\ButtonHoverFocus.png"
-IDR_BUTTONNPNG          PNG                     "Resources\\Buttons\\ButtonNormal.png"
-IDR_MBUTTONFPNG         PNG                     "Resources\\Buttons\\MultiButtonFocus.png"
-IDR_MBUTTONHPNG         PNG                     "Resources\\Buttons\\MultiButtonHover.png"
-IDR_MBUTTONHFPNG        PNG                     "Resources\\Buttons\\MultiButtonHoverFocus.png"
-IDR_MBUTTONHFS1PNG      PNG                     "Resources\\Buttons\\MultiButtonHoverFocusSpecific1.png"
-IDR_MBUTTONHFS2PNG      PNG                     "Resources\\Buttons\\MultiButtonHoverFocusSpecific2.png"
-IDR_MBUTTONHS1PNG       PNG                     "Resources\\Buttons\\MultiButtonHoverSpecific1.png"
-IDR_MBUTTONHS2PNG       PNG                     "Resources\\Buttons\\MultiButtonHoverSpecific2.png"
-IDR_MBUTTONNPNG         PNG                     "Resources\\Buttons\\MultiButtonNormal.png"
-IDR_WIZARDAUDIOPNG      PNG                     "Resources\\Wizard\\AudioDisc.png"
-IDR_WIZARDCOPYPNG       PNG                     "Resources\\Wizard\\CopyDisc.png"
-IDR_WIZARDDATAPNG       PNG                     "Resources\\Wizard\\DataDisc.png"
-IDR_WIZARDREADPNG       PNG                     "Resources\\Wizard\\ReadDisc.png"
-IDR_WIZARDVIDEOPNG      PNG                     "Resources\\Wizard\\VideoDisc.png"
-IDR_WIZARDWRITEPNG      PNG                     "Resources\\Wizard\\WriteImage.png"
+IDR_WELCOMELOGOPNG      PNG                     "Resources\\background-welcome_logo.png"
+IDR_BUTTONFPNG          PNG                     "Resources\\Buttons\\button-focus.png"
+IDR_BUTTONHPNG          PNG                     "Resources\\Buttons\\button-hover.png"
+IDR_BUTTONHFPNG         PNG                     "Resources\\Buttons\\button-hover_focus.png"
+IDR_BUTTONNPNG          PNG                     "Resources\\Buttons\\button-normal.png"
+IDR_MBUTTONFPNG         PNG                     "Resources\\Buttons\\multi_button-focus.png"
+IDR_MBUTTONHPNG         PNG                     "Resources\\Buttons\\multi_button-hover.png"
+IDR_MBUTTONHFPNG        PNG                     "Resources\\Buttons\\multi_button-hover_focus.png"
+IDR_MBUTTONHFS1PNG      PNG                     "Resources\\Buttons\\multi_button-hover_focus_specific1.png"
+IDR_MBUTTONHFS2PNG      PNG                     "Resources\\Buttons\\multi_button-hover_focus_specific2.png"
+IDR_MBUTTONHS1PNG       PNG                     "Resources\\Buttons\\multi_button-hover_specific1.png"
+IDR_MBUTTONHS2PNG       PNG                     "Resources\\Buttons\\multi_button-hover_specific2.png"
+IDR_MBUTTONNPNG         PNG                     "Resources\\Buttons\\multi_button-normal.png"
+IDR_WIZARDAUDIOPNG      PNG                     "Resources\\Wizard\\icon-audio_disc.png"
+IDR_WIZARDCOPYPNG       PNG                     "Resources\\Wizard\\icon-copy_disc.png"
+IDR_WIZARDDATAPNG       PNG                     "Resources\\Wizard\\icon-data_disc.png"
+IDR_WIZARDREADPNG       PNG                     "Resources\\Wizard\\icon-read_disc.png"
+IDR_WIZARDVIDEOPNG      PNG                     "Resources\\Wizard\\icon-video_disc.png"
+IDR_WIZARDWRITEPNG      PNG                     "Resources\\Wizard\\icon-write_image.png"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Bitmap
 //
 
-IDB_SPLASHBITMAP        BITMAP                  "Resources\\Splash.bmp"
-IDB_MINITOOLBARBITMAP   BITMAP                  "Resources\\MiniToolBar.bmp"
-IDB_MINITOOLBARBITMAP_  BITMAP                  "Resources\\MiniToolBar_.bmp"
-IDB_TRACKTOOLBARBITMAP  BITMAP                  "Resources\\TrackToolBar.bmp"
-IDB_TRACKTOOLBARBITMAP_ BITMAP                  "Resources\\TrackToolBar_.bmp"
-IDB_MAINSMALLBITMAP     BITMAP                  "Resources\\MainSmall.bmp"
-IDB_MAINSMALLBITMAP_    BITMAP                  "Resources\\MainSmall_.bmp"
-IDB_MAINLARGEBITMAP     BITMAP                  "Resources\\MainLarge.bmp"
-IDB_MAINLARGEBITMAP_    BITMAP                  "Resources\\MainLarge_.bmp"
-IDB_PANECLOSEBITMAP     BITMAP                  "Resources\\PaneClose.bmp"
-IDB_ABOUTBITMAP         BITMAP                  "Resources\\About.bmp"
+IDB_SPLASHBITMAP        BITMAP                  "Resources\\background-splash.bmp"
+IDB_MINITOOLBARBITMAP   BITMAP                  "Resources\\toolbar-mini.bmp"
+IDB_MINITOOLBARBITMAP_  BITMAP                  "Resources\\toolbar-mini_.bmp"
+IDB_TRACKTOOLBARBITMAP  BITMAP                  "Resources\\toolbar-track.bmp"
+IDB_TRACKTOOLBARBITMAP_ BITMAP                  "Resources\\toolbar-track_.bmp"
+IDB_MAINSMALLBITMAP     BITMAP                  "Resources\\toolbar-main_small.bmp"
+IDB_MAINSMALLBITMAP_    BITMAP                  "Resources\\toolbar-main_small_.bmp"
+IDB_MAINLARGEBITMAP     BITMAP                  "Resources\\toolbar-main_large.bmp"
+IDB_MAINLARGEBITMAP_    BITMAP                  "Resources\\toolbar-main_large_.bmp"
+IDB_PANECLOSEBITMAP     BITMAP                  "Resources\\button-close.bmp"
+IDB_ABOUTBITMAP         BITMAP                  "Resources\\background-about.bmp"
 #endif    // Swedish resources
 /////////////////////////////////////////////////////////////////////////////
 

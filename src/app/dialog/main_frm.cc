@@ -536,7 +536,7 @@ void CMainFrame::InitializeProjectImageLists()
 	ImageList_AddIcon(m_hProjectTreeImageList,hIcon);
 	DestroyIcon(hIcon);
 
-	hIcon = (HICON)LoadImage(_Module.GetResourceInstance(),MAKEINTRESOURCE(IDI_DVDVIDEOICON),IMAGE_ICON,16,16,LR_LOADTRANSPARENT);
+	hIcon = (HICON)LoadImage(_Module.GetResourceInstance(),MAKEINTRESOURCE(IDI_VIDEOICON),IMAGE_ICON,16,16,LR_LOADTRANSPARENT);
 	ImageList_AddIcon(m_hProjectTreeImageList,hIcon);
 	DestroyIcon(hIcon);
 

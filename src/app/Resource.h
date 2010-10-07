@@ -32,7 +32,7 @@
 #define IDD_PROPPAGE_PROJECTPROPISO     212
 #define IDI_DATAICON                    213
 #define IDD_PROPPAGE_PROJECTPROPFIELDS  213
-#define IDI_DVDVIDEOICON                214
+#define IDI_VIDEOICON                   214
 #define IDR_PROJLISTSELMENU             214
 #define IDD_PROPPAGE_PROJECTPROPAUDIO   214
 #define IDR_PROJLISTNOSELMENU           215
