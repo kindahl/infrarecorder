@@ -23,6 +23,7 @@
 #include "LangUtil.h"
 #include "DeviceUtil.h"
 #include "Settings.h"
+#include "Version.h"
 #include "SimpleProgressDlg.h"
 
 static const int SUBITEM_TEXT = 1;

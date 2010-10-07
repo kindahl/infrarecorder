@@ -19,7 +19,7 @@
 #include "stdafx.h"
 #include "ShellListViewCtrl.h"
 #include "CtrlMessages.h"
-#include "WinVer.h"
+#include "Version.h"
 
 unsigned int CF_IDLIST = ::RegisterClipboardFormat(CFSTR_SHELLIDLIST);
 

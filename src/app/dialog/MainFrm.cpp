@@ -32,7 +32,7 @@
 #include "SettingsManager.h"
 #include "StringTable.h"
 #include "TreeManager.h"
-#include "WinVer.h"
+#include "Version.h"
 #include "ProjectPropDlg.h"
 #include "LangUtil.h"
 #include "ConfigDlg.h"

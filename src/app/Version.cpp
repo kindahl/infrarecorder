@@ -17,7 +17,7 @@
  */
 
 #include "stdafx.h"
-#include "WinVer.h"
+#include "Version.h"
 
 #ifdef VERSION_COMPATIBILITY_CHECK
 CWinVer g_WinVer;

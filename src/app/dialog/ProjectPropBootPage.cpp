@@ -21,7 +21,7 @@
 #include "Settings.h"
 #include "StringTable.h"
 #include "LangUtil.h"
-#include "WinVer.h"
+#include "Version.h"
 #include "AddBootImageDlg.h"
 #include "ProjectManager.h"
 #include "TransUtil.h"

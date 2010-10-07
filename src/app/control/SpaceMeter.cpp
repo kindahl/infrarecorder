@@ -21,7 +21,7 @@
 #include <base/GraphUtil.h>
 #include "StringTable.h"
 #include "LangUtil.h"
-#include "WinVer.h"
+#include "Version.h"
 #include "SpaceMeter.h"
 
 CSpaceMeter::CSpaceMeter()

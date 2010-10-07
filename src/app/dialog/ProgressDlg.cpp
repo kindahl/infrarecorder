@@ -24,6 +24,7 @@
 #include "Settings.h"
 #include "InfraRecorder.h"
 #include "DeviceUtil.h"
+#include "Version.h"
 #include "ProgressDlg.h"
 
 static const int SUBITEM_TEXT = 1;

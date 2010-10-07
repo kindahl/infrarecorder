@@ -25,7 +25,7 @@
 #include "LangUtil.h"
 #include "DeviceUtil.h"
 #include "Core2Util.h"
-#include "WinVer.h"
+#include "Version.h"
 #include "VisualStyles.h"
 
 CEraseDlg::CEraseDlg(bool bAppMode)

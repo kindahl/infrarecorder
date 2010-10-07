@@ -22,7 +22,7 @@
 #include "LangUtil.h"
 #include "Settings.h"
 #include "Diagnostics.h"
-#include "WinVer.h"
+#include "Version.h"
 #include "LogDlg.h"
 
 // FIXME: No arrow is used, not enough space.

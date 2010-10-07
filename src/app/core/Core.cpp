@@ -24,7 +24,7 @@
 #include "Settings.h"
 #include "LogDlg.h"
 #include "LangUtil.h"
-#include "WinVer.h"
+#include "Version.h"
 #include "TempManager.h"
 #include "DeviceUtil.h"
 #include "Core2.h"

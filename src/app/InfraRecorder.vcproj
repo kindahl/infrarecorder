@@ -53,7 +53,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(ProjectDir)..\"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)control\&quot;;&quot;$(ProjectDir)core\&quot;;&quot;$(ProjectDir)dialog\&quot;;&quot;$(ProjectDir)utility\&quot;;&quot;$(ProjectDir)..\&quot;"
 				PreprocessorDefinitions="WIN32;_WINDOWS;STRICT;_DEBUG;UNICODE;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -143,7 +143,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(ProjectDir)..\"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)control\&quot;;&quot;$(ProjectDir)core\&quot;;&quot;$(ProjectDir)dialog\&quot;;&quot;$(ProjectDir)utility\&quot;;&quot;$(ProjectDir)..\&quot;"
 				PreprocessorDefinitions="WIN32;_WINDOWS;STRICT;_DEBUG;UNICODE;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -233,7 +233,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories="$(ProjectDir)..\"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)control\&quot;;&quot;$(ProjectDir)core\&quot;;&quot;$(ProjectDir)dialog\&quot;;&quot;$(ProjectDir)utility\&quot;;&quot;$(ProjectDir)..\&quot;"
 				PreprocessorDefinitions="WIN32;_WINDOWS;STRICT;NDEBUG;UNICODE;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS"
 				MinimalRebuild="false"
 				ExceptionHandling="1"
@@ -324,7 +324,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories="$(ProjectDir)..\"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)control\&quot;;&quot;$(ProjectDir)core\&quot;;&quot;$(ProjectDir)dialog\&quot;;&quot;$(ProjectDir)utility\&quot;;&quot;$(ProjectDir)..\&quot;"
 				PreprocessorDefinitions="WIN32;_WINDOWS;STRICT;NDEBUG;UNICODE;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS"
 				MinimalRebuild="false"
 				ExceptionHandling="1"
@@ -415,7 +415,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories="$(ProjectDir)..\"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)control\&quot;;&quot;$(ProjectDir)core\&quot;;&quot;$(ProjectDir)dialog\&quot;;&quot;$(ProjectDir)utility\&quot;;&quot;$(ProjectDir)..\&quot;"
 				PreprocessorDefinitions="WIN32;_WINDOWS;STRICT;NDEBUG;UNICODE;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;PORTABLE"
 				MinimalRebuild="false"
 				ExceptionHandling="1"
@@ -506,7 +506,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories="$(ProjectDir)..\"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)control\&quot;;&quot;$(ProjectDir)core\&quot;;&quot;$(ProjectDir)dialog\&quot;;&quot;$(ProjectDir)utility\&quot;;&quot;$(ProjectDir)..\&quot;"
 				PreprocessorDefinitions="WIN32;_WINDOWS;STRICT;NDEBUG;UNICODE;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;PORTABLE"
 				MinimalRebuild="false"
 				ExceptionHandling="1"
@@ -570,15 +570,7 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm"
 			>
 			<File
-				RelativePath=".\AboutWindow.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\ActionManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\AddBootImageDlg.cpp"
 				>
 			</File>
 			<File
@@ -586,171 +578,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\AudioUtil.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\BurnAdvancedPage.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\BurnImageDlg.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\BurnImageGeneralPage.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CdText.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ConfigAdvancedPage.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ConfigDlg.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ConfigGeneralPage.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ConfigLanguagePage.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ConfigShellExtPage.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ConfirmFileReplaceDlg.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CopyDiscDlg.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CopyDiscGeneralPage.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CopyImageDlg.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CopyImageGeneralPage.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Core.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Core2.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Core2Blank.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Core2Format.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Core2Info.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Core2Read.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Core2Stream.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Core2Util.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CustomButton.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CustomComboBox.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CustomContainer.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CustomEditCtrl.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CustomHeaderCtrl.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CustomMultiButton.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CustomToolBarCtrl.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\DeviceAdvancedPage.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\DeviceDlg.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\DeviceGeneralPage.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\DevicesDlg.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\DeviceUtil.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Diagnostics.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\DirectoryMonitor.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\DiscDlg.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\DiscGeneralPage.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\DoubleBufferedStatic.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\DropDownButton.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\EditTrackDlg.cpp"
 				>
 			</File>
 			<File
@@ -762,59 +590,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\EraseDlg.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\FilesDataObject.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\FixateDlg.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GradientStatic.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ImportSessionDlg.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\InfoDlg.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\InfraRecorder.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\LabelContainer.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\LangUtil.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\LogDlg.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\MainFrm.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\MainView.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\MiniHtmlCtrl.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\NewFileExtDlg.cpp"
 				>
 			</File>
 			<File
@@ -823,10 +603,6 @@
 			</File>
 			<File
 				RelativePath=".\PngFile.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ProgressDlg.cpp"
 				>
 			</File>
 			<File
@@ -842,63 +618,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\ProjectListViewCtrl.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\ProjectManager.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\ProjectPropAudioPage.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ProjectPropBootPage.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ProjectPropDlg.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ProjectPropFieldsPage.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ProjectPropFileSysPage.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ProjectPropGeneralPage.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ProjectPropIsoPage.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ProjectPropUdfPage.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ProjectTreeViewCtrl.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ReadOptionsPage.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\Registry.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\SaveTracksDlg.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Scsi.cpp"
 				>
 			</File>
 			<File
@@ -910,26 +634,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\ShellExtUtil.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ShellListViewCtrl.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\SimpleProgressDlg.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\SpaceMeter.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\SplashWindow.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\stdafx.cpp"
 				>
 				<FileConfiguration
@@ -938,6 +642,7 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						UsePrecompiledHeader="1"
+						PrecompiledHeaderThrough="stdafx.h"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -946,6 +651,7 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						UsePrecompiledHeader="1"
+						PrecompiledHeaderThrough="stdafx.h"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -954,6 +660,7 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						UsePrecompiledHeader="1"
+						PrecompiledHeaderThrough="stdafx.h"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -962,6 +669,7 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						UsePrecompiledHeader="1"
+						PrecompiledHeaderThrough="stdafx.h"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -970,6 +678,7 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						UsePrecompiledHeader="1"
+						PrecompiledHeaderThrough="stdafx.h"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -978,6 +687,7 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						UsePrecompiledHeader="1"
+						PrecompiledHeaderThrough="stdafx.h"
 					/>
 				</FileConfiguration>
 			</File>
@@ -990,19 +700,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\TitleTipListViewCtrl.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\ToolBarManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\TracksDlg.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\TransUtil.cpp"
 				>
 			</File>
 			<File
@@ -1010,36 +708,352 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Version.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\VisualStyles.cpp"
 				>
 			</File>
-			<File
-				RelativePath=".\WaitDlg.cpp"
+			<Filter
+				Name="control"
 				>
-			</File>
-			<File
-				RelativePath=".\WelcomePane.cpp"
+				<File
+					RelativePath=".\control\CustomButton.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\control\CustomComboBox.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\control\CustomContainer.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\control\CustomEditCtrl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\control\CustomHeaderCtrl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\control\CustomMultiButton.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\control\CustomToolBarCtrl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\control\DoubleBufferedStatic.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\control\DropDownButton.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\control\GradientStatic.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\control\LabelContainer.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\control\MiniHtmlCtrl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\control\ProjectListViewCtrl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\control\ProjectTreeViewCtrl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\control\ShellListViewCtrl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\control\SpaceMeter.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\control\TitleTipListViewCtrl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\control\WelcomePane.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="core"
 				>
-			</File>
-			<File
-				RelativePath=".\WinVer.cpp"
+				<File
+					RelativePath=".\core\CdText.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\core\Core.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\core\Core2.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\core\Core2Blank.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\core\Core2Format.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\core\Core2Info.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\core\Core2Read.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\core\Core2Stream.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\core\Core2Util.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\core\Diagnostics.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\core\Scsi.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="dialog"
 				>
-			</File>
+				<File
+					RelativePath=".\dialog\AboutWindow.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\AddBootImageDlg.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\BurnAdvancedPage.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\BurnImageDlg.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\BurnImageGeneralPage.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\ConfigAdvancedPage.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\ConfigDlg.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\ConfigGeneralPage.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\ConfigLanguagePage.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\ConfigShellExtPage.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\ConfirmFileReplaceDlg.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\CopyDiscDlg.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\CopyDiscGeneralPage.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\CopyImageDlg.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\CopyImageGeneralPage.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\DeviceAdvancedPage.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\DeviceDlg.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\DeviceGeneralPage.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\DevicesDlg.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\DiscDlg.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\DiscGeneralPage.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\EditTrackDlg.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\EraseDlg.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\FixateDlg.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\ImportSessionDlg.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\InfoDlg.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\LogDlg.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\MainFrm.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\MainView.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\NewFileExtDlg.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\ProgressDlg.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\ProjectPropAudioPage.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\ProjectPropBootPage.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\ProjectPropDlg.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\ProjectPropFieldsPage.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\ProjectPropFileSysPage.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\ProjectPropGeneralPage.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\ProjectPropIsoPage.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\ProjectPropUdfPage.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\ReadOptionsPage.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\SaveTracksDlg.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\SimpleProgressDlg.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\SplashWindow.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\TracksDlg.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\WaitDlg.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="utility"
+				>
+				<File
+					RelativePath=".\utility\AudioUtil.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\utility\DeviceUtil.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\utility\LangUtil.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\utility\ShellExtUtil.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\utility\TransUtil.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc"
 			>
 			<File
-				RelativePath=".\AboutWindow.h"
-				>
-			</File>
-			<File
 				RelativePath=".\ActionManager.h"
-				>
-			</File>
-			<File
-				RelativePath=".\AddBootImageDlg.h"
 				>
 			</File>
 			<File
@@ -1051,179 +1065,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\AudioUtil.h"
-				>
-			</File>
-			<File
-				RelativePath=".\BurnAdvancedPage.h"
-				>
-			</File>
-			<File
-				RelativePath=".\BurnImageDlg.h"
-				>
-			</File>
-			<File
-				RelativePath=".\BurnImageGeneralPage.h"
-				>
-			</File>
-			<File
-				RelativePath=".\cdrtoolsParseStrings.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CdText.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ConfigAdvancedPage.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ConfigDlg.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ConfigGeneralPage.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ConfigLanguagePage.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ConfigShellExtPage.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ConfirmFileReplaceDlg.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CopyDiscDlg.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CopyDiscGeneralPage.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CopyImageDlg.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CopyImageGeneralPage.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Core.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Core2.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Core2Blank.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Core2Format.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Core2Info.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Core2Read.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Core2Stream.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Core2Util.h"
-				>
-			</File>
-			<File
 				RelativePath=".\CtrlMessages.h"
 				>
 			</File>
 			<File
-				RelativePath=".\CustomButton.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CustomComboBox.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CustomContainer.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CustomEditCtrl.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CustomHeaderCtrl.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CustomMultiButton.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CustomToolBarCtrl.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DeviceAdvancedPage.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DeviceDlg.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DeviceGeneralPage.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DevicesDlg.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DeviceUtil.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Diagnostics.h"
-				>
-			</File>
-			<File
 				RelativePath=".\DirectoryMonitor.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DiscDlg.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DiscGeneralPage.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DoubleBufferedStatic.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DropDownButton.h"
-				>
-			</File>
-			<File
-				RelativePath=".\EditTrackDlg.h"
 				>
 			</File>
 			<File
@@ -1235,59 +1081,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\EraseDlg.h"
-				>
-			</File>
-			<File
 				RelativePath=".\FilesDataObject.h"
 				>
 			</File>
 			<File
-				RelativePath=".\FixateDlg.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GradientStatic.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ImportSessionDlg.h"
-				>
-			</File>
-			<File
-				RelativePath=".\InfoDlg.h"
-				>
-			</File>
-			<File
 				RelativePath=".\InfraRecorder.h"
-				>
-			</File>
-			<File
-				RelativePath=".\LabelContainer.h"
-				>
-			</File>
-			<File
-				RelativePath=".\LangUtil.h"
-				>
-			</File>
-			<File
-				RelativePath=".\LogDlg.h"
-				>
-			</File>
-			<File
-				RelativePath=".\MainFrm.h"
-				>
-			</File>
-			<File
-				RelativePath=".\MainView.h"
-				>
-			</File>
-			<File
-				RelativePath=".\MiniHtmlCtrl.h"
-				>
-			</File>
-			<File
-				RelativePath=".\NewFileExtDlg.h"
 				>
 			</File>
 			<File
@@ -1296,10 +1094,6 @@
 			</File>
 			<File
 				RelativePath=".\PngFile.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ProgressDlg.h"
 				>
 			</File>
 			<File
@@ -1315,51 +1109,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\ProjectListViewCtrl.h"
-				>
-			</File>
-			<File
 				RelativePath=".\ProjectManager.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ProjectPropAudioPage.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ProjectPropBootPage.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ProjectPropDlg.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ProjectPropFieldsPage.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ProjectPropFileSysPage.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ProjectPropGeneralPage.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ProjectPropIsoPage.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ProjectPropUdfPage.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ProjectTreeViewCtrl.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ReadOptionsPage.h"
 				>
 			</File>
 			<File
@@ -1371,39 +1121,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\SaveTracksDlg.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Scsi.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Settings.h"
 				>
 			</File>
 			<File
 				RelativePath=".\SettingsManager.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ShellExtUtil.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ShellListViewCtrl.h"
-				>
-			</File>
-			<File
-				RelativePath=".\SimpleProgressDlg.h"
-				>
-			</File>
-			<File
-				RelativePath=".\SpaceMeter.h"
-				>
-			</File>
-			<File
-				RelativePath=".\SplashWindow.h"
 				>
 			</File>
 			<File
@@ -1419,15 +1141,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\TitleTipListViewCtrl.h"
-				>
-			</File>
-			<File
 				RelativePath=".\ToolBarManager.h"
-				>
-			</File>
-			<File
-				RelativePath=".\TracksDlg.h"
 				>
 			</File>
 			<File
@@ -1435,29 +1149,353 @@
 				>
 			</File>
 			<File
-				RelativePath=".\TransUtil.h"
+				RelativePath=".\TreeManager.h"
 				>
 			</File>
 			<File
-				RelativePath=".\TreeManager.h"
+				RelativePath=".\Version.h"
 				>
 			</File>
 			<File
 				RelativePath=".\VisualStyles.h"
 				>
 			</File>
-			<File
-				RelativePath=".\WaitDlg.h"
+			<Filter
+				Name="control"
 				>
-			</File>
-			<File
-				RelativePath=".\WelcomePane.h"
+				<File
+					RelativePath=".\control\CustomButton.h"
+					>
+				</File>
+				<File
+					RelativePath=".\control\CustomComboBox.h"
+					>
+				</File>
+				<File
+					RelativePath=".\control\CustomContainer.h"
+					>
+				</File>
+				<File
+					RelativePath=".\control\CustomEditCtrl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\control\CustomHeaderCtrl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\control\CustomMultiButton.h"
+					>
+				</File>
+				<File
+					RelativePath=".\control\CustomToolBarCtrl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\control\DoubleBufferedStatic.h"
+					>
+				</File>
+				<File
+					RelativePath=".\control\DropDownButton.h"
+					>
+				</File>
+				<File
+					RelativePath=".\control\GradientStatic.h"
+					>
+				</File>
+				<File
+					RelativePath=".\control\LabelContainer.h"
+					>
+				</File>
+				<File
+					RelativePath=".\control\MiniHtmlCtrl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\control\ProjectListViewCtrl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\control\ProjectTreeViewCtrl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\control\ShellListViewCtrl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\control\SpaceMeter.h"
+					>
+				</File>
+				<File
+					RelativePath=".\control\TitleTipListViewCtrl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\control\WelcomePane.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="core"
 				>
-			</File>
-			<File
-				RelativePath=".\WinVer.h"
+				<File
+					RelativePath=".\core\cdrtoolsParseStrings.h"
+					>
+				</File>
+				<File
+					RelativePath=".\core\CdText.h"
+					>
+				</File>
+				<File
+					RelativePath=".\core\Core.h"
+					>
+				</File>
+				<File
+					RelativePath=".\core\Core2.h"
+					>
+				</File>
+				<File
+					RelativePath=".\core\Core2Blank.h"
+					>
+				</File>
+				<File
+					RelativePath=".\core\Core2Format.h"
+					>
+				</File>
+				<File
+					RelativePath=".\core\Core2Info.h"
+					>
+				</File>
+				<File
+					RelativePath=".\core\Core2Read.h"
+					>
+				</File>
+				<File
+					RelativePath=".\core\Core2Stream.h"
+					>
+				</File>
+				<File
+					RelativePath=".\core\Core2Util.h"
+					>
+				</File>
+				<File
+					RelativePath=".\core\Diagnostics.h"
+					>
+				</File>
+				<File
+					RelativePath=".\core\Scsi.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="dialog"
 				>
-			</File>
+				<File
+					RelativePath=".\dialog\AboutWindow.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\AddBootImageDlg.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\BurnAdvancedPage.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\BurnImageDlg.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\BurnImageGeneralPage.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\ConfigAdvancedPage.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\ConfigDlg.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\ConfigGeneralPage.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\ConfigLanguagePage.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\ConfigShellExtPage.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\ConfirmFileReplaceDlg.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\CopyDiscDlg.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\CopyDiscGeneralPage.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\CopyImageDlg.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\CopyImageGeneralPage.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\DeviceAdvancedPage.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\DeviceDlg.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\DeviceGeneralPage.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\DevicesDlg.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\DiscDlg.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\DiscGeneralPage.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\EditTrackDlg.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\EraseDlg.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\FixateDlg.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\ImportSessionDlg.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\InfoDlg.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\LogDlg.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\MainFrm.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\MainView.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\NewFileExtDlg.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\ProgressDlg.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\ProjectPropAudioPage.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\ProjectPropBootPage.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\ProjectPropDlg.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\ProjectPropFieldsPage.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\ProjectPropFileSysPage.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\ProjectPropGeneralPage.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\ProjectPropIsoPage.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\ProjectPropUdfPage.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\ReadOptionsPage.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\SaveTracksDlg.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\SimpleProgressDlg.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\SplashWindow.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\TracksDlg.h"
+					>
+				</File>
+				<File
+					RelativePath=".\dialog\WaitDlg.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="utility"
+				>
+				<File
+					RelativePath=".\utility\AudioUtil.h"
+					>
+				</File>
+				<File
+					RelativePath=".\utility\DeviceUtil.h"
+					>
+				</File>
+				<File
+					RelativePath=".\utility\LangUtil.h"
+					>
+				</File>
+				<File
+					RelativePath=".\utility\ShellExtUtil.h"
+					>
+				</File>
+				<File
+					RelativePath=".\utility\TransUtil.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Resource Files"

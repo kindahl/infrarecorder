@@ -20,7 +20,7 @@
 #include "LabelContainer.h"
 #include <base/GraphUtil.h>
 #include "CtrlMessages.h"
-#include "WinVer.h"
+#include "Version.h"
 #include "VisualStyles.h"
 #include "Resource.h"
 #include "CtrlMessages.h"

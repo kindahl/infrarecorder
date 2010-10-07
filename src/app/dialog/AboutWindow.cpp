@@ -24,7 +24,7 @@
 #include "Resource.h"
 #include "Settings.h"
 #include "InfraRecorder.h"
-#include "WinVer.h"
+#include "Version.h"
 #include "Core.h"
 #include "AboutWindow.h"
 

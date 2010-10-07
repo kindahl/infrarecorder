@@ -22,7 +22,7 @@
 #include "StringTable.h"
 #include "Scsi.h"
 #include "WaitDlg.h"
-#include "WinVer.h"
+#include "Version.h"
 #include "ProgressDlg.h"
 #include "InfraRecorder.h"
 #include "DeviceUtil.h"

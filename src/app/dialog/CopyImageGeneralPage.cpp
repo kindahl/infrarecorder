@@ -23,7 +23,7 @@
 #include "LangUtil.h"
 #include "CtrlMessages.h"
 #include "TransUtil.h"
-#include "WinVer.h"
+#include "Version.h"
 #include "VisualStyles.h"
 #include "DeviceUtil.h"
 #include "CopyImageGeneralPage.h"
