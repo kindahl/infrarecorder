@@ -1502,55 +1502,55 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;jpg;jpeg;jpe;manifest"
 			>
 			<File
-				RelativePath=".\Resources\About.bmp"
+				RelativePath=".\resources\About.bmp"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\Audio.ico"
+				RelativePath=".\resources\Audio.ico"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\Wizard\AudioDisc.png"
+				RelativePath=".\resources\wizard\AudioDisc.png"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\Buttons\ButtonFocus.png"
+				RelativePath=".\resources\buttons\ButtonFocus.png"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\Buttons\ButtonHover.png"
+				RelativePath=".\resources\buttons\ButtonHover.png"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\Buttons\ButtonHoverFocus.png"
+				RelativePath=".\resources\buttons\ButtonHoverFocus.png"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\Buttons\ButtonNormal.png"
+				RelativePath=".\resources\buttons\ButtonNormal.png"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\Wizard\CopyDisc.png"
+				RelativePath=".\resources\wizard\CopyDisc.png"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\Data.ico"
+				RelativePath=".\resources\Data.ico"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\Wizard\DataDisc.png"
+				RelativePath=".\resources\wizard\DataDisc.png"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\DVDVideo.ico"
+				RelativePath=".\resources\DVDVideo.ico"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\Head.bmp"
+				RelativePath=".\resources\Head.bmp"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\InfraRecorder.ico"
+				RelativePath=".\resources\InfraRecorder.ico"
 				>
 			</File>
 			<File
@@ -1558,127 +1558,127 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\Logo.bmp"
+				RelativePath=".\resources\Logo.bmp"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\LogoSmall.bmp"
+				RelativePath=".\resources\LogoSmall.bmp"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\MainLarge.bmp"
+				RelativePath=".\resources\MainLarge.bmp"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\MainLarge_.bmp"
+				RelativePath=".\resources\MainLarge_.bmp"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\MainSmall.bmp"
+				RelativePath=".\resources\MainSmall.bmp"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\MainSmall_.bmp"
+				RelativePath=".\resources\MainSmall_.bmp"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\MiniToolBar.bmp"
+				RelativePath=".\resources\MiniToolBar.bmp"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\MiniToolBar_.bmp"
+				RelativePath=".\resources\MiniToolBar_.bmp"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\Mixed.ico"
+				RelativePath=".\resources\Mixed.ico"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\Buttons\MultiButtonFocus.png"
+				RelativePath=".\resources\buttons\MultiButtonFocus.png"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\Buttons\MultiButtonHover.png"
+				RelativePath=".\resources\buttons\MultiButtonHover.png"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\Buttons\MultiButtonHoverFocus.png"
+				RelativePath=".\resources\buttons\MultiButtonHoverFocus.png"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\Buttons\MultiButtonHoverFocusSpecific1.png"
+				RelativePath=".\resources\buttons\MultiButtonHoverFocusSpecific1.png"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\Buttons\MultiButtonHoverFocusSpecific2.png"
+				RelativePath=".\resources\buttons\MultiButtonHoverFocusSpecific2.png"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\Buttons\MultiButtonHoverSpecific1.png"
+				RelativePath=".\resources\buttons\MultiButtonHoverSpecific1.png"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\Buttons\MultiButtonHoverSpecific2.png"
+				RelativePath=".\resources\buttons\MultiButtonHoverSpecific2.png"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\Buttons\MultiButtonNormal.png"
+				RelativePath=".\resources\buttons\MultiButtonNormal.png"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\PaneClose.bmp"
+				RelativePath=".\resources\PaneClose.bmp"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\Project.ico"
+				RelativePath=".\resources\Project.ico"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\Wizard\ReadDisc.png"
+				RelativePath=".\resources\wizard\ReadDisc.png"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\Refresh.ico"
+				RelativePath=".\resources\Refresh.ico"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\Splash.bmp"
+				RelativePath=".\resources\Splash.bmp"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\Splash_.bmp"
+				RelativePath=".\resources\Splash_.bmp"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\Toolbar.bmp"
+				RelativePath=".\resources\Toolbar.bmp"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\TrackToolBar.bmp"
+				RelativePath=".\resources\TrackToolBar.bmp"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\TrackToolBar_.bmp"
+				RelativePath=".\resources\TrackToolBar_.bmp"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\Wizard\VideoDisc.png"
+				RelativePath=".\resources\wizard\VideoDisc.png"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\WelcomeLogo.png"
+				RelativePath=".\resources\WelcomeLogo.png"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\WizardMainHeader.bmp"
+				RelativePath=".\resources\WizardMainHeader.bmp"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\WizardMainWatermark.bmp"
+				RelativePath=".\resources\WizardMainWatermark.bmp"
 				>
 			</File>
 			<File
-				RelativePath=".\Resources\Wizard\WriteImage.png"
+				RelativePath=".\resources\Wizard\WriteImage.png"
 				>
 			</File>
 		</Filter>
