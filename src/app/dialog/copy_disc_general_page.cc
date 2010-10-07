@@ -18,7 +18,7 @@
 
 #include "stdafx.hh"
 #include <ckmmc/util.hh>
-#include "infra_recorder.hh"
+#include "infrarecorder.hh"
 #include "string_table.hh"
 #include "settings.hh"
 #include "lang_util.hh"

@@ -17,7 +17,7 @@
  */
 
 #pragma once
-#include "Resource.h"
+#include "resource.h"
 
 class CFixateDlg : public CDialogImpl<CFixateDlg>
 {

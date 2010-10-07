@@ -27,7 +27,7 @@
 #include "core2.hh"
 #include "core2_util.hh"
 #include "version.hh"
-#include "infra_recorder.hh"
+#include "infrarecorder.hh"
 #include "visual_styles.hh"
 
 CReadOptionsPage::CReadOptionsPage(bool bEnableClone,bool bEnableSpeed)

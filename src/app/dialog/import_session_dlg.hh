@@ -18,7 +18,7 @@
 
 #pragma once
 #include <vector>
-#include "Resource.h"
+#include "resource.h"
 
 class CImportSessionDlg : public CDialogImpl<CImportSessionDlg>
 {

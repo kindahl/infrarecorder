@@ -19,7 +19,7 @@
 #include "stdafx.hh"
 #include <ckmmc/util.hh>
 #include <base/StringUtil.h>
-#include "infra_recorder.hh"
+#include "infrarecorder.hh"
 #include "ctrl_messages.hh"
 #include "cdrtools_parse_strings.hh"
 #include "string_table.hh"

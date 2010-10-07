@@ -17,7 +17,7 @@
  */
 
 #pragma once
-#include "Resource.h"
+#include "resource.h"
 #include <ckcore/file.hh>
 #include <ckcore/log.hh>
 #include "drop_down_button.hh"

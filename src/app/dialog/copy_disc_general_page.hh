@@ -18,7 +18,7 @@
 
 #pragma once
 #include <vector>
-#include "Resource.h"
+#include "resource.h"
 #include "core2.hh"
 
 class CCopyDiscGeneralPage : public CPropertyPageImpl<CCopyDiscGeneralPage>

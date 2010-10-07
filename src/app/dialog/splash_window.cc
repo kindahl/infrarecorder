@@ -18,8 +18,8 @@
 
 #include "stdafx.hh"
 #include <base/GraphUtil.h>
-#include "Resource.h"
-#include "infra_recorder.hh"
+#include "resource.h"
+#include "infrarecorder.hh"
 #include "string_table.hh"
 #include "lang_util.hh"
 #include "splash_window.hh"

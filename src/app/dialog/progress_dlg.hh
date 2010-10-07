@@ -19,7 +19,7 @@
 #pragma once
 #include <ckcore/process.hh>
 #include <ckmmc/device.hh>
-#include "Resource.h"
+#include "resource.h"
 #include "advanced_progress.hh"
 #include "double_buffered_static.hh"
 #include "effects.hh"

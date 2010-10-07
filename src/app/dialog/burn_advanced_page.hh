@@ -17,7 +17,7 @@
  */
 
 #pragma once
-#include "Resource.h"
+#include "resource.h"
 
 class CBurnAdvancedPage : public CPropertyPageImpl<CBurnAdvancedPage>
 {

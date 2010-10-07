@@ -44,11 +44,11 @@
 				MkTypLibCompatible="false"
 				TargetEnvironment="1"
 				GenerateStublessProxies="true"
-				TypeLibraryName="$(IntDir)/InfraRecorder.tlb"
-				HeaderFileName="InfraRecorder.h"
+				TypeLibraryName="$(IntDir)/infrarecorder.tlb"
+				HeaderFileName="infrarecorder.h"
 				DLLDataFileName=""
-				InterfaceIdentifierFileName="InfraRecorder_i.c"
-				ProxyFileName="InfraRecorder_p.c"
+				InterfaceIdentifierFileName="infrarecorder_i.c"
+				ProxyFileName="infrarecorder_p.c"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
@@ -134,11 +134,11 @@
 				MkTypLibCompatible="false"
 				TargetEnvironment="3"
 				GenerateStublessProxies="true"
-				TypeLibraryName="$(IntDir)/InfraRecorder.tlb"
-				HeaderFileName="InfraRecorder.h"
+				TypeLibraryName="$(IntDir)/infrarecorder.tlb"
+				HeaderFileName="infrarecorder.h"
 				DLLDataFileName=""
-				InterfaceIdentifierFileName="InfraRecorder_i.c"
-				ProxyFileName="InfraRecorder_p.c"
+				InterfaceIdentifierFileName="infrarecorder_i.c"
+				ProxyFileName="infrarecorder_p.c"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
@@ -224,11 +224,11 @@
 				MkTypLibCompatible="false"
 				TargetEnvironment="1"
 				GenerateStublessProxies="true"
-				TypeLibraryName="$(IntDir)/InfraRecorder.tlb"
-				HeaderFileName="InfraRecorder.h"
+				TypeLibraryName="$(IntDir)/infrarecorder.tlb"
+				HeaderFileName="infrarecorder.h"
 				DLLDataFileName=""
-				InterfaceIdentifierFileName="InfraRecorder_i.c"
-				ProxyFileName="InfraRecorder_p.c"
+				InterfaceIdentifierFileName="infrarecorder_i.c"
+				ProxyFileName="infrarecorder_p.c"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
@@ -315,11 +315,11 @@
 				MkTypLibCompatible="false"
 				TargetEnvironment="3"
 				GenerateStublessProxies="true"
-				TypeLibraryName="$(IntDir)/InfraRecorder.tlb"
-				HeaderFileName="InfraRecorder.h"
+				TypeLibraryName="$(IntDir)/infrarecorder.tlb"
+				HeaderFileName="infrarecorder.h"
 				DLLDataFileName=""
-				InterfaceIdentifierFileName="InfraRecorder_i.c"
-				ProxyFileName="InfraRecorder_p.c"
+				InterfaceIdentifierFileName="infrarecorder_i.c"
+				ProxyFileName="infrarecorder_p.c"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
@@ -406,11 +406,11 @@
 				MkTypLibCompatible="false"
 				TargetEnvironment="1"
 				GenerateStublessProxies="true"
-				TypeLibraryName="$(IntDir)/InfraRecorder.tlb"
-				HeaderFileName="InfraRecorder.h"
+				TypeLibraryName="$(IntDir)/infrarecorder.tlb"
+				HeaderFileName="infrarecorder.h"
 				DLLDataFileName=""
-				InterfaceIdentifierFileName="InfraRecorder_i.c"
-				ProxyFileName="InfraRecorder_p.c"
+				InterfaceIdentifierFileName="infrarecorder_i.c"
+				ProxyFileName="infrarecorder_p.c"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
@@ -497,11 +497,11 @@
 				MkTypLibCompatible="false"
 				TargetEnvironment="3"
 				GenerateStublessProxies="true"
-				TypeLibraryName="$(IntDir)/InfraRecorder.tlb"
-				HeaderFileName="InfraRecorder.h"
+				TypeLibraryName="$(IntDir)/infrarecorder.tlb"
+				HeaderFileName="infrarecorder.h"
 				DLLDataFileName=""
-				InterfaceIdentifierFileName="InfraRecorder_i.c"
-				ProxyFileName="InfraRecorder_p.c"
+				InterfaceIdentifierFileName="infrarecorder_i.c"
+				ProxyFileName="infrarecorder_p.c"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
@@ -882,7 +882,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\infra_recorder.cc"
+				RelativePath=".\infrarecorder.cc"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -5933,7 +5933,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\infra_recorder.hh"
+				RelativePath=".\infrarecorder.hh"
 				>
 			</File>
 			<File
@@ -5965,7 +5965,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Resource.h"
+				RelativePath=".\resource.h"
 				>
 			</File>
 			<File
@@ -6350,183 +6350,155 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;jpg;jpeg;jpe;manifest"
 			>
 			<File
-				RelativePath=".\resources\About.bmp"
+				RelativePath=".\resources\background-about.bmp"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\Audio.ico"
+				RelativePath=".\resources\project-audio.ico"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\wizard\AudioDisc.png"
+				RelativePath=".\resources\wizard\icon-audio_disc.png"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\buttons\ButtonFocus.png"
+				RelativePath=".\resources\buttons\button-focus.png"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\buttons\ButtonHover.png"
+				RelativePath=".\resources\buttons\button-hover.png"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\buttons\ButtonHoverFocus.png"
+				RelativePath=".\resources\buttons\button-hover_focus.png"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\buttons\ButtonNormal.png"
+				RelativePath=".\resources\buttons\button-normal.png"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\wizard\CopyDisc.png"
+				RelativePath=".\resources\wizard\icon-copy_disc.png"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\Data.ico"
+				RelativePath=".\resources\project-data.ico"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\wizard\DataDisc.png"
+				RelativePath=".\resources\wizard\icon-data_disc.png"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\DVDVideo.ico"
+				RelativePath=".\resources\project-video.ico"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\Head.bmp"
+				RelativePath=".\resources\icon-main.ico"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\InfraRecorder.ico"
+				RelativePath=".\infrarecorder.rc"
 				>
 			</File>
 			<File
-				RelativePath=".\InfraRecorder.rc"
+				RelativePath=".\resources\toolbar-main_large.bmp"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\Logo.bmp"
+				RelativePath=".\resources\toolbar-main_large_.bmp"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\LogoSmall.bmp"
+				RelativePath=".\resources\toolbar-main_small.bmp"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\MainLarge.bmp"
+				RelativePath=".\resources\toolbar-main_small_.bmp"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\MainLarge_.bmp"
+				RelativePath=".\resources\toolbar-mini.bmp"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\MainSmall.bmp"
+				RelativePath=".\resources\toolbar-mini_.bmp"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\MainSmall_.bmp"
+				RelativePath=".\resources\project-mixed.ico"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\MiniToolBar.bmp"
+				RelativePath=".\resources\buttons\multi_button-focus.png"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\MiniToolBar_.bmp"
+				RelativePath=".\resources\buttons\multi_button-hover.png"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\Mixed.ico"
+				RelativePath=".\resources\buttons\multi_button-hover_focus.png"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\buttons\MultiButtonFocus.png"
+				RelativePath=".\resources\buttons\multi_button-hover_focus_specific1.png"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\buttons\MultiButtonHover.png"
+				RelativePath=".\resources\buttons\multi_button-hover_focus_specific2.png"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\buttons\MultiButtonHoverFocus.png"
+				RelativePath=".\resources\buttons\multi_button-hover_specific1.png"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\buttons\MultiButtonHoverFocusSpecific1.png"
+				RelativePath=".\resources\buttons\multi_button-hover_specific2.png"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\buttons\MultiButtonHoverFocusSpecific2.png"
+				RelativePath=".\resources\buttons\multi_button-normal.png"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\buttons\MultiButtonHoverSpecific1.png"
+				RelativePath=".\resources\button-close.bmp"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\buttons\MultiButtonHoverSpecific2.png"
+				RelativePath=".\resources\icon-project.ico"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\buttons\MultiButtonNormal.png"
+				RelativePath=".\resources\wizard\icon-read_disc.png"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\PaneClose.bmp"
+				RelativePath=".\resources\icon-refresh.ico"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\Project.ico"
+				RelativePath=".\resources\background-splash.bmp"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\wizard\ReadDisc.png"
+				RelativePath=".\resources\toolbar-track.bmp"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\Refresh.ico"
+				RelativePath=".\resources\toolbar_track_.bmp"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\Splash.bmp"
+				RelativePath=".\resources\wizard\icon-video_disc.png"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\Splash_.bmp"
+				RelativePath=".\resources\background-welcome_logo.png"
 				>
 			</File>
 			<File
-				RelativePath=".\resources\Toolbar.bmp"
-				>
-			</File>
-			<File
-				RelativePath=".\resources\TrackToolBar.bmp"
-				>
-			</File>
-			<File
-				RelativePath=".\resources\TrackToolBar_.bmp"
-				>
-			</File>
-			<File
-				RelativePath=".\resources\wizard\VideoDisc.png"
-				>
-			</File>
-			<File
-				RelativePath=".\resources\WelcomeLogo.png"
-				>
-			</File>
-			<File
-				RelativePath=".\resources\WizardMainHeader.bmp"
-				>
-			</File>
-			<File
-				RelativePath=".\resources\WizardMainWatermark.bmp"
-				>
-			</File>
-			<File
-				RelativePath=".\resources\Wizard\WriteImage.png"
+				RelativePath=".\resources\wizard\icon-write_image.png"
 				>
 			</File>
 		</Filter>
@@ -6534,7 +6506,7 @@
 	<Globals>
 		<Global
 			Name="RESOURCE_FILE"
-			Value="InfraRecorder.rc"
+			Value="infrarecorder.rc"
 		/>
 	</Globals>
 </VisualStudioProject>

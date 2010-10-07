@@ -18,7 +18,7 @@
 
 #pragma once
 #include <ckmmc/device.hh>
-#include "Resource.h"
+#include "resource.h"
 
 class CDeviceGeneralPage : public CPropertyPageImpl<CDeviceGeneralPage>
 {

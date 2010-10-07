@@ -25,7 +25,7 @@
 #include "device_util.hh"
 #include "core2_info.hh"
 #include "log_dlg.hh"
-#include "infra_recorder.hh"
+#include "infrarecorder.hh"
 #include "import_session_dlg.hh"
 
 CImportSessionDlg::CImportSessionDlg() : m_pSelDevice(NULL),m_pSelTrackData(NULL)

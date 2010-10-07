@@ -17,7 +17,7 @@
  */
 
 #pragma once
-#include "Resource.h"
+#include "resource.h"
 
 class CProjectPropIsoPage : public CPropertyPageImpl<CProjectPropIsoPage>
 {

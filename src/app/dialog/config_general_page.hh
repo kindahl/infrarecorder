@@ -17,7 +17,7 @@
  */
 
 #pragma once
-#include "Resource.h"
+#include "resource.h"
 
 class CConfigGeneralPage : public CPropertyPageImpl<CConfigGeneralPage>
 {

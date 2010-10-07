@@ -24,7 +24,7 @@
 #include "wait_dlg.hh"
 #include "version.hh"
 #include "progress_dlg.hh"
-#include "infra_recorder.hh"
+#include "infrarecorder.hh"
 #include "device_util.hh"
 #include "core.hh"
 #include "core2.hh"

@@ -17,7 +17,7 @@
  */
 
 #include "stdafx.hh"
-#include "Resource.h"
+#include "resource.h"
 #include "main_frm.hh"
 #include "project_manager.hh"
 #include "settings.hh"

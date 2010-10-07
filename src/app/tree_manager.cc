@@ -26,7 +26,7 @@
 #include "project_manager.hh"
 #include "lang_util.hh"
 #include "audio_util.hh"
-#include "infra_recorder.hh"
+#include "infrarecorder.hh"
 #include "tree_manager.hh"
 
 CTreeManager g_TreeManager;

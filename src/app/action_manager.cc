@@ -23,7 +23,7 @@
 #include "core.hh"
 #include "core2.hh"
 #include "core2_info.hh"
-#include "infra_recorder.hh"
+#include "infrarecorder.hh"
 #include "burn_image_dlg.hh"
 #include "copy_disc_dlg.hh"
 #include "copy_image_dlg.hh"

@@ -17,7 +17,7 @@
  */
 
 #pragma once
-#include "Resource.h"
+#include "resource.h"
 #include "tree_manager.hh"
 
 class CEditTrackDlg : public CDialogImpl<CEditTrackDlg>

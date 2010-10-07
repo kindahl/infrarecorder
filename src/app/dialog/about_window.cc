@@ -21,9 +21,9 @@
 #include <ckcore/filestream.hh>
 #include <base/GraphUtil.h>
 #include <base/StringUtil.h>
-#include "Resource.h"
+#include "resource.h"
 #include "settings.hh"
-#include "infra_recorder.hh"
+#include "infrarecorder.hh"
 #include "version.hh"
 #include "core.hh"
 #include "about_window.hh"

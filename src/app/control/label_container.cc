@@ -22,7 +22,7 @@
 #include "ctrl_messages.hh"
 #include "version.hh"
 #include "visual_styles.hh"
-#include "Resource.h"
+#include "resource.h"
 #include "ctrl_messages.hh"
 
 CLabelContainer::CLabelContainer(bool bClosable)

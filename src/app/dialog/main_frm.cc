@@ -21,12 +21,12 @@
 #include <ckcore/linereader.hh>
 #include <ckcore/exception.hh>
 #include <base/StringUtil.h>
-#include "Resource.h"
+#include "resource.h"
 #include "settings.hh"
 #include "registry.hh"
 #include "log_dlg.hh"
 #include "devices_dlg.hh"
-#include "infra_recorder.hh"
+#include "infrarecorder.hh"
 #include "core.hh"
 #include "core2.hh"
 #include "settings_manager.hh"

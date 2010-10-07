@@ -17,7 +17,7 @@
  */
 
 #pragma once
-#include "Resource.h"
+#include "resource.h"
 #include "ctrl_messages.hh"
 #include "tree_manager.hh"
 #include "project_drop_target_base.hh"

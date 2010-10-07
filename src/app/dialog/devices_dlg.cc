@@ -18,7 +18,7 @@
 
 #include "stdafx.hh"
 #include <base/StringUtil.h>
-#include "infra_recorder.hh"
+#include "infrarecorder.hh"
 #include "device_dlg.hh"
 #include "string_table.hh"
 #include "settings.hh"

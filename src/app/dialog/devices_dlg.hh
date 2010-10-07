@@ -18,7 +18,7 @@
 
 #pragma once
 #include <ckmmc/devicemanager.hh>
-#include "Resource.h"
+#include "resource.h"
 #include "wait_dlg.hh"
 
 class CDevicesDlg : public CDialogImpl<CDevicesDlg>

@@ -28,7 +28,7 @@
 #include "settings.hh"
 #include "cd_text.hh"
 #include "lang_util.hh"
-#include "infra_recorder.hh"
+#include "infrarecorder.hh"
 #include "project_manager.hh"
 
 CProjectManager g_ProjectManager;

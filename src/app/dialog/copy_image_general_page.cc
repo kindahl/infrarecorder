@@ -17,7 +17,7 @@
  */
 
 #include "stdafx.hh"
-#include "infra_recorder.hh"
+#include "infrarecorder.hh"
 #include "settings.hh"
 #include "string_table.hh"
 #include "lang_util.hh"

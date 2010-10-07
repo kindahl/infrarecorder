@@ -22,7 +22,7 @@
 #include "string_table.hh"
 #include "lang_util.hh"
 #include "settings.hh"
-#include "infra_recorder.hh"
+#include "infrarecorder.hh"
 #include "device_util.hh"
 #include "version.hh"
 #include "progress_dlg.hh"

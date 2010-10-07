@@ -18,7 +18,7 @@
 
 #include "stdafx.hh"
 #include "visual_styles.hh"
-#include "Resource.h"
+#include "resource.h"
 #include "main_view.hh"
 
 CMainView::CMainView() : m_uiBorderSize(MAINVIEW_THEMEDBORDER_SIZE),

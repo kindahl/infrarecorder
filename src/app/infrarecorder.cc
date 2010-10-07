@@ -33,7 +33,7 @@
 #include "temp_manager.hh"
 #include "info_dlg.hh"
 #include "about_window.hh"
-#include "infra_recorder.hh"
+#include "infrarecorder.hh"
 
 CAppModule _Module;
 
