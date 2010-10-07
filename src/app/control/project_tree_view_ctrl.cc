@@ -18,9 +18,9 @@
 
 #include "stdafx.h"
 #include "project_tree_view_ctrl.hh"
-#include "ProjectManager.h"
-#include "ProjectDataObject.h"
-#include "ProjectDropSource.h"
+#include "project_manager.hh"
+#include "project_data_object.hh"
+#include "project_drop_source.hh"
 
 CProjectTreeViewDropTarget::CProjectTreeViewDropTarget(CTreeViewCtrlEx *pHost)
 {

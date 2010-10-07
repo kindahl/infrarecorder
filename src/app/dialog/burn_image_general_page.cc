@@ -19,18 +19,18 @@
 #include "stdafx.h"
 #include <ckmmc/util.hh>
 #include <base/StringUtil.h>
-#include "InfraRecorder.h"
-#include "CtrlMessages.h"
+#include "infra_recorder.hh"
+#include "ctrl_messages.hh"
 #include "cdrtools_parse_strings.hh"
-#include "StringTable.h"
-#include "Settings.h"
-#include "LangUtil.h"
+#include "string_table.hh"
+#include "settings.hh"
+#include "lang_util.hh"
 #include "info_dlg.hh"
-#include "TransUtil.h"
-#include "DeviceUtil.h"
+#include "trans_util.hh"
+#include "device_util.hh"
 #include "core2_util.hh"
-#include "Version.h"
-#include "VisualStyles.h"
+#include "version.hh"
+#include "visual_styles.hh"
 #include "burn_image_general_page.hh"
 
 CBurnImageGeneralPage::CBurnImageGeneralPage(bool bImageHasTOC,bool bEnableOnFly,

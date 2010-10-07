@@ -18,11 +18,11 @@
 
 #include "stdafx.h"
 #include "burn_advanced_page.hh"
-#include "CtrlMessages.h"
+#include "ctrl_messages.hh"
 #include "cdrtools_parse_strings.hh"
-#include "Settings.h"
-#include "StringTable.h"
-#include "LangUtil.h"
+#include "settings.hh"
+#include "string_table.hh"
+#include "lang_util.hh"
 
 CBurnAdvancedPage::CBurnAdvancedPage()
 {

@@ -17,7 +17,7 @@
  */
 
 #pragma once
-#include "PngFile.h"
+#include "png_file.hh"
 
 class CCustomMultiButton : public CWindowImpl<CCustomMultiButton,CButton>,
 	public COwnerDraw<CCustomMultiButton>

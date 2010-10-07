@@ -18,11 +18,11 @@
 
 #include "stdafx.h"
 #include "project_prop_file_sys_page.hh"
-#include "Settings.h"
-#include "StringTable.h"
-#include "LangUtil.h"
-#include "TransUtil.h"
-#include "CtrlMessages.h"
+#include "settings.hh"
+#include "string_table.hh"
+#include "lang_util.hh"
+#include "trans_util.hh"
+#include "ctrl_messages.hh"
 
 CProjectPropFileSysPage::CProjectPropFileSysPage()
 {

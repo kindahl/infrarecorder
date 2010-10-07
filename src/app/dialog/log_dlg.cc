@@ -18,11 +18,11 @@
 
 #include "stdafx.h"
 #include <ckcore/directory.hh>
-#include "StringTable.h"
-#include "LangUtil.h"
-#include "Settings.h"
+#include "string_table.hh"
+#include "lang_util.hh"
+#include "settings.hh"
 #include "diagnostics.hh"
-#include "Version.h"
+#include "version.hh"
 #include "log_dlg.hh"
 
 // FIXME: No arrow is used, not enough space.

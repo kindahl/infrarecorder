@@ -18,8 +18,8 @@
 
 #include "stdafx.h"
 #include "shell_list_view_ctrl.hh"
-#include "CtrlMessages.h"
-#include "Version.h"
+#include "ctrl_messages.hh"
+#include "version.hh"
 
 unsigned int CF_IDLIST = ::RegisterClipboardFormat(CFSTR_SHELLIDLIST);
 

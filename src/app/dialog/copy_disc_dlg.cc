@@ -17,8 +17,8 @@
  */
 
 #include "stdafx.h"
-#include "StringTable.h"
-#include "LangUtil.h"
+#include "string_table.hh"
+#include "lang_util.hh"
 #include "copy_disc_dlg.hh"
 
 CCopyDiscDlg::CCopyDiscDlg(bool bAppMode) :

@@ -19,9 +19,9 @@
 #include "stdafx.h"
 #include <ckcore/convert.hh>
 #include "confirm_file_replace_dlg.hh"
-#include "Settings.h"
-#include "StringTable.h"
-#include "LangUtil.h"
+#include "settings.hh"
+#include "string_table.hh"
+#include "lang_util.hh"
 #include "main_frm.hh"
 
 CConfirmFileReplaceDlg::CConfirmFileReplaceDlg()

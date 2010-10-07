@@ -18,8 +18,8 @@
 
 #pragma once
 #include <atlcrack.h>	// COMMAND_RANGE_HANDLER_EX
-#include "VisualStyles.h"
-#include "CtrlMessages.h"
+#include "visual_styles.hh"
+#include "ctrl_messages.hh"
 
 #define SPACEMETER_BAR_HEIGHT				10
 #define SPACEMETER_BARINDENT_NORMAL			2

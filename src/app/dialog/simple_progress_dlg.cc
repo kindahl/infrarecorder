@@ -19,11 +19,11 @@
 #include "stdafx.h"
 #include <comutil.h>
 #include <base/StringUtil.h>
-#include "StringTable.h"
-#include "LangUtil.h"
-#include "DeviceUtil.h"
-#include "Settings.h"
-#include "Version.h"
+#include "string_table.hh"
+#include "lang_util.hh"
+#include "device_util.hh"
+#include "settings.hh"
+#include "version.hh"
 #include "simple_progress_dlg.hh"
 
 static const int SUBITEM_TEXT = 1;

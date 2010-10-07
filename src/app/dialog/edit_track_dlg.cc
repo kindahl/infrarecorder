@@ -19,8 +19,8 @@
 #include "stdafx.h"
 #include <base/StringUtil.h>
 #include "edit_track_dlg.hh"
-#include "StringTable.h"
-#include "Settings.h"
+#include "string_table.hh"
+#include "settings.hh"
 
 CEditTrackDlg::CEditTrackDlg(CItemData *pItemData)
 {

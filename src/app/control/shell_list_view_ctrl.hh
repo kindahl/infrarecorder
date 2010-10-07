@@ -18,7 +18,7 @@
 
 #pragma once
 #include <shlobj.h>
-#include "PidlHelper.h"
+#include "pidl_helper.hh"
 
 class CShellListViewCtrl : public IShellBrowser, public ICommDlgBrowser
 {

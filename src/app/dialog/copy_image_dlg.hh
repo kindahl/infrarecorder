@@ -19,7 +19,7 @@
 #pragma once
 #include "copy_image_general_page.hh"
 #include "read_options_page.hh"
-#include "CtrlMessages.h"
+#include "ctrl_messages.hh"
 
 class CCopyImageDlg : public CPropertySheetImpl<CCopyImageDlg>
 {

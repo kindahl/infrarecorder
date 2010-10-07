@@ -18,12 +18,12 @@
 
 #include "stdafx.h"
 #include "project_list_view_ctrl.hh"
-#include "ProjectManager.h"
-#include "Settings.h"
+#include "project_manager.hh"
+#include "settings.hh"
 #include "main_frm.hh"
-#include "StringTable.h"
-#include "ProjectDropSource.h"
-#include "ProjectDataObject.h"
+#include "string_table.hh"
+#include "project_drop_source.hh"
+#include "project_data_object.hh"
 
 /*
 	FIXME: For Windows XP and newer.

@@ -19,11 +19,11 @@
 #include "stdafx.h"
 #include "label_container.hh"
 #include <base/GraphUtil.h>
-#include "CtrlMessages.h"
-#include "Version.h"
-#include "VisualStyles.h"
+#include "ctrl_messages.hh"
+#include "version.hh"
+#include "visual_styles.hh"
 #include "Resource.h"
-#include "CtrlMessages.h"
+#include "ctrl_messages.hh"
 
 CLabelContainer::CLabelContainer(bool bClosable)
 {

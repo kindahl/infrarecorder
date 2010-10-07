@@ -22,7 +22,7 @@
 #include <ckfilesystem/fileset.hh>
 #include <ckmmc/device.hh>
 #include <base/StringUtil.h>
-#include "AdvancedProgress.h"
+#include "advanced_progress.hh"
 
 #define CORE_IGNORE_ERRORINFOMESSAGES		// Should we ignore error information message (copyright etc.)?
 #define CORE_PRINT_UNSUPERRORMESSAGES		// Should we print unhandled/unsupported messages to the log window?

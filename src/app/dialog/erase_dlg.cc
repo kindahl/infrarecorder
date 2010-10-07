@@ -18,15 +18,15 @@
 
 #include "stdafx.h"
 #include <ckmmc/util.hh>
-#include "InfraRecorder.h"
+#include "infra_recorder.hh"
 #include "erase_dlg.hh"
-#include "StringTable.h"
-#include "Settings.h"
-#include "LangUtil.h"
-#include "DeviceUtil.h"
+#include "string_table.hh"
+#include "settings.hh"
+#include "lang_util.hh"
+#include "device_util.hh"
 #include "core2_util.hh"
-#include "Version.h"
-#include "VisualStyles.h"
+#include "version.hh"
+#include "visual_styles.hh"
 
 CEraseDlg::CEraseDlg(bool bAppMode)
 {

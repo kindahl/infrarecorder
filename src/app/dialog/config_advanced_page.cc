@@ -18,9 +18,9 @@
 
 #include "stdafx.h"
 #include "config_advanced_page.hh"
-#include "StringTable.h"
-#include "Settings.h"
-#include "LangUtil.h"
+#include "string_table.hh"
+#include "settings.hh"
+#include "lang_util.hh"
 
 CConfigAdvancedPage::CConfigAdvancedPage()
 {

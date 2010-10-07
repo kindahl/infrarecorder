@@ -17,7 +17,7 @@
  */
 
 #include "stdafx.h"
-#include "VisualStyles.h"
+#include "visual_styles.hh"
 #include "Resource.h"
 #include "main_view.hh"
 

@@ -20,8 +20,8 @@
 #include "core2_blank.hh"
 #include "core2.hh"
 #include "log_dlg.hh"
-#include "StringTable.h"
-#include "LangUtil.h"
+#include "string_table.hh"
+#include "lang_util.hh"
 
 CCore2Blank::CCore2Blank()
 {

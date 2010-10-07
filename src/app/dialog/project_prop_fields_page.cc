@@ -18,10 +18,10 @@
 
 #include "stdafx.h"
 #include "project_prop_fields_page.hh"
-#include "Settings.h"
-#include "StringTable.h"
-#include "LangUtil.h"
-#include "TransUtil.h"
+#include "settings.hh"
+#include "string_table.hh"
+#include "lang_util.hh"
+#include "trans_util.hh"
 
 CProjectPropFieldsPage::CProjectPropFieldsPage()
 {

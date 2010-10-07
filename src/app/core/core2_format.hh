@@ -18,7 +18,7 @@
 
 #pragma once
 #include <ckmmc/device.hh>
-#include "AdvancedProgress.h"
+#include "advanced_progress.hh"
 
 class CCore2Format
 {

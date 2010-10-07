@@ -21,8 +21,8 @@
 #include "core2.hh"
 #include "core2_util.hh"
 #include "log_dlg.hh"
-#include "StringTable.h"
-#include "LangUtil.h"
+#include "string_table.hh"
+#include "lang_util.hh"
 
 CCore2Format::CCore2Format()
 {

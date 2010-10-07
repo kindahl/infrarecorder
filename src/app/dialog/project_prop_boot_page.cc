@@ -18,13 +18,13 @@
 
 #include "stdafx.h"
 #include "project_prop_boot_page.hh"
-#include "Settings.h"
-#include "StringTable.h"
-#include "LangUtil.h"
-#include "Version.h"
+#include "settings.hh"
+#include "string_table.hh"
+#include "lang_util.hh"
+#include "version.hh"
 #include "add_boot_image_dlg.hh"
-#include "ProjectManager.h"
-#include "TransUtil.h"
+#include "project_manager.hh"
+#include "trans_util.hh"
 
 CProjectPropBootPage::CProjectPropBootPage()
 {

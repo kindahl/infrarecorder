@@ -19,7 +19,7 @@
 #pragma once
 #include <ckcore/stream.hh>
 #include <ckmmc/device.hh>
-#include "AdvancedProgress.h"
+#include "advanced_progress.hh"
 
 #define CORE2_READ_RETRYCOUNT			1
 #define CORE2_READ_MAXFRAMESIZE			(2352 + 96 + 296)	// Mainchannel + RAW P-W subchannel + C2 block information.

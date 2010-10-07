@@ -17,10 +17,10 @@
  */
 
 #include "stdafx.h"
-#include "StringTable.h"
-#include "Settings.h"
-#include "LangUtil.h"
-#include "Registry.h"
+#include "string_table.hh"
+#include "settings.hh"
+#include "lang_util.hh"
+#include "registry.hh"
 #include "config_general_page.hh"
 
 CConfigGeneralPage::CConfigGeneralPage()

@@ -18,9 +18,9 @@
 
 #include "stdafx.h"
 #include "info_dlg.hh"
-#include "StringTable.h"
-#include "Settings.h"
-#include "LangUtil.h"
+#include "string_table.hh"
+#include "settings.hh"
+#include "lang_util.hh"
 
 CInfoDlg::CInfoDlg(bool *pRemember,const TCHAR *szMessage,int iFlags)
 {

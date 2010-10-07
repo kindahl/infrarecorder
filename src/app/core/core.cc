@@ -20,13 +20,13 @@
 #include <ckcore/convert.hh>
 #include <base/StringContainer.h>
 #include "cdrtools_parse_strings.hh"
-#include "StringTable.h"
-#include "Settings.h"
+#include "string_table.hh"
+#include "settings.hh"
 #include "log_dlg.hh"
-#include "LangUtil.h"
-#include "Version.h"
-#include "TempManager.h"
-#include "DeviceUtil.h"
+#include "lang_util.hh"
+#include "version.hh"
+#include "temp_manager.hh"
+#include "device_util.hh"
 #include "core2.hh"
 #include "core.hh"
 

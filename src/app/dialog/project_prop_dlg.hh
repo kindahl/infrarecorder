@@ -24,7 +24,7 @@
 #include "project_prop_audio_page.hh"
 #include "project_prop_boot_page.hh"
 #include "project_prop_udf_page.hh"
-#include "CtrlMessages.h"
+#include "ctrl_messages.hh"
 
 class CProjectPropDlg : public CPropertySheetImpl<CProjectPropDlg>
 {

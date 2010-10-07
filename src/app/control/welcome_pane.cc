@@ -19,11 +19,11 @@
 #include "stdafx.h"
 #include "Resource.h"
 #include "main_frm.hh"
-#include "ProjectManager.h"
-#include "Settings.h"
-#include "StringTable.h"
-#include "LangUtil.h"
-#include "ActionManager.h"
+#include "project_manager.hh"
+#include "settings.hh"
+#include "string_table.hh"
+#include "lang_util.hh"
+#include "action_manager.hh"
 #include "welcome_pane.hh"
 
 CWelcomePane::CStandardButton::CStandardButton(CWelcomePane *pParent,

@@ -19,17 +19,17 @@
 #include "stdafx.h"
 #include <ckmmc/devicemanager.hh>
 #include <base/StringUtil.h>
-#include "StringTable.h"
+#include "string_table.hh"
 #include "scsi.hh"
 #include "wait_dlg.hh"
-#include "Version.h"
+#include "version.hh"
 #include "progress_dlg.hh"
-#include "InfraRecorder.h"
-#include "DeviceUtil.h"
+#include "infra_recorder.hh"
+#include "device_util.hh"
 #include "core.hh"
 #include "core2.hh"
-#include "LangUtil.h"
-#include "Settings.h"
+#include "lang_util.hh"
+#include "settings.hh"
 #include "save_tracks_dlg.hh"
 #include "tracks_dlg.hh"
 

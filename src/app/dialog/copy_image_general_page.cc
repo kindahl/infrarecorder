@@ -17,15 +17,15 @@
  */
 
 #include "stdafx.h"
-#include "InfraRecorder.h"
-#include "Settings.h"
-#include "StringTable.h"
-#include "LangUtil.h"
-#include "CtrlMessages.h"
-#include "TransUtil.h"
-#include "Version.h"
-#include "VisualStyles.h"
-#include "DeviceUtil.h"
+#include "infra_recorder.hh"
+#include "settings.hh"
+#include "string_table.hh"
+#include "lang_util.hh"
+#include "ctrl_messages.hh"
+#include "trans_util.hh"
+#include "version.hh"
+#include "visual_styles.hh"
+#include "device_util.hh"
 #include "copy_image_general_page.hh"
 
 CCopyImageGeneralPage::CCopyImageGeneralPage()

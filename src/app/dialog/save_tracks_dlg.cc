@@ -19,9 +19,9 @@
 #include "stdafx.h"
 #include <ckcore/directory.hh>
 #include "save_tracks_dlg.hh"
-#include "Settings.h"
-#include "StringTable.h"
-#include "LangUtil.h"
+#include "settings.hh"
+#include "string_table.hh"
+#include "lang_util.hh"
 
 CSaveTracksDlg::CSaveTracksDlg()
 {

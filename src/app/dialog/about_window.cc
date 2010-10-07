@@ -22,9 +22,9 @@
 #include <base/GraphUtil.h>
 #include <base/StringUtil.h>
 #include "Resource.h"
-#include "Settings.h"
-#include "InfraRecorder.h"
-#include "Version.h"
+#include "settings.hh"
+#include "infra_recorder.hh"
+#include "version.hh"
 #include "core.hh"
 #include "about_window.hh"
 

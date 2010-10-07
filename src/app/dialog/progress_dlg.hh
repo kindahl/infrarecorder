@@ -20,10 +20,10 @@
 #include <ckcore/process.hh>
 #include <ckmmc/device.hh>
 #include "Resource.h"
-#include "AdvancedProgress.h"
+#include "advanced_progress.hh"
 #include "double_buffered_static.hh"
-#include "Effects.h"
-#include "WinVer.h"
+#include "effects.hh"
+#include "version.hh"
 
 #ifndef PBM_SETMARQUEE
 #define PBM_SETMARQUEE      (WM_USER + 10)

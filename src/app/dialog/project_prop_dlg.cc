@@ -18,10 +18,10 @@
 
 #include "stdafx.h"
 #include "project_prop_dlg.hh"
-#include "ProjectManager.h"
-#include "StringTable.h"
-#include "LangUtil.h"
-#include "Settings.h"
+#include "project_manager.hh"
+#include "string_table.hh"
+#include "lang_util.hh"
+#include "settings.hh"
 
 CProjectPropDlg::CProjectPropDlg() : CPropertySheetImpl<CProjectPropDlg>(lngGetString(PROJECTPROP_TITLE),0,NULL)
 {

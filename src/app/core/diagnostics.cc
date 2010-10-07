@@ -20,7 +20,7 @@
 #include <base/StringUtil.h>
 #include "cdrtools_parse_strings.hh"
 #include "log_dlg.hh"
-#include "Settings.h"
+#include "settings.hh"
 #include "core.hh"
 #include "diagnostics.hh"
 

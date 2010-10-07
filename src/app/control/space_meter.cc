@@ -19,9 +19,9 @@
 #include "stdafx.h"
 #include <base/StringUtil.h>
 #include <base/GraphUtil.h>
-#include "StringTable.h"
-#include "LangUtil.h"
-#include "Version.h"
+#include "string_table.hh"
+#include "lang_util.hh"
+#include "version.hh"
 #include "space_meter.hh"
 
 CSpaceMeter::CSpaceMeter()

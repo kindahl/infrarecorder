@@ -19,16 +19,16 @@
 #include "stdafx.h"
 #include <ckmmc/util.hh>
 #include "read_options_page.hh"
-#include "CtrlMessages.h"
-#include "StringTable.h"
-#include "LangUtil.h"
-#include "Settings.h"
-#include "TransUtil.h"
+#include "ctrl_messages.hh"
+#include "string_table.hh"
+#include "lang_util.hh"
+#include "settings.hh"
+#include "trans_util.hh"
 #include "core2.hh"
 #include "core2_util.hh"
-#include "WinVer.h"
-#include "InfraRecorder.h"
-#include "VisualStyles.h"
+#include "version.hh"
+#include "infra_recorder.hh"
+#include "visual_styles.hh"
 
 CReadOptionsPage::CReadOptionsPage(bool bEnableClone,bool bEnableSpeed)
 {

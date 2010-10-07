@@ -18,10 +18,10 @@
 
 #include "stdafx.h"
 #include "disc_general_page.hh"
-#include "StringTable.h"
-#include "LangUtil.h"
-#include "Settings.h"
-#include "TransUtil.h"
+#include "string_table.hh"
+#include "lang_util.hh"
+#include "settings.hh"
+#include "trans_util.hh"
 #include "core2.hh"
 
 CDiscGeneralPage::CDiscGeneralPage(const TCHAR *szDiscLabel,ckmmc::Device &Device) :

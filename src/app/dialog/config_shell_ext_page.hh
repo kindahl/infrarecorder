@@ -18,7 +18,7 @@
 
 #pragma once
 #include "Resource.h"
-#include "Registry.h"
+#include "registry.hh"
 
 class CConfigShellExtPage : public CPropertyPageImpl<CConfigShellExtPage>
 {

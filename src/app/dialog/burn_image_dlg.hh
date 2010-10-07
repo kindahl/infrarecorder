@@ -19,7 +19,7 @@
 #pragma once
 #include "burn_image_general_page.hh"
 #include "burn_advanced_page.hh"
-#include "CtrlMessages.h"
+#include "ctrl_messages.hh"
 
 class CBurnImageDlg : public CPropertySheetImpl<CBurnImageDlg>
 {

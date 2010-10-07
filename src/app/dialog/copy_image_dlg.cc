@@ -18,9 +18,9 @@
 
 #include "stdafx.h"
 #include "copy_image_dlg.hh"
-#include "StringTable.h"
-#include "Settings.h"
-#include "LangUtil.h"
+#include "string_table.hh"
+#include "settings.hh"
+#include "lang_util.hh"
 #include "wait_dlg.hh"
 #include "scsi.hh"
 

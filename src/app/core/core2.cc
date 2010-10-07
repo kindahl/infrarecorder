@@ -28,9 +28,9 @@
 #include "core2_info.hh"
 #include "core2_read.hh"
 #include "log_dlg.hh"
-#include "Settings.h"
-#include "StringTable.h"
-#include "LangUtil.h"
+#include "settings.hh"
+#include "string_table.hh"
+#include "lang_util.hh"
 
 CCore2 g_Core2;
 

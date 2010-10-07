@@ -18,9 +18,9 @@
 
 #pragma once
 #include "Resource.h"
-#include "CtrlMessages.h"
-#include "TreeManager.h"
-#include "ProjectDropTargetBase.h"
+#include "ctrl_messages.hh"
+#include "tree_manager.hh"
+#include "project_drop_target_base.hh"
 
 // Color of items flagged as imported.
 #define PROJECTLISTVIEW_COLOR_IMPORTED				RGB(92,53,102)

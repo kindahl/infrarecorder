@@ -18,12 +18,12 @@
 
 #include "stdafx.h"
 #include "project_prop_audio_page.hh"
-#include "Settings.h"
-#include "StringTable.h"
-#include "ProjectManager.h"
+#include "settings.hh"
+#include "string_table.hh"
+#include "project_manager.hh"
 #include "edit_track_dlg.hh"
-#include "LangUtil.h"
-#include "TransUtil.h"
+#include "lang_util.hh"
+#include "trans_util.hh"
 
 CProjectPropAudioPage::CProjectPropAudioPage()
 {

@@ -18,10 +18,10 @@
 
 #include "stdafx.h"
 #include <ckmmc/util.hh>
-#include "DeviceUtil.h"
-#include "StringTable.h"
-#include "LangUtil.h"
-#include "Settings.h"
+#include "device_util.hh"
+#include "string_table.hh"
+#include "lang_util.hh"
+#include "settings.hh"
 #include "info_dlg.hh"
 #include "device_general_page.hh"
 

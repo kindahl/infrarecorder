@@ -18,7 +18,7 @@
 
 #pragma once
 #include <vector>
-#include "PngFile.h"
+#include "png_file.hh"
 #include "custom_button.hh"
 #include "custom_multi_button.hh"
 

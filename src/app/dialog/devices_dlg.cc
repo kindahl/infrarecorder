@@ -18,12 +18,12 @@
 
 #include "stdafx.h"
 #include <base/StringUtil.h>
-#include "InfraRecorder.h"
+#include "infra_recorder.hh"
 #include "device_dlg.hh"
-#include "StringTable.h"
-#include "Settings.h"
-#include "LangUtil.h"
-#include "DeviceUtil.h"
+#include "string_table.hh"
+#include "settings.hh"
+#include "lang_util.hh"
+#include "device_util.hh"
 #include "devices_dlg.hh"
 
 void CDevicesDlg::ScanCallback::event_status(ckmmc::DeviceManager::ScanCallback::Status Status)

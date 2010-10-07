@@ -18,8 +18,8 @@
 
 #include "stdafx.h"
 #include "config_dlg.hh"
-#include "StringTable.h"
-#include "LangUtil.h"
+#include "string_table.hh"
+#include "lang_util.hh"
 
 CConfigDlg::CConfigDlg() : CPropertySheetImpl<CConfigDlg>(lngGetString(TITLE_CONFIGURATION),0,NULL)
 {

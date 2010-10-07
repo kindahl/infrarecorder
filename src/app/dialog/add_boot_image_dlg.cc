@@ -18,8 +18,8 @@
 
 #include "stdafx.h"
 #include "add_boot_image_dlg.hh"
-#include "StringTable.h"
-#include "LangUtil.h"
+#include "string_table.hh"
+#include "lang_util.hh"
 
 /*
 	CAddBootImageDlg::CAddBootImageDlg

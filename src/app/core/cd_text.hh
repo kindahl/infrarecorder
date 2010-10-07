@@ -19,7 +19,7 @@
 #pragma once
 #include <vector>
 #include <ckcore/file.hh>
-#include "TreeManager.h"
+#include "tree_manager.hh"
 
 #define CDTEXT_SIGNATURE			0x2201
 #define CDTEXT_MAXFIELDSIZE			160

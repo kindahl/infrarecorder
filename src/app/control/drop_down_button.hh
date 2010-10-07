@@ -19,7 +19,7 @@
 #pragma once
 
 #include <atlcrack.h>	// BEGIN_MSG_MAP_EX
-#include "VisualStyles.h"
+#include "visual_styles.hh"
 
 #define DROPDOWNBUTTON_MAX_TEXT_SIZE			64
 

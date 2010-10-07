@@ -18,7 +18,7 @@
 
 #pragma once
 #include "Resource.h"
-#include "CtrlMessages.h"
+#include "ctrl_messages.hh"
 
 #if (_WIN32_WINNT < 0x501)
 #define HDF_SORTUP              0x0400

@@ -18,8 +18,8 @@
 
 #include "stdafx.h"
 #include "custom_container.hh"
-#include "Settings.h"
-#include "CtrlMessages.h"
+#include "settings.hh"
+#include "ctrl_messages.hh"
 #include "main_frm.hh"
 
 CCustomContainer::CCustomContainer()

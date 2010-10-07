@@ -19,8 +19,8 @@
 #include "stdafx.h"
 #include "new_file_ext_dlg.hh"
 #include <base/StringUtil.h>
-#include "StringTable.h"
-#include "Settings.h"
+#include "string_table.hh"
+#include "settings.hh"
 
 CNewFileExtDlg::CNewFileExtDlg()
 {

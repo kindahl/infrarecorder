@@ -17,15 +17,15 @@
  */
 
 #include "stdafx.h"
-#include "StringTable.h"
-#include "Settings.h"
-#include "LangUtil.h"
+#include "string_table.hh"
+#include "settings.hh"
+#include "lang_util.hh"
 #include "wait_dlg.hh"
 #include "scsi.hh"
-#include "DeviceUtil.h"
+#include "device_util.hh"
 #include "core2_info.hh"
 #include "log_dlg.hh"
-#include "InfraRecorder.h"
+#include "infra_recorder.hh"
 #include "import_session_dlg.hh"
 
 CImportSessionDlg::CImportSessionDlg() : m_pSelDevice(NULL),m_pSelTrackData(NULL)

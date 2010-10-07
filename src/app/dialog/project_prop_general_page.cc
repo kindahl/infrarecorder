@@ -19,10 +19,10 @@
 #include "stdafx.h"
 #include <base/StringUtil.h>
 #include "project_prop_general_page.hh"
-#include "ProjectManager.h"
-#include "StringTable.h"
-#include "Settings.h"
-#include "LangUtil.h"
+#include "project_manager.hh"
+#include "string_table.hh"
+#include "settings.hh"
+#include "lang_util.hh"
 
 CProjectPropGeneralPage::CProjectPropGeneralPage()
 {

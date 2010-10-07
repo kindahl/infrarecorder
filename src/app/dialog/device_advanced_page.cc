@@ -17,9 +17,9 @@
  */
 
 #include "stdafx.h"
-#include "StringTable.h"
-#include "LangUtil.h"
-#include "Settings.h"
+#include "string_table.hh"
+#include "lang_util.hh"
+#include "settings.hh"
 #include "cdrtools_parse_strings.hh"
 #include "device_advanced_page.hh"
 

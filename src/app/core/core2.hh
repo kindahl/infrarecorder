@@ -25,7 +25,7 @@
 #include <ckmmc/device.hh>
 #include <base/StringUtil.h>
 #include "scsi.hh"
-#include "AdvancedProgress.h"
+#include "advanced_progress.hh"
 
 class CCore2
 {

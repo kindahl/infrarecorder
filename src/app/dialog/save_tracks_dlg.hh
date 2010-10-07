@@ -18,7 +18,7 @@
 
 #pragma once
 #include "Resource.h"
-#include "InfraRecorder.h"
+#include "infra_recorder.hh"
 
 class CSaveTracksDlg : public CDialogImpl<CSaveTracksDlg>
 {

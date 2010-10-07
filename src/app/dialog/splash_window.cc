@@ -19,9 +19,9 @@
 #include "stdafx.h"
 #include <base/GraphUtil.h>
 #include "Resource.h"
-#include "InfraRecorder.h"
-#include "StringTable.h"
-#include "LangUtil.h"
+#include "infra_recorder.hh"
+#include "string_table.hh"
+#include "lang_util.hh"
 #include "splash_window.hh"
 
 CSplashWindow::CSplashWindow()

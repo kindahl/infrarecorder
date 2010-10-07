@@ -570,71 +570,75 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm"
 			>
 			<File
-				RelativePath=".\ActionManager.cpp"
+				RelativePath=".\action_manager.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\AdvancedProgress.cpp"
+				RelativePath=".\advanced_progress.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\DirectoryMonitor.cpp"
+				RelativePath=".\directory_monitor.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\Effects.cpp"
+				RelativePath=".\effects.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\EnumFmtEtc.cpp"
+				RelativePath=".\enum_fmt_etc.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\FilesDataObject.cpp"
+				RelativePath=".\files_data_object.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\InfraRecorder.cpp"
+				RelativePath=".\infra_recorder.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\PidlHelper.cpp"
+				RelativePath=".\pidl_helper.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\PngFile.cpp"
+				RelativePath=".\png_file.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\ProjectDataObject.cpp"
+				RelativePath=".\project_data_object.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\ProjectDropSource.cpp"
+				RelativePath=".\project_drop_source.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\ProjectDropTargetBase.cpp"
+				RelativePath=".\project_drop_target_base.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\ProjectManager.cpp"
+				RelativePath=".\project_manager.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\Registry.cpp"
+				RelativePath=".\registry.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\Settings.cpp"
+				RelativePath=".\Resource.h"
 				>
 			</File>
 			<File
-				RelativePath=".\SettingsManager.cpp"
+				RelativePath=".\settings.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\stdafx.cpp"
+				RelativePath=".\settings_manager.cc"
+				>
+			</File>
+			<File
+				RelativePath=".\stdafx.cc"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -692,27 +696,31 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\StringTable.cpp"
+				RelativePath=".\stdafx.h"
 				>
 			</File>
 			<File
-				RelativePath=".\TempManager.cpp"
+				RelativePath=".\string_table.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\ToolBarManager.cpp"
+				RelativePath=".\temp_manager.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\TreeManager.cpp"
+				RelativePath=".\toolbar_manager.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\Version.cpp"
+				RelativePath=".\tree_manager.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\VisualStyles.cpp"
+				RelativePath=".\version.cc"
+				>
+			</File>
+			<File
+				RelativePath=".\visual_styles.cc"
 				>
 			</File>
 			<Filter
@@ -1027,23 +1035,23 @@
 				Name="utility"
 				>
 				<File
-					RelativePath=".\utility\AudioUtil.cpp"
+					RelativePath=".\utility\audio_util.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\utility\DeviceUtil.cpp"
+					RelativePath=".\utility\device_util.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\utility\LangUtil.cpp"
+					RelativePath=".\utility\lang_util.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\utility\ShellExtUtil.cpp"
+					RelativePath=".\utility\shell_ext_util.cc"
 					>
 				</File>
 				<File
-					RelativePath=".\utility\TransUtil.cpp"
+					RelativePath=".\utility\trans_util.cc"
 					>
 				</File>
 			</Filter>
@@ -1053,111 +1061,103 @@
 			Filter="h;hpp;hxx;hm;inl;inc"
 			>
 			<File
-				RelativePath=".\ActionManager.h"
+				RelativePath=".\action_manager.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\AdvancedProgress.h"
+				RelativePath=".\advanced_progress.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\AtlCompat.h"
+				RelativePath=".\atl_compat.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\CtrlMessages.h"
+				RelativePath=".\ctrl_messages.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\DirectoryMonitor.h"
+				RelativePath=".\directory_monitor.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\Effects.h"
+				RelativePath=".\effects.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\EnumFmtEtc.h"
+				RelativePath=".\enum_fmt_etc.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\FilesDataObject.h"
+				RelativePath=".\files_data_object.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\InfraRecorder.h"
+				RelativePath=".\infra_recorder.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\PidlHelper.h"
+				RelativePath=".\pidl_helper.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\PngFile.h"
+				RelativePath=".\png_file.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\ProjectDataObject.h"
+				RelativePath=".\project_data_object.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\ProjectDropSource.h"
+				RelativePath=".\project_drop_source.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\ProjectDropTargetBase.h"
+				RelativePath=".\project_drop_target_base.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\ProjectManager.h"
+				RelativePath=".\project_manager.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\Registry.h"
+				RelativePath=".\registry.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\Resource.h"
+				RelativePath=".\settings.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\Settings.h"
+				RelativePath=".\settings_manager.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\SettingsManager.h"
+				RelativePath=".\string_table.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\stdafx.h"
+				RelativePath=".\temp_manager.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\StringTable.h"
+				RelativePath=".\toolbar_manager.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\TempManager.h"
+				RelativePath=".\translated_strings.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\ToolBarManager.h"
+				RelativePath=".\tree_manager.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\TranslatedStrings.h"
+				RelativePath=".\version.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\TreeManager.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Version.h"
-				>
-			</File>
-			<File
-				RelativePath=".\VisualStyles.h"
+				RelativePath=".\visual_styles.hh"
 				>
 			</File>
 			<Filter
@@ -1476,23 +1476,23 @@
 				Name="utility"
 				>
 				<File
-					RelativePath=".\utility\AudioUtil.h"
+					RelativePath=".\utility\audio_util.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\utility\DeviceUtil.h"
+					RelativePath=".\utility\device_util.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\utility\LangUtil.h"
+					RelativePath=".\utility\lang_util.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\utility\ShellExtUtil.h"
+					RelativePath=".\utility\shell_ext_util.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\utility\TransUtil.h"
+					RelativePath=".\utility\trans_util.hh"
 					>
 				</File>
 			</Filter>

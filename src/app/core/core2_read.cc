@@ -23,8 +23,8 @@
 #include "core2_info.hh"
 #include "core2_util.hh"
 #include "log_dlg.hh"
-#include "StringTable.h"
-#include "LangUtil.h"
+#include "string_table.hh"
+#include "lang_util.hh"
 
 namespace Core2ReadFunction
 {

@@ -20,9 +20,9 @@
 #include <ckcore/process.hh>
 #include <ckmmc/device.hh>
 #include "Resource.h"
-#include "AdvancedProgress.h"
-#include "Effects.h"
-#include "WinVer.h"
+#include "advanced_progress.hh"
+#include "effects.hh"
+#include "version.hh"
 
 class CSimpleProgressDlg : public CDialogImpl<CSimpleProgressDlg>,
 						   public CDialogResize<CSimpleProgressDlg>,

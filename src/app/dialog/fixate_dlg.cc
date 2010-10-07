@@ -17,11 +17,11 @@
  */
 
 #include "stdafx.h"
-#include "InfraRecorder.h"
-#include "StringTable.h"
-#include "DeviceUtil.h"
-#include "Settings.h"
-#include "LangUtil.h"
+#include "infra_recorder.hh"
+#include "string_table.hh"
+#include "device_util.hh"
+#include "settings.hh"
+#include "lang_util.hh"
 #include "fixate_dlg.hh"
 
 CFixateDlg::CFixateDlg(bool bAppMode)

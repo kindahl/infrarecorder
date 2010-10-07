@@ -18,8 +18,8 @@
 
 #include "stdafx.h"
 #include "custom_header_ctrl.hh"
-#include "ProjectManager.h"
-#include "TreeManager.h"
+#include "project_manager.hh"
+#include "tree_manager.hh"
 
 CCustomHeaderCtrl::CCustomHeaderCtrl()
 {
