@@ -97,7 +97,7 @@ IDR_IRSHELLEXT          REGISTRY                "shell_ext.rgs"
 // Bitmap
 //
 
-IDB_BURNBITMAP          BITMAP                  "Resources\\Burn.bmp"
+IDB_BURNBITMAP          BITMAP                  "Resources\\icon-burn.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
