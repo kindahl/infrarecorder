@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2009 Christian Kindahl
+ * Copyright (C) 2006-2010 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,12 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "stdafx.h"
+#include "stdafx.hh"
 #include "resource.h"
-#include "../../Common/StringUtil.h"
-#include "../../Common/CodecManager.h"
-#include "../../Common/FileManager.h"
-#include "MainDlg.h"
+#include <base/string_util.hh>
+#include <base/codec_manager.hh>
+#include "main_dlg.hh"
 
 CCodecManager g_CodecManager;
 
@@ -193,7 +192,7 @@ LRESULT CMainDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHand
 
 LRESULT CMainDlg::OnAppAbout(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
-	MessageBox(_T("Copyright © 2006-2009 Christian Kindahl"),_T("About"),MB_OK | MB_ICONINFORMATION);
+	MessageBox(_T("Copyright © 2006-2010 Christian Kindahl"),_T("About"),MB_OK | MB_ICONINFORMATION);
 	return 0;
 }
 
