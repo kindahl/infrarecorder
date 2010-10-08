@@ -70,10 +70,10 @@ BEGIN
         BEGIN
             VALUE "FileDescription", "InfraRecorder shell extension."
             VALUE "FileVersion", "0.51.0.0"
-            VALUE "InternalName", "irShell.dll"
+            VALUE "InternalName", "shell.dll"
             VALUE "LegalCopyright", "Copyright © 2006-2010 Christian Kindahl"
-            VALUE "OriginalFilename", "irShell.dll"
-            VALUE "ProductName", "irShell"
+            VALUE "OriginalFilename", "shell.dll"
+            VALUE "ProductName", "InfraRecorder Shell Extension"
             VALUE "ProductVersion", "0.51.0.0"
         END
     END
@@ -89,8 +89,8 @@ END
 // REGISTRY
 //
 
-IDR_IRSHELL             REGISTRY                "irShell.rgs"
-IDR_IRSHELLEXT          REGISTRY                "irShellExt.rgs"
+IDR_IRSHELL             REGISTRY                "shell.rgs"
+IDR_IRSHELLEXT          REGISTRY                "shell_ext.rgs"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -106,7 +106,7 @@ IDB_BURNBITMAP          BITMAP                  "Resources\\Burn.bmp"
 
 STRINGTABLE 
 BEGIN
-    IDS_PROJNAME            "irShell"
+    IDS_PROJNAME            "shell"
 END
 
 #endif    // Swedish resources

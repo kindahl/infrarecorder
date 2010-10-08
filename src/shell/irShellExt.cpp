@@ -24,7 +24,7 @@
 #include "LangUtil.h"
 #include "SettingsManager.h"
 
-CirShellExt::CirShellExt()
+CShellExt::CShellExt()
 {
 	// Load the configuration.
 	g_SettingsManager.Load();
@@ -33,29 +33,29 @@ CirShellExt::CirShellExt()
 	m_hBurnBitmap = LoadBitmap(g_DllInstance,MAKEINTRESOURCE(IDB_BURNBITMAP));
 }
 
-CirShellExt::~CirShellExt()
+CShellExt::~CShellExt()
 {
 	// Unload bitmaps.
 	if (m_hBurnBitmap != NULL)
 		DeleteObject(m_hBurnBitmap);
 }
 
-HRESULT CirShellExt::FinalConstruct()
+HRESULT CShellExt::FinalConstruct()
 {
 	return S_OK;
 }
 	
-void CirShellExt::FinalRelease() 
+void CShellExt::FinalRelease() 
 {
 }
 
 /*
-	CirShellExt::IsSeparatorItem
+	CShellExt::IsSeparatorItem
 	----------------------------
 	Checks if the specified menu item is a separator and returns true if it is
 	and false otherwise.
 */
-bool CirShellExt::IsSeparatorItem(HMENU hMenu,unsigned int uiPosition)
+bool CShellExt::IsSeparatorItem(HMENU hMenu,unsigned int uiPosition)
 {
 	MENUITEMINFO mii;
 	memset(&mii,0,sizeof(MENUITEMINFO));
@@ -68,19 +68,19 @@ bool CirShellExt::IsSeparatorItem(HMENU hMenu,unsigned int uiPosition)
 }
 
 /*
-	CirShellExt::IsProjectFile
+	CShellExt::IsProjectFile
 	--------------------------
 	Determines wheter the specified file is a project file or not. The function
 	returns true if it is a project file, false otherwise.
 */
-bool CirShellExt::IsProjectFile(const TCHAR *szFileName)
+bool CShellExt::IsProjectFile(const TCHAR *szFileName)
 {
 	ckcore::Path FilePath(szFileName);
 	return !lstrcmpi(FilePath.ext_name().c_str(),ckT("irp"));
 }
 
-STDMETHODIMP CirShellExt::Initialize(LPCITEMIDLIST pidlFolder,
-									 LPDATAOBJECT pDataObj,HKEY hProgID)
+STDMETHODIMP CShellExt::Initialize(LPCITEMIDLIST pidlFolder,
+								   LPDATAOBJECT pDataObj,HKEY hProgID)
 {
 	FORMATETC fmt = { CF_HDROP,NULL,DVASPECT_CONTENT,-1,TYMED_HGLOBAL };
 	STGMEDIUM stg = { TYMED_HGLOBAL };
@@ -116,13 +116,13 @@ STDMETHODIMP CirShellExt::Initialize(LPCITEMIDLIST pidlFolder,
 }
 
 /*
-	CirShellExt::FillProjectMenu
+	CShellExt::FillProjectMenu
 	----------------------------
 	Fills the menu with project related items and retursn the next menu index to
 	be used by any following menu items.
 */
-unsigned int CirShellExt::FillProjectMenu(HMENU hMenu,unsigned int uiMenuIndex,
-										  unsigned int uiFirstCmd)
+unsigned int CShellExt::FillProjectMenu(HMENU hMenu,unsigned int uiMenuIndex,
+										unsigned int uiFirstCmd)
 {
 	// Burn project.
 	InsertMenu(hMenu,uiMenuIndex,MF_STRING | MF_BYPOSITION,uiFirstCmd++,lngGetString(MENU_BURNPROJECT));
@@ -137,13 +137,13 @@ unsigned int CirShellExt::FillProjectMenu(HMENU hMenu,unsigned int uiMenuIndex,
 }
 
 /*
-	CirShellExt::FillDiscImageMenu
+	CShellExt::FillDiscImageMenu
 	------------------------------
 	Fills the menu with disc image related items and returns the next menu index
 	to be used by any following menu items.
 */
-unsigned int CirShellExt::FillDiscImageMenu(HMENU hMenu,unsigned int uiMenuIndex,
-											unsigned int uiFirstCmd)
+unsigned int CShellExt::FillDiscImageMenu(HMENU hMenu,unsigned int uiMenuIndex,
+										  unsigned int uiFirstCmd)
 {
 	// Burn image.
 	InsertMenu(hMenu,uiMenuIndex,MF_STRING | MF_BYPOSITION,uiFirstCmd++,lngGetString(MENU_BURNIMAGE));
@@ -154,8 +154,8 @@ unsigned int CirShellExt::FillDiscImageMenu(HMENU hMenu,unsigned int uiMenuIndex
 	return uiMenuIndex;
 }
 
-HRESULT CirShellExt::QueryContextMenu(HMENU hmenu,UINT uMenuIndex,UINT uidFirstCmd,
-									  UINT uidLastCmd,UINT uFlags)
+HRESULT CShellExt::QueryContextMenu(HMENU hmenu,UINT uMenuIndex,UINT uidFirstCmd,
+									UINT uidLastCmd,UINT uFlags)
 {
 	// Check if we should add any items.
 	if (uFlags & CMF_DEFAULTONLY)
@@ -197,8 +197,8 @@ HRESULT CirShellExt::QueryContextMenu(HMENU hmenu,UINT uMenuIndex,UINT uidFirstC
 	return MAKE_HRESULT(SEVERITY_SUCCESS,FACILITY_NULL,uMenuIndex - uiFirstMenuIndex);
 }
 
-HRESULT CirShellExt::GetProjectCommandString(LPSTR pszName,UINT cchMax,bool bUnicode,
-											 UINT_PTR uiID)
+HRESULT CShellExt::GetProjectCommandString(LPSTR pszName,UINT cchMax,bool bUnicode,
+										   UINT_PTR uiID)
 {
 USES_CONVERSION;
 
@@ -224,8 +224,8 @@ USES_CONVERSION;
 	return E_INVALIDARG;
 }
 
-HRESULT CirShellExt::GetDiscImageCommandString(LPSTR pszName,UINT cchMax,bool bUnicode,
-											   UINT_PTR uiID)
+HRESULT CShellExt::GetDiscImageCommandString(LPSTR pszName,UINT cchMax,bool bUnicode,
+											 UINT_PTR uiID)
 {
 USES_CONVERSION;
 
@@ -243,8 +243,8 @@ USES_CONVERSION;
 	return E_INVALIDARG;
 }
 
-HRESULT CirShellExt::GetCommandString(UINT_PTR idCmd,UINT uFlags,UINT *pwReserved,
-									  LPSTR pszName,UINT cchMax)
+HRESULT CShellExt::GetCommandString(UINT_PTR idCmd,UINT uFlags,UINT *pwReserved,
+									LPSTR pszName,UINT cchMax)
 {
 	// Currently only help strings are supported/supplied.
 	if (uFlags & GCS_HELPTEXT)
@@ -258,7 +258,7 @@ HRESULT CirShellExt::GetCommandString(UINT_PTR idCmd,UINT uFlags,UINT *pwReserve
 	return E_INVALIDARG;
 }
 
-HRESULT CirShellExt::InvokeProjectCommand(HWND hWnd,unsigned int uiID)
+HRESULT CShellExt::InvokeProjectCommand(HWND hWnd,unsigned int uiID)
 {
 	TCHAR szParam[MAX_PATH];
 	TCHAR szFileName[MAX_PATH];
@@ -284,7 +284,7 @@ HRESULT CirShellExt::InvokeProjectCommand(HWND hWnd,unsigned int uiID)
 	return E_INVALIDARG;
 }
 
-HRESULT CirShellExt::InvokeDiscImageCommand(HWND hWnd,unsigned int uiID)
+HRESULT CShellExt::InvokeDiscImageCommand(HWND hWnd,unsigned int uiID)
 {
 	TCHAR szParam[MAX_PATH];
 	TCHAR szFileName[MAX_PATH];
@@ -306,7 +306,7 @@ HRESULT CirShellExt::InvokeDiscImageCommand(HWND hWnd,unsigned int uiID)
 	return E_INVALIDARG;
 }
 
-HRESULT CirShellExt::InvokeCommand(LPCMINVOKECOMMANDINFO pCmdInfo)
+HRESULT CShellExt::InvokeCommand(LPCMINVOKECOMMANDINFO pCmdInfo)
 {
 	// Abort if lpVerb points to a string.
 	if (HIWORD(pCmdInfo->lpVerb) != 0)

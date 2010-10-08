@@ -2,8 +2,8 @@ HKCR
 {
 	NoRemove AppID
 	{
-		'%APPID%' = s 'irShell'
-		'irShell.DLL'
+		'%APPID%' = s 'shell'
+		'shell.DLL'
 		{
 			val AppID = s '%APPID%'
 		}

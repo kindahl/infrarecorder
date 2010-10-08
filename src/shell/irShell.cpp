@@ -20,14 +20,14 @@
 #include "resource.h"
 #include "irShell.h"
 
-class CirShellModule : public CAtlDllModuleT<CirShellModule>
+class CShellModule : public CAtlDllModuleT<CShellModule>
 {
 public :
-	DECLARE_LIBID(LIBID_irShellLib)
+	DECLARE_LIBID(LIBID_ShellLib)
 	DECLARE_REGISTRY_APPID_RESOURCEID(IDR_IRSHELL,"{8E8DAC3C-E7C5-4495-9903-430C1F38CF86}")
 };
 
-CirShellModule _AtlModule;
+CShellModule _AtlModule;
 HINSTANCE g_DllInstance = NULL;
 
 extern "C" BOOL WINAPI DllMain(HINSTANCE hInstance,DWORD dwReason,LPVOID lpReserved)

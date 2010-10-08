@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="irShell"
+	Name="shell"
 	ProjectGUID="{A6B8E42F-4793-4995-9D63-2906375407AD}"
-	RootNamespace="irShell"
+	RootNamespace="shell"
 	Keyword="AtlProj"
 	>
 	<Platforms>
@@ -46,7 +46,7 @@
 				MkTypLibCompatible="false"
 				TargetEnvironment="1"
 				GenerateStublessProxies="true"
-				TypeLibraryName="$(IntDir)/irShell.tlb"
+				TypeLibraryName="$(IntDir)/shell.tlb"
 				HeaderFileName="irShell.h"
 				DLLDataFileName=""
 				InterfaceIdentifierFileName="irShell_i.c"
@@ -82,10 +82,10 @@
 				IgnoreImportLibrary="true"
 				AdditionalDependencies="ckcored.lib"
 				LinkIncremental="2"
-				ModuleDefinitionFile=".\irShell.def"
+				ModuleDefinitionFile=".\shell.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
-				ImportLibrary="$(OutDir)/irShell.lib"
+				ImportLibrary="$(OutDir)/shell.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -143,7 +143,7 @@
 				MkTypLibCompatible="false"
 				TargetEnvironment="3"
 				GenerateStublessProxies="true"
-				TypeLibraryName="$(IntDir)/irShell.tlb"
+				TypeLibraryName="$(IntDir)/shell.tlb"
 				HeaderFileName="irShell.h"
 				DLLDataFileName=""
 				InterfaceIdentifierFileName="irShell_i.c"
@@ -179,10 +179,10 @@
 				IgnoreImportLibrary="true"
 				AdditionalDependencies="ckcored.lib"
 				LinkIncremental="2"
-				ModuleDefinitionFile=".\irShell.def"
+				ModuleDefinitionFile=".\shell.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
-				ImportLibrary="$(OutDir)/irShell.lib"
+				ImportLibrary="$(OutDir)/shell.lib"
 				TargetMachine="17"
 			/>
 			<Tool
@@ -240,7 +240,7 @@
 				MkTypLibCompatible="false"
 				TargetEnvironment="1"
 				GenerateStublessProxies="true"
-				TypeLibraryName="$(IntDir)/irShell.tlb"
+				TypeLibraryName="$(IntDir)/shell.tlb"
 				HeaderFileName="irShell.h"
 				DLLDataFileName=""
 				InterfaceIdentifierFileName="irShell_i.c"
@@ -273,12 +273,12 @@
 				IgnoreImportLibrary="true"
 				AdditionalDependencies="ckcore.lib"
 				LinkIncremental="1"
-				ModuleDefinitionFile=".\irShell.def"
+				ModuleDefinitionFile=".\shell.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="$(OutDir)/irShell.lib"
+				ImportLibrary="$(OutDir)/shell.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -336,7 +336,7 @@
 				MkTypLibCompatible="false"
 				TargetEnvironment="3"
 				GenerateStublessProxies="true"
-				TypeLibraryName="$(IntDir)/irShell.tlb"
+				TypeLibraryName="$(IntDir)/shell.tlb"
 				HeaderFileName="irShell.h"
 				DLLDataFileName=""
 				InterfaceIdentifierFileName="irShell_i.c"
@@ -369,12 +369,12 @@
 				IgnoreImportLibrary="true"
 				AdditionalDependencies="ckcore.lib"
 				LinkIncremental="1"
-				ModuleDefinitionFile=".\irShell.def"
+				ModuleDefinitionFile=".\shell.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="$(OutDir)/irShell.lib"
+				ImportLibrary="$(OutDir)/shell.lib"
 				TargetMachine="17"
 			/>
 			<Tool
@@ -432,7 +432,7 @@
 				MkTypLibCompatible="false"
 				TargetEnvironment="1"
 				GenerateStublessProxies="true"
-				TypeLibraryName="$(IntDir)/irShell.tlb"
+				TypeLibraryName="$(IntDir)/shell.tlb"
 				HeaderFileName="irShell.h"
 				DLLDataFileName=""
 				InterfaceIdentifierFileName="irShell_i.c"
@@ -465,12 +465,12 @@
 				IgnoreImportLibrary="true"
 				AdditionalDependencies="ckcore.lib"
 				LinkIncremental="1"
-				ModuleDefinitionFile=".\irShell.def"
+				ModuleDefinitionFile=".\shell.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="$(OutDir)/irShell.lib"
+				ImportLibrary="$(OutDir)/shell.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -528,7 +528,7 @@
 				MkTypLibCompatible="false"
 				TargetEnvironment="3"
 				GenerateStublessProxies="true"
-				TypeLibraryName="$(IntDir)/irShell.tlb"
+				TypeLibraryName="$(IntDir)/shell.tlb"
 				HeaderFileName="irShell.h"
 				DLLDataFileName=""
 				InterfaceIdentifierFileName="irShell_i.c"
@@ -561,12 +561,12 @@
 				IgnoreImportLibrary="true"
 				AdditionalDependencies="ckcore.lib"
 				LinkIncremental="1"
-				ModuleDefinitionFile=".\irShell.def"
+				ModuleDefinitionFile=".\shell.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="$(OutDir)/irShell.lib"
+				ImportLibrary="$(OutDir)/shell.lib"
 				TargetMachine="17"
 			/>
 			<Tool
@@ -610,7 +610,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\irShell.def"
+				RelativePath=".\shell.def"
 				>
 			</File>
 			<File
@@ -742,11 +742,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\irShell.rgs"
+				RelativePath=".\shell.rgs"
 				>
 			</File>
 			<File
-				RelativePath=".\irShellExt.rgs"
+				RelativePath=".\shell_ext.rgs"
 				>
 			</File>
 		</Filter>

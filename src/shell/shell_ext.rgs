@@ -2,7 +2,7 @@ HKCR
 {
 	NoRemove CLSID
 	{
-		ForceRemove {7022C5BB-445E-4300-99F2-0B7EDA907A53} = s 'irShellExt Class'
+		ForceRemove {7022C5BB-445E-4300-99F2-0B7EDA907A53} = s 'ShellExt Class'
 		{
 			InprocServer32 = s '%MODULE%'
 			{

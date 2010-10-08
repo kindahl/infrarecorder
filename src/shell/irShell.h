@@ -4,10 +4,10 @@
 
 
  /* File created by MIDL compiler version 6.00.0366 */
-/* at Thu Oct 07 22:09:31 2010
+/* at Fri Oct 08 15:33:29 2010
  */
 /* Compiler settings for .\irShell.idl:
-    Oicf, W1, Zp8, env=Win32 (32b run)
+    Oicf, W1, Zp8, env=Win64 (32b run)
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
     VC __declspec() decoration level: 
@@ -45,22 +45,22 @@
 
 /* Forward Declarations */ 
 
-#ifndef __IirShellExt_FWD_DEFINED__
-#define __IirShellExt_FWD_DEFINED__
-typedef interface IirShellExt IirShellExt;
-#endif 	/* __IirShellExt_FWD_DEFINED__ */
+#ifndef __IShellExt_FWD_DEFINED__
+#define __IShellExt_FWD_DEFINED__
+typedef interface IShellExt IShellExt;
+#endif 	/* __IShellExt_FWD_DEFINED__ */
 
 
-#ifndef __irShellExt_FWD_DEFINED__
-#define __irShellExt_FWD_DEFINED__
+#ifndef __ShellExt_FWD_DEFINED__
+#define __ShellExt_FWD_DEFINED__
 
 #ifdef __cplusplus
-typedef class irShellExt irShellExt;
+typedef class ShellExt ShellExt;
 #else
-typedef struct irShellExt irShellExt;
+typedef struct ShellExt ShellExt;
 #endif /* __cplusplus */
 
-#endif 	/* __irShellExt_FWD_DEFINED__ */
+#endif 	/* __ShellExt_FWD_DEFINED__ */
 
 
 /* header files for imported files */
@@ -74,46 +74,46 @@ extern "C"{
 void * __RPC_USER MIDL_user_allocate(size_t);
 void __RPC_USER MIDL_user_free( void * ); 
 
-#ifndef __IirShellExt_INTERFACE_DEFINED__
-#define __IirShellExt_INTERFACE_DEFINED__
+#ifndef __IShellExt_INTERFACE_DEFINED__
+#define __IShellExt_INTERFACE_DEFINED__
 
-/* interface IirShellExt */
+/* interface IShellExt */
 /* [unique][helpstring][uuid][object] */ 
 
 
-EXTERN_C const IID IID_IirShellExt;
+EXTERN_C const IID IID_IShellExt;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
     
     MIDL_INTERFACE("02CEB95B-2C12-40CD-A434-D9F699F4B1AA")
-    IirShellExt : public IUnknown
+    IShellExt : public IUnknown
     {
     public:
     };
     
 #else 	/* C style interface */
 
-    typedef struct IirShellExtVtbl
+    typedef struct IShellExtVtbl
     {
         BEGIN_INTERFACE
         
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            IirShellExt * This,
+            IShellExt * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
-            IirShellExt * This);
+            IShellExt * This);
         
         ULONG ( STDMETHODCALLTYPE *Release )( 
-            IirShellExt * This);
+            IShellExt * This);
         
         END_INTERFACE
-    } IirShellExtVtbl;
+    } IShellExtVtbl;
 
-    interface IirShellExt
+    interface IShellExt
     {
-        CONST_VTBL struct IirShellExtVtbl *lpVtbl;
+        CONST_VTBL struct IShellExtVtbl *lpVtbl;
     };
 
     
@@ -121,13 +121,13 @@ EXTERN_C const IID IID_IirShellExt;
 #ifdef COBJMACROS
 
 
-#define IirShellExt_QueryInterface(This,riid,ppvObject)	\
+#define IShellExt_QueryInterface(This,riid,ppvObject)	\
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IirShellExt_AddRef(This)	\
+#define IShellExt_AddRef(This)	\
     (This)->lpVtbl -> AddRef(This)
 
-#define IirShellExt_Release(This)	\
+#define IShellExt_Release(This)	\
     (This)->lpVtbl -> Release(This)
 
 
@@ -139,27 +139,27 @@ EXTERN_C const IID IID_IirShellExt;
 
 
 
-#endif 	/* __IirShellExt_INTERFACE_DEFINED__ */
+#endif 	/* __IShellExt_INTERFACE_DEFINED__ */
 
 
 
-#ifndef __irShellLib_LIBRARY_DEFINED__
-#define __irShellLib_LIBRARY_DEFINED__
+#ifndef __ShellLib_LIBRARY_DEFINED__
+#define __ShellLib_LIBRARY_DEFINED__
 
-/* library irShellLib */
+/* library ShellLib */
 /* [helpstring][version][uuid] */ 
 
 
-EXTERN_C const IID LIBID_irShellLib;
+EXTERN_C const IID LIBID_ShellLib;
 
-EXTERN_C const CLSID CLSID_irShellExt;
+EXTERN_C const CLSID CLSID_ShellExt;
 
 #ifdef __cplusplus
 
 class DECLSPEC_UUID("7022C5BB-445E-4300-99F2-0B7EDA907A53")
-irShellExt;
+ShellExt;
 #endif
-#endif /* __irShellLib_LIBRARY_DEFINED__ */
+#endif /* __ShellLib_LIBRARY_DEFINED__ */
 
 /* Additional Prototypes for ALL interfaces */
 

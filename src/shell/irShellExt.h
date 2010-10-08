@@ -22,9 +22,9 @@
 #include "resource.h"
 #include "irShell.h"
 
-class ATL_NO_VTABLE CirShellExt : 
+class ATL_NO_VTABLE CShellExt : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CirShellExt,&CLSID_irShellExt>,
+	public CComCoClass<CShellExt,&CLSID_ShellExt>,
 	public IShellExtInit,
 	public IContextMenu
 {
@@ -51,14 +51,14 @@ protected:
 	TCHAR m_szFileName[MAX_PATH];
 
 public:
-	CirShellExt();
-	~CirShellExt();
+	CShellExt();
+	~CShellExt();
 
 	DECLARE_REGISTRY_RESOURCEID(IDR_IRSHELLEXT)
 
-	DECLARE_NOT_AGGREGATABLE(CirShellExt)
+	DECLARE_NOT_AGGREGATABLE(CShellExt)
 
-	BEGIN_COM_MAP(CirShellExt)
+	BEGIN_COM_MAP(CShellExt)
 		COM_INTERFACE_ENTRY(IShellExtInit)
 		COM_INTERFACE_ENTRY(IContextMenu)
 	END_COM_MAP()
@@ -79,4 +79,4 @@ public:
 	STDMETHODIMP InvokeCommand(LPCMINVOKECOMMANDINFO pCmdInfo);
 };
 
-OBJECT_ENTRY_AUTO(__uuidof(irShellExt),CirShellExt)
+OBJECT_ENTRY_AUTO(__uuidof(ShellExt),CShellExt)

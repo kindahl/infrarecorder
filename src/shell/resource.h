@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by irShell.rc
+// Used by shell.rc
 //
 #define IDS_PROJNAME                    100
 #define IDR_IRSHELL                     101

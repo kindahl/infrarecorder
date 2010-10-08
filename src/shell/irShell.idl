@@ -1,8 +1,8 @@
-// irShell.idl : IDL source for irShell
+// shell.idl : IDL source for shell
 //
 
 // This file will be processed by the MIDL tool to
-// produce the type library (irShell.tlb) and marshalling code.
+// produce the type library (shell.tlb) and marshalling code.
 
 import "oaidl.idl";
 import "ocidl.idl";
@@ -10,25 +10,25 @@ import "ocidl.idl";
 [
 	object,
 	uuid(02CEB95B-2C12-40CD-A434-D9F699F4B1AA),
-	helpstring("IirShellExt Interface"),
+	helpstring("IShellExt Interface"),
 	pointer_default(unique)
 ]
-interface IirShellExt : IUnknown{
+interface IShellExt : IUnknown{
 };
 [
 	uuid(D346209A-7395-4EBF-BFC2-E16294570A1B),
 	version(1.0),
-	helpstring("irShell 1.0 Type Library")
+	helpstring("Shell 1.0 Type Library")
 ]
-library irShellLib
+library ShellLib
 {
 	importlib("stdole2.tlb");
 	[
 		uuid(7022C5BB-445E-4300-99F2-0B7EDA907A53),
-		helpstring("irShellExt Class")
+		helpstring("ShellExt Class")
 	]
-	coclass irShellExt
+	coclass ShellExt
 	{
-		[default] interface IirShellExt;
+		[default] interface IShellExt;
 	};
 };

@@ -1,6 +1,6 @@
-; irShell.def : Declares the module parameters.
+; shell.def : Declares the module parameters.
 
-LIBRARY      "irShell.DLL"
+LIBRARY      "shell.DLL"
 
 EXPORTS
 	DllCanUnloadNow		PRIVATE

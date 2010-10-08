@@ -26,7 +26,7 @@ bool ExecShellExtFunction(const char *szFunctionName)
 	TCHAR szFileName[MAX_PATH];
 	::GetModuleFileName(NULL,szFileName,MAX_PATH - 1);
 	ExtractFilePath(szFileName);
-	lstrcat(szFileName,_T("irShell.dll"));
+	lstrcat(szFileName,_T("shell.dll"));
 
 	// Load library.
 	HINSTANCE hInstance = LoadLibrary(szFileName);
@@ -84,7 +84,7 @@ bool IsShellExtensionRegistered()
 	CRegistry Reg;
 	Reg.SetRoot(HKEY_CLASSES_ROOT);
 
-	if (Reg.OpenKey(_T("AppID\\irShell.DLL"),false))
+	if (Reg.OpenKey(_T("AppID\\shell.DLL"),false))
 	{
 		TCHAR szAppID[39];
 
@@ -144,7 +144,7 @@ bool InstallExtension(const TCHAR *szFileExt,CRegistry *pReg)
 
 		TCHAR szFullName[256];
 		lstrcpy(szFullName,szKeyName),
-		lstrcat(szFullName,_T("\\ShellEx\\ContextMenuHandlers\\irShell"));
+		lstrcat(szFullName,_T("\\ShellEx\\ContextMenuHandlers\\Shell"));
 
 		if (!pReg->OpenKey(szFullName))
 			return false;
@@ -198,7 +198,7 @@ bool InstallProjectExtension(CRegistry *pReg)
 
 		TCHAR szFullName[256];
 		lstrcpy(szFullName,szKeyName),
-		lstrcat(szFullName,_T("\\ShellEx\\ContextMenuHandlers\\irShell"));
+		lstrcat(szFullName,_T("\\ShellEx\\ContextMenuHandlers\\Shell"));
 
 		if (!pReg->OpenKey(szFullName))
 			return false;
@@ -240,7 +240,7 @@ bool UninstallExtension(const TCHAR *szFileExt,CRegistry *pReg)
 			if (!pReg->OpenKey(szFullName,false))
 				return false;
 
-			bool bResult = pReg->DeleteKey(_T("irShell"));
+			bool bResult = pReg->DeleteKey(_T("Shell"));
 				pReg->CloseKey();
 			return bResult;
 		}
@@ -269,7 +269,7 @@ bool IsExtensionInstalled(const TCHAR *szFileExt,CRegistry *pReg)
 		{
 			TCHAR szFullName[256];
 			lstrcpy(szFullName,szKeyName),
-			lstrcat(szFullName,_T("\\ShellEx\\ContextMenuHandlers\\irShell"));
+			lstrcat(szFullName,_T("\\ShellEx\\ContextMenuHandlers\\Shell"));
 
 			if (!pReg->OpenKey(szFullName,false))
 				return false;
