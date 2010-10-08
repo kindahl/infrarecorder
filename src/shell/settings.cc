@@ -18,7 +18,7 @@
 
 #include "stdafx.h"
 #include <ckcore/file.hh>
-#include "Settings.h"
+#include "settings.hh"
 
 CLanguageSettings g_LanguageSettings;
 CGlobalSettings g_GlobalSettings;

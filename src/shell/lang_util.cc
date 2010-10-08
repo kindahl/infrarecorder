@@ -16,24 +16,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
-#include <vector>
-#include "Settings.h"
+#include "stdafx.h"
+#include "lang_util.hh"
+#include "settings.hh"
+#include "string_table.hh"
 
-class CSettingsManager
+TCHAR *lngGetString(unsigned int uiID)
 {
-private:
-	std::vector<ISettings *> m_Settings;
+	// Try to load translated string.
+	if (g_LanguageSettings.m_pLngProcessor != NULL)
+	{	
+		// Make sure that there is a main translation section.
+		if (g_LanguageSettings.m_pLngProcessor->EnterSection(_T("shell")))
+		{
+			TCHAR *szStrValue;
+			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(uiID,szStrValue))
+				return szStrValue;
+		}
+	}
 
-	void RegisterObject(ISettings *pSettings);
+	// Load internal (English) string.
+	return g_szStringTable[uiID];
+}
 
-	bool GetConfigPath(TCHAR *szConfigPath);
-
-public:
-	CSettingsManager();
-	~CSettingsManager();
-
-	bool Load();
-};
-
-extern CSettingsManager g_SettingsManager;
+int lngMessageBox(HWND hWnd,unsigned int uiTextID,unsigned int uiCaptionID,unsigned int uiType)
+{
+	return MessageBox(hWnd,lngGetString(uiTextID),lngGetString(uiCaptionID),uiType);
+}

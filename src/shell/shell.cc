@@ -18,7 +18,7 @@
 
 #include "stdafx.h"
 #include "resource.h"
-#include "irShell.h"
+#include "shell.hh"
 
 class CShellModule : public CAtlDllModuleT<CShellModule>
 {

@@ -47,10 +47,10 @@
 				TargetEnvironment="1"
 				GenerateStublessProxies="true"
 				TypeLibraryName="$(IntDir)/shell.tlb"
-				HeaderFileName="irShell.h"
+				HeaderFileName="shell.hh"
 				DLLDataFileName=""
-				InterfaceIdentifierFileName="irShell_i.c"
-				ProxyFileName="irShell_p.c"
+				InterfaceIdentifierFileName="shell_i.c"
+				ProxyFileName="shell_p.c"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
@@ -144,10 +144,10 @@
 				TargetEnvironment="3"
 				GenerateStublessProxies="true"
 				TypeLibraryName="$(IntDir)/shell.tlb"
-				HeaderFileName="irShell.h"
+				HeaderFileName="shell.hh"
 				DLLDataFileName=""
-				InterfaceIdentifierFileName="irShell_i.c"
-				ProxyFileName="irShell_p.c"
+				InterfaceIdentifierFileName="shell_i.c"
+				ProxyFileName="shell_p.c"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
@@ -241,10 +241,10 @@
 				TargetEnvironment="1"
 				GenerateStublessProxies="true"
 				TypeLibraryName="$(IntDir)/shell.tlb"
-				HeaderFileName="irShell.h"
+				HeaderFileName="shell.hh"
 				DLLDataFileName=""
-				InterfaceIdentifierFileName="irShell_i.c"
-				ProxyFileName="irShell_p.c"
+				InterfaceIdentifierFileName="shell_i.c"
+				ProxyFileName="shell_p.c"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
@@ -337,10 +337,10 @@
 				TargetEnvironment="3"
 				GenerateStublessProxies="true"
 				TypeLibraryName="$(IntDir)/shell.tlb"
-				HeaderFileName="irShell.h"
+				HeaderFileName="shell.hh"
 				DLLDataFileName=""
-				InterfaceIdentifierFileName="irShell_i.c"
-				ProxyFileName="irShell_p.c"
+				InterfaceIdentifierFileName="shell_i.c"
+				ProxyFileName="shell_p.c"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
@@ -433,10 +433,10 @@
 				TargetEnvironment="1"
 				GenerateStublessProxies="true"
 				TypeLibraryName="$(IntDir)/shell.tlb"
-				HeaderFileName="irShell.h"
+				HeaderFileName="shell.hh"
 				DLLDataFileName=""
-				InterfaceIdentifierFileName="irShell_i.c"
-				ProxyFileName="irShell_p.c"
+				InterfaceIdentifierFileName="shell_i.c"
+				ProxyFileName="shell_p.c"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
@@ -529,10 +529,10 @@
 				TargetEnvironment="3"
 				GenerateStublessProxies="true"
 				TypeLibraryName="$(IntDir)/shell.tlb"
-				HeaderFileName="irShell.h"
+				HeaderFileName="shell.hh"
 				DLLDataFileName=""
-				InterfaceIdentifierFileName="irShell_i.c"
-				ProxyFileName="irShell_p.c"
+				InterfaceIdentifierFileName="shell_i.c"
+				ProxyFileName="shell_p.c"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
@@ -606,7 +606,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\irShell.cpp"
+				RelativePath=".\shell.cc"
 				>
 			</File>
 			<File
@@ -614,27 +614,27 @@
 				>
 			</File>
 			<File
-				RelativePath=".\irShell.idl"
+				RelativePath=".\shell.idl"
 				>
 			</File>
 			<File
-				RelativePath=".\irShellExt.cpp"
+				RelativePath=".\shell_ext.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\LangUtil.cpp"
+				RelativePath=".\lang_util.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\Settings.cpp"
+				RelativePath=".\settings.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\SettingsManager.cpp"
+				RelativePath=".\settings_manager.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\stdafx.cpp"
+				RelativePath=".\stdafx.cc"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -686,7 +686,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\StringTable.cpp"
+				RelativePath=".\string_table.cc"
 				>
 			</File>
 		</Filter>
@@ -696,23 +696,23 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\irShellExt.h"
+				RelativePath=".\shell_ext.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\LangUtil.h"
+				RelativePath=".\lang_util.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\Resource.h"
+				RelativePath=".\resource.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Settings.h"
+				RelativePath=".\settings.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\SettingsManager.h"
+				RelativePath=".\settings_manager.hh"
 				>
 			</File>
 			<File
@@ -720,11 +720,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\StringTable.h"
+				RelativePath=".\string_table.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\Version.h"
+				RelativePath=".\version.hh"
 				>
 			</File>
 		</Filter>
@@ -738,7 +738,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\irShell.rc"
+				RelativePath=".\shell.rc"
 				>
 			</File>
 			<File
@@ -755,7 +755,7 @@
 			SourceControlFiles="false"
 			>
 			<File
-				RelativePath=".\irShell_i.c"
+				RelativePath=".\shell_i.c"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"

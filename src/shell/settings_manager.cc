@@ -20,9 +20,9 @@
 #include <ckcore/directory.hh>
 #include <base/string_util.hh>
 #include <base/xml_processor.hh>
-#include "SettingsManager.h"
-#include "StringTable.h"
-#include "LangUtil.h"
+#include "settings_manager.hh"
+#include "string_table.hh"
+#include "lang_util.hh"
 
 CSettingsManager g_SettingsManager;
 

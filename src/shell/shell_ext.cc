@@ -19,10 +19,10 @@
 #include "stdafx.h"
 #include <ckcore/types.hh>
 #include <base/string_util.hh>
-#include "irShellExt.h"
-#include "StringTable.h"
-#include "LangUtil.h"
-#include "SettingsManager.h"
+#include "shell_ext.hh"
+#include "string_table.hh"
+#include "lang_util.hh"
+#include "settings_manager.hh"
 
 CShellExt::CShellExt()
 {

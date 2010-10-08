@@ -20,7 +20,7 @@
 #include <shlobj.h>
 #include <comdef.h>
 #include "resource.h"
-#include "irShell.h"
+#include "shell.hh"
 
 class ATL_NO_VTABLE CShellExt : 
 	public CComObjectRootEx<CComSingleThreadModel>,

@@ -4,9 +4,9 @@
 
 
  /* File created by MIDL compiler version 6.00.0366 */
-/* at Fri Oct 08 15:33:29 2010
+/* at Fri Oct 08 16:35:35 2010
  */
-/* Compiler settings for .\irShell.idl:
+/* Compiler settings for .\shell.idl:
     Oicf, W1, Zp8, env=Win64 (32b run)
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
@@ -36,8 +36,8 @@
 #include "ole2.h"
 #endif /*COM_NO_WINDOWS_H*/
 
-#ifndef __irShell_h__
-#define __irShell_h__
+#ifndef __shell_hh__
+#define __shell_hh__
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #pragma once

@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="irShellPS"
+	Name="shell_ps"
 	ProjectGUID="{2BF62A6B-B632-4DF4-AC25-F29FEA93E3E0}"
-	RootNamespace="irShellPS"
+	RootNamespace="shell_ps"
 	Keyword="AtlPSProj"
 	>
 	<Platforms>
@@ -59,7 +59,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="kernel32.lib rpcndr.lib rpcns4.lib rpcrt4.lib oleaut32.lib uuid.lib"
-				ModuleDefinitionFile="irShellPS.def"
+				ModuleDefinitionFile="shell_ps.def"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -130,7 +130,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="kernel32.lib rpcndr.lib rpcns4.lib rpcrt4.lib oleaut32.lib uuid.lib"
-				ModuleDefinitionFile="irShellPS.def"
+				ModuleDefinitionFile="shell_ps.def"
 				TargetMachine="17"
 			/>
 			<Tool
@@ -202,7 +202,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="kernel32.lib rpcndr.lib rpcns4.lib rpcrt4.lib oleaut32.lib uuid.lib"
-				ModuleDefinitionFile="irShellPS.def"
+				ModuleDefinitionFile="shell_ps.def"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 			/>
@@ -276,7 +276,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="kernel32.lib rpcndr.lib rpcns4.lib rpcrt4.lib oleaut32.lib uuid.lib"
-				ModuleDefinitionFile="irShellPS.def"
+				ModuleDefinitionFile="shell_ps.def"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				TargetMachine="17"
@@ -411,7 +411,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="kernel32.lib rpcndr.lib rpcns4.lib rpcrt4.lib oleaut32.lib uuid.lib"
-				ModuleDefinitionFile="irShellPS.def"
+				ModuleDefinitionFile="shell_ps.def"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				TargetMachine="17"
@@ -485,7 +485,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="kernel32.lib rpcndr.lib rpcns4.lib rpcrt4.lib oleaut32.lib uuid.lib"
-				ModuleDefinitionFile="irShellPS.def"
+				ModuleDefinitionFile="shell_ps.def"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 			/>
@@ -559,7 +559,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="kernel32.lib rpcndr.lib rpcns4.lib rpcrt4.lib oleaut32.lib uuid.lib"
-				ModuleDefinitionFile="irShellPS.def"
+				ModuleDefinitionFile="shell_ps.def"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				TargetMachine="17"
@@ -608,16 +608,16 @@
 				>
 			</File>
 			<File
-				RelativePath=".\irShell_i.c"
+				RelativePath=".\shell_i.c"
 				>
 			</File>
 			<File
-				RelativePath=".\irShell_p.c"
+				RelativePath=".\shell_p.c"
 				>
 			</File>
 		</Filter>
 		<File
-			RelativePath=".\irShellps.def"
+			RelativePath=".\shell_ps.def"
 			>
 		</File>
 	</Files>
