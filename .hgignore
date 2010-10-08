@@ -8,3 +8,5 @@
 /*\.user$
 ^.hgignore$
 ^src\/shell\/dlldata.c$
+^src\/shell\/shell_i.c$
+^src\/shell\/shell_p.c$
