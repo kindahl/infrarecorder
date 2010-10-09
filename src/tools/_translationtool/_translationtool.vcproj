@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="TranslationTool"
+	Name="translationtool"
 	ProjectGUID="{890C6C24-55F8-466B-91BE-221F6214C3B8}"
-	RootNamespace="TranslationTool"
+	RootNamespace="translationtool"
 	>
 	<Platforms>
 		<Platform
@@ -44,11 +44,11 @@
 				MkTypLibCompatible="false"
 				TargetEnvironment="1"
 				GenerateStublessProxies="true"
-				TypeLibraryName="$(IntDir)/TranslationTool.tlb"
-				HeaderFileName="TranslationTool.h"
+				TypeLibraryName="$(IntDir)/translationtool.tlb"
+				HeaderFileName="translationtool.hh"
 				DLLDataFileName=""
-				InterfaceIdentifierFileName="TranslationTool_i.c"
-				ProxyFileName="TranslationTool_p.c"
+				InterfaceIdentifierFileName="translationtool_i.c"
+				ProxyFileName="translationtool_p.c"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
@@ -134,11 +134,11 @@
 				MkTypLibCompatible="false"
 				TargetEnvironment="3"
 				GenerateStublessProxies="true"
-				TypeLibraryName="$(IntDir)/TranslationTool.tlb"
-				HeaderFileName="TranslationTool.h"
+				TypeLibraryName="$(IntDir)/translationtool.tlb"
+				HeaderFileName="translationtool.hh"
 				DLLDataFileName=""
-				InterfaceIdentifierFileName="TranslationTool_i.c"
-				ProxyFileName="TranslationTool_p.c"
+				InterfaceIdentifierFileName="translationtool_i.c"
+				ProxyFileName="translationtool_p.c"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
@@ -224,11 +224,11 @@
 				MkTypLibCompatible="false"
 				TargetEnvironment="1"
 				GenerateStublessProxies="true"
-				TypeLibraryName="$(IntDir)/TranslationTool.tlb"
-				HeaderFileName="TranslationTool.h"
+				TypeLibraryName="$(IntDir)/translationtool.tlb"
+				HeaderFileName="translationtool.hh"
 				DLLDataFileName=""
-				InterfaceIdentifierFileName="TranslationTool_i.c"
-				ProxyFileName="TranslationTool_p.c"
+				InterfaceIdentifierFileName="translationtool_i.c"
+				ProxyFileName="translationtool_p.c"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
@@ -312,11 +312,11 @@
 				MkTypLibCompatible="false"
 				TargetEnvironment="3"
 				GenerateStublessProxies="true"
-				TypeLibraryName="$(IntDir)/TranslationTool.tlb"
-				HeaderFileName="TranslationTool.h"
+				TypeLibraryName="$(IntDir)/translationtool.tlb"
+				HeaderFileName="translationtool.hh"
 				DLLDataFileName=""
-				InterfaceIdentifierFileName="TranslationTool_i.c"
-				ProxyFileName="TranslationTool_p.c"
+				InterfaceIdentifierFileName="translationtool_i.c"
+				ProxyFileName="translationtool_p.c"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
@@ -382,15 +382,15 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm"
 			>
 			<File
-				RelativePath=".\LngAnalyzer.cpp"
+				RelativePath=".\lng_analyzer.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\MainDlg.cpp"
+				RelativePath=".\main_dlg.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\stdafx.cpp"
+				RelativePath=".\stdafx.cc"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -426,7 +426,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\TranslationTool.cpp"
+				RelativePath=".\translationtool.cc"
 				>
 			</File>
 		</Filter>
@@ -435,11 +435,11 @@
 			Filter="h;hpp;hxx;hm;inl;inc"
 			>
 			<File
-				RelativePath=".\LngAnalyzer.h"
+				RelativePath=".\lng_analyzer.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\MainDlg.h"
+				RelativePath=".\main_dlg.hh"
 				>
 			</File>
 			<File
@@ -447,11 +447,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\stdafx.h"
+				RelativePath=".\stdafx.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\TranslationTool.h"
+				RelativePath=".\translationtool.hh"
 				>
 			</File>
 		</Filter>
@@ -460,11 +460,11 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;jpg;jpeg;jpe;manifest"
 			>
 			<File
-				RelativePath=".\Resources\TranslationTool.ico"
+				RelativePath=".\resources\icon-main.ico"
 				>
 			</File>
 			<File
-				RelativePath=".\TranslationTool.rc"
+				RelativePath=".\translationtool.rc"
 				>
 			</File>
 		</Filter>
@@ -516,7 +516,7 @@
 	<Globals>
 		<Global
 			Name="RESOURCE_FILE"
-			Value="TranslationTool.rc"
+			Value="translationtool.rc"
 		/>
 	</Globals>
 </VisualStudioProject>
