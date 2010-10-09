@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2009 Christian Kindahl
+ * Copyright (C) 2006-2010 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,3 +15,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+#pragma once
+#include <base/lng_processor.hh>
+
+class CLngAnalyzer : public CLngProcessor
+{
+public:
+	CLngAnalyzer(const TCHAR *szFullPath);
+	~CLngAnalyzer();
+
+	unsigned int GetNumValues();
+	unsigned int GetNumSections();
+	CLngSection *GetSection(unsigned int uiIndex);
+	CLngSection *GetSection(const TCHAR *szName);
+	bool SectionHasValue(CLngSection *pSection,unsigned long ulName);
+};
