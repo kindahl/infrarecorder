@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2009 Christian Kindahl
+ * Copyright (C) 2006-2010 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,11 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "stdafx.h"
+#include "stdafx.hh"
 #include <vfw.h>
-#include "../../Common/CodecConst.h"
-#include "../../Common/StringUtil.h"
-#include "WaveWriter.h"
+#include <base/codec_const.hh>
+#include <base/string_util.hh>
+#include "wave_writer.hh"
 
 #pragma comment(lib,"vfw32.lib")
 
@@ -31,7 +31,7 @@ int g_iCapabilities = IRC_HAS_DECODER | IRC_HAS_ENCODER;
 
 // Version and about strings.
 TCHAR *g_szVersion = _T("0.42.1.0");
-TCHAR *g_szAbout = _T("InfraRecorder Wave Codec\n\nCopyright © 2006-2009 Christian Kindahl.");
+TCHAR *g_szAbout = _T("InfraRecorder Wave Codec\n\nCopyright © 2006-2010 Christian Kindahl.");
 TCHAR *g_szEncoder = _T("Wave");
 TCHAR *g_szFileExt = _T(".wav");
 

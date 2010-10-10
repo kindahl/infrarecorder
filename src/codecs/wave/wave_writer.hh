@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2009 Christian Kindahl
+ * Copyright (C) 2006-2010 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,13 +17,14 @@
  */
 
 #pragma once
+#include <ckcore/file.hh>
 
 #define WAVEWRITER_MAXSIZE					4294967040LU
 
 class CWaveWriter
 {
 private:
-	HANDLE m_hFile;
+	ckcore::File *m_pFile;
 
 	int m_iNumChannels;
 	int m_iSampleRate;

@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2009 Christian Kindahl
+ * Copyright (C) 2006-2010 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,14 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "stdafx.h"
-#include "../../Common/FileManager.h"
-#include "WaveWriter.h"
+#include "stdafx.hh"
+#include "wave_writer.hh"
 
-CWaveWriter::CWaveWriter()
+CWaveWriter::CWaveWriter() : m_pFile(NULL)
 {
-	m_hFile = NULL;
-
 	m_iNumChannels = 0;
 	m_iSampleRate = 0;
 	m_iBitRate = 0;
@@ -33,12 +30,15 @@ CWaveWriter::CWaveWriter()
 
 CWaveWriter::~CWaveWriter()
 {
-	if (m_hFile != NULL)
+	if (m_pFile != NULL)
 		Close();
 }
 
 bool CWaveWriter::WriteHeader()
 {
+	if (m_pFile == NULL)
+		return false;
+
 	unsigned char ucHeader[44];
 	unsigned long ulBytes = (m_iBitsPerSample + 7) / 8;
 	unsigned long ulDataSize = m_ulNumSamples * ulBytes;
@@ -119,12 +119,14 @@ bool CWaveWriter::WriteHeader()
 	ucHeader[42] = (unsigned char)(ulTemp >> 16);
 	ucHeader[43] = (unsigned char)(ulTemp >> 24);
 
-	fs_write(ucHeader,sizeof(ucHeader),m_hFile);
-	return true;
+	return m_pFile->write(ucHeader,sizeof(ucHeader)) != -1;
 }
 
 bool CWaveWriter::WriteExtensibleHeader()
 {
+	if (m_pFile == NULL)
+		return false;
+
 	unsigned char ucHeader[68];
 	unsigned long ulBytes = (m_iBitsPerSample + 7) / 8;
 	float fDataSize = (float)ulBytes * m_ulNumSamples;
@@ -231,16 +233,23 @@ bool CWaveWriter::WriteExtensibleHeader()
 	ucHeader[66] = (unsigned char)(ulTemp >> 16);
 	ucHeader[67] = (unsigned char)(ulTemp >> 24);
 
-	fs_write(ucHeader,sizeof(ucHeader),m_hFile);
-	return true;
+	return m_pFile->write(ucHeader,sizeof(ucHeader)) != -1;
 }
 
 bool CWaveWriter::Open(const TCHAR *szFileName,int iNumChannels,
 					   int iSampleRate,int iBitRate)
 {
-	m_hFile = fs_open(szFileName,_T("wb"));
-	if (m_hFile == NULL)
+	if (m_pFile != NULL)
 		return false;
+
+	m_pFile = new ckcore::File(szFileName);
+	if (!m_pFile->open(ckcore::File::ckOPEN_WRITE))
+	{
+		delete m_pFile;
+		m_pFile = NULL;
+
+		return false;
+	}
 
 	m_iNumChannels = iNumChannels;
 	m_iSampleRate = iSampleRate;
@@ -260,15 +269,18 @@ bool CWaveWriter::Open(const TCHAR *szFileName,int iNumChannels,
 
 bool CWaveWriter::Close()
 {
+	if (m_pFile == NULL)
+		return false;
+
 	// Re-write the header (contains updated information).
-	fs_seek(m_hFile,0,FILE_BEGIN);
+	m_pFile->seek(0,ckcore::File::ckFILE_BEGIN);
 	if (m_iNumChannels > 2)
 		WriteExtensibleHeader();
 	else
 		WriteHeader();
 
-	fs_close(m_hFile);
-	m_hFile = NULL;
+	delete m_pFile;
+	m_pFile = NULL;
 
 	return true;
 }
@@ -280,5 +292,5 @@ __int64 CWaveWriter::Write(unsigned char *pBuffer,__int64 iDataSize)
 
 	int iBytesPerSample = m_iBitsPerSample >> 3;
 	m_ulNumSamples += (unsigned long)iDataSize / iBytesPerSample;
-	return fs_write(pBuffer,(unsigned long)iDataSize,m_hFile);
+	return m_pFile->write(pBuffer,(unsigned long)iDataSize);
 }
