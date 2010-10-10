@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2009 Christian Kindahl
+ * Copyright (C) 2006-2010 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,11 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "stdafx.h"
-#include "../../Common/CodecConst.h"
-#include "../../Common/StringUtil.h"
+#include "stdafx.hh"
+#include <ckcore/string.hh>
+#include <base/codec_const.hh>
+#include <base/string_util.hh>
 #include <sndfile.h>
-#include "LibraryHelper.h"
+#include "library_helper.hh"
 
 tirc_send_message *g_pSendMessage = NULL;
 
@@ -29,7 +30,7 @@ int g_iCapabilities = IRC_HAS_DECODER | IRC_HAS_ENCODER;
 
 // Version and about strings.
 TCHAR *g_szVersion = _T("0.42.1.0");
-TCHAR *g_szAbout = _T("InfraRecorder Wave Codec\n\nCopyright © 2006-2009 Christian Kindahl.\n\nThis codec is based on the libsndfile library, created\nby Erik de Castro Lopo. More information can be\nfound on the libsndfile website:\nhttp://www.mega-nerd.com/libsndfile/");
+TCHAR *g_szAbout = _T("InfraRecorder Wave Codec\n\nCopyright © 2006-2010 Christian Kindahl.\n\nThis codec is based on the libsndfile library, created\nby Erik de Castro Lopo. More information can be\nfound on the libsndfile website:\nhttp://www.mega-nerd.com/libsndfile/");
 TCHAR *g_szEncoder = _T("Wave");
 TCHAR *g_szFileExt = _T(".wav");
 
@@ -115,16 +116,11 @@ bool WINAPI irc_decode_init(const TCHAR *szFileName,int &iNumChannels,
 	if (!g_LibraryHelper.IsLoaded())
 		return false;
 
+	std::string ansi_file_name = ckcore::string::auto_to_ansi<8192>(szFileName);
+
 	SF_INFO	sfInfo;
 
-#ifdef UNICODE
-	char szMultiFileName[MAX_PATH];
-	TCharToChar(szFileName,szMultiFileName);
-	g_hInFile = g_LibraryHelper.irc_sf_open(szMultiFileName,SFM_READ,&sfInfo);
-#else
-	g_hInFile = g_LibraryHelper.irc_sf_open(szFileName,SFM_READ,&sfInfo);
-#endif
-
+	g_hInFile = g_LibraryHelper.irc_sf_open(ansi_file_name.c_str(),SFM_READ,&sfInfo);
 	if (g_hInFile == NULL)
 		return false;
 
@@ -279,13 +275,9 @@ bool WINAPI irc_encode_init(const TCHAR *szFileName,int iNumChannels,
 	if (!g_LibraryHelper.irc_sf_format_check(&sfInfo))
 		return false;
 
-#ifdef UNICODE
-	char szMultiFileName[MAX_PATH];
-	TCharToChar(szFileName,szMultiFileName);
-	g_hOutFile = g_LibraryHelper.irc_sf_open(szMultiFileName,SFM_WRITE,&sfInfo);
-#else
-	g_hOutFile = g_LibraryHelper.irc_sf_open(szFileName,SFM_WRITE,&sfInfo);
-#endif
+	std::string ansi_file_name = ckcore::string::auto_to_ansi<8192>(szFileName);
+
+	g_hOutFile = g_LibraryHelper.irc_sf_open(ansi_file_name.c_str(),SFM_WRITE,&sfInfo);
 
 	return true;
 }

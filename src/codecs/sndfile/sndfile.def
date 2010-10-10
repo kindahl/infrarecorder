@@ -1,4 +1,4 @@
-LIBRARY	"irSndFile.irc"
+LIBRARY	"sndfile.irc"
 EXPORTS
 	irc_capabilities
 	irc_string
