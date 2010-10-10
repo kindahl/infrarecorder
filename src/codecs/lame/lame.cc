@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2009 Christian Kindahl
+ * Copyright (C) 2006-2010 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,21 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "stdafx.h"
-#include "../../Common/CodecConst.h"
-#include "../../Common/FileManager.h"
-#include "../../Common/StringUtil.h"
+#include "stdafx.hh"
+#include <ckcore/file.hh>
+#include <base/codec_const.hh>
+#include <base/string_util.hh>
 #include <lame.h>
-#include "ConfigDlg.h"
-#include "irLame.h"
-
-#ifdef _M_X64
-#pragma comment(lib,"lame/x64/release/libmp3lame_vc8.lib")
-#pragma comment(lib,"lame/x64/release/mpglib_vc8.lib")
-#else
-#pragma comment(lib,"lame/libmp3lame/Release/libmp3lame_vc8.lib")
-#pragma comment(lib,"lame/mpglib/Release/mpglib_vc8.lib")
-#endif
+#include "config_dlg.hh"
+#include "lame.hh"
 
 tirc_send_message *g_pSendMessage = NULL;
 
@@ -39,12 +31,12 @@ int g_iCapabilities = IRC_HAS_ENCODER | IRC_HAS_CONFIG;
 
 // Version and about strings.
 TCHAR *g_szVersion = _T("0.42.1.0");
-TCHAR *g_szAbout = _T("InfraRecorder MP3 Encoder\n\nCopyright © 2006-2009 Christian Kindahl.\n\nThis codec is using the libmp3lame (LAME) library.\nVisit: http://lame.sourceforge.net/ for more information.\n\nPlease note that personal and/or commercial use of\ncompiled versions of this codec requires a patent license\nin some countries. Please check before using this codec.");
+TCHAR *g_szAbout = _T("InfraRecorder MP3 Encoder\n\nCopyright © 2006-2010 Christian Kindahl.\n\nThis codec is using the libmp3lame (LAME) library.\nVisit: http://lame.sourceforge.net/ for more information.\n\nPlease note that personal and/or commercial use of\ncompiled versions of this codec requires a patent license\nin some countries. Please check before using this codec.");
 TCHAR *g_szEncoder = _T("MP3");
 TCHAR *g_szFileExt = _T(".mp3");
 
 // Global variables.
-HANDLE g_hOutFile = NULL;
+ckcore::File *g_pOutFile = NULL;
 int g_iNumChannels = -1;
 int g_iSampleRate = -1;
 int g_iBitRate = -1;
@@ -78,7 +70,7 @@ void mp3_errorf(const char *szFormat,va_list ap)
 {
 	// The 64-bit compiler does not support this type of usage of va_start.
 #ifdef _M_X64
-	LocalSendMessage(IRC_MESSAGE_ERROR,_T("Unknown error in irLame.irc (x64 build)."));
+	LocalSendMessage(IRC_MESSAGE_ERROR,_T("Unknown error in lame.irc (x64 build)."));
 #else
 	va_start(ap,szFormat);
 
@@ -274,10 +266,21 @@ bool WINAPI irc_encode_init(const TCHAR *szFileName,int iNumChannels,
 	g_uiEncBufferSize = iNumChannels * ((g_iBitRate / g_iSampleRate) >> 3) * BUFFER_FACTOR;
 	g_pEncBuffer = new unsigned char[g_uiEncBufferSize];
 
-	// Open file handle.
-	g_hOutFile = fs_open(szFileName,_T("wb"));
-	if (g_hOutFile == NULL)
+	// Open file.
+	if (g_pOutFile != NULL)
+	{
+		delete g_pOutFile;
+		g_pOutFile = NULL;
+	}
+
+	g_pOutFile = new ckcore::File(szFileName);
+	if (!g_pOutFile->open(ckcore::File::ckOPEN_WRITE))
+	{
+		delete g_pOutFile;
+		g_pOutFile = NULL;
+
 		return false;
+	}
 
 	return true;
 }
@@ -287,15 +290,23 @@ __int64 WINAPI irc_encode_process(unsigned char *pBuffer,__int64 iDataSize)
 	if (iDataSize > 0xFFFFFFFF)
 		return false;
 
+	if (g_pOutFile == NULL)
+		return false;
+
 	unsigned int uiSampleSize = (g_iBitRate / g_iSampleRate) >> 3;
 	unsigned int uiNumSamples = ((unsigned int)iDataSize / uiSampleSize) / g_iNumChannels;
 
 	int iWritten = lame_encode_buffer_interleaved(gfp,(short int *)pBuffer,uiNumSamples,g_pEncBuffer,g_uiEncBufferSize);
 
 	if (iWritten > 0)
-		fs_write(g_pEncBuffer,iWritten,g_hOutFile);
+	{
+		if (g_pOutFile->write(g_pEncBuffer,iWritten) == -1)
+			return -1;
+	}
 	else if (iWritten < 0)
+	{
 		return -1;
+	}
 
 	return (__int64)iWritten;
 }
@@ -315,8 +326,11 @@ bool WINAPI irc_encode_exit()
 	}
 
 	// Close file handle.
-	fs_close(g_hOutFile);
-	g_hOutFile = NULL;
+	if (g_pOutFile != NULL)
+	{
+		delete g_pOutFile;
+		g_pOutFile = NULL;
+	}
 
 	// Close the LAME encoder.
 	lame_close(gfp);

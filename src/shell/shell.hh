@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 6.00.0366 */
-/* at Fri Oct 08 21:36:02 2010
+/* at Sun Oct 10 13:56:14 2010
  */
 /* Compiler settings for .\shell.idl:
     Oicf, W1, Zp8, env=Win64 (32b run)

@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="irLame"
+	Name="lame"
 	ProjectGUID="{E595EE31-3670-4F99-AAC0-C06B2B5D02E9}"
-	RootNamespace="irLame"
+	RootNamespace="lame"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -20,11 +20,11 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="Debug"
-			IntermediateDirectory="Debug"
+			OutputDirectory="$(ProjectDir)..\..\..\bin\$(PlatformName)\$(ConfigurationName)\codecs"
+			IntermediateDirectory="$(ProjectDir)..\..\..\obj\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
-			CharacterSet="2"
+			CharacterSet="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -44,8 +44,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="lame\include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;IRLAME_EXPORTS;UNICODE;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\..\..\dep\lame\include\&quot;;&quot;$(ProjectDir)..\..\&quot;;lame\include"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;IRLAME_EXPORTS;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -66,13 +66,14 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/NODEFAULTLIB:LIBCMT"
-				OutputFile="../../../Binary32/Codecs/irLame.irc"
+				AdditionalDependencies="ckcored.lib"
+				OutputFile="$(OutDir)\$(ProjectName).irc"
 				LinkIncremental="2"
-				ModuleDefinitionFile="irLame.def"
+				ModuleDefinitionFile="lame.def"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(OutDir)/irLame.pdb"
+				ProgramDatabaseFile="$(OutDir)/lame.pdb"
 				SubSystem="2"
-				ImportLibrary="$(OutDir)/irLame.lib"
+				ImportLibrary="$(OutDir)/lame.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -102,11 +103,11 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
-			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)..\..\..\bin\$(PlatformName)\$(ConfigurationName)\codecs"
+			IntermediateDirectory="$(ProjectDir)..\..\..\obj\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
-			CharacterSet="2"
+			CharacterSet="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -127,8 +128,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="lame\include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;IRLAME_EXPORTS;UNICODE;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\..\..\dep\lame\include\&quot;;&quot;$(ProjectDir)..\..\&quot;;lame\include"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;IRLAME_EXPORTS;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -149,13 +150,14 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/NODEFAULTLIB:LIBCMT"
-				OutputFile="../../../Binary64/Codecs/irLame.irc"
+				AdditionalDependencies="ckcored.lib"
+				OutputFile="$(OutDir)\$(ProjectName).irc"
 				LinkIncremental="2"
-				ModuleDefinitionFile="irLame.def"
+				ModuleDefinitionFile="lame.def"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(OutDir)/irLame.pdb"
+				ProgramDatabaseFile="$(OutDir)/lame.pdb"
 				SubSystem="2"
-				ImportLibrary="$(OutDir)/irLame.lib"
+				ImportLibrary="$(OutDir)/lame.lib"
 				TargetMachine="17"
 			/>
 			<Tool
@@ -185,11 +187,11 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="Release"
-			IntermediateDirectory="Release"
+			OutputDirectory="$(ProjectDir)..\..\..\bin\$(PlatformName)\$(ConfigurationName)\codecs"
+			IntermediateDirectory="$(ProjectDir)..\..\..\obj\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
-			CharacterSet="2"
+			CharacterSet="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -208,8 +210,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="lame\include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;IRLAME_EXPORTS;UNICODE;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\..\..\dep\lame\include\&quot;;&quot;$(ProjectDir)..\..\&quot;;lame\include"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;IRLAME_EXPORTS;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="2"
 				WarningLevel="3"
@@ -227,14 +229,15 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="../../../Binary32/Codecs/irLame.irc"
+				AdditionalDependencies="ckcore.lib"
+				OutputFile="$(OutDir)\$(ProjectName).irc"
 				LinkIncremental="1"
-				ModuleDefinitionFile="irLame.def"
+				ModuleDefinitionFile="lame.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="$(OutDir)/irLame.lib"
+				ImportLibrary="$(OutDir)/lame.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -264,11 +267,11 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
-			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)..\..\..\bin\$(PlatformName)\$(ConfigurationName)\codecs"
+			IntermediateDirectory="$(ProjectDir)..\..\..\obj\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
-			CharacterSet="2"
+			CharacterSet="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -288,8 +291,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="lame\include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;IRLAME_EXPORTS;UNICODE;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\..\..\dep\lame\include\&quot;;&quot;$(ProjectDir)..\..\&quot;;lame\include"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;IRLAME_EXPORTS;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="2"
 				WarningLevel="3"
@@ -308,173 +311,15 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/LTCG"
-				OutputFile="../../../Binary64/Codecs/irLame.irc"
+				AdditionalDependencies="ckcore.lib"
+				OutputFile="$(OutDir)\$(ProjectName).irc"
 				LinkIncremental="1"
-				ModuleDefinitionFile="irLame.def"
+				ModuleDefinitionFile="lame.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="$(OutDir)/irLame.lib"
-				TargetMachine="17"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
-		<Configuration
-			Name="ReleaseA|Win32"
-			OutputDirectory="ReleaseA"
-			IntermediateDirectory="ReleaseA"
-			ConfigurationType="2"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
-			CharacterSet="2"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="lame\include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;IRLAME_EXPORTS;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS"
-				RuntimeLibrary="0"
-				UsePrecompiledHeader="2"
-				WarningLevel="3"
-				Detect64BitPortabilityProblems="true"
-				DebugInformationFormat="3"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				OutputFile="../../../BinaryA/Codecs/irLame.irc"
-				LinkIncremental="1"
-				ModuleDefinitionFile="irLame.def"
-				GenerateDebugInformation="true"
-				SubSystem="2"
-				OptimizeReferences="2"
-				EnableCOMDATFolding="2"
-				ImportLibrary="$(OutDir)/irLame.lib"
-				TargetMachine="1"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
-		<Configuration
-			Name="ReleaseA|x64"
-			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
-			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
-			ConfigurationType="2"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
-			CharacterSet="2"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-				TargetEnvironment="3"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="lame\include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;IRLAME_EXPORTS;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS"
-				RuntimeLibrary="0"
-				UsePrecompiledHeader="2"
-				WarningLevel="3"
-				Detect64BitPortabilityProblems="true"
-				DebugInformationFormat="3"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				OutputFile="../../../BinaryA/Codecs/irLame.irc"
-				LinkIncremental="1"
-				ModuleDefinitionFile="irLame.def"
-				GenerateDebugInformation="true"
-				SubSystem="2"
-				OptimizeReferences="2"
-				EnableCOMDATFolding="2"
-				ImportLibrary="$(OutDir)/irLame.lib"
+				ImportLibrary="$(OutDir)/lame.lib"
 				TargetMachine="17"
 			/>
 			<Tool
@@ -512,23 +357,119 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\ConfigDlg.cpp"
+				RelativePath=".\config_dlg.cc"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PrecompiledHeaderThrough="stdafx.hh"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PrecompiledHeaderThrough="stdafx.hh"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PrecompiledHeaderThrough="stdafx.hh"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PrecompiledHeaderThrough="stdafx.hh"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\config_general_page.cc"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PrecompiledHeaderThrough="stdafx.hh"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PrecompiledHeaderThrough="stdafx.hh"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PrecompiledHeaderThrough="stdafx.hh"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PrecompiledHeaderThrough="stdafx.hh"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\lame.cc"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PrecompiledHeaderThrough="stdafx.hh"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PrecompiledHeaderThrough="stdafx.hh"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PrecompiledHeaderThrough="stdafx.hh"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PrecompiledHeaderThrough="stdafx.hh"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\lame.def"
 				>
 			</File>
 			<File
-				RelativePath=".\ConfigGeneralPage.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\irLame.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\irLame.def"
-				>
-			</File>
-			<File
-				RelativePath=".\stdafx.cpp"
+				RelativePath=".\stdafx.cc"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -536,6 +477,7 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						UsePrecompiledHeader="1"
+						PrecompiledHeaderThrough="stdafx.hh"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -544,6 +486,7 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						UsePrecompiledHeader="1"
+						PrecompiledHeaderThrough="stdafx.hh"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -552,6 +495,7 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						UsePrecompiledHeader="1"
+						PrecompiledHeaderThrough="stdafx.hh"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -560,22 +504,7 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="ReleaseA|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="ReleaseA|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
+						PrecompiledHeaderThrough="stdafx.hh"
 					/>
 				</FileConfiguration>
 			</File>
@@ -586,15 +515,15 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\ConfigDlg.h"
+				RelativePath=".\config_dlg.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\ConfigGeneralPage.h"
+				RelativePath=".\config_general_page.hh"
 				>
 			</File>
 			<File
-				RelativePath=".\irLame.h"
+				RelativePath=".\lame.h"
 				>
 			</File>
 			<File
@@ -602,7 +531,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\stdafx.h"
+				RelativePath=".\stdafx.hh"
 				>
 			</File>
 		</Filter>
@@ -612,27 +541,7 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath=".\irLame.rc"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Common"
-			>
-			<File
-				RelativePath="..\..\Common\CodecConst.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Common\FileManager.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Common\StringUtil.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Common\StringUtil.h"
+				RelativePath=".\lame.rc"
 				>
 			</File>
 		</Filter>
@@ -640,7 +549,7 @@
 	<Globals>
 		<Global
 			Name="RESOURCE_FILE"
-			Value="irLame.rc"
+			Value="lame.rc"
 		/>
 	</Globals>
 </VisualStudioProject>

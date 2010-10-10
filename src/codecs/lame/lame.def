@@ -1,4 +1,4 @@
-LIBRARY	"irLame.irc"
+LIBRARY	"lame.irc"
 EXPORTS
 	irc_capabilities
 	irc_string

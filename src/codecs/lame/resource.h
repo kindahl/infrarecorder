@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by irLame.rc
+// Used by lame.rc
 //
 #define IDD_PROPPAGE_CONFIGGENERAL      106
 #define IDC_PRESETSTATIC                1001
