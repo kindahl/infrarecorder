@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2009 Christian Kindahl
+ * Copyright (C) 2006-2010 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,32 +16,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "stdafx.h"
-#include "ConfigDlg.h"
+#pragma once
+#include "config_general_page.hh"
 
-CConfigDlg::CConfigDlg(CEncoderConfig *pConfig) : CPropertySheetImpl<CConfigDlg>(_T("Configuration"),0,NULL)
+class CConfigDlg : public CPropertySheetImpl<CConfigDlg>
 {
-	m_bCentered = false;
+private:
+	bool m_bCentered;
 
-	m_psh.dwFlags |= PSH_NOAPPLYNOW;
+	CConfigGeneralPage m_GeneralPage;
 
-	m_GeneralPage.SetConfig(pConfig);
-	AddPage(m_GeneralPage);
-}
+public:
+	CConfigDlg(CEncoderConfig *pConfig);
+	~CConfigDlg();
 
-CConfigDlg::~CConfigDlg()
-{
-}
+	BEGIN_MSG_MAP(CConfigDlg)
+		MESSAGE_HANDLER(WM_SHOWWINDOW,OnShowWindow)
+		CHAIN_MSG_MAP(CPropertySheetImpl<CConfigDlg>)
+	END_MSG_MAP()
 
-LRESULT CConfigDlg::OnShowWindow(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
-{
-	// Center the window, once.
-	if (wParam == TRUE && !m_bCentered)
-	{
-		CenterWindow();
-		m_bCentered = true;
-	}
-
-	bHandled = FALSE;
-	return 0;
-}
+	LRESULT OnShowWindow(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+};

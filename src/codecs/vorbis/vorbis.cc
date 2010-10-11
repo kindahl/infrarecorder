@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2009 Christian Kindahl
+ * Copyright (C) 2006-2010 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,18 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "stdafx.h"
-#include "../../Common/CodecConst.h"
-#include "../../Common/FileManager.h"
-#include "../../Common/StringUtil.h"
+#include "stdafx.hh"
+#include <ckcore/file.hh>
+#include <base/codec_const.hh>
+#include <base/string_util.hh>
 #include <stdlib.h>
 #include <time.h>
 #include <vorbis/vorbisenc.h>
 #include <vorbis/vorbisfile.h>
-#include "ConfigDlg.h"
-#include "irVorbis.h"
+#include "config_dlg.hh"
+#include "vorbis.hh"
 
-#ifdef _M_X64
+/*#ifdef _M_X64
 #pragma comment(lib,"libogg/win32/Static_Release/ogg_static_x64.lib")
 #else
 #pragma comment(lib,"libogg/win32/Static_Release/ogg_static.lib")
@@ -35,7 +35,7 @@
 
 #pragma comment(lib,"libvorbis/win32/Vorbis_Static_Release/vorbis_static.lib")
 #pragma comment(lib,"libvorbis/win32/VorbisEnc_Static_Release/vorbisenc_static.lib")
-#pragma comment(lib,"libvorbis/win32/VorbisFile_Static_Release/vorbisfile_static.lib")
+#pragma comment(lib,"libvorbis/win32/VorbisFile_Static_Release/vorbisfile_static.lib")*/
 
 tirc_send_message *g_pSendMessage = NULL;
 
@@ -44,12 +44,12 @@ int g_iCapabilities = IRC_HAS_DECODER | IRC_HAS_ENCODER | IRC_HAS_CONFIG;
 
 // Version and about strings.
 TCHAR *g_szVersion = _T("0.42.1.0");
-TCHAR *g_szAbout = _T("InfraRecorder Ogg Vorbis Codec\n\nCopyright © 2006-2009 Christian Kindahl.\n\nThis codec is using the following 3rd party libraries:\n - libogg: Copyright © 2002, Xiph.org Foundation.\n - libvorbis: Copyright © 2002-2004 Xiph.org Foundation.");
+TCHAR *g_szAbout = _T("InfraRecorder Ogg Vorbis Codec\n\nCopyright © 2006-2010 Christian Kindahl.\n\nThis codec is using the following 3rd party libraries:\n - libogg: Copyright © 2002, Xiph.org Foundation.\n - libvorbis: Copyright © 2002-2004 Xiph.org Foundation.");
 TCHAR *g_szEncoder = _T("Ogg Vorbis");
 TCHAR *g_szFileExt = _T(".ogg");
 
 // Global variables.
-HANDLE g_hOutFile = NULL;
+ckcore::File *g_pFile = NULL;
 FILE *g_hInFile = NULL;
 int g_iNumChannels = -1;
 int g_iSampleRate = -1;
@@ -188,14 +188,22 @@ bool WINAPI irc_encode_init(const TCHAR *szFileName,int iNumChannels,
 	if (iNumChannels > 6)
 		return false;
 
+	if (g_pFile != NULL)
+		return false;
+
 	g_iNumChannels = iNumChannels;
 	g_iSampleRate = iSampleRate;
 	g_iBitRate = iBitRate;
 
 	// Open output file.
-	g_hOutFile = fs_open(szFileName,_T("wb"));
-	if (g_hOutFile == NULL)
+	g_pFile = new ckcore::File(szFileName);
+	if (!g_pFile->open(ckcore::File::ckOPEN_WRITE))
+	{
+		delete g_pFile;
+		g_pFile = NULL;
+
 		return false;
+	}
 
 	// Initialize encoder.
 	vorbis_info_init(&vi);
@@ -264,8 +272,8 @@ bool WINAPI irc_encode_init(const TCHAR *szFileName,int iNumChannels,
 			if (iResult == 0)
 				break;
 
-			fs_write(og.header,og.header_len,g_hOutFile);
-			fs_write(og.body,og.body_len,g_hOutFile);
+			g_pFile->write(og.header,og.header_len);
+			g_pFile->write(og.body,og.body_len);
 		}
 	}
 
@@ -305,8 +313,8 @@ __int64 irc_encode_flush_ex()
 				if (ogg_stream_pageout(&os,&og) == 0)
 					break;
 
-				fs_write(og.header,og.header_len,g_hOutFile);
-				fs_write(og.body,og.body_len,g_hOutFile);
+				g_pFile->write(og.header,og.header_len);
+				g_pFile->write(og.body,og.body_len);
 
 				iWritten += og.header_len + og.body_len;
 	  
@@ -514,11 +522,11 @@ __int64 WINAPI irc_encode_flush()
 bool WINAPI irc_encode_exit()
 {
 	// Close the out file.
-	if (g_hOutFile == NULL)
+	if (g_pFile == NULL)
 		return false;
 
-	fs_close(g_hOutFile);
-	g_hOutFile = NULL;
+	delete g_pFile;
+	g_pFile = NULL;
 
 	// Destroy the encoder.
 	ogg_stream_clear(&os);

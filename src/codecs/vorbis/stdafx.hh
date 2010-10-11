@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2009 Christian Kindahl
+ * Copyright (C) 2006-2010 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,23 +17,12 @@
  */
 
 #pragma once
-#include "ConfigGeneralPage.h"
 
-class CConfigDlg : public CPropertySheetImpl<CConfigDlg>
-{
-private:
-	bool m_bCentered;
+// Exclude rarely-used stuff from Windows headers.
+#define WIN32_LEAN_AND_MEAN
 
-	CConfigGeneralPage m_GeneralPage;
-
-public:
-	CConfigDlg(CEncoderConfig *pConfig);
-	~CConfigDlg();
-
-	BEGIN_MSG_MAP(CConfigDlg)
-		MESSAGE_HANDLER(WM_SHOWWINDOW,OnShowWindow)
-		CHAIN_MSG_MAP(CPropertySheetImpl<CConfigDlg>)
-	END_MSG_MAP()
-
-	LRESULT OnShowWindow(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-};
+#include <atlbase.h>
+#include <atlapp.h>
+#include <atlctrls.h>
+#include <atlctrlw.h>
+#include <atldlgs.h>
