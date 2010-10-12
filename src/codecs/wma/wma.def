@@ -1,4 +1,4 @@
-LIBRARY	"irWMA.irc"
+LIBRARY	"wma.irc"
 EXPORTS
 	irc_capabilities
 	irc_string

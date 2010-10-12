@@ -17,9 +17,9 @@
  */
 
 #include "stdafx.hh"
+#include <ckcore/string.hh>
 #include <ckcore/file.hh>
 #include <base/codec_const.hh>
-#include <base/string_util.hh>
 #include <lame.h>
 #include "config_dlg.hh"
 #include "lame.hh"
@@ -78,15 +78,8 @@ void mp3_errorf(const char *szFormat,va_list ap)
 	char *szMessage = new char[iLength];
 	vsprintf(szMessage,szFormat,ap);
 
-#ifdef UNICODE
-	TCHAR *szWideMessage = new TCHAR[iLength];
-	AnsiToUnicode(szWideMessage,szMessage,iLength);
-
-	LocalSendMessage(IRC_MESSAGE_ERROR,szWideMessage);
-	delete [] szWideMessage;
-#else
-	LocalSendMessage(IRC_MESSAGE_ERROR,szMessage);
-#endif
+	ckcore::tstring Message = ckcore::string::ansi_to_auto<8192>(szMessage);
+	LocalSendMessage(IRC_MESSAGE_ERROR,Message.c_str());
 
 	delete [] szMessage;
 #endif
@@ -108,15 +101,8 @@ void mp3_msgf(const char *szFormat,va_list ap)
 	char *szMessage = new char[iLength];
 	vsprintf(szMessage,szFormat,ap);
 
-#ifdef UNICODE
-	TCHAR *szWideMessage = new TCHAR[iLength];
-	AnsiToUnicode(szWideMessage,szMessage,iLength);
-
-	LocalSendMessage(IRC_MESSAGE_INFO,szWideMessage);
-	delete [] szWideMessage;
-#else
-	LocalSendMessage(IRC_MESSAGE_INFO,szMessage);
-#endif
+	ckcore::tstring Message = ckcore::string::ansi_to_auto<8192>(szMessage);
+	LocalSendMessage(IRC_MESSAGE_INFO,Message.c_str());
 
 	delete [] szMessage;
 #endif

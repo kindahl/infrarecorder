@@ -3,18 +3,18 @@
 /* this ALWAYS GENERATED file contains the definitions for the interfaces */
 
 
- /* File created by MIDL compiler version 6.00.0366 */
-/* at Sun Oct 10 13:56:14 2010
+ /* File created by MIDL compiler version 7.00.0555 */
+/* at Tue Oct 12 10:42:16 2010
  */
 /* Compiler settings for .\shell.idl:
-    Oicf, W1, Zp8, env=Win64 (32b run)
+    Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
     VC __declspec() decoration level: 
          __declspec(uuid()), __declspec(selectany), __declspec(novtable)
          DECLSPEC_UUID(), MIDL_INTERFACE()
 */
-//@@MIDL_FILE_HEADING(  )
+/* @@MIDL_FILE_HEADING(  ) */
 
 #pragma warning( disable: 4049 )  /* more than 64k source lines */
 
@@ -71,8 +71,6 @@ typedef struct ShellExt ShellExt;
 extern "C"{
 #endif 
 
-void * __RPC_USER MIDL_user_allocate(size_t);
-void __RPC_USER MIDL_user_free( void * ); 
 
 #ifndef __IShellExt_INTERFACE_DEFINED__
 #define __IShellExt_INTERFACE_DEFINED__
@@ -100,7 +98,8 @@ EXTERN_C const IID IID_IShellExt;
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
             IShellExt * This,
             /* [in] */ REFIID riid,
-            /* [iid_is][out] */ void **ppvObject);
+            /* [annotation][iid_is][out] */ 
+            __RPC__deref_out  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IShellExt * This);
@@ -122,13 +121,13 @@ EXTERN_C const IID IID_IShellExt;
 
 
 #define IShellExt_QueryInterface(This,riid,ppvObject)	\
-    (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
 
 #define IShellExt_AddRef(This)	\
-    (This)->lpVtbl -> AddRef(This)
+    ( (This)->lpVtbl -> AddRef(This) ) 
 
 #define IShellExt_Release(This)	\
-    (This)->lpVtbl -> Release(This)
+    ( (This)->lpVtbl -> Release(This) ) 
 
 
 #endif /* COBJMACROS */

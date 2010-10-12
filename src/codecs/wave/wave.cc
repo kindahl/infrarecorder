@@ -19,7 +19,6 @@
 #include "stdafx.hh"
 #include <vfw.h>
 #include <base/codec_const.hh>
-#include <base/string_util.hh>
 #include "wave_writer.hh"
 
 #pragma comment(lib,"vfw32.lib")

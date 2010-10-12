@@ -1,4 +1,4 @@
-LIBRARY	"irVorbis.irc"
+LIBRARY	"vorbis.irc"
 EXPORTS
 	irc_capabilities
 	irc_string

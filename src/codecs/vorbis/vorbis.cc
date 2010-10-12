@@ -19,7 +19,6 @@
 #include "stdafx.hh"
 #include <ckcore/file.hh>
 #include <base/codec_const.hh>
-#include <base/string_util.hh>
 #include <stdlib.h>
 #include <time.h>
 #include <vorbis/vorbisenc.h>

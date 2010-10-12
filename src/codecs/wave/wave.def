@@ -1,4 +1,4 @@
-LIBRARY	"irWave.irc"
+LIBRARY	"wave.irc"
 EXPORTS
 	irc_capabilities
 	irc_string
