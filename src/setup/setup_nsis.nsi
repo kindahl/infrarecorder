@@ -96,11 +96,7 @@ FunctionEnd
 
   ;Name and file
   Name "InfraRecorder"
-!ifdef UNICODE
   OutFile "../irsetup_unicode.exe"
-!else
-  OutFile "../irsetup_ansi.exe"
-!endif
 
   ;Default installation folder
   InstallDir "$PROGRAMFILES\InfraRecorder"
@@ -122,7 +118,7 @@ FunctionEnd
 ;Pages
 
   !insertmacro MUI_PAGE_WELCOME
-  !insertmacro MUI_PAGE_LICENSE "../License.txt"
+  !insertmacro MUI_PAGE_LICENSE "../../license.txt"
   !insertmacro MUI_PAGE_COMPONENTS
   !insertmacro MUI_PAGE_DIRECTORY
   !insertmacro MUI_PAGE_INSTFILES
@@ -819,55 +815,41 @@ Section $(NAME_SecCore) SecCore
   SectionIn 1 2 RO
 
   SetOutPath "$INSTDIR"
-  File "..\Readme.txt"
-  File "..\License.txt"
-  File "..\Help\English\InfraRecorder.chm"
-!ifdef UNICODE
-  File "..\Binary32\InfraRecorder.exe"
-  File "..\Binary32\irShell.dll"
-  File "..\Binary32\ckEffects.exe"
-!else
-  File "..\BinaryA\InfraRecorder.exe"
-  File "..\BinaryA\irShell.dll"
-!endif
+  File "..\..\readme.txt"
+  File "..\..\license.txt"
+  File "..\..\doc\english\infrarecorder.chm"
+  File "..\..\bin\win32\release\infrarecorder.exe"
+  File "..\..\bin\win32\release\shell.dll"
+  File "..\..\dep\smoke.exe"
 
-  SetOutPath "$INSTDIR\Codecs"
-!ifdef UNICODE
-  ;File "..\Binary32\Codecs\irWave.irc"
-  File "..\Binary32\Codecs\irSndFile.irc"
-  File "..\Binary32\Codecs\libsndfile.dll"
-  File "..\Binary32\Codecs\irWMA.irc"
-  File "..\Binary32\Codecs\irVorbis.irc"
-!else
-  SetOutPath "$INSTDIR\Codecs"
-  ;File "..\BinaryA\Codecs\irWave.irc"
-  File "..\BinaryA\Codecs\irSndFile.irc"
-  File "..\BinaryA\Codecs\libsndfile.dll"
-  File "..\BinaryA\Codecs\irWMA.irc"
-  File "..\BinaryA\Codecs\irVorbis.irc"
-!endif
+  SetOutPath "$INSTDIR\codecs"
+  ;File "..\..\bin\win32\release\codecs\irWave.irc"
+  File "..\..\bin\win32\release\codecs\sndfile.irc"
+  File "..\..\dep\libsndfile\win32\libsndfile.dll"
+  File "..\..\bin\win32\release\codecs\wma.irc"
+  File "..\..\bin\win32\release\codecs\vorbis.irc"
 
 !ifdef CDRKIT
   SetOutPath "$INSTDIR\cdrkit"
-  File "..\Binary32\cdrkit\icedax.exe"
-  File "..\Binary32\cdrkit\wodim.exe"
-  File "..\Binary32\cdrkit\cygwin1.dll"
-  File "..\Binary32\cdrkit\readom.exe"
-  File "..\Binary32\cdrkit\COPYING"
+  File "..\..\dep\cdrkit\icedax.exe"
+  File "..\..\dep\cdrkit\wodim.exe"
+  File "..\..\dep\cdrkit\cygwin1.dll"
+  File "..\..\dep\cdrkit\readom.exe"
+  File "..\..\dep\cdrkit\COPYING"
 !else
   SetOutPath "$INSTDIR\cdrtools"
-  File "..\Binary32\cdrtools\cdda2wav.exe"
-  File "..\Binary32\cdrtools\cdrecord.exe"
-  File "..\Binary32\cdrtools\cygwin1.dll"
-  File "..\Binary32\cdrtools\readcd.exe"
-  File "..\Binary32\cdrtools\COPYING"
+  File "..\..\dep\cdrtools\cdda2wav.exe"
+  File "..\..\dep\cdrtools\cdrecord.exe"
+  File "..\..\dep\cdrtools\cygwin1.dll"
+  File "..\..\dep\cdrtools\readcd.exe"
+  File "..\..\dep\cdrtools\COPYING"
 !endif
   
   ;Store installation folder
   WriteRegStr HKCU "Software\InfraRecorder" "" $INSTDIR
   
   ;Create uninstaller
-  WriteUninstaller "$INSTDIR\Uninstall.exe"
+  WriteUninstaller "$INSTDIR\uninstall.exe"
 
   ;Add an entry to Add/Remove Programs.
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\InfraRecorder" \
@@ -875,7 +857,7 @@ Section $(NAME_SecCore) SecCore
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\InfraRecorder" \
 	"UninstallString" "$INSTDIR\uninstall.exe"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\InfraRecorder" \
-	"DisplayIcon" "$INSTDIR\InfraRecorder.exe"
+	"DisplayIcon" "$INSTDIR\infrarecorder.exe"
 SectionEnd
 
 Section $(NAME_SecStartShortcut) SecStartShortcut
@@ -883,129 +865,78 @@ Section $(NAME_SecStartShortcut) SecStartShortcut
 
   ;Start menu shortcuts.
   CreateDirectory "$SMPROGRAMS\InfraRecorder"
-  CreateShortCut "$SMPROGRAMS\InfraRecorder\InfraRecorder.lnk" "$INSTDIR\InfraRecorder.exe"
-  CreateShortCut "$SMPROGRAMS\InfraRecorder\InfraRecorder Help.lnk" "$INSTDIR\InfraRecorder.chm"
-  CreateShortCut "$SMPROGRAMS\InfraRecorder\Uninstall.lnk" "$INSTDIR\Uninstall.exe"
+  CreateShortCut "$SMPROGRAMS\InfraRecorder\InfraRecorder.lnk" "$INSTDIR\infrarecorder.exe"
+  CreateShortCut "$SMPROGRAMS\InfraRecorder\InfraRecorder Help.lnk" "$INSTDIR\infrarecorder.chm"
+  CreateShortCut "$SMPROGRAMS\InfraRecorder\Uninstall.lnk" "$INSTDIR\uninstall.exe"
 SectionEnd
 
 Section $(NAME_SecDeskShortcut) SecDeskShortcut
   SectionIn 1
 
-  CreateShortCut "$DESKTOP\InfraRecorder.lnk" "$INSTDIR\InfraRecorder.exe"
+  CreateShortCut "$DESKTOP\InfraRecorder.lnk" "$INSTDIR\infrarecorder.exe"
 SectionEnd
 
 Section $(NAME_SecQuickShortcut) SecQuickShortcut
   SectionIn 1
 
   ;Quick launc shortcut.
-  CreateShortCut "$QUICKLAUNCH\InfraRecorder.lnk" "$INSTDIR\InfraRecorder.exe"
+  CreateShortCut "$QUICKLAUNCH\InfraRecorder.lnk" "$INSTDIR\infrarecorder.exe"
 SectionEnd
 
 Section $(NAME_SecLang) SecLang
   SectionIn 1
 
-  SetOutPath "$INSTDIR\Languages"
-!ifdef UNICODE
-  File "..\Binary32\Languages\Arabic.irl"
-  File "..\Binary32\Languages\Armenian.irl"
-  File "..\Binary32\Languages\Basque.irl"
-  File "..\Binary32\Languages\Bosnian.irl"
-  File "..\Binary32\Languages\Bulgarian.irl"
-  File "..\Binary32\Languages\Catalan.irl"
-  File "..\Binary32\Languages\Croatian.irl"
-  File "..\Binary32\Languages\Czech.irl"
-  File "..\Binary32\Languages\Danish.irl"
-  File "..\Binary32\Languages\Dutch.irl"
-  File "..\Binary32\Languages\Estonian.irl"
-  File "..\Binary32\Languages\Farsi.irl"
-  File "..\Binary32\Languages\Finnish.irl"
-  File "..\Binary32\Languages\French.irl"
-  File "..\Binary32\Languages\Galician.irl"
-  File "..\Binary32\Languages\German.irl"
-  File "..\Binary32\Languages\Greek.irl"
-  File "..\Binary32\Languages\Hebrew.irl"
-  File "..\Binary32\Languages\Hungarian.irl"
-  File "..\Binary32\Languages\Indonesian.irl"
-  File "..\Binary32\Languages\Italian.irl"
-  File "..\Binary32\Languages\Japanese.irl"
-  File "..\Binary32\Languages\Korean.irl"
-  File "..\Binary32\Languages\Latvian.irl"
-  File "..\Binary32\Languages\Lithuanian.irl"
-  File "..\Binary32\Languages\Macedonian.irl"
-  File "..\Binary32\Languages\Norwegian.irl"
-  File "..\Binary32\Languages\Polish.irl"
-  File "..\Binary32\Languages\Portuguese.irl"
-  File "..\Binary32\Languages\Portuguese (Brazilian).irl"
-  File "..\Binary32\Languages\Romanian.irl"
-  File "..\Binary32\Languages\Russian.irl"
-  File "..\Binary32\Languages\Serbian (Cyrillic).irl"
-  File "..\Binary32\Languages\Serbian (Latin).irl"
-  File "..\Binary32\Languages\Slovak.irl"
-  File "..\Binary32\Languages\Slovenian.irl"
-  File "..\Binary32\Languages\Chinese (Simplified).irl"
-  File "..\Binary32\Languages\Spanish.irl"
-  File "..\Binary32\Languages\Swedish.irl"
-  File "..\Binary32\Languages\Thai.irl"
-  File "..\Binary32\Languages\Chinese (Traditional).irl"
-  File "..\Binary32\Languages\Turkish.irl"
-  File "..\Binary32\Languages\Ukrainian.irl"
-  File "..\Binary32\Languages\French.chm"
-  File "..\Binary32\Languages\German.chm"
-  File "..\Binary32\Languages\Russian.chm"
-  File "..\Binary32\Languages\Ukrainian.chm"
-  File "..\Binary32\Languages\Thai.chm"
-  File "..\Binary32\Languages\Turkish.chm"
-!else
-  File "..\BinaryA\Languages\Arabic.irl"
-  File "..\BinaryA\Languages\Armenian.irl"
-  File "..\BinaryA\Languages\Basque.irl"
-  File "..\BinaryA\Languages\Bosnian.irl"
-  File "..\BinaryA\Languages\Bulgarian.irl"
-  File "..\BinaryA\Languages\Catalan.irl"
-  File "..\BinaryA\Languages\Croatian.irl"
-  File "..\BinaryA\Languages\Czech.irl"
-  File "..\BinaryA\Languages\Danish.irl"
-  File "..\BinaryA\Languages\Dutch.irl"
-  File "..\BinaryA\Languages\Estonian.irl"
-  File "..\BinaryA\Languages\Farsi.irl"
-  File "..\BinaryA\Languages\Finnish.irl"
-  File "..\BinaryA\Languages\French.irl"
-  File "..\BinaryA\Languages\Galician.irl"
-  File "..\BinaryA\Languages\German.irl"
-  File "..\BinaryA\Languages\Greek.irl"
-  File "..\BinaryA\Languages\Hebrew.irl"
-  File "..\BinaryA\Languages\Hungarian.irl"
-  File "..\BinaryA\Languages\Indonesian.irl"
-  File "..\BinaryA\Languages\Italian.irl"
-  File "..\BinaryA\Languages\Japanese.irl"
-  File "..\BinaryA\Languages\Korean.irl"
-  File "..\BinaryA\Languages\Latvian.irl"
-  File "..\BinaryA\Languages\Lithuanian.irl"
-  File "..\BinaryA\Languages\Macedonian.irl"
-  File "..\BinaryA\Languages\Norwegian.irl"
-  File "..\BinaryA\Languages\Polish.irl"
-  File "..\BinaryA\Languages\Portuguese.irl"
-  File "..\BinaryA\Languages\Portuguese (Brazilian).irl"
-  File "..\BinaryA\Languages\Romanian.irl"
-  File "..\BinaryA\Languages\Russian.irl"
-  File "..\BinaryA\Languages\Serbian (Cyrillic).irl"
-  File "..\BinaryA\Languages\Serbian (Latin).irl"
-  File "..\BinaryA\Languages\Slovak.irl"
-  File "..\BinaryA\Languages\Slovenian.irl"
-  File "..\BinaryA\Languages\Chinese (Simplified).irl"
-  File "..\BinaryA\Languages\Spanish.irl"
-  File "..\BinaryA\Languages\Swedish.irl"
-  File "..\BinaryA\Languages\Thai.irl"
-  File "..\BinaryA\Languages\Chinese (Traditional).irl"
-  File "..\BinaryA\Languages\Turkish.irl"
-  File "..\BinaryA\Languages\Ukrainian.irl"
-  File "..\BinaryA\Languages\French.chm"
-  File "..\BinaryA\Languages\German.chm"
-  File "..\BinaryA\Languages\Russian.chm"
-  File "..\BinaryA\Languages\Ukrainian.chm"
-  File "..\BinaryA\Languages\Thai.chm"
-  File "..\BinaryA\Languages\Turkish.chm"
-!endif
+  SetOutPath "$INSTDIR\languages"
+
+  File "..\..\etc\translations\software\arabic.irl"
+  File "..\..\etc\translations\software\armenian.irl"
+  File "..\..\etc\translations\software\basque.irl"
+  File "..\..\etc\translations\software\bosnian.irl"
+  File "..\..\etc\translations\software\bulgarian.irl"
+  File "..\..\etc\translations\software\catalan.irl"
+  File "..\..\etc\translations\software\croatian.irl"
+  File "..\..\etc\translations\software\czech.irl"
+  File "..\..\etc\translations\software\danish.irl"
+  File "..\..\etc\translations\software\dutch.irl"
+  File "..\..\etc\translations\software\estonian.irl"
+  File "..\..\etc\translations\software\farsi.irl"
+  File "..\..\etc\translations\software\finnish.irl"
+  File "..\..\etc\translations\software\french.irl"
+  File "..\..\etc\translations\software\galician.irl"
+  File "..\..\etc\translations\software\german.irl"
+  File "..\..\etc\translations\software\greek.irl"
+  File "..\..\etc\translations\software\hebrew.irl"
+  File "..\..\etc\translations\software\hungarian.irl"
+  File "..\..\etc\translations\software\indonesian.irl"
+  File "..\..\etc\translations\software\italian.irl"
+  File "..\..\etc\translations\software\japanese.irl"
+  File "..\..\etc\translations\software\korean.irl"
+  File "..\..\etc\translations\software\latvian.irl"
+  File "..\..\etc\translations\software\lithuanian.irl"
+  File "..\..\etc\translations\software\macedonian.irl"
+  File "..\..\etc\translations\software\norwegian.irl"
+  File "..\..\etc\translations\software\polish.irl"
+  File "..\..\etc\translations\software\portuguese.irl"
+  File "..\..\etc\translations\software\portuguese-brazilian.irl"
+  File "..\..\etc\translations\software\romanian.irl"
+  File "..\..\etc\translations\software\russian.irl"
+  File "..\..\etc\translations\software\serbian-cyrillic.irl"
+  File "..\..\etc\translations\software\serbian-latin.irl"
+  File "..\..\etc\translations\software\slovak.irl"
+  File "..\..\etc\translations\software\slovenian.irl"
+  File "..\..\etc\translations\software\chinese-simplified.irl"
+  File "..\..\etc\translations\software\spanish.irl"
+  File "..\..\etc\translations\software\swedish.irl"
+  File "..\..\etc\translations\software\thai.irl"
+  File "..\..\etc\translations\software\chinese-traditional.irl"
+  File "..\..\etc\translations\software\turkish.irl"
+  File "..\..\etc\translations\software\ukrainian.irl"
+  File "..\..\etc\translations\help\czech.chm"
+  File "..\..\etc\translations\help\french.chm"
+  File "..\..\etc\translations\help\german.chm"
+  File "..\..\etc\translations\help\russian.chm"
+  File "..\..\etc\translations\help\ukrainian.chm"
+  File "..\..\etc\translations\help\thai.chm"
 
   ; Check if a language has been specified by the commandline.
   ; http://www.microsoft.com/globaldev/reference/oslocversion.mspx
@@ -1147,144 +1078,140 @@ Section $(NAME_SecLang) SecLang
   ; http://www.microsoft.com/globaldev/reference/lcid-all.mspx
   ${Switch} $LANGUAGE
     ${Case} ${LANG_ARABIC}	; 1025
-      StrCpy $0 "Arabic.irl"
+      StrCpy $0 "arabic.irl"
       ${Break}
     ${Case} ${LANG_ARMENIAN}
-      StrCpy $0 "Armenian.irl"
+      StrCpy $0 "armenian.irl"
       ${Break}
     ${Case} ${LANG_BASQUE}	; 1069
-      StrCpy $0 "Basque.irl"
+      StrCpy $0 "basque.irl"
       ${Break}
     ${Case} ${LANG_BOSNIAN}	; 5146
-      StrCpy $0 "Bosnian.irl"
+      StrCpy $0 "bosnian.irl"
       ${Break}
     ${Case} ${LANG_BULGARIAN}	; 1026
-      StrCpy $0 "Bulgarian.irl"
+      StrCpy $0 "bulgarian.irl"
       ${Break}
     ${Case} ${LANG_CATALAN}	; 1027
-      StrCpy $0 "Catalan.irl"
+      StrCpy $0 "catalan.irl"
       ${Break}
     ${Case} ${LANG_CROATIAN}	; 1050
-      StrCpy $0 "Croatian.irl"
+      StrCpy $0 "croatian.irl"
       ${Break}
     ${Case} ${LANG_CZECH}	; 1029
-      StrCpy $0 "Czech.irl"
+      StrCpy $0 "czech.irl"
       ${Break}
     ${Case} ${LANG_DANISH}	; 1030
-      StrCpy $0 "Danish.irl"
+      StrCpy $0 "danish.irl"
       ${Break}
     ${Case} ${LANG_DUTCH}	; 1043
-      StrCpy $0 "Dutch.irl"
+      StrCpy $0 "dutch.irl"
       ${Break}
     ${Case} ${LANG_ENGLISH}	; 1033
       StrCpy $0 ""
       ${Break}
     ${Case} ${LANG_ESTONIAN}
-      StrCpy $0 "Estonian.irl"
+      StrCpy $0 "estonian.irl"
       ${Break}
     ${Case} ${LANG_FARSI}
-      StrCpy $0 "Farsi.irl"
+      StrCpy $0 "farsi.irl"
       ${Break}
     ${Case} ${LANG_FINNISH}	; 1035
-      StrCpy $0 "Finnish.irl"
+      StrCpy $0 "finnish.irl"
       ${Break}
     ${Case} ${LANG_FRENCH}	; 1036
-      StrCpy $0 "French.irl"
+      StrCpy $0 "french.irl"
       ${Break}
     ${Case} ${LANG_GERMAN}	; 1031
-      StrCpy $0 "German.irl"
+      StrCpy $0 "german.irl"
       ${Break}
     ${Case} ${LANG_GREEK}	; 1032
-      StrCpy $0 "Greek.irl"
+      StrCpy $0 "greek.irl"
       ${Break}
     ${Case} ${LANG_HEBREW}	; 1037
-      StrCpy $0 "Hebrew.irl"
+      StrCpy $0 "hebrew.irl"
       ${Break}
     ${Case} ${LANG_HUNGARIAN}	; 1038
-      StrCpy $0 "Hungarian.irl"
+      StrCpy $0 "hungarian.irl"
       ${Break}
     ${Case} ${LANG_INDONESIAN}	; 1057
-      StrCpy $0 "Indonesian.irl"
+      StrCpy $0 "indonesian.irl"
       ${Break}
     ${Case} ${LANG_ITALIAN}	; 1040
-      StrCpy $0 "Italian.irl"
+      StrCpy $0 "italian.irl"
       ${Break}
     ${Case} ${LANG_JAPANESE}	; 1041
-      StrCpy $0 "Japanese.irl"
+      StrCpy $0 "japanese.irl"
       ${Break}
     ${Case} ${LANG_KOREAN}	; 1042
-      StrCpy $0 "Korean.irl"
+      StrCpy $0 "korean.irl"
       ${Break}
     ${Case} ${LANG_LATVIAN}
-      StrCpy $0 "Latvian.irl"
+      StrCpy $0 "latvian.irl"
       ${Break}
     ${Case} ${LANG_LITHUANIAN}	; 1063
-      StrCpy $0 "Lithuanian.irl"
+      StrCpy $0 "lithuanian.irl"
       ${Break}
     ${Case} ${LANG_MACEDONAIN}
-      StrCpy $0 "Macedonian.irl"
+      StrCpy $0 "macedonian.irl"
       ${Break}
     ${Case} ${LANG_NORWEGIAN}	; 1044
-      StrCpy $0 "Norwegian.irl"
+      StrCpy $0 "norwegian.irl"
       ${Break}
     ${Case} ${LANG_POLISH}	; 1045
-      StrCpy $0 "Polish.irl"
+      StrCpy $0 "polish.irl"
       ${Break}
     ${Case} ${LANG_PORTUGUESE}	; 2070
-      StrCpy $0 "Portuguese.irl"
+      StrCpy $0 "portuguese.irl"
       ${Break}
     ${Case} ${LANG_PORTUGUESEBR}	; 1046
-      StrCpy $0 "Portuguese (Brazilian).irl"
+      StrCpy $0 "portuguese-brazilian.irl"
       ${Break}
     ${Case} ${LANG_ROMANIAN}	; 1048
-      StrCpy $0 "Romanian.irl"
+      StrCpy $0 "romanian.irl"
       ${Break}
     ${Case} ${LANG_RUSSIAN}	; 1049
-      StrCpy $0 "Russian.irl"
+      StrCpy $0 "russian.irl"
       ${Break}
     ${Case} ${LANG_SERBIAN}	; 3098
-      StrCpy $0 "Serbian (Cyrillic).irl"
+      StrCpy $0 "serbian-cyrillic.irl"
       ${Break}
     ${Case} ${LANG_SERBIANLATIN} ; 2074
-      StrCpy $0 "Serbian (Latin).irl"
+      StrCpy $0 "serbian-latin.irl"
       ${Break}
     ${Case} ${LANG_SLOVAK}	; 1051
-      StrCpy $0 "Slovak.irl"
+      StrCpy $0 "slovak.irl"
       ${Break}
     ${Case} ${LANG_SLOVENIAN}	; 1060
-      StrCpy $0 "Slovenian.irl"
+      StrCpy $0 "slovenian.irl"
       ${Break}
     ${Case} ${LANG_SIMPCHINESE}	; 2052
-      StrCpy $0 "Chinese (Simplified).irl"
+      StrCpy $0 "chinese-simplified.irl"
       ${Break}
     ${Case} ${LANG_SPANISH}	; 1034
-      StrCpy $0 "Spanish.irl"
+      StrCpy $0 "spanish.irl"
       ${Break}
     ${Case} ${LANG_SWEDISH}	; 1053
-      StrCpy $0 "Swedish.irl"
+      StrCpy $0 "swedish.irl"
       ${Break}
     ${Case} ${LANG_THAI}	; 1054
-      StrCpy $0 "Thai.irl"
+      StrCpy $0 "thai.irl"
       ${Break}
     ${Case} ${LANG_TRADCHINESE}	; 1028
-      StrCpy $0 "Chinese (Traditional).irl"
+      StrCpy $0 "chinese-traditional.irl"
       ${Break}
     ${Case} ${LANG_TURKISH}	; 1055
-      StrCpy $0 "Turkish.irl"
+      StrCpy $0 "turkish.irl"
       ${Break}
     ${Case} ${LANG_UKRAINIAN}	; 1058
-      StrCpy $0 "Ukrainian.irl"
+      StrCpy $0 "ukrainian.irl"
       ${Break}
   ${EndSwitch}
 
   ;Create a configuration file with a preselected language file (if the
   ;selected language is not English).
   ${If} $0 != ""
-!ifdef UNICODE
-    irInstallPlugin::CreateConfig "$INSTDIR\Settings.xml" "$0"
-!else
-    irInstallPluginA::CreateConfig "$INSTDIR\Settings.xml" "$0"
-!endif
+    ir_plugin::CreateConfig "$INSTDIR\settings.xml" "$0"
   ${EndIf}
 SectionEnd
 

@@ -1,0 +1,3 @@
+LIBRARY	ir_plugin
+EXPORTS
+	CreateConfig

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2010 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "stdafx.h"
-#include "Settings.h"
+#include "stdafx.hh"
+#include "settings.hh"
 
 CLanguageSettings g_LanguageSettings;
 

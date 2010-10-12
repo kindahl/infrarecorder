@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2010 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,12 +16,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "stdafx.h"
+#include "stdafx.hh"
 #include <ckcore/directory.hh>
-#include "../../Source/Common/StringUtil.h"
-#include "Settings.h"
+#include <base/string_util.hh>
+#include "settings.hh"
 
-typedef struct _stack_t {
+typedef struct _stack_t
+{
 	struct _stack_t *pNext;
 	char szText[1];				// This should be the length of iStringSize.
 } stack_t;

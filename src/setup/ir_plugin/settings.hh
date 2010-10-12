@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2008 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2010 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +18,9 @@
 
 #pragma once
 #include <list>
-#include "../../Source/Common/StringUtil.h"
-#include "../../Source/Common/XMLProcessor.h"
-#include "../../Source/Common/LNGProcessor.h"
+#include <base/string_util.hh>
+#include <base/xml_processor.hh>
+#include <base/lng_processor.hh>
 
 class ISettings
 {
