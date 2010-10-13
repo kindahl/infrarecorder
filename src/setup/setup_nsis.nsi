@@ -16,6 +16,11 @@
   !define UNICODE
 
 ;--------------------------------
+; Plugins
+
+  !addplugindir ir_plugin\win32\release\
+
+;--------------------------------
 ;StrStr function.
 Function StrStr 
   ;Get input from user
@@ -96,7 +101,7 @@ FunctionEnd
 
   ;Name and file
   Name "InfraRecorder"
-  OutFile "../irsetup_unicode.exe"
+  OutFile "../../dist/ir.exe"
 
   ;Default installation folder
   InstallDir "$PROGRAMFILES\InfraRecorder"
@@ -136,6 +141,9 @@ FunctionEnd
   !insertmacro MUI_LANGUAGE "Bosnian"
   !insertmacro MUI_LANGUAGE "Bulgarian"
   !insertmacro MUI_LANGUAGE "Catalan"
+  !insertmacro MUI_LANGUAGE "SimpChinese"
+  !insertmacro MUI_LANGUAGE "TradChinese"
+;  !insertmacro MUI_LANGUAGE "Chuvash"
   !insertmacro MUI_LANGUAGE "Croatian"
   !insertmacro MUI_LANGUAGE "Czech"
   !insertmacro MUI_LANGUAGE "Danish"
@@ -145,7 +153,7 @@ FunctionEnd
   !insertmacro MUI_LANGUAGE "Farsi"
   !insertmacro MUI_LANGUAGE "Finnish"
   !insertmacro MUI_LANGUAGE "French"
-;  !insertmacro MUI_LANGUAGE "Galician"
+  !insertmacro MUI_LANGUAGE "Galician"
   !insertmacro MUI_LANGUAGE "German"
   !insertmacro MUI_LANGUAGE "Greek"
   !insertmacro MUI_LANGUAGE "Hebrew"
@@ -167,13 +175,12 @@ FunctionEnd
   !insertmacro MUI_LANGUAGE "SerbianLatin"
   !insertmacro MUI_LANGUAGE "Slovak"
   !insertmacro MUI_LANGUAGE "Slovenian"
-  !insertmacro MUI_LANGUAGE "SimpChinese"
   !insertmacro MUI_LANGUAGE "Spanish"
   !insertmacro MUI_LANGUAGE "Swedish"
   !insertmacro MUI_LANGUAGE "Thai"
-  !insertmacro MUI_LANGUAGE "TradChinese"
   !insertmacro MUI_LANGUAGE "Turkish"
   !insertmacro MUI_LANGUAGE "Ukrainian"
+;  !insertmacro MUI_LANGUAGE "Valencian"
 
 ;--------------------------------
 ;A customized language selection dialog.
@@ -471,6 +478,18 @@ FunctionEnd
   LangString DESC_SecDeskShortcut ${LANG_FRENCH} "Ajouter un icone sur le Bureau."
   LangString DESC_SecQuickShortcut ${LANG_FRENCH} "Ajouter un icone à votre barre de lancement rapide."
   LangString DESC_SecLang ${LANG_FRENCH} "Fichiers de langues nécessaires pour la traduction d'InfraRecorder."
+
+  ;Language strings (Galician)
+  LangString NAME_SecCore ${LANG_GALICIAN} "InfraRecorder Core Files (required)"
+  LangString NAME_SecStartShortcut ${LANG_GALICIAN} "Start Menu Shortcuts"
+  LangString NAME_SecDeskShortcut ${LANG_GALICIAN} "Desktop Shortcut"
+  LangString NAME_SecQuickShortcut ${LANG_GALICIAN} "Quick Launch Shortcut"
+  LangString NAME_SecLang ${LANG_GALICIAN} "Language Files"
+  LangString DESC_SecCore ${LANG_GALICIAN} "The core files required to use InfraRecorder."
+  LangString DESC_SecStartShortcut ${LANG_GALICIAN} "Adds icons to your start menu for easy access."
+  LangString DESC_SecDeskShortcut ${LANG_GALICIAN} "Adds an icon to your desktop."
+  LangString DESC_SecQuickShortcut ${LANG_GALICIAN} "Adds an icon to your quick launch bar."
+  LangString DESC_SecLang ${LANG_GALICIAN} "Language files used for supporting different languages in InfraRecorder."
 
   ;Language strings (German)
   LangString NAME_SecCore ${LANG_GERMAN} "InfraRecorder Programmdateien (notwendig)"
@@ -879,7 +898,7 @@ SectionEnd
 Section $(NAME_SecQuickShortcut) SecQuickShortcut
   SectionIn 1
 
-  ;Quick launc shortcut.
+  ;Quick launch shortcut.
   CreateShortCut "$QUICKLAUNCH\InfraRecorder.lnk" "$INSTDIR\infrarecorder.exe"
 SectionEnd
 
@@ -894,6 +913,9 @@ Section $(NAME_SecLang) SecLang
   File "..\..\etc\translations\software\bosnian.irl"
   File "..\..\etc\translations\software\bulgarian.irl"
   File "..\..\etc\translations\software\catalan.irl"
+  File "..\..\etc\translations\software\chinese-simplified.irl"
+  File "..\..\etc\translations\software\chinese-traditional.irl"
+  File "..\..\etc\translations\software\chuvash.irl"
   File "..\..\etc\translations\software\croatian.irl"
   File "..\..\etc\translations\software\czech.irl"
   File "..\..\etc\translations\software\danish.irl"
@@ -924,13 +946,12 @@ Section $(NAME_SecLang) SecLang
   File "..\..\etc\translations\software\serbian-latin.irl"
   File "..\..\etc\translations\software\slovak.irl"
   File "..\..\etc\translations\software\slovenian.irl"
-  File "..\..\etc\translations\software\chinese-simplified.irl"
   File "..\..\etc\translations\software\spanish.irl"
   File "..\..\etc\translations\software\swedish.irl"
   File "..\..\etc\translations\software\thai.irl"
-  File "..\..\etc\translations\software\chinese-traditional.irl"
   File "..\..\etc\translations\software\turkish.irl"
   File "..\..\etc\translations\software\ukrainian.irl"
+  File "..\..\etc\translations\software\valencian.irl"
   File "..\..\etc\translations\help\czech.chm"
   File "..\..\etc\translations\help\french.chm"
   File "..\..\etc\translations\help\german.chm"
@@ -960,6 +981,15 @@ Section $(NAME_SecLang) SecLang
     ${case} "catalan"	; 1027
       StrCpy $LANGUAGE ${LANG_CATALAN}
       ${break}
+    ${Case} "simpchinese"	; 2052
+      StrCpy $LANGUAGE ${LANG_SIMPCHINESE}
+      ${Break}
+    ${Case} "tradchinese"	; 1028
+      StrCpy $LANGUAGE ${LANG_TRADCHINESE}
+      ${Break}
+    ${Case} "chuvash"
+      StrCpy $LANGUAGE ${LANG_CHUVASH}
+      ${Break}
     ${Case} "croatian"	; 1050
       StrCpy $LANGUAGE ${LANG_CROATIAN}
       ${Break}
@@ -986,6 +1016,9 @@ Section $(NAME_SecLang) SecLang
       ${Break}
     ${Case} "french"	; 1036
       StrCpy $LANGUAGE ${LANG_FRENCH}
+      ${Break}
+    ${Case} "galician"
+      StrCpy $LANGUAGE ${LANG_GALICIAN}
       ${Break}
     ${Case} "german"	; 1031
       StrCpy $LANGUAGE ${LANG_GERMAN}
@@ -1050,9 +1083,6 @@ Section $(NAME_SecLang) SecLang
     ${Case} "slovenian"	; 1060
       StrCpy $LANGUAGE ${LANG_SLOVENIAN}
       ${Break}
-    ${Case} "simpchinese"; 2052
-      StrCpy $LANGUAGE ${LANG_SIMPCHINESE}
-      ${Break}
     ${Case} "spanish"	; 1034
       StrCpy $LANGUAGE ${LANG_SPANISH}
       ${Break}
@@ -1062,14 +1092,14 @@ Section $(NAME_SecLang) SecLang
     ${Case} "thai"	; 1054
       StrCpy $LANGUAGE ${LANG_THAI}
       ${Break}
-    ${Case} "tradchinese"; 1028
-      StrCpy $LANGUAGE ${LANG_TRADCHINESE}
-      ${Break}
     ${Case} "turkish"	; 1055
       StrCpy $LANGUAGE ${LANG_TURKISH}
       ${Break}
     ${Case} "ukrainian"	; 1058
       StrCpy $LANGUAGE ${LANG_UKRAINIAN}
+      ${Break}
+    ${Case} "valencian"	; 1058
+      StrCpy $LANGUAGE ${LANG_VALENCIAN}
       ${Break}
   ${EndSwitch}
 
@@ -1094,6 +1124,15 @@ Section $(NAME_SecLang) SecLang
       ${Break}
     ${Case} ${LANG_CATALAN}	; 1027
       StrCpy $0 "catalan.irl"
+      ${Break}
+    ${Case} ${LANG_SIMPCHINESE}	; 2052
+      StrCpy $0 "chinese-simplified.irl"
+      ${Break}
+    ${Case} ${LANG_TRADCHINESE}	; 1028
+      StrCpy $0 "chinese-traditional.irl"
+      ${Break}
+    ${Case} ${LANG_CHUVASH}
+      StrCpy $0 "chuvash.irl"
       ${Break}
     ${Case} ${LANG_CROATIAN}	; 1050
       StrCpy $0 "croatian.irl"
@@ -1121,6 +1160,9 @@ Section $(NAME_SecLang) SecLang
       ${Break}
     ${Case} ${LANG_FRENCH}	; 1036
       StrCpy $0 "french.irl"
+      ${Break}
+    ${Case} ${LANG_GALICIAN}
+      StrCpy $0 "galician.irl"
       ${Break}
     ${Case} ${LANG_GERMAN}	; 1031
       StrCpy $0 "german.irl"
@@ -1152,7 +1194,7 @@ Section $(NAME_SecLang) SecLang
     ${Case} ${LANG_LITHUANIAN}	; 1063
       StrCpy $0 "lithuanian.irl"
       ${Break}
-    ${Case} ${LANG_MACEDONAIN}
+    ${Case} ${LANG_MACEDONIAN}
       StrCpy $0 "macedonian.irl"
       ${Break}
     ${Case} ${LANG_NORWEGIAN}	; 1044
@@ -1185,9 +1227,6 @@ Section $(NAME_SecLang) SecLang
     ${Case} ${LANG_SLOVENIAN}	; 1060
       StrCpy $0 "slovenian.irl"
       ${Break}
-    ${Case} ${LANG_SIMPCHINESE}	; 2052
-      StrCpy $0 "chinese-simplified.irl"
-      ${Break}
     ${Case} ${LANG_SPANISH}	; 1034
       StrCpy $0 "spanish.irl"
       ${Break}
@@ -1197,14 +1236,14 @@ Section $(NAME_SecLang) SecLang
     ${Case} ${LANG_THAI}	; 1054
       StrCpy $0 "thai.irl"
       ${Break}
-    ${Case} ${LANG_TRADCHINESE}	; 1028
-      StrCpy $0 "chinese-traditional.irl"
-      ${Break}
     ${Case} ${LANG_TURKISH}	; 1055
       StrCpy $0 "turkish.irl"
       ${Break}
     ${Case} ${LANG_UKRAINIAN}	; 1058
       StrCpy $0 "ukrainian.irl"
+      ${Break}
+    ${Case} ${LANG_VALENCIAN}
+      StrCpy $0 "valencian.irl"
       ${Break}
   ${EndSwitch}
 
