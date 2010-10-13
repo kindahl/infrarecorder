@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="setup_nsis"
-	ProjectGUID="{B8D2451B-06E5-4EBD-8B84-3FA7492A41FF}"
-	RootNamespace="setup_nsis"
+	Name="help_english"
+	ProjectGUID="{44E47ABA-9695-4A96-BC52-53585C6AAA3C}"
+	RootNamespace="help_english"
 	Keyword="MakeFileProj"
 	>
 	<Platforms>
@@ -23,10 +23,10 @@
 			>
 			<Tool
 				Name="VCNMakeTool"
-				BuildCommandLine="makensis.exe $(ProjectDir)setup_nsis.nsi"
-				ReBuildCommandLine="del ..\..\dist\ir.exe&#x0D;&#x0A;makensis.exe $(ProjectDir)setup_nsis.nsi"
-				CleanCommandLine="del ..\..\dist\ir.exe"
-				Output="setup_nsis.exe"
+				BuildCommandLine="hhc infrarecorder.hhp&#x0D;&#x0A;&#x0D;&#x0A;rem for some reason hhc exits with code 1 even on successful builds.&#x0D;&#x0A;goto VCEnd"
+				ReBuildCommandLine="del infrarecorder.chm&#x0D;&#x0A;hhc infrarecorder.hhp&#x0D;&#x0A;&#x0D;&#x0A;rem for some reason hhc exits with code 1 even on successful builds.&#x0D;&#x0A;goto VCEnd"
+				CleanCommandLine="del infrarecorder.chm"
+				Output="help_english.exe"
 				PreprocessorDefinitions="WIN32;_DEBUG"
 				IncludeSearchPath=""
 				ForcedIncludes=""
@@ -43,10 +43,10 @@
 			>
 			<Tool
 				Name="VCNMakeTool"
-				BuildCommandLine="makensis.exe $(ProjectDir)setup_nsis.nsi"
-				ReBuildCommandLine="del ..\..\dist\ir.exe&#x0D;&#x0A;makensis.exe $(ProjectDir)setup_nsis.nsi"
-				CleanCommandLine="del ..\..\dist\ir.exe"
-				Output="setup_nsis.exe"
+				BuildCommandLine="hhc infrarecorder.hhp&#x0D;&#x0A;&#x0D;&#x0A;rem for some reason hhc exits with code 1 even on successful builds.&#x0D;&#x0A;goto VCEnd"
+				ReBuildCommandLine="del infrarecorder.chm&#x0D;&#x0A;hhc infrarecorder.hhp&#x0D;&#x0A;&#x0D;&#x0A;rem for some reason hhc exits with code 1 even on successful builds.&#x0D;&#x0A;goto VCEnd"
+				CleanCommandLine="del infrarecorder.chm"
+				Output="help_english.exe"
 				PreprocessorDefinitions="WIN32;NDEBUG"
 				IncludeSearchPath=""
 				ForcedIncludes=""
@@ -64,10 +64,6 @@
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
-			<File
-				RelativePath=".\setup_nsis.nsi"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
