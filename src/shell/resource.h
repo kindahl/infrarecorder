@@ -3,8 +3,8 @@
 // Used by shell.rc
 //
 #define IDS_PROJNAME                    100
-#define IDR_IRSHELL                     101
-#define IDR_IRSHELLEXT                  102
+#define IDR_SHELL                       101
+#define IDR_SHELLEXT                    102
 #define IDB_BITMAP1                     201
 #define IDB_BURNBITMAP                  201
 

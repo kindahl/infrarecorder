@@ -89,8 +89,8 @@ END
 // REGISTRY
 //
 
-IDR_IRSHELL             REGISTRY                "shell.rgs"
-IDR_IRSHELLEXT          REGISTRY                "shell_ext.rgs"
+IDR_SHELL             REGISTRY                  "shell.rgs"
+IDR_SHELLEXT          REGISTRY                  "shell_ext.rgs"
 
 /////////////////////////////////////////////////////////////////////////////
 //
