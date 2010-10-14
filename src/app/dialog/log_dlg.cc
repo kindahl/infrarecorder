@@ -70,7 +70,7 @@ ckcore::Path CLogDlg::GetLogDirPath()
 	GetModuleFileName(NULL,szDirPath,MAX_PATH - 1);
 	ExtractFilePath(szDirPath);
 
-	lstrcat(szDirPath,_T("Logs\\"));
+	lstrcat(szDirPath,_T("logs\\"));
 #else
 #ifdef UNICODE
 	if (SUCCEEDED(SHGetFolderPath(m_hWnd,CSIDL_APPDATA | CSIDL_FLAG_CREATE,NULL,
@@ -80,7 +80,7 @@ ckcore::Path CLogDlg::GetLogDirPath()
 #endif
 	{
 		IncludeTrailingBackslash(szDirPath);
-		lstrcat(szDirPath,_T("InfraRecorder\\Logs\\"));
+		lstrcat(szDirPath,_T("InfraRecorder\\logs\\"));
 	}
 	else
 	{

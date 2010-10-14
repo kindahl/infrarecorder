@@ -73,7 +73,7 @@
 				GetModuleFileName(NULL,szFileName,MAX_PATH - 1);\
 				ExtractFilePath(szFileName);\
 				IncludeTrailingBackslash(szFileName);\
-				lstrcat(szFileName,_T("ckEffects.exe"));\
+				lstrcat(szFileName,_T("smoke.exe"));\
 				ShellExecute(HWND_DESKTOP,_T("open"),szFileName,szParam,NULL,SW_SHOWDEFAULT);\
 			}\
 		}\

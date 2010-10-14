@@ -71,7 +71,7 @@ bool CSettingsManager::GetConfigPath(TCHAR *szConfigPath)
 	ckcore::Directory::create(szConfigPath);
 #endif
 
-	lstrcat(szConfigPath,_T("Settings.xml"));
+	lstrcat(szConfigPath,_T("settings.xml"));
 	return true;
 }
 

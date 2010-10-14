@@ -50,7 +50,7 @@ bool GetConfigPath(TCHAR *szConfigPath)
 	// Create the file path if it doesn't exist.
 	ckcore::Directory::create(szConfigPath);
 
-	lstrcat(szConfigPath,_T("Settings.xml"));
+	lstrcat(szConfigPath,_T("settings.xml"));
 	return true;
 }
 
