@@ -163,6 +163,7 @@
               <File Id="french.chm" Name="french.chm" Source="..\..\etc\translations\help\french.chm"/>
               <File Id="russian.chm" Name="russian.chm" Source="..\..\etc\translations\help\russian.chm"/>
               <File Id="thai.chm" Name="thai.chm" Source="..\..\etc\translations\help\thai.chm"/>
+              <File Id="turkish.chm" Name="turkish.chm" Source="..\..\etc\translations\help\turkish.chm"/>
               <File Id="ukrainian.chm" Name="ukrainian.chm" Source="..\..\etc\translations\help\ukrainian.chm"/>
             </Component>
           </Directory>

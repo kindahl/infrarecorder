@@ -956,8 +956,9 @@ Section $(NAME_SecLang) SecLang
   File "..\..\etc\translations\help\french.chm"
   File "..\..\etc\translations\help\german.chm"
   File "..\..\etc\translations\help\russian.chm"
-  File "..\..\etc\translations\help\ukrainian.chm"
   File "..\..\etc\translations\help\thai.chm"
+  File "..\..\etc\translations\help\turkish.chm"
+  File "..\..\etc\translations\help\ukrainian.chm"
 
   ; Check if a language has been specified by the commandline.
   ; http://www.microsoft.com/globaldev/reference/oslocversion.mspx
