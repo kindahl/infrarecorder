@@ -842,7 +842,7 @@ Section $(NAME_SecCore) SecCore
   File "..\..\dep\smoke.exe"
 
   SetOutPath "$INSTDIR\codecs"
-  ;File "..\..\bin\win32\release\codecs\irWave.irc"
+  ;File "..\..\bin\win32\release\codecs\wave.irc"
   File "..\..\bin\win32\release\codecs\sndfile.irc"
   File "..\..\dep\libsndfile\win32\libsndfile.dll"
   File "..\..\bin\win32\release\codecs\wma.irc"
