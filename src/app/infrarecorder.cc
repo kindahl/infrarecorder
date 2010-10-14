@@ -375,7 +375,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPTSTR lpstrCmd
 			GetModuleFileName(NULL,szCodecPath,MAX_PATH - 1);
 
 			ExtractFilePath(szCodecPath);
-			lstrcat(szCodecPath,_T("Codecs\\"));
+			lstrcat(szCodecPath,_T("codecs\\"));
 
 			if (!g_CodecManager.LoadCodecs(szCodecPath))
 			{

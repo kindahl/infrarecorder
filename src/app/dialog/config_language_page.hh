@@ -33,6 +33,7 @@ private:
 	std::vector<tLangFileData> m_LangFileList;
 
 	bool Translate();
+	ckcore::tstring GetTranslationDisplayName(TCHAR *szFileName);
 	void FillLangCombo();
 
 public:

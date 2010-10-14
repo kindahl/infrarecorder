@@ -17,6 +17,7 @@
  */
 
 #include "stdafx.hh"
+#include <base/lng_processor.hh>
 #include "config_language_page.hh"
 #include "string_table.hh"
 #include "settings.hh"
@@ -92,6 +93,36 @@ void CConfigLanguagePage::OnHelp()
 	HtmlHelp(m_hWnd,szFileName,HH_DISPLAY_TOC,NULL);
 }
 
+ckcore::tstring CConfigLanguagePage::GetTranslationDisplayName(TCHAR *szFileName)
+{
+	bool bNeedParenthesis = false;
+	ckcore::tstring DispName;
+
+	size_t iFileNameLen = lstrlen(szFileName);
+	for (size_t i = 0; i < iFileNameLen; i++)
+	{
+		if (i == 0)
+		{
+			DispName.push_back((wchar_t)toupper(szFileName[i]));
+			continue;
+		}
+
+		if (szFileName[i] == '-')
+		{
+			DispName += TEXT(" (");
+			bNeedParenthesis = true;
+			continue;
+		}
+
+		DispName.push_back(szFileName[i]);
+	}
+
+	if (bNeedParenthesis)
+		DispName.push_back(')');
+
+	return DispName;
+}
+
 void CConfigLanguagePage::FillLangCombo()
 {
 	// Always add the english language item.
@@ -106,7 +137,7 @@ void CConfigLanguagePage::FillLangCombo()
 	TCHAR szFolderPath[MAX_PATH];
 	::GetModuleFileName(NULL,szFolderPath,MAX_PATH - 1);
 	ExtractFilePath(szFolderPath);
-	lstrcat(szFolderPath,_T("Languages\\"));
+	lstrcat(szFolderPath,_T("languages\\"));
 
 	TCHAR szFilePath[MAX_PATH];
 	lstrcpy(szFilePath,szFolderPath);
@@ -134,7 +165,26 @@ void CConfigLanguagePage::FillLangCombo()
 			// Remove the file extension and add the item.
 			lstrcpy(szFilePath,FileData.cFileName);
 			ChangeFileExt(szFilePath,_T(""));
-			m_LangCombo.AddString(szFilePath);
+
+			ckcore::tstring DispName = GetTranslationDisplayName(szFilePath);
+			m_LangCombo.AddString(DispName.c_str());
+
+			// Loading the translation name from file is too slow.
+			/*lstrcpy(szFilePath,szFolderPath);
+			lstrcat(szFilePath,FileData.cFileName);
+
+			CLngProcessor LangFile(szFilePath);
+			if (LangFile.Load() != LNGRES_OK)
+				continue;
+
+			if (!LangFile.EnterSection(TEXT("translation")))
+				continue;
+
+			TCHAR szLangName[256];
+			if (!LangFile.GetValue(0x0000,szLangName,sizeof(szLangName)/sizeof(TCHAR)))
+				continue;
+
+			m_LangCombo.AddString(szLangName);*/
 
 			if (!lstrcmp(FileData.cFileName,g_LanguageSettings.m_szLanguageFile))
 				m_LangCombo.SetCurSel(m_LangCombo.GetCount() - 1);

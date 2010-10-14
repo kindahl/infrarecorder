@@ -60,7 +60,7 @@ bool CLanguageSettings::Load(CXmlProcessor *pXml)
 	TCHAR szFullPath[MAX_PATH];
 	::GetModuleFileName(NULL,szFullPath,MAX_PATH - 1);
 	ExtractFilePath(szFullPath);
-	lstrcat(szFullPath,_T("Languages\\"));
+	lstrcat(szFullPath,_T("languages\\"));
 	lstrcat(szFullPath,m_szLanguageFile);
 
 	if (ckcore::File::exist(szFullPath))
