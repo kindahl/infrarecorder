@@ -75,21 +75,21 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 		std::vector<TCHAR *> TempTracks;
 		const TCHAR *pAudioText;
 
-		CLocalData ( void )
-			: ImageFile( g_BurnImageSettings.m_bOnFly
+		CLocalData(void)
+			: ImageFile(g_BurnImageSettings.m_bOnFly
 							? ckcore::Path() // 'ImageFile' variable not used.
 							: ckcore::File::temp(g_GlobalSettings.m_szTempPath,
-												 ckT("InfraRecorder") )
-						  )
-		    , pAudioText( NULL )
+												 ckT("InfraRecorder"))),
+			  Files(g_ProjectSettings.m_iFileSystem == FILESYSTEM_DVDVIDEO),
+			  pAudioText(NULL)
 		{}
 
-		~CLocalData ( void )
+		~CLocalData(void)
 		{
 			if (!g_BurnImageSettings.m_bOnFly)
 				ImageFile.remove();
 
-			ckfilesystem::DestroyFileSet( Files );
+			ckfilesystem::destroy_file_set(Files);
 
 			RemoveTempTracks(TempTracks);
 
@@ -98,7 +98,6 @@ DWORD WINAPI CActionManager::BurnCompilationThread(LPVOID lpThreadParameter)
 				ckcore::File::remove(pAudioText);
 		}
 	} LocalData;
-	
 
 	int iProjectType = g_ProjectManager.GetProjectType();
 	eBurnResult result = BURNRESULT_INTERNALERROR;
@@ -459,7 +458,7 @@ DWORD WINAPI CActionManager::CreateImageThread(LPVOID lpThreadParameter)
 {
 	TCHAR *szFileName = (TCHAR *)lpThreadParameter;
 
-	ckfilesystem::FileSet Files;
+	ckfilesystem::FileSet Files(g_ProjectSettings.m_iFileSystem == FILESYSTEM_DVDVIDEO);
 
 	try
 	{
@@ -477,7 +476,7 @@ DWORD WINAPI CActionManager::CreateImageThread(LPVOID lpThreadParameter)
 			default:
 				ATLASSERT( false );
 				delete [] szFileName;
-				ckfilesystem::DestroyFileSet( Files );
+				ckfilesystem::destroy_file_set(Files);
 				return 0;
 		};
 
@@ -517,12 +516,12 @@ DWORD WINAPI CActionManager::CreateImageThread(LPVOID lpThreadParameter)
 	catch ( ... )
 	{
 		delete [] szFileName;
-		ckfilesystem::DestroyFileSet( Files );
+		ckfilesystem::destroy_file_set(Files);
 		throw;
 	}
 
 	delete [] szFileName;
-	ckfilesystem::DestroyFileSet( Files );
+	ckfilesystem::destroy_file_set(Files);
 	return 0;
 }
 

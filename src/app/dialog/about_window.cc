@@ -261,7 +261,7 @@ LRESULT CAboutWindow::OnPaint(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandl
 
 	RECT rcCdrtoolsVer = { 37,300,390,330 };
 	DrawText(hMemDC,AtlGetDefaultGuiFont(),&rcCdrtoolsVer,ABOUTWINDOW_TEXTCOLOR,
-			 m_szCdrtoolsVersion.c_str(),m_szCdrtoolsVersion.size());
+			 m_szCdrtoolsVersion.c_str(),static_cast<unsigned int>(m_szCdrtoolsVersion.size()));
 
 	RECT rcUrl = { ABOUTWINDOW_URL_LEFT,ABOUTWINDOW_URL_TOP,
 				   ABOUTWINDOW_URL_RIGHT,ABOUTWINDOW_URL_BOTTOM };
