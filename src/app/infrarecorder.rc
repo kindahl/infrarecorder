@@ -689,8 +689,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,51,0,0
- PRODUCTVERSION 0,51,0,0
+ FILEVERSION 0,52,0,0
+ PRODUCTVERSION 0,52,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -707,12 +707,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Christian Kindahl"
             VALUE "FileDescription", "InfraRecorder"
-            VALUE "FileVersion", "0.51.0.0"
+            VALUE "FileVersion", "0.52.0.0"
             VALUE "InternalName", "InfraRecorder"
-            VALUE "LegalCopyright", "Copyright © 2006-2010 Christian Kindahl"
+            VALUE "LegalCopyright", "Copyright © 2006-2011 Christian Kindahl"
             VALUE "OriginalFilename", "InfraRecorder.exe"
             VALUE "ProductName", "InfraRecorder"
-            VALUE "ProductVersion", "0.51.0.0"
+            VALUE "ProductVersion", "0.52.0.0"
         END
     END
     BLOCK "VarFileInfo"

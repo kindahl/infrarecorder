@@ -30,8 +30,8 @@ tirc_send_message *g_pSendMessage = NULL;
 int g_iCapabilities = IRC_HAS_ENCODER | IRC_HAS_CONFIG;
 
 // Version and about strings.
-TCHAR *g_szVersion = _T("0.42.1.0");
-TCHAR *g_szAbout = _T("InfraRecorder MP3 Encoder\n\nCopyright © 2006-2010 Christian Kindahl.\n\nThis codec is using the libmp3lame (LAME) library.\nVisit: http://lame.sourceforge.net/ for more information.\n\nPlease note that personal and/or commercial use of\ncompiled versions of this codec requires a patent license\nin some countries. Please check before using this codec.");
+TCHAR *g_szVersion = _T("0.52.0.0");
+TCHAR *g_szAbout = _T("InfraRecorder MP3 Encoder\n\nCopyright © 2006-2011 Christian Kindahl.\n\nThis codec is using the libmp3lame (LAME) library.\nVisit: http://lame.sourceforge.net/ for more information.\n\nPlease note that personal and/or commercial use of\ncompiled versions of this codec requires a patent license\nin some countries. Please check before using this codec.");
 TCHAR *g_szEncoder = _T("MP3");
 TCHAR *g_szFileExt = _T(".mp3");
 

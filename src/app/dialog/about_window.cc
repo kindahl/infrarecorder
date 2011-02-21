@@ -28,7 +28,7 @@
 #include "core.hh"
 #include "about_window.hh"
 
-#define ABOUT_YEARS			_T("2006-2010")
+#define ABOUT_YEARS			_T("2006-2011")
 #define ABOUT_STR(str)		str,(sizeof(str)/sizeof(TCHAR))-1
 
 /*

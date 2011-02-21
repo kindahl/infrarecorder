@@ -29,8 +29,8 @@ tirc_send_message *g_pSendMessage = NULL;
 int g_iCapabilities = IRC_HAS_DECODER | IRC_HAS_ENCODER;
 
 // Version and about strings.
-TCHAR *g_szVersion = _T("0.42.1.0");
-TCHAR *g_szAbout = _T("InfraRecorder Wave Codec\n\nCopyright © 2006-2010 Christian Kindahl.");
+TCHAR *g_szVersion = _T("0.52.0.0");
+TCHAR *g_szAbout = _T("InfraRecorder Wave Codec\n\nCopyright © 2006-2011 Christian Kindahl.");
 TCHAR *g_szEncoder = _T("Wave");
 TCHAR *g_szFileExt = _T(".wav");
 
