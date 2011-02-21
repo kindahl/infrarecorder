@@ -101,6 +101,8 @@ void lngTranslateTables()
 				ckfilesystem::StringTable::instance().set_string(ckfilesystem::StringTable::STATUS_WRITEJOLIETTABLE,szStrValue);
 			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(ckfilesystem::StringTable::STATUS_WRITEDIRENTRIES,szStrValue))
 				ckfilesystem::StringTable::instance().set_string(ckfilesystem::StringTable::STATUS_WRITEDIRENTRIES,szStrValue);
+			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(ckfilesystem::StringTable::ERROR_DVDVIDEO,szStrValue))
+				ckfilesystem::StringTable::instance().set_string(ckfilesystem::StringTable::ERROR_DVDVIDEO,szStrValue);
 		}
 	}
 }
