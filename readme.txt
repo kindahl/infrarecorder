@@ -1,5 +1,5 @@
 InfraRecorder
-Copyright (C) 2006-2010 Christian Kindahl, christian dot kindahl at gmail dot com
+Copyright (C) 2006-2011 Christian Kindahl, christian dot kindahl at gmail dot com
 
 This program is licensed under GPL (version 3), please see the file
 License.txt. Please note that the graphics used in InfraRecorder is not covered

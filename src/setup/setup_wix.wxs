@@ -4,23 +4,23 @@
 <?define Arch="x64"?>
 <?define ProductName="InfraRecorder"?>
 <?define VerMajor="0"?>
-<?define VerMinor="51"?>
+<?define VerMinor="52"?>
 <?define VerRev="00"?>
 <?define VerBuild="00"?>
 
 <!--Main Definitions-->
 <?if $(var.Arch)="x64"?>
-  <?define CpuId="2"?>
-  <?define ProgramFolder="ProgramFiles64Folder"?>
-  <?define VerPostStr=" (x64 edition)"?>
-  <?define Is64="yes"?>
-  <?define Platforms="x64"?>
+<?define CpuId="2"?>
+<?define ProgramFolder="ProgramFiles64Folder"?>
+<?define VerPostStr=" (x64 edition)"?>
+<?define Is64="yes"?>
+<?define Platforms="x64"?>
 <?else?>
-  <?define CpuId="1"?>
-  <?define ProgramFolder="ProgramFilesFolder"?>
-  <?define VerPostStr=""?>
-  <?define Is64="no"?>
-  <?define Platforms="Intel"?>
+<?define CpuId="1"?>
+<?define ProgramFolder="ProgramFilesFolder"?>
+<?define VerPostStr=""?>
+<?define Is64="no"?>
+<?define Platforms="Intel"?>
 <?endif?>
 
 <!--<?define BaseId="2C22EA92-CB30-4933-9B67-A7A0582DBEA4"?>-->
@@ -40,26 +40,25 @@
 <?define CompDoc="$(var.BaseCompId)0006"?>
 <?define CompHelp="$(var.BaseCompId)0007"?>
 <?define CompEffects="$(var.BaseCompId)0008"?>
+<?define CompShortcuts="$(var.BaseCompId)0100"?>
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product
-    Id="$(var.ProductId)"
-    Name="$(var.ProductName) $(var.VerMajor).$(var.VerMinor)$(var.VerPostStr)"
-    Language="1033"
-    Version="$(var.VerMajor).$(var.VerMinor).$(var.VerRev).$(var.VerBuild)"
-    Manufacturer="Christian Kindahl"
-    UpgradeCode="$(var.UpgradeCode)">
-    
-  <Package
-    Id="$(var.PackageId)"
-    Description="$(var.ProductName)$(var.VerPostStr)"
-    Comments="$(var.ProductName)$(var.VerPostStr)"
-    Manufacturer="Christian Kindahl"
-    InstallerVersion="200"
-    Compressed="yes"
-    Platforms="$(var.Platforms)"/>
+  <Product Id="$(var.ProductId)"
+           Name="$(var.ProductName) $(var.VerMajor).$(var.VerMinor)$(var.VerPostStr)"
+           Language="1033"
+           Version="$(var.VerMajor).$(var.VerMinor).$(var.VerRev).$(var.VerBuild)"
+           Manufacturer="Christian Kindahl"
+           UpgradeCode="$(var.UpgradeCode)">
 
-  <Media Id="1" Cabinet="InfraRecorder.cab" EmbedCab="yes" CompressionLevel="high"/>
+    <Package Id="$(var.PackageId)"
+             Description="$(var.ProductName)$(var.VerPostStr)"
+             Comments="$(var.ProductName)$(var.VerPostStr)"
+             Manufacturer="Christian Kindahl"
+             InstallerVersion="200"
+             Compressed="yes"
+             Platforms="$(var.Platforms)"/>
+
+    <Media Id="1" Cabinet="InfraRecorder.cab" EmbedCab="yes" CompressionLevel="high"/>
 
     <Directory Id="TARGETDIR" Name="SourceDir">
       <!--<Directory Id="ProgramMenuFolder"/>-->
@@ -67,15 +66,14 @@
 
       <Directory Id="$(var.ProgramFolder)" Name="Files">
         <Directory Id="INSTALLDIR" Name="InfraRecorder">
+
           <Component Id="Main" Guid="$(var.CompMain)" DiskId="1" Win64="$(var.Is64)">
-            <File Id="infrarecorder.exe" Name="infrarecorder.exe" Source="..\..\bin\x64\release\infrarecorder.exe">
-              <Shortcut Id="StartMenuInfraRecorderShortcut" Directory="InfraProgramMenu" Name="InfraRecorder" Advertise="yes"/>
-            </File>
+            <File Id="infrarecorder.exe" Name="infrarecorder.exe" Source="..\..\bin\x64\release\infrarecorder.exe"/>
             <RemoveFolder Id="MyRemFolder" Directory="InfraProgramMenu" On="uninstall"/>
           </Component>
 
           <Component Id="ShellExt" Guid="$(var.CompShellExt)" DiskId="1" Win64="$(var.Is64)">
-            <File Id="irShell.dll" Name="irShell.dll" Source="..\..\bin\x64\release\shell.dll"/>
+            <File Id="shell.dll" Name="shell.dll" Source="..\..\bin\x64\release\shell.dll"/>
           </Component>
 
           <Component Id="Effects" Guid="$(var.CompEffects)" DiskId="1" Win64="$(var.Is64)">
@@ -88,9 +86,7 @@
           </Component>
 
           <Component Id="Help" Guid="$(var.CompHelp)" DiskId="1" Win64="$(var.Is64)">
-            <File Id="infrarecorder.chm" Name="infrarecorder.chm" Source="..\..\doc\english\infrarecorder.chm">
-              <Shortcut Id="StartMenuHelpShortcut" Directory="InfraProgramMenu" Name="InfraRecorder Help" Advertise="yes"/>
-            </File>
+            <File Id="infrarecorder.chm" Name="infrarecorder.chm" Source="..\..\doc\english\infrarecorder.chm"/>
           </Component>
 
           <Directory Id="cdrtools" Name="cdrtools">
@@ -103,14 +99,14 @@
             </Component>
           </Directory>
 
-          <Directory Id="Codecs" Name="Codecs">
+          <Directory Id="codecs" Name="codecs">
             <Component Id="Codecs" Guid="$(var.CompCodecs)" DiskId="1" Win64="$(var.Is64)">
               <File Id="wave.irc" Name="wave.irc" Source="..\..\bin\x64\release\codecs\wave.irc"/>
               <File Id="wma.irc" Name="wma.irc" Source="..\..\bin\x64\release\codecs\wma.irc"/>
             </Component>
           </Directory>
 
-          <Directory Id="Languages" Name="Languages">
+          <Directory Id="languages" Name="languages">
             <Component Id="Lang" Guid="$(var.CompLang)" DiskId="1" Win64="$(var.Is64)">
               <File Id="arabic.irl" Name="arabic.irl" Source="..\..\etc\translations\software\arabic.irl"/>
               <File Id="armenian.irl" Name="armenian.irl" Source="..\..\etc\translations\software\armenian.irl"/>
@@ -175,6 +171,19 @@
       </Directory>
     </Directory>
 
+    <DirectoryRef Id="InfraProgramMenu">
+      <Component Id="Shortcuts" Guid="$(var.CompShortcuts)">
+        <Shortcut Id="StartMenuInfraRecorderShortcut" Name="InfraRecorder"
+                  Target="[INSTALLDIR]infrarecorder.exe"
+                  WorkingDirectory="INSTALLDIR"/>
+        <Shortcut Id="StartMenuHelpShortcut" Name="InfraRecorder Help"
+                  Target="[INSTALLDIR]infrarecorder.chm"
+                  WorkingDirectory="INSTALLDIR"/>
+        <RemoveFolder Id="InfraProgramMenu" On="uninstall"/>
+        <RegistryValue Root="HKCU" Key="Software\InfraRecorder" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+      </Component>
+    </DirectoryRef>
+
     <Feature Id="Full" Title="InfraRecorder" Description="The complete package."
              Display="expand" Level="1" ConfigurableDirectory="INSTALLDIR"
              Absent="disallow" AllowAdvertise="no">
@@ -187,6 +196,7 @@
         <ComponentRef Id="Codecs"/>
         <ComponentRef Id="Doc"/>
         <ComponentRef Id="Help"/>
+        <ComponentRef Id="Shortcuts"/>
       </Feature>
       <Feature Id="LanguageFiles" Title="Localization files" Description="Language files used for supporting different languages in InfraRecorder."
                Level="1" AllowAdvertise="no">
@@ -197,6 +207,9 @@
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR"/>
     <UIRef Id="WixUI_InstallDir"/>
     <WixVariable Id="WixUILicenseRtf" Value="..\..\license.rtf"/>
+
+    <Icon Id="iconmain.ico" SourceFile="..\..\src\app\resources\icon-main.ico"/>
+    <Property Id="ARPPRODUCTICON" Value="iconmain.ico"/>
 
   </Product>
 </Wix>
