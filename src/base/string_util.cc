@@ -419,6 +419,49 @@ void UnicodeToAnsi(char *szTarget,const wchar_t *szSource,int iTargetSize)
 		szTarget[iTargetSize - 1] = '\0';
 }
 
+ckcore::tstring GetCygwinFileName(const TCHAR *szFileName)
+{
+	size_t uiLength = lstrlen(szFileName);
+
+	ckcore::tstring CygPath;
+
+	// Check if UNC path.
+	if (uiLength > 2 && szFileName[0] == '\\' && szFileName[1] == '\\')
+	{
+		CygPath = szFileName;
+
+		// Replace all backslashes by slashes.
+		ckcore::tstring::iterator it;
+		for (it = CygPath.begin(); it != CygPath.end(); it++)
+		{
+			TCHAR &c = *it;
+			if (c == '\\')
+				c = '/';
+		}
+	}
+	else	// If not UNC path convert to proper cygwin path.
+	{
+		CygPath = _T("/cygdrive/");
+
+		// Copy the drive letter.
+		CygPath.push_back(szFileName[0]);
+		CygPath.push_back('/');
+
+		CygPath.append(szFileName + 3);
+
+		// Replace all backslashes by slashes.
+		ckcore::tstring::iterator it;
+		for (it = CygPath.begin(); it != CygPath.end(); it++)
+		{
+			TCHAR &c = *it;
+			if (c == '\\')
+				c = '/';
+		}
+	}
+
+	return CygPath;
+}
+
 void GetCygwinFileName(const TCHAR *szFileName,TCHAR *szCygwinFileName)
 {
 	// Check if UNC path.

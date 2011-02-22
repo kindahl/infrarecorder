@@ -53,6 +53,7 @@ void AnsiToUnicode(wchar_t *szTarget,const char *szSource,int iTargetSize);
 void UnicodeToAnsi(char *szTarget,const wchar_t *szSource,int iTargetSize);
 
 void GetCygwinFileName(const TCHAR *szFileName,TCHAR *szCygwinFileName);
+ckcore::tstring GetCygwinFileName(const TCHAR *szFileName);
 
 void lsnprintf_s(TCHAR *szBuffer,int iBufferLength,const TCHAR *szFormatString,...);
 

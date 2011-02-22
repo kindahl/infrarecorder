@@ -2187,7 +2187,7 @@ bool CCore::ReadDisc(ckmmc::Device &Device,CAdvancedProgress *pProgress,const TC
 
 	// File name.
 	CommandLine += _T(" f=\"");
-	CommandLine += szFileName;
+	CommandLine += GetCygwinFileName(szFileName);
 	CommandLine += _T("\"");
 
 	return SafeLaunch(CommandLine,bWaitForProcess);
