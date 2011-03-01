@@ -1,19 +1,21 @@
-;Infra Recorder Installation Script
+; Infra Recorder Installation Script
 ;  written by Christian Kindahl
 ;
 ;--------------------------------
-;Include Modern UI
+; Include Modern UI
 
   !include "MUI.nsh"
   !include "LogicLib.nsh"
   !include "FileFunc.nsh"
 
 ;--------------------------------
-;Definitions
+; Definitions
 
   !define MUI_COMPONENTSPAGE_SMALLDESC
-  !define MUI_HEADERBITMAP "ir_icon.bmp"
-  !define UNICODE
+  ;!define MUI_HEADERIMAGE
+  ;!define MUI_HEADERIMAGE_BITMAP "resources\header-logo.bmp"
+  ;!define MUI_HEADERIMAGE_RIGHT
+  !define MUI_ABORTWARNING
 
 ;--------------------------------
 ; Plugins
@@ -21,9 +23,9 @@
   !addplugindir ir_plugin\win32\release\
 
 ;--------------------------------
-;StrStr function.
+; StrStr function.
 Function StrStr 
-  ;Get input from user
+  ; Get input from user
   Exch $R0
   Exch
   Exch $R1
@@ -32,29 +34,29 @@ Function StrStr
   Push $R4
   Push $R5
  
-  ;Get "String" and "SubString" length
+  ; Get "String" and "SubString" length
   StrLen $R2 $R0
   StrLen $R3 $R1
-  ;Start "StartCharPos" counter
+  ; Start "StartCharPos" counter
   StrCpy $R4 0
  
-  ;Loop until "SubString" is found or "String" reaches its end
+  ; Loop until "SubString" is found or "String" reaches its end
   ${Do}
-    ;Remove everything before and after the searched part ("TempStr")
+    ; Remove everything before and after the searched part ("TempStr")
     StrCpy $R5 $R1 $R2 $R4
  
-    ;Compare "TempStr" with "SubString"
+    ; Compare "TempStr" with "SubString"
     ${IfThen} $R5 == $R0 ${|} ${ExitDo} ${|}
-    ;If not "SubString", this could be "String"'s end
+    ; If not "SubString", this could be "String"'s end
     ${IfThen} $R4 >= $R3 ${|} ${ExitDo} ${|}
-    ;If not, continue the loop
+    ; If not, continue the loop
     IntOp $R4 $R4 + 1
   ${Loop}
  
-  ;Remove part before "SubString" on "String" (if there has one)
+  ; Remove part before "SubString" on "String" (if there has one)
   StrCpy $R0 $R1 `` $R4
  
-  ;Return output to user
+  ; Return output to user
   Pop $R5
   Pop $R4
   Pop $R3
@@ -64,7 +66,7 @@ Function StrStr
 FunctionEnd
 
 ;--------------------------------
-;StrLower function
+; StrLower function
 Function StrLower 
   Exch $0 ; Original string 
   Push $1 ; Final string 
@@ -97,33 +99,54 @@ Done:
 FunctionEnd
 
 ;--------------------------------
-;General
+; General
 
-  ;Name and file
+  ; Application name.
   Name "InfraRecorder"
-  OutFile "../../dist/ir.exe"
 
-  ;Default installation folder
+  ; Default installation folder.
   InstallDir "$PROGRAMFILES\InfraRecorder"
   
-  ;Get installation folder from registry if available
+  ; Get installation folder from registry if available.
   InstallDirRegKey HKCU "Software\InfraRecorder" ""
 
-  ;Compression settings.
+!ifdef INNER
+  !echo "Inner invocation"
+
+  ; Output file.
+  OutFile "$%TEMP%\ir.exe"
+
+  ; Compression settings.
+  SetCompress off
+!else
+  !echo "Outer invocation"
+ 
+  ; Call makensis again, defining INNER. This writes an installer for us which, 
+  ; when it is invoked, will just write the uninstaller to some location, and
+  ; then exit.
+  !system "$\"${NSISDIR}\makensis$\" /DINNER setup_nsis.nsi" = 0
+ 
+  ; Run that installer we just created. Since it calls quit the return value
+  ; isn't zero.
+  !system "$%TEMP%\ir.exe" = 2
+ 
+  ; That will have written an uninstaller binary for us. Now we sign it.
+  !system "call ..\..\sign.bat $%TEMP%\uninstall.exe" = 0
+ 
+  ; Output file.
+  OutFile "..\..\dist\ir.exe"
+
+  ; Compression settings.
   ;SetCompress off
   SetCompress force
   SetCompressor /SOLID lzma
+!endif
 
 ;--------------------------------
-;Interface Settings
-
-  !define MUI_ABORTWARNING
-
-;--------------------------------
-;Pages
+; Pages
 
   !insertmacro MUI_PAGE_WELCOME
-  !insertmacro MUI_PAGE_LICENSE "../../license.txt"
+  !insertmacro MUI_PAGE_LICENSE "..\..\license.txt"
   !insertmacro MUI_PAGE_COMPONENTS
   !insertmacro MUI_PAGE_DIRECTORY
   !insertmacro MUI_PAGE_INSTFILES
@@ -133,7 +156,7 @@ FunctionEnd
   !insertmacro MUI_UNPAGE_INSTFILES
   
 ;--------------------------------
-;Languages
+; Languages
 
   !insertmacro MUI_LANGUAGE "Arabic"
 ;  !insertmacro MUI_LANGUAGE "Armenian"
@@ -183,7 +206,7 @@ FunctionEnd
 ;  !insertmacro MUI_LANGUAGE "Valencian"
 
 ;--------------------------------
-;A customized language selection dialog.
+; A customized language selection dialog.
 !macro IR_MUI_LANGDLL_DISPLAY
 
   !verbose push
@@ -230,20 +253,29 @@ FunctionEnd
 !macroend
 
 ;--------------------------------
-;Installation types
+; Installation types
 
   InstType "Full"
   InstType "Minimal"
 
 ;--------------------------------
-;Installer Functions
+; Installer Functions
 !insertmacro GetParameters
 
 Function .onInit
-  ;Display the language selector.
+!ifdef INNER
+  ; If INNER is defined, then we aren't supposed to do anything except write
+  ; out the installer. This is better than processing a command line option as
+  ; it means this entire code path is not present in the final (real)
+  ; installer.
+  WriteUninstaller "$%TEMP%\uninstall.exe"
+  Quit
+!endif
+
+  ; Display the language selector.
   !insertmacro IR_MUI_LANGDLL_DISPLAY
 
-  ;Parse the command-line.
+  ; Parse the command-line.
   ;Call GetParameters
   ;Pop $3
   ${GetParameters} $3
@@ -265,7 +297,7 @@ Next:
   StrCmp $1 "" done
     ;Copy the value after /LANGUAGE=.
     StrCpy $1 $1 "" 10
-  ;Search for the next parameter.
+  ; Search for the next parameter.
   Push $1
   Push $2
   Call StrStr
@@ -275,7 +307,7 @@ Next:
   StrCpy $1 $1 -$2
 Done:
 
-  ;Convert the language parameter to lowercase.
+  ; Convert the language parameter to lowercase.
   Push $1
   Call StrLower
   Pop $1
@@ -293,13 +325,12 @@ Done:
   Win9x:
   	SetShellVarContext current
   cont_done:
-
 FunctionEnd
 
 ;--------------------------------
-;Language Strings
+; Language Strings
 
-  ;Language strings (Arabic)
+  ; Language strings (Arabic)
   LangString NAME_SecCore ${LANG_ARABIC} "«б—∆н”н… InfrarecorderгбЁ«  (гЌ «ћ…)"
   LangString NAME_SecStartShortcut ${LANG_ARABIC} "«нёжд«  «ќ ’«— ё«∆г… «б»ѕ«н…"
   LangString NAME_SecDeskShortcut ${LANG_ARABIC} "«нёжд«  «ќ ’«— ”ЎЌ «бгя »"
@@ -311,7 +342,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_ARABIC} " ÷нЁ «нёжд«  «бм г”Ў— «б»ѕЅ «б”—нЏ"
   LangString DESC_SecLang ${LANG_ARABIC} "гбЁ«  «ббџ«  «б н  ” Џгб бѕЏг бџ«  гќ бЁ… бб»—д«гћ"
 
-  ;Language strings (Armenian)
+  ; Language strings (Armenian)
   LangString NAME_SecCore ${LANG_ARMENIAN} "InfraRecorder Core Files (required)"
   LangString NAME_SecStartShortcut ${LANG_ARMENIAN} "Start Menu Shortcuts"
   LangString NAME_SecDeskShortcut ${LANG_ARMENIAN} "Desktop Shortcut"
@@ -323,7 +354,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_ARMENIAN} "Adds an icon to your quick launch bar."
   LangString DESC_SecLang ${LANG_ARMENIAN} "Language files used for supporting different languages in InfraRecorder."
 
-  ;Language strings (Basque)
+  ; Language strings (Basque)
   LangString NAME_SecCore ${LANG_BASQUE} "InfraRecorder Core Artxiboak (beharrezkoak)"
   LangString NAME_SecStartShortcut ${LANG_BASQUE} "Hasiera Menuaren Laburbideak"
   LangString NAME_SecDeskShortcut ${LANG_BASQUE} "Idazmahaiaren Laburbidea"
@@ -335,7 +366,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_BASQUE} "Ikono bat gehitzen dio arin-hasteko barrari"
   LangString DESC_SecLang ${LANG_BASQUE} "Hizkuntza desberdinak onartzeko erabiltzen diren artxiboak"
 
-  ;Language strings (Bosnian)
+  ; Language strings (Bosnian)
   LangString NAME_SecCore ${LANG_BOSNIAN} "Kljucna datoteka InfraRecorder-a (zahtijevano)"
   LangString NAME_SecStartShortcut ${LANG_BOSNIAN} "Precica za Start Menu"
   LangString NAME_SecDeskShortcut ${LANG_BOSNIAN} "Precica za Desktop"
@@ -347,7 +378,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_BOSNIAN} "Dodaj ikonu za brzo pokretanje."
   LangString DESC_SecLang ${LANG_BOSNIAN} "Datoteke jezika se koriste za prikaz InfraRecorder-a u razlicitim jezicima."
 
-  ;Language strings (Bulgarian)
+  ; Language strings (Bulgarian)
   LangString NAME_SecCore ${LANG_BULGARIAN} "ќсновни файлове на InfraRecorder (задължително)"
   LangString NAME_SecStartShortcut ${LANG_BULGARIAN} "ѕреки пътища в меню —тарт"
   LangString NAME_SecDeskShortcut ${LANG_BULGARIAN} "ѕр€к път до работни€ плот"
@@ -359,7 +390,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_BULGARIAN} "ƒобав€не на икони в лентата quick launch"
   LangString DESC_SecLang ${LANG_BULGARIAN} "‘айлове на езиците използвани за поддръжка на различни езици в InfraRecorder"
 
-  ;Language strings (Catalan)
+  ; Language strings (Catalan)
   LangString NAME_SecCore ${LANG_CATALAN} "Fitxers del nucli InfraRecorder (necessari)"
   LangString NAME_SecStartShortcut ${LANG_CATALAN} "Dreceres en menъ Inici"
   LangString NAME_SecDeskShortcut ${LANG_CATALAN} "Drecera en Escriptori"
@@ -371,7 +402,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_CATALAN} "Afegeix una icona a la vostre barra d'execuciу rаpida."
   LangString DESC_SecLang ${LANG_CATALAN} "Fitxers de idioma utilitzats per donar suport a diferents idiomes en el InfraRecorder."
 
-  ;Language strings (Croatian)
+  ; Language strings (Croatian)
   LangString NAME_SecCore ${LANG_CROATIAN} "InfraRecorder Jezgrene Datoteke (obavezne)"
   LangString NAME_SecStartShortcut ${LANG_CROATIAN} "Start Meni Precaci"
   LangString NAME_SecDeskShortcut ${LANG_CROATIAN} "Desktop Precac"
@@ -383,7 +414,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_CROATIAN} "Dodaje ikonu u vaЪ Quick Launch liniju."
   LangString DESC_SecLang ${LANG_CROATIAN} "Datoteke jezika koriЪtene za razlicite prijevode InfraRecorder-a."
 
-  ;Language strings (Czech)
+  ; Language strings (Czech)
   LangString NAME_SecCore ${LANG_CZECH} "Zбkladnн soubory InfraRecorderu (nezbytnй)"
   LangString NAME_SecStartShortcut ${LANG_CZECH} "Zбstupci v nabнdce Start"
   LangString NAME_SecDeskShortcut ${LANG_CZECH} "Zбstupce na PloЪe"
@@ -395,7 +426,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_CZECH} "Pшidб ikonu do panelu Snadnйho spuЪtмnн."
   LangString DESC_SecLang ${LANG_CZECH} "Jazykovй soubory zajiЪЭujнcн InfraRecorderu podporu rщznэch jazykщ."
 
-  ;Language strings (Danish)
+  ; Language strings (Danish)
   LangString NAME_SecCore ${LANG_DANISH} "InfraRecorder Core Files (required)"
   LangString NAME_SecStartShortcut ${LANG_DANISH} "Start Menu Shortcuts"
   LangString NAME_SecDeskShortcut ${LANG_DANISH} "Desktop Shortcut"
@@ -407,7 +438,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_DANISH} "Adds an icon to your quick launch bar."
   LangString DESC_SecLang ${LANG_DANISH} "Language files used for supporting different languages in InfraRecorder."
 
-  ;Language strings (Dutch)
+  ; Language strings (Dutch)
   LangString NAME_SecCore ${LANG_DUTCH} "InfraRecorder essentiлle bestanden (benodigd)"
   LangString NAME_SecStartShortcut ${LANG_DUTCH} "Start Menu snelkoppelingen"
   LangString NAME_SecDeskShortcut ${LANG_DUTCH} "Bureaublad snelkoppeling"
@@ -419,7 +450,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_DUTCH} "Voegt een pictogram toe aan Snel starten op de taakbalk."
   LangString DESC_SecLang ${LANG_DUTCH} "Taal bestanden gebruikt voor ondersteuning van verschillende talen in InfraRecorder."
 
-  ;Language strings (English)
+  ; Language strings (English)
   LangString NAME_SecCore ${LANG_ENGLISH} "InfraRecorder Core Files (required)"
   LangString NAME_SecStartShortcut ${LANG_ENGLISH} "Start Menu Shortcuts"
   LangString NAME_SecDeskShortcut ${LANG_ENGLISH} "Desktop Shortcut"
@@ -431,7 +462,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_ENGLISH} "Adds an icon to your quick launch bar."
   LangString DESC_SecLang ${LANG_ENGLISH} "Language files used for supporting different languages in InfraRecorder."
 
-  ;Language strings (Estonian)
+  ; Language strings (Estonian)
   LangString NAME_SecCore ${LANG_ESTONIAN} "InfraRecorder Core Files (required)"
   LangString NAME_SecStartShortcut ${LANG_ESTONIAN} "Start Menu Shortcuts"
   LangString NAME_SecDeskShortcut ${LANG_ESTONIAN} "Desktop Shortcut"
@@ -443,7 +474,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_ESTONIAN} "Adds an icon to your quick launch bar."
   LangString DESC_SecLang ${LANG_ESTONIAN} "Language files used for supporting different languages in InfraRecorder."
 
-  ;Language strings (Farsi)
+  ; Language strings (Farsi)
   LangString NAME_SecCore ${LANG_FARSI} "(Ё«нб е«н е” е «ндЁ—«—Шж—ѕ—(÷—ж—н"
   LangString NAME_SecStartShortcut ${LANG_FARSI} "гн«д»—е« ѕ— гджн ‘—жЏ"
   LangString NAME_SecDeskShortcut ${LANG_FARSI} "гн«д»— гн“Ш«—"
@@ -455,7 +486,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_FARSI} "«÷«Ёе дгжѕд ¬нШжд »е дж«— ѕ” —”н ”—нЏ"
   LangString DESC_SecLang ${LANG_FARSI} "Ё«нб е«н “»«д ће  Б‘ н»«дн «“ “»«д е«н гќ бЁ ѕ— «ндЁ—«—Шж—ѕ— «” Ё«ѕе гн ‘ждѕ"
 
-  ;Language strings (Finnish)
+  ; Language strings (Finnish)
   LangString NAME_SecCore ${LANG_FINNISH} "InfraRecorderin perustiedosto (pakollinen)"
   LangString NAME_SecStartShortcut ${LANG_FINNISH} "Kдynnistдvalikon pikakuvakkeet"
   LangString NAME_SecDeskShortcut ${LANG_FINNISH} "Tyцpцydдn pikakuvake"
@@ -467,7 +498,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_FINNISH} "Lisдд kuvake pikakдynnistyspalkkiin."
   LangString DESC_SecLang ${LANG_FINNISH} "Kielitiedostojen avulla InfraRecorderia voidaan kдyttдд eri kielillд."
 
-  ;Language strings (French)
+  ; Language strings (French)
   LangString NAME_SecCore ${LANG_FRENCH} "Fichiers requis pour InfraRecorder"
   LangString NAME_SecStartShortcut ${LANG_FRENCH} "Raccourcis dans le Menu Dйmarrer"
   LangString NAME_SecDeskShortcut ${LANG_FRENCH} "Raccourcis sur le Bureau"
@@ -479,7 +510,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_FRENCH} "Ajouter un icone а votre barre de lancement rapide."
   LangString DESC_SecLang ${LANG_FRENCH} "Fichiers de langues nйcessaires pour la traduction d'InfraRecorder."
 
-  ;Language strings (Galician)
+  ; Language strings (Galician)
   LangString NAME_SecCore ${LANG_GALICIAN} "InfraRecorder Core Files (required)"
   LangString NAME_SecStartShortcut ${LANG_GALICIAN} "Start Menu Shortcuts"
   LangString NAME_SecDeskShortcut ${LANG_GALICIAN} "Desktop Shortcut"
@@ -491,7 +522,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_GALICIAN} "Adds an icon to your quick launch bar."
   LangString DESC_SecLang ${LANG_GALICIAN} "Language files used for supporting different languages in InfraRecorder."
 
-  ;Language strings (German)
+  ; Language strings (German)
   LangString NAME_SecCore ${LANG_GERMAN} "InfraRecorder Programmdateien (notwendig)"
   LangString NAME_SecStartShortcut ${LANG_GERMAN} "Startmenь-Eintrдge"
   LangString NAME_SecDeskShortcut ${LANG_GERMAN} "Desktop-Eintrag"
@@ -503,7 +534,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_GERMAN} "Symbol auf Schnellstartleiste erstellen."
   LangString DESC_SecLang ${LANG_GERMAN} "Weitere Sprachdateien fьr den mehrsprachigen Betrieb von InfraRecorder hinzufьgen."
 
-  ;Language strings (Greek)
+  ; Language strings (Greek)
   LangString NAME_SecCore ${LANG_GREEK} "¬буйк№ бсчеяб фпх InfraRecorder (брбсбяфзфп)"
   LangString NAME_SecStartShortcut ${LANG_GREEK} "”хнфпмеэуейт уфп менпэ Єнбсоз"
   LangString NAME_SecDeskShortcut ${LANG_GREEK} "”хнфьмехуз уфзн ≈рйц№нейб ≈сгбуябт"
@@ -515,7 +546,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_GREEK} "–спуиЁфей Ёнб ейкпнядйп уфз гсбммё гсёгпсзт еккянзуёт убт."
   LangString DESC_SecLang ${LANG_GREEK} "« рплхглщууйкё хрпуфёсйоз чсзуймпрпйеяфбй гйб нб хрпуфзсяоей дйбцпсефйкЁт глюуует уфпн InfraRecorder."
 
-  ;Language strings (Hebrew)
+  ; Language strings (Hebrew)
   LangString NAME_SecCore ${LANG_HEBREW} "Infra Recorder чбцй дъелрд (required)"
   LangString NAME_SecStartShortcut ${LANG_HEBREW} "чйцеш бъфшйи дъзм"
   LangString NAME_SecDeskShortcut ${LANG_HEBREW} "чйцеш тм щемзп дтбегд"
@@ -527,7 +558,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_HEBREW} "десфъ цмойеъ млфъешй дфтмд одйшд."
   LangString DESC_SecLang ${LANG_HEBREW} "чбцй щфеъ мъойлд бщфеъ ресфеъ бъелрд."
 
-  ;Language strings (Hungarian)
+  ; Language strings (Hungarian)
   LangString NAME_SecCore ${LANG_HUNGARIAN} "InfraRecorder Programfбjlok (szьksйges)"
   LangString NAME_SecStartShortcut ${LANG_HUNGARIAN} "Start Menь Parancsikonok"
   LangString NAME_SecDeskShortcut ${LANG_HUNGARIAN} "Asztali Parancsikon"
@@ -539,7 +570,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_HUNGARIAN} "Ikon elhelyezйse a gyorsindнtу pulton."
   LangString DESC_SecLang ${LANG_HUNGARIAN} "A nyelvi fбjlok segнtsйgйvel kьlцnbцzх nyelveken hasznбlhatja az InfraRecordert."
 
-  ;Language strings (Indonesian)
+  ; Language strings (Indonesian)
   LangString NAME_SecCore ${LANG_INDONESIAN} "Berkas Inti InfraRecorder (dibutuhkan)"
   LangString NAME_SecStartShortcut ${LANG_INDONESIAN} "Jalan Pintas Menu Start"
   LangString NAME_SecDeskShortcut ${LANG_INDONESIAN} "Jalan Pintas Destop"
@@ -551,7 +582,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_INDONESIAN} "Tambah ikon ke batang luncur cepat anda."
   LangString DESC_SecLang ${LANG_INDONESIAN} "Berkas bahasa yang digunakan untuk dukungan bahasa yang berbeda di InfraRecorder."
 
-  ;Language strings (Italian)
+  ; Language strings (Italian)
   LangString NAME_SecCore ${LANG_ITALIAN} "File del programma InfraRecorder (Necessari)"
   LangString NAME_SecStartShortcut ${LANG_ITALIAN} "Collegamenti del menu' avvio"
   LangString NAME_SecDeskShortcut ${LANG_ITALIAN} "Icona sul desktop"
@@ -563,7 +594,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_ITALIAN} "Aggiunge una icona alla barra di avvio veloce."
   LangString DESC_SecLang ${LANG_ITALIAN} "File usati da InfraRecorder per il supporto delle lingue."
 
-  ;Language strings (Japanese)
+  ; Language strings (Japanese)
   LangString NAME_SecCore ${LANG_JAPANESE} "InfraRecorder Ц{СћГtГ@ГCГЛ (ХKР{)"
   LangString NAME_SecStartShortcut ${LANG_JAPANESE} "[ГXГ^Б[Гg] ГБГjГЕБ[ ГVГЗБ[ГgГJГbГg"
   LangString NAME_SecDeskShortcut ${LANG_JAPANESE} "ГfГXГNГgГbГv ГVГЗБ[ГgГJГbГg"
@@ -575,7 +606,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_JAPANESE} "ГAГCГRГУВрВ®ОgВҐВћ [ГNГCГbГNЛNУЃ] ГoБ[В…Т«ЙЅВµВ№ВЈБB"
   LangString DESC_SecLang ${LANG_JAPANESE} "МЊМкГtГ@ГCГЛВЌ InfraRecorder ВрИўВ»ВЅВљМЊМкВ≈ГTГ|Б[ГgВЈВйВћВ…ОgЧpВ≥ВкВ№ВЈБB"
 
-  ;Language strings (Korean)
+  ; Language strings (Korean)
   LangString NAME_SecCore ${LANG_KOREAN} "InfraRecorder Core Files (required)"
   LangString NAME_SecStartShortcut ${LANG_KOREAN} "Start Menu Shortcuts"
   LangString NAME_SecDeskShortcut ${LANG_KOREAN} "Desktop Shortcut"
@@ -587,7 +618,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_KOREAN} "Adds an icon to your quick launch bar."
   LangString DESC_SecLang ${LANG_KOREAN} "Language files used for supporting different languages in InfraRecorder."
 
-  ;Language strings (Latvian)
+  ; Language strings (Latvian)
   LangString NAME_SecCore ${LANG_LATVIAN} "InfraRecorder Core Files (required)"
   LangString NAME_SecStartShortcut ${LANG_LATVIAN} "Start Menu Shortcuts"
   LangString NAME_SecDeskShortcut ${LANG_LATVIAN} "Desktop Shortcut"
@@ -599,7 +630,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_LATVIAN} "Adds an icon to your quick launch bar."
   LangString DESC_SecLang ${LANG_LATVIAN} "Language files used for supporting different languages in InfraRecorder."
 
-  ;Language strings (Lithuanian)
+  ; Language strings (Lithuanian)
   LangString NAME_SecCore ${LANG_LITHUANIAN} "InfraRecorder pagrindiniai failai (bыtini)"
   LangString NAME_SecStartShortcut ${LANG_LITHUANIAN} "Start Menu nuorodos"
   LangString NAME_SecDeskShortcut ${LANG_LITHUANIAN} "Darbastalio nuoroda"
@@ -611,7 +642,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_LITHUANIAN} "Sukuria ikonа б greito paleidimo juostа."
   LangString DESC_SecLang ${LANG_LITHUANIAN} "Kalbos failai reikalingi norint kad InfraRecorder vartotojo sаsaja dirbtш skirtingomis kalbomis."
 
-  ;Language strings (Macedonian)
+  ; Language strings (Macedonian)
   LangString NAME_SecCore ${LANG_MACEDONIAN} "ќсновни податотеки на InfraRecorder (задолжително)"
   LangString NAME_SecStartShortcut ${LANG_MACEDONIAN} "»кони во стартното мени"
   LangString NAME_SecDeskShortcut ${LANG_MACEDONIAN} "»кона на работната површина"
@@ -623,7 +654,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_MACEDONIAN} "ƒодава икона во лентата за брзо пуштаЬе."
   LangString DESC_SecLang ${LANG_MACEDONIAN} "£азични податотеки со разни Љазици за интерфеЉсот на InfraRecorder."
 
-  ;Language strings (Norwegian)
+  ; Language strings (Norwegian)
   LangString NAME_SecCore ${LANG_NORWEGIAN} "InfraRecorder kjernefiler (obligatorisk)"
   LangString NAME_SecStartShortcut ${LANG_NORWEGIAN} "Snarvei i startmenyen"
   LangString NAME_SecDeskShortcut ${LANG_NORWEGIAN} "Snarvei pе skrivebordet"
@@ -635,7 +666,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_NORWEGIAN} "Oppretter programikon for InfraRecorder pе hurtigstartlinjen"
   LangString DESC_SecLang ${LANG_NORWEGIAN} "Installerer sprеkfiler som tillater bruk av ulike sprеk i InfraRecorder"
 
-  ;Language strings (Polish)
+  ; Language strings (Polish)
   LangString NAME_SecCore ${LANG_POLISH} "G≥уwne pliki InfraRecorder (wymagane)"
   LangString NAME_SecStartShortcut ${LANG_POLISH} "Skrуty menu Start"
   LangString NAME_SecDeskShortcut ${LANG_POLISH} "Skrуty na pulpicie"
@@ -647,7 +678,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_POLISH} "Dodaje ikonк w pasku szybkiego uruchamiania."
   LangString DESC_SecLang ${LANG_POLISH} "Pliki jкzykowe dla obs≥ugi innych jкzykуw w InfraRecorder."
 
-  ;Language strings (Portuguese)
+  ; Language strings (Portuguese)
   LangString NAME_SecCore ${LANG_PORTUGUESE} "Ficheiros Base do 'InfraRecorder' (obrigatorios)"
   LangString NAME_SecStartShortcut ${LANG_PORTUGUESE} "Atalhos do Menu de Programas"
   LangString NAME_SecDeskShortcut ${LANG_PORTUGUESE} "Atalho do Ambiente de Trabalho"
@@ -659,7 +690,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_PORTUGUESE} "Adiciona um 'icon' a barra de iniciacao rapida."
   LangString DESC_SecLang ${LANG_PORTUGUESE} "Ficheiros de linguas usados para suportar o 'InfraRecorder' em modo multi-lingual."
 
-  ;Language strings (Brazilian Portuguese)
+  ; Language strings (Brazilian Portuguese)
   LangString NAME_SecCore ${LANG_PORTUGUESEBR} "Arquivos de Nъcleo do InfraRecorder (requeridos)"
   LangString NAME_SecStartShortcut ${LANG_PORTUGUESEBR} "Atalhos do Menu Iniciar"
   LangString NAME_SecDeskShortcut ${LANG_PORTUGUESEBR} "Atalho do Desktop"
@@ -671,7 +702,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_PORTUGUESEBR} "Adicionar um нcone na Barra de Inicializaзгo Rбpida"
   LangString DESC_SecLang ${LANG_PORTUGUESEBR} "Arquivos de linguagem utilizados para o suporte multilнngьe no InfraRecorder"
 
-  ;Language strings (Romanian)
+  ; Language strings (Romanian)
   LangString NAME_SecCore ${LANG_ROMANIAN} "InfraRecorder Core Files (required)"
   LangString NAME_SecStartShortcut ${LANG_ROMANIAN} "Start Menu Shortcuts"
   LangString NAME_SecDeskShortcut ${LANG_ROMANIAN} "Desktop Shortcut"
@@ -683,7 +714,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_ROMANIAN} "Adds an icon to your quick launch bar."
   LangString DESC_SecLang ${LANG_ROMANIAN} "Language files used for supporting different languages in InfraRecorder."
 
-  ;Language strings (Russian)
+  ; Language strings (Russian)
   LangString NAME_SecCore ${LANG_RUSSIAN} "—истемные файлы InfraRecorder (об€зательно)"
   LangString NAME_SecStartShortcut ${LANG_RUSSIAN} "ярлыки в главном меню"
   LangString NAME_SecDeskShortcut ${LANG_RUSSIAN} "ярлык на рабочем столе"
@@ -695,7 +726,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_RUSSIAN} "ƒобавить значок на панель быстрого запуска."
   LangString DESC_SecLang ${LANG_RUSSIAN} "языковые файлы дл€ включени€ различных €зыков в InfraRecorder."
 
-  ;Language strings (Cyrillic Serbian)
+  ; Language strings (Cyrillic Serbian)
   LangString NAME_SecCore ${LANG_SERBIAN} "InfraRecorder датотеке (потребно)"
   LangString NAME_SecStartShortcut ${LANG_SERBIAN} "ѕречица —тарт мениЉа"
   LangString NAME_SecDeskShortcut ${LANG_SERBIAN} "ѕречица радне површине"
@@ -707,7 +738,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_SERBIAN} "ƒодаЉ икону на траку брзог покретаЬа."
   LangString DESC_SecLang ${LANG_SERBIAN} "£езичке датотеке за InfraRecorder."
 
-  ;Language strings (Latin Serbian)
+  ; Language strings (Latin Serbian)
   LangString NAME_SecCore ${LANG_SERBIANLATIN} "InfraRecorder datoteke (potrebno)"
   LangString NAME_SecStartShortcut ${LANG_SERBIANLATIN} "Preиica Start menija"
   LangString NAME_SecDeskShortcut ${LANG_SERBIANLATIN} "Preиica radne povrЪine"
@@ -719,7 +750,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_SERBIANLATIN} "Dodaj ikonu na traku brzog pokretanja."
   LangString DESC_SecLang ${LANG_SERBIANLATIN} "Jeziиke datoteke za InfraRecorder."
 
-  ;Language strings (Slovak)
+  ; Language strings (Slovak)
   LangString NAME_SecCore ${LANG_SLOVAK} "Zбkladnй sъbory InfraRecorderu (nutnй)"
   LangString NAME_SecStartShortcut ${LANG_SLOVAK} "Odkazy v menu Кtart"
   LangString NAME_SecDeskShortcut ${LANG_SLOVAK} "Odkaz na Plochu"
@@ -731,7 +762,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_SLOVAK} "Pridб ikonu do VбЪho panelu Rэchle spustenie."
   LangString DESC_SecLang ${LANG_SLOVAK} "Sъbory jazykov, pouЮitй pre podporu rфznych jazykov InfraRecorderu"
 
-  ;Language strings (Slovenian)
+  ; Language strings (Slovenian)
   LangString NAME_SecCore ${LANG_SLOVENIAN} "InfraRecorder Core Files (required)"
   LangString NAME_SecStartShortcut ${LANG_SLOVENIAN} "Start Menu Shortcuts"
   LangString NAME_SecDeskShortcut ${LANG_SLOVENIAN} "Desktop Shortcut"
@@ -743,7 +774,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_SLOVENIAN} "Adds an icon to your quick launch bar."
   LangString DESC_SecLang ${LANG_SLOVENIAN} "Language files used for supporting different languages in InfraRecorder."
 
-  ;Language strings (Simplified Chinese)
+  ; Language strings (Simplified Chinese)
   LangString NAME_SecCore ${LANG_SIMPCHINESE} "InfraRecorder Core Files (required)"
   LangString NAME_SecStartShortcut ${LANG_SIMPCHINESE} "Start Menu Shortcuts"
   LangString NAME_SecDeskShortcut ${LANG_SIMPCHINESE} "Desktop Shortcut"
@@ -755,7 +786,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_SIMPCHINESE} "Adds an icon to your quick launch bar."
   LangString DESC_SecLang ${LANG_SIMPCHINESE} "Language files used for supporting different languages in InfraRecorder."
 
-  ;Language strings (Spanish)
+  ; Language strings (Spanish)
   LangString NAME_SecCore ${LANG_SPANISH} "Nъcleo de InfraRecorder (requerido)"
   LangString NAME_SecStartShortcut ${LANG_SPANISH} "Accesos directos en menъ de inicio"
   LangString NAME_SecDeskShortcut ${LANG_SPANISH} "Acceso directo en el escritorio"
@@ -767,7 +798,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_SPANISH} "Agrega un icono a su barra de inicio rбpido."
   LangString DESC_SecLang ${LANG_SPANISH} "Archivos usados para soporte de diferentes idiomas en InfraRecorder."
 
-  ;Language strings (Swedish)
+  ; Language strings (Swedish)
   LangString NAME_SecCore ${LANG_SWEDISH} "InfraRecorder huvudfiler (krдvs)"
   LangString NAME_SecStartShortcut ${LANG_SWEDISH} "Startmeny genvдgar"
   LangString NAME_SecDeskShortcut ${LANG_SWEDISH} "Skrivbord genvдg"
@@ -779,7 +810,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_SWEDISH} "Lдgger till en ikon pе snabbstartfдltet."
   LangString DESC_SecLang ${LANG_SWEDISH} "Sprеkfiler som anvдnds fцr att stцdja olika sprеk i InfraRecorder."
 
-  ;Language strings (Thai)
+  ; Language strings (Thai)
   LangString NAME_SecCore ${LANG_THAI} "InfraRecorder Core Files (required)"
   LangString NAME_SecStartShortcut ${LANG_THAI} "Start Menu Shortcuts"
   LangString NAME_SecDeskShortcut ${LANG_THAI} "Desktop Shortcut"
@@ -791,7 +822,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_THAI} "Adds an icon to your quick launch bar."
   LangString DESC_SecLang ${LANG_THAI} "Language files used for supporting different languages in InfraRecorder."
 
-  ;Language strings (Traditional Chinese)
+  ; Language strings (Traditional Chinese)
   LangString NAME_SecCore ${LANG_TRADCHINESE} "InfraRecorderЃ÷§яј…Ѓ„(•≤≠n¶wЄЋ)"
   LangString NAME_SecStartShortcut ${LANG_TRADCHINESE} "ґ}©l•\ѓа™н±ґЃ|"
   LangString NAME_SecDeskShortcut ${LANG_TRADCHINESE} "Ѓа≠±±ґЃ|"
@@ -803,7 +834,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_TRADCHINESE} "ЉW•[єѕ•№¶№І÷≥t±“∞ "
   LangString DESC_SecLang ${LANG_TRADCHINESE} "≈э InfraRecorder §ді©§£¶P∞кЃa™Їїy®•"
 
-  ;Language strings (Turkish)
+  ; Language strings (Turkish)
   LangString NAME_SecCore ${LANG_TURKISH} "InfraRecorder Ana Dosyalarэ (Gerekli)"
   LangString NAME_SecStartShortcut ${LANG_TURKISH} "Baюlat Menьsь Kэsayollarэ"
   LangString NAME_SecDeskShortcut ${LANG_TURKISH} "Masaьstь Kэsayolu"
@@ -815,7 +846,7 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_TURKISH} "Hэzlэ Baюlata simge ekler"
   LangString DESC_SecLang ${LANG_TURKISH} "InfraRecorder'э farklэ dillerde kullanabilmek iзin dil dosyalarэ."
 
-  ;Language strings (Ukrainian)
+  ; Language strings (Ukrainian)
   LangString NAME_SecCore ${LANG_UKRAINIAN} "ќсновн≥ файли InfraRecorder (необх≥дно)"
   LangString NAME_SecStartShortcut ${LANG_UKRAINIAN} "ярлички дл€ меню 'ѕуск'"
   LangString NAME_SecDeskShortcut ${LANG_UKRAINIAN} "ярличок на робочий ст≥л"
@@ -828,7 +859,7 @@ FunctionEnd
   LangString DESC_SecLang ${LANG_UKRAINIAN} "‘айли мови використовуютьс€ дл€ п≥дтримки р≥зних мов у InfraRecorder."
 
 ;--------------------------------
-;Installer Sections
+; Installer Sections
 
 Section $(NAME_SecCore) SecCore
   SectionIn 1 2 RO
@@ -864,17 +895,24 @@ Section $(NAME_SecCore) SecCore
   File "..\..\dep\cdrtools\COPYING"
 !endif
   
-  ;Store installation folder
+  ; Store installation folder.
   WriteRegStr HKCU "Software\InfraRecorder" "" $INSTDIR
   
-  ;Create uninstaller
-  WriteUninstaller "$INSTDIR\uninstall.exe"
+  ; Create uninstaller.
+!ifndef INNER
+  SetOutPath "$INSTDIR"
+ 
+  ; Package the signed uninstaller.
+  File $%TEMP%\uninstall.exe
+!endif
 
-  ;Add an entry to Add/Remove Programs.
+  ; Add an entry to Add/Remove Programs.
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\InfraRecorder" \
 	"DisplayName" "InfraRecorder"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\InfraRecorder" \
-	"UninstallString" "$INSTDIR\uninstall.exe"
+	"Publisher" "Christian Kindahl"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\InfraRecorder" \
+	"UninstallString" "$\"$INSTDIR\uninstall.exe$\""
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\InfraRecorder" \
 	"DisplayIcon" "$INSTDIR\infrarecorder.exe"
 SectionEnd
@@ -882,7 +920,7 @@ SectionEnd
 Section $(NAME_SecStartShortcut) SecStartShortcut
   SectionIn 1
 
-  ;Start menu shortcuts.
+  ; Start menu shortcuts.
   CreateDirectory "$SMPROGRAMS\InfraRecorder"
   CreateShortCut "$SMPROGRAMS\InfraRecorder\InfraRecorder.lnk" "$INSTDIR\infrarecorder.exe"
   CreateShortCut "$SMPROGRAMS\InfraRecorder\InfraRecorder Help.lnk" "$INSTDIR\infrarecorder.chm"
@@ -898,7 +936,7 @@ SectionEnd
 Section $(NAME_SecQuickShortcut) SecQuickShortcut
   SectionIn 1
 
-  ;Quick launch shortcut.
+  ; Quick launch shortcut.
   CreateShortCut "$QUICKLAUNCH\InfraRecorder.lnk" "$INSTDIR\infrarecorder.exe"
 SectionEnd
 
@@ -1248,17 +1286,17 @@ Section $(NAME_SecLang) SecLang
       ${Break}
   ${EndSwitch}
 
-  ;Create a configuration file with a preselected language file (if the
-  ;selected language is not English).
+  ; Create a configuration file with a preselected language file (if the
+  ; selected language is not English).
   ${If} $0 != ""
     ir_plugin::CreateConfig "$INSTDIR\settings.xml" "$0"
   ${EndIf}
 SectionEnd
 
 ;--------------------------------
-;Description Macros
+; Description Macros
 
-  ;Assign language strings to sections
+  ; Assign language strings to sections
   !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
     !insertmacro MUI_DESCRIPTION_TEXT ${SecCore} $(DESC_SecCore)
     !insertmacro MUI_DESCRIPTION_TEXT ${SecStartShortcut} $(DESC_SecStartShortcut)
@@ -1268,23 +1306,24 @@ SectionEnd
   !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 ;--------------------------------
-;Uninstaller Section
-
+; Uninstaller Section
+!ifdef INNER
 Section "Uninstall"
-  ;Delete program directory.
+  ; Delete program directory.
   RMDir /r /REBOOTOK "$INSTDIR"
 
-  ;Delete start menu shortcuts.
+  ; Delete start menu shortcuts.
   RMDir /r "$SMPROGRAMS\InfraRecorder"
 
-  ;Delete desktop shortcut.
+  ; Delete desktop shortcut.
   Delete "$DESKTOP\InfraRecorder.lnk"
 
-  ;Delete quick launch shortcut.
+  ; Delete quick launch shortcut.
   Delete "$QUICKLAUNCH\InfraRecorder.lnk"
 
   DeleteRegKey /ifempty HKCU "Software\InfraRecorder"
 
-  ;Remove InfraRecorder from Add/Remove Programs.
+  ; Remove InfraRecorder from Add/Remove Programs.
   DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\InfraRecorder"
 SectionEnd
+!endif

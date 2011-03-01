@@ -1,7 +1,7 @@
 @echo off
 
-set    cert_file=   christian_kindahl.pfx
-set /p cert_pass= < christian_kindahl.psw
+set    cert_file=   %~dp0christian_kindahl.pfx
+set /p cert_pass= < %~dp0christian_kindahl.psw
 set    cert_sats=   "http://timestamp.comodoca.com/authenticode"
 
 set path_w32r=%~dp0bin\win32\release\
@@ -11,6 +11,8 @@ set path_x64p=%~dp0bin\x64\releasep\
 
 set path_dist=%~dp0dist\
 set path_smoke=%~dp0dep\
+
+if "%~1" NEQ "" goto single_file
 
 signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_smoke%smoke.exe
 
@@ -36,3 +38,11 @@ signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_x64p%infrarecor
 
 signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_dist%ir.exe
 signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_dist%ir.msi
+goto end
+
+:single_file
+
+signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %1
+goto end
+
+:end
