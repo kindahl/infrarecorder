@@ -47,7 +47,7 @@ signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_x64p%codecs\wma
 signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_x64p%codecs\vorbis.irc
 
 rem signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_dist%ir.exe
-rem signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_dist%ir.msi
+rem signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_dist%ir_x64.msi
 goto end
 
 :single_file
