@@ -26,8 +26,8 @@
 			>
 			<Tool
 				Name="VCNMakeTool"
-				BuildCommandLine="candle setup_wix.wxs -out ..\..\obj\setup_wix\ &amp;&amp; light -ext WixUIExtension -cultures:en-us ..\..\obj\setup_wix\setup_wix.wixobj -out ..\..\dist\ir.msi&#x0D;&#x0A;call ..\..\sign.bat ..\..\dist\ir.msi"
-				ReBuildCommandLine="del ..\..\dist\ir.msi&#x0D;&#x0A;del ..\..\dist\ir.wixpdb&#x0D;&#x0A;del ..\..\obj\setup_wix\setup_wix.wixobj&#x0D;&#x0A;candle setup_wix.wxs -out ..\..\obj\setup_wix\ &amp;&amp; light -ext WixUIExtension -cultures:en-us ..\..\obj\setup_wix\setup_wix.wixobj -out ..\..\dist\ir.msi&#x0D;&#x0A;call ..\..\sign.bat ..\..\dist\ir.msi"
+				BuildCommandLine="candle setup_wix.wxs -out ..\..\obj\setup_wix\ &amp;&amp; light -ext WixUIExtension -cultures:en-us ..\..\obj\setup_wix\setup_wix.wixobj -out ..\..\dist\ir_x64.msi&#x0D;&#x0A;call ..\..\sign.bat ..\..\dist\ir_x64.msi"
+				ReBuildCommandLine="del ..\..\dist\ir.msi&#x0D;&#x0A;del ..\..\dist\ir.wixpdb&#x0D;&#x0A;del ..\..\obj\setup_wix\setup_wix.wixobj&#x0D;&#x0A;candle setup_wix.wxs -out ..\..\obj\setup_wix\ &amp;&amp; light -ext WixUIExtension -cultures:en-us ..\..\obj\setup_wix\setup_wix.wixobj -out ..\..\dist\ir_x64.msi&#x0D;&#x0A;call ..\..\sign.bat ..\..\dist\ir_x64.msi"
 				CleanCommandLine="del ..\..\dist\ir.msi&#x0D;&#x0A;del ..\..\dist\ir.wixpdb&#x0D;&#x0A;del ..\..\obj\setup_wix\setup_wix.wixobj"
 				Output="setup_wix.exe"
 				PreprocessorDefinitions="WIN32;_DEBUG"
@@ -46,8 +46,8 @@
 			>
 			<Tool
 				Name="VCNMakeTool"
-				BuildCommandLine="candle setup_wix.wxs -out ..\..\obj\setup_wix\ &amp;&amp; light -ext WixUIExtension -cultures:en-us ..\..\obj\setup_wix\setup_wix.wixobj -out ..\..\dist\ir.msi&#x0D;&#x0A;call ..\..\sign.bat ..\..\dist\ir.msi"
-				ReBuildCommandLine="del ..\..\dist\ir.msi&#x0D;&#x0A;del ..\..\dist\ir.wixpdb&#x0D;&#x0A;del ..\..\obj\setup_wix\setup_wix.wixobj&#x0D;&#x0A;candle setup_wix.wxs -out ..\..\obj\setup_wix\ &amp;&amp; light -ext WixUIExtension -cultures:en-us ..\..\obj\setup_wix\setup_wix.wixobj -out ..\..\dist\ir.msi&#x0D;&#x0A;call ..\..\sign.bat ..\..\dist\ir.msi"
+				BuildCommandLine="candle setup_wix.wxs -out ..\..\obj\setup_wix\ &amp;&amp; light -ext WixUIExtension -cultures:en-us ..\..\obj\setup_wix\setup_wix.wixobj -out ..\..\dist\ir_x64.msi&#x0D;&#x0A;call ..\..\sign.bat ..\..\dist\ir_x64.msi"
+				ReBuildCommandLine="del ..\..\dist\ir.msi&#x0D;&#x0A;del ..\..\dist\ir.wixpdb&#x0D;&#x0A;del ..\..\obj\setup_wix\setup_wix.wixobj&#x0D;&#x0A;candle setup_wix.wxs -out ..\..\obj\setup_wix\ &amp;&amp; light -ext WixUIExtension -cultures:en-us ..\..\obj\setup_wix\setup_wix.wixobj -out ..\..\dist\ir_x64.msi&#x0D;&#x0A;call ..\..\sign.bat ..\..\dist\ir_x64.msi"
 				CleanCommandLine="del ..\..\dist\ir.msi&#x0D;&#x0A;del ..\..\dist\ir.wixpdb&#x0D;&#x0A;del ..\..\obj\setup_wix\setup_wix.wixobj"
 				Output="setup_wix.exe"
 				PreprocessorDefinitions="WIN32;_DEBUG"
@@ -66,8 +66,8 @@
 			>
 			<Tool
 				Name="VCNMakeTool"
-				BuildCommandLine="candle setup_wix.wxs -out ..\..\obj\setup_wix\ &amp;&amp; light -ext WixUIExtension -cultures:en-us ..\..\obj\setup_wix\setup_wix.wixobj -out ..\..\dist\ir.msi&#x0D;&#x0A;call ..\..\sign.bat ..\..\dist\ir.msi"
-				ReBuildCommandLine="del ..\..\dist\ir.msi&#x0D;&#x0A;del ..\..\dist\ir.wixpdb&#x0D;&#x0A;del ..\..\obj\setup_wix\setup_wix.wixobj&#x0D;&#x0A;candle setup_wix.wxs -out ..\..\obj\setup_wix\ &amp;&amp; light -ext WixUIExtension -cultures:en-us ..\..\obj\setup_wix\setup_wix.wixobj -out ..\..\dist\ir.msi&#x0D;&#x0A;call ..\..\sign.bat ..\..\dist\ir.msi"
+				BuildCommandLine="candle setup_wix.wxs -out ..\..\obj\setup_wix\ &amp;&amp; light -ext WixUIExtension -cultures:en-us ..\..\obj\setup_wix\setup_wix.wixobj -out ..\..\dist\ir_x64.msi&#x0D;&#x0A;call ..\..\sign.bat ..\..\dist\ir_x64.msi"
+				ReBuildCommandLine="del ..\..\dist\ir.msi&#x0D;&#x0A;del ..\..\dist\ir.wixpdb&#x0D;&#x0A;del ..\..\obj\setup_wix\setup_wix.wixobj&#x0D;&#x0A;candle setup_wix.wxs -out ..\..\obj\setup_wix\ &amp;&amp; light -ext WixUIExtension -cultures:en-us ..\..\obj\setup_wix\setup_wix.wixobj -out ..\..\dist\ir_x64.msi&#x0D;&#x0A;call ..\..\sign.bat ..\..\dist\ir_x64.msi"
 				CleanCommandLine="del ..\..\dist\ir.msi&#x0D;&#x0A;del ..\..\dist\ir.wixpdb&#x0D;&#x0A;del ..\..\obj\setup_wix\setup_wix.wixobj"
 				Output="setup_wix.exe"
 				PreprocessorDefinitions="WIN32;NDEBUG"
@@ -86,8 +86,8 @@
 			>
 			<Tool
 				Name="VCNMakeTool"
-				BuildCommandLine="candle setup_wix.wxs -out ..\..\obj\setup_wix\ &amp;&amp; light -ext WixUIExtension -cultures:en-us ..\..\obj\setup_wix\setup_wix.wixobj -out ..\..\dist\ir.msi&#x0D;&#x0A;call ..\..\sign.bat ..\..\dist\ir.msi"
-				ReBuildCommandLine="del ..\..\dist\ir.msi&#x0D;&#x0A;del ..\..\dist\ir.wixpdb&#x0D;&#x0A;del ..\..\obj\setup_wix\setup_wix.wixobj&#x0D;&#x0A;candle setup_wix.wxs -out ..\..\obj\setup_wix\ &amp;&amp; light -ext WixUIExtension -cultures:en-us ..\..\obj\setup_wix\setup_wix.wixobj -out ..\..\dist\ir.msi&#x0D;&#x0A;call ..\..\sign.bat ..\..\dist\ir.msi"
+				BuildCommandLine="candle setup_wix.wxs -out ..\..\obj\setup_wix\ &amp;&amp; light -ext WixUIExtension -cultures:en-us ..\..\obj\setup_wix\setup_wix.wixobj -out ..\..\dist\ir_x64.msi&#x0D;&#x0A;call ..\..\sign.bat ..\..\dist\ir_x64.msi"
+				ReBuildCommandLine="del ..\..\dist\ir.msi&#x0D;&#x0A;del ..\..\dist\ir.wixpdb&#x0D;&#x0A;del ..\..\obj\setup_wix\setup_wix.wixobj&#x0D;&#x0A;candle setup_wix.wxs -out ..\..\obj\setup_wix\ &amp;&amp; light -ext WixUIExtension -cultures:en-us ..\..\obj\setup_wix\setup_wix.wixobj -out ..\..\dist\ir_x64.msi&#x0D;&#x0A;call ..\..\sign.bat ..\..\dist\ir_x64.msi"
 				CleanCommandLine="del ..\..\dist\ir.msi&#x0D;&#x0A;del ..\..\dist\ir.wixpdb&#x0D;&#x0A;del ..\..\obj\setup_wix\setup_wix.wixobj"
 				Output="setup_wix.exe"
 				PreprocessorDefinitions="WIN32;NDEBUG"
