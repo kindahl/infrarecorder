@@ -23,8 +23,8 @@
 			>
 			<Tool
 				Name="VCNMakeTool"
-				BuildCommandLine="makensis.exe $(ProjectDir)setup_nsis.nsi"
-				ReBuildCommandLine="del ..\..\dist\ir.exe&#x0D;&#x0A;makensis.exe $(ProjectDir)setup_nsis.nsi"
+				BuildCommandLine="makensis.exe $(ProjectDir)setup_nsis.nsi&#x0D;&#x0A;call ..\..\sign.bat ..\..\dist\ir.exe"
+				ReBuildCommandLine="del ..\..\dist\ir.exe&#x0D;&#x0A;makensis.exe $(ProjectDir)setup_nsis.nsi&#x0D;&#x0A;call ..\..\sign.bat ..\..\dist\ir.exe"
 				CleanCommandLine="del ..\..\dist\ir.exe"
 				Output="setup_nsis.exe"
 				PreprocessorDefinitions="WIN32;_DEBUG"
@@ -43,8 +43,8 @@
 			>
 			<Tool
 				Name="VCNMakeTool"
-				BuildCommandLine="makensis.exe $(ProjectDir)setup_nsis.nsi"
-				ReBuildCommandLine="del ..\..\dist\ir.exe&#x0D;&#x0A;makensis.exe $(ProjectDir)setup_nsis.nsi"
+				BuildCommandLine="makensis.exe $(ProjectDir)setup_nsis.nsi&#x0D;&#x0A;call ..\..\sign.bat ..\..\dist\ir.exe"
+				ReBuildCommandLine="del ..\..\dist\ir.exe&#x0D;&#x0A;makensis.exe $(ProjectDir)setup_nsis.nsi&#x0D;&#x0A;call ..\..\sign.bat ..\..\dist\ir.exe"
 				CleanCommandLine="del ..\..\dist\ir.exe"
 				Output="setup_nsis.exe"
 				PreprocessorDefinitions="WIN32;NDEBUG"

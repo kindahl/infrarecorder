@@ -9,7 +9,7 @@ set path_w32p=%~dp0bin\win32\releasep\
 set path_x64r=%~dp0bin\x64\release\
 set path_x64p=%~dp0bin\x64\releasep\
 
-set path_dist=%~dp0dist\
+rem set path_dist=%~dp0dist\
 set path_smoke=%~dp0dep\
 
 if "%~1" NEQ "" goto single_file
@@ -46,8 +46,8 @@ signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_x64p%codecs\wav
 signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_x64p%codecs\wma.irc
 signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_x64p%codecs\vorbis.irc
 
-signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_dist%ir.exe
-signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_dist%ir.msi
+rem signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_dist%ir.exe
+rem signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_dist%ir.msi
 goto end
 
 :single_file
@@ -56,3 +56,5 @@ signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %1
 goto end
 
 :end
+
+pause
