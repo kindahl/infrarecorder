@@ -260,6 +260,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy $(TargetPath) $(ProjectDir)..\..\..\bin\$(PlatformName)\releasep\codecs"
 			/>
 		</Configuration>
 		<Configuration
@@ -340,6 +341,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy $(TargetPath) $(ProjectDir)..\..\..\bin\$(PlatformName)\releasep\codecs"
 			/>
 		</Configuration>
 	</Configurations>

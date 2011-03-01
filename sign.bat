@@ -25,6 +25,11 @@ signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_w32r%codecs\wma
 signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_w32r%codecs\vorbis.irc
 
 signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_w32p%infrarecorder.exe
+signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_w32p%codecs\lame.irc
+signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_w32p%codecs\sndfile.irc
+signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_w32p%codecs\wave.irc
+signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_w32p%codecs\wma.irc
+signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_w32p%codecs\vorbis.irc
 
 signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_x64r%infrarecorder.exe
 signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_x64r%shell.dll
@@ -35,6 +40,11 @@ signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_x64r%codecs\wma
 signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_x64r%codecs\vorbis.irc
 
 signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_x64p%infrarecorder.exe
+signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_x64p%codecs\lame.irc
+signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_x64p%codecs\sndfile.irc
+signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_x64p%codecs\wave.irc
+signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_x64p%codecs\wma.irc
+signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_x64p%codecs\vorbis.irc
 
 signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_dist%ir.exe
 signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_dist%ir.msi
