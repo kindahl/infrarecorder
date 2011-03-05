@@ -1627,8 +1627,8 @@ bool CCore::BurnTracks(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 	also has extra return values.
 */
 eBurnResult CCore::BurnTracksEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,
-						const TCHAR *szDataTrack,std::vector<TCHAR *> &AudioTracks,
-						const TCHAR *szAudioText,int iDataMode)
+								const TCHAR *szDataTrack,std::vector<TCHAR *> &AudioTracks,
+								const TCHAR *szAudioText,int iDataMode)
 {
 	if (!BurnTracks(Device,pProgress,szDataTrack,AudioTracks,szAudioText,
 					iDataMode,MODE_BURNIMAGEEX,true))
@@ -1707,8 +1707,8 @@ bool CCore::ReadDataTrack(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 }
 
 eBurnResult CCore::ReadDataTrackEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,
-						   const TCHAR *szFileName,unsigned int uiTrackNumber,
-						   unsigned long ulStartSector,unsigned long ulEndSector)
+								   const TCHAR *szFileName,unsigned int uiTrackNumber,
+								   unsigned long ulStartSector,unsigned long ulEndSector)
 {
 	if (!ReadDataTrack(Device,pProgress,szFileName,uiTrackNumber,ulStartSector,
 					   ulEndSector,MODE_READDATATRACKEX,true))
@@ -1779,7 +1779,7 @@ bool CCore::ReadAudioTrack(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 						  MODE_READAUDIOTRACK,true);
 }
 eBurnResult CCore::ReadAudioTrackEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,const TCHAR *szFileName,
-							unsigned int uiTrackNumber)
+									unsigned int uiTrackNumber)
 {
 	if (!ReadAudioTrack(Device,pProgress,szFileName,uiTrackNumber,
 						MODE_READAUDIOTRACKEX,true))
@@ -1849,7 +1849,7 @@ bool CCore::ScanTrack(ckmmc::Device &Device,CAdvancedProgress *pProgress,unsigne
 }
 
 eBurnResult CCore::ScanTrackEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,unsigned int uiTrackNumber,
-					   unsigned long ulStartSector,unsigned long ulEndSector)
+							   unsigned long ulStartSector,unsigned long ulEndSector)
 {
 	if (!ScanTrack(Device,pProgress,uiTrackNumber,ulStartSector,ulEndSector,
 				   MODE_SCANTRACKEX,true))
@@ -2525,9 +2525,9 @@ bool CCore::BurnCompilation(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 }
 
 eBurnResult CCore::BurnCompilationEx(ckmmc::Device &Device,CAdvancedProgress *pProgress,
-							 ckcore::Progress &Progress,const ckfilesystem::FileSet &Files,
-							 std::vector<TCHAR *> &AudioTracks,const TCHAR *szAudioText,
-							 int iMode,unsigned __int64 uiDataBytes)
+									 ckcore::Progress &Progress,const ckfilesystem::FileSet &Files,
+									 std::vector<TCHAR *> &AudioTracks,const TCHAR *szAudioText,
+									 int iMode,unsigned __int64 uiDataBytes)
 {
 	if (!BurnCompilation(Device,pProgress,Progress,Files,AudioTracks,szAudioText,
 						 iMode,uiDataBytes,MODE_BURNIMAGEEX))

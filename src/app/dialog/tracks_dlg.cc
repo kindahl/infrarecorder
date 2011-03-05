@@ -600,7 +600,7 @@ unsigned long WINAPI CTracksDlg::ReadTrackThread(LPVOID lpThreadParameter)
 			{
 				if (pTracksDlg->m_pEncoder != NULL)
 				{
-					if (g_Core.ReadAudioTrackEx(*pDevice,g_pProgressDlg,szFilePath,iItemIndex + 1) != RESULT_OK)
+					if (g_Core.ReadAudioTrackEx(*pDevice,g_pProgressDlg,szFilePath,iItemIndex + 1) != BURNRESULT_OK)
 					{
 						ckcore::File::remove(szFilePath);
 						return 0;
@@ -650,7 +650,7 @@ unsigned long WINAPI CTracksDlg::ReadTrackThread(LPVOID lpThreadParameter)
 			}
 			else
 			{
-				if (g_Core.ReadAudioTrackEx(*pDevice,g_pProgressDlg,szFilePath,iItemIndex + 1) != RESULT_OK)
+				if (g_Core.ReadAudioTrackEx(*pDevice,g_pProgressDlg,szFilePath,iItemIndex + 1) != BURNRESULT_OK)
 				{
 					ckcore::File::remove(szFilePath);
 					return 0;
@@ -724,7 +724,7 @@ unsigned long WINAPI CTracksDlg::ScanTrackThread(LPVOID lpThreadParameter)
 		else
 		{
 			if (g_Core.ScanTrackEx(*pDevice,g_pProgressDlg,iItemIndex + 1,
-								   ulAddress,ulAddress + ulLength) != RESULT_OK)
+								   ulAddress,ulAddress + ulLength) != BURNRESULT_OK)
 			{
 				return 0;
 			}
