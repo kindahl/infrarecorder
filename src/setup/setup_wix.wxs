@@ -77,7 +77,7 @@
           </Component>
 
           <Component Id="Effects" Guid="$(var.CompEffects)" DiskId="1" Win64="$(var.Is64)">
-            <File Id="snoke.exe" Name="smoke.exe" Source="..\..\dep\smoke.exe"/>
+            <File Id="snoke.exe" Name="smoke.exe" Source="..\..\dep\smoke\x64\smoke.exe"/>
           </Component>
 
           <Component Id="Doc" Guid="$(var.CompDoc)" DiskId="1" Win64="$(var.Is64)">

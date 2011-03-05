@@ -870,7 +870,7 @@ Section $(NAME_SecCore) SecCore
   File "..\..\doc\english\infrarecorder.chm"
   File "..\..\bin\win32\release\infrarecorder.exe"
   File "..\..\bin\win32\release\shell.dll"
-  File "..\..\dep\smoke.exe"
+  File "..\..\dep\smoke\win32\smoke.exe"
 
   SetOutPath "$INSTDIR\codecs"
   ;File "..\..\bin\win32\release\codecs\wave.irc"

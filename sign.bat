@@ -10,11 +10,13 @@ set path_x64r=%~dp0bin\x64\release\
 set path_x64p=%~dp0bin\x64\releasep\
 
 rem set path_dist=%~dp0dist\
-set path_smoke=%~dp0dep\
+set path_smoke_w32=%~dp0dep\smoke\win32\
+set path_smoke_x64=%~dp0dep\smoke\x64\
 
 if "%~1" NEQ "" goto single_file
 
-signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_smoke%smoke.exe
+signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_smoke_w32%smoke.exe
+signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_smoke_x64%smoke.exe
 
 signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_w32r%infrarecorder.exe
 signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_w32r%shell.dll
