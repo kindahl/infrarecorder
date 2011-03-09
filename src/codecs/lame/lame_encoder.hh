@@ -17,5 +17,36 @@
  */
 
 #pragma once
+#include <ckcore/buffer.hh>
+#include <ckcore/file.hh>
+#include <ckcore/types.hh>
+#include <lame.h>
+#include "config_dlg.hh"
+#include "lame_base.hh"
 
-#define BUFFER_FACTOR			4096
+class LameEncoder : public LameBase
+{
+private:
+    enum
+    {
+        BUFFER_FACTOR = 4096
+    };
+
+private:
+    ckcore::File file_;
+    int num_channels_;
+    int sample_rate_;
+    int bit_rate_;
+
+    ckcore::Buffer<unsigned char,int> buffer_;
+    CEncoderConfig &encoder_cfg_;
+
+public:
+    LameEncoder(const TCHAR *file_path,
+                int num_channels,int sample_rate,int bit_rate,
+                CEncoderConfig &encoder_cfg);
+
+    bool initialize();
+    __int64 encode(unsigned char *buffer,__int64 data_size);
+    __int64 flush();
+};
