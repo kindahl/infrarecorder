@@ -19,5 +19,6 @@
 ^src\/shell\/dlldata.c$
 ^src\/shell\/shell_i.c$
 ^src\/shell\/shell_p.c$
+^src\/tests\/test.cc$
 ^christian_kindahl.pfx$
 ^christian_kindahl.psw$

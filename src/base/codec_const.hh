@@ -17,6 +17,7 @@
  */
 
 #pragma once
+#include <windows.h>
 
 // Callback function definitions.
 #define IRC_MESSAGE_INFO			0

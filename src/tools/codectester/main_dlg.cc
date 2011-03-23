@@ -170,7 +170,7 @@ LRESULT CMainDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHand
     GetModuleFileName(NULL,szCodecPath,MAX_PATH - 1);
 
 	ExtractFilePath(szCodecPath);
-	lstrcat(szCodecPath,_T("Codecs\\"));
+	lstrcat(szCodecPath,_T("codecs\\"));
 
 	if (g_CodecManager.LoadCodecs(szCodecPath))
 	{
@@ -192,7 +192,7 @@ LRESULT CMainDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHand
 
 LRESULT CMainDlg::OnAppAbout(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
-	MessageBox(_T("Copyright © 2006-2010 Christian Kindahl"),_T("About"),MB_OK | MB_ICONINFORMATION);
+	MessageBox(_T("Copyright © 2006-2011 Christian Kindahl"),_T("About"),MB_OK | MB_ICONINFORMATION);
 	return 0;
 }
 
