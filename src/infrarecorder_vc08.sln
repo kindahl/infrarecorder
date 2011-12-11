@@ -1,18 +1,18 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "infrarecorder", "app\infrarecorder.vcproj", "{949B73FF-BD75-47C0-B965-328513C481B4}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "infrarecorder", "app\infrarecorder_vc08.vcproj", "{949B73FF-BD75-47C0-B965-328513C481B4}"
 	ProjectSection(ProjectDependencies) = postProject
 		{81EA1BB3-2BA0-4600-9081-2D2CB9203466} = {81EA1BB3-2BA0-4600-9081-2D2CB9203466}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "shell", "shell\shell.vcproj", "{A6B8E42F-4793-4995-9D63-2906375407AD}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "shell", "shell\shell_vc08.vcproj", "{A6B8E42F-4793-4995-9D63-2906375407AD}"
 	ProjectSection(ProjectDependencies) = postProject
 		{81EA1BB3-2BA0-4600-9081-2D2CB9203466} = {81EA1BB3-2BA0-4600-9081-2D2CB9203466}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "base", "base\base.vcproj", "{81EA1BB3-2BA0-4600-9081-2D2CB9203466}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "base", "base\base_vc08.vcproj", "{81EA1BB3-2BA0-4600-9081-2D2CB9203466}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "codectester", "tools\codectester\codectester.vcproj", "{662C79E3-70D3-4F83-BAAF-EC663B93BAFD}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "codectester", "tools\codectester\codectester_vc08.vcproj", "{662C79E3-70D3-4F83-BAAF-EC663B93BAFD}"
 	ProjectSection(ProjectDependencies) = postProject
 		{81EA1BB3-2BA0-4600-9081-2D2CB9203466} = {81EA1BB3-2BA0-4600-9081-2D2CB9203466}
 	EndProjectSection
@@ -21,12 +21,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{2C836544
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "main", "main", "{8D08569A-D3CE-4690-A244-AA1704ED3147}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "translationtool", "tools\translationtool\translationtool.vcproj", "{890C6C24-55F8-466B-91BE-221F6214C3B8}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "translationtool", "tools\translationtool\translationtool_vc08.vcproj", "{890C6C24-55F8-466B-91BE-221F6214C3B8}"
 	ProjectSection(ProjectDependencies) = postProject
 		{81EA1BB3-2BA0-4600-9081-2D2CB9203466} = {81EA1BB3-2BA0-4600-9081-2D2CB9203466}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lame", "codecs\lame\lame.vcproj", "{E595EE31-3670-4F99-AAC0-C06B2B5D02E9}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lame", "codecs\lame\lame_vc08.vcproj", "{E595EE31-3670-4F99-AAC0-C06B2B5D02E9}"
 	ProjectSection(ProjectDependencies) = postProject
 		{4B152319-0AF6-4E1B-A284-805D6483C5F1} = {4B152319-0AF6-4E1B-A284-805D6483C5F1}
 		{0AB48E5D-FAA5-402B-84D6-2F5166D90DD4} = {0AB48E5D-FAA5-402B-84D6-2F5166D90DD4}
@@ -40,16 +40,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dependencies", "dependencie
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mpglib_vc8", "..\dep\lame\mpglib\mpglib_vc8.vcproj", "{0AB48E5D-FAA5-402B-84D6-2F5166D90DD4}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sndfile", "codecs\sndfile\sndfile.vcproj", "{533889C9-1598-4823-BFA9-7C97FD35D6DF}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sndfile", "codecs\sndfile\sndfile_vc08.vcproj", "{533889C9-1598-4823-BFA9-7C97FD35D6DF}"
 	ProjectSection(ProjectDependencies) = postProject
 		{81EA1BB3-2BA0-4600-9081-2D2CB9203466} = {81EA1BB3-2BA0-4600-9081-2D2CB9203466}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wave", "codecs\wave\wave.vcproj", "{1A7358F8-3F30-4079-8BAB-9399B76B5187}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wave", "codecs\wave\wave_vc08.vcproj", "{1A7358F8-3F30-4079-8BAB-9399B76B5187}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wma", "codecs\wma\wma.vcproj", "{DA677405-57CD-4E24-AC27-4250A4BF0D1C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wma", "codecs\wma\wma_vc08.vcproj", "{DA677405-57CD-4E24-AC27-4250A4BF0D1C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vorbis", "codecs\vorbis\vorbis.vcproj", "{571D4215-38A0-42CE-8AB7-DEEE9D2154ED}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vorbis", "codecs\vorbis\vorbis_vc08.vcproj", "{571D4215-38A0-42CE-8AB7-DEEE9D2154ED}"
 	ProjectSection(ProjectDependencies) = postProject
 		{3A214E06-B95E-4D61-A291-1F8DF2EC10FD} = {3A214E06-B95E-4D61-A291-1F8DF2EC10FD}
 		{CEBDE98B-A6AA-46E6-BC79-FAAF823DB9EC} = {CEBDE98B-A6AA-46E6-BC79-FAAF823DB9EC}
@@ -64,12 +64,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libvorbisfile", "..\dep\lib
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "setup", "setup", "{4A43E150-27F3-4779-B894-9D5471CB90F9}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ir_plugin", "setup\ir_plugin\ir_plugin.vcproj", "{BC845F0A-9F4D-4A2F-8366-30B816498DBD}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ir_plugin", "setup\ir_plugin\ir_plugin_vc08.vcproj", "{BC845F0A-9F4D-4A2F-8366-30B816498DBD}"
 	ProjectSection(ProjectDependencies) = postProject
 		{81EA1BB3-2BA0-4600-9081-2D2CB9203466} = {81EA1BB3-2BA0-4600-9081-2D2CB9203466}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "setup_nsis", "setup\setup_nsis.vcproj", "{B8D2451B-06E5-4EBD-8B84-3FA7492A41FF}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "setup_nsis", "setup\setup_nsis_vc08.vcproj", "{B8D2451B-06E5-4EBD-8B84-3FA7492A41FF}"
 	ProjectSection(ProjectDependencies) = postProject
 		{DA677405-57CD-4E24-AC27-4250A4BF0D1C} = {DA677405-57CD-4E24-AC27-4250A4BF0D1C}
 		{BC845F0A-9F4D-4A2F-8366-30B816498DBD} = {BC845F0A-9F4D-4A2F-8366-30B816498DBD}
@@ -80,7 +80,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "setup_nsis", "setup\setup_n
 		{949B73FF-BD75-47C0-B965-328513C481B4} = {949B73FF-BD75-47C0-B965-328513C481B4}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "setup_wix", "setup\setup_wix.vcproj", "{295627F8-6235-4E9D-992F-F200A7F40173}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "setup_wix", "setup\setup_wix_vc08.vcproj", "{295627F8-6235-4E9D-992F-F200A7F40173}"
 	ProjectSection(ProjectDependencies) = postProject
 		{949B73FF-BD75-47C0-B965-328513C481B4} = {949B73FF-BD75-47C0-B965-328513C481B4}
 		{1A7358F8-3F30-4079-8BAB-9399B76B5187} = {1A7358F8-3F30-4079-8BAB-9399B76B5187}
@@ -91,11 +91,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "setup_wix", "setup\setup_wi
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "help", "help", "{176EBD88-B63B-466F-BB4F-3C331C89BF24}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "help_english", "..\doc\english\help_english.vcproj", "{44E47ABA-9695-4A96-BC52-53585C6AAA3C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "help_english", "..\doc\english\help_english_vc08.vcproj", "{44E47ABA-9695-4A96-BC52-53585C6AAA3C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{5B05DB5E-5941-4418-A8D1-37101F2A8E07}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tests", "tests\tests.vcproj", "{2C35640E-0BF9-4BAE-8A0E-3DE5A691D160}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tests", "tests\tests_vc08.vcproj", "{2C35640E-0BF9-4BAE-8A0E-3DE5A691D160}"
 	ProjectSection(ProjectDependencies) = postProject
 		{81EA1BB3-2BA0-4600-9081-2D2CB9203466} = {81EA1BB3-2BA0-4600-9081-2D2CB9203466}
 	EndProjectSection
