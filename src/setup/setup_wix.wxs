@@ -108,6 +108,7 @@
 
           <Directory Id="languages" Name="languages">
             <Component Id="Lang" Guid="$(var.CompLang)" DiskId="1" Win64="$(var.Is64)">
+              <File Id="albanian.irl" Name="albanian.irl" Source="..\..\etc\translations\software\albanian.irl"/>
               <File Id="arabic.irl" Name="arabic.irl" Source="..\..\etc\translations\software\arabic.irl"/>
               <File Id="armenian.irl" Name="armenian.irl" Source="..\..\etc\translations\software\armenian.irl"/>
               <File Id="basque.irl" Name="basque.irl" Source="..\..\etc\translations\software\basque.irl"/>

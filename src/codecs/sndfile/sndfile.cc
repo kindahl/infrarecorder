@@ -55,7 +55,7 @@ BOOL APIENTRY DllMain(HANDLE hModule,DWORD ul_reason_for_call,LPVOID lpReserved)
 			::GetModuleFileName((HMODULE)hModule,szFileName,MAX_PATH - 1);
 
 			ExtractFilePath(szFileName);
-			lstrcat(szFileName,_T("libsndfile.dll"));
+			lstrcat(szFileName,_T("libsndfile-1.dll"));
 
 			// Tell the library helper to load the library.
 			g_LibraryHelper.Load(szFileName);

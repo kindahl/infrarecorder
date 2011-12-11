@@ -330,6 +330,18 @@ FunctionEnd
 ;--------------------------------
 ; Language Strings
 
+  ; Language strings (Albanian)
+  LangString NAME_SecCore ${LANG_ALBANIAN} "Skedarët bazë të InfraRecorder (të domosdoshme)"
+  LangString NAME_SecStartShortcut ${LANG_ALBANIAN} "Shkurtoret e Menusë Start"
+  LangString NAME_SecDeskShortcut ${LANG_ALBANIAN} "Shkurtore e Desktopit"
+  LangString NAME_SecQuickShortcut ${LANG_ALBANIAN} "Shkurtore e hapjes së shpejtë"
+  LangString NAME_SecLang ${LANG_ALBANIAN} "Skedarët e gjuhës"
+  LangString DESC_SecCore ${LANG_ALBANIAN} "Skedarët bazë që duhen për të përdorur InfraRecorder."
+  LangString DESC_SecStartShortcut ${LANG_ALBANIAN} "Shto ikonat në menunë start për akses të shpejtë."
+  LangString DESC_SecDeskShortcut ${LANG_ALBANIAN} "Shto një ikonë në desktop."
+  LangString DESC_SecQuickShortcut ${LANG_ALBANIAN} "Shto një ikonë në shiritin e hapjes së shpejtë."
+  LangString DESC_SecLang ${LANG_ALBANIAN} "Skedarët e gjuhës që përdoren për të mbështetur gjuhë të tjera në InfraRecorder."
+
   ; Language strings (Arabic)
   LangString NAME_SecCore ${LANG_ARABIC} "ÇáÑÆíÓíÉ InfrarecorderãáÝÇÊ (ãÍÊÇÌÉ)"
   LangString NAME_SecStartShortcut ${LANG_ARABIC} "ÇíÞæäÇÊ ÇÎÊÕÇÑ ÞÇÆãÉ ÇáÈÏÇíÉ"
@@ -875,7 +887,7 @@ Section $(NAME_SecCore) SecCore
   SetOutPath "$INSTDIR\codecs"
   ;File "..\..\bin\win32\release\codecs\wave.irc"
   File "..\..\bin\win32\release\codecs\sndfile.irc"
-  File "..\..\dep\libsndfile\win32\libsndfile.dll"
+  File "..\..\dep\libsndfile\win32\libsndfile-1.dll"
   File "..\..\bin\win32\release\codecs\wma.irc"
   File "..\..\bin\win32\release\codecs\vorbis.irc"
 
@@ -945,6 +957,7 @@ Section $(NAME_SecLang) SecLang
 
   SetOutPath "$INSTDIR\languages"
 
+  File "..\..\etc\translations\software\albanian.irl"
   File "..\..\etc\translations\software\arabic.irl"
   File "..\..\etc\translations\software\armenian.irl"
   File "..\..\etc\translations\software\basque.irl"
@@ -1002,6 +1015,9 @@ Section $(NAME_SecLang) SecLang
   ; http://www.microsoft.com/globaldev/reference/oslocversion.mspx
   ; http://www.microsoft.com/globaldev/reference/lcid-all.mspx
   ${Switch} $1
+    ${case} "albanian"
+      StrCpy $LANGUAGE ${LANG_ALBANIAN}
+      ${break}
     ${case} "arabic"	; 1025
       StrCpy $LANGUAGE ${LANG_ARABIC}
       ${break}
@@ -1146,6 +1162,9 @@ Section $(NAME_SecLang) SecLang
   ; http://www.microsoft.com/globaldev/reference/oslocversion.mspx
   ; http://www.microsoft.com/globaldev/reference/lcid-all.mspx
   ${Switch} $LANGUAGE
+    ${Case} ${LANG_ALBANIAN}
+      StrCpy $0 "albanian.irl"
+      ${Break}
     ${Case} ${LANG_ARABIC}	; 1025
       StrCpy $0 "arabic.irl"
       ${Break}
