@@ -66,7 +66,7 @@ void CFmtStrPlaceholderAnalysis::InsertPlaceholder(
 
     m_bPositionalPlaceholders = bIsPositionalPlaceholder;
 
-    m_uPlaceholderCount = _cpp_max(m_uPlaceholderCount,uPlaceholderPos);
+	m_uPlaceholderCount = (std::max)(m_uPlaceholderCount,uPlaceholderPos);
 
     if (m_Placeholders.size() < m_uPlaceholderCount)
         m_Placeholders.resize(m_uPlaceholderCount);

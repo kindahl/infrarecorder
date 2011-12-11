@@ -19,6 +19,7 @@
 #include "stdafx.hh"
 #include "resource.h"
 #include "png_file.hh"
+#include <pngpriv.h>	// FIXME: Recent versions of libpng hides functionality used by this class.
 
 CPngFile::CPngFile() : m_ulWidth(0),m_ulHeight(0),m_pRowData(NULL)
 {

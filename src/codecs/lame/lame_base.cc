@@ -17,6 +17,7 @@
  */
 
 #include "stdafx.hh"
+#include <ckcore/string.hh>
 #include "lame_base.hh"
 
 tirc_send_message *LameBase::send_message_ = NULL;
