@@ -1,0 +1,793 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{d85c6bed-28d6-420b-af8f-ede0217d10dc}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm</Extensions>
+    </Filter>
+    <Filter Include="Source Files\control">
+      <UniqueIdentifier>{1f2547c6-c107-48fd-95f8-6b902e5496cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core">
+      <UniqueIdentifier>{b9d0e8e3-351c-4a30-ad56-adda8e3d77fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\dialog">
+      <UniqueIdentifier>{1d87a704-ef86-428c-9275-904ca3cdb4bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\utility">
+      <UniqueIdentifier>{fcb35f20-d0bf-4159-8263-ca8767d27618}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{e901b0d8-2399-4d03-8b03-a1c9a3d7cb9d}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc</Extensions>
+    </Filter>
+    <Filter Include="Header Files\control">
+      <UniqueIdentifier>{f5fe78e4-6571-4719-b9c7-2d8dc16f1de2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\core">
+      <UniqueIdentifier>{71c00cda-4259-42b7-b432-6f42bc3b1c0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\dialog">
+      <UniqueIdentifier>{730528af-b1b8-4eb3-99a5-8c22fb865ba2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\utility">
+      <UniqueIdentifier>{2594990d-46e8-42f3-aa59-15d435e67ea8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{781d6da1-ed1a-48c5-aa4b-f8ce12a3af5d}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;jpg;jpeg;jpe;manifest</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="action_manager.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="advanced_progress.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="directory_monitor.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="effects.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="enum_fmt_etc.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="files_data_object.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="infrarecorder.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pidl_helper.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="png_file.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="project_data_object.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="project_drop_source.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="project_drop_target_base.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="project_manager.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="registry.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="settings.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="settings_manager.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="string_table.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="temp_manager.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="toolbar_manager.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tree_manager.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="version.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="visual_styles.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="control\custom_button.cc">
+      <Filter>Source Files\control</Filter>
+    </ClCompile>
+    <ClCompile Include="control\custom_combo_box.cc">
+      <Filter>Source Files\control</Filter>
+    </ClCompile>
+    <ClCompile Include="control\custom_container.cc">
+      <Filter>Source Files\control</Filter>
+    </ClCompile>
+    <ClCompile Include="control\custom_edit_ctrl.cc">
+      <Filter>Source Files\control</Filter>
+    </ClCompile>
+    <ClCompile Include="control\custom_header_ctrl.cc">
+      <Filter>Source Files\control</Filter>
+    </ClCompile>
+    <ClCompile Include="control\custom_multi_button.cc">
+      <Filter>Source Files\control</Filter>
+    </ClCompile>
+    <ClCompile Include="control\custom_toolbar_ctrl.cc">
+      <Filter>Source Files\control</Filter>
+    </ClCompile>
+    <ClCompile Include="control\double_buffered_static.cc">
+      <Filter>Source Files\control</Filter>
+    </ClCompile>
+    <ClCompile Include="control\drop_down_button.cc">
+      <Filter>Source Files\control</Filter>
+    </ClCompile>
+    <ClCompile Include="control\gradient_static.cc">
+      <Filter>Source Files\control</Filter>
+    </ClCompile>
+    <ClCompile Include="control\label_container.cc">
+      <Filter>Source Files\control</Filter>
+    </ClCompile>
+    <ClCompile Include="control\mini_html_ctrl.cc">
+      <Filter>Source Files\control</Filter>
+    </ClCompile>
+    <ClCompile Include="control\project_list_view_ctrl.cc">
+      <Filter>Source Files\control</Filter>
+    </ClCompile>
+    <ClCompile Include="control\project_tree_view_ctrl.cc">
+      <Filter>Source Files\control</Filter>
+    </ClCompile>
+    <ClCompile Include="control\shell_list_view_ctrl.cc">
+      <Filter>Source Files\control</Filter>
+    </ClCompile>
+    <ClCompile Include="control\space_meter.cc">
+      <Filter>Source Files\control</Filter>
+    </ClCompile>
+    <ClCompile Include="control\title_tip_list_view_ctrl.cc">
+      <Filter>Source Files\control</Filter>
+    </ClCompile>
+    <ClCompile Include="control\welcome_pane.cc">
+      <Filter>Source Files\control</Filter>
+    </ClCompile>
+    <ClCompile Include="core\cd_text.cc">
+      <Filter>Source Files\core</Filter>
+    </ClCompile>
+    <ClCompile Include="core\core.cc">
+      <Filter>Source Files\core</Filter>
+    </ClCompile>
+    <ClCompile Include="core\core2.cc">
+      <Filter>Source Files\core</Filter>
+    </ClCompile>
+    <ClCompile Include="core\core2_blank.cc">
+      <Filter>Source Files\core</Filter>
+    </ClCompile>
+    <ClCompile Include="core\core2_format.cc">
+      <Filter>Source Files\core</Filter>
+    </ClCompile>
+    <ClCompile Include="core\core2_info.cc">
+      <Filter>Source Files\core</Filter>
+    </ClCompile>
+    <ClCompile Include="core\core2_read.cc">
+      <Filter>Source Files\core</Filter>
+    </ClCompile>
+    <ClCompile Include="core\core2_stream.cc">
+      <Filter>Source Files\core</Filter>
+    </ClCompile>
+    <ClCompile Include="core\core2_util.cc">
+      <Filter>Source Files\core</Filter>
+    </ClCompile>
+    <ClCompile Include="core\diagnostics.cc">
+      <Filter>Source Files\core</Filter>
+    </ClCompile>
+    <ClCompile Include="core\scsi.cc">
+      <Filter>Source Files\core</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\about_window.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\add_boot_image_dlg.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\burn_advanced_page.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\burn_image_dlg.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\burn_image_general_page.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\config_advanced_page.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\config_dlg.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\config_general_page.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\config_language_page.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\config_shell_ext_page.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\confirm_file_replace_dlg.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\copy_disc_dlg.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\copy_disc_general_page.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\copy_image_dlg.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\copy_image_general_page.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\device_advanced_page.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\device_dlg.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\device_general_page.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\devices_dlg.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\disc_dlg.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\disc_general_page.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\edit_track_dlg.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\erase_dlg.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\fixate_dlg.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\import_session_dlg.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\info_dlg.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\log_dlg.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\main_frm.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\main_view.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\new_file_ext_dlg.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\progress_dlg.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\project_prop_audio_page.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\project_prop_boot_page.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\project_prop_dlg.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\project_prop_fields_page.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\project_prop_file_sys_page.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\project_prop_general_page.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\project_prop_iso_page.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\project_prop_udf_page.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\read_options_page.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\save_tracks_dlg.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\simple_progress_dlg.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\splash_window.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\tracks_dlg.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="dialog\wait_dlg.cc">
+      <Filter>Source Files\dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="utility\audio_util.cc">
+      <Filter>Source Files\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="utility\device_util.cc">
+      <Filter>Source Files\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="utility\lang_util.cc">
+      <Filter>Source Files\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="utility\shell_ext_util.cc">
+      <Filter>Source Files\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="utility\trans_util.cc">
+      <Filter>Source Files\utility</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="action_manager.hh">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="advanced_progress.hh">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="atl_compat.hh">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="ctrl_messages.hh">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="directory_monitor.hh">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="effects.hh">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="enum_fmt_etc.hh">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="files_data_object.hh">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="infrarecorder.hh">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="pidl_helper.hh">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="png_file.hh">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="project_data_object.hh">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="project_drop_source.hh">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="project_drop_target_base.hh">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="project_manager.hh">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="registry.hh">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="settings.hh">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="settings_manager.hh">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="stdafx.hh">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="string_table.hh">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="temp_manager.hh">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="toolbar_manager.hh">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="translated_strings.hh">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="tree_manager.hh">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="version.hh">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="visual_styles.hh">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="control\custom_button.hh">
+      <Filter>Header Files\control</Filter>
+    </None>
+    <None Include="control\custom_combo_box.hh">
+      <Filter>Header Files\control</Filter>
+    </None>
+    <None Include="control\custom_container.hh">
+      <Filter>Header Files\control</Filter>
+    </None>
+    <None Include="control\custom_edit_ctrl.hh">
+      <Filter>Header Files\control</Filter>
+    </None>
+    <None Include="control\custom_header_ctrl.hh">
+      <Filter>Header Files\control</Filter>
+    </None>
+    <None Include="control\custom_multi_button.hh">
+      <Filter>Header Files\control</Filter>
+    </None>
+    <None Include="control\custom_toolbar_ctrl.hh">
+      <Filter>Header Files\control</Filter>
+    </None>
+    <None Include="control\double_buffered_static.hh">
+      <Filter>Header Files\control</Filter>
+    </None>
+    <None Include="control\drop_down_button.hh">
+      <Filter>Header Files\control</Filter>
+    </None>
+    <None Include="control\gradient_static.hh">
+      <Filter>Header Files\control</Filter>
+    </None>
+    <None Include="control\label_container.hh">
+      <Filter>Header Files\control</Filter>
+    </None>
+    <None Include="control\mini_html_ctrl.hh">
+      <Filter>Header Files\control</Filter>
+    </None>
+    <None Include="control\project_list_view_ctrl.hh">
+      <Filter>Header Files\control</Filter>
+    </None>
+    <None Include="control\project_tree_view_ctrl.hh">
+      <Filter>Header Files\control</Filter>
+    </None>
+    <None Include="control\shell_list_view_ctrl.hh">
+      <Filter>Header Files\control</Filter>
+    </None>
+    <None Include="control\space_meter.hh">
+      <Filter>Header Files\control</Filter>
+    </None>
+    <None Include="control\title_tip_list_view_ctrl.hh">
+      <Filter>Header Files\control</Filter>
+    </None>
+    <None Include="control\welcome_pane.hh">
+      <Filter>Header Files\control</Filter>
+    </None>
+    <None Include="core\cd_text.hh">
+      <Filter>Header Files\core</Filter>
+    </None>
+    <None Include="core\cdrtools_parse_strings.hh">
+      <Filter>Header Files\core</Filter>
+    </None>
+    <None Include="core\core.hh">
+      <Filter>Header Files\core</Filter>
+    </None>
+    <None Include="core\core2.hh">
+      <Filter>Header Files\core</Filter>
+    </None>
+    <None Include="core\core2_blank.hh">
+      <Filter>Header Files\core</Filter>
+    </None>
+    <None Include="core\core2_format.hh">
+      <Filter>Header Files\core</Filter>
+    </None>
+    <None Include="core\core2_info.hh">
+      <Filter>Header Files\core</Filter>
+    </None>
+    <None Include="core\core2_read.hh">
+      <Filter>Header Files\core</Filter>
+    </None>
+    <None Include="core\core2_stream.hh">
+      <Filter>Header Files\core</Filter>
+    </None>
+    <None Include="core\core2_util.hh">
+      <Filter>Header Files\core</Filter>
+    </None>
+    <None Include="core\diagnostics.hh">
+      <Filter>Header Files\core</Filter>
+    </None>
+    <None Include="core\scsi.hh">
+      <Filter>Header Files\core</Filter>
+    </None>
+    <None Include="dialog\about_window.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\add_boot_image_dlg.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\burn_advanced_page.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\burn_image_dlg.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\burn_image_general_page.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\config_advanced_page.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\config_dlg.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\config_general_page.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\config_language_page.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\config_shell_ext_page.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\confirm_file_replace_dlg.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\copy_disc_dlg.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\copy_disc_general_page.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\copy_image_dlg.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\copy_image_general_page.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\device_advanced_page.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\device_dlg.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\device_general_page.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\devices_dlg.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\disc_dlg.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\disc_general_page.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\edit_track_dlg.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\erase_dlg.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\fixate_dlg.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\import_session_dlg.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\info_dlg.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\log_dlg.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\main_frm.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\main_view.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\new_file_ext_dlg.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\progress_dlg.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\project_prop_audio_page.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\project_prop_boot_page.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\project_prop_dlg.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\project_prop_fields_page.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\project_prop_file_sys_page.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\project_prop_general_page.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\project_prop_iso_page.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\project_prop_udf_page.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\read_options_page.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\save_tracks_dlg.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\simple_progress_dlg.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\splash_window.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\tracks_dlg.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="dialog\wait_dlg.hh">
+      <Filter>Header Files\dialog</Filter>
+    </None>
+    <None Include="utility\audio_util.hh">
+      <Filter>Header Files\utility</Filter>
+    </None>
+    <None Include="utility\device_util.hh">
+      <Filter>Header Files\utility</Filter>
+    </None>
+    <None Include="utility\lang_util.hh">
+      <Filter>Header Files\utility</Filter>
+    </None>
+    <None Include="utility\shell_ext_util.hh">
+      <Filter>Header Files\utility</Filter>
+    </None>
+    <None Include="utility\trans_util.hh">
+      <Filter>Header Files\utility</Filter>
+    </None>
+    <None Include="resources\background-about.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\background-splash.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\background-welcome_logo.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\button-close.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\buttons\button-focus.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\buttons\button-hover.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\buttons\button-hover_focus.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\buttons\button-normal.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\wizard\icon-audio_disc.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\wizard\icon-copy_disc.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\wizard\icon-data_disc.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\icon-main.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\icon-project.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\wizard\icon-read_disc.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\icon-refresh.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\wizard\icon-video_disc.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\wizard\icon-write_image.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\buttons\multi_button-focus.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\buttons\multi_button-hover.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\buttons\multi_button-hover_focus.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\buttons\multi_button-hover_focus_specific1.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\buttons\multi_button-hover_focus_specific2.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\buttons\multi_button-hover_specific1.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\buttons\multi_button-hover_specific2.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\buttons\multi_button-normal.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\project-audio.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\project-data.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\project-mixed.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\project-video.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\toolbar-main_large.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\toolbar-main_large_.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\toolbar-main_small.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\toolbar-main_small_.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\toolbar-mini.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\toolbar-mini_.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\toolbar-track.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\toolbar-track_.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\toolbar_track_.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="infrarecorder.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
