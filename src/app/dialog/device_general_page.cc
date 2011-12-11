@@ -139,20 +139,20 @@ LRESULT CDeviceGeneralPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,B
 	ckcore::tuint32 max_read_speed = m_Device.property(ckmmc::Device::ckPROP_MAX_READ_SPD);
 	lsprintf(szBuffer,_T("%d sectors/s (CD: %s, DVD: %s)"),
 			 max_read_speed,
-			 ckmmc::util::sec_to_disp_speed(max_read_speed,
-											ckmmc::Device::ckPROFILE_CDROM).c_str(),
-			 ckmmc::util::sec_to_disp_speed(max_read_speed,
-											ckmmc::Device::ckPROFILE_DVDROM).c_str());
+			 ckmmc::util::kb_to_disp_speed(max_read_speed,
+										   ckmmc::Device::ckPROFILE_CDROM).c_str(),
+			 ckmmc::util::kb_to_disp_speed(max_read_speed,
+										   ckmmc::Device::ckPROFILE_DVDROM).c_str());
 	SetDlgItemText(IDC_MAXREADSTATIC,szBuffer);
 
 	// Max write speed.
 	ckcore::tuint32 max_write_speed = m_Device.property(ckmmc::Device::ckPROP_MAX_WRITE_SPD);
 	lsprintf(szBuffer,_T("%d sectors/s (CD: %s, DVD: %s)"),
 			 max_write_speed,
-			 ckmmc::util::sec_to_disp_speed(max_write_speed,
-											ckmmc::Device::ckPROFILE_CDROM).c_str(),
-			 ckmmc::util::sec_to_disp_speed(max_write_speed,
-											ckmmc::Device::ckPROFILE_DVDROM).c_str());
+			 ckmmc::util::kb_to_disp_speed(max_write_speed,
+										   ckmmc::Device::ckPROFILE_CDROM).c_str(),
+			 ckmmc::util::kb_to_disp_speed(max_write_speed,
+										   ckmmc::Device::ckPROFILE_DVDROM).c_str());
 	SetDlgItemText(IDC_MAXWRITESTATIC,szBuffer);
 
 	// Read media.

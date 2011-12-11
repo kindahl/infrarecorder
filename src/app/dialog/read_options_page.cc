@@ -139,9 +139,9 @@ void CReadOptionsPage::UpdateSpeeds()
 		std::vector<ckcore::tuint32>::const_iterator it;
 		for (it = ReadSpeeds.begin(); it != ReadSpeeds.end(); it++)
 		{
-			m_ReadSpeedCombo.AddString(ckmmc::util::sec_to_disp_speed(*it,Profile).c_str());
+			m_ReadSpeedCombo.AddString(ckmmc::util::kb_to_disp_speed(*it,Profile).c_str());
 			m_ReadSpeedCombo.SetItemData(m_ReadSpeedCombo.GetCount() - 1,
-				static_cast<DWORD_PTR>(ckmmc::util::sec_to_human_speed(*it,
+				static_cast<DWORD_PTR>(ckmmc::util::kb_to_human_speed(*it,
 									   ckmmc::Device::ckPROFILE_CDR)));
 		}
 	}

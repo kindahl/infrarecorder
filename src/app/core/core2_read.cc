@@ -307,7 +307,7 @@ bool CCore2Read::ReadData(ckmmc::Device &Device,CAdvancedProgress *pProgress,
 			if (pProgress != NULL)
 			{
 				pProgress->set_status(lngGetString(STATUS_READTRACK2),
-					ckmmc::util::sec_to_human_speed(ulWritten,Profile));
+					ckmmc::util::kb_to_human_speed(ulWritten * 2352 / 1000,Profile));
 			}
 
 			ulWritten = 0;

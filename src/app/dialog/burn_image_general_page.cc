@@ -228,9 +228,9 @@ bool CBurnImageGeneralPage::InitRecorderMedia()
 		std::vector<ckcore::tuint32>::const_iterator it;
 		for (it = WriteSpeeds.begin(); it != WriteSpeeds.end(); it++)
 		{
-			m_WriteSpeedCombo.AddString(ckmmc::util::sec_to_disp_speed(*it,Profile).c_str());
+			m_WriteSpeedCombo.AddString(ckmmc::util::kb_to_disp_speed(*it,Profile).c_str());
 			m_WriteSpeedCombo.SetItemData(m_WriteSpeedCombo.GetCount() - 1,
-										  static_cast<DWORD_PTR>(ckmmc::util::sec_to_human_speed(*it,
+										  static_cast<DWORD_PTR>(ckmmc::util::kb_to_human_speed(*it,
 																 ckmmc::Device::ckPROFILE_CDR)));
 		}
 

@@ -225,9 +225,9 @@ bool CEraseDlg::InitRecorderMedia()
 		std::vector<ckcore::tuint32>::const_iterator it;
 		for (it = WriteSpeeds.begin(); it != WriteSpeeds.end(); it++)
 		{
-			m_SpeedCombo.AddString(ckmmc::util::sec_to_disp_speed(*it,Profile).c_str());
+			m_SpeedCombo.AddString(ckmmc::util::kb_to_disp_speed(*it,Profile).c_str());
 			m_SpeedCombo.SetItemData(m_SpeedCombo.GetCount() - 1,
-									 static_cast<DWORD_PTR>(ckmmc::util::sec_to_human_speed(*it,
+									 static_cast<DWORD_PTR>(ckmmc::util::kb_to_human_speed(*it,
 															ckmmc::Device::ckPROFILE_CDR)));
 		}
 	}
