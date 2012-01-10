@@ -128,6 +128,7 @@
               <File Id="french.irl" Name="french.irl" Source="..\..\etc\translations\software\french.irl"/>
               <File Id="galician.irl" Name="galician.irl" Source="..\..\etc\translations\software\galician.irl"/>
               <File Id="german.irl" Name="german.irl" Source="..\..\etc\translations\software\german.irl"/>
+              <File Id="georgian.irl" Name="georgian.irl" Source="..\..\etc\translations\software\georgian.irl"/>
               <File Id="greek.irl" Name="greek.irl" Source="..\..\etc\translations\software\greek.irl"/>
               <File Id="hebrew.irl" Name="hebrew.irl" Source="..\..\etc\translations\software\hebrew.irl"/>
               <File Id="hungarian.irl" Name="hungarian.irl" Source="..\..\etc\translations\software\hungarian.irl"/>

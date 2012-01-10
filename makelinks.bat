@@ -81,6 +81,7 @@ if not exist %path_w32d%languages\finnish.irl              mklink %path_w32d%lan
 if not exist %path_w32d%languages\french.irl               mklink %path_w32d%languages\french.irl               %path_trans_l%french.irl
 if not exist %path_w32d%languages\galician.irl             mklink %path_w32d%languages\galician.irl             %path_trans_l%galician.irl
 if not exist %path_w32d%languages\german.irl               mklink %path_w32d%languages\german.irl               %path_trans_l%german.irl
+if not exist %path_w32d%languages\georgian.irl             mklink %path_w32d%languages\georgian.irl             %path_trans_l%georgian.irl
 if not exist %path_w32d%languages\greek.irl                mklink %path_w32d%languages\greek.irl                %path_trans_l%greek.irl
 if not exist %path_w32d%languages\hebrew.irl               mklink %path_w32d%languages\hebrew.irl               %path_trans_l%hebrew.irl
 if not exist %path_w32d%languages\hungarian.irl            mklink %path_w32d%languages\hungarian.irl            %path_trans_l%hungarian.irl
@@ -127,6 +128,7 @@ if not exist %path_w32r%languages\finnish.irl              mklink %path_w32r%lan
 if not exist %path_w32r%languages\french.irl               mklink %path_w32r%languages\french.irl               %path_trans_l%french.irl
 if not exist %path_w32r%languages\galician.irl             mklink %path_w32r%languages\galician.irl             %path_trans_l%galician.irl
 if not exist %path_w32r%languages\german.irl               mklink %path_w32r%languages\german.irl               %path_trans_l%german.irl
+if not exist %path_w32r%languages\georgian.irl             mklink %path_w32r%languages\georgian.irl             %path_trans_l%georgian.irl
 if not exist %path_w32r%languages\greek.irl                mklink %path_w32r%languages\greek.irl                %path_trans_l%greek.irl
 if not exist %path_w32r%languages\hebrew.irl               mklink %path_w32r%languages\hebrew.irl               %path_trans_l%hebrew.irl
 if not exist %path_w32r%languages\hungarian.irl            mklink %path_w32r%languages\hungarian.irl            %path_trans_l%hungarian.irl
@@ -173,6 +175,7 @@ if not exist %path_w32p%languages\finnish.irl              mklink %path_w32p%lan
 if not exist %path_w32p%languages\french.irl               mklink %path_w32p%languages\french.irl               %path_trans_l%french.irl
 if not exist %path_w32p%languages\galician.irl             mklink %path_w32p%languages\galician.irl             %path_trans_l%galician.irl
 if not exist %path_w32p%languages\german.irl               mklink %path_w32p%languages\german.irl               %path_trans_l%german.irl
+if not exist %path_w32p%languages\georgian.irl             mklink %path_w32p%languages\georgian.irl             %path_trans_l%georgian.irl
 if not exist %path_w32p%languages\greek.irl                mklink %path_w32p%languages\greek.irl                %path_trans_l%greek.irl
 if not exist %path_w32p%languages\hebrew.irl               mklink %path_w32p%languages\hebrew.irl               %path_trans_l%hebrew.irl
 if not exist %path_w32p%languages\hungarian.irl            mklink %path_w32p%languages\hungarian.irl            %path_trans_l%hungarian.irl
@@ -219,6 +222,7 @@ if not exist %path_x64d%languages\finnish.irl              mklink %path_x64d%lan
 if not exist %path_x64d%languages\french.irl               mklink %path_x64d%languages\french.irl               %path_trans_l%french.irl
 if not exist %path_x64d%languages\galician.irl             mklink %path_x64d%languages\galician.irl             %path_trans_l%galician.irl
 if not exist %path_x64d%languages\german.irl               mklink %path_x64d%languages\german.irl               %path_trans_l%german.irl
+if not exist %path_x64d%languages\georgian.irl             mklink %path_x64d%languages\georgian.irl             %path_trans_l%georgian.irl
 if not exist %path_x64d%languages\greek.irl                mklink %path_x64d%languages\greek.irl                %path_trans_l%greek.irl
 if not exist %path_x64d%languages\hebrew.irl               mklink %path_x64d%languages\hebrew.irl               %path_trans_l%hebrew.irl
 if not exist %path_x64d%languages\hungarian.irl            mklink %path_x64d%languages\hungarian.irl            %path_trans_l%hungarian.irl
@@ -265,6 +269,7 @@ if not exist %path_x64r%languages\finnish.irl              mklink %path_x64r%lan
 if not exist %path_x64r%languages\french.irl               mklink %path_x64r%languages\french.irl               %path_trans_l%french.irl
 if not exist %path_x64r%languages\galician.irl             mklink %path_x64r%languages\galician.irl             %path_trans_l%galician.irl
 if not exist %path_x64r%languages\german.irl               mklink %path_x64r%languages\german.irl               %path_trans_l%german.irl
+if not exist %path_x64r%languages\georgian.irl             mklink %path_x64r%languages\georgian.irl             %path_trans_l%georgian.irl
 if not exist %path_x64r%languages\greek.irl                mklink %path_x64r%languages\greek.irl                %path_trans_l%greek.irl
 if not exist %path_x64r%languages\hebrew.irl               mklink %path_x64r%languages\hebrew.irl               %path_trans_l%hebrew.irl
 if not exist %path_x64r%languages\hungarian.irl            mklink %path_x64r%languages\hungarian.irl            %path_trans_l%hungarian.irl
@@ -311,6 +316,7 @@ if not exist %path_x64p%languages\finnish.irl              mklink %path_x64p%lan
 if not exist %path_x64p%languages\french.irl               mklink %path_x64p%languages\french.irl               %path_trans_l%french.irl
 if not exist %path_x64p%languages\galician.irl             mklink %path_x64p%languages\galician.irl             %path_trans_l%galician.irl
 if not exist %path_x64p%languages\german.irl               mklink %path_x64p%languages\german.irl               %path_trans_l%german.irl
+if not exist %path_x64p%languages\georgian.irl             mklink %path_x64p%languages\georgian.irl             %path_trans_l%georgian.irl
 if not exist %path_x64p%languages\greek.irl                mklink %path_x64p%languages\greek.irl                %path_trans_l%greek.irl
 if not exist %path_x64p%languages\hebrew.irl               mklink %path_x64p%languages\hebrew.irl               %path_trans_l%hebrew.irl
 if not exist %path_x64p%languages\hungarian.irl            mklink %path_x64p%languages\hungarian.irl            %path_trans_l%hungarian.irl

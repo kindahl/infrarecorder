@@ -178,6 +178,7 @@ FunctionEnd
   !insertmacro MUI_LANGUAGE "French"
   !insertmacro MUI_LANGUAGE "Galician"
   !insertmacro MUI_LANGUAGE "German"
+;  !insertmacro MUI_LANGUAGE "Georgian"
   !insertmacro MUI_LANGUAGE "Greek"
   !insertmacro MUI_LANGUAGE "Hebrew"
   !insertmacro MUI_LANGUAGE "Hungarian"
@@ -545,6 +546,18 @@ FunctionEnd
   LangString DESC_SecDeskShortcut ${LANG_GERMAN} "Symbol auf dem Desktop erstellen."
   LangString DESC_SecQuickShortcut ${LANG_GERMAN} "Symbol auf Schnellstartleiste erstellen."
   LangString DESC_SecLang ${LANG_GERMAN} "Weitere Sprachdateien fόr den mehrsprachigen Betrieb von InfraRecorder hinzufόgen."
+
+  ; Language strings (Georgian)
+  LangString NAME_SecCore ${LANG_GEORGIAN} "InfraRecorder Core Files (required)"
+  LangString NAME_SecStartShortcut ${LANG_GEORGIAN} "Start Menu Shortcuts"
+  LangString NAME_SecDeskShortcut ${LANG_GEORGIAN} "Desktop Shortcut"
+  LangString NAME_SecQuickShortcut ${LANG_GEORGIAN} "Quick Launch Shortcut"
+  LangString NAME_SecLang ${LANG_GEORGIAN} "Language Files"
+  LangString DESC_SecCore ${LANG_GEORGIAN} "The core files required to use InfraRecorder."
+  LangString DESC_SecStartShortcut ${LANG_GEORGIAN} "Adds icons to your start menu for easy access."
+  LangString DESC_SecDeskShortcut ${LANG_GEORGIAN} "Adds an icon to your desktop."
+  LangString DESC_SecQuickShortcut ${LANG_GEORGIAN} "Adds an icon to your quick launch bar."
+  LangString DESC_SecLang ${LANG_GEORGIAN} "Language files used for supporting different languages in InfraRecorder."
 
   ; Language strings (Greek)
   LangString NAME_SecCore ${LANG_GREEK} "Βασικά αρχεία του InfraRecorder (απαραίτητο)"
@@ -977,6 +990,7 @@ Section $(NAME_SecLang) SecLang
   File "..\..\etc\translations\software\french.irl"
   File "..\..\etc\translations\software\galician.irl"
   File "..\..\etc\translations\software\german.irl"
+  File "..\..\etc\translations\software\georgian.irl"
   File "..\..\etc\translations\software\greek.irl"
   File "..\..\etc\translations\software\hebrew.irl"
   File "..\..\etc\translations\software\hungarian.irl"
@@ -1077,6 +1091,9 @@ Section $(NAME_SecLang) SecLang
       ${Break}
     ${Case} "german"	; 1031
       StrCpy $LANGUAGE ${LANG_GERMAN}
+      ${Break}
+    ${Case} "georgian"
+      StrCpy $LANGUAGE ${LANG_GEORGIAN}
       ${Break}
     ${Case} "greek"	; 1032
       StrCpy $LANGUAGE ${LANG_GREEK}
@@ -1224,6 +1241,9 @@ Section $(NAME_SecLang) SecLang
       ${Break}
     ${Case} ${LANG_GERMAN}	; 1031
       StrCpy $0 "german.irl"
+      ${Break}
+    ${Case} ${LANG_GEORGIAN}
+      StrCpy $0 "georgian.irl"
       ${Break}
     ${Case} ${LANG_GREEK}	; 1032
       StrCpy $0 "greek.irl"
