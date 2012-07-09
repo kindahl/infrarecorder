@@ -155,6 +155,7 @@
               <File Id="turkish.irl" Name="turkish.irl" Source="..\..\etc\translations\software\turkish.irl"/>
               <File Id="ukrainian.irl" Name="ukrainian.irl" Source="..\..\etc\translations\software\ukrainian.irl"/>
               <File Id="valencian.irl" Name="valencian.irl" Source="..\..\etc\translations\software\valencian.irl"/>
+              <File Id="vietnamese.irl" Name="vietnamese.irl" Source="..\..\etc\translations\software\vietnamese.irl"/>
 
               <File Id="czech.chm" Name="czech.chm" Source="..\..\etc\translations\help\czech.chm"/>
               <File Id="german.chm" Name="german.chm" Source="..\..\etc\translations\help\german.chm"/>

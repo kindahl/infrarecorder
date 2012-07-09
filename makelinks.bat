@@ -108,6 +108,7 @@ if not exist %path_w32d%languages\thai.irl                 mklink %path_w32d%lan
 if not exist %path_w32d%languages\turkish.irl              mklink %path_w32d%languages\turkish.irl              %path_trans_l%turkish.irl
 if not exist %path_w32d%languages\ukrainian.irl            mklink %path_w32d%languages\ukrainian.irl            %path_trans_l%ukrainian.irl
 if not exist %path_w32d%languages\valencian.irl            mklink %path_w32d%languages\valencian.irl            %path_trans_l%valencian.irl
+if not exist %path_w32d%languages\vietnamese.irl           mklink %path_w32d%languages\vietnamese.irl           %path_trans_l%vietnamese.irl
 if not exist %path_w32r%languages\albanian.irl             mklink %path_w32r%languages\albanian.irl             %path_trans_l%albanian.irl
 if not exist %path_w32r%languages\arabic.irl               mklink %path_w32r%languages\arabic.irl               %path_trans_l%arabic.irl
 if not exist %path_w32r%languages\armenian.irl             mklink %path_w32r%languages\armenian.irl             %path_trans_l%armenian.irl
@@ -155,6 +156,7 @@ if not exist %path_w32r%languages\thai.irl                 mklink %path_w32r%lan
 if not exist %path_w32r%languages\turkish.irl              mklink %path_w32r%languages\turkish.irl              %path_trans_l%turkish.irl
 if not exist %path_w32r%languages\ukrainian.irl            mklink %path_w32r%languages\ukrainian.irl            %path_trans_l%ukrainian.irl
 if not exist %path_w32r%languages\valencian.irl            mklink %path_w32r%languages\valencian.irl            %path_trans_l%valencian.irl
+if not exist %path_w32r%languages\vietnamese.irl           mklink %path_w32r%languages\vietnamese.irl           %path_trans_l%vietnamese.irl
 if not exist %path_w32p%languages\albanian.irl             mklink %path_w32p%languages\albanian.irl             %path_trans_l%albanian.irl
 if not exist %path_w32p%languages\arabic.irl               mklink %path_w32p%languages\arabic.irl               %path_trans_l%arabic.irl
 if not exist %path_w32p%languages\armenian.irl             mklink %path_w32p%languages\armenian.irl             %path_trans_l%armenian.irl
@@ -202,6 +204,7 @@ if not exist %path_w32p%languages\thai.irl                 mklink %path_w32p%lan
 if not exist %path_w32p%languages\turkish.irl              mklink %path_w32p%languages\turkish.irl              %path_trans_l%turkish.irl
 if not exist %path_w32p%languages\ukrainian.irl            mklink %path_w32p%languages\ukrainian.irl            %path_trans_l%ukrainian.irl
 if not exist %path_w32p%languages\valencian.irl            mklink %path_w32p%languages\valencian.irl            %path_trans_l%valencian.irl
+if not exist %path_w32p%languages\vietnamese.irl           mklink %path_w32p%languages\vietnamese.irl           %path_trans_l%vietnamese.irl
 if not exist %path_x64d%languages\albanian.irl             mklink %path_x64d%languages\albanian.irl             %path_trans_l%albanian.irl
 if not exist %path_x64d%languages\arabic.irl               mklink %path_x64d%languages\arabic.irl               %path_trans_l%arabic.irl
 if not exist %path_x64d%languages\armenian.irl             mklink %path_x64d%languages\armenian.irl             %path_trans_l%armenian.irl
@@ -249,6 +252,7 @@ if not exist %path_x64d%languages\thai.irl                 mklink %path_x64d%lan
 if not exist %path_x64d%languages\turkish.irl              mklink %path_x64d%languages\turkish.irl              %path_trans_l%turkish.irl
 if not exist %path_x64d%languages\ukrainian.irl            mklink %path_x64d%languages\ukrainian.irl            %path_trans_l%ukrainian.irl
 if not exist %path_x64d%languages\valencian.irl            mklink %path_x64d%languages\valencian.irl            %path_trans_l%valencian.irl
+if not exist %path_x64d%languages\vietnamese.irl           mklink %path_x64d%languages\vietnamese.irl           %path_trans_l%vietnamese.irl
 if not exist %path_x64r%languages\albanian.irl             mklink %path_x64r%languages\albanian.irl             %path_trans_l%albanian.irl
 if not exist %path_x64r%languages\arabic.irl               mklink %path_x64r%languages\arabic.irl               %path_trans_l%arabic.irl
 if not exist %path_x64r%languages\armenian.irl             mklink %path_x64r%languages\armenian.irl             %path_trans_l%armenian.irl
@@ -296,6 +300,7 @@ if not exist %path_x64r%languages\thai.irl                 mklink %path_x64r%lan
 if not exist %path_x64r%languages\turkish.irl              mklink %path_x64r%languages\turkish.irl              %path_trans_l%turkish.irl
 if not exist %path_x64r%languages\ukrainian.irl            mklink %path_x64r%languages\ukrainian.irl            %path_trans_l%ukrainian.irl
 if not exist %path_x64r%languages\valencian.irl            mklink %path_x64r%languages\valencian.irl            %path_trans_l%valencian.irl
+if not exist %path_x64r%languages\vietnamese.irl           mklink %path_x64r%languages\vietnamese.irl           %path_trans_l%vietnamese.irl
 if not exist %path_x64p%languages\albanian.irl             mklink %path_x64p%languages\albanian.irl             %path_trans_l%albanian.irl
 if not exist %path_x64p%languages\arabic.irl               mklink %path_x64p%languages\arabic.irl               %path_trans_l%arabic.irl
 if not exist %path_x64p%languages\armenian.irl             mklink %path_x64p%languages\armenian.irl             %path_trans_l%armenian.irl
@@ -343,6 +348,7 @@ if not exist %path_x64p%languages\thai.irl                 mklink %path_x64p%lan
 if not exist %path_x64p%languages\turkish.irl              mklink %path_x64p%languages\turkish.irl              %path_trans_l%turkish.irl
 if not exist %path_x64p%languages\ukrainian.irl            mklink %path_x64p%languages\ukrainian.irl            %path_trans_l%ukrainian.irl
 if not exist %path_x64p%languages\valencian.irl            mklink %path_x64p%languages\valencian.irl            %path_trans_l%valencian.irl
+if not exist %path_x64p%languages\vietnamese.irl           mklink %path_x64p%languages\vietnamese.irl           %path_trans_l%vietnamese.irl
 
 rem make symbolic links to translated help.
 if not exist %path_w32d%languages\czech.chm                mklink %path_w32d%languages\czech.chm                %path_trans_h%czech.chm

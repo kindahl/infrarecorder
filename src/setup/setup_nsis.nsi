@@ -205,6 +205,7 @@ FunctionEnd
   !insertmacro MUI_LANGUAGE "Turkish"
   !insertmacro MUI_LANGUAGE "Ukrainian"
 ;  !insertmacro MUI_LANGUAGE "Valencian"
+;  !insertmacro MUI_LANGUAGE "Vietnamese"
 
 ;--------------------------------
 ; A customized language selection dialog.
@@ -883,6 +884,18 @@ FunctionEnd
   LangString DESC_SecQuickShortcut ${LANG_UKRAINIAN} "Додає іконку до панелі швидкого доступу."
   LangString DESC_SecLang ${LANG_UKRAINIAN} "Файли мови використовуються для підтримки різних мов у InfraRecorder."
 
+  ; Language strings (Vietnamese)
+  LangString NAME_SecCore ${LANG_VIETNAMESE} "InfraRecorder Core Files (required)"
+  LangString NAME_SecStartShortcut ${LANG_VIETNAMESE} "Start Menu Shortcuts"
+  LangString NAME_SecDeskShortcut ${LANG_VIETNAMESE} "Desktop Shortcut"
+  LangString NAME_SecQuickShortcut ${LANG_VIETNAMESE} "Quick Launch Shortcut"
+  LangString NAME_SecLang ${LANG_VIETNAMESE} "Language Files"
+  LangString DESC_SecCore ${LANG_VIETNAMESE} "The core files required to use InfraRecorder."
+  LangString DESC_SecStartShortcut ${LANG_VIETNAMESE} "Adds icons to your start menu for easy access."
+  LangString DESC_SecDeskShortcut ${LANG_VIETNAMESE} "Adds an icon to your desktop."
+  LangString DESC_SecQuickShortcut ${LANG_VIETNAMESE} "Adds an icon to your quick launch bar."
+  LangString DESC_SecLang ${LANG_VIETNAMESE} "Language files used for supporting different languages in InfraRecorder."
+
 ;--------------------------------
 ; Installer Sections
 
@@ -1017,6 +1030,7 @@ Section $(NAME_SecLang) SecLang
   File "..\..\etc\translations\software\turkish.irl"
   File "..\..\etc\translations\software\ukrainian.irl"
   File "..\..\etc\translations\software\valencian.irl"
+  File "..\..\etc\translations\software\vietnamese.irl"
   File "..\..\etc\translations\help\czech.chm"
   File "..\..\etc\translations\help\french.chm"
   File "..\..\etc\translations\help\german.chm"
@@ -1173,6 +1187,9 @@ Section $(NAME_SecLang) SecLang
     ${Case} "valencian"	; 1058
       StrCpy $LANGUAGE ${LANG_VALENCIAN}
       ${Break}
+    ${Case} "vietnamese"
+      StrCpy $LANGUAGE ${LANG_VIETNAMESE}
+      ${Break}
   ${EndSwitch}
 
   ; Calculate file name of the translation file.
@@ -1322,6 +1339,9 @@ Section $(NAME_SecLang) SecLang
       ${Break}
     ${Case} ${LANG_VALENCIAN}
       StrCpy $0 "valencian.irl"
+      ${Break}
+    ${Case} ${LANG_VIETNAMESE}
+      StrCpy $0 "vietnamese.irl"
       ${Break}
   ${EndSwitch}
 
