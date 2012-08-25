@@ -65,6 +65,15 @@ bool CProjectPropIsoPage::Translate()
 		if (iStaticRight > iMaxStaticRight)
 			iMaxStaticRight = iStaticRight;
 	}
+    if (pLng->GetValuePtr(IDC_CHARSETSTATIC,szStrValue))
+	{
+		SetDlgItemText(IDC_CHARSETSTATIC,szStrValue);
+
+		// Update the static width if necessary.
+		int iStaticRight = UpdateStaticWidth(m_hWnd,IDC_CHARSETSTATIC,szStrValue);
+		if (iStaticRight > iMaxStaticRight)
+			iMaxStaticRight = iStaticRight;
+	}
 	if (pLng->GetValuePtr(IDC_JOLIETCHECK,szStrValue))
 		SetDlgItemText(IDC_JOLIETCHECK,szStrValue);
 	if (pLng->GetValuePtr(IDC_JOLIETLONGNAMESCHECK,szStrValue))
@@ -88,6 +97,7 @@ bool CProjectPropIsoPage::OnApply()
 {
 	g_ProjectSettings.m_iIsoLevel = m_LevelCombo.GetCurSel();
 	g_ProjectSettings.m_iIsoFormat = m_FormatCombo.GetCurSel();
+    g_ProjectSettings.m_IsoCharSet = static_cast<CProjectSettings::IsoCharSet>(m_CharSetCombo.GetCurSel());
 	g_ProjectSettings.m_bJoliet = IsDlgButtonChecked(IDC_JOLIETCHECK) == TRUE;
 	g_ProjectSettings.m_bJolietLongNames = IsDlgButtonChecked(IDC_JOLIETLONGNAMESCHECK) == TRUE;
 	g_ProjectSettings.m_bOmitVerNum = IsDlgButtonChecked(IDC_OMITVNCHECK) == TRUE;
@@ -112,7 +122,6 @@ LRESULT CProjectPropIsoPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,
 {
 	// Setup the level combo box.
 	m_LevelCombo = GetDlgItem(IDC_LEVELCOMBO);
-
 	m_LevelCombo.AddString(lngGetString(PROJECTPROP_ISOLEVEL1));
 	m_LevelCombo.AddString(lngGetString(PROJECTPROP_ISOLEVEL2));
 	m_LevelCombo.AddString(lngGetString(PROJECTPROP_ISOLEVEL3));
@@ -121,10 +130,16 @@ LRESULT CProjectPropIsoPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,
 
 	// Format combo box.
 	m_FormatCombo = GetDlgItem(IDC_FORMATCOMBO);
-
 	m_FormatCombo.AddString(lngGetString(PROJECTPROP_MODE1));
 	m_FormatCombo.AddString(lngGetString(PROJECTPROP_MODE2));
 	m_FormatCombo.SetCurSel(g_ProjectSettings.m_iIsoFormat);
+
+    // Character set combo box.
+    m_CharSetCombo = GetDlgItem(IDC_CHARSETCOMBO);
+    m_CharSetCombo.AddString(lngGetString(PROJECTPROP_ISO_CHARSET_ISO));
+    m_CharSetCombo.AddString(_T("DOS"));
+    m_CharSetCombo.AddString(_T("ASCII"));
+    m_CharSetCombo.SetCurSel(g_ProjectSettings.m_IsoCharSet);
 
 	// Joliet.
 	CheckDlgButton(IDC_JOLIETCHECK,g_ProjectSettings.m_bJoliet);

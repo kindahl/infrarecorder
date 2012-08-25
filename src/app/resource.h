@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by InfraRecorder.rc
+// Used by infrarecorder.rc
 //
 #define IDD_PROPPAGE_DEVICEGENERAL      106
 #define IDR_MAINFRAME                   128
@@ -201,7 +201,10 @@
 #define IDC_FORMATCOMBO                 1092
 #define IDC_FORMATSTATIC                1093
 #define IDC_ALBUMSTATIC                 1094
+#define IDC_CHARSETCOMBO                1094
 #define IDC_ALBUMEDIT                   1095
+#define IDC_FORMATSTATIC2               1095
+#define IDC_CHARSETSTATIC               1095
 #define IDC_ARTISTEDIT                  1096
 #define IDC_ARTISTSTATIC                1097
 #define IDC_TRACKLIST                   1098

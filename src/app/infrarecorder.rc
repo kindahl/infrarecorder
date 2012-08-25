@@ -13,13 +13,11 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// English (U.S.) resources
+// English (United States) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-#ifdef _WIN32
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 #pragma code_page(1252)
-#endif //_WIN32
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -46,7 +44,7 @@ END
 // Menu
 //
 
-IDR_MAINFRAME MENU 
+IDR_MAINFRAME MENU
 BEGIN
     POPUP "&File"
     BEGIN
@@ -277,16 +275,18 @@ FONT 8, "MS Shell Dlg", 0, 0, 0x0
 BEGIN
     LTEXT           "Level:",IDC_LEVELSTATIC,7,9,50,8
     COMBOBOX        IDC_LEVELCOMBO,57,7,162,140,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
-    CONTROL         "",IDC_BEVELSTATIC,"Static",SS_ETCHEDHORZ | WS_GROUP,7,41,212,1,WS_EX_STATICEDGE
-    CONTROL         "Use Joliet file name extension",IDC_JOLIETCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,48,212,10
+    CONTROL         "",IDC_BEVELSTATIC,"Static",SS_ETCHEDHORZ | WS_GROUP,7,57,212,1,WS_EX_STATICEDGE
+    CONTROL         "Use Joliet file name extension",IDC_JOLIETCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,64,212,10
     CONTROL         "Allow more than 64 characters for Joliet names",IDC_JOLIETLONGNAMESCHECK,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,19,61,200,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,19,77,200,10
     LTEXT           "Format:",IDC_FORMATSTATIC,7,25,49,8
     COMBOBOX        IDC_FORMATCOMBO,57,23,162,108,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
     CONTROL         "Omit version numbers from ISO9660 file names",IDC_OMITVNCHECK,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,74,212,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,90,212,10
     CONTROL         "Allow more than 8 directories of path depth",IDC_DEEPDIRCHECK,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,87,212,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,103,212,10
+    COMBOBOX        IDC_CHARSETCOMBO,57,39,162,108,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Character set:",IDC_CHARSETSTATIC,7,41,49,8
 END
 
 IDD_PROPPAGE_PROJECTPROPFIELDS DIALOGEX 0, 0, 226, 154
@@ -507,7 +507,7 @@ END
 //
 
 #ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO 
+GUIDELINES DESIGNINFO
 BEGIN
     IDD_PROPPAGE_DEVICEGENERAL, DIALOG
     BEGIN
@@ -669,7 +669,7 @@ END
 // Accelerator
 //
 
-IDR_MAINFRAME ACCELERATORS 
+IDR_MAINFRAME ACCELERATORS
 BEGIN
     VK_DELETE,      ID_EDIT_REMOVE,         VIRTKEY, NOINVERT
     VK_F2,          ID_EDIT_RENAME,         VIRTKEY, NOINVERT
@@ -727,7 +727,7 @@ END
 // String Table
 //
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDR_MAINFRAME           "InfraRecorder"
     ID_VIEW_UPLEVEL         "Go up one level."
@@ -742,7 +742,7 @@ BEGIN
     ID_NEWPROJECT_DATA      "Create a new data project."
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_FILE_OPEN            "Open an existing project."
     ID_FILE_CLOSE           "Close the active document\nClose"
@@ -751,25 +751,25 @@ BEGIN
     ID_FILE_PAGE_SETUP      "Change the printing options\nPage Setup"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_APP_ABOUT            "Display program information, version number and copyright."
     ID_APP_EXIT             "Quit the application."
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_NEXT_PANE            "Switch to the next window pane\nNext Pane"
     ID_PREV_PANE            "Switch back to the previous window pane\nPrevious Pane"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_VIEW_TOOLBAR         "Show or hide the toolbar.\nToggle ToolBar"
     ID_VIEW_STATUS_BAR      "Show or hide the status bar.\nToggle StatusBar"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ATL_IDS_SCSIZE          "Change the window size"
     ATL_IDS_SCMOVE          "Change the window position"
@@ -780,24 +780,24 @@ BEGIN
     ATL_IDS_SCCLOSE         "Close the active window and prompts to save the documents"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ATL_IDS_SCRESTORE       "Restore the window to normal size"
     ATL_IDS_SCTASKLIST      "Activate Task List"
     ATL_IDS_MDICHILD        "Activate this window"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ATL_IDS_IDLEMESSAGE     "Ready"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ATL_IDS_MRU_FILE        "Open this document"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_ACTIONS_ERASERE      "Erase or format a disc."
     ID_VIEW_PROGRAMLOG      "View the program log."
@@ -806,7 +806,7 @@ BEGIN
     ID_OPTIONS_DEVICES      "View device properties and edit the device configuration."
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_NEWPROJECT_DATACD    "Create a new data CD project."
     ID_NEWPROJECT_AUDIO     "Create a new audio CD project."
@@ -816,7 +816,7 @@ BEGIN
     ID_EDIT_REMOVE          "Remove the selected item(s) from the project."
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_FILE_PROJECTPROPERTIES "Display and change project settings."
     ID_BURNCOMPILATION_DISCIMAGE 
@@ -829,7 +829,7 @@ BEGIN
     ID_COPYDISC_DISCIMAGE   "Copy the contents of a CD to a disc image."
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_ADD_SELECTED         "Add the selected object(s) to the project."
     ID_ADD_ALL              "Add all object(s) to the project."
@@ -841,7 +841,7 @@ BEGIN
     ID_NEWPROJECT_DATADVD   "Create a new data DVD project."
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_EDIT_SELECTALL       "Select all items in the window."
     ID_EDIT_INVERTSELECTION "Reverse which items are selected and which are not."
@@ -849,18 +849,16 @@ BEGIN
     ID_EDIT_IMPORT          "Import file(s) to the project."
 END
 
-#endif    // English (U.S.) resources
+#endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
 /////////////////////////////////////////////////////////////////////////////
-// Swedish resources
+// Swedish (Sweden) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_SVE)
-#ifdef _WIN32
-LANGUAGE LANG_SWEDISH, SUBLANG_DEFAULT
+LANGUAGE LANG_SWEDISH, SUBLANG_SWEDISH
 #pragma code_page(1252)
-#endif //_WIN32
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -881,7 +879,7 @@ END
 // Menu
 //
 
-IDR_PROJLISTSELMENU MENU 
+IDR_PROJLISTSELMENU MENU
 BEGIN
     POPUP "Popup Menu"
     BEGIN
@@ -892,7 +890,7 @@ BEGIN
     END
 END
 
-IDR_PROJLISTNOSELMENU MENU 
+IDR_PROJLISTNOSELMENU MENU
 BEGIN
     POPUP "Popup Menu"
     BEGIN
@@ -908,7 +906,7 @@ BEGIN
     END
 END
 
-IDR_SHELLTREEMENU MENU 
+IDR_SHELLTREEMENU MENU
 BEGIN
     POPUP "Popup Menu"
     BEGIN
@@ -916,7 +914,7 @@ BEGIN
     END
 END
 
-IDR_DIAGNOSTICSMENU MENU 
+IDR_DIAGNOSTICSMENU MENU
 BEGIN
     POPUP ""
     BEGIN
@@ -1164,7 +1162,7 @@ END
 //
 
 #ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO 
+GUIDELINES DESIGNINFO
 BEGIN
     IDD_PROGRESSDLG, DIALOG
     BEGIN
@@ -1330,7 +1328,7 @@ IDB_MAINLARGEBITMAP     BITMAP                  "Resources\\toolbar-main_large.b
 IDB_MAINLARGEBITMAP_    BITMAP                  "Resources\\toolbar-main_large_.bmp"
 IDB_PANECLOSEBITMAP     BITMAP                  "Resources\\button-close.bmp"
 IDB_ABOUTBITMAP         BITMAP                  "Resources\\background-about.bmp"
-#endif    // Swedish resources
+#endif    // Swedish (Sweden) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

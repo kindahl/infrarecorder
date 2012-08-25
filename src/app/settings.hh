@@ -340,6 +340,12 @@ public:
 	int m_iFileSystem;
 	int m_iIsoLevel;
 	int m_iIsoFormat;	// FIXME: Use defined values here. Rename?
+    enum IsoCharSet
+    {
+        CHARSET_ISO,
+        CHARSET_DOS,
+        CHARSET_ASCII
+    } m_IsoCharSet;
 	bool m_bJoliet;
 	bool m_bJolietLongNames;
 	bool m_bOmitVerNum;
@@ -408,6 +414,7 @@ public:
 		m_iFileSystem = FILESYSTEM_ISO;
 		m_iIsoLevel = 2;
 		m_iIsoFormat = 0;
+        m_iIsoFormat = CHARSET_ISO;
 		m_bJoliet = true;
 		m_bJolietLongNames = true;
 		m_bOmitVerNum = false;

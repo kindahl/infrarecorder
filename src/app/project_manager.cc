@@ -1350,6 +1350,7 @@ void CProjectManager::SaveProjectISO(CXmlProcessor *pXml)
 	pXml->AddElement(_T("ISO"),_T(""),true);
 		pXml->AddElement(_T("Level"),g_ProjectSettings.m_iIsoLevel);
 		pXml->AddElement(_T("Format"),g_ProjectSettings.m_iIsoFormat);
+        pXml->AddElement(_T("CharSet"),g_ProjectSettings.m_IsoCharSet);
 		pXml->AddElement(_T("DeepDirs"),g_ProjectSettings.m_bDeepDirs);
 		pXml->AddElement(_T("Joliet"),_T(""),true);
 			pXml->AddElementAttr(_T("enable"),g_ProjectSettings.m_bJoliet);
@@ -1366,6 +1367,11 @@ bool CProjectManager::LoadProjectISO(CXmlProcessor *pXml)
 
 	pXml->GetSafeElementData(_T("Level"),&g_ProjectSettings.m_iIsoLevel);
 	pXml->GetSafeElementData(_T("Format"),&g_ProjectSettings.m_iIsoFormat);
+
+    int iCharSet = 0;
+    pXml->GetSafeElementData(_T("CharSet"),&iCharSet);
+    g_ProjectSettings.m_IsoCharSet = static_cast<CProjectSettings::IsoCharSet>(iCharSet);
+
 	pXml->GetSafeElementData(_T("DeepDirs"),&g_ProjectSettings.m_bDeepDirs);
 
 	if (!pXml->EnterElement(_T("Joliet")))

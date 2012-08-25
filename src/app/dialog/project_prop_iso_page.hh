@@ -24,6 +24,7 @@ class CProjectPropIsoPage : public CPropertyPageImpl<CProjectPropIsoPage>
 private:
 	CComboBox m_LevelCombo;
 	CComboBox m_FormatCombo;
+    CComboBox m_CharSetCombo;
 
 	bool Translate();
 

@@ -392,3 +392,4 @@
 	// Added version <future version>.
 	TRSTR(STITLE_PREPOPERATION /* 0x0144 */, _T("Preparing Operation"))
 	TRSTR(STATUS_GATHER_FILE_INFO /* 0x0145 */, _T("Gathering project file information."))
+    TRSTR(PROJECTPROP_ISO_CHARSET_ISO /* 0x0146 */, _T("ISO9660 (standard)"))

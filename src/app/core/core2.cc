@@ -703,54 +703,61 @@ int CCore2::CreateImage(ckcore::OutStream &OutStream,const ckfilesystem::FileSet
 				ckfilesystem::FileSystem::TYPE_ISO_JOLIET :
 				ckfilesystem::FileSystem::TYPE_ISO;
 			break;
-				
 		case FILESYSTEM_ISO_UDF:
 			FileSysType = g_ProjectSettings.m_bJoliet ?
 				ckfilesystem::FileSystem::TYPE_ISO_UDF_JOLIET :
 				ckfilesystem::FileSystem::TYPE_ISO_UDF;
 				break;
-
 		case FILESYSTEM_DVDVIDEO:
 			FileSysType = ckfilesystem::FileSystem::TYPE_DVDVIDEO;
 			break;
-
 		case FILESYSTEM_UDF:
 			FileSysType = ckfilesystem::FileSystem::TYPE_UDF;			
 			break;
-
 		default:
 			ATLASSERT(false);
 			ckcore::throw_internal_error(_T(__FILE__),__LINE__);
 	}
 
-	ckfilesystem::Iso::InterLevel InterchangeLevel;
+	ckfilesystem::Iso::InterchangeLevel InterchangeLevel;
 	switch (g_ProjectSettings.m_iIsoLevel)
 	{
 		case 0:
 			InterchangeLevel = ckfilesystem::Iso::LEVEL_1;
 			break;
-
 		case 1:
 			InterchangeLevel = ckfilesystem::Iso::LEVEL_2;
 			break;
-
 		case 2:
 			InterchangeLevel = ckfilesystem::Iso::LEVEL_3;
 			break;
-
 		case 3:
 			InterchangeLevel = ckfilesystem::Iso::ISO9660_1999;
 			break;
-
 		default:
 			ATLASSERT(false);
 			ckcore::throw_internal_error(_T(__FILE__),__LINE__);
 	}
 
+    ckfilesystem::CharacterSet CharacterSet;
+    switch (g_ProjectSettings.m_IsoCharSet)
+	{
+        case CProjectSettings::CHARSET_ISO:
+            CharacterSet = ckfilesystem::CHARSET_ISO;
+            break;
+        case CProjectSettings::CHARSET_DOS:
+            CharacterSet = ckfilesystem::CHARSET_DOS;
+            break;
+        case CProjectSettings::CHARSET_ASCII:
+            CharacterSet = ckfilesystem::CHARSET_ASCII;
+            break;
+    }
+
 	ckfilesystem::FileSystem FileSys(FileSysType,Files);
 
 	FileSys.set_long_joliet_names(g_ProjectSettings.m_bJolietLongNames);
 	FileSys.set_interchange_level(InterchangeLevel);
+    FileSys.set_char_set(CharacterSet);
 	FileSys.set_include_file_ver_info(!g_ProjectSettings.m_bOmitVerNum);
 	FileSys.set_relax_max_dir_level(g_ProjectSettings.m_bDeepDirs);
 
