@@ -150,10 +150,10 @@ bool CItemData::HasAudioData()
 	return m_pAudioData != NULL;
 }
 
-CItemData::CIso9660Data *CItemData::GetIsoData()
+CItemData::CIsoData *CItemData::GetIsoData()
 {
 	if (m_pIsoData == NULL)
-		m_pIsoData = new CIso9660Data();
+		m_pIsoData = new CIsoData();
 	
 	return m_pIsoData;
 }
@@ -1809,12 +1809,12 @@ void CTreeManager::GetPathList(ckfilesystem::FileSet &Files,CProjectNode *pRootN
 	}
 }
 
-void CTreeManager::ImportLocalIso9660Tree(ckfilesystem::Iso9660TreeNode *pLocalIsoNode,
-										  CProjectNode *pLocalNode,
-										  std::vector<std::pair<ckfilesystem::Iso9660TreeNode *,
-										  CProjectNode *> > &FolderStack)
+void CTreeManager::ImportLocalIsoTree(ckfilesystem::IsoTreeNode *pLocalIsoNode,
+									  CProjectNode *pLocalNode,
+									  std::vector<std::pair<ckfilesystem::IsoTreeNode *,
+									  CProjectNode *> > &FolderStack)
 {
-	std::vector<ckfilesystem::Iso9660TreeNode *>::const_iterator itIsoNode;
+	std::vector<ckfilesystem::IsoTreeNode *>::const_iterator itIsoNode;
 	for (itIsoNode = pLocalIsoNode->children_.begin(); itIsoNode !=
 		pLocalIsoNode->children_.end(); itIsoNode++)
 	{
@@ -1846,7 +1846,7 @@ void CTreeManager::ImportLocalIso9660Tree(ckfilesystem::Iso9660TreeNode *pLocalI
 				lstrcat(szFilePath,_T("/"));
 				pCurNode->pItemData->EndEditFilePath();
 
-				ckfilesystem::Iso9660::make_dosdatetime((*itIsoNode)->rec_timestamp_,
+				ckfilesystem::iso_make_dosdatetime((*itIsoNode)->rec_timestamp_,
 					pCurNode->pItemData->usFileDate,
 					pCurNode->pItemData->usFileTime);
 
@@ -1860,7 +1860,7 @@ void CTreeManager::ImportLocalIso9660Tree(ckfilesystem::Iso9660TreeNode *pLocalI
 				}
 
 				// Add ISO9660 data.
-				CItemData::CIso9660Data *pIsoData = pCurNode->pItemData->GetIsoData();
+				CItemData::CIsoData *pIsoData = pCurNode->pItemData->GetIsoData();
 
 				pIsoData->file_flags_ = (*itIsoNode)->file_flags_;
 				pIsoData->file_unit_size_ = (*itIsoNode)->file_unit_size_;
@@ -1893,11 +1893,11 @@ void CTreeManager::ImportLocalIso9660Tree(ckfilesystem::Iso9660TreeNode *pLocalI
 			lstrcat(szFilePath,_T("/"));
 			pItemData->EndEditFilePath();
 
-			ckfilesystem::Iso9660::make_dosdatetime((*itIsoNode)->rec_timestamp_,
-													pItemData->usFileDate,pItemData->usFileTime);
+			ckfilesystem::iso_make_dosdatetime((*itIsoNode)->rec_timestamp_,
+                                               pItemData->usFileDate,pItemData->usFileTime);
 
 			// Add ISO9660 data.
-			CItemData::CIso9660Data *pIsoData = pItemData->GetIsoData();
+			CItemData::CIsoData *pIsoData = pItemData->GetIsoData();
 
 			pIsoData->file_flags_ = (*itIsoNode)->file_flags_;
 			pIsoData->file_unit_size_ = (*itIsoNode)->file_unit_size_;
@@ -1915,19 +1915,19 @@ void CTreeManager::ImportLocalIso9660Tree(ckfilesystem::Iso9660TreeNode *pLocalI
 	}
 }
 
-void CTreeManager::ImportIso9660Tree(ckfilesystem::Iso9660TreeNode *pIsoRootNode,CProjectNode *pRootNode)
+void CTreeManager::ImportIsoTree(ckfilesystem::IsoTreeNode *pIsoRootNode,CProjectNode *pRootNode)
 {
 	// Save the information.
-	std::vector<std::pair<ckfilesystem::Iso9660TreeNode *,CProjectNode *> > FolderStack;
-	ImportLocalIso9660Tree(pIsoRootNode,pRootNode,FolderStack);
+	std::vector<std::pair<ckfilesystem::IsoTreeNode *,CProjectNode *> > FolderStack;
+	ImportLocalIsoTree(pIsoRootNode,pRootNode,FolderStack);
 
 	while (FolderStack.size() > 0)
 	{ 
-		ckfilesystem::Iso9660TreeNode *pIsoNode = FolderStack.back().first;
+		ckfilesystem::IsoTreeNode *pIsoNode = FolderStack.back().first;
 		CProjectNode *pNode = FolderStack.back().second;
 
 		FolderStack.pop_back();
 
-		ImportLocalIso9660Tree(pIsoNode,pNode,FolderStack);
+		ImportLocalIsoTree(pIsoNode,pNode,FolderStack);
 	}
 }

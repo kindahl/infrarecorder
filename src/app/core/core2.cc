@@ -698,16 +698,16 @@ int CCore2::CreateImage(ckcore::OutStream &OutStream,const ckfilesystem::FileSet
 	ckfilesystem::FileSystem::Type FileSysType;
 	switch (g_ProjectSettings.m_iFileSystem)
 	{
-		case FILESYSTEM_ISO9660:
+		case FILESYSTEM_ISO:
 			FileSysType = g_ProjectSettings.m_bJoliet ?
-				ckfilesystem::FileSystem::TYPE_ISO9660_JOLIET :
-				ckfilesystem::FileSystem::TYPE_ISO9660;
+				ckfilesystem::FileSystem::TYPE_ISO_JOLIET :
+				ckfilesystem::FileSystem::TYPE_ISO;
 			break;
 				
-		case FILESYSTEM_ISO9660_UDF:
+		case FILESYSTEM_ISO_UDF:
 			FileSysType = g_ProjectSettings.m_bJoliet ?
-				ckfilesystem::FileSystem::TYPE_ISO9660_UDF_JOLIET : 
-				ckfilesystem::FileSystem::TYPE_ISO9660_UDF;
+				ckfilesystem::FileSystem::TYPE_ISO_UDF_JOLIET :
+				ckfilesystem::FileSystem::TYPE_ISO_UDF;
 				break;
 
 		case FILESYSTEM_DVDVIDEO:
@@ -723,23 +723,23 @@ int CCore2::CreateImage(ckcore::OutStream &OutStream,const ckfilesystem::FileSet
 			ckcore::throw_internal_error(_T(__FILE__),__LINE__);
 	}
 
-	ckfilesystem::Iso9660::InterLevel InterchangeLevel;
+	ckfilesystem::Iso::InterLevel InterchangeLevel;
 	switch (g_ProjectSettings.m_iIsoLevel)
 	{
 		case 0:
-			InterchangeLevel = ckfilesystem::Iso9660::LEVEL_1;			
+			InterchangeLevel = ckfilesystem::Iso::LEVEL_1;
 			break;
 
 		case 1:
-			InterchangeLevel = ckfilesystem::Iso9660::LEVEL_2;
+			InterchangeLevel = ckfilesystem::Iso::LEVEL_2;
 			break;
 
 		case 2:
-			InterchangeLevel = ckfilesystem::Iso9660::LEVEL_3;
+			InterchangeLevel = ckfilesystem::Iso::LEVEL_3;
 			break;
 
 		case 3:
-			InterchangeLevel = ckfilesystem::Iso9660::ISO9660_1999;
+			InterchangeLevel = ckfilesystem::Iso::ISO9660_1999;
 			break;
 
 		default:

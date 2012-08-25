@@ -20,8 +20,8 @@
 #include <list>
 #include <vector>
 #include <ckfilesystem/fileset.hh>
-#include <ckfilesystem/iso9660reader.hh>
-#include <ckfilesystem/iso9660writer.hh>
+#include <ckfilesystem/isoreader.hh>
+#include <ckfilesystem/isowriter.hh>
 #include <base/xml_processor.hh>
 #include <base/string_container.hh>
 
@@ -52,7 +52,7 @@ public:
 		}
 	};
 
-	typedef ckfilesystem::Iso9660ImportData CIso9660Data;
+	typedef ckfilesystem::IsoImportData CIsoData;
 
 private:
 	TCHAR m_szFileName[MAX_PATH];	// File name in the project (disc image).
@@ -63,7 +63,7 @@ private:
 
 	// Only allocated when needed.
 	CAudioData *m_pAudioData;
-	CIso9660Data *m_pIsoData;
+	CIsoData *m_pIsoData;
 
 public:
 	CItemData();
@@ -102,7 +102,7 @@ public:
 	bool HasAudioData();
 	CAudioData *GetAudioData();
 	bool HasIsoData();
-	CIso9660Data *GetIsoData();
+	CIsoData *GetIsoData();
 };
 
 class CProjectNode
@@ -271,9 +271,9 @@ public:
 
 	void GetPathList(ckfilesystem::FileSet &Files,CProjectNode *pRootNode,int iPathStripLen = 0);
 
-	void ImportLocalIso9660Tree(ckfilesystem::Iso9660TreeNode *pLocalIsoNode,CProjectNode *pLocalNode,
-		std::vector<std::pair<ckfilesystem::Iso9660TreeNode *,CProjectNode *> > &FolderStack);
-	void ImportIso9660Tree(ckfilesystem::Iso9660TreeNode *pIsoRootNode,CProjectNode *pRootNode);
+	void ImportLocalIsoTree(ckfilesystem::IsoTreeNode *pLocalIsoNode,CProjectNode *pLocalNode,
+		std::vector<std::pair<ckfilesystem::IsoTreeNode *,CProjectNode *> > &FolderStack);
+	void ImportIsoTree(ckfilesystem::IsoTreeNode *pIsoRootNode,CProjectNode *pRootNode);
 };
 
 extern CTreeManager g_TreeManager;

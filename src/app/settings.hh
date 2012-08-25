@@ -61,8 +61,8 @@
 #define FIFO_MAX						800  // In MiB.
 #define FIFO_MIN						4
 
-#define FILESYSTEM_ISO9660				0
-#define FILESYSTEM_ISO9660_UDF			1
+#define FILESYSTEM_ISO                  0
+#define FILESYSTEM_ISO_UDF              1
 #define FILESYSTEM_DVDVIDEO				2
 #define FILESYSTEM_UDF					3
 
@@ -405,7 +405,7 @@ public:
 
 	void Reset()
 	{
-		m_iFileSystem = FILESYSTEM_ISO9660;
+		m_iFileSystem = FILESYSTEM_ISO;
 		m_iIsoLevel = 2;
 		m_iIsoFormat = 0;
 		m_bJoliet = true;

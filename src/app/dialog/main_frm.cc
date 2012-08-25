@@ -2720,7 +2720,7 @@ LRESULT CMainFrame::OnNewProjectDataCDMS(WORD wNotifyCode,WORD wID,HWND hWndCtl,
 
 	g_ProjectManager.NewDataProject(SPACEMETER_SIZE_703MB);
 
-	g_ProjectSettings.m_iFileSystem = FILESYSTEM_ISO9660;
+	g_ProjectSettings.m_iFileSystem = FILESYSTEM_ISO;
 	g_ProjectSettings.m_iIsoFormat = 1;	// Mode 2 (multi-session).
 
 	return 0;
@@ -3147,10 +3147,10 @@ LRESULT CMainFrame::OnActionsImportsession(WORD wNotifyCode,WORD wID,HWND hWndCt
 			return 0;
 	}
 
-	if (g_ProjectSettings.m_iFileSystem != FILESYSTEM_ISO9660)
+	if (g_ProjectSettings.m_iFileSystem != FILESYSTEM_ISO)
 	{
 		if (lngMessageBox(m_hWnd,WARNING_IMPORTFS,GENERAL_WARNING,MB_YESNO | MB_ICONWARNING) == IDYES)
-			g_ProjectSettings.m_iFileSystem = FILESYSTEM_ISO9660;
+			g_ProjectSettings.m_iFileSystem = FILESYSTEM_ISO;
 		else
 			return 0;
 	}
@@ -3184,11 +3184,11 @@ LRESULT CMainFrame::OnActionsImportsession(WORD wNotifyCode,WORD wID,HWND hWndCt
 		CCore2InStream InStream(g_pLogDlg,*pDevice,0,
 			ImportSessionDlg.m_pSelTrackData->m_ulTrackAddr + ImportSessionDlg.m_pSelTrackData->m_ulTrackLen);
 
-		ckfilesystem::Iso9660Reader Reader(*g_pLogDlg);
+		ckfilesystem::IsoReader Reader(*g_pLogDlg);
 		Reader.read(InStream,ImportSessionDlg.m_pSelTrackData->m_ulTrackAddr);
 		//Reader.PrintTree();
 
-		g_TreeManager.ImportIso9660Tree(Reader.get_root(),pDataRootNode);
+		g_TreeManager.ImportIsoTree(Reader.get_root(),pDataRootNode);
 		g_TreeManager.Refresh();
 
 		// Update the space meter.

@@ -90,9 +90,9 @@ LRESULT CProjectPropFileSysPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lPa
 
 	int iIndex = 0;
 	m_FileSysCombo.AddString(_T("ISO9660"));
-	m_FileSysCombo.SetItemData(iIndex++,FILESYSTEM_ISO9660);
+	m_FileSysCombo.SetItemData(iIndex++,FILESYSTEM_ISO);
 	m_FileSysCombo.AddString(_T("ISO9660 + UDF"));
-	m_FileSysCombo.SetItemData(iIndex++,FILESYSTEM_ISO9660_UDF);
+	m_FileSysCombo.SetItemData(iIndex++,FILESYSTEM_ISO_UDF);
 	m_FileSysCombo.AddString(_T("ISO9660 + UDF (DVD-Video)"));
 	m_FileSysCombo.SetItemData(iIndex++,FILESYSTEM_DVDVIDEO);
 	m_FileSysCombo.AddString(_T("UDF"));
