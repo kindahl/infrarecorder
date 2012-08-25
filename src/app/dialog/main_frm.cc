@@ -1934,7 +1934,6 @@ LRESULT CMainFrame::OnSTVGetDispInfo(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled)
 LRESULT CMainFrame::OnSTVItemExpanding(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled)
 {
 	LPNMTREEVIEW pNMTV = (LPNMTREEVIEW)pNMH;
-	IShellFolder *pParentFolder;
 
 	bHandled = false;
 
@@ -1956,6 +1955,7 @@ LRESULT CMainFrame::OnSTVItemExpanding(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled)
 		CShellTreeItemInfo *pItemInfo = (CShellTreeItemInfo *)tvItem.lParam;
 		hCursor = SetCursor(LoadCursor(NULL,IDC_WAIT));
 		
+        IShellFolder *pParentFolder = NULL;
 		if (pItemInfo->pParentFolder == 0)
 		{
 			if (FAILED(SHGetDesktopFolder(&pParentFolder)))

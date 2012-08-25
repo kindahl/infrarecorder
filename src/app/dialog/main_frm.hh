@@ -74,7 +74,6 @@
 class CShellTreeItemInfo
 {
 public:
-
 	CShellTreeItemInfo()
 	{
 		memset(this,0,sizeof(CShellTreeItemInfo));
