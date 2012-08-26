@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,35 +24,35 @@
 #define DROPDOWNBUTTON_MAX_TEXT_SIZE			64
 
 class CDropDownButton : public CWindowImpl<CDropDownButton,CButton>,
-	public COwnerDraw<CDropDownButton>,
-	public CCustomDraw<CDropDownButton>
+    public COwnerDraw<CDropDownButton>,
+    public CCustomDraw<CDropDownButton>
 {
 private:
-	bool m_bDrawArrow;
-	HMENU m_hMenu;
-	HFONT m_hWebdingsFont;
-	HTHEME m_hTheme;
+    bool m_bDrawArrow;
+    HMENU m_hMenu;
+    HFONT m_hWebdingsFont;
+    HTHEME m_hTheme;
 
 public:
-	CDropDownButton(unsigned int uiMenuID,bool bDrawArrow);
-	~CDropDownButton();
+    CDropDownButton(unsigned int uiMenuID,bool bDrawArrow);
+    ~CDropDownButton();
 
-	HMENU GetMenu();
-	BOOL SubclassWindow(HWND hWnd);
-	void DrawItem(LPDRAWITEMSTRUCT lpDIS);
-	DWORD OnPrePaint(int idCtrl,LPNMCUSTOMDRAW lpNMCD);
-	DWORD OnPostPaint(int idCtrl,LPNMCUSTOMDRAW lpNMCD);
+    HMENU GetMenu();
+    BOOL SubclassWindow(HWND hWnd);
+    void DrawItem(LPDRAWITEMSTRUCT lpDIS);
+    DWORD OnPrePaint(int idCtrl,LPNMCUSTOMDRAW lpNMCD);
+    DWORD OnPostPaint(int idCtrl,LPNMCUSTOMDRAW lpNMCD);
 
 #if _ATL_VER <= 0x0300
-	BEGIN_MSG_MAP_EX(CDropDownButton)
+    BEGIN_MSG_MAP_EX(CDropDownButton)
 #else
-	BEGIN_MSG_MAP(CDropDownButton)
+    BEGIN_MSG_MAP(CDropDownButton)
 #endif
-		REFLECTED_COMMAND_CODE_HANDLER(BN_CLICKED,OnClicked)
+        REFLECTED_COMMAND_CODE_HANDLER(BN_CLICKED,OnClicked)
 
-		 CHAIN_MSG_MAP_ALT(COwnerDraw<CDropDownButton>,1)
-		 CHAIN_MSG_MAP_ALT(CCustomDraw<CDropDownButton>,1)
-	END_MSG_MAP()
+         CHAIN_MSG_MAP_ALT(COwnerDraw<CDropDownButton>,1)
+         CHAIN_MSG_MAP_ALT(CCustomDraw<CDropDownButton>,1)
+    END_MSG_MAP()
 
-	LRESULT OnClicked(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnClicked(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
 };

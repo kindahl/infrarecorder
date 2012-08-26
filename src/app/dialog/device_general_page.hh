@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,24 +23,24 @@
 class CDeviceGeneralPage : public CPropertyPageImpl<CDeviceGeneralPage>
 {
 private:
-	HICON m_hIcon;
-	ckmmc::Device &m_Device;
+    HICON m_hIcon;
+    ckmmc::Device &m_Device;
 
-	bool Translate();
-	void PrintDeviceType(ckmmc::Device &Device);
+    bool Translate();
+    void PrintDeviceType(ckmmc::Device &Device);
 
 public:
-	enum { IDD = IDD_PROPPAGE_DEVICEGENERAL };
+    enum { IDD = IDD_PROPPAGE_DEVICEGENERAL };
 
-	CDeviceGeneralPage(ckmmc::Device &Device);
-	~CDeviceGeneralPage();
+    CDeviceGeneralPage(ckmmc::Device &Device);
+    ~CDeviceGeneralPage();
 
-	BEGIN_MSG_MAP(CDeviceGeneralPage)
-		MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
+    BEGIN_MSG_MAP(CDeviceGeneralPage)
+        MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
 
-		CHAIN_MSG_MAP(CPropertyPageImpl<CDeviceGeneralPage>)
-	END_MSG_MAP()
+        CHAIN_MSG_MAP(CPropertyPageImpl<CDeviceGeneralPage>)
+    END_MSG_MAP()
 
-	LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnWriteSpeedSpin(int idCtrl,LPNMHDR pNMH,BOOL &bHandled);
+    LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnWriteSpeedSpin(int idCtrl,LPNMHDR pNMH,BOOL &bHandled);
 };

@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@ void TrimRight(ckcore::tstring &Str,const ckcore::tchar * const szCharsToRemove)
 void TrimLeft(ckcore::tstring &Str,const ckcore::tchar * const szCharsToRemove);
 inline void TrimStr(ckcore::tstring &Str,const ckcore::tchar * const szCharsToRemove)
 {
-	TrimRight(Str,szCharsToRemove); TrimLeft(Str,szCharsToRemove);
+    TrimRight(Str,szCharsToRemove); TrimLeft(Str,szCharsToRemove);
 }
 
 char *SkipInteger(char *szString);

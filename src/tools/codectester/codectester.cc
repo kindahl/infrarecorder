@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,45 +24,45 @@ CAppModule _Module;
 
 int Run(LPTSTR lpstrCmdLine = NULL,int nCmdShow = SW_SHOWDEFAULT)
 {
-	CMessageLoop MainLoop;
-	_Module.AddMessageLoop(&MainLoop);
+    CMessageLoop MainLoop;
+    _Module.AddMessageLoop(&MainLoop);
 
-	CMainDlg MainDlg;
+    CMainDlg MainDlg;
 
-	if (MainDlg.Create(NULL) == NULL)
-	{
-		ATLTRACE(_T("Main dialog creation failed!\n"));
-		return 0;
-	}
+    if (MainDlg.Create(NULL) == NULL)
+    {
+        ATLTRACE(_T("Main dialog creation failed!\n"));
+        return 0;
+    }
 
-	MainDlg.ShowWindow(nCmdShow);
+    MainDlg.ShowWindow(nCmdShow);
 
-	int nRet = MainLoop.Run();
+    int nRet = MainLoop.Run();
 
-	_Module.RemoveMessageLoop();
-	return nRet;
+    _Module.RemoveMessageLoop();
+    return nRet;
 }
 
 int WINAPI _tWinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPTSTR lpstrCmdLine,int nCmdShow)
 {
-	HRESULT hRes = ::CoInitialize(NULL);
-	// If you are running on NT 4.0 or higher you can use the following call instead to 
-	// make the EXE free threaded. This means that calls come in on a random RPC thread.
-	//HRESULT hRes = ::CoInitializeEx(NULL, COINIT_MULTITHREADED);
-	ATLASSERT(SUCCEEDED(hRes));
+    HRESULT hRes = ::CoInitialize(NULL);
+    // If you are running on NT 4.0 or higher you can use the following call instead to 
+    // make the EXE free threaded. This means that calls come in on a random RPC thread.
+    //HRESULT hRes = ::CoInitializeEx(NULL, COINIT_MULTITHREADED);
+    ATLASSERT(SUCCEEDED(hRes));
 
-	// This resolves ATL window thunking problem when Microsoft Layer for Unicode (MSLU) is used.
-	::DefWindowProc(NULL,0,0,0L);
+    // This resolves ATL window thunking problem when Microsoft Layer for Unicode (MSLU) is used.
+    ::DefWindowProc(NULL,0,0,0L);
 
-	AtlInitCommonControls(ICC_BAR_CLASSES);	// Add flags to support other controls.
+    AtlInitCommonControls(ICC_BAR_CLASSES);	// Add flags to support other controls.
 
-	hRes = _Module.Init(NULL,hInstance);
-	ATLASSERT(SUCCEEDED(hRes));
+    hRes = _Module.Init(NULL,hInstance);
+    ATLASSERT(SUCCEEDED(hRes));
 
-	int nRet = Run(lpstrCmdLine,nCmdShow);
+    int nRet = Run(lpstrCmdLine,nCmdShow);
 
-	_Module.Term();
-	::CoUninitialize();
+    _Module.Term();
+    ::CoUninitialize();
 
-	return nRet;
+    return nRet;
 }

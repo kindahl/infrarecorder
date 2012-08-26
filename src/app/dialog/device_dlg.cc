@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,15 +20,15 @@
 #include "device_dlg.hh"
 
 CDeviceDlg::CDeviceDlg(ckmmc::Device &Device,const TCHAR *szTitle) :
-	CPropertySheetImpl<CDeviceDlg>(szTitle,0,NULL),
-	m_GeneralPage(Device),m_AdvancedPage(Device)
+    CPropertySheetImpl<CDeviceDlg>(szTitle,0,NULL),
+    m_GeneralPage(Device),m_AdvancedPage(Device)
 {
-	m_bCentered = false;
+    m_bCentered = false;
 
-	m_psh.dwFlags |= PSH_NOAPPLYNOW | PSH_NOCONTEXTHELP;
+    m_psh.dwFlags |= PSH_NOAPPLYNOW | PSH_NOCONTEXTHELP;
 
-	AddPage(m_GeneralPage);
-	AddPage(m_AdvancedPage);
+    AddPage(m_GeneralPage);
+    AddPage(m_AdvancedPage);
 }
 
 CDeviceDlg::~CDeviceDlg()
@@ -37,13 +37,13 @@ CDeviceDlg::~CDeviceDlg()
 
 LRESULT CDeviceDlg::OnShowWindow(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
-	// Center the window, once.
-	if (wParam == TRUE && !m_bCentered)
-	{
-		CenterWindow();
-		m_bCentered = true;
-	}
+    // Center the window, once.
+    if (wParam == TRUE && !m_bCentered)
+    {
+        CenterWindow();
+        m_bCentered = true;
+    }
 
-	bHandled = FALSE;
-	return 0;
+    bHandled = FALSE;
+    return 0;
 }

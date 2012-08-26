@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,27 +22,27 @@
 class CProjectPropFileSysPage : public CPropertyPageImpl<CProjectPropFileSysPage>
 {
 private:
-	int m_iSelFileSystem;	// To keep track of the previously selected file system.
-	CComboBox m_FileSysCombo;
+    int m_iSelFileSystem;	// To keep track of the previously selected file system.
+    CComboBox m_FileSysCombo;
 
-	bool Translate();
+    bool Translate();
 
 public:
-	enum { IDD = IDD_PROPPAGE_PROJECTPROPFILESYS };
+    enum { IDD = IDD_PROPPAGE_PROJECTPROPFILESYS };
 
-	CProjectPropFileSysPage();
-	~CProjectPropFileSysPage();
+    CProjectPropFileSysPage();
+    ~CProjectPropFileSysPage();
 
-	bool OnApply();
-	void OnHelp();
+    bool OnApply();
+    void OnHelp();
 
-	BEGIN_MSG_MAP(CProjectPropFileSysPage)
-		MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
-		COMMAND_HANDLER(IDC_FILESYSCOMBO,CBN_SELCHANGE,OnFileSysChange)
+    BEGIN_MSG_MAP(CProjectPropFileSysPage)
+        MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
+        COMMAND_HANDLER(IDC_FILESYSCOMBO,CBN_SELCHANGE,OnFileSysChange)
 
-		CHAIN_MSG_MAP(CPropertyPageImpl<CProjectPropFileSysPage>)
-	END_MSG_MAP()
+        CHAIN_MSG_MAP(CPropertyPageImpl<CProjectPropFileSysPage>)
+    END_MSG_MAP()
 
-	LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnFileSysChange(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnFileSysChange(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
 };

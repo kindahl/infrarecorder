@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,38 +32,38 @@
 class CEncoderConfig
 {
 public:
-	CEncoderConfig()
-	{
-		// Profile number 21 should hopefully be 128 kbps.
-		m_iProfile = 21;
-	}
+    CEncoderConfig()
+    {
+        // Profile number 21 should hopefully be 128 kbps.
+        m_iProfile = 21;
+    }
 
-	int m_iProfile;
+    int m_iProfile;
 };
 
 class CConfigGeneralPage : public CPropertyPageImpl<CConfigGeneralPage>
 {
 private:
-	CListBox m_ProfileList;
+    CListBox m_ProfileList;
 
-	CEncoderConfig *m_pConfig;
+    CEncoderConfig *m_pConfig;
 
-	bool FillProfileList();
+    bool FillProfileList();
 
 public:
-	enum { IDD = IDD_PROPPAGE_CONFIGGENERAL };
+    enum { IDD = IDD_PROPPAGE_CONFIGGENERAL };
 
-	CConfigGeneralPage();
-	~CConfigGeneralPage();
+    CConfigGeneralPage();
+    ~CConfigGeneralPage();
 
-	bool SetConfig(CEncoderConfig *pConfig);
-	bool OnApply();
+    bool SetConfig(CEncoderConfig *pConfig);
+    bool OnApply();
 
-	BEGIN_MSG_MAP(CConfigGeneralPage)
-		MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
+    BEGIN_MSG_MAP(CConfigGeneralPage)
+        MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
 
-		CHAIN_MSG_MAP(CPropertyPageImpl<CConfigGeneralPage>)
-	END_MSG_MAP()
+        CHAIN_MSG_MAP(CPropertyPageImpl<CConfigGeneralPage>)
+    END_MSG_MAP()
 
-	LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 };

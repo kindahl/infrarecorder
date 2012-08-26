@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,49 +23,49 @@
 class CCopyImageGeneralPage : public CPropertyPageImpl<CCopyImageGeneralPage>
 {
 private:
-	unsigned int m_uiParentTitleLen;
-	HICON m_hRefreshIcon;
-	HIMAGELIST m_hRefreshImageList;
+    unsigned int m_uiParentTitleLen;
+    HICON m_hRefreshIcon;
+    HIMAGELIST m_hRefreshImageList;
 
-	CComboBox m_SourceCombo;
+    CComboBox m_SourceCombo;
 
-	// File name of the target image file.
-	TCHAR m_szFileName[MAX_PATH];
+    // File name of the target image file.
+    TCHAR m_szFileName[MAX_PATH];
 
-	enum
-	{
-		TIMER_ID = 42,
-		TIMER_INTERVAL = 1000
-	};
+    enum
+    {
+        TIMER_ID = 42,
+        TIMER_INTERVAL = 1000
+    };
 
-	bool Translate();
-	void InitRefreshButton();
+    bool Translate();
+    void InitRefreshButton();
 
 public:
-	enum { IDD = IDD_PROPPAGE_COPYIMAGEGENERAL };
+    enum { IDD = IDD_PROPPAGE_COPYIMAGEGENERAL };
 
-	CCopyImageGeneralPage();
-	~CCopyImageGeneralPage();
+    CCopyImageGeneralPage();
+    ~CCopyImageGeneralPage();
 
-	bool OnApply();
-	void OnHelp();
+    bool OnApply();
+    void OnHelp();
 
-	BEGIN_MSG_MAP(CCopyImageGeneralPage)
-		MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
-		MESSAGE_HANDLER(WM_TIMER,OnTimer)
-		COMMAND_HANDLER(IDC_SOURCECOMBO,CBN_SELCHANGE,OnSourceChange)
-		COMMAND_HANDLER(IDC_REFRESHBUTTON,BN_CLICKED,OnRefresh)
-		COMMAND_ID_HANDLER(IDC_BROWSEBUTTON,OnBrowse)
+    BEGIN_MSG_MAP(CCopyImageGeneralPage)
+        MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
+        MESSAGE_HANDLER(WM_TIMER,OnTimer)
+        COMMAND_HANDLER(IDC_SOURCECOMBO,CBN_SELCHANGE,OnSourceChange)
+        COMMAND_HANDLER(IDC_REFRESHBUTTON,BN_CLICKED,OnRefresh)
+        COMMAND_ID_HANDLER(IDC_BROWSEBUTTON,OnBrowse)
 
-		CHAIN_MSG_MAP(CPropertyPageImpl<CCopyImageGeneralPage>)
-	END_MSG_MAP()
+        CHAIN_MSG_MAP(CPropertyPageImpl<CCopyImageGeneralPage>)
+    END_MSG_MAP()
 
-	LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnTimer(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnTimer(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 
-	LRESULT OnSourceChange(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
-	LRESULT OnRefresh(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
-	LRESULT OnBrowse(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnSourceChange(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnRefresh(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnBrowse(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
 
-	TCHAR *GetFileName();
+    TCHAR *GetFileName();
 };

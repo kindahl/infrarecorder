@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,19 +24,19 @@
 
 CConfigAdvancedPage::CConfigAdvancedPage()
 {
-	// Try to load translated string.
-	if (g_LanguageSettings.m_pLngProcessor != NULL)
-	{	
-		// Make sure that there is a strings translation section.
-		if (g_LanguageSettings.m_pLngProcessor->EnterSection(_T("strings")))
-		{
-			TCHAR *szStrValue;
-			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(TITLE_ADVANCED,szStrValue))
-				SetTitle(szStrValue);
-		}
-	}
+    // Try to load translated string.
+    if (g_LanguageSettings.m_pLngProcessor != NULL)
+    {	
+        // Make sure that there is a strings translation section.
+        if (g_LanguageSettings.m_pLngProcessor->EnterSection(_T("strings")))
+        {
+            TCHAR *szStrValue;
+            if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(TITLE_ADVANCED,szStrValue))
+                SetTitle(szStrValue);
+        }
+    }
 
-	m_psp.dwFlags |= PSP_HASHELP;
+    m_psp.dwFlags |= PSP_HASHELP;
 }
 
 CConfigAdvancedPage::~CConfigAdvancedPage()
@@ -45,85 +45,85 @@ CConfigAdvancedPage::~CConfigAdvancedPage()
 
 bool CConfigAdvancedPage::Translate()
 {
-	if (g_LanguageSettings.m_pLngProcessor == NULL)
-		return false;
+    if (g_LanguageSettings.m_pLngProcessor == NULL)
+        return false;
 
-	CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
-	
-	// Make sure that there is a config translation section.
-	if (!pLng->EnterSection(_T("config")))
-		return false;
+    CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
+    
+    // Make sure that there is a config translation section.
+    if (!pLng->EnterSection(_T("config")))
+        return false;
 
-	// Translate.
-	TCHAR *szStrValue;
+    // Translate.
+    TCHAR *szStrValue;
 
-	if (pLng->GetValuePtr(IDC_LOGCHECK,szStrValue))
-		SetDlgItemText(IDC_LOGCHECK,szStrValue);
-	if (pLng->GetValuePtr(IDC_SMOKECHECK,szStrValue))
-		SetDlgItemText(IDC_SMOKECHECK,szStrValue);
-	if (pLng->GetValuePtr(IDC_FIFOGROUPSTATIC,szStrValue))
-		SetDlgItemText(IDC_FIFOGROUPSTATIC,szStrValue);
-	if (pLng->GetValuePtr(IDC_FIFOINFOSTATIC,szStrValue))
-		SetDlgItemText(IDC_FIFOINFOSTATIC,szStrValue);
+    if (pLng->GetValuePtr(IDC_LOGCHECK,szStrValue))
+        SetDlgItemText(IDC_LOGCHECK,szStrValue);
+    if (pLng->GetValuePtr(IDC_SMOKECHECK,szStrValue))
+        SetDlgItemText(IDC_SMOKECHECK,szStrValue);
+    if (pLng->GetValuePtr(IDC_FIFOGROUPSTATIC,szStrValue))
+        SetDlgItemText(IDC_FIFOGROUPSTATIC,szStrValue);
+    if (pLng->GetValuePtr(IDC_FIFOINFOSTATIC,szStrValue))
+        SetDlgItemText(IDC_FIFOINFOSTATIC,szStrValue);
 
-	return true;
+    return true;
 }
 
 bool CConfigAdvancedPage::OnApply()
 {
-	TCHAR szFIFO[4];
-	GetDlgItemText(IDC_FIFOEDIT,szFIFO,4);
+    TCHAR szFIFO[4];
+    GetDlgItemText(IDC_FIFOEDIT,szFIFO,4);
 #ifdef UNICODE
-	int iFIFOSize = _wtoi(szFIFO);
+    int iFIFOSize = _wtoi(szFIFO);
 #else
-	int iFIFOSize = atoi(szFIFO);
+    int iFIFOSize = atoi(szFIFO);
 #endif
 
-	if (iFIFOSize < FIFO_MIN || iFIFOSize > FIFO_MAX)
-	{
-		TCHAR szMessage[128];
-		lsnprintf_s(szMessage,128,lngGetString(ERROR_FIFOSIZE),FIFO_MIN,FIFO_MAX);
-		MessageBox(szMessage,lngGetString(GENERAL_ERROR),MB_OK | MB_ICONERROR);
-		return false;
-	}
+    if (iFIFOSize < FIFO_MIN || iFIFOSize > FIFO_MAX)
+    {
+        TCHAR szMessage[128];
+        lsnprintf_s(szMessage,128,lngGetString(ERROR_FIFOSIZE),FIFO_MIN,FIFO_MAX);
+        MessageBox(szMessage,lngGetString(GENERAL_ERROR),MB_OK | MB_ICONERROR);
+        return false;
+    }
 
-	// Remember the configuration.
-	g_GlobalSettings.m_bLog = IsDlgButtonChecked(IDC_LOGCHECK) == TRUE;
-	g_GlobalSettings.m_bSmoke = IsDlgButtonChecked(IDC_SMOKECHECK) == TRUE;
-	g_GlobalSettings.m_iFIFOSize = iFIFOSize;
+    // Remember the configuration.
+    g_GlobalSettings.m_bLog = IsDlgButtonChecked(IDC_LOGCHECK) == TRUE;
+    g_GlobalSettings.m_bSmoke = IsDlgButtonChecked(IDC_SMOKECHECK) == TRUE;
+    g_GlobalSettings.m_iFIFOSize = iFIFOSize;
 
-	return true;
+    return true;
 }
 
 void CConfigAdvancedPage::OnHelp()
 {
-	TCHAR szFileName[MAX_PATH];
-	GetModuleFileName(NULL,szFileName,MAX_PATH - 1);
+    TCHAR szFileName[MAX_PATH];
+    GetModuleFileName(NULL,szFileName,MAX_PATH - 1);
 
-	ExtractFilePath(szFileName);
-	lstrcat(szFileName,lngGetManual());
-	lstrcat(szFileName,_T("::/how_to_use/configuration.html"));
+    ExtractFilePath(szFileName);
+    lstrcat(szFileName,lngGetManual());
+    lstrcat(szFileName,_T("::/how_to_use/configuration.html"));
 
-	HtmlHelp(m_hWnd,szFileName,HH_DISPLAY_TOC,NULL);
+    HtmlHelp(m_hWnd,szFileName,HH_DISPLAY_TOC,NULL);
 }
 
 LRESULT CConfigAdvancedPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
-	// Load configuration.
-	CheckDlgButton(IDC_LOGCHECK,g_GlobalSettings.m_bLog);
-	CheckDlgButton(IDC_SMOKECHECK,g_GlobalSettings.m_bSmoke);
+    // Load configuration.
+    CheckDlgButton(IDC_LOGCHECK,g_GlobalSettings.m_bLog);
+    CheckDlgButton(IDC_SMOKECHECK,g_GlobalSettings.m_bSmoke);
 
-	::SendMessage(GetDlgItem(IDC_FIFOEDIT),EM_SETLIMITTEXT,3,0);
-	TCHAR szFIFO[4];
+    ::SendMessage(GetDlgItem(IDC_FIFOEDIT),EM_SETLIMITTEXT,3,0);
+    TCHAR szFIFO[4];
 #ifdef UNICODE
-	_itow(g_GlobalSettings.m_iFIFOSize,szFIFO,10);
+    _itow(g_GlobalSettings.m_iFIFOSize,szFIFO,10);
 #else
-	_itoa(g_GlobalSettings.m_iFIFOSize,szFIFO,10);
+    _itoa(g_GlobalSettings.m_iFIFOSize,szFIFO,10);
 #endif
-	SetDlgItemText(IDC_FIFOEDIT,szFIFO);
+    SetDlgItemText(IDC_FIFOEDIT,szFIFO);
 
-	// Translate the window.
-	Translate();
+    // Translate the window.
+    Translate();
 
-	return TRUE;
+    return TRUE;
 }

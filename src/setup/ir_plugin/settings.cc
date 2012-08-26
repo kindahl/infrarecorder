@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2011 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2012 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,32 +23,32 @@ CLanguageSettings g_LanguageSettings;
 
 bool CLanguageSettings::Save(CXmlProcessor *pXML)
 {
-	if (pXML == NULL)
-		return false;
+    if (pXML == NULL)
+        return false;
 
-	pXML->AddElement(_T("Language"),_T(""),true);
-		pXML->AddElement(_T("LanguageFile"),m_szLanguageFile);
-	pXML->LeaveElement();
+    pXML->AddElement(_T("Language"),_T(""),true);
+        pXML->AddElement(_T("LanguageFile"),m_szLanguageFile);
+    pXML->LeaveElement();
 
-	return true;
+    return true;
 }
 
 bool CLanguageSettings::Load(CXmlProcessor *pXML)
 {
-	if (pXML == NULL)
-		return false;
+    if (pXML == NULL)
+        return false;
 
-	if (!pXML->EnterElement(_T("Language")))
-		return false;
+    if (!pXML->EnterElement(_T("Language")))
+        return false;
 
-	pXML->GetSafeElementData(_T("LanguageFile"),m_szLanguageFile,MAX_PATH - 1);
+    pXML->GetSafeElementData(_T("LanguageFile"),m_szLanguageFile,MAX_PATH - 1);
 
-	if (ckcore::File::exist(m_szLanguageFile))
-	{
-		m_pLngProcessor = new CLngProcessor(m_szLanguageFile);
-		m_pLngProcessor->Load();
-	}
+    if (ckcore::File::exist(m_szLanguageFile))
+    {
+        m_pLngProcessor = new CLngProcessor(m_szLanguageFile);
+        m_pLngProcessor->Load();
+    }
 
-	pXML->LeaveElement();
-	return true;
+    pXML->LeaveElement();
+    return true;
 }

@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,11 +18,11 @@
 
 enum eStringTable
 {
-	#define TRSTR(a,b) a,
-	#include "translated_strings.hh"
-	#undef TRSTR
+    #define TRSTR(a,b) a,
+    #include "translated_strings.hh"
+    #undef TRSTR
 
-	END_OF_STRING_TABLE_GUARD
+    END_OF_STRING_TABLE_GUARD
 };
 
 extern const TCHAR *g_szStringTable[END_OF_STRING_TABLE_GUARD];

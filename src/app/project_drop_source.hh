@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,18 +21,18 @@
 class CProjectDropSource : public IDropSource
 {
 private:
-	long m_lRefCount;
+    long m_lRefCount;
 
 public:
-	CProjectDropSource();
-	~CProjectDropSource();
+    CProjectDropSource();
+    ~CProjectDropSource();
 
-	// IUnknown members.
+    // IUnknown members.
     HRESULT __stdcall QueryInterface(REFIID iid,void ** ppvObject);
     ULONG __stdcall AddRef();
     ULONG __stdcall Release();
 
-	// IDropSource members.
+    // IDropSource members.
     HRESULT __stdcall QueryContinueDrag(BOOL fEscapePressed,DWORD grfKeyState);
     HRESULT __stdcall GiveFeedback(DWORD dwEffect);
 };

@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,36 +26,36 @@
 class CProjectTreeViewDropTarget : public CProjectDropTargetBase
 {
 private:
-	CTreeViewCtrlEx *m_pHost;
+    CTreeViewCtrlEx *m_pHost;
 
-	bool HandleDropData(IDataObject *pDataObject,CProjectNode *pTargetNode);
+    bool HandleDropData(IDataObject *pDataObject,CProjectNode *pTargetNode);
 
 public:
-	CProjectTreeViewDropTarget(CTreeViewCtrlEx *pHost);
+    CProjectTreeViewDropTarget(CTreeViewCtrlEx *pHost);
 
-	bool OnDragOver(POINTL ptCursor);	
-	bool OnDrop(POINTL ptCursor,IDataObject *pDataObject);
-	void OnDragLeave();
+    bool OnDragOver(POINTL ptCursor);	
+    bool OnDrop(POINTL ptCursor,IDataObject *pDataObject);
+    void OnDragLeave();
 };
 
 class CProjectTreeViewCtrl : public CWindowImpl<CProjectTreeViewCtrl,CTreeViewCtrlEx>
 {
 public:
-	CProjectTreeViewDropTarget *m_pDropTarget;
+    CProjectTreeViewDropTarget *m_pDropTarget;
 
-	DECLARE_WND_CLASS(_T("ckProjectTreeViewCtrl"));
+    DECLARE_WND_CLASS(_T("ckProjectTreeViewCtrl"));
 
-	CProjectTreeViewCtrl();
-	~CProjectTreeViewCtrl();
+    CProjectTreeViewCtrl();
+    ~CProjectTreeViewCtrl();
 
-	BEGIN_MSG_MAP(CProjectTreeViewCtrl)
-		MESSAGE_HANDLER(WM_SETFOCUS,OnSetFocus)
-		MESSAGE_HANDLER(WM_CONTROLCUSTOMDRAW,OnCustomDraw)
-	END_MSG_MAP()
+    BEGIN_MSG_MAP(CProjectTreeViewCtrl)
+        MESSAGE_HANDLER(WM_SETFOCUS,OnSetFocus)
+        MESSAGE_HANDLER(WM_CONTROLCUSTOMDRAW,OnCustomDraw)
+    END_MSG_MAP()
 
-	LRESULT OnSetFocus(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnCustomDraw(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnSetFocus(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnCustomDraw(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 
-	void BeginDrag(LPNMTREEVIEW pNMTreeView);
-	void ForceRedraw();
+    void BeginDrag(LPNMTREEVIEW pNMTreeView);
+    void ForceRedraw();
 };

@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,60 +23,60 @@
 
 CCustomHeaderCtrl::CCustomHeaderCtrl()
 {
-	m_bSortUp = true;
-	m_iSortCol = 0;
+    m_bSortUp = true;
+    m_iSortCol = 0;
 }
 
 void CCustomHeaderCtrl::SetSortColumn(unsigned int uiColIndex,bool bSortUp)
 {
-	m_bSortUp = bSortUp;
-	m_iSortCol = uiColIndex;
+    m_bSortUp = bSortUp;
+    m_iSortCol = uiColIndex;
 
-	HDITEM hdColumn;
-	hdColumn.mask = HDI_FORMAT;
-	GetItem(m_iSortCol,&hdColumn);
+    HDITEM hdColumn;
+    hdColumn.mask = HDI_FORMAT;
+    GetItem(m_iSortCol,&hdColumn);
 
-	if (m_bSortUp)
-	{
-		hdColumn.fmt |= HDF_SORTUP;
-		hdColumn.fmt &= ~HDF_SORTDOWN;
-	}
-	else
-	{
-		hdColumn.fmt |= HDF_SORTDOWN;
-		hdColumn.fmt &= ~HDF_SORTUP;
-	}
+    if (m_bSortUp)
+    {
+        hdColumn.fmt |= HDF_SORTUP;
+        hdColumn.fmt &= ~HDF_SORTDOWN;
+    }
+    else
+    {
+        hdColumn.fmt |= HDF_SORTDOWN;
+        hdColumn.fmt &= ~HDF_SORTUP;
+    }
 
-	SetItem(m_iSortCol,&hdColumn);
+    SetItem(m_iSortCol,&hdColumn);
 }
 
 LRESULT CCustomHeaderCtrl::OnSetSortColumn(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
-	SetSortColumn((unsigned int)wParam,lParam == 0);
-	return 0;
+    SetSortColumn((unsigned int)wParam,lParam == 0);
+    return 0;
 }
 
 void CCustomHeaderCtrl::ColumnClick(unsigned int uiColIndex)
 {
-	if (m_iSortCol == uiColIndex)
-	{
-		// Set the new sort arrow.
-		SetSortColumn(uiColIndex,!m_bSortUp);
-	}
-	else
-	{
-		// Remove the sort arrow from the previous column.
-		HDITEM hdColumn;
-		hdColumn.mask = HDI_FORMAT;
-		GetItem(m_iSortCol,&hdColumn);
-		hdColumn.fmt &= ~(m_bSortUp ? HDF_SORTUP : HDF_SORTDOWN);
-		SetItem(m_iSortCol,&hdColumn);
+    if (m_iSortCol == uiColIndex)
+    {
+        // Set the new sort arrow.
+        SetSortColumn(uiColIndex,!m_bSortUp);
+    }
+    else
+    {
+        // Remove the sort arrow from the previous column.
+        HDITEM hdColumn;
+        hdColumn.mask = HDI_FORMAT;
+        GetItem(m_iSortCol,&hdColumn);
+        hdColumn.fmt &= ~(m_bSortUp ? HDF_SORTUP : HDF_SORTDOWN);
+        SetItem(m_iSortCol,&hdColumn);
 
-		// Set the new sort arrow.
-		SetSortColumn(uiColIndex,true);
-	}
+        // Set the new sort arrow.
+        SetSortColumn(uiColIndex,true);
+    }
 
-	// Do the sorting.
-	g_TreeManager.GetCurrentNode()->Sort(uiColIndex,m_bSortUp,g_ProjectManager.GetViewType() != PROJECTVIEWTYPE_DATA);
-	g_TreeManager.Refresh();
+    // Do the sorting.
+    g_TreeManager.GetCurrentNode()->Sort(uiColIndex,m_bSortUp,g_ProjectManager.GetViewType() != PROJECTVIEWTYPE_DATA);
+    g_TreeManager.Refresh();
 }

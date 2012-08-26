@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,28 +24,28 @@
 class CDeviceAdvancedPage : public CPropertyPageImpl<CDeviceAdvancedPage>
 {
 private:
-	ckmmc::Device &m_Device;
-	bool m_bLockAdvList;
-	CTitleTipListViewCtrl m_ListView;
+    ckmmc::Device &m_Device;
+    bool m_bLockAdvList;
+    CTitleTipListViewCtrl m_ListView;
 
-	bool Translate();
+    bool Translate();
 
 public:
-	enum { IDD = IDD_PROPPAGE_DEVICEADVANCED };
+    enum { IDD = IDD_PROPPAGE_DEVICEADVANCED };
 
-	CDeviceAdvancedPage(ckmmc::Device &Device);
-	~CDeviceAdvancedPage();
+    CDeviceAdvancedPage(ckmmc::Device &Device);
+    ~CDeviceAdvancedPage();
 
-	BEGIN_MSG_MAP(CDeviceAdvancedPage)
-		MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
-		
-		NOTIFY_HANDLER(IDC_ADVLIST,LVN_ITEMCHANGING,OnItemChanging)
+    BEGIN_MSG_MAP(CDeviceAdvancedPage)
+        MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
+        
+        NOTIFY_HANDLER(IDC_ADVLIST,LVN_ITEMCHANGING,OnItemChanging)
 
-		CHAIN_MSG_MAP(CPropertyPageImpl<CDeviceAdvancedPage>)
-		CHAIN_MSG_MAP_MEMBER(m_ListView)
-	END_MSG_MAP()
+        CHAIN_MSG_MAP(CPropertyPageImpl<CDeviceAdvancedPage>)
+        CHAIN_MSG_MAP_MEMBER(m_ListView)
+    END_MSG_MAP()
 
-	LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 
-	LRESULT OnItemChanging(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled);
+    LRESULT OnItemChanging(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled);
 };

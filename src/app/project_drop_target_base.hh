@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,39 +21,39 @@
 class CProjectDropTargetBase : public IDropTarget
 {
 protected:
-	// Custom InfraRecorder clip board format identifier.
-	unsigned int m_uiClipFormat;
+    // Custom InfraRecorder clip board format identifier.
+    unsigned int m_uiClipFormat;
 
 private:
-	enum eDropType
-	{
-		DT_NONE,
-		DT_HDROP,
-		DT_IRPROJECT
-	};
+    enum eDropType
+    {
+        DT_NONE,
+        DT_HDROP,
+        DT_IRPROJECT
+    };
 
-	eDropType m_DropType;
-	long m_lRefCount;
+    eDropType m_DropType;
+    long m_lRefCount;
 
-	eDropType QueryDataObject(IDataObject *pDataObject);
+    eDropType QueryDataObject(IDataObject *pDataObject);
 
 public:
-	CProjectDropTargetBase();
-	~CProjectDropTargetBase();
+    CProjectDropTargetBase();
+    ~CProjectDropTargetBase();
 
-	// IUnknown implementation.
-	HRESULT __stdcall QueryInterface(REFIID iid,void **ppvObject);
-	ULONG __stdcall AddRef();
-	ULONG __stdcall Release();
+    // IUnknown implementation.
+    HRESULT __stdcall QueryInterface(REFIID iid,void **ppvObject);
+    ULONG __stdcall AddRef();
+    ULONG __stdcall Release();
 
-	// IDropTarget implementation.
-	HRESULT __stdcall DragEnter(IDataObject *pDataObject,DWORD grfKeyState,POINTL pt,DWORD *pdwEffect);
-	HRESULT __stdcall DragOver(DWORD grfKeyState,POINTL pt,DWORD *pdwEffect);
-	HRESULT __stdcall DragLeave();
-	HRESULT __stdcall Drop(IDataObject *pDataObject,DWORD grfKeyState,POINTL pt,DWORD *pdwEffect);
+    // IDropTarget implementation.
+    HRESULT __stdcall DragEnter(IDataObject *pDataObject,DWORD grfKeyState,POINTL pt,DWORD *pdwEffect);
+    HRESULT __stdcall DragOver(DWORD grfKeyState,POINTL pt,DWORD *pdwEffect);
+    HRESULT __stdcall DragLeave();
+    HRESULT __stdcall Drop(IDataObject *pDataObject,DWORD grfKeyState,POINTL pt,DWORD *pdwEffect);
 
-	// To be implemented by inheritor.
-	virtual bool OnDragOver(POINTL ptCursor) = 0;
-	virtual bool OnDrop(POINTL ptCursor,IDataObject *pDataObject) = 0;
-	virtual void OnDragLeave() = 0;
+    // To be implemented by inheritor.
+    virtual bool OnDragOver(POINTL ptCursor) = 0;
+    virtual bool OnDrop(POINTL ptCursor,IDataObject *pDataObject) = 0;
+    virtual void OnDragLeave() = 0;
 };

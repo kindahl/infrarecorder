@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,60 +21,60 @@
 #include "core2_util.hh"
 
 /**
-	Parses the specified sense buffer and returns a value representing the
-	specific error.
-	@param pSenseBuf a pointer to the sense buffer, it should be atleast 24
-	bytes long
-	@return the correcsponding internal error value.
+    Parses the specified sense buffer and returns a value representing the
+    specific error.
+    @param pSenseBuf a pointer to the sense buffer, it should be atleast 24
+    bytes long
+    @return the correcsponding internal error value.
 */
 unsigned char CheckSense(unsigned char *pSenseBuf)
 {
-	// Sense key.
-	switch (pSenseBuf[2] & 0x0F)
-	{
-		case 0x02:
-			{
-				// Additional sense code.
-				switch (pSenseBuf[12])
-				{
-					case 0x04:
-						{
-							// Additional sense code qualifier.
-							switch (pSenseBuf[13])
-							{
-								case 0x04:
-									return SENSE_FORMATINPROGRESS;
+    // Sense key.
+    switch (pSenseBuf[2] & 0x0F)
+    {
+        case 0x02:
+            {
+                // Additional sense code.
+                switch (pSenseBuf[12])
+                {
+                    case 0x04:
+                        {
+                            // Additional sense code qualifier.
+                            switch (pSenseBuf[13])
+                            {
+                                case 0x04:
+                                    return SENSE_FORMATINPROGRESS;
 
-								case 0x08:
-									return SENSE_LONGWRITEINPROGRESS;
-							}
-						}
-						break;
-				}
-			}
-			break;
+                                case 0x08:
+                                    return SENSE_LONGWRITEINPROGRESS;
+                            }
+                        }
+                        break;
+                }
+            }
+            break;
 
-		case 0x05:
-			{
-				// Additional sense code.
-				switch (pSenseBuf[12])
-				{
-					case 0x64:
-						{
-							switch (pSenseBuf[13])
-							{
-								case 0x00:
-									return SENSE_ILLEGALMODEFORTHISTRACK;
+        case 0x05:
+            {
+                // Additional sense code.
+                switch (pSenseBuf[12])
+                {
+                    case 0x64:
+                        {
+                            switch (pSenseBuf[13])
+                            {
+                                case 0x00:
+                                    return SENSE_ILLEGALMODEFORTHISTRACK;
 
-								case 0x01:
-									return SENSE_INVALIDPACKETSIZE;
-							}
-						}
-						break;
-				}
-			}
-			break;
-	}
+                                case 0x01:
+                                    return SENSE_INVALIDPACKETSIZE;
+                            }
+                        }
+                        break;
+                }
+            }
+            break;
+    }
 
-	return 0;
+    return 0;
 }

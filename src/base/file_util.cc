@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,9 +23,9 @@
 
 void WriteString(ckcore::File &File,const ckcore::tchar *szString)
 {
-	const ckcore::tuint32 uiByteCount =
-		static_cast<ckcore::tuint32>(ckcore::string::astrlen(szString) * sizeof(ckcore::tchar));
-	
-	if (uiByteCount != File.write(szString,uiByteCount))
-		throw ckcore::Exception2(ckT("Error writing to the file."));	// FIXME: Improve message output.
+    const ckcore::tuint32 uiByteCount =
+        static_cast<ckcore::tuint32>(ckcore::string::astrlen(szString) * sizeof(ckcore::tchar));
+    
+    if (uiByteCount != File.write(szString,uiByteCount))
+        throw ckcore::Exception2(ckT("Error writing to the file."));	// FIXME: Improve message output.
 }

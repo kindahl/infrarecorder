@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,25 +24,25 @@
 class CAdvancedProgress : public ckcore::Progress
 {
 protected:
-	// Should be used by inheritors when parsing the variable argument list passed
-	// to the AddLogEntry and SetStatus functions.
-	TCHAR m_szStringBuffer[PROGRESS_STRINGBUFFER_SIZE];
+    // Should be used by inheritors when parsing the variable argument list passed
+    // to the AddLogEntry and SetStatus functions.
+    TCHAR m_szStringBuffer[PROGRESS_STRINGBUFFER_SIZE];
 
 public:
-	// Called when the operation is complteted.
-	virtual void NotifyCompleted() = 0;
+    // Called when the operation is complteted.
+    virtual void NotifyCompleted() = 0;
 
-	// Should be set to true when a real writing process is started.
-	virtual void SetRealMode(bool bRealMode) = 0;
+    // Should be set to true when a real writing process is started.
+    virtual void SetRealMode(bool bRealMode) = 0;
 
-	// Not forced to be implemented by inheritor.
-	virtual void SetBuffer(int iPercent);
+    // Not forced to be implemented by inheritor.
+    virtual void SetBuffer(int iPercent);
 
-	virtual void AllowReload() = 0;
-	virtual void AllowCancel(bool bAllow) = 0;
+    virtual void AllowReload() = 0;
+    virtual void AllowCancel(bool bAllow) = 0;
 
-	virtual bool RequestNextDisc() = 0;
+    virtual bool RequestNextDisc() = 0;
 
-	// Starts the smoke effect.
-	virtual void StartSmoke() = 0;
+    // Starts the smoke effect.
+    virtual void StartSmoke() = 0;
 };

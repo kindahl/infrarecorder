@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,61 +26,61 @@ CWinVer g_WinVer;
 
 CWinVer::CWinVer()
 {
-	m_ulMajorVersion = 0;
-	m_ulMinorVersion = 0;
+    m_ulMajorVersion = 0;
+    m_ulMinorVersion = 0;
 
-	m_ulMajorIEVersion = 0;
-	m_ulMinorIEVersion = 0;
+    m_ulMajorIEVersion = 0;
+    m_ulMinorIEVersion = 0;
 
-	// Get Windows version information.
-	OSVERSIONINFO ovInfo;
-	ovInfo.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+    // Get Windows version information.
+    OSVERSIONINFO ovInfo;
+    ovInfo.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
 
     if (GetVersionEx(&ovInfo))
-	{
-		m_ulMajorVersion = ovInfo.dwMajorVersion;
-		m_ulMinorVersion = ovInfo.dwMinorVersion;
-	}
+    {
+        m_ulMajorVersion = ovInfo.dwMajorVersion;
+        m_ulMinorVersion = ovInfo.dwMinorVersion;
+    }
 
-	// Get Internet Explorer version information.
-	VS_FIXEDFILEINFO *wxFileInfo;
+    // Get Internet Explorer version information.
+    VS_FIXEDFILEINFO *wxFileInfo;
 
-	unsigned long ulDummy,ulVersionSize = GetFileVersionInfoSize(_T("shlwapi.dll"),NULL);
+    unsigned long ulDummy,ulVersionSize = GetFileVersionInfoSize(_T("shlwapi.dll"),NULL);
 
-	if (ulVersionSize > 0)
-	{
-		unsigned char *pBuffer = new unsigned char[ulVersionSize];
+    if (ulVersionSize > 0)
+    {
+        unsigned char *pBuffer = new unsigned char[ulVersionSize];
 
-		if (GetFileVersionInfo(_T("shlwapi.dll"),NULL,ulVersionSize,pBuffer))
-		{
-			if (VerQueryValue(pBuffer,_T("\\"),(void **)&wxFileInfo,(unsigned int *)&ulDummy))
-			{
-				m_ulMajorIEVersion = wxFileInfo->dwFileVersionMS/65536;
-				m_ulMinorIEVersion = wxFileInfo->dwFileVersionMS%65536;
-			}
-		}
+        if (GetFileVersionInfo(_T("shlwapi.dll"),NULL,ulVersionSize,pBuffer))
+        {
+            if (VerQueryValue(pBuffer,_T("\\"),(void **)&wxFileInfo,(unsigned int *)&ulDummy))
+            {
+                m_ulMajorIEVersion = wxFileInfo->dwFileVersionMS/65536;
+                m_ulMinorIEVersion = wxFileInfo->dwFileVersionMS%65536;
+            }
+        }
 
-		delete [] pBuffer;
-	}
+        delete [] pBuffer;
+    }
 
-	// Get Common Controls version information;
-	ulVersionSize = GetFileVersionInfoSize(_T("comctl32.dll"),NULL);
+    // Get Common Controls version information;
+    ulVersionSize = GetFileVersionInfoSize(_T("comctl32.dll"),NULL);
 
-	if (ulVersionSize > 0)
-	{
-		unsigned char *pBuffer = new unsigned char[ulVersionSize];
+    if (ulVersionSize > 0)
+    {
+        unsigned char *pBuffer = new unsigned char[ulVersionSize];
 
-		if (GetFileVersionInfo(_T("comctl32.dll"),NULL,ulVersionSize,pBuffer))
-		{
-			if (VerQueryValue(pBuffer,_T("\\"),(void **)&wxFileInfo,(unsigned int *)&ulDummy))
-			{
-				m_ulMajorCCVersion = wxFileInfo->dwFileVersionMS/65536;
-				m_ulMinorCCVersion = wxFileInfo->dwFileVersionMS%65536;
-			}
-		}
+        if (GetFileVersionInfo(_T("comctl32.dll"),NULL,ulVersionSize,pBuffer))
+        {
+            if (VerQueryValue(pBuffer,_T("\\"),(void **)&wxFileInfo,(unsigned int *)&ulDummy))
+            {
+                m_ulMajorCCVersion = wxFileInfo->dwFileVersionMS/65536;
+                m_ulMinorCCVersion = wxFileInfo->dwFileVersionMS%65536;
+            }
+        }
 
-		delete [] pBuffer;
-	}
+        delete [] pBuffer;
+    }
 }
 
 CWinVer::~CWinVer()

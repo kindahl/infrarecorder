@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 
 CRegistry::CRegistry()
 {
-	m_hRootKey = HKEY_CURRENT_USER;
+    m_hRootKey = HKEY_CURRENT_USER;
 }
 
 CRegistry::~CRegistry()
@@ -30,176 +30,176 @@ CRegistry::~CRegistry()
 
 void CRegistry::SetRoot(HKEY hKey)
 {
-	m_hRootKey = hKey;
+    m_hRootKey = hKey;
 }
 
 bool CRegistry::OpenKey(const TCHAR *szKeyName,bool bCreate)
 {
-	if (RegOpenKeyEx(m_hRootKey,szKeyName,0,KEY_ALL_ACCESS,&m_hKey) == ERROR_SUCCESS)
-		return true;
+    if (RegOpenKeyEx(m_hRootKey,szKeyName,0,KEY_ALL_ACCESS,&m_hKey) == ERROR_SUCCESS)
+        return true;
 
-	if (bCreate)
-	{
-		DWORD dwResult;
+    if (bCreate)
+    {
+        DWORD dwResult;
 
-		if (RegCreateKeyEx(m_hRootKey,szKeyName,0,NULL,REG_OPTION_NON_VOLATILE,KEY_ALL_ACCESS,NULL,&m_hKey,&dwResult) == ERROR_SUCCESS)
-			return true;
-	}
+        if (RegCreateKeyEx(m_hRootKey,szKeyName,0,NULL,REG_OPTION_NON_VOLATILE,KEY_ALL_ACCESS,NULL,&m_hKey,&dwResult) == ERROR_SUCCESS)
+            return true;
+    }
 
-	return false;
+    return false;
 }
 
 bool CRegistry::CloseKey()
 {
-	if (RegCloseKey(m_hKey) == ERROR_SUCCESS)
-		return true;
+    if (RegCloseKey(m_hKey) == ERROR_SUCCESS)
+        return true;
 
-	return false;
+    return false;
 }
 
 bool CRegistry::DeleteKey(const TCHAR *szKeyName)
 {
-	if (RegDeleteKey(m_hKey,szKeyName) == ERROR_SUCCESS)
-		return true;
+    if (RegDeleteKey(m_hKey,szKeyName) == ERROR_SUCCESS)
+        return true;
 
-	return false;
+    return false;
 }
 
 bool CRegistry::ReadBool(const TCHAR *szValueName,bool &bResult)
 {
-	DWORD dwValue,dwSize = sizeof(DWORD),dwType = REG_DWORD;
+    DWORD dwValue,dwSize = sizeof(DWORD),dwType = REG_DWORD;
 
-	if (RegQueryValueEx(m_hKey,szValueName,NULL,&dwType,(LPBYTE)&dwValue,&dwSize) == ERROR_SUCCESS)
-	{
-		bResult = dwValue >= 1 ? true : false;
-		return true;
-	}
+    if (RegQueryValueEx(m_hKey,szValueName,NULL,&dwType,(LPBYTE)&dwValue,&dwSize) == ERROR_SUCCESS)
+    {
+        bResult = dwValue >= 1 ? true : false;
+        return true;
+    }
 
-	return false;
+    return false;
 }
 
 bool CRegistry::ReadInteger(const TCHAR *szValueName,int &iResult)
 {
-	DWORD dwValue,dwSize = sizeof(DWORD),dwType = REG_DWORD;
+    DWORD dwValue,dwSize = sizeof(DWORD),dwType = REG_DWORD;
 
-	if (RegQueryValueEx(m_hKey,szValueName,NULL,&dwType,(LPBYTE)&dwValue,&dwSize) == ERROR_SUCCESS)
-	{
-		iResult = (int)dwValue;
-		return true;
-	}
+    if (RegQueryValueEx(m_hKey,szValueName,NULL,&dwType,(LPBYTE)&dwValue,&dwSize) == ERROR_SUCCESS)
+    {
+        iResult = (int)dwValue;
+        return true;
+    }
 
-	return false;
+    return false;
 }
 
 bool CRegistry::ReadInteger64(const TCHAR *szValueName,__int64 &iResult)
 {
-	DWORD dwSize = sizeof(__int64),dwType = REG_QWORD;
-	LARGE_INTEGER liValue;
+    DWORD dwSize = sizeof(__int64),dwType = REG_QWORD;
+    LARGE_INTEGER liValue;
 
-	if (RegQueryValueEx(m_hKey,szValueName,NULL,&dwType,(LPBYTE)&liValue,&dwSize) == ERROR_SUCCESS)
-	{
-		iResult = (__int64)liValue.QuadPart;
-		return true;
-	}
+    if (RegQueryValueEx(m_hKey,szValueName,NULL,&dwType,(LPBYTE)&liValue,&dwSize) == ERROR_SUCCESS)
+    {
+        iResult = (__int64)liValue.QuadPart;
+        return true;
+    }
 
-	return false;
+    return false;
 }
 
 bool CRegistry::ReadString(const TCHAR *szValueName,TCHAR *szResult,
-	unsigned long ulBufferSize)
+    unsigned long ulBufferSize)
 {
-	DWORD dwBufferSize = ulBufferSize;
+    DWORD dwBufferSize = ulBufferSize;
 
-	if (RegQueryValueEx(m_hKey,szValueName,NULL,NULL,(LPBYTE)szResult,
-		&dwBufferSize) == ERROR_SUCCESS)
-	{
-		return true;
-	}
+    if (RegQueryValueEx(m_hKey,szValueName,NULL,NULL,(LPBYTE)szResult,
+        &dwBufferSize) == ERROR_SUCCESS)
+    {
+        return true;
+    }
 
-	return false;
+    return false;
 }
 
 bool CRegistry::ReadStringEx(const TCHAR *szValueName,TCHAR *&szResult)
 {
-	unsigned long ulBufferSize = STRING_CHUNK_SIZE;
-	szResult = new TCHAR[STRING_CHUNK_SIZE];
-	long lResult = 0;
+    unsigned long ulBufferSize = STRING_CHUNK_SIZE;
+    szResult = new TCHAR[STRING_CHUNK_SIZE];
+    long lResult = 0;
 
-	while ((lResult = RegQueryValueEx(m_hKey,szValueName,NULL,NULL,(LPBYTE)szResult,
-		&ulBufferSize)) == ERROR_MORE_DATA)
+    while ((lResult = RegQueryValueEx(m_hKey,szValueName,NULL,NULL,(LPBYTE)szResult,
+        &ulBufferSize)) == ERROR_MORE_DATA)
     {
         // Increase the buffer size.
         ulBufferSize += STRING_CHUNK_SIZE;
 
         // Reallocate memory for the buffer. Why doesn't the realloc code work?
         //realloc(szResult,ulBufferSize);
-		delete [] szResult;
-		szResult = new TCHAR[ulBufferSize];
+        delete [] szResult;
+        szResult = new TCHAR[ulBufferSize];
     }
 
-	if (lResult != ERROR_SUCCESS)
-	{
-		delete [] szResult;
-		return false;
-	}
+    if (lResult != ERROR_SUCCESS)
+    {
+        delete [] szResult;
+        return false;
+    }
 
-	return true;
+    return true;
 }
 
 bool CRegistry::WriteBool(const TCHAR *szValueName,bool bValue)
 {
-	DWORD dwValue = (DWORD)bValue;
+    DWORD dwValue = (DWORD)bValue;
 
-	if (RegSetValueEx(m_hKey,szValueName,NULL,(DWORD)REG_DWORD,(LPBYTE)&dwValue,
-		(DWORD)sizeof(DWORD)) == ERROR_SUCCESS)
-	{
-		return true;
-	}
+    if (RegSetValueEx(m_hKey,szValueName,NULL,(DWORD)REG_DWORD,(LPBYTE)&dwValue,
+        (DWORD)sizeof(DWORD)) == ERROR_SUCCESS)
+    {
+        return true;
+    }
 
-	return false;
+    return false;
 }
 
 bool CRegistry::WriteInteger(const TCHAR *szValueName,int iValue)
 {
-	DWORD dwValue = (DWORD)iValue;
+    DWORD dwValue = (DWORD)iValue;
 
-	if (RegSetValueEx(m_hKey,szValueName,NULL,(DWORD)REG_DWORD,(LPBYTE)&dwValue,
-		(DWORD)sizeof(DWORD)) == ERROR_SUCCESS)
-	{
-		return true;
-	}
+    if (RegSetValueEx(m_hKey,szValueName,NULL,(DWORD)REG_DWORD,(LPBYTE)&dwValue,
+        (DWORD)sizeof(DWORD)) == ERROR_SUCCESS)
+    {
+        return true;
+    }
 
-	return false;
+    return false;
 }
 
 bool CRegistry::WriteInteger64(const TCHAR *szValueName,__int64 iValue)
 {
-	LARGE_INTEGER liValue;
-	liValue.QuadPart = iValue;
+    LARGE_INTEGER liValue;
+    liValue.QuadPart = iValue;
 
-	if (RegSetValueEx(m_hKey,szValueName,NULL,(DWORD)REG_QWORD,(LPBYTE)&liValue,
-		(DWORD)sizeof(__int64)) == ERROR_SUCCESS)
-	{
-		return true;
-	}
+    if (RegSetValueEx(m_hKey,szValueName,NULL,(DWORD)REG_QWORD,(LPBYTE)&liValue,
+        (DWORD)sizeof(__int64)) == ERROR_SUCCESS)
+    {
+        return true;
+    }
 
-	return false;
+    return false;
 }
 
 bool CRegistry::WriteString(const TCHAR *szValueName,TCHAR *szValue,unsigned long ulBufferSize)
 {
-	if (RegSetValueEx(m_hKey,szValueName,NULL,REG_SZ,(LPBYTE)szValue,ulBufferSize) == ERROR_SUCCESS)
-		return true;
+    if (RegSetValueEx(m_hKey,szValueName,NULL,REG_SZ,(LPBYTE)szValue,ulBufferSize) == ERROR_SUCCESS)
+        return true;
 
-	return false;
+    return false;
 }
 
 bool CRegistry::WriteStringEx(const TCHAR *szValueName,TCHAR *szValue)
 {
-	unsigned long ulBufferSize = lstrlen(szValue);
+    unsigned long ulBufferSize = lstrlen(szValue);
 
-	if (RegSetValueEx(m_hKey,szValueName,NULL,REG_SZ,(LPBYTE)szValue,ulBufferSize) == ERROR_SUCCESS)
-		return true;
+    if (RegSetValueEx(m_hKey,szValueName,NULL,REG_SZ,(LPBYTE)szValue,ulBufferSize) == ERROR_SUCCESS)
+        return true;
 
-	return false;
+    return false;
 }

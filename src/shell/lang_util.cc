@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,23 +23,23 @@
 
 TCHAR *lngGetString(unsigned int uiID)
 {
-	// Try to load translated string.
-	if (g_LanguageSettings.m_pLngProcessor != NULL)
-	{	
-		// Make sure that there is a main translation section.
-		if (g_LanguageSettings.m_pLngProcessor->EnterSection(_T("shell")))
-		{
-			TCHAR *szStrValue;
-			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(uiID,szStrValue))
-				return szStrValue;
-		}
-	}
+    // Try to load translated string.
+    if (g_LanguageSettings.m_pLngProcessor != NULL)
+    {
+        // Make sure that there is a main translation section.
+        if (g_LanguageSettings.m_pLngProcessor->EnterSection(_T("shell")))
+        {
+            TCHAR *szStrValue;
+            if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(uiID,szStrValue))
+                return szStrValue;
+        }
+    }
 
-	// Load internal (English) string.
-	return g_szStringTable[uiID];
+    // Load internal (English) string.
+    return g_szStringTable[uiID];
 }
 
 int lngMessageBox(HWND hWnd,unsigned int uiTextID,unsigned int uiCaptionID,unsigned int uiType)
 {
-	return MessageBox(hWnd,lngGetString(uiTextID),lngGetString(uiCaptionID),uiType);
+    return MessageBox(hWnd,lngGetString(uiTextID),lngGetString(uiCaptionID),uiType);
 }

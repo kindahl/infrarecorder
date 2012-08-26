@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,35 +22,35 @@
 int StringToInt(const TCHAR *szString)
 {
 #ifdef UNICODE
-	return _wtoi(szString);
+    return _wtoi(szString);
 #else
-	return atoi(szString);
+    return atoi(szString);
 #endif
 }
 
 __int64 StringToInt64(const TCHAR *szString)
 {
 #ifdef UNICODE
-	return _wtoi64(szString);
+    return _wtoi64(szString);
 #else
-	return _atoi64(szString);
+    return _atoi64(szString);
 #endif
 }
 
 double StringToDouble(const TCHAR *szString)
 {
 #ifdef UNICODE
-	return _wtof(szString);
+    return _wtof(szString);
 #else
-	return atof(szString);
+    return atof(szString);
 #endif
 }
 
 long StringToLong(const TCHAR *szString)
 {
 #ifdef UNICODE
-	return _wtol(szString);
+    return _wtol(szString);
 #else
-	return atol(szString);
+    return atol(szString);
 #endif
 }

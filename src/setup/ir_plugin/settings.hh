@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2011 Christian Kindahl, christian dot kindahl at gmail dot com
+ * Copyright (C) 2006-2012 Christian Kindahl, christian dot kindahl at gmail dot com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,33 +25,33 @@
 class ISettings
 {
 public:
-	virtual bool Save(CXmlProcessor *pXML) = 0;
-	virtual bool Load(CXmlProcessor *pXML) = 0;
+    virtual bool Save(CXmlProcessor *pXML) = 0;
+    virtual bool Load(CXmlProcessor *pXML) = 0;
 };
 
 class CLanguageSettings : public ISettings
 {
 public:
-	TCHAR m_szLanguageFile[MAX_PATH];
-	CLngProcessor *m_pLngProcessor;
+    TCHAR m_szLanguageFile[MAX_PATH];
+    CLngProcessor *m_pLngProcessor;
 
-	CLanguageSettings()
-	{
-		m_szLanguageFile[0] = '\0';
-		m_pLngProcessor = NULL;
-	}
+    CLanguageSettings()
+    {
+        m_szLanguageFile[0] = '\0';
+        m_pLngProcessor = NULL;
+    }
 
-	~CLanguageSettings()
-	{
-		if (m_pLngProcessor != NULL)
-		{
-			delete m_pLngProcessor;
-			m_pLngProcessor = NULL;
-		}
-	}
+    ~CLanguageSettings()
+    {
+        if (m_pLngProcessor != NULL)
+        {
+            delete m_pLngProcessor;
+            m_pLngProcessor = NULL;
+        }
+    }
 
-	bool Save(CXmlProcessor *pXML);
-	bool Load(CXmlProcessor *pXML);
+    bool Save(CXmlProcessor *pXML);
+    bool Load(CXmlProcessor *pXML);
 };
 
 extern CLanguageSettings g_LanguageSettings;

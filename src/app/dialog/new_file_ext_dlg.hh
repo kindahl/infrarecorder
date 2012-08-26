@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,29 +23,29 @@
 class CNewFileExtDlg : public CDialogImpl<CNewFileExtDlg>
 {
 private:
-	CCustomEditCtrl m_DescEdit;
-	CCustomEditCtrl m_ExtEdit;
+    CCustomEditCtrl m_DescEdit;
+    CCustomEditCtrl m_ExtEdit;
 
-	bool Translate();
+    bool Translate();
 
 public:
-	enum { IDD = IDD_NEWFILEEXTDLG };
+    enum { IDD = IDD_NEWFILEEXTDLG };
 
-	TCHAR m_szDescBuffer[64];
-	TCHAR m_szExtBuffer[64];
+    TCHAR m_szDescBuffer[64];
+    TCHAR m_szExtBuffer[64];
 
-	CNewFileExtDlg();
-	~CNewFileExtDlg();
+    CNewFileExtDlg();
+    ~CNewFileExtDlg();
 
-	BEGIN_MSG_MAP(CNewFileExtDlg)
-		MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
+    BEGIN_MSG_MAP(CNewFileExtDlg)
+        MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
 
-		COMMAND_ID_HANDLER(IDOK,OnOK)
-		COMMAND_ID_HANDLER(IDCANCEL,OnCancel)
-	END_MSG_MAP()
+        COMMAND_ID_HANDLER(IDOK,OnOK)
+        COMMAND_ID_HANDLER(IDCANCEL,OnCancel)
+    END_MSG_MAP()
 
-	LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 
-	LRESULT OnOK(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
-	LRESULT OnCancel(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnOK(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnCancel(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
 };

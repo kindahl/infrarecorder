@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,19 +27,19 @@ typedef sf_count_t (*tirc_sf_write_raw)(SNDFILE *sndfile,const void *ptr,sf_coun
 class CLibraryHelper
 {
 private:
-	HINSTANCE m_hDllInstance;
+    HINSTANCE m_hDllInstance;
 
 public:
-	CLibraryHelper();
-	~CLibraryHelper();
+    CLibraryHelper();
+    ~CLibraryHelper();
 
-	bool Load(const TCHAR *szFileName);
-	bool Unload();
-	bool IsLoaded();
+    bool Load(const TCHAR *szFileName);
+    bool Unload();
+    bool IsLoaded();
 
-	tirc_sf_open irc_sf_open;
-	tirc_sf_close irc_sf_close;
-	tirc_sf_format_check irc_sf_format_check;
-	tirc_sf_read_raw irc_sf_read_raw;
-	tirc_sf_write_raw irc_sf_write_raw;
+    tirc_sf_open irc_sf_open;
+    tirc_sf_close irc_sf_close;
+    tirc_sf_format_check irc_sf_format_check;
+    tirc_sf_read_raw irc_sf_read_raw;
+    tirc_sf_write_raw irc_sf_write_raw;
 };

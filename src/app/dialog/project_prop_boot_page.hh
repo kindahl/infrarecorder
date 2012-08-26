@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,48 +22,48 @@
 class CProjectPropBootPage : public CPropertyPageImpl<CProjectPropBootPage>
 {
 private:
-	HIMAGELIST m_hToolBarImageList;
-	CListViewCtrl m_ListView;
-	CToolBarCtrl m_ToolBar;
+    HIMAGELIST m_hToolBarImageList;
+    CListViewCtrl m_ListView;
+    CToolBarCtrl m_ToolBar;
 
-	bool Translate();
+    bool Translate();
 
-	void InitToolBarImageList();
-	void AddToolBarButton(int iCommand,int iBitmap);
-	void CreateToolBarCtrl();
+    void InitToolBarImageList();
+    void AddToolBarButton(int iCommand,int iBitmap);
+    void CreateToolBarCtrl();
 
-	void FillListView();
+    void FillListView();
 
 public:
-	enum { IDD = IDD_PROPPAGE_PROJECTPROPBOOT };
+    enum { IDD = IDD_PROPPAGE_PROJECTPROPBOOT };
 
-	CProjectPropBootPage();
-	~CProjectPropBootPage();
+    CProjectPropBootPage();
+    ~CProjectPropBootPage();
 
-	bool OnApply();
-	void OnHelp();
+    bool OnApply();
+    void OnHelp();
 
-	BEGIN_MSG_MAP(CProjectPropBootPage)
-		MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
+    BEGIN_MSG_MAP(CProjectPropBootPage)
+        MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
 
-		COMMAND_ID_HANDLER(ID_BOOT_ADD,OnListAdd)
-		COMMAND_ID_HANDLER(ID_BOOT_REMOVE,OnListRemove)
-		COMMAND_ID_HANDLER(ID_BOOT_EDIT,OnListEdit)
+        COMMAND_ID_HANDLER(ID_BOOT_ADD,OnListAdd)
+        COMMAND_ID_HANDLER(ID_BOOT_REMOVE,OnListRemove)
+        COMMAND_ID_HANDLER(ID_BOOT_EDIT,OnListEdit)
 
-		NOTIFY_CODE_HANDLER(TTN_GETDISPINFO,OnToolBarGetInfo)
-		NOTIFY_HANDLER(IDC_LIST,LVN_ITEMCHANGED,OnListItemChanged)
-		NOTIFY_HANDLER(IDC_LIST,LVN_GETDISPINFO,OnListGetDispInfo)
+        NOTIFY_CODE_HANDLER(TTN_GETDISPINFO,OnToolBarGetInfo)
+        NOTIFY_HANDLER(IDC_LIST,LVN_ITEMCHANGED,OnListItemChanged)
+        NOTIFY_HANDLER(IDC_LIST,LVN_GETDISPINFO,OnListGetDispInfo)
 
-		CHAIN_MSG_MAP(CPropertyPageImpl<CProjectPropBootPage>)
-	END_MSG_MAP()
+        CHAIN_MSG_MAP(CPropertyPageImpl<CProjectPropBootPage>)
+    END_MSG_MAP()
 
-	LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 
-	LRESULT OnListAdd(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
-	LRESULT OnListRemove(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
-	LRESULT OnListEdit(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnListAdd(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnListRemove(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnListEdit(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
 
-	LRESULT OnToolBarGetInfo(int idCtrl,LPNMHDR pNMH,BOOL &bHandled);
-	LRESULT OnListItemChanged(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled);
-	LRESULT OnListGetDispInfo(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled);
+    LRESULT OnToolBarGetInfo(int idCtrl,LPNMHDR pNMH,BOOL &bHandled);
+    LRESULT OnListItemChanged(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled);
+    LRESULT OnListGetDispInfo(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled);
 };

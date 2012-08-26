@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,26 +23,26 @@
 class CWMAReader
 {
 private:
-	CReadStream *m_pStream;
+    CReadStream *m_pStream;
 
-	INSSBuffer *m_pSample;
-	unsigned char *m_pSampleBuffer;
-	unsigned long m_ulSampleBufferSize;
-	unsigned long m_ulSampleBufferPos;
+    INSSBuffer *m_pSample;
+    unsigned char *m_pSampleBuffer;
+    unsigned long m_ulSampleBufferSize;
+    unsigned long m_ulSampleBufferPos;
 
-	unsigned __int64 m_uiCurrentTime;
+    unsigned __int64 m_uiCurrentTime;
 
-	HRESULT GetStreamNumber(IWMProfile *pProfile,unsigned short &usStreamNumber);
+    HRESULT GetStreamNumber(IWMProfile *pProfile,unsigned short &usStreamNumber);
 
 public:
-	IWMSyncReader *m_pWMReader;
+    IWMSyncReader *m_pWMReader;
 
-	CWMAReader();
-	~CWMAReader();
+    CWMAReader();
+    ~CWMAReader();
 
-	bool Open(const TCHAR *szFileName);
-	bool Close();
+    bool Open(const TCHAR *szFileName);
+    bool Close();
 
-	HRESULT DecodeSamples(unsigned char *pBuffer,__int64 iBufferSize,
-		__int64 &iProcessed,unsigned __int64 &uiTime);
+    HRESULT DecodeSamples(unsigned char *pBuffer,__int64 iBufferSize,
+        __int64 &iProcessed,unsigned __int64 &uiTime);
 };

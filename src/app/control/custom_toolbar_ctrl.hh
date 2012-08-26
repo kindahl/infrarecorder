@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,16 +21,16 @@
 class CCustomToolBarCtrl : public CWindowImpl<CCustomToolBarCtrl,CToolBarCtrl>
 {
 public:
-	DECLARE_WND_CLASS(_T("ckToolBar"));
+    DECLARE_WND_CLASS(_T("ckToolBar"));
 
-	CCustomToolBarCtrl();
-	~CCustomToolBarCtrl();
+    CCustomToolBarCtrl();
+    ~CCustomToolBarCtrl();
 
-	BEGIN_MSG_MAP(CCustomToolBarCtrl)
-		MESSAGE_HANDLER(WM_RBUTTONDOWN,OnRButtonDown)
-		MESSAGE_HANDLER(WM_LBUTTONDBLCLK,OnLButtonDblClk)
-	END_MSG_MAP()
+    BEGIN_MSG_MAP(CCustomToolBarCtrl)
+        MESSAGE_HANDLER(WM_RBUTTONDOWN,OnRButtonDown)
+        MESSAGE_HANDLER(WM_LBUTTONDBLCLK,OnLButtonDblClk)
+    END_MSG_MAP()
 
-	LRESULT OnRButtonDown(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnLButtonDblClk(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnRButtonDown(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnLButtonDblClk(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 };

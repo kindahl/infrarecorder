@@ -1,6 +1,6 @@
  /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,27 +23,27 @@
 class CRegistry
 {
 private:
-	HKEY m_hRootKey;
-	HKEY m_hKey;
+    HKEY m_hRootKey;
+    HKEY m_hKey;
 
 public:
-	CRegistry();
-	~CRegistry();
+    CRegistry();
+    ~CRegistry();
 
-	void SetRoot(HKEY hKey);
-	bool OpenKey(const TCHAR *szKeyName,bool bCreate = true);
-	bool CloseKey();
-	bool DeleteKey(const TCHAR *szKeyName);
+    void SetRoot(HKEY hKey);
+    bool OpenKey(const TCHAR *szKeyName,bool bCreate = true);
+    bool CloseKey();
+    bool DeleteKey(const TCHAR *szKeyName);
 
-	bool ReadBool(const TCHAR *szValueName,bool &bResult);
-	bool ReadInteger(const TCHAR *szValueName,int &iResult);
-	bool ReadInteger64(const TCHAR *szValueName,__int64 &iResult);
-	bool ReadString(const TCHAR *szValueName,TCHAR *szResult,unsigned long ulBufferSize);
-	bool ReadStringEx(const TCHAR *szValueName,TCHAR *&szResult);
+    bool ReadBool(const TCHAR *szValueName,bool &bResult);
+    bool ReadInteger(const TCHAR *szValueName,int &iResult);
+    bool ReadInteger64(const TCHAR *szValueName,__int64 &iResult);
+    bool ReadString(const TCHAR *szValueName,TCHAR *szResult,unsigned long ulBufferSize);
+    bool ReadStringEx(const TCHAR *szValueName,TCHAR *&szResult);
 
-	bool WriteBool(const TCHAR *szValueName,bool bValue);
-	bool WriteInteger(const TCHAR *szValueName,int iValue);
-	bool WriteInteger64(const TCHAR *szValueName,__int64 iValue);
-	bool WriteString(const TCHAR *szValueName,TCHAR *szValue,unsigned long ulBufferSize);
-	bool WriteStringEx(const TCHAR *szValueName,TCHAR *szValue);
+    bool WriteBool(const TCHAR *szValueName,bool bValue);
+    bool WriteInteger(const TCHAR *szValueName,int iValue);
+    bool WriteInteger64(const TCHAR *szValueName,__int64 iValue);
+    bool WriteString(const TCHAR *szValueName,TCHAR *szValue,unsigned long ulBufferSize);
+    bool WriteStringEx(const TCHAR *szValueName,TCHAR *szValue);
 };

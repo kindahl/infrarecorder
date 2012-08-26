@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,86 +40,86 @@
 class CLngValue
 {
 public:
-	unsigned long ulName;
-	CCustomString m_szValue;
+    unsigned long ulName;
+    CCustomString m_szValue;
 
-	CLngValue() : m_szValue(LNG_VALUELENGTH)
-	{
-		ulName = 0;
-		m_szValue[0] = '\0';
-	}
+    CLngValue() : m_szValue(LNG_VALUELENGTH)
+    {
+        ulName = 0;
+        m_szValue[0] = '\0';
+    }
 
-	CLngValue(unsigned int uiValueLength) :
-		m_szValue(uiValueLength)
-	{
-		ulName = 0;
-		m_szValue[0] = '\0';
-	}
+    CLngValue(unsigned int uiValueLength) :
+        m_szValue(uiValueLength)
+    {
+        ulName = 0;
+        m_szValue[0] = '\0';
+    }
 };
 
 class CLngSection
 {
 public:
-	CCustomString m_szName;
-	std::vector<CLngValue *> m_Values;
+    CCustomString m_szName;
+    std::vector<CLngValue *> m_Values;
 
-	CLngSection() : m_szName(LNG_NAMELENGTH)
-	{
-		m_szName[0] = '\0';
-	}
+    CLngSection() : m_szName(LNG_NAMELENGTH)
+    {
+        m_szName[0] = '\0';
+    }
 
-	CLngSection(unsigned int uiNameLength) :
-		m_szName(uiNameLength)
-	{
-		m_szName[0] = '\0';
-	}
+    CLngSection(unsigned int uiNameLength) :
+        m_szName(uiNameLength)
+    {
+        m_szName[0] = '\0';
+    }
 
-	~CLngSection()
-	{
-		Clear();
-	}
+    ~CLngSection()
+    {
+        Clear();
+    }
 
-	void Clear()
-	{
-		// Free the children.
-		for (unsigned int iIndex = 0; iIndex < m_Values.size(); iIndex++)
-		{
-			// Remove the object from m_Instances.
-			std::vector <CLngValue *>::iterator itObject = m_Values.begin() + iIndex;
-			delete *itObject;
-		}
+    void Clear()
+    {
+        // Free the children.
+        for (unsigned int iIndex = 0; iIndex < m_Values.size(); iIndex++)
+        {
+            // Remove the object from m_Instances.
+            std::vector <CLngValue *>::iterator itObject = m_Values.begin() + iIndex;
+            delete *itObject;
+        }
 
-		m_Values.clear();
-	}
+        m_Values.clear();
+    }
 };
 
 class CLngProcessor
 {
 protected:
-	ckcore::File m_File;
+    ckcore::File m_File;
 
-	TCHAR m_ucBuffer[LNG_BUFFER_SIZE];
-	unsigned long m_ulBufferSize;
-	unsigned long m_ulBufferPos;
+    TCHAR m_ucBuffer[LNG_BUFFER_SIZE];
+    unsigned long m_ulBufferSize;
+    unsigned long m_ulBufferPos;
 
-	__int64 m_iRemainBytes;
+    __int64 m_iRemainBytes;
 
-	std::vector<CLngSection *> m_pSections;
-	CLngSection *m_pCurrent;
+    std::vector<CLngSection *> m_pSections;
+    CLngSection *m_pCurrent;
 
-	void Clear();
+    void Clear();
 
-	bool ReadNext(TCHAR &c);
-	void ReadBack();
+    bool ReadNext(TCHAR &c);
+    void ReadBack();
 
 public:
-	CLngProcessor(const TCHAR *szFullPath);
-	~CLngProcessor();
+    CLngProcessor(const TCHAR *szFullPath);
+    ~CLngProcessor();
 
-	int Load();
+    int Load();
 
-	bool EnterSection(const TCHAR *szSectionName);
+    bool EnterSection(const TCHAR *szSectionName);
 
-	bool GetValue(unsigned long ulName,TCHAR *szValue,unsigned int uiMaxValueLen);
-	bool GetValuePtr(unsigned long ulName,TCHAR *&szValue);
+    bool GetValue(unsigned long ulName,TCHAR *szValue,unsigned int uiMaxValueLen);
+    bool GetValuePtr(unsigned long ulName,TCHAR *&szValue);
 };

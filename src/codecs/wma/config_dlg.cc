@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,12 +21,12 @@
 
 CConfigDlg::CConfigDlg(CEncoderConfig *pConfig) : CPropertySheetImpl<CConfigDlg>(_T("Configuration"),0,NULL)
 {
-	m_bCentered = false;
+    m_bCentered = false;
 
-	m_psh.dwFlags |= PSH_NOAPPLYNOW;
+    m_psh.dwFlags |= PSH_NOAPPLYNOW;
 
-	m_GeneralPage.SetConfig(pConfig);
-	AddPage(m_GeneralPage);
+    m_GeneralPage.SetConfig(pConfig);
+    AddPage(m_GeneralPage);
 }
 
 CConfigDlg::~CConfigDlg()
@@ -35,13 +35,13 @@ CConfigDlg::~CConfigDlg()
 
 LRESULT CConfigDlg::OnShowWindow(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
-	// Center the window, once.
-	if (wParam == TRUE && !m_bCentered)
-	{
-		CenterWindow();
-		m_bCentered = true;
-	}
+    // Center the window, once.
+    if (wParam == TRUE && !m_bCentered)
+    {
+        CenterWindow();
+        m_bCentered = true;
+    }
 
-	bHandled = FALSE;
-	return 0;
+    bHandled = FALSE;
+    return 0;
 }

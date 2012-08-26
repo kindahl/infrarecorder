@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,48 +23,48 @@
 class ISettings
 {
 public:
-	virtual bool Load(CXmlProcessor *pXml) = 0;
+    virtual bool Load(CXmlProcessor *pXml) = 0;
 };
 
 class CLanguageSettings : public ISettings
 {
 public:
-	TCHAR m_szLanguageFile[MAX_PATH];
-	CLngProcessor *m_pLngProcessor;
+    TCHAR m_szLanguageFile[MAX_PATH];
+    CLngProcessor *m_pLngProcessor;
 
-	CLanguageSettings()
-	{
-		m_szLanguageFile[0] = '\0';
-		m_pLngProcessor = NULL;
-	}
+    CLanguageSettings()
+    {
+        m_szLanguageFile[0] = '\0';
+        m_pLngProcessor = NULL;
+    }
 
-	~CLanguageSettings()
-	{
-		if (m_pLngProcessor != NULL)
-		{
-			delete m_pLngProcessor;
-			m_pLngProcessor = NULL;
-		}
-	}
+    ~CLanguageSettings()
+    {
+        if (m_pLngProcessor != NULL)
+        {
+            delete m_pLngProcessor;
+            m_pLngProcessor = NULL;
+        }
+    }
 
-	bool Load(CXmlProcessor *pXml);
+    bool Load(CXmlProcessor *pXml);
 };
 
 class CGlobalSettings : public ISettings
 {
 public:
-	// Shell extension.
-	bool m_bShellExtSubMenu;
-	bool m_bShellExtIcon;
+    // Shell extension.
+    bool m_bShellExtSubMenu;
+    bool m_bShellExtIcon;
 
-	CGlobalSettings()
-	{
-		// Shell extension.
-		m_bShellExtSubMenu = false;
-		m_bShellExtIcon = true;
-	}
+    CGlobalSettings()
+    {
+        // Shell extension.
+        m_bShellExtSubMenu = false;
+        m_bShellExtIcon = true;
+    }
 
-	bool Load(CXmlProcessor *pXml);
+    bool Load(CXmlProcessor *pXml);
 };
 
 extern CLanguageSettings g_LanguageSettings;

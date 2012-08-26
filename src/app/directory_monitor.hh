@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,13 +21,13 @@
 class CDirectoryMonitor
 {
 private:
-	unsigned long m_ulNotifyID;
+    unsigned long m_ulNotifyID;
 
 public:
-	CDirectoryMonitor();
-	~CDirectoryMonitor();
+    CDirectoryMonitor();
+    ~CDirectoryMonitor();
 
-	bool Register(HWND hWndNotify,unsigned int uiMsg,int iFilter,LPITEMIDLIST pidl,
-		bool bRecursive);
-	bool Deregister();
+    bool Register(HWND hWndNotify,unsigned int uiMsg,int iFilter,LPITEMIDLIST pidl,
+        bool bRecursive);
+    bool Deregister();
 };

@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,17 +25,17 @@ typedef HRESULT (__stdcall *tirc_WMCreateSyncReader)(IUnknown *pUnkCert,DWORD dw
 class CLibraryHelper
 {
 private:
-	HINSTANCE m_hDllInstance;
+    HINSTANCE m_hDllInstance;
 
 public:
-	CLibraryHelper();
-	~CLibraryHelper();
+    CLibraryHelper();
+    ~CLibraryHelper();
 
-	bool Load(const TCHAR *szFileName);
-	bool Unload();
-	bool IsLoaded();
+    bool Load(const TCHAR *szFileName);
+    bool Unload();
+    bool IsLoaded();
 
-	tirc_WMCreateProfileManager irc_WMCreateProfileManager;
-	tirc_WMCreateWriter irc_WMCreateWriter;
-	tirc_WMCreateSyncReader irc_WMCreateSyncReader;
+    tirc_WMCreateProfileManager irc_WMCreateProfileManager;
+    tirc_WMCreateWriter irc_WMCreateWriter;
+    tirc_WMCreateSyncReader irc_WMCreateSyncReader;
 };

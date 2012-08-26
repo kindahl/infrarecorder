@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,34 +23,34 @@
 class CSaveTracksDlg : public CDialogImpl<CSaveTracksDlg>
 {
 private:
-	CComboBox m_AudioFormatCombo;
-	CCodec *m_pEncoder;
+    CComboBox m_AudioFormatCombo;
+    CCodec *m_pEncoder;
 
-	bool Translate();
+    bool Translate();
 
 public:
-	enum { IDD = IDD_SAVETRACKSDLG };
+    enum { IDD = IDD_SAVETRACKSDLG };
 
-	CSaveTracksDlg();
-	~CSaveTracksDlg();
+    CSaveTracksDlg();
+    ~CSaveTracksDlg();
 
-	BEGIN_MSG_MAP(CSaveTracksDlg)
-		MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
+    BEGIN_MSG_MAP(CSaveTracksDlg)
+        MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
 
-		COMMAND_ID_HANDLER(IDOK,OnOK)
-		COMMAND_ID_HANDLER(IDCANCEL,OnCancel)
-		COMMAND_HANDLER(IDC_AUDIOFORMATCOMBO,CBN_SELCHANGE,OnAudioFormatChange)
-		COMMAND_HANDLER(IDC_AUDIOFORMATBUTTON,BN_CLICKED,OnClickedAudioFormatButton)
-		COMMAND_HANDLER(IDC_BROWSEBUTTON,BN_CLICKED,OnClickedBrowseButton)
-	END_MSG_MAP()
+        COMMAND_ID_HANDLER(IDOK,OnOK)
+        COMMAND_ID_HANDLER(IDCANCEL,OnCancel)
+        COMMAND_HANDLER(IDC_AUDIOFORMATCOMBO,CBN_SELCHANGE,OnAudioFormatChange)
+        COMMAND_HANDLER(IDC_AUDIOFORMATBUTTON,BN_CLICKED,OnClickedAudioFormatButton)
+        COMMAND_HANDLER(IDC_BROWSEBUTTON,BN_CLICKED,OnClickedBrowseButton)
+    END_MSG_MAP()
 
-	LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 
-	LRESULT OnOK(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
-	LRESULT OnCancel(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
-	LRESULT OnAudioFormatChange(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
-	LRESULT OnClickedAudioFormatButton(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
-	LRESULT OnClickedBrowseButton(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnOK(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnCancel(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnAudioFormatChange(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnClickedAudioFormatButton(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnClickedBrowseButton(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
 
-	CCodec *GetEncoder();
+    CCodec *GetEncoder();
 };

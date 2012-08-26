@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,10 +20,10 @@
 
 /*typedef struct
 {
-	// Vorbis variables.
-	ogg_page og;
-	ogg_stream_state os;
-	vorbis_dsp_state vd;
-	vorbis_block vb;
-	vorbis_info vi;
+    // Vorbis variables.
+    ogg_page og;
+    ogg_stream_state os;
+    vorbis_dsp_state vd;
+    vorbis_block vb;
+    vorbis_info vi;
 };*/

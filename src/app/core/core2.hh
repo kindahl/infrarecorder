@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,67 +30,67 @@
 class CCore2
 {
 public:
-	CCore2();
-	~CCore2();
+    CCore2();
+    ~CCore2();
 
-	enum eLoadMedia
-	{
-		LOADMEDIA_STOP = 0x00,
-		LOADMEDIA_START = 0x01,
-		LOADMEDIA_EJECT = 0x02,
-		LOADMEDIA_LOAD = 0x03
-	};
+    enum eLoadMedia
+    {
+        LOADMEDIA_STOP = 0x00,
+        LOADMEDIA_START = 0x01,
+        LOADMEDIA_EJECT = 0x02,
+        LOADMEDIA_LOAD = 0x03
+    };
 
-	enum eMediaChange
-	{
-		MEDIACHANGE_NOCHANGE,
-		MEDIACHANGE_EJECTREQUEST,
-		MEDIACHANGE_NEWMEDIA,
-		MEDIACHANGE_MEDIAREMOVAL,
-		MEDIACHANGE_MEDIACHANGED,
-		MEDIACHANGE_BGFORMAT_COMPLETED,
-		MEDIACHANGE_BGFORMAT_RESTARTED
-	};
+    enum eMediaChange
+    {
+        MEDIACHANGE_NOCHANGE,
+        MEDIACHANGE_EJECTREQUEST,
+        MEDIACHANGE_NEWMEDIA,
+        MEDIACHANGE_MEDIAREMOVAL,
+        MEDIACHANGE_MEDIACHANGED,
+        MEDIACHANGE_BGFORMAT_COMPLETED,
+        MEDIACHANGE_BGFORMAT_RESTARTED
+    };
 
-	enum
-	{
-		ERASE_FORMAT_QUICK,
-		ERASE_FORMAT_FULL,
-		ERASE_BLANK_FULL,
-		ERASE_BLANK_MINIMAL,
-		ERASE_BLANK_UNCLOSE,
-		ERASE_BLANK_SESSION
-	};
+    enum
+    {
+        ERASE_FORMAT_QUICK,
+        ERASE_FORMAT_FULL,
+        ERASE_BLANK_FULL,
+        ERASE_BLANK_MINIMAL,
+        ERASE_BLANK_UNCLOSE,
+        ERASE_BLANK_SESSION
+    };
 
-	bool HandleEvents(ckmmc::Device &Device,CAdvancedProgress *pProgress,
-		unsigned char &ucHandledEvents);
-	bool WaitForUnit(ckmmc::Device &Device,CAdvancedProgress *pProgress);
-	eMediaChange CheckMediaChange(ckmmc::Device &Device);
+    bool HandleEvents(ckmmc::Device &Device,CAdvancedProgress *pProgress,
+        unsigned char &ucHandledEvents);
+    bool WaitForUnit(ckmmc::Device &Device,CAdvancedProgress *pProgress);
+    eMediaChange CheckMediaChange(ckmmc::Device &Device);
 
-	bool LockMedia(ckmmc::Device &Device,bool bLock);
-	bool StartStopUnit(ckmmc::Device &Device,eLoadMedia Action,bool bImmed);
-	bool CloseTrackSession(ckmmc::Device &Device,unsigned char ucCloseFunction,
-		unsigned short usTrackNumber,bool bImmed);
+    bool LockMedia(ckmmc::Device &Device,bool bLock);
+    bool StartStopUnit(ckmmc::Device &Device,eLoadMedia Action,bool bImmed);
+    bool CloseTrackSession(ckmmc::Device &Device,unsigned char ucCloseFunction,
+        unsigned short usTrackNumber,bool bImmed);
 
-	bool SetDiscSpeeds(ckmmc::Device &Device,unsigned short usReadSpeed,
-		unsigned short usWriteSpeed);
+    bool SetDiscSpeeds(ckmmc::Device &Device,unsigned short usReadSpeed,
+        unsigned short usWriteSpeed);
 
-	bool UpdateModePage5(ckmmc::Device &Device,bool bTestWrite,bool bSilent = false);
+    bool UpdateModePage5(ckmmc::Device &Device,bool bTestWrite,bool bSilent = false);
 
-	// Primary functions.
-	bool EraseDisc(ckmmc::Device &Device,CAdvancedProgress *pProgress,int iMethod,
-		bool bForce,bool bEject,bool bSimulate,unsigned int uiSpeed);
-	bool ReadDataTrack(ckmmc::Device &Device,CAdvancedProgress *pProgress,
-		unsigned char ucTrackNumber,bool bIgnoreErr,const TCHAR *szFilePath);
-	bool ReadFullTOC(ckmmc::Device &Device,const TCHAR *szFileName);
-	int CreateImage(ckcore::OutStream &OutStream,const ckfilesystem::FileSet &Files,
-		ckcore::Progress &Progress,bool bFailOnError,
-		std::map<tstring,tstring> *pFilePathMap = NULL);
-	int CreateImage(const TCHAR *szFullPath,const ckfilesystem::FileSet &Files,		// Wrapper.
-		ckcore::Progress &Progress,bool bFailOnError,
-		std::map<tstring,tstring> *pFilePathMap = NULL);
-	int EstimateImageSize(const ckfilesystem::FileSet &Files,ckcore::Progress &Progress,	// Wrapper.
-		unsigned __int64 &uiImageSize);
+    // Primary functions.
+    bool EraseDisc(ckmmc::Device &Device,CAdvancedProgress *pProgress,int iMethod,
+        bool bForce,bool bEject,bool bSimulate,unsigned int uiSpeed);
+    bool ReadDataTrack(ckmmc::Device &Device,CAdvancedProgress *pProgress,
+        unsigned char ucTrackNumber,bool bIgnoreErr,const TCHAR *szFilePath);
+    bool ReadFullTOC(ckmmc::Device &Device,const TCHAR *szFileName);
+    int CreateImage(ckcore::OutStream &OutStream,const ckfilesystem::FileSet &Files,
+        ckcore::Progress &Progress,bool bFailOnError,
+        std::map<tstring,tstring> *pFilePathMap = NULL);
+    int CreateImage(const TCHAR *szFullPath,const ckfilesystem::FileSet &Files,		// Wrapper.
+        ckcore::Progress &Progress,bool bFailOnError,
+        std::map<tstring,tstring> *pFilePathMap = NULL);
+    int EstimateImageSize(const ckfilesystem::FileSet &Files,ckcore::Progress &Progress,	// Wrapper.
+        unsigned __int64 &uiImageSize);
 };
 
 extern CCore2 g_Core2;

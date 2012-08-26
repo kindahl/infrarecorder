@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,243 +37,243 @@ class CProjectNode;
 class CItemData
 {
 public:
-	class CAudioData
-	{
-	public:
-		unsigned __int64 uiTrackLength;
-		TCHAR szTrackTitle[160];
-		TCHAR szTrackArtist[160];
+    class CAudioData
+    {
+    public:
+        unsigned __int64 uiTrackLength;
+        TCHAR szTrackTitle[160];
+        TCHAR szTrackArtist[160];
 
-		CAudioData()
-		{
-			uiTrackLength = 0;
-			szTrackTitle[0] = '\0';
-			szTrackArtist[0] = '\0';
-		}
-	};
+        CAudioData()
+        {
+            uiTrackLength = 0;
+            szTrackTitle[0] = '\0';
+            szTrackArtist[0] = '\0';
+        }
+    };
 
-	typedef ckfilesystem::IsoImportData CIsoData;
+    typedef ckfilesystem::IsoImportData CIsoData;
 
 private:
-	TCHAR m_szFileName[MAX_PATH];	// File name in the project (disc image).
-	TCHAR m_szFilePath[MAX_PATH];	// File path in the project (disc image).
+    TCHAR m_szFileName[MAX_PATH];	// File name in the project (disc image).
+    TCHAR m_szFilePath[MAX_PATH];	// File path in the project (disc image).
 
-	void FileNameChanged();
-	void FilePathChanged();
+    void FileNameChanged();
+    void FilePathChanged();
 
-	// Only allocated when needed.
-	CAudioData *m_pAudioData;
-	CIsoData *m_pIsoData;
+    // Only allocated when needed.
+    CAudioData *m_pAudioData;
+    CIsoData *m_pIsoData;
 
 public:
-	CItemData();
-	~CItemData();
+    CItemData();
+    ~CItemData();
 
-	//TCHAR szFileName[MAX_PATH];		// File name in the project (disc image).
-	//TCHAR szFilePath[MAX_PATH];		// File path in the project (disc image).
-	TCHAR szFullPath[MAX_PATH];			// Real file path on the harddrive.
-	TCHAR szFileType[80];
-	unsigned short usFileDate;
-	unsigned short usFileTime;
-	unsigned __int64 uiSize;		// In data and mixed-mode projects this
-									// variable holds the file size in bytes.
-									// In audio projects it holds the same
-									// information as uiTrackLength.
+    //TCHAR szFileName[MAX_PATH];		// File name in the project (disc image).
+    //TCHAR szFilePath[MAX_PATH];		// File path in the project (disc image).
+    TCHAR szFullPath[MAX_PATH];			// Real file path on the harddrive.
+    TCHAR szFileType[80];
+    unsigned short usFileDate;
+    unsigned short usFileTime;
+    unsigned __int64 uiSize;		// In data and mixed-mode projects this
+                                    // variable holds the file size in bytes.
+                                    // In audio projects it holds the same
+                                    // information as uiTrackLength.
 
-	// Only used in audio mode. Audio track length in milliseconds.
-	// UPDATE: An object with this information is only created when needed.
-	/*unsigned __int64 uiTrackLength;
-	TCHAR szTrackTitle[160];
-	TCHAR szTrackArtist[160];*/
+    // Only used in audio mode. Audio track length in milliseconds.
+    // UPDATE: An object with this information is only created when needed.
+    /*unsigned __int64 uiTrackLength;
+    TCHAR szTrackTitle[160];
+    TCHAR szTrackArtist[160];*/
 
-	unsigned char ucFlags;
+    unsigned char ucFlags;
 
-	// Getters and setters.
-	void SetFileName(const TCHAR *szFileName);
-	const TCHAR *GetFileName();
-	void SetFilePath(const TCHAR *szFilePath);
-	const TCHAR *GetFilePath();
+    // Getters and setters.
+    void SetFileName(const TCHAR *szFileName);
+    const TCHAR *GetFileName();
+    void SetFilePath(const TCHAR *szFilePath);
+    const TCHAR *GetFilePath();
 
-	TCHAR *BeginEditFileName();
-	void EndEditFileName();
-	TCHAR *BeginEditFilePath();
-	void EndEditFilePath();
+    TCHAR *BeginEditFileName();
+    void EndEditFileName();
+    TCHAR *BeginEditFilePath();
+    void EndEditFilePath();
 
-	bool HasAudioData();
-	CAudioData *GetAudioData();
-	bool HasIsoData();
-	CIsoData *GetIsoData();
+    bool HasAudioData();
+    CAudioData *GetAudioData();
+    bool HasIsoData();
+    CIsoData *GetIsoData();
 };
 
 class CProjectNode
 {
 public:
-	std::list<CProjectNode *> m_Children;
-	std::list<CItemData *> m_Files;
-	CProjectNode *m_pParent;
+    std::list<CProjectNode *> m_Children;
+    std::list<CItemData *> m_Files;
+    CProjectNode *m_pParent;
     CItemData *pItemData;
-	int iIconIndex;
-	HTREEITEM m_hTreeItem;
+    int iIconIndex;
+    HTREEITEM m_hTreeItem;
 
     CProjectNode(CProjectNode *pParent)
     {
-		m_pParent = pParent;
-		m_hTreeItem = NULL;
+        m_pParent = pParent;
+        m_hTreeItem = NULL;
 
-		// Initialize the default data.
-		pItemData = new CItemData();
-		pItemData->ucFlags = PROJECTITEM_FLAG_ISFOLDER;
+        // Initialize the default data.
+        pItemData = new CItemData();
+        pItemData->ucFlags = PROJECTITEM_FLAG_ISFOLDER;
     }
         
     ~CProjectNode()
     {
         delete pItemData;
 
-		// Free the children.
-		std::list <CProjectNode *>::iterator itNodeObject;
-		for (itNodeObject = m_Children.begin(); itNodeObject != m_Children.end(); itNodeObject++)
-			delete *itNodeObject;
+        // Free the children.
+        std::list <CProjectNode *>::iterator itNodeObject;
+        for (itNodeObject = m_Children.begin(); itNodeObject != m_Children.end(); itNodeObject++)
+            delete *itNodeObject;
 
-		m_Children.clear();
+        m_Children.clear();
 
-		// Free the file data.
-		std::list <CItemData *>::iterator itFileObject;
-		for (itFileObject = m_Files.begin(); itFileObject != m_Files.end(); itFileObject++)
-			delete *itFileObject;
+        // Free the file data.
+        std::list <CItemData *>::iterator itFileObject;
+        for (itFileObject = m_Files.begin(); itFileObject != m_Files.end(); itFileObject++)
+            delete *itFileObject;
 
-		m_Files.clear();
+        m_Files.clear();
     }
 
-	void Sort(unsigned int uiSortColumn,bool bSortUp,bool bSortAudio);
+    void Sort(unsigned int uiSortColumn,bool bSortUp,bool bSortAudio);
 };
 
 class CChildComparator
 {
 private:
-	unsigned int m_uiSortColumn;
-	bool m_bSortUp;
-	bool m_bSortAudio;
+    unsigned int m_uiSortColumn;
+    bool m_bSortUp;
+    bool m_bSortAudio;
 
 public:
-	CChildComparator(unsigned int uiSortColumn,bool bSortUp,bool bSortAudio)
-	{
-		m_uiSortColumn = uiSortColumn;
-		m_bSortUp = bSortUp;
-		m_bSortAudio = bSortAudio;
-	}
+    CChildComparator(unsigned int uiSortColumn,bool bSortUp,bool bSortAudio)
+    {
+        m_uiSortColumn = uiSortColumn;
+        m_bSortUp = bSortUp;
+        m_bSortAudio = bSortAudio;
+    }
 
-	bool operator() (const CProjectNode *pSafeNode1,const CProjectNode *pSafeNode2);
+    bool operator() (const CProjectNode *pSafeNode1,const CProjectNode *pSafeNode2);
 };
 
 class CFileComparator
 {
 private:
-	unsigned int m_uiSortColumn;
-	bool m_bSortUp;
-	bool m_bSortAudio;
+    unsigned int m_uiSortColumn;
+    bool m_bSortUp;
+    bool m_bSortAudio;
 
 public:
-	CFileComparator(unsigned int uiSortColumn,bool bSortUp,bool bSortAudio)
-	{
-		m_uiSortColumn = uiSortColumn;
-		m_bSortUp = bSortUp;
-		m_bSortAudio = bSortAudio;
-	}
+    CFileComparator(unsigned int uiSortColumn,bool bSortUp,bool bSortAudio)
+    {
+        m_uiSortColumn = uiSortColumn;
+        m_bSortUp = bSortUp;
+        m_bSortAudio = bSortAudio;
+    }
 
-	bool operator() (const CItemData *pSafeItemData1,const CItemData *pSafeItemData2);
+    bool operator() (const CItemData *pSafeItemData1,const CItemData *pSafeItemData2);
 };
 
 class CTreeManager
 {
 private:
-	CTreeViewCtrlEx *m_pTreeView;
-	CListViewCtrl *m_pListView;
+    CTreeViewCtrlEx *m_pTreeView;
+    CListViewCtrl *m_pListView;
 
-	CProjectNode *m_pRootNode;
-	CProjectNode *m_pCurrentNode;
+    CProjectNode *m_pRootNode;
+    CProjectNode *m_pCurrentNode;
 
-	TCHAR m_szCurrentPath[MAX_PATH];
+    TCHAR m_szCurrentPath[MAX_PATH];
 
-	HTREEITEM GetTreeChildFromParent(HTREEITEM hParentItem,TCHAR *szText);
-	bool HasChildren(HTREEITEM hItem,bool bHasChildren);
+    HTREEITEM GetTreeChildFromParent(HTREEITEM hParentItem,TCHAR *szText);
+    bool HasChildren(HTREEITEM hItem,bool bHasChildren);
 
-	CProjectNode *GetDirFromParent(CProjectNode *pParent,const TCHAR *szName);
-	CProjectNode *NodalizePath(const TCHAR *szPath);
-	CProjectNode *GetChildFromParent(CProjectNode *pParentNode,const TCHAR *szText);
+    CProjectNode *GetDirFromParent(CProjectNode *pParent,const TCHAR *szName);
+    CProjectNode *NodalizePath(const TCHAR *szPath);
+    CProjectNode *GetChildFromParent(CProjectNode *pParentNode,const TCHAR *szText);
 
-	void ListNode(CProjectNode *pNode);
+    void ListNode(CProjectNode *pNode);
 
-	void RebuildLocalPaths(CProjectNode *pNode,std::vector<CProjectNode *> &FolderStack);
-	unsigned __int64 GetLocalSizeFromNode(CProjectNode *pNode,std::vector<CProjectNode *> &FolderStack);
+    void RebuildLocalPaths(CProjectNode *pNode,std::vector<CProjectNode *> &FolderStack);
+    unsigned __int64 GetLocalSizeFromNode(CProjectNode *pNode,std::vector<CProjectNode *> &FolderStack);
 
-	void SaveLocalNodeFileData(CXmlProcessor *pXml,CProjectNode *pNode,
-		std::vector<CProjectNode *> &FolderStack,unsigned int &uiFileCount,
-		unsigned int uiRootLength);
+    void SaveLocalNodeFileData(CXmlProcessor *pXml,CProjectNode *pNode,
+        std::vector<CProjectNode *> &FolderStack,unsigned int &uiFileCount,
+        unsigned int uiRootLength);
 
-	void GetLocalPathList(ckfilesystem::FileSet &Files,CProjectNode *pNode,
-		std::vector<CProjectNode *> &FolderStack,int iPathStripLen);
+    void GetLocalPathList(ckfilesystem::FileSet &Files,CProjectNode *pNode,
+        std::vector<CProjectNode *> &FolderStack,int iPathStripLen);
 
-	void GetLocalNodeContents(CProjectNode *pNode,std::vector<CProjectNode *> &FolderStack,
-		unsigned __int64 &uiFileCount,unsigned __int64 &uiNodeCount);
-	void RecursiveLocalSetFlags(CProjectNode *pNode,std::vector<CProjectNode *> &FolderStack,
-		unsigned char ucFlags);
+    void GetLocalNodeContents(CProjectNode *pNode,std::vector<CProjectNode *> &FolderStack,
+        unsigned __int64 &uiFileCount,unsigned __int64 &uiNodeCount);
+    void RecursiveLocalSetFlags(CProjectNode *pNode,std::vector<CProjectNode *> &FolderStack,
+        unsigned char ucFlags);
 
 public:
-	CTreeManager();
-	~CTreeManager();
+    CTreeManager();
+    ~CTreeManager();
 
-	void AssignControls(CTreeViewCtrlEx *pTreeView,CListViewCtrl *pListView);
-	void CreateTree(const TCHAR *szRootName,int iImage);
-	void DestroyTree();
+    void AssignControls(CTreeViewCtrlEx *pTreeView,CListViewCtrl *pListView);
+    void CreateTree(const TCHAR *szRootName,int iImage);
+    void DestroyTree();
 
-	HTREEITEM AddTreeNode(HTREEITEM hParentItem,CProjectNode *pNode);
-	CProjectNode *AddPath(const TCHAR *szPath);
-	CProjectNode *InsertVirtualRoot(const TCHAR *szNodeName,int iImage);
-	void SelectPath(const TCHAR *szPath);
-	void Refresh();
-	void RebuildPaths(const TCHAR *szStartPath);
-	bool RemoveEntry(CProjectNode *pNode);
-	bool RemoveEntry(CProjectNode *pNode,CItemData *pItemData);
-	bool RemoveEntry(const TCHAR *szLocalPath,const TCHAR *szFullPath);
-	bool MoveEntry(CProjectNode *pParent,CItemData *pItemData,CProjectNode *pNewParent);
+    HTREEITEM AddTreeNode(HTREEITEM hParentItem,CProjectNode *pNode);
+    CProjectNode *AddPath(const TCHAR *szPath);
+    CProjectNode *InsertVirtualRoot(const TCHAR *szNodeName,int iImage);
+    void SelectPath(const TCHAR *szPath);
+    void Refresh();
+    void RebuildPaths(const TCHAR *szStartPath);
+    bool RemoveEntry(CProjectNode *pNode);
+    bool RemoveEntry(CProjectNode *pNode,CItemData *pItemData);
+    bool RemoveEntry(const TCHAR *szLocalPath,const TCHAR *szFullPath);
+    bool MoveEntry(CProjectNode *pParent,CItemData *pItemData,CProjectNode *pNewParent);
 
-	bool IsSubNode(CProjectNode *pNode1,CProjectNode *pNode2);
+    bool IsSubNode(CProjectNode *pNode1,CProjectNode *pNode2);
 
-	CItemData *GetChildItem(CProjectNode *pParent,const TCHAR *szName);
-	CProjectNode *GetChildNode(CProjectNode *pParent,const TCHAR *szName);
+    CItemData *GetChildItem(CProjectNode *pParent,const TCHAR *szName);
+    CProjectNode *GetChildNode(CProjectNode *pParent,const TCHAR *szName);
 
-	CProjectNode *ResolveNode(CProjectNode *pParent,CItemData *pNodeItem);
+    CProjectNode *ResolveNode(CProjectNode *pParent,CItemData *pNodeItem);
 
-	void GetCurrentPath(TCHAR *szCurrentPath);
-	void SetCurrentPath(const TCHAR *szCurrentPath);
-	CProjectNode *GetCurrentNode();
-	CProjectNode *GetRootNode();
-	CProjectNode *GetDirFromParent(CProjectNode *pParent,TCHAR *szText);
-	CProjectNode *GetNodeFromPath(const TCHAR *szPath);
+    void GetCurrentPath(TCHAR *szCurrentPath);
+    void SetCurrentPath(const TCHAR *szCurrentPath);
+    CProjectNode *GetCurrentNode();
+    CProjectNode *GetRootNode();
+    CProjectNode *GetDirFromParent(CProjectNode *pParent,TCHAR *szText);
+    CProjectNode *GetNodeFromPath(const TCHAR *szPath);
 
-	unsigned __int64 GetNodeSize(CProjectNode *pNode);
-	unsigned __int64 GetNodeSize(CProjectNode *pParentNode,CItemData *pItemData);
-	void GetNodeContents(CProjectNode *pRootNode,unsigned __int64 &uiFileCount,
-		unsigned __int64 &uiNodeCount);
-	void RecursiveSetFlags(CProjectNode *pRootNode,unsigned char ucFlags);
-	void DeleteImportedItems(CProjectNode *pRootNode);
-	void GetNodeFullPaths(CProjectNode *pRootNode,std::vector<TCHAR *> &FullPaths);
-	void GetNodeFiles(CProjectNode *pNode,std::vector<CItemData *> &Files);
-	void ListNodeFiles(CProjectNode *pNode,CListViewCtrl *pListView);
+    unsigned __int64 GetNodeSize(CProjectNode *pNode);
+    unsigned __int64 GetNodeSize(CProjectNode *pParentNode,CItemData *pItemData);
+    void GetNodeContents(CProjectNode *pRootNode,unsigned __int64 &uiFileCount,
+        unsigned __int64 &uiNodeCount);
+    void RecursiveSetFlags(CProjectNode *pRootNode,unsigned char ucFlags);
+    void DeleteImportedItems(CProjectNode *pRootNode);
+    void GetNodeFullPaths(CProjectNode *pRootNode,std::vector<TCHAR *> &FullPaths);
+    void GetNodeFiles(CProjectNode *pNode,std::vector<CItemData *> &Files);
+    void ListNodeFiles(CProjectNode *pNode,CListViewCtrl *pListView);
 
-	bool HasExtraAudioData(CProjectNode *pNode);
+    bool HasExtraAudioData(CProjectNode *pNode);
 
-	// Save/load routines.
-	void SaveNodeFileData(CXmlProcessor *pXml,CProjectNode *pRootNode);
-	void SaveNodeAudioData(CXmlProcessor *pXml,CProjectNode *pRootNode);
-	bool LoadNodeFileData(CXmlProcessor *pXml,CProjectNode *pRootNode);
-	bool LoadNodeAudioData(CXmlProcessor *pXml,CProjectNode *pRootNode,int iProjectType);
+    // Save/load routines.
+    void SaveNodeFileData(CXmlProcessor *pXml,CProjectNode *pRootNode);
+    void SaveNodeAudioData(CXmlProcessor *pXml,CProjectNode *pRootNode);
+    bool LoadNodeFileData(CXmlProcessor *pXml,CProjectNode *pRootNode);
+    bool LoadNodeAudioData(CXmlProcessor *pXml,CProjectNode *pRootNode,int iProjectType);
 
-	void GetPathList(ckfilesystem::FileSet &Files,CProjectNode *pRootNode,int iPathStripLen = 0);
+    void GetPathList(ckfilesystem::FileSet &Files,CProjectNode *pRootNode,int iPathStripLen = 0);
 
-	void ImportLocalIsoTree(ckfilesystem::IsoTreeNode *pLocalIsoNode,CProjectNode *pLocalNode,
-		std::vector<std::pair<ckfilesystem::IsoTreeNode *,CProjectNode *> > &FolderStack);
-	void ImportIsoTree(ckfilesystem::IsoTreeNode *pIsoRootNode,CProjectNode *pRootNode);
+    void ImportLocalIsoTree(ckfilesystem::IsoTreeNode *pLocalIsoNode,CProjectNode *pLocalNode,
+        std::vector<std::pair<ckfilesystem::IsoTreeNode *,CProjectNode *> > &FolderStack);
+    void ImportIsoTree(ckfilesystem::IsoTreeNode *pIsoRootNode,CProjectNode *pRootNode);
 };
 
 extern CTreeManager g_TreeManager;

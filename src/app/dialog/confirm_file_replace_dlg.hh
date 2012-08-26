@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,41 +23,41 @@
 class CConfirmFileReplaceDlg : public CDialogImpl<CConfirmFileReplaceDlg>
 {
 private:
-	enum eMode
-	{
-		MODE_ASK,
-		MODE_YESALL,
-		MODE_NOALL
-	};
+    enum eMode
+    {
+        MODE_ASK,
+        MODE_YESALL,
+        MODE_NOALL
+    };
 
-	eMode m_Mode;
-	const TCHAR *m_szNewFullPath;
-	CItemData *m_pNewItemData;
-	CItemData *m_pOldItemData;
+    eMode m_Mode;
+    const TCHAR *m_szNewFullPath;
+    CItemData *m_pNewItemData;
+    CItemData *m_pOldItemData;
 
-	bool Translate();
-	bool Execute();
+    bool Translate();
+    bool Execute();
 
 public:
-	enum { IDD = IDD_CONFIRMFILEREPLACEDLG };
+    enum { IDD = IDD_CONFIRMFILEREPLACEDLG };
 
-	CConfirmFileReplaceDlg();
-	~CConfirmFileReplaceDlg();
+    CConfirmFileReplaceDlg();
+    ~CConfirmFileReplaceDlg();
 
-	void Reset();
-	bool Execute(const TCHAR *szNewFullPath,CItemData *pOldItemData);
-	bool Execute(CItemData *pNewItemData,CItemData *pOldItemData);
+    void Reset();
+    bool Execute(const TCHAR *szNewFullPath,CItemData *pOldItemData);
+    bool Execute(CItemData *pNewItemData,CItemData *pOldItemData);
 
-	BEGIN_MSG_MAP(CConfirmFileReplaceDlg)
-		MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
+    BEGIN_MSG_MAP(CConfirmFileReplaceDlg)
+        MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
 
-		COMMAND_ID_HANDLER(IDC_YESBUTTON,OnButton)
-		COMMAND_ID_HANDLER(IDC_YESALLBUTTON,OnButton)
-		COMMAND_ID_HANDLER(IDC_NOBUTTON,OnButton)
-		COMMAND_ID_HANDLER(IDC_NOALLBUTTON,OnButton)
-	END_MSG_MAP()
+        COMMAND_ID_HANDLER(IDC_YESBUTTON,OnButton)
+        COMMAND_ID_HANDLER(IDC_YESALLBUTTON,OnButton)
+        COMMAND_ID_HANDLER(IDC_NOBUTTON,OnButton)
+        COMMAND_ID_HANDLER(IDC_NOALLBUTTON,OnButton)
+    END_MSG_MAP()
 
-	LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 
-	LRESULT OnButton(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnButton(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
 };

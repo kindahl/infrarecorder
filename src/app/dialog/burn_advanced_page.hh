@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,28 +22,28 @@
 class CBurnAdvancedPage : public CPropertyPageImpl<CBurnAdvancedPage>
 {
 private:
-	CTrackBarCtrl m_VariRecTrackBar;
+    CTrackBarCtrl m_VariRecTrackBar;
 
-	bool Translate();
+    bool Translate();
 
 public:
-	enum { IDD = IDD_PROPPAGE_BURNIMAGEADVANCED };
+    enum { IDD = IDD_PROPPAGE_BURNIMAGEADVANCED };
 
-	CBurnAdvancedPage();
-	~CBurnAdvancedPage();
+    CBurnAdvancedPage();
+    ~CBurnAdvancedPage();
 
-	bool OnApply();
-	void OnHelp();
+    bool OnApply();
+    void OnHelp();
 
-	BEGIN_MSG_MAP(CBurnAdvancedPage)
-		MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
-		MESSAGE_HANDLER(WM_SHOWWINDOW,OnShowWindow)
-		MESSAGE_HANDLER(WM_HSCROLL,OnHScroll)
+    BEGIN_MSG_MAP(CBurnAdvancedPage)
+        MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
+        MESSAGE_HANDLER(WM_SHOWWINDOW,OnShowWindow)
+        MESSAGE_HANDLER(WM_HSCROLL,OnHScroll)
 
-		CHAIN_MSG_MAP(CPropertyPageImpl<CBurnAdvancedPage>)
-	END_MSG_MAP()
+        CHAIN_MSG_MAP(CPropertyPageImpl<CBurnAdvancedPage>)
+    END_MSG_MAP()
 
-	LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnShowWindow(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnHScroll(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnShowWindow(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnHScroll(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 };

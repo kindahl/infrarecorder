@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,36 +36,36 @@ CDiagnostics::~CDiagnostics()
 
 void CDiagnostics::event_output(const std::string &block)
 {
-	// Always skip the copyright line.
-	if (!strncmp(block.c_str(),CDRTOOLS_COPYRIGHT,CDRTOOLS_COPYRIGHT_LENGTH))
-		return;
+    // Always skip the copyright line.
+    if (!strncmp(block.c_str(),CDRTOOLS_COPYRIGHT,CDRTOOLS_COPYRIGHT_LENGTH))
+        return;
 
-	g_pLogDlg->print(_T("   > "));
-	g_pLogDlg->print_line(ckcore::string::ansi_to_auto<1024>(block.c_str()).c_str());
+    g_pLogDlg->print(_T("   > "));
+    g_pLogDlg->print_line(ckcore::string::ansi_to_auto<1024>(block.c_str()).c_str());
 }
 
 void CDiagnostics::event_finished()
 {
-	g_pLogDlg->print_line(_T("CDiagnostics::ProcessEnded"));
-	g_pLogDlg->print_line(_T(""));
+    g_pLogDlg->print_line(_T("CDiagnostics::ProcessEnded"));
+    g_pLogDlg->print_line(_T(""));
 }
 
 bool CDiagnostics::DeviceScan()
 {
-	g_pLogDlg->print_line(_T("CDiagnostics::DeviceScan"));
+    g_pLogDlg->print_line(_T("CDiagnostics::DeviceScan"));
 
-	TCHAR szCommandLine[MAX_PATH];
-	lstrcpy(szCommandLine,_T("\""));
-	lstrcat(szCommandLine,g_GlobalSettings.m_szCDRToolsPath);
-	lstrcat(szCommandLine,_T(CORE_WRITEAPP));
+    TCHAR szCommandLine[MAX_PATH];
+    lstrcpy(szCommandLine,_T("\""));
+    lstrcat(szCommandLine,g_GlobalSettings.m_szCDRToolsPath);
+    lstrcat(szCommandLine,_T(CORE_WRITEAPP));
 #ifdef CDRKIT
-	lstrcat(szCommandLine,_T("\" -devices"));
+    lstrcat(szCommandLine,_T("\" -devices"));
 #else
-	lstrcat(szCommandLine,_T("\" -scanbus"));
+    lstrcat(szCommandLine,_T("\" -scanbus"));
 #endif
 
-	if (!create(szCommandLine))
-		return false;
+    if (!create(szCommandLine))
+        return false;
 
-	return true;
+    return true;
 }

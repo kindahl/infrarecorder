@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,438 +26,438 @@
 #include "project_data_object.hh"
 
 /*
-	FIXME: For Windows XP and newer.
+    FIXME: For Windows XP and newer.
 #ifndef LVM_SETSELECTEDCOLUMN
-	#define LVM_SETSELECTEDCOLUMN   (LVM_FIRST + 140)
+    #define LVM_SETSELECTEDCOLUMN   (LVM_FIRST + 140)
 #endif
 
-	::SendMessage(m_hWnd,LVM_SETSELECTEDCOLUMN,0,0);
+    ::SendMessage(m_hWnd,LVM_SETSELECTEDCOLUMN,0,0);
 */
 
 CProjectListViewDropTarget::CProjectListViewDropTarget(CProjectListViewCtrl *pHost)
 {
-	m_pHost = pHost;
+    m_pHost = pHost;
 }
 
 bool CProjectListViewDropTarget::OnDragOver(POINTL ptCursor)
 {
-	LVHITTESTINFO lvHit;
-	lvHit.pt.x = ptCursor.x;
-	lvHit.pt.y = ptCursor.y;
+    LVHITTESTINFO lvHit;
+    lvHit.pt.x = ptCursor.x;
+    lvHit.pt.y = ptCursor.y;
 
-	ScreenToClient(m_pHost->m_hWnd,&lvHit.pt);
+    ScreenToClient(m_pHost->m_hWnd,&lvHit.pt);
 
-	// See we're dragging above a folder, in that case highlight it.
-	int iTarget = m_pHost->HitTest(&lvHit);
-	if (iTarget != -1 && (((CItemData *)m_pHost->GetItemData(iTarget))->ucFlags & PROJECTITEM_FLAG_ISFOLDER))
-		m_pHost->SelectDropTarget(iTarget);
-	else
-		m_pHost->SelectDropTarget(-1);
+    // See we're dragging above a folder, in that case highlight it.
+    int iTarget = m_pHost->HitTest(&lvHit);
+    if (iTarget != -1 && (((CItemData *)m_pHost->GetItemData(iTarget))->ucFlags & PROJECTITEM_FLAG_ISFOLDER))
+        m_pHost->SelectDropTarget(iTarget);
+    else
+        m_pHost->SelectDropTarget(-1);
 
-	return true;
+    return true;
 }
 
 bool CProjectListViewDropTarget::OnDrop(POINTL ptCursor,IDataObject *pDataObject)
 {
-	CWaitCursor WaitCursor;		// This displays the hourglass cursor.
+    CWaitCursor WaitCursor;		// This displays the hourglass cursor.
 
-	LVHITTESTINFO lvHit;
-	lvHit.pt.x = ptCursor.x;
-	lvHit.pt.y = ptCursor.y;
+    LVHITTESTINFO lvHit;
+    lvHit.pt.x = ptCursor.x;
+    lvHit.pt.y = ptCursor.y;
 
-	ScreenToClient(m_pHost->m_hWnd,&lvHit.pt);
+    ScreenToClient(m_pHost->m_hWnd,&lvHit.pt);
 
-	CProjectNode *pTargetNode = NULL;
+    CProjectNode *pTargetNode = NULL;
 
-	int iTarget = m_pHost->HitTest(&lvHit);
-	if (iTarget != -1 && (((CItemData *)m_pHost->GetItemData(iTarget))->ucFlags & PROJECTITEM_FLAG_ISFOLDER))
-	{
-		m_pHost->SelectDropTarget(-1);
+    int iTarget = m_pHost->HitTest(&lvHit);
+    if (iTarget != -1 && (((CItemData *)m_pHost->GetItemData(iTarget))->ucFlags & PROJECTITEM_FLAG_ISFOLDER))
+    {
+        m_pHost->SelectDropTarget(-1);
 
-		pTargetNode = g_TreeManager.ResolveNode(g_TreeManager.GetCurrentNode(),
-			(CItemData *)m_pHost->GetItemData(iTarget));
-	}
+        pTargetNode = g_TreeManager.ResolveNode(g_TreeManager.GetCurrentNode(),
+            (CItemData *)m_pHost->GetItemData(iTarget));
+    }
 
-	// Handle the data.
-	HandleDropData(pDataObject,pTargetNode,ptCursor);
-	return true;
+    // Handle the data.
+    HandleDropData(pDataObject,pTargetNode,ptCursor);
+    return true;
 }
 
 void CProjectListViewDropTarget::OnDragLeave()
 {
-	m_pHost->SelectDropTarget(-1);
+    m_pHost->SelectDropTarget(-1);
 }
 
 bool CProjectListViewDropTarget::HandleDropData(IDataObject *pDataObject,CProjectNode *pTargetNode,
-												POINTL ptCursor)
+                                                POINTL ptCursor)
 {
-	// Construct a FORMATETC object.
-	FORMATETC FormatEtc = { CF_HDROP, 0, DVASPECT_CONTENT, -1, TYMED_HGLOBAL };
-	STGMEDIUM StgMedium;
+    // Construct a FORMATETC object.
+    FORMATETC FormatEtc = { CF_HDROP, 0, DVASPECT_CONTENT, -1, TYMED_HGLOBAL };
+    STGMEDIUM StgMedium;
 
-	if (pDataObject->QueryGetData(&FormatEtc) == S_OK)
-	{
-		if (pDataObject->GetData(&FormatEtc,&StgMedium) == S_OK)
-		{
-			// Prepare a project file transaction.
-			CProjectManager::CFileTransaction Transaction;
+    if (pDataObject->QueryGetData(&FormatEtc) == S_OK)
+    {
+        if (pDataObject->GetData(&FormatEtc,&StgMedium) == S_OK)
+        {
+            // Prepare a project file transaction.
+            CProjectManager::CFileTransaction Transaction;
 
-			HDROP hDrop = (HDROP)GlobalLock(StgMedium.hGlobal);
+            HDROP hDrop = (HDROP)GlobalLock(StgMedium.hGlobal);
 
-			unsigned int uiNumFiles = DragQueryFile(hDrop,0xFFFFFFFF,NULL,NULL);
-			TCHAR szFullName[MAX_PATH];
+            unsigned int uiNumFiles = DragQueryFile(hDrop,0xFFFFFFFF,NULL,NULL);
+            TCHAR szFullName[MAX_PATH];
 
-			for (unsigned int i = 0; i < uiNumFiles; i++)
-			{
-				// Add each file to the project.
-				if (DragQueryFile(hDrop,i,szFullName,MAX_PATH - 1))
-					Transaction.AddFile(szFullName,pTargetNode);
-			}
+            for (unsigned int i = 0; i < uiNumFiles; i++)
+            {
+                // Add each file to the project.
+                if (DragQueryFile(hDrop,i,szFullName,MAX_PATH - 1))
+                    Transaction.AddFile(szFullName,pTargetNode);
+            }
 
-			GlobalUnlock(StgMedium.hGlobal);
-			ReleaseStgMedium(&StgMedium);
-		}
-	}
-	else
-	{
-		// Move to another folder if possible, otherwise rearrange in the list.
-		if (pTargetNode != NULL)
-		{
-			FormatEtc.cfFormat = static_cast<CLIPFORMAT>(m_uiClipFormat);
-			if (pDataObject->QueryGetData(&FormatEtc) == S_OK)
-			{
-				if (pDataObject->GetData(&FormatEtc,&StgMedium) == S_OK)
-				{
-					// Prepare a project file transaction.
-					CProjectManager::CFileTransaction Transaction;
+            GlobalUnlock(StgMedium.hGlobal);
+            ReleaseStgMedium(&StgMedium);
+        }
+    }
+    else
+    {
+        // Move to another folder if possible, otherwise rearrange in the list.
+        if (pTargetNode != NULL)
+        {
+            FormatEtc.cfFormat = static_cast<CLIPFORMAT>(m_uiClipFormat);
+            if (pDataObject->QueryGetData(&FormatEtc) == S_OK)
+            {
+                if (pDataObject->GetData(&FormatEtc,&StgMedium) == S_OK)
+                {
+                    // Prepare a project file transaction.
+                    CProjectManager::CFileTransaction Transaction;
 
-					CProjectDropData *pDropData = (CProjectDropData *)GlobalLock(StgMedium.hGlobal);
-					if (pDropData->m_pParent == NULL)
-						return true;
+                    CProjectDropData *pDropData = (CProjectDropData *)GlobalLock(StgMedium.hGlobal);
+                    if (pDropData->m_pParent == NULL)
+                        return true;
 
-					SIZE_T uiNumFiles = (GlobalSize(StgMedium.hGlobal) - sizeof(CProjectDropData)) / sizeof(CItemData *);
+                    SIZE_T uiNumFiles = (GlobalSize(StgMedium.hGlobal) - sizeof(CProjectDropData)) / sizeof(CItemData *);
 
-					for (SIZE_T i = 0; i < uiNumFiles; i++)
-					{
-						CItemData *pItemData = pDropData->m_ppData[i];
+                    for (SIZE_T i = 0; i < uiNumFiles; i++)
+                    {
+                        CItemData *pItemData = pDropData->m_ppData[i];
 
-						Transaction.MoveFile(pDropData->m_pParent,pItemData,pTargetNode);
-					}
+                        Transaction.MoveFile(pDropData->m_pParent,pItemData,pTargetNode);
+                    }
 
-					GlobalUnlock(StgMedium.hGlobal);
-					ReleaseStgMedium(&StgMedium);
-				}
-			}
-		}
-		else
-		{
-			/*
-			*/
-			// Determine the dropped item.
-			LVHITTESTINFO lvHit;
-			lvHit.pt.x = ptCursor.x;
-			lvHit.pt.y = ptCursor.y;
+                    GlobalUnlock(StgMedium.hGlobal);
+                    ReleaseStgMedium(&StgMedium);
+                }
+            }
+        }
+        else
+        {
+            /*
+            */
+            // Determine the dropped item.
+            LVHITTESTINFO lvHit;
+            lvHit.pt.x = ptCursor.x;
+            lvHit.pt.y = ptCursor.y;
 
-			ScreenToClient(m_pHost->m_hWnd,&lvHit.pt);
+            ScreenToClient(m_pHost->m_hWnd,&lvHit.pt);
 
-			ListView_HitTest(m_pHost->m_hWnd,&lvHit);
+            ListView_HitTest(m_pHost->m_hWnd,&lvHit);
 
-			// Not inside the list view?
-			if (lvHit.iItem == -1)
-				return true;
+            // Not inside the list view?
+            if (lvHit.iItem == -1)
+                return true;
 
-			// Make sure that we can't drop a file above a folder.
-			CItemData *pDropItemData = (CItemData *)m_pHost->GetItemData(lvHit.iItem);
+            // Make sure that we can't drop a file above a folder.
+            CItemData *pDropItemData = (CItemData *)m_pHost->GetItemData(lvHit.iItem);
 
-			while (pDropItemData->ucFlags & PROJECTITEM_FLAG_ISFOLDER)
-				pDropItemData = (CItemData *)m_pHost->GetItemData(++lvHit.iItem);
+            while (pDropItemData->ucFlags & PROJECTITEM_FLAG_ISFOLDER)
+                pDropItemData = (CItemData *)m_pHost->GetItemData(++lvHit.iItem);
 
-			CProjectNode *pCurrentNode = g_TreeManager.GetCurrentNode();
+            CProjectNode *pCurrentNode = g_TreeManager.GetCurrentNode();
 
-			// Locate the dropped item (wee need an iterator so we know where to insert
-			// the dropped files.
-			std::list <CItemData *>::iterator itFileObject;
+            // Locate the dropped item (wee need an iterator so we know where to insert
+            // the dropped files.
+            std::list <CItemData *>::iterator itFileObject;
 
-			for (itFileObject = pCurrentNode->m_Files.begin(); itFileObject !=
-				pCurrentNode->m_Files.end(); itFileObject++)
-			{
-				if (*itFileObject == pDropItemData)
-					break;
-			}
+            for (itFileObject = pCurrentNode->m_Files.begin(); itFileObject !=
+                pCurrentNode->m_Files.end(); itFileObject++)
+            {
+                if (*itFileObject == pDropItemData)
+                    break;
+            }
 
-			// Move the selected items.
-			int iItemIndex = -1;
-			iItemIndex = m_pHost->GetNextItem(iItemIndex,LVNI_SELECTED);
+            // Move the selected items.
+            int iItemIndex = -1;
+            iItemIndex = m_pHost->GetNextItem(iItemIndex,LVNI_SELECTED);
 
-			while (iItemIndex != -1)
-			{
-				// Move the internal item data pointer.
-				CItemData *pItemData = (CItemData *)m_pHost->GetItemData(iItemIndex);
+            while (iItemIndex != -1)
+            {
+                // Move the internal item data pointer.
+                CItemData *pItemData = (CItemData *)m_pHost->GetItemData(iItemIndex);
 
-				pCurrentNode->m_Files.remove(pItemData);
-				pCurrentNode->m_Files.insert(itFileObject,pItemData);
+                pCurrentNode->m_Files.remove(pItemData);
+                pCurrentNode->m_Files.insert(itFileObject,pItemData);
 
-				// Move the actual list item.
-				LVITEM lvi = { 0 };
-				lvi.iItem = iItemIndex;
-				lvi.iSubItem = 0;
-				lvi.pszText = LPSTR_TEXTCALLBACK;
-				lvi.stateMask = static_cast<unsigned int>(~LVIS_SELECTED);
-				lvi.mask = LVIF_TEXT | LVIF_IMAGE | LVIF_PARAM | LVIF_STATE;
-				m_pHost->GetItem(&lvi);
+                // Move the actual list item.
+                LVITEM lvi = { 0 };
+                lvi.iItem = iItemIndex;
+                lvi.iSubItem = 0;
+                lvi.pszText = LPSTR_TEXTCALLBACK;
+                lvi.stateMask = static_cast<unsigned int>(~LVIS_SELECTED);
+                lvi.mask = LVIF_TEXT | LVIF_IMAGE | LVIF_PARAM | LVIF_STATE;
+                m_pHost->GetItem(&lvi);
 
-				lvi.iItem = lvHit.iItem;
+                lvi.iItem = lvHit.iItem;
 
-				// Re-insert the item.
-				int iResult = m_pHost->InsertItem(&lvi);
-				if (lvi.iItem < iItemIndex)
-					lvHit.iItem++;
-				if (iResult <= iItemIndex)
-					iItemIndex++;
+                // Re-insert the item.
+                int iResult = m_pHost->InsertItem(&lvi);
+                if (lvi.iItem < iItemIndex)
+                    lvHit.iItem++;
+                if (iResult <= iItemIndex)
+                    iItemIndex++;
 
-				// Delete the old item.
-				m_pHost->DeleteItem(iItemIndex);
+                // Delete the old item.
+                m_pHost->DeleteItem(iItemIndex);
 
-				iItemIndex = m_pHost->GetNextItem(-1,LVNI_SELECTED);
-			}
-			/*
-			*/
-		}
-	}
+                iItemIndex = m_pHost->GetNextItem(-1,LVNI_SELECTED);
+            }
+            /*
+            */
+        }
+    }
 
-	return true;
+    return true;
 }
 /*
 */
 
 CProjectListViewCtrl::CProjectListViewCtrl()
 {
-	m_hDragImageList = NULL;
+    m_hDragImageList = NULL;
 
-	// Drop target.
-	m_pDropTarget = new CProjectListViewDropTarget(this);
-	CoLockObjectExternal(m_pDropTarget,TRUE,FALSE);
+    // Drop target.
+    m_pDropTarget = new CProjectListViewDropTarget(this);
+    CoLockObjectExternal(m_pDropTarget,TRUE,FALSE);
 }
 
 CProjectListViewCtrl::~CProjectListViewCtrl()
 {
-	// Drop target.
-	if (m_pDropTarget != NULL)
-	{
-		CoLockObjectExternal(m_pDropTarget,FALSE,TRUE);
+    // Drop target.
+    if (m_pDropTarget != NULL)
+    {
+        CoLockObjectExternal(m_pDropTarget,FALSE,TRUE);
 
-		m_pDropTarget->Release();
-		m_pDropTarget = NULL;
-	}
+        m_pDropTarget->Release();
+        m_pDropTarget = NULL;
+    }
 
-	if (m_hDragImageList != NULL)
-		ImageList_Destroy(m_hDragImageList);
+    if (m_hDragImageList != NULL)
+        ImageList_Destroy(m_hDragImageList);
 }
 
 LRESULT CProjectListViewCtrl::OnKeyDown(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
-	LRESULT lResult = DefWindowProc(uMsg,wParam,lParam);
+    LRESULT lResult = DefWindowProc(uMsg,wParam,lParam);
 
-	if (wParam == VK_RETURN)
-	{
-		if (GetSelectedCount() > 0)
-		{
-			// This is not safe, I know.
-			BOOL bDummy;
-			g_pMainFrame->OnPLVDblClk(IDC_PROJECTLISTVIEW,NULL,bDummy);
-		}
-	}
+    if (wParam == VK_RETURN)
+    {
+        if (GetSelectedCount() > 0)
+        {
+            // This is not safe, I know.
+            BOOL bDummy;
+            g_pMainFrame->OnPLVDblClk(IDC_PROJECTLISTVIEW,NULL,bDummy);
+        }
+    }
 
-	return lResult;
+    return lResult;
 }
 
 LRESULT CProjectListViewCtrl::OnDropFiles(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
-	CWaitCursor WaitCursor;		// This displays the hourglass cursor.
+    CWaitCursor WaitCursor;		// This displays the hourglass cursor.
 
-	HDROP hDrop = (HDROP)wParam;
+    HDROP hDrop = (HDROP)wParam;
 
-	POINT ptDrop;
-	TCHAR szFullName[MAX_PATH];
+    POINT ptDrop;
+    TCHAR szFullName[MAX_PATH];
 
-	if (DragQueryPoint(hDrop,&ptDrop) > 0)
-	{
-		// Prepare a project file transaction.
-		CProjectManager::CFileTransaction Transaction;
+    if (DragQueryPoint(hDrop,&ptDrop) > 0)
+    {
+        // Prepare a project file transaction.
+        CProjectManager::CFileTransaction Transaction;
 
-		unsigned int uiNumFiles = DragQueryFile(hDrop,0xFFFFFFFF,NULL,NULL);
+        unsigned int uiNumFiles = DragQueryFile(hDrop,0xFFFFFFFF,NULL,NULL);
 
-		for (unsigned int i = 0; i < uiNumFiles; i++)
-		{
-			if (DragQueryFile(hDrop,i,szFullName,MAX_PATH - 1))
-				Transaction.AddFile(szFullName);
-		}
-	}
+        for (unsigned int i = 0; i < uiNumFiles; i++)
+        {
+            if (DragQueryFile(hDrop,i,szFullName,MAX_PATH - 1))
+                Transaction.AddFile(szFullName);
+        }
+    }
 
-	DragFinish(hDrop);
+    DragFinish(hDrop);
 
-	bHandled = false;
-	return 0;
+    bHandled = false;
+    return 0;
 }
 
 LRESULT CProjectListViewCtrl::OnSetFocus(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
-	g_ProjectManager.ListSetActive();
-	g_ProjectManager.NotifyListSelChanged(GetSelectedCount());
+    g_ProjectManager.ListSetActive();
+    g_ProjectManager.NotifyListSelChanged(GetSelectedCount());
 
-	bHandled = false;
-	return 0;
+    bHandled = false;
+    return 0;
 }
 
 LRESULT CProjectListViewCtrl::OnCustomDraw(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
-	LPNMLVCUSTOMDRAW lpNMCustomDraw = (LPNMLVCUSTOMDRAW)lParam;
+    LPNMLVCUSTOMDRAW lpNMCustomDraw = (LPNMLVCUSTOMDRAW)lParam;
 
-	switch (lpNMCustomDraw->nmcd.dwDrawStage)
-	{
-		case CDDS_PREPAINT:
-			return CDRF_NOTIFYITEMDRAW;
+    switch (lpNMCustomDraw->nmcd.dwDrawStage)
+    {
+        case CDDS_PREPAINT:
+            return CDRF_NOTIFYITEMDRAW;
 
-		case CDDS_ITEMPREPAINT:
-			CItemData *pItemData = (CItemData *)lpNMCustomDraw->nmcd.lItemlParam;
+        case CDDS_ITEMPREPAINT:
+            CItemData *pItemData = (CItemData *)lpNMCustomDraw->nmcd.lItemlParam;
 
-			if (pItemData->ucFlags & PROJECTITEM_FLAG_ISIMPORTED)
-			{
-				lpNMCustomDraw->clrText = PROJECTLISTVIEW_COLOR_IMPORTED;
-				return CDRF_NEWFONT;
-			}
-			
-			if (pItemData->ucFlags & PROJECTITEM_FLAG_ISLOCKED)
-			{
-				lpNMCustomDraw->clrText = GetSysColor(COLOR_GRAYTEXT); 
-				return CDRF_NEWFONT;
-			}
+            if (pItemData->ucFlags & PROJECTITEM_FLAG_ISIMPORTED)
+            {
+                lpNMCustomDraw->clrText = PROJECTLISTVIEW_COLOR_IMPORTED;
+                return CDRF_NEWFONT;
+            }
+            
+            if (pItemData->ucFlags & PROJECTITEM_FLAG_ISLOCKED)
+            {
+                lpNMCustomDraw->clrText = GetSysColor(COLOR_GRAYTEXT); 
+                return CDRF_NEWFONT;
+            }
 
-			bHandled = false;
-			return CDRF_DODEFAULT;
-	}
+            bHandled = false;
+            return CDRF_DODEFAULT;
+    }
 
-	bHandled = false;
-	return CDRF_DODEFAULT;
+    bHandled = false;
+    return CDRF_DODEFAULT;
 }
 
 void CProjectListViewCtrl::BeginDrag(LPNMLISTVIEW pNMListView)
 {
-	CProjectDropSource *pDropSource = new CProjectDropSource();
-	CProjectDataObject *pDataObject = new CProjectDataObject();
+    CProjectDropSource *pDropSource = new CProjectDropSource();
+    CProjectDataObject *pDataObject = new CProjectDataObject();
 
-	// Add all file names to the data object.
-	int iItemIndex = -1;
-	iItemIndex = GetNextItem(iItemIndex,LVNI_SELECTED);
+    // Add all file names to the data object.
+    int iItemIndex = -1;
+    iItemIndex = GetNextItem(iItemIndex,LVNI_SELECTED);
 
-	while (iItemIndex != -1)
-	{
-		CItemData *pItemData = (CItemData *)GetItemData(iItemIndex);
-		pDataObject->AddFile(pItemData);
+    while (iItemIndex != -1)
+    {
+        CItemData *pItemData = (CItemData *)GetItemData(iItemIndex);
+        pDataObject->AddFile(pItemData);
 
-		iItemIndex = GetNextItem(iItemIndex,LVNI_SELECTED);
-	}
+        iItemIndex = GetNextItem(iItemIndex,LVNI_SELECTED);
+    }
 
-	pDataObject->SetParent(g_TreeManager.GetCurrentNode());
+    pDataObject->SetParent(g_TreeManager.GetCurrentNode());
 
-	DWORD dwEffect = 0;
-	::DoDragDrop(pDataObject,pDropSource,DROPEFFECT_MOVE,&dwEffect);
+    DWORD dwEffect = 0;
+    ::DoDragDrop(pDataObject,pDropSource,DROPEFFECT_MOVE,&dwEffect);
 
-	pDropSource->Release();
-	pDataObject->Release();	
+    pDropSource->Release();
+    pDataObject->Release();	
 }
 
 void CProjectListViewCtrl::SetViewStyle(int iViewStyle)
 {
-	unsigned long ulStyle = 0;
+    unsigned long ulStyle = 0;
 
-	switch (iViewStyle)
-	{
-		case LISTVIEWSTYLE_LARGEICONS:
-			ulStyle = LVS_ICON;
-			break;
+    switch (iViewStyle)
+    {
+        case LISTVIEWSTYLE_LARGEICONS:
+            ulStyle = LVS_ICON;
+            break;
 
-		case LISTVIEWSTYLE_SMALLICONS:
-			ulStyle = LVS_SMALLICON;
-			break;
+        case LISTVIEWSTYLE_SMALLICONS:
+            ulStyle = LVS_SMALLICON;
+            break;
 
-		case LISTVIEWSTYLE_LIST:
-			ulStyle = LVS_LIST;
-			break;
+        case LISTVIEWSTYLE_LIST:
+            ulStyle = LVS_LIST;
+            break;
 
-		case LISTVIEWSTYLE_DETAILS:
-			ulStyle = LVS_REPORT;
-			break;
-	};
+        case LISTVIEWSTYLE_DETAILS:
+            ulStyle = LVS_REPORT;
+            break;
+    };
 
-	unsigned long ulOldStyle = GetWindowLong(GWL_STYLE);
-	if ((ulOldStyle & LVS_TYPEMASK) != ulStyle)
-	{
-		unsigned long ulNewStyle = (ulOldStyle & ~LVS_TYPEMASK) | ulStyle;
-		SetWindowLong(GWL_STYLE,ulNewStyle);
-	}
+    unsigned long ulOldStyle = GetWindowLong(GWL_STYLE);
+    if ((ulOldStyle & LVS_TYPEMASK) != ulStyle)
+    {
+        unsigned long ulNewStyle = (ulOldStyle & ~LVS_TYPEMASK) | ulStyle;
+        SetWindowLong(GWL_STYLE,ulNewStyle);
+    }
 }
 
 LRESULT CProjectListViewCtrl::OnViewLargeIcons(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
-	g_DynamicSettings.m_iPrjListViewStyle = LISTVIEWSTYLE_LARGEICONS;
-	g_DynamicSettings.Apply();
-	return 0;
+    g_DynamicSettings.m_iPrjListViewStyle = LISTVIEWSTYLE_LARGEICONS;
+    g_DynamicSettings.Apply();
+    return 0;
 }
 
 LRESULT CProjectListViewCtrl::OnViewSmallIcons(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
-	g_DynamicSettings.m_iPrjListViewStyle = LISTVIEWSTYLE_SMALLICONS;
-	g_DynamicSettings.Apply();
-	return 0;
+    g_DynamicSettings.m_iPrjListViewStyle = LISTVIEWSTYLE_SMALLICONS;
+    g_DynamicSettings.Apply();
+    return 0;
 }
 
 LRESULT CProjectListViewCtrl::OnViewList(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
-	g_DynamicSettings.m_iPrjListViewStyle = LISTVIEWSTYLE_LIST;
-	g_DynamicSettings.Apply();
-	return 0;
+    g_DynamicSettings.m_iPrjListViewStyle = LISTVIEWSTYLE_LIST;
+    g_DynamicSettings.Apply();
+    return 0;
 }
 
 LRESULT CProjectListViewCtrl::OnViewDetails(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
-	g_DynamicSettings.m_iPrjListViewStyle = LISTVIEWSTYLE_DETAILS;
-	g_DynamicSettings.Apply();
-	return 0;
+    g_DynamicSettings.m_iPrjListViewStyle = LISTVIEWSTYLE_DETAILS;
+    g_DynamicSettings.Apply();
+    return 0;
 }
 
 LRESULT CProjectListViewCtrl::OnNewFolder(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
-	g_ProjectManager.ListAddNewFolder();
-	return 0;
+    g_ProjectManager.ListAddNewFolder();
+    return 0;
 }
 
 /*
-	CProjectListViewCtrl::SelectDropTarget
-	--------------------------------------
-	Marks the specified item as drop target, if iDropItemIndex the drop target
-	items will be cleared but no new target selected.
+    CProjectListViewCtrl::SelectDropTarget
+    --------------------------------------
+    Marks the specified item as drop target, if iDropItemIndex the drop target
+    items will be cleared but no new target selected.
 */
 void CProjectListViewCtrl::SelectDropTarget(int iDropItemIndex)
 {
-	// Move the selected items.
-	int iItemIndex = -1;
-	iItemIndex = GetNextItem(iItemIndex,LVNI_DROPHILITED);
+    // Move the selected items.
+    int iItemIndex = -1;
+    iItemIndex = GetNextItem(iItemIndex,LVNI_DROPHILITED);
 
-	while (iItemIndex != -1)
-	{
-		SetItemState(iItemIndex,0,LVNI_DROPHILITED);
+    while (iItemIndex != -1)
+    {
+        SetItemState(iItemIndex,0,LVNI_DROPHILITED);
 
-		iItemIndex = GetNextItem(-1,LVNI_DROPHILITED);
-	}
+        iItemIndex = GetNextItem(-1,LVNI_DROPHILITED);
+    }
 
-	if (iDropItemIndex != -1)
-		SetItemState(iDropItemIndex,LVNI_DROPHILITED,LVNI_DROPHILITED);
+    if (iDropItemIndex != -1)
+        SetItemState(iDropItemIndex,LVNI_DROPHILITED,LVNI_DROPHILITED);
 }
 
 void CProjectListViewCtrl::ForceRedraw()
 {
-	RECT rcClient;
-	GetClientRect(&rcClient);
-	InvalidateRect(&rcClient,true);
+    RECT rcClient;
+    GetClientRect(&rcClient);
+    InvalidateRect(&rcClient,true);
 }

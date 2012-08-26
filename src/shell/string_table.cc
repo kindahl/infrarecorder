@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,11 +19,11 @@
 #include "stdafx.hh"
 
 TCHAR *g_szStringTable[] = {
-	_T("Burn image..."),
-	_T("Burn project..."),
-	_T("Open with InfraRecorder"),
+    _T("Burn image..."),
+    _T("Burn project..."),
+    _T("Open with InfraRecorder"),
 
-	_T("Write the disc image contents to a compact disc."),
-	_T("Write the project contents to a compact disc."),
-	_T("Open the project with InfraRecorder.")
+    _T("Write the disc image contents to a compact disc."),
+    _T("Write the project contents to a compact disc."),
+    _T("Open the project with InfraRecorder.")
 };

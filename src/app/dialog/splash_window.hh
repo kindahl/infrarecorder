@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,45 +27,45 @@
 #endif
 
 typedef BOOL (WINAPI *tUpdateLayeredWindow)(HWND hWnd,HDC hdcDst,POINT *pptDst,
-											SIZE *psize,HDC hdcSrc,POINT *pptSrc,
-											COLORREF crKey,BLENDFUNCTION *pblend,
-											DWORD dwFlags);
+                                            SIZE *psize,HDC hdcSrc,POINT *pptSrc,
+                                            COLORREF crKey,BLENDFUNCTION *pblend,
+                                            DWORD dwFlags);
 
 class CSplashWindow : public CWindowImpl<CSplashWindow,CWindow,CWinTraits<WS_POPUP | WS_VISIBLE,WS_EX_TOOLWINDOW> >,
-	public ckmmc::DeviceManager::ScanCallback
+    public ckmmc::DeviceManager::ScanCallback
 {
 private:
-	CBitmap m_SplashBitmap;
+    CBitmap m_SplashBitmap;
 
-	HBRUSH m_hTextBkBrush;
+    HBRUSH m_hTextBkBrush;
 
-	ckcore::tstring m_InfoText;
+    ckcore::tstring m_InfoText;
 
-	tUpdateLayeredWindow m_pUpdateLayeredWindow;
-	void DrawBitmap(HDC hScreenDC,HDC hMemDC);
-	void DrawText(HDC hDC);
-	void LoadBitmap();
+    tUpdateLayeredWindow m_pUpdateLayeredWindow;
+    void DrawBitmap(HDC hScreenDC,HDC hMemDC);
+    void DrawText(HDC hDC);
+    void LoadBitmap();
 
-	void SetInfoText(const TCHAR *szInfoText);
+    void SetInfoText(const TCHAR *szInfoText);
 
-	/*
-	 * ckmmc::DeviceManager::ScanCallback interface.
-	 */
-	void event_status(ckmmc::DeviceManager::ScanCallback::Status Status);
-	bool event_device(ckmmc::Device::Address &Addr);
+    /*
+     * ckmmc::DeviceManager::ScanCallback interface.
+     */
+    void event_status(ckmmc::DeviceManager::ScanCallback::Status Status);
+    bool event_device(ckmmc::Device::Address &Addr);
 
 public:
-	CSplashWindow();
-	~CSplashWindow();
+    CSplashWindow();
+    ~CSplashWindow();
 
-	BEGIN_MSG_MAP(CSplashWindow)
-		MESSAGE_HANDLER(WM_CREATE,OnCreate)
-		MESSAGE_HANDLER(WM_PAINT,OnPaint)
-	END_MSG_MAP()
+    BEGIN_MSG_MAP(CSplashWindow)
+        MESSAGE_HANDLER(WM_CREATE,OnCreate)
+        MESSAGE_HANDLER(WM_PAINT,OnPaint)
+    END_MSG_MAP()
 
-	LRESULT OnCreate(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnPaint(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnCreate(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnPaint(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 
-	void SafeCreate();
-	void SafeDestroy();
+    void SafeCreate();
+    void SafeDestroy();
 };

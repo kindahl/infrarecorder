@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,18 +33,18 @@
     __int64 read = 0;                                                   \
     unsigned __int64 time = 0;                                          \
     while (true)                                                        \
-	{                                                                   \
-		read = decoder.irc_decode_process(buffer,buffer.size(),time);   \
-		if (read <= 0)                                                  \
-			break;                                                      \
+    {                                                                   \
+        read = decoder.irc_decode_process(buffer,buffer.size(),time);   \
+        if (read <= 0)                                                  \
+            break;                                                      \
                                                                         \
         bool res = encoder.irc_encode_process(buffer,read) >= 0;        \
-		TS_ASSERT(res);                                                 \
+        TS_ASSERT(res);                                                 \
         if (!res)                                                       \
             break;                                                      \
-	}                                                                   \
+    }                                                                   \
                                                                         \
-	TS_ASSERT(encoder.irc_encode_flush() != -1);                        \
+    TS_ASSERT(encoder.irc_encode_flush() != -1);                        \
 }
 
 #define TEST_INIT(decoder,encoder,src_file,dst_file)                    \
@@ -55,7 +55,7 @@
 
 #define TEST_EXIT(decoder,encoder)                                      \
     TS_ASSERT(encoder.irc_encode_exit());                               \
-	TS_ASSERT(decoder.irc_decode_exit());
+    TS_ASSERT(decoder.irc_decode_exit());
 
 ckcore::tuint32 get_file_crc(const ckcore::tchar * file_path)
 {

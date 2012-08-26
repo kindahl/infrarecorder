@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,48 +20,48 @@
 #include "png_file.hh"
 
 class CCustomButton : public CWindowImpl<CCustomButton,CButton>,
-	public COwnerDraw<CCustomButton>
+    public COwnerDraw<CCustomButton>
 {
 private:
-	enum eState
-	{
-		STATE_NORMAL,
-		STATE_HOT,
-		STATE_DOWN
-	};
+    enum eState
+    {
+        STATE_NORMAL,
+        STATE_HOT,
+        STATE_DOWN
+    };
 
-	eState m_State;
-	int m_iCoverLeft;
-	int m_iCoverTop;
+    eState m_State;
+    int m_iCoverLeft;
+    int m_iCoverTop;
 
-	CPngFile m_CoverImage;
-	CPngFile m_NormalImage;
-	CPngFile m_FocusImage;
-	CPngFile m_HoverImage;
-	CPngFile m_HoverFocusImage;
+    CPngFile m_CoverImage;
+    CPngFile m_NormalImage;
+    CPngFile m_FocusImage;
+    CPngFile m_HoverImage;
+    CPngFile m_HoverFocusImage;
 
 public:
-	DECLARE_WND_CLASS(_T("ckButton"));
+    DECLARE_WND_CLASS(_T("ckButton"));
 
-	CCustomButton(unsigned short usCoverPng,int iCoverLeft,int iCoverRight);
-	~CCustomButton();
+    CCustomButton(unsigned short usCoverPng,int iCoverLeft,int iCoverRight);
+    ~CCustomButton();
 
-	BEGIN_MSG_MAP(CCustomButton)
-		MESSAGE_HANDLER(WM_MOUSEMOVE,OnMouseMove)
-		MESSAGE_HANDLER(WM_MOUSELEAVE,OnMouseLeave)
-		//MESSAGE_HANDLER(WM_LBUTTONDOWN,OnLButtonDown)
-		//MESSAGE_HANDLER(WM_LBUTTONUP,OnLButtonUp)
-		MESSAGE_HANDLER(WM_ERASEBKGND,OnEraseBkgnd)
+    BEGIN_MSG_MAP(CCustomButton)
+        MESSAGE_HANDLER(WM_MOUSEMOVE,OnMouseMove)
+        MESSAGE_HANDLER(WM_MOUSELEAVE,OnMouseLeave)
+        //MESSAGE_HANDLER(WM_LBUTTONDOWN,OnLButtonDown)
+        //MESSAGE_HANDLER(WM_LBUTTONUP,OnLButtonUp)
+        MESSAGE_HANDLER(WM_ERASEBKGND,OnEraseBkgnd)
 
-		CHAIN_MSG_MAP_ALT(COwnerDraw<CCustomButton>,1)
-	END_MSG_MAP()
+        CHAIN_MSG_MAP_ALT(COwnerDraw<CCustomButton>,1)
+    END_MSG_MAP()
 
-	LRESULT OnMouseMove(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnMouseLeave(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnLButtonDown(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnLButtonUp(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnEraseBkgnd(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnMouseMove(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnMouseLeave(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnLButtonDown(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnLButtonUp(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnEraseBkgnd(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 
-	// For ownerdraw.
-	void DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct);
+    // For ownerdraw.
+    void DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct);
 };

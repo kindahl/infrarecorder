@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,19 +25,19 @@
 
 CProjectPropFieldsPage::CProjectPropFieldsPage()
 {
-	// Try to load translated string.
-	if (g_LanguageSettings.m_pLngProcessor != NULL)
-	{	
-		// Make sure that there is a strings translation section.
-		if (g_LanguageSettings.m_pLngProcessor->EnterSection(_T("strings")))
-		{
-			TCHAR *szStrValue;
-			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(TITLE_FIELDS,szStrValue))
-				SetTitle(szStrValue);
-		}
-	}
+    // Try to load translated string.
+    if (g_LanguageSettings.m_pLngProcessor != NULL)
+    {	
+        // Make sure that there is a strings translation section.
+        if (g_LanguageSettings.m_pLngProcessor->EnterSection(_T("strings")))
+        {
+            TCHAR *szStrValue;
+            if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(TITLE_FIELDS,szStrValue))
+                SetTitle(szStrValue);
+        }
+    }
 
-	m_psp.dwFlags |= PSP_HASHELP;
+    m_psp.dwFlags |= PSP_HASHELP;
 }
 
 CProjectPropFieldsPage::~CProjectPropFieldsPage()
@@ -46,148 +46,148 @@ CProjectPropFieldsPage::~CProjectPropFieldsPage()
 
 bool CProjectPropFieldsPage::Translate()
 {
-	if (g_LanguageSettings.m_pLngProcessor == NULL)
-		return false;
+    if (g_LanguageSettings.m_pLngProcessor == NULL)
+        return false;
 
-	CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
-	
-	// Make sure that there is a projectprop translation section.
-	if (!pLng->EnterSection(_T("projectprop")))
-		return false;
+    CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
+    
+    // Make sure that there is a projectprop translation section.
+    if (!pLng->EnterSection(_T("projectprop")))
+        return false;
 
-	// Translate.
-	TCHAR *szStrValue;
-	int iMaxStaticRight = 0;
+    // Translate.
+    TCHAR *szStrValue;
+    int iMaxStaticRight = 0;
 
-	if (pLng->GetValuePtr(IDC_PUBLISHERSTATIC,szStrValue))
-	{
-		SetDlgItemText(IDC_PUBLISHERSTATIC,szStrValue);
+    if (pLng->GetValuePtr(IDC_PUBLISHERSTATIC,szStrValue))
+    {
+        SetDlgItemText(IDC_PUBLISHERSTATIC,szStrValue);
 
-		// Update the static width if necessary.
-		int iStaticRight = UpdateStaticWidth(m_hWnd,IDC_PUBLISHERSTATIC,szStrValue);
-		if (iStaticRight > iMaxStaticRight)
-			iMaxStaticRight = iStaticRight;
-	}
-	if (pLng->GetValuePtr(IDC_PREPARERSTATIC,szStrValue))
-	{
-		SetDlgItemText(IDC_PREPARERSTATIC,szStrValue);
+        // Update the static width if necessary.
+        int iStaticRight = UpdateStaticWidth(m_hWnd,IDC_PUBLISHERSTATIC,szStrValue);
+        if (iStaticRight > iMaxStaticRight)
+            iMaxStaticRight = iStaticRight;
+    }
+    if (pLng->GetValuePtr(IDC_PREPARERSTATIC,szStrValue))
+    {
+        SetDlgItemText(IDC_PREPARERSTATIC,szStrValue);
 
-		// Update the static width if necessary.
-		int iStaticRight = UpdateStaticWidth(m_hWnd,IDC_PREPARERSTATIC,szStrValue);
-		if (iStaticRight > iMaxStaticRight)
-			iMaxStaticRight = iStaticRight;
-	}
-	if (pLng->GetValuePtr(IDC_SYSTEMSTATIC,szStrValue))
-	{
-		SetDlgItemText(IDC_SYSTEMSTATIC,szStrValue);
+        // Update the static width if necessary.
+        int iStaticRight = UpdateStaticWidth(m_hWnd,IDC_PREPARERSTATIC,szStrValue);
+        if (iStaticRight > iMaxStaticRight)
+            iMaxStaticRight = iStaticRight;
+    }
+    if (pLng->GetValuePtr(IDC_SYSTEMSTATIC,szStrValue))
+    {
+        SetDlgItemText(IDC_SYSTEMSTATIC,szStrValue);
 
-		// Update the static width if necessary.
-		int iStaticRight = UpdateStaticWidth(m_hWnd,IDC_SYSTEMSTATIC,szStrValue);
-		if (iStaticRight > iMaxStaticRight)
-			iMaxStaticRight = iStaticRight;
-	}
-	if (pLng->GetValuePtr(IDC_VOLUMESTATIC,szStrValue))
-	{
-		SetDlgItemText(IDC_VOLUMESTATIC,szStrValue);
+        // Update the static width if necessary.
+        int iStaticRight = UpdateStaticWidth(m_hWnd,IDC_SYSTEMSTATIC,szStrValue);
+        if (iStaticRight > iMaxStaticRight)
+            iMaxStaticRight = iStaticRight;
+    }
+    if (pLng->GetValuePtr(IDC_VOLUMESTATIC,szStrValue))
+    {
+        SetDlgItemText(IDC_VOLUMESTATIC,szStrValue);
 
-		// Update the static width if necessary.
-		int iStaticRight = UpdateStaticWidth(m_hWnd,IDC_VOLUMESTATIC,szStrValue);
-		if (iStaticRight > iMaxStaticRight)
-			iMaxStaticRight = iStaticRight;
-	}
-	if (pLng->GetValuePtr(IDC_COPYRIGHTSTATIC,szStrValue))
-	{
-		SetDlgItemText(IDC_COPYRIGHTSTATIC,szStrValue);
+        // Update the static width if necessary.
+        int iStaticRight = UpdateStaticWidth(m_hWnd,IDC_VOLUMESTATIC,szStrValue);
+        if (iStaticRight > iMaxStaticRight)
+            iMaxStaticRight = iStaticRight;
+    }
+    if (pLng->GetValuePtr(IDC_COPYRIGHTSTATIC,szStrValue))
+    {
+        SetDlgItemText(IDC_COPYRIGHTSTATIC,szStrValue);
 
-		// Update the static width if necessary.
-		int iStaticRight = UpdateStaticWidth(m_hWnd,IDC_COPYRIGHTSTATIC,szStrValue);
-		if (iStaticRight > iMaxStaticRight)
-			iMaxStaticRight = iStaticRight;
-	}
-	if (pLng->GetValuePtr(IDC_ABSTRACTSTATIC,szStrValue))
-	{
-		SetDlgItemText(IDC_ABSTRACTSTATIC,szStrValue);
+        // Update the static width if necessary.
+        int iStaticRight = UpdateStaticWidth(m_hWnd,IDC_COPYRIGHTSTATIC,szStrValue);
+        if (iStaticRight > iMaxStaticRight)
+            iMaxStaticRight = iStaticRight;
+    }
+    if (pLng->GetValuePtr(IDC_ABSTRACTSTATIC,szStrValue))
+    {
+        SetDlgItemText(IDC_ABSTRACTSTATIC,szStrValue);
 
-		// Update the static width if necessary.
-		int iStaticRight = UpdateStaticWidth(m_hWnd,IDC_ABSTRACTSTATIC,szStrValue);
-		if (iStaticRight > iMaxStaticRight)
-			iMaxStaticRight = iStaticRight;
-	}
-	if (pLng->GetValuePtr(IDC_BIBLIOGRAPHICSTATIC,szStrValue))
-	{
-		SetDlgItemText(IDC_BIBLIOGRAPHICSTATIC,szStrValue);
+        // Update the static width if necessary.
+        int iStaticRight = UpdateStaticWidth(m_hWnd,IDC_ABSTRACTSTATIC,szStrValue);
+        if (iStaticRight > iMaxStaticRight)
+            iMaxStaticRight = iStaticRight;
+    }
+    if (pLng->GetValuePtr(IDC_BIBLIOGRAPHICSTATIC,szStrValue))
+    {
+        SetDlgItemText(IDC_BIBLIOGRAPHICSTATIC,szStrValue);
 
-		// Update the static width if necessary.
-		int iStaticRight = UpdateStaticWidth(m_hWnd,IDC_BIBLIOGRAPHICSTATIC,szStrValue);
-		if (iStaticRight > iMaxStaticRight)
-			iMaxStaticRight = iStaticRight;
-	}
+        // Update the static width if necessary.
+        int iStaticRight = UpdateStaticWidth(m_hWnd,IDC_BIBLIOGRAPHICSTATIC,szStrValue);
+        if (iStaticRight > iMaxStaticRight)
+            iMaxStaticRight = iStaticRight;
+    }
 
-	// Make sure that the edit controls are not in the way of the statics.
-	if (iMaxStaticRight > 75)
-	{
-		UpdateEditPos(m_hWnd,IDC_PUBLISHEREDIT,iMaxStaticRight);
-		UpdateEditPos(m_hWnd,IDC_PREPAREREDIT,iMaxStaticRight);
-		UpdateEditPos(m_hWnd,IDC_SYSTEMEDIT,iMaxStaticRight);
-		UpdateEditPos(m_hWnd,IDC_VOLUMEEDIT,iMaxStaticRight);
-		UpdateEditPos(m_hWnd,IDC_COPYRIGHTEDIT,iMaxStaticRight);
-		UpdateEditPos(m_hWnd,IDC_ABSTRACTEDIT,iMaxStaticRight);
-		UpdateEditPos(m_hWnd,IDC_BIBLIOGRAPHICEDIT,iMaxStaticRight);
-	}
+    // Make sure that the edit controls are not in the way of the statics.
+    if (iMaxStaticRight > 75)
+    {
+        UpdateEditPos(m_hWnd,IDC_PUBLISHEREDIT,iMaxStaticRight);
+        UpdateEditPos(m_hWnd,IDC_PREPAREREDIT,iMaxStaticRight);
+        UpdateEditPos(m_hWnd,IDC_SYSTEMEDIT,iMaxStaticRight);
+        UpdateEditPos(m_hWnd,IDC_VOLUMEEDIT,iMaxStaticRight);
+        UpdateEditPos(m_hWnd,IDC_COPYRIGHTEDIT,iMaxStaticRight);
+        UpdateEditPos(m_hWnd,IDC_ABSTRACTEDIT,iMaxStaticRight);
+        UpdateEditPos(m_hWnd,IDC_BIBLIOGRAPHICEDIT,iMaxStaticRight);
+    }
 
-	return true;
+    return true;
 }
 
 bool CProjectPropFieldsPage::OnApply()
 {
-	GetDlgItemText(IDC_PUBLISHEREDIT,g_ProjectSettings.m_szPublisher,127);
-	GetDlgItemText(IDC_PREPAREREDIT,g_ProjectSettings.m_szPreparer,127);
-	GetDlgItemText(IDC_SYSTEMEDIT,g_ProjectSettings.m_szSystem,127);
-	GetDlgItemText(IDC_VOLUMEEDIT,g_ProjectSettings.m_szVolumeSet,127);
+    GetDlgItemText(IDC_PUBLISHEREDIT,g_ProjectSettings.m_szPublisher,127);
+    GetDlgItemText(IDC_PREPAREREDIT,g_ProjectSettings.m_szPreparer,127);
+    GetDlgItemText(IDC_SYSTEMEDIT,g_ProjectSettings.m_szSystem,127);
+    GetDlgItemText(IDC_VOLUMEEDIT,g_ProjectSettings.m_szVolumeSet,127);
 
-	GetDlgItemText(IDC_COPYRIGHTEDIT,g_ProjectSettings.m_szCopyright,36);
-	GetDlgItemText(IDC_ABSTRACTEDIT,g_ProjectSettings.m_szAbstract,36);
-	GetDlgItemText(IDC_BIBLIOGRAPHICEDIT,g_ProjectSettings.m_szBibliographic,36);
+    GetDlgItemText(IDC_COPYRIGHTEDIT,g_ProjectSettings.m_szCopyright,36);
+    GetDlgItemText(IDC_ABSTRACTEDIT,g_ProjectSettings.m_szAbstract,36);
+    GetDlgItemText(IDC_BIBLIOGRAPHICEDIT,g_ProjectSettings.m_szBibliographic,36);
 
-	return true;
+    return true;
 }
 
 void CProjectPropFieldsPage::OnHelp()
 {
-	TCHAR szFileName[MAX_PATH];
-	GetModuleFileName(NULL,szFileName,MAX_PATH - 1);
+    TCHAR szFileName[MAX_PATH];
+    GetModuleFileName(NULL,szFileName,MAX_PATH - 1);
 
-	ExtractFilePath(szFileName);
-	lstrcat(szFileName,lngGetManual());
-	lstrcat(szFileName,_T("::/how_to_use/working_with_projects/project_settings.html"));
+    ExtractFilePath(szFileName);
+    lstrcat(szFileName,lngGetManual());
+    lstrcat(szFileName,_T("::/how_to_use/working_with_projects/project_settings.html"));
 
-	HtmlHelp(m_hWnd,szFileName,HH_DISPLAY_TOC,NULL);
+    HtmlHelp(m_hWnd,szFileName,HH_DISPLAY_TOC,NULL);
 }
 
 LRESULT CProjectPropFieldsPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
-	// Set field length limits.
-	::SendMessage(GetDlgItem(IDC_PUBLISHEREDIT),EM_SETLIMITTEXT,127,0);
-	::SendMessage(GetDlgItem(IDC_PREPAREREDIT),EM_SETLIMITTEXT,127,0);
-	::SendMessage(GetDlgItem(IDC_SYSTEMEDIT),EM_SETLIMITTEXT,127,0);
-	::SendMessage(GetDlgItem(IDC_VOLUMEEDIT),EM_SETLIMITTEXT,127,0);
+    // Set field length limits.
+    ::SendMessage(GetDlgItem(IDC_PUBLISHEREDIT),EM_SETLIMITTEXT,127,0);
+    ::SendMessage(GetDlgItem(IDC_PREPAREREDIT),EM_SETLIMITTEXT,127,0);
+    ::SendMessage(GetDlgItem(IDC_SYSTEMEDIT),EM_SETLIMITTEXT,127,0);
+    ::SendMessage(GetDlgItem(IDC_VOLUMEEDIT),EM_SETLIMITTEXT,127,0);
 
-	::SendMessage(GetDlgItem(IDC_COPYRIGHTEDIT),EM_SETLIMITTEXT,36,0);
-	::SendMessage(GetDlgItem(IDC_ABSTRACTEDIT),EM_SETLIMITTEXT,36,0);
-	::SendMessage(GetDlgItem(IDC_BIBLIOGRAPHICEDIT),EM_SETLIMITTEXT,36,0);
+    ::SendMessage(GetDlgItem(IDC_COPYRIGHTEDIT),EM_SETLIMITTEXT,36,0);
+    ::SendMessage(GetDlgItem(IDC_ABSTRACTEDIT),EM_SETLIMITTEXT,36,0);
+    ::SendMessage(GetDlgItem(IDC_BIBLIOGRAPHICEDIT),EM_SETLIMITTEXT,36,0);
 
-	// Load the default settings.
-	SetDlgItemText(IDC_PUBLISHEREDIT,g_ProjectSettings.m_szPublisher);
-	SetDlgItemText(IDC_PREPAREREDIT,g_ProjectSettings.m_szPreparer);
-	SetDlgItemText(IDC_SYSTEMEDIT,g_ProjectSettings.m_szSystem);
-	SetDlgItemText(IDC_VOLUMEEDIT,g_ProjectSettings.m_szVolumeSet);
+    // Load the default settings.
+    SetDlgItemText(IDC_PUBLISHEREDIT,g_ProjectSettings.m_szPublisher);
+    SetDlgItemText(IDC_PREPAREREDIT,g_ProjectSettings.m_szPreparer);
+    SetDlgItemText(IDC_SYSTEMEDIT,g_ProjectSettings.m_szSystem);
+    SetDlgItemText(IDC_VOLUMEEDIT,g_ProjectSettings.m_szVolumeSet);
 
-	SetDlgItemText(IDC_COPYRIGHTEDIT,g_ProjectSettings.m_szCopyright);
-	SetDlgItemText(IDC_ABSTRACTEDIT,g_ProjectSettings.m_szAbstract);
-	SetDlgItemText(IDC_BIBLIOGRAPHICEDIT,g_ProjectSettings.m_szBibliographic);
+    SetDlgItemText(IDC_COPYRIGHTEDIT,g_ProjectSettings.m_szCopyright);
+    SetDlgItemText(IDC_ABSTRACTEDIT,g_ProjectSettings.m_szAbstract);
+    SetDlgItemText(IDC_BIBLIOGRAPHICEDIT,g_ProjectSettings.m_szBibliographic);
 
-	// Translate the window.
-	Translate();
+    // Translate the window.
+    Translate();
 
-	return true;
+    return true;
 }

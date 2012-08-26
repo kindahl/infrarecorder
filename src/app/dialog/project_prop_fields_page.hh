@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,22 +22,22 @@
 class CProjectPropFieldsPage : public CPropertyPageImpl<CProjectPropFieldsPage>
 {
 private:
-	bool Translate();
+    bool Translate();
 
 public:
-	enum { IDD = IDD_PROPPAGE_PROJECTPROPFIELDS };
+    enum { IDD = IDD_PROPPAGE_PROJECTPROPFIELDS };
 
-	CProjectPropFieldsPage();
-	~CProjectPropFieldsPage();
+    CProjectPropFieldsPage();
+    ~CProjectPropFieldsPage();
 
-	bool OnApply();
-	void OnHelp();
+    bool OnApply();
+    void OnHelp();
 
-	BEGIN_MSG_MAP(CProjectPropFieldsPage)
-		MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
+    BEGIN_MSG_MAP(CProjectPropFieldsPage)
+        MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
 
-		CHAIN_MSG_MAP(CPropertyPageImpl<CProjectPropFieldsPage>)
-	END_MSG_MAP()
+        CHAIN_MSG_MAP(CPropertyPageImpl<CProjectPropFieldsPage>)
+    END_MSG_MAP()
 
-	LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 };

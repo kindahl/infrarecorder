@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,480 +27,480 @@
 
 CConfigShellExtPage::CConfigShellExtPage()
 {
-	m_hToolBarImageList = NULL;
+    m_hToolBarImageList = NULL;
 
-	// Try to load translated string.
-	if (g_LanguageSettings.m_pLngProcessor != NULL)
-	{	
-		// Make sure that there is a strings translation section.
-		if (g_LanguageSettings.m_pLngProcessor->EnterSection(_T("strings")))
-		{
-			TCHAR *szStrValue;
-			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(TITLE_SHELLEXT,szStrValue))
-				SetTitle(szStrValue);
-		}
-	}
+    // Try to load translated string.
+    if (g_LanguageSettings.m_pLngProcessor != NULL)
+    {	
+        // Make sure that there is a strings translation section.
+        if (g_LanguageSettings.m_pLngProcessor->EnterSection(_T("strings")))
+        {
+            TCHAR *szStrValue;
+            if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(TITLE_SHELLEXT,szStrValue))
+                SetTitle(szStrValue);
+        }
+    }
 
-	m_psp.dwFlags |= PSP_HASHELP;
+    m_psp.dwFlags |= PSP_HASHELP;
 }
 
 CConfigShellExtPage::~CConfigShellExtPage()
 {
-	if (m_hToolBarImageList)
-		ImageList_Destroy(m_hToolBarImageList);
+    if (m_hToolBarImageList)
+        ImageList_Destroy(m_hToolBarImageList);
 }
 
 bool CConfigShellExtPage::Translate()
 {
-	if (g_LanguageSettings.m_pLngProcessor == NULL)
-		return false;
+    if (g_LanguageSettings.m_pLngProcessor == NULL)
+        return false;
 
-	CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
-	
-	// Make sure that there is a config translation section.
-	if (!pLng->EnterSection(_T("config")))
-		return false;
+    CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
+    
+    // Make sure that there is a config translation section.
+    if (!pLng->EnterSection(_T("config")))
+        return false;
 
-	// Translate.
-	TCHAR *szStrValue;
+    // Translate.
+    TCHAR *szStrValue;
 
-	if (pLng->GetValuePtr(IDC_SHELLEXTCHECK,szStrValue))
-		SetDlgItemText(IDC_SHELLEXTCHECK,szStrValue);
-	if (pLng->GetValuePtr(IDC_SHELLEXTSUBMENUCHECK,szStrValue))
-		SetDlgItemText(IDC_SHELLEXTSUBMENUCHECK,szStrValue);
-	if (pLng->GetValuePtr(IDC_SHELLEXTICONCHECK,szStrValue))
-		SetDlgItemText(IDC_SHELLEXTICONCHECK,szStrValue);
-	if (pLng->GetValuePtr(IDC_SHELLEXTTEXTSTATIC,szStrValue))
-		SetDlgItemText(IDC_SHELLEXTTEXTSTATIC,szStrValue);
+    if (pLng->GetValuePtr(IDC_SHELLEXTCHECK,szStrValue))
+        SetDlgItemText(IDC_SHELLEXTCHECK,szStrValue);
+    if (pLng->GetValuePtr(IDC_SHELLEXTSUBMENUCHECK,szStrValue))
+        SetDlgItemText(IDC_SHELLEXTSUBMENUCHECK,szStrValue);
+    if (pLng->GetValuePtr(IDC_SHELLEXTICONCHECK,szStrValue))
+        SetDlgItemText(IDC_SHELLEXTICONCHECK,szStrValue);
+    if (pLng->GetValuePtr(IDC_SHELLEXTTEXTSTATIC,szStrValue))
+        SetDlgItemText(IDC_SHELLEXTTEXTSTATIC,szStrValue);
 
-	return true;
+    return true;
 }
 
 bool CConfigShellExtPage::OnApply()
 {
-	// Remember the configuration.
-	g_GlobalSettings.m_bShellExtSubMenu = IsDlgButtonChecked(IDC_SHELLEXTSUBMENUCHECK) == TRUE;
-	g_GlobalSettings.m_bShellExtIcon = IsDlgButtonChecked(IDC_SHELLEXTICONCHECK) == TRUE;
+    // Remember the configuration.
+    g_GlobalSettings.m_bShellExtSubMenu = IsDlgButtonChecked(IDC_SHELLEXTSUBMENUCHECK) == TRUE;
+    g_GlobalSettings.m_bShellExtIcon = IsDlgButtonChecked(IDC_SHELLEXTICONCHECK) == TRUE;
 
-	if (IsDlgButtonChecked(IDC_SHELLEXTCHECK))
-		RegisterShellExtension();
-	else
-		UnregisterShellExtension();
+    if (IsDlgButtonChecked(IDC_SHELLEXTCHECK))
+        RegisterShellExtension();
+    else
+        UnregisterShellExtension();
 
-	// Associate the individual file extensions.
-	RegisterListView();
+    // Associate the individual file extensions.
+    RegisterListView();
 
-	return true;
+    return true;
 }
 
 void CConfigShellExtPage::OnHelp()
 {
-	TCHAR szFileName[MAX_PATH];
-	GetModuleFileName(NULL,szFileName,MAX_PATH - 1);
+    TCHAR szFileName[MAX_PATH];
+    GetModuleFileName(NULL,szFileName,MAX_PATH - 1);
 
-	ExtractFilePath(szFileName);
-	lstrcat(szFileName,lngGetManual());
-	lstrcat(szFileName,_T("::/how_to_use/configuration.html"));
+    ExtractFilePath(szFileName);
+    lstrcat(szFileName,lngGetManual());
+    lstrcat(szFileName,_T("::/how_to_use/configuration.html"));
 
-	HtmlHelp(m_hWnd,szFileName,HH_DISPLAY_TOC,NULL);
+    HtmlHelp(m_hWnd,szFileName,HH_DISPLAY_TOC,NULL);
 }
 
 void CConfigShellExtPage::InitToolBarImageList()
 {
-	// Create the image list.
-	HBITMAP hBitmap;
+    // Create the image list.
+    HBITMAP hBitmap;
 
-	// Get color depth (minimum requirement is 32-bits for alpha blended images).
-	int iBitsPixel = GetDeviceCaps(::GetDC(HWND_DESKTOP),BITSPIXEL);
-	
-	if (g_WinVer.m_ulMajorCCVersion >= 6 && iBitsPixel >= 32)
-	{
-		hBitmap = LoadBitmap(_Module.GetResourceInstance(),MAKEINTRESOURCE(IDB_MINITOOLBARBITMAP));
+    // Get color depth (minimum requirement is 32-bits for alpha blended images).
+    int iBitsPixel = GetDeviceCaps(::GetDC(HWND_DESKTOP),BITSPIXEL);
+    
+    if (g_WinVer.m_ulMajorCCVersion >= 6 && iBitsPixel >= 32)
+    {
+        hBitmap = LoadBitmap(_Module.GetResourceInstance(),MAKEINTRESOURCE(IDB_MINITOOLBARBITMAP));
 
-		m_hToolBarImageList = ImageList_Create(16,16,ILC_COLOR32,0,6);
-		ImageList_Add(m_hToolBarImageList,hBitmap,NULL);
-	}
-	else
-	{
-		hBitmap = LoadBitmap(_Module.GetResourceInstance(),MAKEINTRESOURCE(IDB_MINITOOLBARBITMAP_));
+        m_hToolBarImageList = ImageList_Create(16,16,ILC_COLOR32,0,6);
+        ImageList_Add(m_hToolBarImageList,hBitmap,NULL);
+    }
+    else
+    {
+        hBitmap = LoadBitmap(_Module.GetResourceInstance(),MAKEINTRESOURCE(IDB_MINITOOLBARBITMAP_));
 
-		m_hToolBarImageList = ImageList_Create(16,16,ILC_COLOR32 | ILC_MASK,0,6);
-		ImageList_AddMasked(m_hToolBarImageList,hBitmap,RGB(255,0,255));
-	}
+        m_hToolBarImageList = ImageList_Create(16,16,ILC_COLOR32 | ILC_MASK,0,6);
+        ImageList_AddMasked(m_hToolBarImageList,hBitmap,RGB(255,0,255));
+    }
 
-	DeleteObject(hBitmap);
+    DeleteObject(hBitmap);
 }
 
 void CConfigShellExtPage::AddToolBarButton(int iCommand,int iBitmap)
 {
-	TBBUTTON tbButton;
-	tbButton.fsState = TBSTATE_ENABLED;
-	tbButton.fsStyle = TBSTYLE_BUTTON;
-	tbButton.iBitmap = iBitmap;
-	tbButton.idCommand = iCommand;
-	tbButton.iString = 0;
-	tbButton.dwData = 0;
-	m_ToolBar.InsertButton(m_ToolBar.GetButtonCount(),&tbButton);
+    TBBUTTON tbButton;
+    tbButton.fsState = TBSTATE_ENABLED;
+    tbButton.fsStyle = TBSTYLE_BUTTON;
+    tbButton.iBitmap = iBitmap;
+    tbButton.idCommand = iCommand;
+    tbButton.iString = 0;
+    tbButton.dwData = 0;
+    m_ToolBar.InsertButton(m_ToolBar.GetButtonCount(),&tbButton);
 }
 
 void CConfigShellExtPage::CreateToolBarCtrl()
 {
-	RECT rcListView;
-	m_ListView.GetWindowRect(&rcListView);
-	ScreenToClient(&rcListView);
+    RECT rcListView;
+    m_ListView.GetWindowRect(&rcListView);
+    ScreenToClient(&rcListView);
 
-	RECT rcToolBar = { 0,0,100,100 };
-	m_ToolBar.Create(m_hWnd,rcToolBar,NULL,ATL_SIMPLE_TOOLBAR_PANE_STYLE,NULL);
-	m_ToolBar.SetImageList(m_hToolBarImageList);
-	m_ToolBar.SetButtonStructSize();
+    RECT rcToolBar = { 0,0,100,100 };
+    m_ToolBar.Create(m_hWnd,rcToolBar,NULL,ATL_SIMPLE_TOOLBAR_PANE_STYLE,NULL);
+    m_ToolBar.SetImageList(m_hToolBarImageList);
+    m_ToolBar.SetButtonStructSize();
 
-	// Create the buttons.
-	AddToolBarButton(ID_SHELLEXT_ADD,1);
-	AddToolBarButton(ID_SHELLEXT_REMOVE,3);
-	m_ToolBar.EnableButton(ID_SHELLEXT_REMOVE,false);	// Disabled by default.
+    // Create the buttons.
+    AddToolBarButton(ID_SHELLEXT_ADD,1);
+    AddToolBarButton(ID_SHELLEXT_REMOVE,3);
+    m_ToolBar.EnableButton(ID_SHELLEXT_REMOVE,false);	// Disabled by default.
 
-	// Update the toolbar position.
-	int iToolBarWidth = 0;
-	RECT rcButton;
+    // Update the toolbar position.
+    int iToolBarWidth = 0;
+    RECT rcButton;
 
-	for (int i = 0; i < m_ToolBar.GetButtonCount(); i++)
-	{
-		m_ToolBar.GetItemRect(i,&rcButton);
-		iToolBarWidth += rcButton.right - rcButton.left;
-	}
+    for (int i = 0; i < m_ToolBar.GetButtonCount(); i++)
+    {
+        m_ToolBar.GetItemRect(i,&rcButton);
+        iToolBarWidth += rcButton.right - rcButton.left;
+    }
 
-	m_ToolBar.SetWindowPos(NULL,
-		rcListView.right - iToolBarWidth,
-		rcListView.top - HIWORD(m_ToolBar.GetButtonSize()),
-		iToolBarWidth,
-		HIWORD(m_ToolBar.GetButtonSize()),0);
+    m_ToolBar.SetWindowPos(NULL,
+        rcListView.right - iToolBarWidth,
+        rcListView.top - HIWORD(m_ToolBar.GetButtonSize()),
+        iToolBarWidth,
+        HIWORD(m_ToolBar.GetButtonSize()),0);
 }
 
 void CConfigShellExtPage::CheckListView()
 {
-	int iDelimiter,iLength;
-	TCHAR *szString;
-	TCHAR *szExt;
+    int iDelimiter,iLength;
+    TCHAR *szString;
+    TCHAR *szExt;
 
-	// Open registry.
-	CRegistry Reg;
-	Reg.SetRoot(HKEY_CLASSES_ROOT);
+    // Open registry.
+    CRegistry Reg;
+    Reg.SetRoot(HKEY_CLASSES_ROOT);
 
-	int iItemIndex = -1;
-	iItemIndex = m_ListView.GetNextItem(iItemIndex,LVNI_ALL);
+    int iItemIndex = -1;
+    iItemIndex = m_ListView.GetNextItem(iItemIndex,LVNI_ALL);
 
-	while (iItemIndex != -1)
-	{
-		szString = (TCHAR *)m_ListView.GetItemData(iItemIndex);
-		iDelimiter = FirstDelimiter(szString,'|');
-		szExt = szString + iDelimiter + 1;
+    while (iItemIndex != -1)
+    {
+        szString = (TCHAR *)m_ListView.GetItemData(iItemIndex);
+        iDelimiter = FirstDelimiter(szString,'|');
+        szExt = szString + iDelimiter + 1;
 
-		// Parse the extension list.
-		iLength = lstrlen(szExt);
-		iDelimiter = 0;
+        // Parse the extension list.
+        iLength = lstrlen(szExt);
+        iDelimiter = 0;
 
-		bool bCheck = true;
+        bool bCheck = true;
 
-		for (int i = 0; i < iLength; i++)
-		{
-			if (szExt[i] == ',')
-			{
-				// Skip empty extensions.
-				if (iDelimiter == i)
-				{
-					iDelimiter++;
-					continue;
-				}
+        for (int i = 0; i < iLength; i++)
+        {
+            if (szExt[i] == ',')
+            {
+                // Skip empty extensions.
+                if (iDelimiter == i)
+                {
+                    iDelimiter++;
+                    continue;
+                }
 
-				szExt[i] = '\0';
-				//MessageBox(szExt + iDelimiter);
-				bCheck = bCheck && IsExtensionInstalled(szExt + iDelimiter,&Reg);
-				szExt[i] = ',';
+                szExt[i] = '\0';
+                //MessageBox(szExt + iDelimiter);
+                bCheck = bCheck && IsExtensionInstalled(szExt + iDelimiter,&Reg);
+                szExt[i] = ',';
 
-				iDelimiter = i + 1;
+                iDelimiter = i + 1;
 
-				// Automatically left trim the (next) string.
-				while (i + 1 < iLength &&
-					szExt[i + 1] == ' ')
-				{
-					iDelimiter++;
-					i++;
-				}
-			}
-		}
+                // Automatically left trim the (next) string.
+                while (i + 1 < iLength &&
+                    szExt[i + 1] == ' ')
+                {
+                    iDelimiter++;
+                    i++;
+                }
+            }
+        }
 
-		//MessageBox(szExt + iDelimiter);
-		bCheck = bCheck && IsExtensionInstalled(szExt + iDelimiter,&Reg);
+        //MessageBox(szExt + iDelimiter);
+        bCheck = bCheck && IsExtensionInstalled(szExt + iDelimiter,&Reg);
 
-		m_ListView.SetCheckState(iItemIndex,bCheck);
+        m_ListView.SetCheckState(iItemIndex,bCheck);
 
-		iItemIndex = m_ListView.GetNextItem(iItemIndex,LVNI_ALL);
-	}
+        iItemIndex = m_ListView.GetNextItem(iItemIndex,LVNI_ALL);
+    }
 }
 
 /*
-	CConfigShellExtPage::RegisterListItem
-	-------------------------------------
-	Registers or unregisters the list view item with the specified item index.
+    CConfigShellExtPage::RegisterListItem
+    -------------------------------------
+    Registers or unregisters the list view item with the specified item index.
 */
 void CConfigShellExtPage::RegisterListItem(CRegistry *pReg,int iItemIndex)
 {
-	TCHAR *szString = (TCHAR *)m_ListView.GetItemData(iItemIndex);
-	int iDelimiter = FirstDelimiter(szString,'|');
-	TCHAR *szExt = szString + iDelimiter + 1;
+    TCHAR *szString = (TCHAR *)m_ListView.GetItemData(iItemIndex);
+    int iDelimiter = FirstDelimiter(szString,'|');
+    TCHAR *szExt = szString + iDelimiter + 1;
 
-	// Parse the extension list.
-	int iLength = lstrlen(szExt);
-	iDelimiter = 0;
+    // Parse the extension list.
+    int iLength = lstrlen(szExt);
+    iDelimiter = 0;
 
-	bool bRegister = m_ListView.GetCheckState(iItemIndex) == TRUE;
+    bool bRegister = m_ListView.GetCheckState(iItemIndex) == TRUE;
 
-	for (int i = 0; i < iLength; i++)
-	{
-		if (szExt[i] == ',')
-		{
-			// Skip empty extensions.
-			if (iDelimiter == i)
-			{
-				iDelimiter++;
-				continue;
-			}
+    for (int i = 0; i < iLength; i++)
+    {
+        if (szExt[i] == ',')
+        {
+            // Skip empty extensions.
+            if (iDelimiter == i)
+            {
+                iDelimiter++;
+                continue;
+            }
 
-			szExt[i] = '\0';
+            szExt[i] = '\0';
 
-			// Register or unregister the file extension.
-			if (bRegister)
-			{
-				// We separate project files from disc images since they need
-				// another desciption.
-				if (!lstrcmp(szExt,_T(".irp")))
-					InstallProjectExtension(pReg);
-				else
-					InstallExtension(szExt + iDelimiter,pReg);
-			}
-			else
-				UninstallExtension(szExt + iDelimiter,pReg);
+            // Register or unregister the file extension.
+            if (bRegister)
+            {
+                // We separate project files from disc images since they need
+                // another desciption.
+                if (!lstrcmp(szExt,_T(".irp")))
+                    InstallProjectExtension(pReg);
+                else
+                    InstallExtension(szExt + iDelimiter,pReg);
+            }
+            else
+                UninstallExtension(szExt + iDelimiter,pReg);
 
-			szExt[i] = ',';
+            szExt[i] = ',';
 
-			iDelimiter = i + 1;
+            iDelimiter = i + 1;
 
-			// Automatically left trim the (next) string.
-			while (i + 1 < iLength &&
-				szExt[i + 1] == ' ')
-			{
-				iDelimiter++;
-				i++;
-			}
-		}
-	}
+            // Automatically left trim the (next) string.
+            while (i + 1 < iLength &&
+                szExt[i + 1] == ' ')
+            {
+                iDelimiter++;
+                i++;
+            }
+        }
+    }
 
-	// Register or unregister the file extension.
-	if (bRegister)
-	{
-		// We separate project files from disc images since they need another desciption.
-		if (!lstrcmp(szExt,_T(".irp")))
-			InstallProjectExtension(pReg);
-		else
-			InstallExtension(szExt + iDelimiter,pReg);
-	}
-	else
-		UninstallExtension(szExt + iDelimiter,pReg);
+    // Register or unregister the file extension.
+    if (bRegister)
+    {
+        // We separate project files from disc images since they need another desciption.
+        if (!lstrcmp(szExt,_T(".irp")))
+            InstallProjectExtension(pReg);
+        else
+            InstallExtension(szExt + iDelimiter,pReg);
+    }
+    else
+        UninstallExtension(szExt + iDelimiter,pReg);
 }
 
 /*
-	CConfigShellExtPage::RegisterListView
-	-------------------------------------
-	Registers and unregisters all extensions found in the list view depending on
-	the item check state.
+    CConfigShellExtPage::RegisterListView
+    -------------------------------------
+    Registers and unregisters all extensions found in the list view depending on
+    the item check state.
 */
 void CConfigShellExtPage::RegisterListView()
 {
-	// Open registry.
-	CRegistry Reg;
-	Reg.SetRoot(HKEY_CLASSES_ROOT);
+    // Open registry.
+    CRegistry Reg;
+    Reg.SetRoot(HKEY_CLASSES_ROOT);
 
-	int iItemIndex = -1;
-	iItemIndex = m_ListView.GetNextItem(iItemIndex,LVNI_ALL);
+    int iItemIndex = -1;
+    iItemIndex = m_ListView.GetNextItem(iItemIndex,LVNI_ALL);
 
-	while (iItemIndex != -1)
-	{
-		// Register or unregister the item.
-		RegisterListItem(&Reg,iItemIndex);
+    while (iItemIndex != -1)
+    {
+        // Register or unregister the item.
+        RegisterListItem(&Reg,iItemIndex);
 
-		iItemIndex = m_ListView.GetNextItem(iItemIndex,LVNI_ALL);
-	}
+        iItemIndex = m_ListView.GetNextItem(iItemIndex,LVNI_ALL);
+    }
 }
 
 LRESULT CConfigShellExtPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
-	// Initialize the list view.
-	m_ListView = GetDlgItem(IDC_SHELLEXTLIST);
-	m_ListView.SetExtendedListViewStyle(LVS_EX_FULLROWSELECT | LVS_EX_CHECKBOXES);
+    // Initialize the list view.
+    m_ListView = GetDlgItem(IDC_SHELLEXTLIST);
+    m_ListView.SetExtendedListViewStyle(LVS_EX_FULLROWSELECT | LVS_EX_CHECKBOXES);
 
-	m_ListView.InsertColumn(0,lngGetString(COLUMN_DESCRIPTION),LVCFMT_LEFT,196,0);
-	m_ListView.InsertColumn(1,lngGetString(COLUMN_EXTENSIONS),LVCFMT_LEFT,150,0);
+    m_ListView.InsertColumn(0,lngGetString(COLUMN_DESCRIPTION),LVCFMT_LEFT,196,0);
+    m_ListView.InsertColumn(1,lngGetString(COLUMN_EXTENSIONS),LVCFMT_LEFT,150,0);
 
-	// Fill the list view.
-	int iItemCount = 0;
-	std::list<tstring>::iterator itNodeObject;
-	for (itNodeObject = g_GlobalSettings.m_szShellExt.begin(); itNodeObject != g_GlobalSettings.m_szShellExt.end(); itNodeObject++)
-	{
-		tstring apa = (*itNodeObject);
+    // Fill the list view.
+    int iItemCount = 0;
+    std::list<tstring>::iterator itNodeObject;
+    for (itNodeObject = g_GlobalSettings.m_szShellExt.begin(); itNodeObject != g_GlobalSettings.m_szShellExt.end(); itNodeObject++)
+    {
+        tstring apa = (*itNodeObject);
 
-		m_ListView.AddItem(iItemCount,0,LPSTR_TEXTCALLBACK);
-		m_ListView.AddItem(iItemCount,1,LPSTR_TEXTCALLBACK);
-		m_ListView.SetItemData(iItemCount,(DWORD_PTR)(*itNodeObject).c_str());
+        m_ListView.AddItem(iItemCount,0,LPSTR_TEXTCALLBACK);
+        m_ListView.AddItem(iItemCount,1,LPSTR_TEXTCALLBACK);
+        m_ListView.SetItemData(iItemCount,(DWORD_PTR)(*itNodeObject).c_str());
 
-		iItemCount++;
-	}
+        iItemCount++;
+    }
 
-	// Check the list view items.
-	CheckListView();
+    // Check the list view items.
+    CheckListView();
 
-	// Tool bar.
-	InitToolBarImageList();
-	CreateToolBarCtrl();
+    // Tool bar.
+    InitToolBarImageList();
+    CreateToolBarCtrl();
 
-	// Load configuration.
-	CheckDlgButton(IDC_SHELLEXTCHECK,IsShellExtensionRegistered());
-	CheckDlgButton(IDC_SHELLEXTSUBMENUCHECK,g_GlobalSettings.m_bShellExtSubMenu);
-	CheckDlgButton(IDC_SHELLEXTICONCHECK,g_GlobalSettings.m_bShellExtIcon);
+    // Load configuration.
+    CheckDlgButton(IDC_SHELLEXTCHECK,IsShellExtensionRegistered());
+    CheckDlgButton(IDC_SHELLEXTSUBMENUCHECK,g_GlobalSettings.m_bShellExtSubMenu);
+    CheckDlgButton(IDC_SHELLEXTICONCHECK,g_GlobalSettings.m_bShellExtIcon);
 
-	// Translate the window.
-	Translate();
+    // Translate the window.
+    Translate();
 
-	return TRUE;
+    return TRUE;
 }
 
 LRESULT CConfigShellExtPage::OnListAdd(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
-	CNewFileExtDlg NewFileExtDlg;
+    CNewFileExtDlg NewFileExtDlg;
 
-	if (NewFileExtDlg.DoModal() == IDOK)
-	{
-		TCHAR szBuffer[128];
-		lstrcpy(szBuffer,NewFileExtDlg.m_szDescBuffer);
-		lstrcat(szBuffer,_T("|"));
-		lstrcat(szBuffer,NewFileExtDlg.m_szExtBuffer);
+    if (NewFileExtDlg.DoModal() == IDOK)
+    {
+        TCHAR szBuffer[128];
+        lstrcpy(szBuffer,NewFileExtDlg.m_szDescBuffer);
+        lstrcat(szBuffer,_T("|"));
+        lstrcat(szBuffer,NewFileExtDlg.m_szExtBuffer);
 
-		g_GlobalSettings.m_szShellExt.push_back(szBuffer);
+        g_GlobalSettings.m_szShellExt.push_back(szBuffer);
 
-		// Add the list item.
-		int iItemCount = m_ListView.GetItemCount();
+        // Add the list item.
+        int iItemCount = m_ListView.GetItemCount();
 
-		m_ListView.AddItem(iItemCount,0,LPSTR_TEXTCALLBACK);
-		m_ListView.AddItem(iItemCount,1,LPSTR_TEXTCALLBACK);
-		m_ListView.SetItemData(iItemCount,(DWORD_PTR)(*--g_GlobalSettings.m_szShellExt.end()).c_str());
-	}
+        m_ListView.AddItem(iItemCount,0,LPSTR_TEXTCALLBACK);
+        m_ListView.AddItem(iItemCount,1,LPSTR_TEXTCALLBACK);
+        m_ListView.SetItemData(iItemCount,(DWORD_PTR)(*--g_GlobalSettings.m_szShellExt.end()).c_str());
+    }
 
-	bHandled = false;
-	return 0;
+    bHandled = false;
+    return 0;
 }
 
 LRESULT CConfigShellExtPage::OnListRemove(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
-	int iSelItem = m_ListView.GetSelectedIndex();
+    int iSelItem = m_ListView.GetSelectedIndex();
 
-	if (m_ListView.GetCheckState(iSelItem))
-	{
-		m_ListView.SetCheckState(iSelItem,false);
+    if (m_ListView.GetCheckState(iSelItem))
+    {
+        m_ListView.SetCheckState(iSelItem,false);
 
-		// Unregister the item extensions.
-		CRegistry Reg;
-		Reg.SetRoot(HKEY_CLASSES_ROOT);
+        // Unregister the item extensions.
+        CRegistry Reg;
+        Reg.SetRoot(HKEY_CLASSES_ROOT);
 
-		RegisterListItem(&Reg,iSelItem);
-	}
+        RegisterListItem(&Reg,iSelItem);
+    }
 
-	// Remove the list view item.
-	const TCHAR *szString = (const TCHAR *)m_ListView.GetItemData(iSelItem);
-	m_ListView.DeleteItem(m_ListView.GetSelectedIndex());
+    // Remove the list view item.
+    const TCHAR *szString = (const TCHAR *)m_ListView.GetItemData(iSelItem);
+    m_ListView.DeleteItem(m_ListView.GetSelectedIndex());
 
-	// Locate and remove the data from the global settings.
-	std::list<tstring>::iterator itNodeObject;
-	for (itNodeObject = g_GlobalSettings.m_szShellExt.begin(); itNodeObject != g_GlobalSettings.m_szShellExt.end(); itNodeObject++)
-	{
-		if (szString == (*itNodeObject).c_str())
-		{
-			g_GlobalSettings.m_szShellExt.erase(itNodeObject);
-			break;
-		}
-	}
+    // Locate and remove the data from the global settings.
+    std::list<tstring>::iterator itNodeObject;
+    for (itNodeObject = g_GlobalSettings.m_szShellExt.begin(); itNodeObject != g_GlobalSettings.m_szShellExt.end(); itNodeObject++)
+    {
+        if (szString == (*itNodeObject).c_str())
+        {
+            g_GlobalSettings.m_szShellExt.erase(itNodeObject);
+            break;
+        }
+    }
 
-	bHandled = false;
-	return 0;
+    bHandled = false;
+    return 0;
 }
 
 LRESULT CConfigShellExtPage::OnToolBarGetInfo(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled)
 {
-	bHandled = true;
+    bHandled = true;
 
-	// The string ID is the same as the button ID.
-	LPTOOLTIPTEXT pTipText = (LPTOOLTIPTEXT)pNMH;
+    // The string ID is the same as the button ID.
+    LPTOOLTIPTEXT pTipText = (LPTOOLTIPTEXT)pNMH;
 
-	// Try to load translated string.
-	if (g_LanguageSettings.m_pLngProcessor != NULL)
-	{	
-		// Make sure that there is a hint translation section.
-		if (g_LanguageSettings.m_pLngProcessor->EnterSection(_T("hint")))
-		{
-			TCHAR *szStrValue;
-			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr((unsigned long)pTipText->hdr.idFrom,szStrValue))
-			{
-				pTipText->lpszText = szStrValue;
-				return 0;
-			}
-		}
-	}
+    // Try to load translated string.
+    if (g_LanguageSettings.m_pLngProcessor != NULL)
+    {	
+        // Make sure that there is a hint translation section.
+        if (g_LanguageSettings.m_pLngProcessor->EnterSection(_T("hint")))
+        {
+            TCHAR *szStrValue;
+            if (g_LanguageSettings.m_pLngProcessor->GetValuePtr((unsigned long)pTipText->hdr.idFrom,szStrValue))
+            {
+                pTipText->lpszText = szStrValue;
+                return 0;
+            }
+        }
+    }
 
-	pTipText->lpszText = MAKEINTRESOURCE(pTipText->hdr.idFrom);
-	return 0;
+    pTipText->lpszText = MAKEINTRESOURCE(pTipText->hdr.idFrom);
+    return 0;
 }
 
 LRESULT CConfigShellExtPage::OnListItemChanged(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled)
 {
-	if (m_ToolBar.IsWindow())
-	{
-		if (m_ListView.GetSelectedCount() > 0)
-			m_ToolBar.EnableButton(ID_SHELLEXT_REMOVE,true);
-		else
-			m_ToolBar.EnableButton(ID_SHELLEXT_REMOVE,false);
-	}
+    if (m_ToolBar.IsWindow())
+    {
+        if (m_ListView.GetSelectedCount() > 0)
+            m_ToolBar.EnableButton(ID_SHELLEXT_REMOVE,true);
+        else
+            m_ToolBar.EnableButton(ID_SHELLEXT_REMOVE,false);
+    }
 
-	bHandled = false;
-	return 0;
+    bHandled = false;
+    return 0;
 }
 
 LRESULT CConfigShellExtPage::OnListGetDispInfo(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled)
 {
-	NMLVDISPINFO *pDispInfo = (NMLVDISPINFO *)pNMH;
-	const TCHAR *szString = (const TCHAR *)pDispInfo->item.lParam;
+    NMLVDISPINFO *pDispInfo = (NMLVDISPINFO *)pNMH;
+    const TCHAR *szString = (const TCHAR *)pDispInfo->item.lParam;
 
-	if (pDispInfo->item.mask & LVIF_TEXT)
-	{
-		int iDelimiter = FirstDelimiter(szString,'|');
+    if (pDispInfo->item.mask & LVIF_TEXT)
+    {
+        int iDelimiter = FirstDelimiter(szString,'|');
 
-		switch (pDispInfo->item.iSubItem)
-		{
-			case 0:
-				{
-					TCHAR *pDelimiter = (TCHAR *)szString + iDelimiter;
+        switch (pDispInfo->item.iSubItem)
+        {
+            case 0:
+                {
+                    TCHAR *pDelimiter = (TCHAR *)szString + iDelimiter;
 
-					*pDelimiter = '\0';
-					lstrcpy(pDispInfo->item.pszText,szString);
-					*pDelimiter = '|';
-				}
-				break;
+                    *pDelimiter = '\0';
+                    lstrcpy(pDispInfo->item.pszText,szString);
+                    *pDelimiter = '|';
+                }
+                break;
 
-			case 1:
-				{
-					lstrcpy(pDispInfo->item.pszText,(TCHAR *)szString + iDelimiter + 1);
-				}
-				break;
-		}
-	}
+            case 1:
+                {
+                    lstrcpy(pDispInfo->item.pszText,(TCHAR *)szString + iDelimiter + 1);
+                }
+                break;
+        }
+    }
 
-	bHandled = false;
-	return 0;
+    bHandled = false;
+    return 0;
 }

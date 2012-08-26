@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,78 +21,78 @@
 
 void DrawVertGradientRect(HDC hDC,RECT *pRect,COLORREF cTop,COLORREF cBottom)
 {
-	unsigned int uiClientHeight = pRect->bottom - pRect->top;
+    unsigned int uiClientHeight = pRect->bottom - pRect->top;
 
-	RECT rcBand;
-	rcBand.left = pRect->left;
-	rcBand.right = pRect->right;
+    RECT rcBand;
+    rcBand.left = pRect->left;
+    rcBand.right = pRect->right;
 
-	int iBeginRGB[3];
-	int iRGBDiff[3];
-	int iR,iG,iB;
+    int iBeginRGB[3];
+    int iRGBDiff[3];
+    int iR,iG,iB;
 
-	iBeginRGB[0] = GetRValue(cTop);
-	iBeginRGB[1] = GetGValue(cTop);
-	iBeginRGB[2] = GetBValue(cTop);
+    iBeginRGB[0] = GetRValue(cTop);
+    iBeginRGB[1] = GetGValue(cTop);
+    iBeginRGB[2] = GetBValue(cTop);
 
-	iRGBDiff[0] = GetRValue(cBottom) - iBeginRGB[0];
-	iRGBDiff[1] = GetGValue(cBottom) - iBeginRGB[1];
-	iRGBDiff[2] = GetBValue(cBottom) - iBeginRGB[2];
+    iRGBDiff[0] = GetRValue(cBottom) - iBeginRGB[0];
+    iRGBDiff[1] = GetGValue(cBottom) - iBeginRGB[1];
+    iRGBDiff[2] = GetBValue(cBottom) - iBeginRGB[2];
 
-	for (int i = pRect->top,j = 0; i < pRect->bottom; i++,j++)
-	{
-		iR = iBeginRGB[0] + MulDiv(j,iRGBDiff[0],uiClientHeight);
-		iG = iBeginRGB[1] + MulDiv(j,iRGBDiff[1],uiClientHeight);
-		iB = iBeginRGB[2] + MulDiv(j,iRGBDiff[2],uiClientHeight);
+    for (int i = pRect->top,j = 0; i < pRect->bottom; i++,j++)
+    {
+        iR = iBeginRGB[0] + MulDiv(j,iRGBDiff[0],uiClientHeight);
+        iG = iBeginRGB[1] + MulDiv(j,iRGBDiff[1],uiClientHeight);
+        iB = iBeginRGB[2] + MulDiv(j,iRGBDiff[2],uiClientHeight);
 
-		rcBand.top = (int)(i);
-		rcBand.bottom = (int)((i + 1));
+        rcBand.top = (int)(i);
+        rcBand.bottom = (int)((i + 1));
 
-		HBRUSH hBrush = CreateSolidBrush(RGB(iR,iG,iB));
-			FillRect(hDC,&rcBand,hBrush);
-		DeleteObject(hBrush);
-	}
+        HBRUSH hBrush = CreateSolidBrush(RGB(iR,iG,iB));
+            FillRect(hDC,&rcBand,hBrush);
+        DeleteObject(hBrush);
+    }
 }
 
 void DrawHorGradientRect(HDC hDC,RECT *pRect,COLORREF cLeft,COLORREF cRight)
 {
-	unsigned int uiClientWidth = pRect->right - pRect->left;
+    unsigned int uiClientWidth = pRect->right - pRect->left;
 
-	RECT rcBand;
-	rcBand.top = pRect->top;
-	rcBand.bottom = pRect->bottom;
+    RECT rcBand;
+    rcBand.top = pRect->top;
+    rcBand.bottom = pRect->bottom;
 
-	int iBeginRGB[3];
-	int iRGBDiff[3];
-	int iR,iG,iB;
+    int iBeginRGB[3];
+    int iRGBDiff[3];
+    int iR,iG,iB;
 
-	iBeginRGB[0] = GetRValue(cLeft);
-	iBeginRGB[1] = GetGValue(cLeft);
-	iBeginRGB[2] = GetBValue(cLeft);
+    iBeginRGB[0] = GetRValue(cLeft);
+    iBeginRGB[1] = GetGValue(cLeft);
+    iBeginRGB[2] = GetBValue(cLeft);
 
-	iRGBDiff[0] = GetRValue(cRight) - iBeginRGB[0];
-	iRGBDiff[1] = GetGValue(cRight) - iBeginRGB[1];
-	iRGBDiff[2] = GetBValue(cRight) - iBeginRGB[2];
+    iRGBDiff[0] = GetRValue(cRight) - iBeginRGB[0];
+    iRGBDiff[1] = GetGValue(cRight) - iBeginRGB[1];
+    iRGBDiff[2] = GetBValue(cRight) - iBeginRGB[2];
 
-	for (int i = pRect->left,j = 0; i < pRect->right; i++,j++)
-	{
-		iR = iBeginRGB[0] + MulDiv(j,iRGBDiff[0],uiClientWidth);
-		iG = iBeginRGB[1] + MulDiv(j,iRGBDiff[1],uiClientWidth);
-		iB = iBeginRGB[2] + MulDiv(j,iRGBDiff[2],uiClientWidth);
+    for (int i = pRect->left,j = 0; i < pRect->right; i++,j++)
+    {
+        iR = iBeginRGB[0] + MulDiv(j,iRGBDiff[0],uiClientWidth);
+        iG = iBeginRGB[1] + MulDiv(j,iRGBDiff[1],uiClientWidth);
+        iB = iBeginRGB[2] + MulDiv(j,iRGBDiff[2],uiClientWidth);
 
-		rcBand.left = (int)(i);
-		rcBand.right = (int)((i + 1));
+        rcBand.left = (int)(i);
+        rcBand.right = (int)((i + 1));
 
-		HBRUSH hBrush = CreateSolidBrush(RGB(iR,iG,iB));
-			FillRect(hDC,&rcBand,hBrush);
-		DeleteObject(hBrush);
-	}
+        HBRUSH hBrush = CreateSolidBrush(RGB(iR,iG,iB));
+            FillRect(hDC,&rcBand,hBrush);
+        DeleteObject(hBrush);
+    }
 }
 
 void ContractRect(RECT *pRect,int iSize)
 {
-	pRect->left += iSize;
-	pRect->right -= iSize;
-	pRect->top += iSize;
-	pRect->bottom -= iSize;
+    pRect->left += iSize;
+    pRect->right -= iSize;
+    pRect->top += iSize;
+    pRect->bottom -= iSize;
 }

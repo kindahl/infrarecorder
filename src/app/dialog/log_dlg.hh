@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,64 +32,64 @@
 #define LOG_LINEBUFFER_SIZE			512
 
 class CLogDlg : public CDialogImpl<CLogDlg>,public CDialogResize<CLogDlg>,
-				public ckcore::Log
+                public ckcore::Log
 {
 private:
-	CEdit m_LogEdit;
-	CDropDownButton m_DiagButton;
+    CEdit m_LogEdit;
+    CDropDownButton m_DiagButton;
 
-	// This buffer will be used when creating the log line by the variable
-	// argument list.
-	TCHAR m_szLineBuffer[LOG_LINEBUFFER_SIZE];
+    // This buffer will be used when creating the log line by the variable
+    // argument list.
+    TCHAR m_szLineBuffer[LOG_LINEBUFFER_SIZE];
 
-	ckcore::File m_LogFile;
+    ckcore::File m_LogFile;
 
-	ckcore::Path GetLogFullPath();
-	ckcore::Path GetLogDirPath();
+    ckcore::Path GetLogFullPath();
+    ckcore::Path GetLogDirPath();
 
-	void InitializeLogFile();
+    void InitializeLogFile();
 
-	bool Translate();
-	bool SaveLog(const TCHAR *szFileName);
+    bool Translate();
+    bool SaveLog(const TCHAR *szFileName);
 
 public:
-	enum { IDD = IDD_LOGDLG };
+    enum { IDD = IDD_LOGDLG };
 
-	CLogDlg();
-	~CLogDlg();
+    CLogDlg();
+    ~CLogDlg();
 
-	void Show();
-	void print(const TCHAR *szString,...);
-	void print_line(const TCHAR *szLine,...);
+    void Show();
+    void print(const TCHAR *szString,...);
+    void print_line(const TCHAR *szLine,...);
 
-	// Resize maps.
-	BEGIN_DLGRESIZE_MAP(CLogDlg)
-		DLGRESIZE_CONTROL(IDOK,DLSZ_MOVE_X)
-		DLGRESIZE_CONTROL(ID_SAVEASBUTTON,DLSZ_MOVE_X | DLSZ_MOVE_Y)
-		DLGRESIZE_CONTROL(IDC_DIAGNOSTICSBUTTON,DLSZ_MOVE_X)
-		DLGRESIZE_CONTROL(IDC_FILESBUTTON,DLSZ_MOVE_X)
-		DLGRESIZE_CONTROL(IDC_LOGEDIT,DLSZ_SIZE_X | DLSZ_SIZE_Y)
-	END_DLGRESIZE_MAP()
+    // Resize maps.
+    BEGIN_DLGRESIZE_MAP(CLogDlg)
+        DLGRESIZE_CONTROL(IDOK,DLSZ_MOVE_X)
+        DLGRESIZE_CONTROL(ID_SAVEASBUTTON,DLSZ_MOVE_X | DLSZ_MOVE_Y)
+        DLGRESIZE_CONTROL(IDC_DIAGNOSTICSBUTTON,DLSZ_MOVE_X)
+        DLGRESIZE_CONTROL(IDC_FILESBUTTON,DLSZ_MOVE_X)
+        DLGRESIZE_CONTROL(IDC_LOGEDIT,DLSZ_SIZE_X | DLSZ_SIZE_Y)
+    END_DLGRESIZE_MAP()
 
-	// Events.
-	BEGIN_MSG_MAP(CLogDlg)
-		MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
+    // Events.
+    BEGIN_MSG_MAP(CLogDlg)
+        MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
 
-		COMMAND_ID_HANDLER(IDOK,OnOK)
-		COMMAND_ID_HANDLER(IDCANCEL,OnOK)
-		COMMAND_ID_HANDLER(ID_SAVEASBUTTON,OnSaveAs)
-		COMMAND_ID_HANDLER(IDC_FILESBUTTON,OnFiles)
-		COMMAND_ID_HANDLER(ID_DIAGNOSTICS_DEVICESCAN,OnDiagDeviceScan)
+        COMMAND_ID_HANDLER(IDOK,OnOK)
+        COMMAND_ID_HANDLER(IDCANCEL,OnOK)
+        COMMAND_ID_HANDLER(ID_SAVEASBUTTON,OnSaveAs)
+        COMMAND_ID_HANDLER(IDC_FILESBUTTON,OnFiles)
+        COMMAND_ID_HANDLER(ID_DIAGNOSTICS_DEVICESCAN,OnDiagDeviceScan)
 
-		REFLECT_NOTIFICATIONS()
-		CHAIN_MSG_MAP(CDialogResize<CLogDlg>)
-	END_MSG_MAP()
+        REFLECT_NOTIFICATIONS()
+        CHAIN_MSG_MAP(CDialogResize<CLogDlg>)
+    END_MSG_MAP()
 
-	LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnOK(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
-	LRESULT OnSaveAs(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
-	LRESULT OnDiagDeviceScan(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
-	LRESULT OnFiles(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnOK(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnSaveAs(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnDiagDeviceScan(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnFiles(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
 };
 
 extern CLogDlg * g_pLogDlg;

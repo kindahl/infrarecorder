@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,15 +21,15 @@
 class CGradientStatic : public CWindowImpl<CGradientStatic,CWindow>
 {
 private:
-	COLORREF m_TopColor;
+    COLORREF m_TopColor;
 
 public:
-	CGradientStatic(COLORREF TopColor);
-	~CGradientStatic();
+    CGradientStatic(COLORREF TopColor);
+    ~CGradientStatic();
 
-	BEGIN_MSG_MAP(CGradientStatic)
-		MESSAGE_HANDLER(WM_PAINT,OnPaint)
-	END_MSG_MAP()
+    BEGIN_MSG_MAP(CGradientStatic)
+        MESSAGE_HANDLER(WM_PAINT,OnPaint)
+    END_MSG_MAP()
 
-	LRESULT OnPaint(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnPaint(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 };

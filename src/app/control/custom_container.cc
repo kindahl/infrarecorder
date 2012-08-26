@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,10 +24,10 @@
 
 CCustomContainer::CCustomContainer()
 {
-	m_iHeaderHeight = 0;
+    m_iHeaderHeight = 0;
 
-	m_hWndCustomDraw = NULL;
-	m_iControlID = -1;
+    m_hWndCustomDraw = NULL;
+    m_iControlID = -1;
 }
 
 CCustomContainer::~CCustomContainer()
@@ -36,173 +36,173 @@ CCustomContainer::~CCustomContainer()
 
 void CCustomContainer::SetCustomDrawHandler(HWND hWndCustomDraw,int iID)
 {
-	m_hWndCustomDraw = hWndCustomDraw;
-	m_iControlID = iID;
+    m_hWndCustomDraw = hWndCustomDraw;
+    m_iControlID = iID;
 }
 
 void CCustomContainer::SetClient(HWND hWndClient)
 {
-	m_ClientWindow = hWndClient;
+    m_ClientWindow = hWndClient;
 
-	UpdateLayout();
+    UpdateLayout();
 }
 
 void CCustomContainer::SetImageList(HIMAGELIST hImageList)
 {
-	m_ToolBar.SetImageList(hImageList);
-	//m_ToolBar.SetButtonStructSize();
+    m_ToolBar.SetImageList(hImageList);
+    //m_ToolBar.SetButtonStructSize();
 }
 
 void CCustomContainer::UpdateLayout()
 {
-	RECT rcClient;
-	GetClientRect(&rcClient);
+    RECT rcClient;
+    GetClientRect(&rcClient);
 
-	UpdateLayout(rcClient.right,rcClient.bottom);
+    UpdateLayout(rcClient.right,rcClient.bottom);
 }
 
 void CCustomContainer::UpdateLayout(int iWidth,int iHeight)
 {
-	RECT rcHeader = { 0,0,iWidth,m_iHeaderHeight };
+    RECT rcHeader = { 0,0,iWidth,m_iHeaderHeight };
 
-	if (m_ClientWindow.m_hWnd != NULL)
-		m_ClientWindow.SetWindowPos(NULL,0,m_iHeaderHeight,iWidth,iHeight - m_iHeaderHeight,SWP_NOZORDER);
-	else
-		rcHeader.bottom = iHeight;
+    if (m_ClientWindow.m_hWnd != NULL)
+        m_ClientWindow.SetWindowPos(NULL,0,m_iHeaderHeight,iWidth,iHeight - m_iHeaderHeight,SWP_NOZORDER);
+    else
+        rcHeader.bottom = iHeight;
 
-	InvalidateRect(&rcHeader);
+    InvalidateRect(&rcHeader);
 }
 
 void CCustomContainer::AddToolBarSeparator()
 {
-	TBBUTTON tbButton;
-	tbButton.fsState = TBSTATE_ENABLED;
-	tbButton.fsStyle = TBSTYLE_SEP;
-	tbButton.iBitmap = 0;
-	tbButton.idCommand = 0;
-	tbButton.iString = 0;
-	tbButton.dwData = 0;
-	m_ToolBar.InsertButton(m_ToolBar.GetButtonCount(),&tbButton);
+    TBBUTTON tbButton;
+    tbButton.fsState = TBSTATE_ENABLED;
+    tbButton.fsStyle = TBSTYLE_SEP;
+    tbButton.iBitmap = 0;
+    tbButton.idCommand = 0;
+    tbButton.iString = 0;
+    tbButton.dwData = 0;
+    m_ToolBar.InsertButton(m_ToolBar.GetButtonCount(),&tbButton);
 }
 
 void CCustomContainer::AddToolBarButton(int iCommand,int iBitmap)
 {
-	TBBUTTON tbButton;
-	tbButton.fsState = TBSTATE_ENABLED;
-	tbButton.fsStyle = TBSTYLE_BUTTON;
-	tbButton.iBitmap = iBitmap;
-	tbButton.idCommand = iCommand;
-	tbButton.iString = NULL;
-	tbButton.dwData = 0;
-	m_ToolBar.InsertButton(m_ToolBar.GetButtonCount(),&tbButton);
+    TBBUTTON tbButton;
+    tbButton.fsState = TBSTATE_ENABLED;
+    tbButton.fsStyle = TBSTYLE_BUTTON;
+    tbButton.iBitmap = iBitmap;
+    tbButton.idCommand = iCommand;
+    tbButton.iString = NULL;
+    tbButton.dwData = 0;
+    m_ToolBar.InsertButton(m_ToolBar.GetButtonCount(),&tbButton);
 }
 
 void CCustomContainer::UpdateToolBar()
 {
-	// Update the toolbar position.
-	int iToolBarWidth = 0;
-	RECT rcButton;
+    // Update the toolbar position.
+    int iToolBarWidth = 0;
+    RECT rcButton;
 
-	for (int i = 0; i < m_ToolBar.GetButtonCount(); i++)
-	{
-		m_ToolBar.GetItemRect(i,&rcButton);
-		iToolBarWidth += rcButton.right - rcButton.left;
-	}
+    for (int i = 0; i < m_ToolBar.GetButtonCount(); i++)
+    {
+        m_ToolBar.GetItemRect(i,&rcButton);
+        iToolBarWidth += rcButton.right - rcButton.left;
+    }
 
-	m_iHeaderHeight = HIWORD(m_ToolBar.GetButtonSize());
-	m_ToolBar.SetWindowPos(NULL,0,0,iToolBarWidth,m_iHeaderHeight,0);
+    m_iHeaderHeight = HIWORD(m_ToolBar.GetButtonSize());
+    m_ToolBar.SetWindowPos(NULL,0,0,iToolBarWidth,m_iHeaderHeight,0);
 }
 
 void CCustomContainer::EnableToolbarButton(int iID,bool bEnable)
 {
-	m_ToolBar.EnableButton(iID,bEnable);
+    m_ToolBar.EnableButton(iID,bEnable);
 }
 
 LRESULT CCustomContainer::OnCreate(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
-	RECT rcToolBar = { 0,0,100,100 };
-	m_ToolBar.Create(m_hWnd,rcToolBar,NULL,ATL_SIMPLE_TOOLBAR_PANE_STYLE,NULL);
-	m_ToolBar.SetButtonStructSize();
+    RECT rcToolBar = { 0,0,100,100 };
+    m_ToolBar.Create(m_hWnd,rcToolBar,NULL,ATL_SIMPLE_TOOLBAR_PANE_STYLE,NULL);
+    m_ToolBar.SetButtonStructSize();
 
-	return 0;
+    return 0;
 }
 
 LRESULT CCustomContainer::OnSize(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
-	UpdateLayout(GET_X_LPARAM(lParam),GET_Y_LPARAM(lParam));
-	return 0;
+    UpdateLayout(GET_X_LPARAM(lParam),GET_Y_LPARAM(lParam));
+    return 0;
 }
 
 LRESULT CCustomContainer::OnSetFocus(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
-	if (m_ClientWindow.m_hWnd != NULL)
-		m_ClientWindow.SetFocus();
+    if (m_ClientWindow.m_hWnd != NULL)
+        m_ClientWindow.SetFocus();
 
-	return 0;
+    return 0;
 }
 
 LRESULT CCustomContainer::OnCommand(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
-	// Redirect messages to the parent.
-	if (m_ToolBar.m_hWnd != NULL && (HWND)lParam == m_ToolBar.m_hWnd)
-		return ::SendMessage(GetParent(),WM_COMMAND,wParam,(LPARAM)m_hWnd);
+    // Redirect messages to the parent.
+    if (m_ToolBar.m_hWnd != NULL && (HWND)lParam == m_ToolBar.m_hWnd)
+        return ::SendMessage(GetParent(),WM_COMMAND,wParam,(LPARAM)m_hWnd);
 
-	bHandled = false;
-	return TRUE;
+    bHandled = false;
+    return TRUE;
 }
 
 LRESULT CCustomContainer::OnGetIShellBrowser(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
-	// This is very important, we need to redirect this message to the main frame that can return
-	// the correct IShellBrowser object. If we do not answer to this message the CreateViewObject
-	// function call will fail on Windows 98 systems for all other directories than the desktop.
-	bHandled = TRUE;
-	return ::SendMessage(*g_pMainFrame,WM_GETISHELLBROWSER,wParam,lParam);
+    // This is very important, we need to redirect this message to the main frame that can return
+    // the correct IShellBrowser object. If we do not answer to this message the CreateViewObject
+    // function call will fail on Windows 98 systems for all other directories than the desktop.
+    bHandled = TRUE;
+    return ::SendMessage(*g_pMainFrame,WM_GETISHELLBROWSER,wParam,lParam);
 }
 
 LRESULT CCustomContainer::OnCustomDraw(int idCtrl,LPNMHDR pnmh,BOOL &bHandled)
 {
-	if (m_hWndCustomDraw != NULL && idCtrl == m_iControlID)
-		return ::SendMessage(m_hWndCustomDraw,WM_CONTROLCUSTOMDRAW,0,(LPARAM)pnmh);
-		
-	bHandled = false;
-	return CDRF_DODEFAULT;
+    if (m_hWndCustomDraw != NULL && idCtrl == m_iControlID)
+        return ::SendMessage(m_hWndCustomDraw,WM_CONTROLCUSTOMDRAW,0,(LPARAM)pnmh);
+        
+    bHandled = false;
+    return CDRF_DODEFAULT;
 }
 
 LRESULT CCustomContainer::OnToolBarGetInfo(int idCtrl,LPNMHDR pNMH,BOOL &bHandled)
 {
-	bHandled = true;
+    bHandled = true;
 
-	// The string ID is the same as the button ID.
-	LPTOOLTIPTEXT pTipText = (LPTOOLTIPTEXT)pNMH;
-	//pTipText->lpszText = MAKEINTRESOURCE(pTipText->hdr.idFrom);
+    // The string ID is the same as the button ID.
+    LPTOOLTIPTEXT pTipText = (LPTOOLTIPTEXT)pNMH;
+    //pTipText->lpszText = MAKEINTRESOURCE(pTipText->hdr.idFrom);
 
-	// Try to load translated string.
-	if (g_LanguageSettings.m_pLngProcessor != NULL)
-	{	
-		// Make sure that there is a hint translation section.
-		if (g_LanguageSettings.m_pLngProcessor->EnterSection(_T("hint")))
-		{
-			TCHAR *szStrValue;
-			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr((unsigned long)pTipText->hdr.idFrom,szStrValue))
-			{
-				pTipText->lpszText = szStrValue;
-				return 0;
-			}
-		}
-	}
+    // Try to load translated string.
+    if (g_LanguageSettings.m_pLngProcessor != NULL)
+    {	
+        // Make sure that there is a hint translation section.
+        if (g_LanguageSettings.m_pLngProcessor->EnterSection(_T("hint")))
+        {
+            TCHAR *szStrValue;
+            if (g_LanguageSettings.m_pLngProcessor->GetValuePtr((unsigned long)pTipText->hdr.idFrom,szStrValue))
+            {
+                pTipText->lpszText = szStrValue;
+                return 0;
+            }
+        }
+    }
 
-	// I am not sure if I want the tool tips to be displayed on the toolbar.
-	// This method is also to slow.
-	/*TCHAR szBuffer[256];
-	LoadString(_Module.GetResourceInstance(),pTipText->hdr.idFrom,szBuffer,sizeof(szBuffer) / sizeof(TCHAR));
-	m_StatusBar.SetPaneText(ID_DEFAULT_PANE,szBuffer);*/
+    // I am not sure if I want the tool tips to be displayed on the toolbar.
+    // This method is also to slow.
+    /*TCHAR szBuffer[256];
+    LoadString(_Module.GetResourceInstance(),pTipText->hdr.idFrom,szBuffer,sizeof(szBuffer) / sizeof(TCHAR));
+    m_StatusBar.SetPaneText(ID_DEFAULT_PANE,szBuffer);*/
 
-	pTipText->lpszText = MAKEINTRESOURCE(pTipText->hdr.idFrom);
-	return 0;
+    pTipText->lpszText = MAKEINTRESOURCE(pTipText->hdr.idFrom);
+    return 0;
 }
 
 int CCustomContainer::GetHeaderHeight()
 {
-	return m_iHeaderHeight;
+    return m_iHeaderHeight;
 }

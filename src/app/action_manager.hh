@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,39 +21,39 @@
 class CActionManager
 {
 private:
-	class CEraseParam
-	{
-	public:
-		bool m_bNotifyCompleted;
+    class CEraseParam
+    {
+    public:
+        bool m_bNotifyCompleted;
 
-		CEraseParam(bool bNotifyCompleted) : m_bNotifyCompleted(bNotifyCompleted) {}
-	};
+        CEraseParam(bool bNotifyCompleted) : m_bNotifyCompleted(bNotifyCompleted) {}
+    };
 
-	static DWORD WINAPI BurnCompilationThread(LPVOID lpThreadParameter);
-	static DWORD WINAPI CreateImageThread(LPVOID lpThreadParameter);
-	static DWORD WINAPI CopyDiscOnFlyThread(LPVOID lpThreadParameter);
-	static DWORD WINAPI CopyDiscThread(LPVOID lpThreadParameter);
-	static DWORD WINAPI EraseThread(LPVOID lpThreadParameter);
+    static DWORD WINAPI BurnCompilationThread(LPVOID lpThreadParameter);
+    static DWORD WINAPI CreateImageThread(LPVOID lpThreadParameter);
+    static DWORD WINAPI CopyDiscOnFlyThread(LPVOID lpThreadParameter);
+    static DWORD WINAPI CopyDiscThread(LPVOID lpThreadParameter);
+    static DWORD WINAPI EraseThread(LPVOID lpThreadParameter);
 
-	void QuickErase(ckmmc::Device &Device);
-	bool QuickEraseQuery(ckmmc::Device &Device,HWND hWndParent);
+    void QuickErase(ckmmc::Device &Device);
+    bool QuickEraseQuery(ckmmc::Device &Device,HWND hWndParent);
 
 public:
-	CActionManager();
-	~CActionManager();
+    CActionManager();
+    ~CActionManager();
 
-	INT_PTR BurnCompilation(HWND hWndParent,bool bAppMode);
-	INT_PTR CreateImage(HWND hWndParent,bool bAppMode);
-	INT_PTR BurnImage(HWND hWndParent,bool bAppMode);
-	INT_PTR BurnImageEx(HWND hWndParent,bool bAppMode,const TCHAR *szFilePath);
-	INT_PTR CopyDisc(HWND hWndParent,bool bAppMode);
-	INT_PTR CopyImage(HWND hWndParent,bool bAppMode);
-	INT_PTR ManageTracks(bool bAppMode);
-	INT_PTR Erase(HWND hWndParent,bool bAppMode);
-	INT_PTR Fixate(HWND hWndParent,bool bAppMode);
+    INT_PTR BurnCompilation(HWND hWndParent,bool bAppMode);
+    INT_PTR CreateImage(HWND hWndParent,bool bAppMode);
+    INT_PTR BurnImage(HWND hWndParent,bool bAppMode);
+    INT_PTR BurnImageEx(HWND hWndParent,bool bAppMode,const TCHAR *szFilePath);
+    INT_PTR CopyDisc(HWND hWndParent,bool bAppMode);
+    INT_PTR CopyImage(HWND hWndParent,bool bAppMode);
+    INT_PTR ManageTracks(bool bAppMode);
+    INT_PTR Erase(HWND hWndParent,bool bAppMode);
+    INT_PTR Fixate(HWND hWndParent,bool bAppMode);
 
-	// For testing purposes only.
-	//int VerifyCompilation(HWND hWndParent);
+    // For testing purposes only.
+    //int VerifyCompilation(HWND hWndParent);
 };
 
 extern CActionManager g_ActionManager;

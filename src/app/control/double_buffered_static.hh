@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,19 +25,19 @@
 class CDoubleBufferedStatic : public CWindowImpl<CDoubleBufferedStatic,CStatic>
 {
 private:
-	tstring m_Text;
+    tstring m_Text;
 
 public:
-	CDoubleBufferedStatic();
-	~CDoubleBufferedStatic();
+    CDoubleBufferedStatic();
+    ~CDoubleBufferedStatic();
 
-	void SetWindowText(const TCHAR *szWindowText);
+    void SetWindowText(const TCHAR *szWindowText);
 
-	BEGIN_MSG_MAP(CDoubleBufferedStatic)
-		MESSAGE_HANDLER(WM_PAINT,OnPaint)
-		MESSAGE_HANDLER(WM_ERASEBKGND,OnEraseBkGnd)
-	END_MSG_MAP()
+    BEGIN_MSG_MAP(CDoubleBufferedStatic)
+        MESSAGE_HANDLER(WM_PAINT,OnPaint)
+        MESSAGE_HANDLER(WM_ERASEBKGND,OnEraseBkGnd)
+    END_MSG_MAP()
 
-	LRESULT OnPaint(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnEraseBkGnd(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnPaint(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnEraseBkGnd(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 };

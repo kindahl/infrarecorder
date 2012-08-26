@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,66 +32,66 @@
 class CEncoderConfig
 {
 public:
-	CEncoderConfig()
-	{
-		m_bMono = false;
-		m_bBitrateMode = true;
-		m_bConstantBitrate = false;
-		m_bFastVBR = false;
-		m_iPreset = CONFIG_PRESET_STANDARD;
-		m_iEncodeQuality = CONFIG_EQ_STANDARD;
-		m_iBitrate = 192;
-		m_iQuality = 4;
-	}
+    CEncoderConfig()
+    {
+        m_bMono = false;
+        m_bBitrateMode = true;
+        m_bConstantBitrate = false;
+        m_bFastVBR = false;
+        m_iPreset = CONFIG_PRESET_STANDARD;
+        m_iEncodeQuality = CONFIG_EQ_STANDARD;
+        m_iBitrate = 192;
+        m_iQuality = 4;
+    }
 
-	bool m_bMono;
-	bool m_bBitrateMode;
-	bool m_bConstantBitrate;
-	bool m_bFastVBR;
-	int m_iPreset;
-	int m_iEncodeQuality;
-	int m_iBitrate;
-	int m_iQuality;
+    bool m_bMono;
+    bool m_bBitrateMode;
+    bool m_bConstantBitrate;
+    bool m_bFastVBR;
+    int m_iPreset;
+    int m_iEncodeQuality;
+    int m_iBitrate;
+    int m_iQuality;
 };
 
 class CConfigGeneralPage : public CPropertyPageImpl<CConfigGeneralPage>
 {
 private:
-	CComboBox m_PresetComboBox;
-	CComboBox m_EncQualityComboBox;
-	CComboBox m_VBRModeComboBox;
-	CTrackBarCtrl m_BitrateTrackBar;
-	CTrackBarCtrl m_QualityTrackBar;
+    CComboBox m_PresetComboBox;
+    CComboBox m_EncQualityComboBox;
+    CComboBox m_VBRModeComboBox;
+    CTrackBarCtrl m_BitrateTrackBar;
+    CTrackBarCtrl m_QualityTrackBar;
 
-	void SelectBitrateMode(BOOL bSelect);
-	void SelectPreset(int iPreset);
+    void SelectBitrateMode(BOOL bSelect);
+    void SelectPreset(int iPreset);
 
-	CEncoderConfig *m_pConfig;
+    CEncoderConfig *m_pConfig;
 
 public:
-	enum { IDD = IDD_PROPPAGE_CONFIGGENERAL };
+    enum { IDD = IDD_PROPPAGE_CONFIGGENERAL };
 
-	CConfigGeneralPage();
-	~CConfigGeneralPage();
+    CConfigGeneralPage();
+    ~CConfigGeneralPage();
 
-	bool SetConfig(CEncoderConfig *pConfig);
-	bool OnApply();
+    bool SetConfig(CEncoderConfig *pConfig);
+    bool OnApply();
 
-	BEGIN_MSG_MAP(CConfigGeneralPage)
-		MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
-		MESSAGE_HANDLER(WM_HSCROLL,OnHScroll)
+    BEGIN_MSG_MAP(CConfigGeneralPage)
+        MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
+        MESSAGE_HANDLER(WM_HSCROLL,OnHScroll)
 
-		COMMAND_ID_HANDLER(IDC_BITRATERADIO,OnBitrateCheck)
-		COMMAND_ID_HANDLER(IDC_QUALITYRADIO,OnQualityCheck)
-		COMMAND_HANDLER(IDC_PRESETCOMBO,CBN_SELCHANGE,OnPresetChange)
+        COMMAND_ID_HANDLER(IDC_BITRATERADIO,OnBitrateCheck)
+        COMMAND_ID_HANDLER(IDC_QUALITYRADIO,OnQualityCheck)
+        COMMAND_HANDLER(IDC_PRESETCOMBO,CBN_SELCHANGE,OnPresetChange)
 
-		CHAIN_MSG_MAP(CPropertyPageImpl<CConfigGeneralPage>)
-	END_MSG_MAP()
+        CHAIN_MSG_MAP(CPropertyPageImpl<CConfigGeneralPage>)
+    END_MSG_MAP()
 
-	LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnHScroll(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnHScroll(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 
-	LRESULT OnBitrateCheck(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
-	LRESULT OnQualityCheck(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
-	LRESULT OnPresetChange(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnBitrateCheck(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnQualityCheck(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnPresetChange(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
 };

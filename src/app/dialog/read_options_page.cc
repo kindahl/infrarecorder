@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,185 +32,185 @@
 
 CReadOptionsPage::CReadOptionsPage(bool bEnableClone,bool bEnableSpeed)
 {
-	m_bEnableClone = bEnableClone;
-	m_bEnableSpeed = bEnableSpeed;
-	m_hRefreshIcon = NULL;
-	m_hRefreshImageList = NULL;
+    m_bEnableClone = bEnableClone;
+    m_bEnableSpeed = bEnableSpeed;
+    m_hRefreshIcon = NULL;
+    m_hRefreshImageList = NULL;
 
-	// Try to load translated string.
-	if (g_LanguageSettings.m_pLngProcessor != NULL)
-	{	
-		// Make sure that there is a strings translation section.
-		if (g_LanguageSettings.m_pLngProcessor->EnterSection(_T("strings")))
-		{
-			TCHAR *szStrValue;
-			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(TITLE_READ,szStrValue))
-				SetTitle(szStrValue);
-		}
-	}
+    // Try to load translated string.
+    if (g_LanguageSettings.m_pLngProcessor != NULL)
+    {	
+        // Make sure that there is a strings translation section.
+        if (g_LanguageSettings.m_pLngProcessor->EnterSection(_T("strings")))
+        {
+            TCHAR *szStrValue;
+            if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(TITLE_READ,szStrValue))
+                SetTitle(szStrValue);
+        }
+    }
 
-	m_psp.dwFlags |= PSP_HASHELP;
+    m_psp.dwFlags |= PSP_HASHELP;
 }
 
 CReadOptionsPage::~CReadOptionsPage()
 {
-	if (m_hRefreshImageList != NULL)
-		ImageList_Destroy(m_hRefreshImageList);
+    if (m_hRefreshImageList != NULL)
+        ImageList_Destroy(m_hRefreshImageList);
 
-	if (m_hRefreshIcon != NULL)
-		DestroyIcon(m_hRefreshIcon);
+    if (m_hRefreshIcon != NULL)
+        DestroyIcon(m_hRefreshIcon);
 }
 
 bool CReadOptionsPage::Translate()
 {
-	if (g_LanguageSettings.m_pLngProcessor == NULL)
-		return false;
+    if (g_LanguageSettings.m_pLngProcessor == NULL)
+        return false;
 
-	CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
-	
-	// Make sure that there is a burn translation section.
-	if (!pLng->EnterSection(_T("read")))
-		return false;
+    CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
+    
+    // Make sure that there is a burn translation section.
+    if (!pLng->EnterSection(_T("read")))
+        return false;
 
-	// Translate.
-	TCHAR *szStrValue;
-	int iMaxStaticRight = 0;
+    // Translate.
+    TCHAR *szStrValue;
+    int iMaxStaticRight = 0;
 
-	if (pLng->GetValuePtr(IDC_NOREADERRCHECK,szStrValue))
-		SetDlgItemText(IDC_NOREADERRCHECK,szStrValue);
-	if (pLng->GetValuePtr(IDC_READSUBCHANNELCHECK,szStrValue))
-		SetDlgItemText(IDC_READSUBCHANNELCHECK,szStrValue);
-	if (pLng->GetValuePtr(IDC_READSPEEDSTATIC,szStrValue))
-	{
-		SetDlgItemText(IDC_READSPEEDSTATIC,szStrValue);
+    if (pLng->GetValuePtr(IDC_NOREADERRCHECK,szStrValue))
+        SetDlgItemText(IDC_NOREADERRCHECK,szStrValue);
+    if (pLng->GetValuePtr(IDC_READSUBCHANNELCHECK,szStrValue))
+        SetDlgItemText(IDC_READSUBCHANNELCHECK,szStrValue);
+    if (pLng->GetValuePtr(IDC_READSPEEDSTATIC,szStrValue))
+    {
+        SetDlgItemText(IDC_READSPEEDSTATIC,szStrValue);
 
-		// Update the static width if necessary.
-		int iStaticRight = UpdateStaticWidth(m_hWnd,IDC_READSPEEDSTATIC,szStrValue);
-		if (iStaticRight > iMaxStaticRight)
-			iMaxStaticRight = iStaticRight;
-	}
+        // Update the static width if necessary.
+        int iStaticRight = UpdateStaticWidth(m_hWnd,IDC_READSPEEDSTATIC,szStrValue);
+        if (iStaticRight > iMaxStaticRight)
+            iMaxStaticRight = iStaticRight;
+    }
 
-	// Make sure that the edit/combo controls are not in the way of the statics.
-	if (iMaxStaticRight > 75)
-		UpdateEditPos(m_hWnd,IDC_READSPEEDCOMBO,iMaxStaticRight,true);
+    // Make sure that the edit/combo controls are not in the way of the statics.
+    if (iMaxStaticRight > 75)
+        UpdateEditPos(m_hWnd,IDC_READSPEEDCOMBO,iMaxStaticRight,true);
 
-	return true;
+    return true;
 }
 
 bool CReadOptionsPage::OnApply()
 {
-	// Remember the configuration.
-	g_ReadSettings.m_bIgnoreErr = IsDlgButtonChecked(IDC_NOREADERRCHECK) == TRUE;
-	g_ReadSettings.m_bClone = IsDlgButtonChecked(IDC_READSUBCHANNELCHECK) == TRUE;
-	g_ReadSettings.m_iReadSpeed = m_ReadSpeedCombo.GetItemData(m_ReadSpeedCombo.GetCurSel());
+    // Remember the configuration.
+    g_ReadSettings.m_bIgnoreErr = IsDlgButtonChecked(IDC_NOREADERRCHECK) == TRUE;
+    g_ReadSettings.m_bClone = IsDlgButtonChecked(IDC_READSUBCHANNELCHECK) == TRUE;
+    g_ReadSettings.m_iReadSpeed = m_ReadSpeedCombo.GetItemData(m_ReadSpeedCombo.GetCurSel());
 
-	return true;
+    return true;
 }
 
 void CReadOptionsPage::OnHelp()
 {
-	TCHAR szFileName[MAX_PATH];
-	GetModuleFileName(NULL,szFileName,MAX_PATH - 1);
+    TCHAR szFileName[MAX_PATH];
+    GetModuleFileName(NULL,szFileName,MAX_PATH - 1);
 
-	ExtractFilePath(szFileName);
-	lstrcat(szFileName,lngGetManual());
-	lstrcat(szFileName,_T("::/how_to_use/read_options.html"));
+    ExtractFilePath(szFileName);
+    lstrcat(szFileName,lngGetManual());
+    lstrcat(szFileName,_T("::/how_to_use/read_options.html"));
 
-	HtmlHelp(m_hWnd,szFileName,HH_DISPLAY_TOC,NULL);
+    HtmlHelp(m_hWnd,szFileName,HH_DISPLAY_TOC,NULL);
 }
 
 void CReadOptionsPage::UpdateSpeeds()
 {
-	ckmmc::Device &Device =
-		*reinterpret_cast<ckmmc::Device *>(::SendMessage(GetParent(),WM_GETDEVICE,1,0));
+    ckmmc::Device &Device =
+        *reinterpret_cast<ckmmc::Device *>(::SendMessage(GetParent(),WM_GETDEVICE,1,0));
 
-	// Maximum read speed.
-	m_ReadSpeedCombo.ResetContent();
-	m_ReadSpeedCombo.AddString(lngGetString(MISC_MAXIMUM));
-	m_ReadSpeedCombo.SetItemData(0,0xFFFFFFFF);
-	m_ReadSpeedCombo.SetCurSel(0);
+    // Maximum read speed.
+    m_ReadSpeedCombo.ResetContent();
+    m_ReadSpeedCombo.AddString(lngGetString(MISC_MAXIMUM));
+    m_ReadSpeedCombo.SetItemData(0,0xFFFFFFFF);
+    m_ReadSpeedCombo.SetCurSel(0);
 
-	// Get current profile.
-	ckmmc::Device::Profile Profile = Device.profile();
-	if (Profile != ckmmc::Device::ckPROFILE_NONE)
-	{
-		const std::vector<ckcore::tuint32> &ReadSpeeds = Device.read_speeds();
+    // Get current profile.
+    ckmmc::Device::Profile Profile = Device.profile();
+    if (Profile != ckmmc::Device::ckPROFILE_NONE)
+    {
+        const std::vector<ckcore::tuint32> &ReadSpeeds = Device.read_speeds();
 
-		std::vector<ckcore::tuint32>::const_iterator it;
-		for (it = ReadSpeeds.begin(); it != ReadSpeeds.end(); it++)
-		{
-			m_ReadSpeedCombo.AddString(ckmmc::util::kb_to_disp_speed(*it,Profile).c_str());
-			m_ReadSpeedCombo.SetItemData(m_ReadSpeedCombo.GetCount() - 1,
-				static_cast<DWORD_PTR>(ckmmc::util::kb_to_human_speed(*it,
-									   ckmmc::Device::ckPROFILE_CDR)));
-		}
-	}
+        std::vector<ckcore::tuint32>::const_iterator it;
+        for (it = ReadSpeeds.begin(); it != ReadSpeeds.end(); it++)
+        {
+            m_ReadSpeedCombo.AddString(ckmmc::util::kb_to_disp_speed(*it,Profile).c_str());
+            m_ReadSpeedCombo.SetItemData(m_ReadSpeedCombo.GetCount() - 1,
+                static_cast<DWORD_PTR>(ckmmc::util::kb_to_human_speed(*it,
+                                       ckmmc::Device::ckPROFILE_CDR)));
+        }
+    }
 }
 
 void CReadOptionsPage::CheckMedia()
 {
-	if (m_bEnableSpeed)
-	{
-		UpdateSpeeds();
-	}
-	else
-	{
-		m_ReadSpeedCombo.ResetContent();
-		m_ReadSpeedCombo.AddString(lngGetString(MISC_AUTO));
-		m_ReadSpeedCombo.SetCurSel(0);
-	}
+    if (m_bEnableSpeed)
+    {
+        UpdateSpeeds();
+    }
+    else
+    {
+        m_ReadSpeedCombo.ResetContent();
+        m_ReadSpeedCombo.AddString(lngGetString(MISC_AUTO));
+        m_ReadSpeedCombo.SetCurSel(0);
+    }
 }
 
 LRESULT CReadOptionsPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
-	m_ReadSpeedCombo = GetDlgItem(IDC_READSPEEDCOMBO);
+    m_ReadSpeedCombo = GetDlgItem(IDC_READSPEEDCOMBO);
 
-	CheckDlgButton(IDC_NOREADERRCHECK,g_ReadSettings.m_bIgnoreErr);
+    CheckDlgButton(IDC_NOREADERRCHECK,g_ReadSettings.m_bIgnoreErr);
 
-	// Enable/disable options.
-	if (!m_bEnableClone)
-	{
-		::EnableWindow(GetDlgItem(IDC_READSUBCHANNELCHECK),FALSE);
-		CheckDlgButton(IDC_READSUBCHANNELCHECK,m_bCloneCheck);
-	}
-	else
-	{
-		CheckDlgButton(IDC_READSUBCHANNELCHECK,g_ReadSettings.m_bClone);
-	}
+    // Enable/disable options.
+    if (!m_bEnableClone)
+    {
+        ::EnableWindow(GetDlgItem(IDC_READSUBCHANNELCHECK),FALSE);
+        CheckDlgButton(IDC_READSUBCHANNELCHECK,m_bCloneCheck);
+    }
+    else
+    {
+        CheckDlgButton(IDC_READSUBCHANNELCHECK,g_ReadSettings.m_bClone);
+    }
 
-	if (!m_bEnableSpeed)
-	{
-		::EnableWindow(GetDlgItem(IDC_READSPEEDSTATIC),FALSE);
-		::EnableWindow(GetDlgItem(IDC_READSPEEDCOMBO),FALSE);
-	}
+    if (!m_bEnableSpeed)
+    {
+        ::EnableWindow(GetDlgItem(IDC_READSPEEDSTATIC),FALSE);
+        ::EnableWindow(GetDlgItem(IDC_READSPEEDCOMBO),FALSE);
+    }
 
-	// Translate the window.
-	Translate();
+    // Translate the window.
+    Translate();
 
-	return TRUE;
+    return TRUE;
 }
 
 LRESULT CReadOptionsPage::OnShowWindow(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
-	if ((BOOL)wParam == TRUE)
-		CheckMedia();
+    if ((BOOL)wParam == TRUE)
+        CheckMedia();
 
-	bHandled = FALSE;
-	return 0;
+    bHandled = FALSE;
+    return 0;
 }
 
 LRESULT CReadOptionsPage::OnCheckMedia(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
-	CheckMedia();
+    CheckMedia();
 
-	bHandled = FALSE;
-	return 0;
+    bHandled = FALSE;
+    return 0;
 }
 
 void CReadOptionsPage::SetCloneMode(bool bEnable)
 {
-	m_bCloneCheck = bEnable;
+    m_bCloneCheck = bEnable;
 
-	if (IsWindow())
-		CheckDlgButton(IDC_READSUBCHANNELCHECK,bEnable);
+    if (IsWindow())
+        CheckDlgButton(IDC_READSUBCHANNELCHECK,bEnable);
 }

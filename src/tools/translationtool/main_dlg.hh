@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,55 +20,55 @@
 #include <base/xml_processor.hh>
 
 class CMainDlg : public CDialogImpl<CMainDlg>,public CUpdateUI<CMainDlg>,
-	public CMessageFilter,public CIdleHandler,public CDialogResize<CMainDlg>
+    public CMessageFilter,public CIdleHandler,public CDialogResize<CMainDlg>
 {
 private:
-	CListBox m_TransList;
+    CListBox m_TransList;
 
-	bool AnalyzeTranslation(const TCHAR *szFileName,CXmlProcessor *pXml);
+    bool AnalyzeTranslation(const TCHAR *szFileName,CXmlProcessor *pXml);
 
 public:
-	enum { IDD = IDD_MAINDLG };
+    enum { IDD = IDD_MAINDLG };
 
-	void CloseDialog(int iVal);
+    void CloseDialog(int iVal);
 
-	virtual BOOL PreTranslateMessage(MSG *pMsg);
-	virtual BOOL OnIdle();
+    virtual BOOL PreTranslateMessage(MSG *pMsg);
+    virtual BOOL OnIdle();
 
-	BEGIN_UPDATE_UI_MAP(CMainDlg)
-	END_UPDATE_UI_MAP()
+    BEGIN_UPDATE_UI_MAP(CMainDlg)
+    END_UPDATE_UI_MAP()
 
-	BEGIN_DLGRESIZE_MAP(CMainDlg)
-		DLGRESIZE_CONTROL(IDOK,DLSZ_MOVE_X)
-		DLGRESIZE_CONTROL(IDCANCEL,DLSZ_MOVE_X)
-		DLGRESIZE_CONTROL(IDC_REFBUTTON,DLSZ_MOVE_X)
-		DLGRESIZE_CONTROL(IDC_TRANSADDBUTTON,DLSZ_MOVE_Y)
-		DLGRESIZE_CONTROL(IDC_TRANSREMOVEBUTTON,DLSZ_MOVE_Y)
-		DLGRESIZE_CONTROL(IDC_TRANSCLEARBUTTON,DLSZ_MOVE_Y)
-		DLGRESIZE_CONTROL(IDC_REFEDIT,DLSZ_SIZE_X)
-		DLGRESIZE_CONTROL(IDC_TRANSLIST,DLSZ_SIZE_X | DLSZ_SIZE_Y)
-	END_DLGRESIZE_MAP()
+    BEGIN_DLGRESIZE_MAP(CMainDlg)
+        DLGRESIZE_CONTROL(IDOK,DLSZ_MOVE_X)
+        DLGRESIZE_CONTROL(IDCANCEL,DLSZ_MOVE_X)
+        DLGRESIZE_CONTROL(IDC_REFBUTTON,DLSZ_MOVE_X)
+        DLGRESIZE_CONTROL(IDC_TRANSADDBUTTON,DLSZ_MOVE_Y)
+        DLGRESIZE_CONTROL(IDC_TRANSREMOVEBUTTON,DLSZ_MOVE_Y)
+        DLGRESIZE_CONTROL(IDC_TRANSCLEARBUTTON,DLSZ_MOVE_Y)
+        DLGRESIZE_CONTROL(IDC_REFEDIT,DLSZ_SIZE_X)
+        DLGRESIZE_CONTROL(IDC_TRANSLIST,DLSZ_SIZE_X | DLSZ_SIZE_Y)
+    END_DLGRESIZE_MAP()
 
-	BEGIN_MSG_MAP(CMainDlg)
-		MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
-		MESSAGE_HANDLER(WM_DROPFILES,OnDropFiles)
-		COMMAND_ID_HANDLER(IDOK,OnOK)
-		COMMAND_ID_HANDLER(IDCANCEL,OnCancel)
-		COMMAND_HANDLER(IDC_REFBUTTON,BN_CLICKED,OnClickedBrowseButton)
-		COMMAND_HANDLER(IDC_TRANSADDBUTTON,BN_CLICKED,OnClickedTransAddButton)
-		COMMAND_HANDLER(IDC_TRANSREMOVEBUTTON,BN_CLICKED,OnClickedTransRemoveButton)
-		COMMAND_HANDLER(IDC_TRANSCLEARBUTTON,BN_CLICKED,OnClickedTransClearButton)
+    BEGIN_MSG_MAP(CMainDlg)
+        MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
+        MESSAGE_HANDLER(WM_DROPFILES,OnDropFiles)
+        COMMAND_ID_HANDLER(IDOK,OnOK)
+        COMMAND_ID_HANDLER(IDCANCEL,OnCancel)
+        COMMAND_HANDLER(IDC_REFBUTTON,BN_CLICKED,OnClickedBrowseButton)
+        COMMAND_HANDLER(IDC_TRANSADDBUTTON,BN_CLICKED,OnClickedTransAddButton)
+        COMMAND_HANDLER(IDC_TRANSREMOVEBUTTON,BN_CLICKED,OnClickedTransRemoveButton)
+        COMMAND_HANDLER(IDC_TRANSCLEARBUTTON,BN_CLICKED,OnClickedTransClearButton)
 
-		CHAIN_MSG_MAP(CDialogResize<CMainDlg>)
-	END_MSG_MAP()
+        CHAIN_MSG_MAP(CDialogResize<CMainDlg>)
+    END_MSG_MAP()
 
-	LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnDropFiles(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnOK(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
-	LRESULT OnCancel(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnDropFiles(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnOK(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnCancel(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
 
-	LRESULT OnClickedBrowseButton(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
-	LRESULT OnClickedTransAddButton(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
-	LRESULT OnClickedTransRemoveButton(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
-	LRESULT OnClickedTransClearButton(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnClickedBrowseButton(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnClickedTransAddButton(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnClickedTransRemoveButton(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnClickedTransClearButton(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
 };

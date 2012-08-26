@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,19 +23,19 @@
 class CDeviceDlg : public CPropertySheetImpl<CDeviceDlg>
 {
 private:
-	bool m_bCentered;
+    bool m_bCentered;
 
-	CDeviceGeneralPage m_GeneralPage;
-	CDeviceAdvancedPage m_AdvancedPage;
+    CDeviceGeneralPage m_GeneralPage;
+    CDeviceAdvancedPage m_AdvancedPage;
 
 public:
-	CDeviceDlg(ckmmc::Device &Device,const TCHAR *szTitle);
-	~CDeviceDlg();
+    CDeviceDlg(ckmmc::Device &Device,const TCHAR *szTitle);
+    ~CDeviceDlg();
 
-	BEGIN_MSG_MAP(CDeviceDlg)
-		MESSAGE_HANDLER(WM_SHOWWINDOW,OnShowWindow)
-		CHAIN_MSG_MAP(CPropertySheetImpl<CDeviceDlg>)
-	END_MSG_MAP()
+    BEGIN_MSG_MAP(CDeviceDlg)
+        MESSAGE_HANDLER(WM_SHOWWINDOW,OnShowWindow)
+        CHAIN_MSG_MAP(CPropertySheetImpl<CDeviceDlg>)
+    END_MSG_MAP()
 
-	LRESULT OnShowWindow(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnShowWindow(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 };

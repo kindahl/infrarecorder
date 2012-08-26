@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,20 +22,20 @@
 class CWaitDlg : public CDialogImpl<CWaitDlg>
 {
 public:
-	enum { IDD = IDD_WAITDLG };
+    enum { IDD = IDD_WAITDLG };
 
-	CWaitDlg();
-	~CWaitDlg();
+    CWaitDlg();
+    ~CWaitDlg();
 
-	void SetMessage(const TCHAR *szMessage);
+    void SetMessage(const TCHAR *szMessage);
 
-	BEGIN_MSG_MAP(CWaitDlg)
-		MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
+    BEGIN_MSG_MAP(CWaitDlg)
+        MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
 
-		COMMAND_ID_HANDLER(IDCANCEL,OnCancel)
-	END_MSG_MAP()
+        COMMAND_ID_HANDLER(IDCANCEL,OnCancel)
+    END_MSG_MAP()
 
-	LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 
-	LRESULT OnCancel(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnCancel(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
 };

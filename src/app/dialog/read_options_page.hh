@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,37 +23,37 @@
 class CReadOptionsPage : public CPropertyPageImpl<CReadOptionsPage>
 {
 private:
-	bool m_bEnableClone;
-	bool m_bEnableSpeed;
-	bool m_bCloneCheck;		// The initial state of the read subchannel data.
-	HICON m_hRefreshIcon;
-	HIMAGELIST m_hRefreshImageList;
-	CComboBox m_ReadSpeedCombo;
+    bool m_bEnableClone;
+    bool m_bEnableSpeed;
+    bool m_bCloneCheck;		// The initial state of the read subchannel data.
+    HICON m_hRefreshIcon;
+    HIMAGELIST m_hRefreshImageList;
+    CComboBox m_ReadSpeedCombo;
 
-	bool Translate();
-	void UpdateSpeeds();
-	void CheckMedia();
+    bool Translate();
+    void UpdateSpeeds();
+    void CheckMedia();
 
 public:
-	enum { IDD = IDD_PROPPAGE_READOPTIONS };
+    enum { IDD = IDD_PROPPAGE_READOPTIONS };
 
-	CReadOptionsPage(bool bEnableClone,bool bEnableSpeed);
-	~CReadOptionsPage();
+    CReadOptionsPage(bool bEnableClone,bool bEnableSpeed);
+    ~CReadOptionsPage();
 
-	bool OnApply();
-	void OnHelp();
+    bool OnApply();
+    void OnHelp();
 
-	BEGIN_MSG_MAP(CReadOptionsPage)
-		MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
-		MESSAGE_HANDLER(WM_SHOWWINDOW,OnShowWindow)
-		MESSAGE_HANDLER(WM_CHECKMEDIA,OnCheckMedia)
+    BEGIN_MSG_MAP(CReadOptionsPage)
+        MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
+        MESSAGE_HANDLER(WM_SHOWWINDOW,OnShowWindow)
+        MESSAGE_HANDLER(WM_CHECKMEDIA,OnCheckMedia)
 
-		CHAIN_MSG_MAP(CPropertyPageImpl<CReadOptionsPage>)
-	END_MSG_MAP()
+        CHAIN_MSG_MAP(CPropertyPageImpl<CReadOptionsPage>)
+    END_MSG_MAP()
 
-	LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnShowWindow(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnCheckMedia(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnShowWindow(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnCheckMedia(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 
-	void SetCloneMode(bool bEnable);
+    void SetCloneMode(bool bEnable);
 };

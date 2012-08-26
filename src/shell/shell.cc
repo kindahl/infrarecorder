@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,8 +23,8 @@
 class CShellModule : public CAtlDllModuleT<CShellModule>
 {
 public :
-	DECLARE_LIBID(LIBID_ShellLib)
-	DECLARE_REGISTRY_APPID_RESOURCEID(IDR_SHELL,"{8E8DAC3C-E7C5-4495-9903-430C1F38CF86}")
+    DECLARE_LIBID(LIBID_ShellLib)
+    DECLARE_REGISTRY_APPID_RESOURCEID(IDR_SHELL,"{8E8DAC3C-E7C5-4495-9903-430C1F38CF86}")
 };
 
 CShellModule _AtlModule;
@@ -32,14 +32,14 @@ HINSTANCE g_DllInstance = NULL;
 
 extern "C" BOOL WINAPI DllMain(HINSTANCE hInstance,DWORD dwReason,LPVOID lpReserved)
 {
-	g_DllInstance = hInstance;
+    g_DllInstance = hInstance;
     return _AtlModule.DllMain(dwReason,lpReserved); 
 }
 
 /*
-	DllCanUnloadNow
-	---------------
-	Used to determine whether the DLL can be unloaded by OLE.
+    DllCanUnloadNow
+    ---------------
+    Used to determine whether the DLL can be unloaded by OLE.
 */
 STDAPI DllCanUnloadNow()
 {
@@ -47,9 +47,9 @@ STDAPI DllCanUnloadNow()
 }
 
 /*
-	DllGetClassObject
-	-----------------
-	Returns a class factory to create an object of the requested type.
+    DllGetClassObject
+    -----------------
+    Returns a class factory to create an object of the requested type.
 */
 STDAPI DllGetClassObject(REFCLSID rclsid,REFIID riid,LPVOID *ppv)
 {
@@ -57,23 +57,23 @@ STDAPI DllGetClassObject(REFCLSID rclsid,REFIID riid,LPVOID *ppv)
 }
 
 /*
-	DllRegisterServer
-	-----------------
-	Adds entries to the system registry.
+    DllRegisterServer
+    -----------------
+    Adds entries to the system registry.
 */
 STDAPI DllRegisterServer()
 {
     HRESULT hr = _AtlModule.DllRegisterServer(FALSE);
-	return hr;
+    return hr;
 }
 
 /*
-	DllUnregisterServer
-	-------------------
-	Removes entries from the system registry.
+    DllUnregisterServer
+    -------------------
+    Removes entries from the system registry.
 */
 STDAPI DllUnregisterServer()
 {
-	HRESULT hr = _AtlModule.DllUnregisterServer(FALSE);
-	return hr;
+    HRESULT hr = _AtlModule.DllUnregisterServer(FALSE);
+    return hr;
 }

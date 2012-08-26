@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,57 +23,57 @@
 class CImportSessionDlg : public CDialogImpl<CImportSessionDlg>
 {
 private:
-	class CTrackData
-	{
-	public:
-		unsigned char m_ucMode;
-		unsigned short m_usSessionNumber;
-		unsigned short m_usTrackNumber;
-		unsigned long m_ulTrackAddr;
-		unsigned long m_ulTrackLen;
+    class CTrackData
+    {
+    public:
+        unsigned char m_ucMode;
+        unsigned short m_usSessionNumber;
+        unsigned short m_usTrackNumber;
+        unsigned long m_ulTrackAddr;
+        unsigned long m_ulTrackLen;
 
-		CTrackData(unsigned char ucMode,unsigned short usSessionNumber,
-			unsigned short usTrackNumber,unsigned long ulTrackAddr,unsigned long ulTrackLen) :
-			m_ucMode(ucMode),m_usSessionNumber(usSessionNumber),m_usTrackNumber(usTrackNumber),
-			m_ulTrackAddr(ulTrackAddr),m_ulTrackLen(ulTrackLen)
-		{
-		}
-	};
+        CTrackData(unsigned char ucMode,unsigned short usSessionNumber,
+            unsigned short usTrackNumber,unsigned long ulTrackAddr,unsigned long ulTrackLen) :
+            m_ucMode(ucMode),m_usSessionNumber(usSessionNumber),m_usTrackNumber(usTrackNumber),
+            m_ulTrackAddr(ulTrackAddr),m_ulTrackLen(ulTrackLen)
+        {
+        }
+    };
 
-	std::vector<CTrackData *> m_TrackData;
-	CComboBox m_DeviceCombo;
-	CComboBox m_TrackCombo;
+    std::vector<CTrackData *> m_TrackData;
+    CComboBox m_DeviceCombo;
+    CComboBox m_TrackCombo;
 
-	bool Translate();
-	bool UpdateDiscInfo(ckmmc::Device &Device);
+    bool Translate();
+    bool UpdateDiscInfo(ckmmc::Device &Device);
 
-	void ResetDiscInfo();
+    void ResetDiscInfo();
 
 public:
-	enum { IDD = IDD_IMPORTSESSIONDLG };
+    enum { IDD = IDD_IMPORTSESSIONDLG };
 
-	// Data members that can be accessed from another object when the dialog
-	// has closed.
-	unsigned __int64 m_uiAllocatedSize;
-	ckmmc::Device *m_pSelDevice;
-	CTrackData *m_pSelTrackData;
+    // Data members that can be accessed from another object when the dialog
+    // has closed.
+    unsigned __int64 m_uiAllocatedSize;
+    ckmmc::Device *m_pSelDevice;
+    CTrackData *m_pSelTrackData;
 
-	CImportSessionDlg();
-	~CImportSessionDlg();
+    CImportSessionDlg();
+    ~CImportSessionDlg();
 
-	BEGIN_MSG_MAP(CImportSessionDlg)
-		MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
-		COMMAND_HANDLER(IDC_DEVICECOMBO,CBN_SELCHANGE,OnDeviceChange)
+    BEGIN_MSG_MAP(CImportSessionDlg)
+        MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
+        COMMAND_HANDLER(IDC_DEVICECOMBO,CBN_SELCHANGE,OnDeviceChange)
 
-		COMMAND_ID_HANDLER(IDOK,OnOK)
-		COMMAND_ID_HANDLER(IDCANCEL,OnCancel)
+        COMMAND_ID_HANDLER(IDOK,OnOK)
+        COMMAND_ID_HANDLER(IDCANCEL,OnCancel)
 
-		REFLECT_NOTIFICATIONS()
-	END_MSG_MAP()
+        REFLECT_NOTIFICATIONS()
+    END_MSG_MAP()
 
-	LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnDeviceChange(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnDeviceChange(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
 
-	LRESULT OnOK(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
-	LRESULT OnCancel(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnOK(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnCancel(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
 };

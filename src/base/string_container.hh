@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,45 +34,45 @@
 class CStringContainer
 {
 private:
-	TCHAR m_ucBuffer[SC_BUFFER_SIZE];
-	unsigned long m_ulBufferSize;
-	unsigned long m_ulBufferPos;
+    TCHAR m_ucBuffer[SC_BUFFER_SIZE];
+    unsigned long m_ulBufferSize;
+    unsigned long m_ulBufferPos;
 
-	__int64 m_iRemainBytes;
+    __int64 m_iRemainBytes;
 
-	bool ReadNext(ckcore::File &File,TCHAR &c);
+    bool ReadNext(ckcore::File &File,TCHAR &c);
 
 public:
 #ifdef UNICODE
-	std::vector<std::wstring> m_szStrings;
+    std::vector<std::wstring> m_szStrings;
 #else
-	std::vector<std::string> m_szStrings;
+    std::vector<std::string> m_szStrings;
 #endif
 
-	CStringContainer();
-	~CStringContainer();
+    CStringContainer();
+    ~CStringContainer();
 
-	int SaveToFile(const TCHAR *szFileName,bool bCRLF = true);
-	int LoadFromFile(const TCHAR *szFileName);
+    int SaveToFile(const TCHAR *szFileName,bool bCRLF = true);
+    int LoadFromFile(const TCHAR *szFileName);
 };
 
 class CStringContainerA
 {
 private:
-	char m_ucBuffer[SC_BUFFER_SIZE];
-	unsigned long m_ulBufferSize;
-	unsigned long m_ulBufferPos;
+    char m_ucBuffer[SC_BUFFER_SIZE];
+    unsigned long m_ulBufferSize;
+    unsigned long m_ulBufferPos;
 
-	__int64 m_iRemainBytes;
+    __int64 m_iRemainBytes;
 
-	bool ReadNext(ckcore::File &File,char &c);
+    bool ReadNext(ckcore::File &File,char &c);
 
 public:
-	std::vector<std::string> m_szStrings;
+    std::vector<std::string> m_szStrings;
 
-	CStringContainerA();
-	~CStringContainerA();
+    CStringContainerA();
+    ~CStringContainerA();
 
-	int SaveToFile(const TCHAR *szFileName,bool bCRLF = true);
-	int LoadFromFile(const TCHAR *szFileName);
+    int SaveToFile(const TCHAR *szFileName,bool bCRLF = true);
+    int LoadFromFile(const TCHAR *szFileName);
 };

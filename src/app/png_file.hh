@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,32 +22,32 @@
 class CPngFile
 {
 private:
-	class CMemFile
-	{
-	public:
-		unsigned char *m_pData;
-		size_t m_iRemainBytes;
+    class CMemFile
+    {
+    public:
+        unsigned char *m_pData;
+        size_t m_iRemainBytes;
 
-		CMemFile(unsigned char *pData,size_t iRemainBytes) :
-			m_pData(pData),m_iRemainBytes(iRemainBytes)
-		{
-		}
-	};
+        CMemFile(unsigned char *pData,size_t iRemainBytes) :
+            m_pData(pData),m_iRemainBytes(iRemainBytes)
+        {
+        }
+    };
 
-	unsigned long m_ulWidth;
-	unsigned long m_ulHeight;
+    unsigned long m_ulWidth;
+    unsigned long m_ulHeight;
 
-	unsigned char **m_pRowData;
+    unsigned char **m_pRowData;
 
-	static void ReadMemFile(png_structp pPng,png_bytep pData,png_size_t iSize);
+    static void ReadMemFile(png_structp pPng,png_bytep pData,png_size_t iSize);
 
 public:
-	CPngFile();
-	~CPngFile();
+    CPngFile();
+    ~CPngFile();
 
-	bool Open(unsigned short usResourceId);
-	bool Open(const TCHAR *szFullPath);
-	bool Close();
+    bool Open(unsigned short usResourceId);
+    bool Open(const TCHAR *szFullPath);
+    bool Close();
 
-	bool Draw(HDC hDC,int iX,int iY,int iWidth,int iHeight);
+    bool Draw(HDC hDC,int iX,int iY,int iWidth,int iHeight);
 };

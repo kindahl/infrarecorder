@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,49 +22,49 @@
 
 namespace NDeviceUtil
 {
-	/**
-	 * Convert the address of the specified device into string form making
-	 * it compatible with command line usage of the back-end applications.
-	 * @param [in] device The device to obtain the address from.
-	 * @return The address in command line string form.
-	 */
-	ckcore::tstring GetDeviceAddr(const ckmmc::Device &device)
-	{
-		const ckmmc::Device::Address &addr = device.address();
-	#ifdef USE_CDRKIT
-		return addr.device_;
-	#else
-		ckcore::tchar buffer[64];
-		ckcore::convert::sprintf(buffer,sizeof(buffer),ckT("%d,%d,%d"),
-								 addr.bus_,addr.target_,addr.lun_);
+    /**
+     * Convert the address of the specified device into string form making
+     * it compatible with command line usage of the back-end applications.
+     * @param [in] device The device to obtain the address from.
+     * @return The address in command line string form.
+     */
+    ckcore::tstring GetDeviceAddr(const ckmmc::Device &device)
+    {
+        const ckmmc::Device::Address &addr = device.address();
+    #ifdef USE_CDRKIT
+        return addr.device_;
+    #else
+        ckcore::tchar buffer[64];
+        ckcore::convert::sprintf(buffer,sizeof(buffer),ckT("%d,%d,%d"),
+                                 addr.bus_,addr.target_,addr.lun_);
 
-		return buffer;
-	#endif
-	}
+        return buffer;
+    #endif
+    }
 
-	/**
-	 * Convert the address of the specified device into string form making
-	 * it compatible with command line usage of the back-end applications.
-	 * @param [in] device The device to obtain the address from.
-	 * @return The address in command line string form.
-	 */
-	std::string GetDeviceAddrA(const ckmmc::Device &device)
-	{
-		const ckmmc::Device::Address &addr = device.address();
-	#ifdef USE_CDRKIT
-		return addr.device_;
-	#else
-		char buffer[64];
-		sprintf(buffer,"%d,%d,%d",addr.bus_,addr.target_,addr.lun_);
+    /**
+     * Convert the address of the specified device into string form making
+     * it compatible with command line usage of the back-end applications.
+     * @param [in] device The device to obtain the address from.
+     * @return The address in command line string form.
+     */
+    std::string GetDeviceAddrA(const ckmmc::Device &device)
+    {
+        const ckmmc::Device::Address &addr = device.address();
+    #ifdef USE_CDRKIT
+        return addr.device_;
+    #else
+        char buffer[64];
+        sprintf(buffer,"%d,%d,%d",addr.bus_,addr.target_,addr.lun_);
 
-		return buffer;
-	#endif
-	}
+        return buffer;
+    #endif
+    }
 
-	ckcore::tstring GetDeviceName(const ckmmc::Device &device)
-	{
-		const ckmmc::Device::Address &addr = device.address();
+    ckcore::tstring GetDeviceName(const ckmmc::Device &device)
+    {
+        const ckmmc::Device::Address &addr = device.address();
 
-		return addr.device_ + ckT(": ") + device.name();
-	}
+        return addr.device_ + ckT(": ") + device.name();
+    }
 };

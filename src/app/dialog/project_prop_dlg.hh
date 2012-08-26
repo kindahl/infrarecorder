@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,35 +29,35 @@
 class CProjectPropDlg : public CPropertySheetImpl<CProjectPropDlg>
 {
 private:
-	bool m_bCentered;
+    bool m_bCentered;
 
-	CProjectPropGeneralPage m_GeneralPage;
-	CProjectPropFileSysPage m_FileSysPage;
-	CProjectPropIsoPage m_IsoPage;
-	CProjectPropFieldsPage m_FieldsPage;
-	CProjectPropBootPage m_BootPage;
-	CProjectPropUdfPage m_UdfPage;
-	CProjectPropAudioPage m_AudioPage;
+    CProjectPropGeneralPage m_GeneralPage;
+    CProjectPropFileSysPage m_FileSysPage;
+    CProjectPropIsoPage m_IsoPage;
+    CProjectPropFieldsPage m_FieldsPage;
+    CProjectPropBootPage m_BootPage;
+    CProjectPropUdfPage m_UdfPage;
+    CProjectPropAudioPage m_AudioPage;
 
-	HPROPSHEETPAGE m_hGeneralPage;
-	HPROPSHEETPAGE m_hFileSysPage;
-	HPROPSHEETPAGE m_hIsoPage;
-	HPROPSHEETPAGE m_hFieldsPage;
-	HPROPSHEETPAGE m_hBootPage;
-	HPROPSHEETPAGE m_hUdfPage;
-	HPROPSHEETPAGE m_hAudioPage;
+    HPROPSHEETPAGE m_hGeneralPage;
+    HPROPSHEETPAGE m_hFileSysPage;
+    HPROPSHEETPAGE m_hIsoPage;
+    HPROPSHEETPAGE m_hFieldsPage;
+    HPROPSHEETPAGE m_hBootPage;
+    HPROPSHEETPAGE m_hUdfPage;
+    HPROPSHEETPAGE m_hAudioPage;
 
 public:
-	CProjectPropDlg();
-	~CProjectPropDlg();
+    CProjectPropDlg();
+    ~CProjectPropDlg();
 
-	BEGIN_MSG_MAP(CProjectPropDlg)
-		MESSAGE_HANDLER(WM_SHOWWINDOW,OnShowWindow)
-		MESSAGE_HANDLER(WM_SETFILESYSTEM,OnSetFileSystem);
+    BEGIN_MSG_MAP(CProjectPropDlg)
+        MESSAGE_HANDLER(WM_SHOWWINDOW,OnShowWindow)
+        MESSAGE_HANDLER(WM_SETFILESYSTEM,OnSetFileSystem);
 
-		CHAIN_MSG_MAP(CPropertySheetImpl<CProjectPropDlg>)
-	END_MSG_MAP()
+        CHAIN_MSG_MAP(CPropertySheetImpl<CProjectPropDlg>)
+    END_MSG_MAP()
 
-	LRESULT OnShowWindow(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnSetFileSystem(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnShowWindow(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnSetFileSystem(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 };

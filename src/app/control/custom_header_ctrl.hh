@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,19 +28,19 @@
 class CCustomHeaderCtrl : public CWindowImpl<CCustomHeaderCtrl,CHeaderCtrl>
 {
 private:
-	bool m_bSortUp;
-	unsigned int m_iSortCol;
+    bool m_bSortUp;
+    unsigned int m_iSortCol;
 
-	void SetSortColumn(unsigned int uiColIndex,bool bSortUp);
+    void SetSortColumn(unsigned int uiColIndex,bool bSortUp);
 
 public:
-	CCustomHeaderCtrl();
+    CCustomHeaderCtrl();
 
-	BEGIN_MSG_MAP(CCustomHeaderCtrl)
-		MESSAGE_HANDLER(WM_CHC_SETSORTCOLUMN,OnSetSortColumn)
-	END_MSG_MAP()
+    BEGIN_MSG_MAP(CCustomHeaderCtrl)
+        MESSAGE_HANDLER(WM_CHC_SETSORTCOLUMN,OnSetSortColumn)
+    END_MSG_MAP()
 
-	LRESULT OnSetSortColumn(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnSetSortColumn(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 
-	void ColumnClick(unsigned int uiColIndex);
+    void ColumnClick(unsigned int uiColIndex);
 };

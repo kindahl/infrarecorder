@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -47,7 +47,7 @@ void CFmtStrPlaceholderAnalysis::ClearForReuse(void)
 }
 
 void CFmtStrPlaceholderAnalysis::InsertPlaceholder(
-						const unsigned uPlaceholderPos,  // The first position is number 1.
+                        const unsigned uPlaceholderPos,  // The first position is number 1.
                         const bool bIsPositionalPlaceholder,
                         const ckcore::tchar * const szPlaceholderStr,
                         const unsigned uPlaceholderStrLen)
@@ -66,7 +66,7 @@ void CFmtStrPlaceholderAnalysis::InsertPlaceholder(
 
     m_bPositionalPlaceholders = bIsPositionalPlaceholder;
 
-	m_uPlaceholderCount = (std::max)(m_uPlaceholderCount,uPlaceholderPos);
+    m_uPlaceholderCount = (std::max)(m_uPlaceholderCount,uPlaceholderPos);
 
     if (m_Placeholders.size() < m_uPlaceholderCount)
         m_Placeholders.resize(m_uPlaceholderCount);
@@ -80,7 +80,7 @@ void CFmtStrPlaceholderAnalysis::InsertPlaceholder(
     // argument from several placeholders, an each placeholder can have
     // different format specifiers. However, we don't allow it here, because of
     // the extra complication that would add to this testing class. Fortunately,
-	// this feature is rarely used.
+    // this feature is rarely used.
     if (!plh->m_Placeholder.empty())
         throw ckcore::Exception2(ckcore::string::formatstr(_T("Placeholder %u already used."),uPlaceholderPos).c_str());
     
@@ -100,57 +100,57 @@ void CFmtStrPlaceholderAnalysis::InsertPlaceholder(
 static bool IsPlaceholderLength(const ckcore::tchar ** const p)
 {
     // According to the Microsoft documentation, these are the possible
-	// indicators for field [length] inside a format string:
+    // indicators for field [length] inside a format string:
     //   {h | l | ll | I | I32 | I64}
 
     switch (**p)
     {
-		case _T('h'):
-			++*p;
-			return true;
+        case _T('h'):
+            ++*p;
+            return true;
 
-		case _T('l'):
-			++*p;
+        case _T('l'):
+            ++*p;
 
-			if (**p == 'l')
-				++*p;
+            if (**p == 'l')
+                ++*p;
 
-			return true;
-	        
-		case _T('I'):
-			{
-				++*p;
+            return true;
+            
+        case _T('I'):
+            {
+                ++*p;
 
-				const ckcore::tchar *t = *p;
+                const ckcore::tchar *t = *p;
 
-				if (*t == _T('3'))
-				{
-					++t;
+                if (*t == _T('3'))
+                {
+                    ++t;
 
-					if (*t == _T('2'))
-					{
-						++t;
-						*p = t;
-						return true;
-					}
-				}
-				else if (*t == _T('6'))
-				{
-					++t;
+                    if (*t == _T('2'))
+                    {
+                        ++t;
+                        *p = t;
+                        return true;
+                    }
+                }
+                else if (*t == _T('6'))
+                {
+                    ++t;
 
-					if (*t == _T('4'))
-					{
-						++t;
-						*p = t;
-						return true;
-					}
-				}
+                    if (*t == _T('4'))
+                    {
+                        ++t;
+                        *p = t;
+                        return true;
+                    }
+                }
 
-				return true;  // An 'I' alone.
-			}
+                return true;  // An 'I' alone.
+            }
 
-		default:
-			return false;
+        default:
+            return false;
     }
 }
 
@@ -158,26 +158,26 @@ static bool IsPlaceholderType(const ckcore::tchar c)
 {
     switch (c)
     {
-		case _T('d'):
-		case _T('i'):
-		case _T('u'):
-		case _T('f'):
-		case _T('F'):
-		case _T('e'):
-		case _T('E'):
-		case _T('g'):
-		case _T('G'):
-		case _T('x'):
-		case _T('X'):
-		case _T('o'):
-		case _T('s'):
-		case _T('c'):
-		case _T('p'):
-		case _T('n'):
-			return true;
+        case _T('d'):
+        case _T('i'):
+        case _T('u'):
+        case _T('f'):
+        case _T('F'):
+        case _T('e'):
+        case _T('E'):
+        case _T('g'):
+        case _T('G'):
+        case _T('x'):
+        case _T('X'):
+        case _T('o'):
+        case _T('s'):
+        case _T('c'):
+        case _T('p'):
+        case _T('n'):
+            return true;
 
-		default:
-			return false;
+        default:
+            return false;
     }
 }
 
@@ -185,15 +185,15 @@ static bool IsPlaceholderFlag(const ckcore::tchar c)
 {
     switch ( c )
     {
-		case _T('-'):
-		case _T('+'):
-		case _T('0'):
-		case _T(' '):
-		case _T('#'):
-			return true;
+        case _T('-'):
+        case _T('+'):
+        case _T('0'):
+        case _T(' '):
+        case _T('#'):
+            return true;
 
-		default:
-			return false;
+        default:
+            return false;
     }
 }
 
@@ -245,7 +245,7 @@ void CFmtStrPlaceholderAnalysis::AnalyzeFormatString(const ckcore::tchar * const
     //
     //  [parameter] is an optional positional argument specifier like "1$".
     //  That means, old-style "%s" would look like "%1$s" for the first
-	//  positional argument.
+    //  positional argument.
     unsigned uPlaceholderPos = 1;
 
     for (const ckcore::tchar * p = szFmtStr; *p != _T('\0');)
@@ -308,7 +308,7 @@ void CFmtStrPlaceholderAnalysis::AnalyzeFormatString(const ckcore::tchar * const
         }
         catch (const std::exception &e)
         {
-			ckcore::rethrow_with_pfx(e,_T("Error at line position %d: "),
+            ckcore::rethrow_with_pfx(e,_T("Error at line position %d: "),
                                      placeholderStart - szFmtStr + 1);
         }
     }

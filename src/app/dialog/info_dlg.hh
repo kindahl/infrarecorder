@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,33 +27,33 @@
 class CInfoDlg : public CDialogImpl<CInfoDlg>
 {
 private:
-	// Pointer to the value that will be changed according to the "Do not display
-	// this message again" option.
-	bool *m_pRemember;
+    // Pointer to the value that will be changed according to the "Do not display
+    // this message again" option.
+    bool *m_pRemember;
 
-	int m_iFlags;
+    int m_iFlags;
 
-	// Pointer to the message text to be displayed.
-	const TCHAR *n_szMessage;
+    // Pointer to the message text to be displayed.
+    const TCHAR *n_szMessage;
 
-	bool Translate();
-	void InitializeMessage(const TCHAR *szMessage);
+    bool Translate();
+    void InitializeMessage(const TCHAR *szMessage);
 
 public:
-	enum { IDD = IDD_INFODLG };
+    enum { IDD = IDD_INFODLG };
 
-	CInfoDlg(bool *pRemember,const TCHAR *szMessage,int iFlags = 0);
-	~CInfoDlg();
+    CInfoDlg(bool *pRemember,const TCHAR *szMessage,int iFlags = 0);
+    ~CInfoDlg();
 
-	BEGIN_MSG_MAP(CEraseDlg)
-		MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
+    BEGIN_MSG_MAP(CEraseDlg)
+        MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
 
-		COMMAND_ID_HANDLER(IDOK,OnOK)
-		COMMAND_ID_HANDLER(IDCANCEL,OnCancel)
-	END_MSG_MAP()
+        COMMAND_ID_HANDLER(IDOK,OnOK)
+        COMMAND_ID_HANDLER(IDCANCEL,OnCancel)
+    END_MSG_MAP()
 
-	LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 
-	LRESULT OnOK(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
-	LRESULT OnCancel(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnOK(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnCancel(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
 };

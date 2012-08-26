@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@
 
 CEditTrackDlg::CEditTrackDlg(CItemData *pItemData)
 {
-	m_pItemData = pItemData;
+    m_pItemData = pItemData;
 }
 
 CEditTrackDlg::~CEditTrackDlg()
@@ -33,55 +33,55 @@ CEditTrackDlg::~CEditTrackDlg()
 
 bool CEditTrackDlg::Translate()
 {
-	if (g_LanguageSettings.m_pLngProcessor == NULL)
-		return false;
+    if (g_LanguageSettings.m_pLngProcessor == NULL)
+        return false;
 
-	CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
-	
-	// Make sure that there is a edittrack translation section.
-	if (!pLng->EnterSection(_T("edittrack")))
-		return false;
+    CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
+    
+    // Make sure that there is a edittrack translation section.
+    if (!pLng->EnterSection(_T("edittrack")))
+        return false;
 
-	// Translate.
-	TCHAR *szStrValue;
+    // Translate.
+    TCHAR *szStrValue;
 
-	if (pLng->GetValuePtr(IDOK,szStrValue))
-		SetDlgItemText(IDOK,szStrValue);
-	if (pLng->GetValuePtr(IDCANCEL,szStrValue))
-		SetDlgItemText(IDCANCEL,szStrValue);
-	if (pLng->GetValuePtr(IDC_TITLESTATIC,szStrValue))
-		SetDlgItemText(IDC_TITLESTATIC,szStrValue);
-	if (pLng->GetValuePtr(IDC_ARTISTSTATIC,szStrValue))
-		SetDlgItemText(IDC_ARTISTSTATIC,szStrValue);
+    if (pLng->GetValuePtr(IDOK,szStrValue))
+        SetDlgItemText(IDOK,szStrValue);
+    if (pLng->GetValuePtr(IDCANCEL,szStrValue))
+        SetDlgItemText(IDCANCEL,szStrValue);
+    if (pLng->GetValuePtr(IDC_TITLESTATIC,szStrValue))
+        SetDlgItemText(IDC_TITLESTATIC,szStrValue);
+    if (pLng->GetValuePtr(IDC_ARTISTSTATIC,szStrValue))
+        SetDlgItemText(IDC_ARTISTSTATIC,szStrValue);
 
-	return true;
+    return true;
 }
 
 LRESULT CEditTrackDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
-	CenterWindow(GetParent());
-	SetWindowText((TCHAR *)lParam);
+    CenterWindow(GetParent());
+    SetWindowText((TCHAR *)lParam);
 
-	SetDlgItemText(IDC_TITLEEDIT,m_pItemData->GetAudioData()->szTrackTitle);
-	SetDlgItemText(IDC_ARTISTEDIT,m_pItemData->GetAudioData()->szTrackArtist);
+    SetDlgItemText(IDC_TITLEEDIT,m_pItemData->GetAudioData()->szTrackTitle);
+    SetDlgItemText(IDC_ARTISTEDIT,m_pItemData->GetAudioData()->szTrackArtist);
 
-	// Translate the window.
-	Translate();
+    // Translate the window.
+    Translate();
 
-	return TRUE;
+    return TRUE;
 }
 
 LRESULT CEditTrackDlg::OnOK(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
-	GetDlgItemText(IDC_TITLEEDIT,m_pItemData->GetAudioData()->szTrackTitle,159);
-	GetDlgItemText(IDC_ARTISTEDIT,m_pItemData->GetAudioData()->szTrackArtist,159);
+    GetDlgItemText(IDC_TITLEEDIT,m_pItemData->GetAudioData()->szTrackTitle,159);
+    GetDlgItemText(IDC_ARTISTEDIT,m_pItemData->GetAudioData()->szTrackArtist,159);
 
-	EndDialog(wID);
-	return FALSE;
+    EndDialog(wID);
+    return FALSE;
 }
 
 LRESULT CEditTrackDlg::OnCancel(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
-	EndDialog(wID);
-	return FALSE;
+    EndDialog(wID);
+    return FALSE;
 }

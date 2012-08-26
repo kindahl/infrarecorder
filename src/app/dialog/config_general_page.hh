@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,34 +22,34 @@
 class CConfigGeneralPage : public CPropertyPageImpl<CConfigGeneralPage>
 {
 private:
-	bool IsFileExtRegistered(const TCHAR *szFileExt);
-	bool RegisterFileExt(const TCHAR *szFileExt,const TCHAR *szTypeKeyName,
-		const TCHAR *szTypeDesc);
-	bool UnregisterFileExt(const TCHAR *szFileExt);
+    bool IsFileExtRegistered(const TCHAR *szFileExt);
+    bool RegisterFileExt(const TCHAR *szFileExt,const TCHAR *szTypeKeyName,
+        const TCHAR *szTypeDesc);
+    bool UnregisterFileExt(const TCHAR *szFileExt);
 
-	bool Translate();
+    bool Translate();
 
 public:
-	enum { IDD = IDD_PROPPAGE_CONFIGGENERAL };
+    enum { IDD = IDD_PROPPAGE_CONFIGGENERAL };
 
-	CConfigGeneralPage();
-	~CConfigGeneralPage();
+    CConfigGeneralPage();
+    ~CConfigGeneralPage();
 
-	bool OnApply();
-	void OnHelp();
+    bool OnApply();
+    void OnHelp();
 
-	BEGIN_MSG_MAP(CBurnImageGeneralPage)
-		MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
+    BEGIN_MSG_MAP(CBurnImageGeneralPage)
+        MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
 
-		COMMAND_ID_HANDLER(IDC_REMEMBERSHELLCHECK,OnRememberShellCheck)
-		COMMAND_ID_HANDLER(IDC_SHELLFOLDERBROWSEBUTTON,OnFolderBrowse)
-		COMMAND_ID_HANDLER(IDC_TEMPFOLDERBROWSEBUTTON,OnFolderBrowse)
+        COMMAND_ID_HANDLER(IDC_REMEMBERSHELLCHECK,OnRememberShellCheck)
+        COMMAND_ID_HANDLER(IDC_SHELLFOLDERBROWSEBUTTON,OnFolderBrowse)
+        COMMAND_ID_HANDLER(IDC_TEMPFOLDERBROWSEBUTTON,OnFolderBrowse)
 
-		CHAIN_MSG_MAP(CPropertyPageImpl<CConfigGeneralPage>)
-	END_MSG_MAP()
+        CHAIN_MSG_MAP(CPropertyPageImpl<CConfigGeneralPage>)
+    END_MSG_MAP()
 
-	LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 
-	LRESULT OnRememberShellCheck(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
-	LRESULT OnFolderBrowse(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnRememberShellCheck(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnFolderBrowse(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
 };

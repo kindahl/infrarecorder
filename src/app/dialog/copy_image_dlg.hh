@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,30 +24,30 @@
 class CCopyImageDlg : public CPropertySheetImpl<CCopyImageDlg>
 {
 private:
-	bool m_bCentered;
-	bool m_bAppMode;
-	ckmmc::Device *m_pSrcDevice;
+    bool m_bCentered;
+    bool m_bAppMode;
+    ckmmc::Device *m_pSrcDevice;
 
-	CCopyImageGeneralPage m_GeneralPage;
-	CReadOptionsPage m_ReadPage;
+    CCopyImageGeneralPage m_GeneralPage;
+    CReadOptionsPage m_ReadPage;
 
 public:
-	CCopyImageDlg(bool bAppMode);
-	~CCopyImageDlg();
+    CCopyImageDlg(bool bAppMode);
+    ~CCopyImageDlg();
 
-	BEGIN_MSG_MAP(CCopyImageDlg)
-		MESSAGE_HANDLER(WM_SHOWWINDOW,OnShowWindow)
-		MESSAGE_HANDLER(WM_SETDEVICE,OnSetDevice)
-		MESSAGE_HANDLER(WM_GETDEVICE,OnGetDevice)
-		MESSAGE_HANDLER(WM_CHECKMEDIA_BROADCAST,OnCheckMediaBroadcast)
+    BEGIN_MSG_MAP(CCopyImageDlg)
+        MESSAGE_HANDLER(WM_SHOWWINDOW,OnShowWindow)
+        MESSAGE_HANDLER(WM_SETDEVICE,OnSetDevice)
+        MESSAGE_HANDLER(WM_GETDEVICE,OnGetDevice)
+        MESSAGE_HANDLER(WM_CHECKMEDIA_BROADCAST,OnCheckMediaBroadcast)
 
-		CHAIN_MSG_MAP(CPropertySheetImpl<CCopyImageDlg>)
-	END_MSG_MAP()
+        CHAIN_MSG_MAP(CPropertySheetImpl<CCopyImageDlg>)
+    END_MSG_MAP()
 
-	LRESULT OnShowWindow(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnSetDevice(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnGetDevice(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnCheckMediaBroadcast(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnShowWindow(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnSetDevice(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnGetDevice(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnCheckMediaBroadcast(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 
-	TCHAR *GetFileName();
+    TCHAR *GetFileName();
 };

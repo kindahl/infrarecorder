@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,45 +29,45 @@ CLngAnalyzer::~CLngAnalyzer()
 
 unsigned int CLngAnalyzer::GetNumValues()
 {
-	unsigned int uiResult = 0;
+    unsigned int uiResult = 0;
 
-	for (unsigned int i = 0; i < m_pSections.size(); i++)
-		uiResult += (unsigned int)m_pSections[i]->m_Values.size();
+    for (unsigned int i = 0; i < m_pSections.size(); i++)
+        uiResult += (unsigned int)m_pSections[i]->m_Values.size();
 
-	return uiResult;
+    return uiResult;
 }
 
 unsigned int CLngAnalyzer::GetNumSections()
 {
-	return (unsigned int)m_pSections.size();
+    return (unsigned int)m_pSections.size();
 }
 
 CLngSection *CLngAnalyzer::GetSection(unsigned int uiIndex)
 {
-	if (uiIndex > m_pSections.size())
-		return NULL;
+    if (uiIndex > m_pSections.size())
+        return NULL;
 
-	return m_pSections[uiIndex];
+    return m_pSections[uiIndex];
 }
 
 CLngSection *CLngAnalyzer::GetSection(const TCHAR *szName)
 {
-	for (unsigned int i = 0; i < m_pSections.size(); i++)
-	{
-		if (!lstrcmp(m_pSections[i]->m_szName,szName))
-			return m_pSections[i];
-	}
+    for (unsigned int i = 0; i < m_pSections.size(); i++)
+    {
+        if (!lstrcmp(m_pSections[i]->m_szName,szName))
+            return m_pSections[i];
+    }
 
-	return NULL;
+    return NULL;
 }
 
 bool CLngAnalyzer::SectionHasValue(CLngSection *pSection,unsigned long ulName)
 {
-	for (unsigned int i = 0; i < pSection->m_Values.size(); i++)
-	{
-		if (pSection->m_Values[i]->ulName == ulName)
-			return true;
-	}
+    for (unsigned int i = 0; i < pSection->m_Values.size(); i++)
+    {
+        if (pSection->m_Values[i]->ulName == ulName)
+            return true;
+    }
 
-	return false;
+    return false;
 }

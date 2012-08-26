@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,36 +23,36 @@
 class CAddBootImageDlg : public CDialogImpl<CAddBootImageDlg>
 {
 private:
-	bool m_bEdit;
-	CProjectBootImage *m_pBootImage;
-	CComboBox m_EmuCombo;
+    bool m_bEdit;
+    CProjectBootImage *m_pBootImage;
+    CComboBox m_EmuCombo;
 
-	enum
-	{
-		MAX_BOOTLOAD_SIZE = 32
-	};
+    enum
+    {
+        MAX_BOOTLOAD_SIZE = 32
+    };
 
-	bool Translate();
+    bool Translate();
 
 public:
-	enum { IDD = IDD_ADDBOOTIMAGEDLG };
+    enum { IDD = IDD_ADDBOOTIMAGEDLG };
 
-	CAddBootImageDlg(CProjectBootImage *pBootImage,bool bEdit);
-	~CAddBootImageDlg();
+    CAddBootImageDlg(CProjectBootImage *pBootImage,bool bEdit);
+    ~CAddBootImageDlg();
 
-	BEGIN_MSG_MAP(CAddBootImageDlg)
-		MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
+    BEGIN_MSG_MAP(CAddBootImageDlg)
+        MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
 
-		COMMAND_ID_HANDLER(IDOK,OnOK)
-		COMMAND_ID_HANDLER(IDCANCEL,OnCancel)
-		COMMAND_ID_HANDLER(IDC_HELPBUTTON,OnHelp)
-		COMMAND_HANDLER(IDC_EMULATIONCOMBO,CBN_SELCHANGE,OnEmuChange)
-	END_MSG_MAP()
+        COMMAND_ID_HANDLER(IDOK,OnOK)
+        COMMAND_ID_HANDLER(IDCANCEL,OnCancel)
+        COMMAND_ID_HANDLER(IDC_HELPBUTTON,OnHelp)
+        COMMAND_HANDLER(IDC_EMULATIONCOMBO,CBN_SELCHANGE,OnEmuChange)
+    END_MSG_MAP()
 
-	LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 
-	LRESULT OnOK(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
-	LRESULT OnCancel(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
-	LRESULT OnHelp(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
-	LRESULT OnEmuChange(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnOK(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnCancel(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnHelp(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnEmuChange(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
 };

@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,74 +28,74 @@ CSettingsManager g_SettingsManager;
 
 CSettingsManager::CSettingsManager()
 {
-	RegisterObject(&g_LanguageSettings);
-	RegisterObject(&g_GlobalSettings);
+    RegisterObject(&g_LanguageSettings);
+    RegisterObject(&g_GlobalSettings);
 }
 
 CSettingsManager::~CSettingsManager()
 {
-	m_Settings.clear();
+    m_Settings.clear();
 }
 
 void CSettingsManager::RegisterObject(ISettings *pSettings)
 {
-	m_Settings.push_back(pSettings);
+    m_Settings.push_back(pSettings);
 }
 
 bool CSettingsManager::GetConfigPath(TCHAR *szConfigPath)
 {
 #ifdef PORTABLE
     GetModuleFileName(NULL,szConfigPath,MAX_PATH - 1);
-	ExtractFilePath(szConfigPath);
+    ExtractFilePath(szConfigPath);
 #else
 #ifdef UNICODE
-	if (!SUCCEEDED(SHGetFolderPath(HWND_DESKTOP,CSIDL_APPDATA | CSIDL_FLAG_CREATE,NULL,
-		SHGFP_TYPE_CURRENT,szConfigPath)))
-		return false;
+    if (!SUCCEEDED(SHGetFolderPath(HWND_DESKTOP,CSIDL_APPDATA | CSIDL_FLAG_CREATE,NULL,
+        SHGFP_TYPE_CURRENT,szConfigPath)))
+        return false;
 #else	// Win 9x.
-	if (!SUCCEEDED(SHGetSpecialFolderPath(HWND_DESKTOP,szConfigPath,CSIDL_APPDATA,true)))
-		return false;
+    if (!SUCCEEDED(SHGetSpecialFolderPath(HWND_DESKTOP,szConfigPath,CSIDL_APPDATA,true)))
+        return false;
 #endif
-	IncludeTrailingBackslash(szConfigPath);
-	lstrcat(szConfigPath,_T("InfraRecorder\\"));
+    IncludeTrailingBackslash(szConfigPath);
+    lstrcat(szConfigPath,_T("InfraRecorder\\"));
 
-	// Create the file path if it doesn't exist.
-	ckcore::Directory::create(szConfigPath);
+    // Create the file path if it doesn't exist.
+    ckcore::Directory::create(szConfigPath);
 #endif
 
-	lstrcat(szConfigPath,_T("settings.xml"));
-	return true;
+    lstrcat(szConfigPath,_T("settings.xml"));
+    return true;
 }
 
 bool CSettingsManager::Load()
 {
-	CXmlProcessor Xml;
-	bool bResult = true;
+    CXmlProcessor Xml;
+    bool bResult = true;
 
-	// Get the correct file-path.
-	TCHAR szConfigPath[MAX_PATH];
+    // Get the correct file-path.
+    TCHAR szConfigPath[MAX_PATH];
     if (!GetConfigPath(szConfigPath))
-		return false;
+        return false;
 
-	// Load the file.
-	int iResult = Xml.Load(szConfigPath);
-	if (iResult != XMLRES_OK && iResult != XMLRES_FILEERROR)
-		return false;
+    // Load the file.
+    int iResult = Xml.Load(szConfigPath);
+    if (iResult != XMLRES_OK && iResult != XMLRES_FILEERROR)
+        return false;
 
-	if (!Xml.EnterElement(_T("InfraRecorder")))
-		return false;
+    if (!Xml.EnterElement(_T("InfraRecorder")))
+        return false;
 
-	if (!Xml.EnterElement(_T("Settings")))
-		return false;
+    if (!Xml.EnterElement(_T("Settings")))
+        return false;
 
-	for (unsigned int i = 0; i < m_Settings.size(); i++)
-	{
-		if (!m_Settings[i]->Load(&Xml))
-			bResult = false;
-	}
+    for (unsigned int i = 0; i < m_Settings.size(); i++)
+    {
+        if (!m_Settings[i]->Load(&Xml))
+            bResult = false;
+    }
 
-	Xml.LeaveElement();
-	Xml.LeaveElement();
+    Xml.LeaveElement();
+    Xml.LeaveElement();
 
-	return bResult;
+    return bResult;
 }

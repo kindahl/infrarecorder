@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,119 +34,119 @@
 #endif
 
 class CProgressDlg : public CDialogImpl<CProgressDlg>,
-					 public CDialogResize<CProgressDlg>,
-					 public CAdvancedProgress
+                     public CDialogResize<CProgressDlg>,
+                     public CAdvancedProgress
 {
 private:
-	#if(WINVER < 0x0500)
+    #if(WINVER < 0x0500)
 
-		typedef struct {
-			UINT  cbSize;
-			HWND  hwnd;
-			DWORD dwFlags;
-			UINT  uCount;
-			DWORD dwTimeout;
-		} FLASHWINFO, *PFLASHWINFO;
+        typedef struct {
+            UINT  cbSize;
+            HWND  hwnd;
+            DWORD dwFlags;
+            UINT  uCount;
+            DWORD dwTimeout;
+        } FLASHWINFO, *PFLASHWINFO;
 
-	#endif  // #if(WINVER < 0x0500)
+    #endif  // #if(WINVER < 0x0500)
 
-	typedef BOOL (WINAPI *PointerToFlashWindowEx)(PFLASHWINFO);
-	PointerToFlashWindowEx m_pFlashWindowEx;
-	bool m_bNeedToFocusOkButton;
+    typedef BOOL (WINAPI *PointerToFlashWindowEx)(PFLASHWINFO);
+    PointerToFlashWindowEx m_pFlashWindowEx;
+    bool m_bNeedToFocusOkButton;
 
-	HIMAGELIST m_hListImageList;
-	CListViewCtrl m_ListView;
-	CDoubleBufferedStatic m_TotalStatic;
-	CDoubleBufferedStatic m_StatusStatic;
+    HIMAGELIST m_hListImageList;
+    CListViewCtrl m_ListView;
+    CDoubleBufferedStatic m_TotalStatic;
+    CDoubleBufferedStatic m_StatusStatic;
 
-	ckcore::Process *m_pProcess;
-	bool m_bAppMode;
-	bool m_bRealMode;
-	bool m_bCancelled;
+    ckcore::Process *m_pProcess;
+    bool m_bAppMode;
+    bool m_bRealMode;
+    bool m_bCancelled;
 
-	HWND m_hWndHost;
+    HWND m_hWndHost;
 
-	unsigned char m_ucPercent;
+    unsigned char m_ucPercent;
 
-	TCHAR *m_szHostTitle;
+    TCHAR *m_szHostTitle;
 
-	bool Translate();
+    bool Translate();
 
 public:
-	enum { IDD = IDD_PROGRESSDLG };
+    enum { IDD = IDD_PROGRESSDLG };
 
-	CProgressDlg();
-	~CProgressDlg();
+    CProgressDlg();
+    ~CProgressDlg();
 
-	void AttachProcess(ckcore::Process *pProcess);
-	void AttachHost(HWND hWndHost);
+    void AttachProcess(ckcore::Process *pProcess);
+    void AttachHost(HWND hWndHost);
 
-	void SetAppMode(bool bAppMode);
-	void SetRealMode(bool bRealMode);
+    void SetAppMode(bool bAppMode);
+    void SetRealMode(bool bRealMode);
 
-	// ckcore::Progress.
-	void set_progress(unsigned char ucPercent);
-	void set_marquee(bool bMarquee);
-	void set_status(const TCHAR *szStatus,...);
-	void notify(ckcore::Progress::MessageType Type,const TCHAR *szMessage,...);
-	bool cancelled();
+    // ckcore::Progress.
+    void set_progress(unsigned char ucPercent);
+    void set_marquee(bool bMarquee);
+    void set_status(const TCHAR *szStatus,...);
+    void notify(ckcore::Progress::MessageType Type,const TCHAR *szMessage,...);
+    bool cancelled();
 
-	void SetDevice(const TCHAR *szDevice);
-	void SetDevice(ckmmc::Device &Device);
+    void SetDevice(const TCHAR *szDevice);
+    void SetDevice(ckmmc::Device &Device);
 
-	void NotifyCompleted();
+    void NotifyCompleted();
 
-	void SetBuffer(int iPercent);
-	void AllowReload();
-	void AllowCancel(bool bAllow);
+    void SetBuffer(int iPercent);
+    void AllowReload();
+    void AllowCancel(bool bAllow);
 
-	void Reset();
+    void Reset();
 
-	bool RequestNextDisc();
+    bool RequestNextDisc();
 
-	void StartSmoke();
+    void StartSmoke();
 
 private:
-	BEGIN_MSG_MAP(CProgressDlg)
-		MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
-		MESSAGE_HANDLER(WM_ACTIVATE,OnActivate)
+    BEGIN_MSG_MAP(CProgressDlg)
+        MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
+        MESSAGE_HANDLER(WM_ACTIVATE,OnActivate)
 
-		COMMAND_ID_HANDLER(IDC_RELOADBUTTON,OnReload)
-		COMMAND_ID_HANDLER(IDOK,OnOK)
-		COMMAND_ID_HANDLER(IDCANCEL,OnCancel)
+        COMMAND_ID_HANDLER(IDC_RELOADBUTTON,OnReload)
+        COMMAND_ID_HANDLER(IDOK,OnOK)
+        COMMAND_ID_HANDLER(IDCANCEL,OnCancel)
 
-		NOTIFY_HANDLER(IDC_MESSAGELIST,NM_DBLCLK,OnListViewDblClick)
+        NOTIFY_HANDLER(IDC_MESSAGELIST,NM_DBLCLK,OnListViewDblClick)
 
-		SMOKE_EVENTS
+        SMOKE_EVENTS
 
-		CHAIN_MSG_MAP(CDialogResize<CProgressDlg>)
-	END_MSG_MAP()
+        CHAIN_MSG_MAP(CDialogResize<CProgressDlg>)
+    END_MSG_MAP()
 
-	// Resize maps.
-	BEGIN_DLGRESIZE_MAP(CProgressDlg)
-		DLGRESIZE_CONTROL(IDC_TOTALSTATIC,DLSZ_SIZE_X)
-		DLGRESIZE_CONTROL(IDC_TOTALPROGRESS,DLSZ_SIZE_X)
-		DLGRESIZE_CONTROL(IDC_STATUSSTATIC,DLSZ_SIZE_X)
-		DLGRESIZE_CONTROL(IDC_MESSAGELIST,DLSZ_SIZE_X | DLSZ_SIZE_Y)
-		DLGRESIZE_CONTROL(IDC_BEVELSTATIC,DLSZ_SIZE_X | DLSZ_MOVE_Y)
-		DLGRESIZE_CONTROL(IDC_DEVICESTATIC,DLSZ_SIZE_X | DLSZ_MOVE_Y)
-		DLGRESIZE_CONTROL(IDC_BUFFERSTATIC,DLSZ_MOVE_Y)
-		DLGRESIZE_CONTROL(IDC_BUFFERPROGRESS,DLSZ_SIZE_X | DLSZ_MOVE_Y)
-		DLGRESIZE_CONTROL(IDOK,DLSZ_MOVE_X | DLSZ_MOVE_Y)
-		DLGRESIZE_CONTROL(IDCANCEL,DLSZ_MOVE_X | DLSZ_MOVE_Y)
-		DLGRESIZE_CONTROL(IDC_RELOADBUTTON,DLSZ_MOVE_X | DLSZ_MOVE_Y)
-	END_DLGRESIZE_MAP()
+    // Resize maps.
+    BEGIN_DLGRESIZE_MAP(CProgressDlg)
+        DLGRESIZE_CONTROL(IDC_TOTALSTATIC,DLSZ_SIZE_X)
+        DLGRESIZE_CONTROL(IDC_TOTALPROGRESS,DLSZ_SIZE_X)
+        DLGRESIZE_CONTROL(IDC_STATUSSTATIC,DLSZ_SIZE_X)
+        DLGRESIZE_CONTROL(IDC_MESSAGELIST,DLSZ_SIZE_X | DLSZ_SIZE_Y)
+        DLGRESIZE_CONTROL(IDC_BEVELSTATIC,DLSZ_SIZE_X | DLSZ_MOVE_Y)
+        DLGRESIZE_CONTROL(IDC_DEVICESTATIC,DLSZ_SIZE_X | DLSZ_MOVE_Y)
+        DLGRESIZE_CONTROL(IDC_BUFFERSTATIC,DLSZ_MOVE_Y)
+        DLGRESIZE_CONTROL(IDC_BUFFERPROGRESS,DLSZ_SIZE_X | DLSZ_MOVE_Y)
+        DLGRESIZE_CONTROL(IDOK,DLSZ_MOVE_X | DLSZ_MOVE_Y)
+        DLGRESIZE_CONTROL(IDCANCEL,DLSZ_MOVE_X | DLSZ_MOVE_Y)
+        DLGRESIZE_CONTROL(IDC_RELOADBUTTON,DLSZ_MOVE_X | DLSZ_MOVE_Y)
+    END_DLGRESIZE_MAP()
 
-	LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnActivate(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnActivate(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 
-	LRESULT OnReload(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
-	LRESULT OnOK(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
-	LRESULT OnCancel(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnReload(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnOK(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnCancel(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
 
-	LRESULT OnListViewDblClick(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled);
+    LRESULT OnListViewDblClick(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled);
 
-	SMOKE_IMPL
+    SMOKE_IMPL
 };
 
 extern CProgressDlg * g_pProgressDlg;

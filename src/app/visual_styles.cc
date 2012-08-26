@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,100 +23,100 @@ CVisualStyles g_VisualStyles;
 
 CVisualStyles::CVisualStyles()
 {
-	m_hInstance = LoadLibrary(_T("uxtheme.dll"));
+    m_hInstance = LoadLibrary(_T("uxtheme.dll"));
 }
 
 CVisualStyles::~CVisualStyles()
 {
-	if (m_hInstance != NULL)
-		FreeLibrary(m_hInstance);
+    if (m_hInstance != NULL)
+        FreeLibrary(m_hInstance);
                 
-	m_hInstance = NULL;
+    m_hInstance = NULL;
 }
 
 bool CVisualStyles::Supported()
 {
-	return (m_hInstance != NULL);
+    return (m_hInstance != NULL);
 }
 
 bool CVisualStyles::IsThemeActive()
 {
-	if (!Supported())
-		return false;
+    if (!Supported())
+        return false;
                 
-	PFNISTHEMEACTIVE pfn = (PFNISTHEMEACTIVE)GetProcAddress(m_hInstance,"IsThemeActive");
+    PFNISTHEMEACTIVE pfn = (PFNISTHEMEACTIVE)GetProcAddress(m_hInstance,"IsThemeActive");
 
-	if (!pfn)
-		return false;
+    if (!pfn)
+        return false;
                 
-	return (*pfn)();
+    return (*pfn)();
 }
 
 bool CVisualStyles::IsAppThemed()
 {
-	if (!Supported())
-		return false;
+    if (!Supported())
+        return false;
                 
-	PFNISAPPTHEMED pfnIsAppThemed = (PFNISAPPTHEMED)GetProcAddress(m_hInstance,"IsAppThemed");
+    PFNISAPPTHEMED pfnIsAppThemed = (PFNISAPPTHEMED)GetProcAddress(m_hInstance,"IsAppThemed");
 
-	if (!pfnIsAppThemed)
-		return false;
+    if (!pfnIsAppThemed)
+        return false;
 
-	return (*pfnIsAppThemed)();
+    return (*pfnIsAppThemed)();
 }
 
 HTHEME CVisualStyles::OpenThemeData(HWND hwnd,LPCWSTR pszClassList)
 {
-	if (!Supported())
-		return NULL;
+    if (!Supported())
+        return NULL;
 
-	PFNOPENTHEMEDATA pfnOpenThemeData = (PFNOPENTHEMEDATA)GetProcAddress(m_hInstance,"OpenThemeData");
+    PFNOPENTHEMEDATA pfnOpenThemeData = (PFNOPENTHEMEDATA)GetProcAddress(m_hInstance,"OpenThemeData");
 
-	if (!pfnOpenThemeData)
-		return NULL;
+    if (!pfnOpenThemeData)
+        return NULL;
 
-	return (*pfnOpenThemeData)(hwnd,pszClassList);
+    return (*pfnOpenThemeData)(hwnd,pszClassList);
 }
 
 HRESULT CVisualStyles::CloseThemeData(HTHEME hTheme)
 {
-	if (!Supported())
-		return false;
+    if (!Supported())
+        return false;
 
-	PFNCLOSETHEMEDATA pfnCloseThemeData = (PFNCLOSETHEMEDATA)GetProcAddress(m_hInstance,"CloseThemeData");
+    PFNCLOSETHEMEDATA pfnCloseThemeData = (PFNCLOSETHEMEDATA)GetProcAddress(m_hInstance,"CloseThemeData");
 
-	if (!pfnCloseThemeData)
-		return false;
+    if (!pfnCloseThemeData)
+        return false;
 
-	return (*pfnCloseThemeData)(hTheme);
+    return (*pfnCloseThemeData)(hTheme);
 }
 
 HRESULT CVisualStyles::DrawThemeBackground(HTHEME hTheme,HDC hdc,
-	int iPartId,int iStateId,const RECT *pRect,const RECT *pClipRect)
+    int iPartId,int iStateId,const RECT *pRect,const RECT *pClipRect)
 {
-	if (!Supported())
-		return false;
+    if (!Supported())
+        return false;
                 
-	PFNDRAWTHEMEBACKGROUND pfnDrawThemeBackground =
-		(PFNDRAWTHEMEBACKGROUND)GetProcAddress(m_hInstance,"DrawThemeBackground");
+    PFNDRAWTHEMEBACKGROUND pfnDrawThemeBackground =
+        (PFNDRAWTHEMEBACKGROUND)GetProcAddress(m_hInstance,"DrawThemeBackground");
 
-	if (!pfnDrawThemeBackground)
-		return false;
+    if (!pfnDrawThemeBackground)
+        return false;
 
-	return (*pfnDrawThemeBackground)(hTheme,hdc,iPartId,iStateId,pRect,pClipRect);
+    return (*pfnDrawThemeBackground)(hTheme,hdc,iPartId,iStateId,pRect,pClipRect);
 }
 
 HRESULT CVisualStyles::GetThemeColor(HTHEME hTheme,int iPartId,int iStateId,
-	int iPropId,COLORREF *pColor)
+    int iPropId,COLORREF *pColor)
 {
-	if (!Supported())
-		return false;
+    if (!Supported())
+        return false;
 
-	PFNGETTHEMECOLOR pfnGetThemeColor =
-		(PFNGETTHEMECOLOR)GetProcAddress(m_hInstance,"GetThemeColor");
+    PFNGETTHEMECOLOR pfnGetThemeColor =
+        (PFNGETTHEMECOLOR)GetProcAddress(m_hInstance,"GetThemeColor");
 
-	if (!pfnGetThemeColor)
-		return false;
+    if (!pfnGetThemeColor)
+        return false;
 
-	return (*pfnGetThemeColor)(hTheme,iPartId,iStateId,iPropId,pColor);
+    return (*pfnGetThemeColor)(hTheme,iPartId,iStateId,iPropId,pColor);
 }

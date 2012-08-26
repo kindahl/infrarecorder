@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,114 +33,114 @@
 class CMiniHtmlCtrl : public CScrollWindowImpl<CMiniHtmlCtrl>
 {
 private:
-	enum eAtomType
-	{
-		AT_TEXT,
-		AT_IMAGE,
-		AT_BREAK
-	};
+    enum eAtomType
+    {
+        AT_TEXT,
+        AT_IMAGE,
+        AT_BREAK
+    };
 
-	enum eAtomAttr
-	{
-		AA_NORMAL,
-		AA_BOLD,
-		AA_ITALIC,
-		AA_HEADER
-	};
+    enum eAtomAttr
+    {
+        AA_NORMAL,
+        AA_BOLD,
+        AA_ITALIC,
+        AA_HEADER
+    };
 
-	enum eTagType
-	{
-		TT_UNKNOWN,
-		TT_NORMAL,
-		TT_BOLD,
-		TT_ITALIC,
-		TT_HEADER,
-		TT_BREAK
-	};
+    enum eTagType
+    {
+        TT_UNKNOWN,
+        TT_NORMAL,
+        TT_BOLD,
+        TT_ITALIC,
+        TT_HEADER,
+        TT_BREAK
+    };
 
-	class CAtom
-	{
-	public:
-		TCHAR *m_szText;
-		unsigned int m_uiTextLen;
-		unsigned int m_uiWidth;
-		unsigned int m_uiLine;
-		CMiniHtmlCtrl::eAtomType m_Type;
-		CMiniHtmlCtrl::eAtomAttr m_Attr;
+    class CAtom
+    {
+    public:
+        TCHAR *m_szText;
+        unsigned int m_uiTextLen;
+        unsigned int m_uiWidth;
+        unsigned int m_uiLine;
+        CMiniHtmlCtrl::eAtomType m_Type;
+        CMiniHtmlCtrl::eAtomAttr m_Attr;
 
-		CAtom(TCHAR *szText,unsigned int uiTextLen,CMiniHtmlCtrl::eAtomType Type,
-			CMiniHtmlCtrl::eAtomAttr Attr)
-		{
-			m_szText = szText;
-			m_uiTextLen = uiTextLen;
-			m_uiWidth = 0;
-			m_uiLine = 0;
-			m_Type = Type;
-			m_Attr = Attr;
-		}
-	};
+        CAtom(TCHAR *szText,unsigned int uiTextLen,CMiniHtmlCtrl::eAtomType Type,
+            CMiniHtmlCtrl::eAtomAttr Attr)
+        {
+            m_szText = szText;
+            m_uiTextLen = uiTextLen;
+            m_uiWidth = 0;
+            m_uiLine = 0;
+            m_Type = Type;
+            m_Attr = Attr;
+        }
+    };
 
-	TCHAR *m_pDocBuffer;
-	unsigned long m_ulDocLength;
-	std::vector<CAtom> m_Atoms;
-	std::vector<unsigned int> m_LineWordCount;
-	HFONT m_hNormalFont;
-	HFONT m_hBoldFont;
-	HFONT m_hItalicFont;
-	HFONT m_hHeaderFont;
-	unsigned int m_uiNormalSpaceWidth;
-	unsigned int m_uiBoldSpaceWidth;
-	unsigned int m_uiItalicSpaceWidth;
-	unsigned int m_uiHeaderSpaceWidth;
+    TCHAR *m_pDocBuffer;
+    unsigned long m_ulDocLength;
+    std::vector<CAtom> m_Atoms;
+    std::vector<unsigned int> m_LineWordCount;
+    HFONT m_hNormalFont;
+    HFONT m_hBoldFont;
+    HFONT m_hItalicFont;
+    HFONT m_hHeaderFont;
+    unsigned int m_uiNormalSpaceWidth;
+    unsigned int m_uiBoldSpaceWidth;
+    unsigned int m_uiItalicSpaceWidth;
+    unsigned int m_uiHeaderSpaceWidth;
 
-	static HBRUSH m_hBackgroundBrush;
+    static HBRUSH m_hBackgroundBrush;
 
-	HFONT GetAtomFont(const CAtom *pAtom);
-	unsigned int GetAtomWidth(const CAtom *pAtom);
-	unsigned int GetAtomSpaceWidth(const CAtom *pAtom);
-	unsigned int GetAtomsTotalWidth(unsigned int uiFirstAtom,unsigned int uiLastAtom);
+    HFONT GetAtomFont(const CAtom *pAtom);
+    unsigned int GetAtomWidth(const CAtom *pAtom);
+    unsigned int GetAtomSpaceWidth(const CAtom *pAtom);
+    unsigned int GetAtomsTotalWidth(unsigned int uiFirstAtom,unsigned int uiLastAtom);
 
-	int RenderText(CDCHandle dc,const RECT *pRect,const CAtom *pAtom);
-	int RenderImage(CDCHandle dc,const RECT *pRect,const CAtom *pAtom);
-	void Render(CDCHandle dc);
-	void Layout(unsigned int uiWidth,unsigned int uiHeight);
+    int RenderText(CDCHandle dc,const RECT *pRect,const CAtom *pAtom);
+    int RenderImage(CDCHandle dc,const RECT *pRect,const CAtom *pAtom);
+    void Render(CDCHandle dc);
+    void Layout(unsigned int uiWidth,unsigned int uiHeight);
 
-	eTagType ParseTag(const TCHAR *szTag);
-	eAtomAttr TagToAttr(eTagType TagType);
-	bool ParseBuffer();
+    eTagType ParseTag(const TCHAR *szTag);
+    eAtomAttr TagToAttr(eTagType TagType);
+    bool ParseBuffer();
 
 public:
-	static CWndClassInfo &GetWndClassInfo()
-	{
-		static CWndClassInfo wc =
-		{
-			{
-				sizeof(WNDCLASSEX),CS_DBLCLKS,
-				StartWindowProc,0,0,NULL,NULL,NULL,
-				m_hBackgroundBrush,NULL,
-				_T("ckMiniHTML"),NULL
-			},
-			NULL,NULL,IDC_ARROW,TRUE,0,_T("")
-		};
+    static CWndClassInfo &GetWndClassInfo()
+    {
+        static CWndClassInfo wc =
+        {
+            {
+                sizeof(WNDCLASSEX),CS_DBLCLKS,
+                StartWindowProc,0,0,NULL,NULL,NULL,
+                m_hBackgroundBrush,NULL,
+                _T("ckMiniHTML"),NULL
+            },
+            NULL,NULL,IDC_ARROW,TRUE,0,_T("")
+        };
 
-		return wc;
-	}
+        return wc;
+    }
 
-	CMiniHtmlCtrl();
-	~CMiniHtmlCtrl();
+    CMiniHtmlCtrl();
+    ~CMiniHtmlCtrl();
 
-	bool Load(const TCHAR *szFileName);
-	void Close();
+    bool Load(const TCHAR *szFileName);
+    void Close();
 
-	BEGIN_MSG_MAP(CMiniHtmlCtrl)
-		MESSAGE_HANDLER(WM_PAINT,OnPaint)
-		MESSAGE_HANDLER(WM_SIZE,OnSize)
+    BEGIN_MSG_MAP(CMiniHtmlCtrl)
+        MESSAGE_HANDLER(WM_PAINT,OnPaint)
+        MESSAGE_HANDLER(WM_SIZE,OnSize)
 
         DEFAULT_REFLECTION_HANDLER()
 
-		CHAIN_MSG_MAP(CScrollWindowImpl<CMiniHtmlCtrl>)
+        CHAIN_MSG_MAP(CScrollWindowImpl<CMiniHtmlCtrl>)
     END_MSG_MAP()
 
-	LRESULT OnPaint(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnSize(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnPaint(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnSize(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 };

@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,19 +26,19 @@
 
 CProjectPropFileSysPage::CProjectPropFileSysPage()
 {
-	// Try to load translated string.
-	if (g_LanguageSettings.m_pLngProcessor != NULL)
-	{	
-		// Make sure that there is a strings translation section.
-		if (g_LanguageSettings.m_pLngProcessor->EnterSection(_T("strings")))
-		{
-			TCHAR *szStrValue;
-			if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(TITLE_FILESYSTEM,szStrValue))
-				SetTitle(szStrValue);
-		}
-	}
+    // Try to load translated string.
+    if (g_LanguageSettings.m_pLngProcessor != NULL)
+    {	
+        // Make sure that there is a strings translation section.
+        if (g_LanguageSettings.m_pLngProcessor->EnterSection(_T("strings")))
+        {
+            TCHAR *szStrValue;
+            if (g_LanguageSettings.m_pLngProcessor->GetValuePtr(TITLE_FILESYSTEM,szStrValue))
+                SetTitle(szStrValue);
+        }
+    }
 
-	m_psp.dwFlags |= PSP_HASHELP;
+    m_psp.dwFlags |= PSP_HASHELP;
 }
 
 CProjectPropFileSysPage::~CProjectPropFileSysPage()
@@ -47,88 +47,88 @@ CProjectPropFileSysPage::~CProjectPropFileSysPage()
 
 bool CProjectPropFileSysPage::Translate()
 {
-	if (g_LanguageSettings.m_pLngProcessor == NULL)
-		return false;
+    if (g_LanguageSettings.m_pLngProcessor == NULL)
+        return false;
 
-	CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
-	
-	// Make sure that there is a projectprop translation section.
-	if (!pLng->EnterSection(_T("projectprop")))
-		return false;
+    CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
+    
+    // Make sure that there is a projectprop translation section.
+    if (!pLng->EnterSection(_T("projectprop")))
+        return false;
 
-	// Translate.
-	TCHAR *szStrValue;
-	if (pLng->GetValuePtr(IDC_FILESYSSTATIC,szStrValue))
-		SetDlgItemText(IDC_FILESYSSTATIC,szStrValue);
+    // Translate.
+    TCHAR *szStrValue;
+    if (pLng->GetValuePtr(IDC_FILESYSSTATIC,szStrValue))
+        SetDlgItemText(IDC_FILESYSSTATIC,szStrValue);
 
-	return true;
+    return true;
 }
 
 bool CProjectPropFileSysPage::OnApply()
 {
-	g_ProjectSettings.m_iFileSystem = (int)m_FileSysCombo.GetItemData(m_FileSysCombo.GetCurSel());
+    g_ProjectSettings.m_iFileSystem = (int)m_FileSysCombo.GetItemData(m_FileSysCombo.GetCurSel());
 
-	return true;
+    return true;
 }
 
 void CProjectPropFileSysPage::OnHelp()
 {
-	TCHAR szFileName[MAX_PATH];
-	GetModuleFileName(NULL,szFileName,MAX_PATH - 1);
+    TCHAR szFileName[MAX_PATH];
+    GetModuleFileName(NULL,szFileName,MAX_PATH - 1);
 
-	ExtractFilePath(szFileName);
-	lstrcat(szFileName,lngGetManual());
-	lstrcat(szFileName,_T("::/how_to_use/working_with_projects/project_settings.html"));
+    ExtractFilePath(szFileName);
+    lstrcat(szFileName,lngGetManual());
+    lstrcat(szFileName,_T("::/how_to_use/working_with_projects/project_settings.html"));
 
-	HtmlHelp(m_hWnd,szFileName,HH_DISPLAY_TOC,NULL);
+    HtmlHelp(m_hWnd,szFileName,HH_DISPLAY_TOC,NULL);
 }
 
 LRESULT CProjectPropFileSysPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
-	// Setup the file system combo box.
-	m_FileSysCombo = GetDlgItem(IDC_FILESYSCOMBO);
+    // Setup the file system combo box.
+    m_FileSysCombo = GetDlgItem(IDC_FILESYSCOMBO);
 
-	int iIndex = 0;
-	m_FileSysCombo.AddString(_T("ISO9660"));
-	m_FileSysCombo.SetItemData(iIndex++,FILESYSTEM_ISO);
-	m_FileSysCombo.AddString(_T("ISO9660 + UDF"));
-	m_FileSysCombo.SetItemData(iIndex++,FILESYSTEM_ISO_UDF);
-	m_FileSysCombo.AddString(_T("ISO9660 + UDF (DVD-Video)"));
-	m_FileSysCombo.SetItemData(iIndex++,FILESYSTEM_DVDVIDEO);
-	m_FileSysCombo.AddString(_T("UDF"));
-	m_FileSysCombo.SetItemData(iIndex++,FILESYSTEM_UDF);	
+    int iIndex = 0;
+    m_FileSysCombo.AddString(_T("ISO9660"));
+    m_FileSysCombo.SetItemData(iIndex++,FILESYSTEM_ISO);
+    m_FileSysCombo.AddString(_T("ISO9660 + UDF"));
+    m_FileSysCombo.SetItemData(iIndex++,FILESYSTEM_ISO_UDF);
+    m_FileSysCombo.AddString(_T("ISO9660 + UDF (DVD-Video)"));
+    m_FileSysCombo.SetItemData(iIndex++,FILESYSTEM_DVDVIDEO);
+    m_FileSysCombo.AddString(_T("UDF"));
+    m_FileSysCombo.SetItemData(iIndex++,FILESYSTEM_UDF);	
 
-	bool bFoundItem = false;
-	for (int i = 0; i < m_FileSysCombo.GetCount(); i++)
-	{
-		if (static_cast<int>(m_FileSysCombo.GetItemData(i)) == g_ProjectSettings.m_iFileSystem)
-		{
-			m_FileSysCombo.SetCurSel(i);
-			bFoundItem = true;
-			break;
-		}
-	}
+    bool bFoundItem = false;
+    for (int i = 0; i < m_FileSysCombo.GetCount(); i++)
+    {
+        if (static_cast<int>(m_FileSysCombo.GetItemData(i)) == g_ProjectSettings.m_iFileSystem)
+        {
+            m_FileSysCombo.SetCurSel(i);
+            bFoundItem = true;
+            break;
+        }
+    }
 
-	if (!bFoundItem)
-		m_FileSysCombo.SetCurSel(0);
+    if (!bFoundItem)
+        m_FileSysCombo.SetCurSel(0);
 
-	m_iSelFileSystem = g_ProjectSettings.m_iFileSystem;
+    m_iSelFileSystem = g_ProjectSettings.m_iFileSystem;
 
-	if (g_ProjectSettings.m_bMultiSession)
-		m_FileSysCombo.EnableWindow(FALSE);
+    if (g_ProjectSettings.m_bMultiSession)
+        m_FileSysCombo.EnableWindow(FALSE);
 
-	// Translate the window.
-	Translate();
+    // Translate the window.
+    Translate();
 
-	return true;
+    return true;
 }
 
 LRESULT CProjectPropFileSysPage::OnFileSysChange(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
-	::SendMessage(GetParent(),WM_SETFILESYSTEM,m_iSelFileSystem,m_FileSysCombo.GetItemData(m_FileSysCombo.GetCurSel()));
+    ::SendMessage(GetParent(),WM_SETFILESYSTEM,m_iSelFileSystem,m_FileSysCombo.GetItemData(m_FileSysCombo.GetCurSel()));
 
-	m_iSelFileSystem = (int)m_FileSysCombo.GetItemData(m_FileSysCombo.GetCurSel());
+    m_iSelFileSystem = (int)m_FileSysCombo.GetItemData(m_FileSysCombo.GetCurSel());
 
-	bHandled = false;
-	return 0;
+    bHandled = false;
+    return 0;
 }

@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,28 +24,28 @@
 class CDiscGeneralPage : public CPropertyPageImpl<CDiscGeneralPage>
 {
 private:
-	HICON m_hIcon;
+    HICON m_hIcon;
 
-	ckmmc::Device &m_Device;
-	TCHAR m_szDiscLabel[64];
+    ckmmc::Device &m_Device;
+    TCHAR m_szDiscLabel[64];
 
-	bool Translate();
+    bool Translate();
 
-	void DisplayDiscType(ckmmc::Device::Profile Profile);
-	void DisplayBookType(unsigned char ucBookType,unsigned char ucBookRev);
-	void DisplayStatus(CCore2DiscInfo *pDiscInfo);
+    void DisplayDiscType(ckmmc::Device::Profile Profile);
+    void DisplayBookType(unsigned char ucBookType,unsigned char ucBookRev);
+    void DisplayStatus(CCore2DiscInfo *pDiscInfo);
 
 public:
-	enum { IDD = IDD_PROPPAGE_DISCGENERAL };
+    enum { IDD = IDD_PROPPAGE_DISCGENERAL };
 
-	CDiscGeneralPage(const TCHAR *szDiscLabel,ckmmc::Device &Device);
-	~CDiscGeneralPage();
+    CDiscGeneralPage(const TCHAR *szDiscLabel,ckmmc::Device &Device);
+    ~CDiscGeneralPage();
 
-	BEGIN_MSG_MAP(CDiscGeneralPage)
-		MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
+    BEGIN_MSG_MAP(CDiscGeneralPage)
+        MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
 
-		CHAIN_MSG_MAP(CPropertyPageImpl<CDiscGeneralPage>)
-	END_MSG_MAP()
+        CHAIN_MSG_MAP(CPropertyPageImpl<CDiscGeneralPage>)
+    END_MSG_MAP()
 
-	LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 };

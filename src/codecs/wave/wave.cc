@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ int g_iCapabilities = IRC_HAS_DECODER | IRC_HAS_ENCODER;
 
 // Version and about strings.
 TCHAR *g_szVersion = _T("0.52.0.0");
-TCHAR *g_szAbout = _T("InfraRecorder Wave Codec\n\nCopyright © 2006-2011 Christian Kindahl.");
+TCHAR *g_szAbout = _T("InfraRecorder Wave Codec\n\nCopyright © 2006-2012 Christian Kindahl.");
 TCHAR *g_szEncoder = _T("Wave");
 TCHAR *g_szFileExt = _T(".wav");
 
@@ -42,168 +42,168 @@ CWaveWriter g_WaveWriter;
 
 BOOL APIENTRY DllMain(HANDLE hModule,DWORD ul_reason_for_call,LPVOID lpReserved)
 {
-	switch (ul_reason_for_call)
-	{
-		// Initialize COM for the current thread if it hasn't already been initialized.
-		case DLL_PROCESS_ATTACH:
-		case DLL_THREAD_ATTACH:
-			AVIFileInit();
-			break;
+    switch (ul_reason_for_call)
+    {
+        // Initialize COM for the current thread if it hasn't already been initialized.
+        case DLL_PROCESS_ATTACH:
+        case DLL_THREAD_ATTACH:
+            AVIFileInit();
+            break;
 
-		case DLL_PROCESS_DETACH:
-		case DLL_THREAD_DETACH:
-			AVIFileExit();
-			break;
-	};
+        case DLL_PROCESS_DETACH:
+        case DLL_THREAD_DETACH:
+            AVIFileExit();
+            break;
+    };
 
     return TRUE;
 }
 
 /*
-	irc_capabilities
-	----------------
-	Returns bit information on what operations that are supported by the codec.
+    irc_capabilities
+    ----------------
+    Returns bit information on what operations that are supported by the codec.
 */
 int WINAPI irc_capabilities()
 {
-	return g_iCapabilities;
+    return g_iCapabilities;
 }
 
 TCHAR *WINAPI irc_string(unsigned int uiID)
 {
-	switch (uiID)
-	{
-		case IRC_STR_VERSION:
-			return g_szVersion;
+    switch (uiID)
+    {
+        case IRC_STR_VERSION:
+            return g_szVersion;
 
-		case IRC_STR_ABOUT:
-			return g_szAbout;
+        case IRC_STR_ABOUT:
+            return g_szAbout;
 
-		case IRC_STR_ENCODER:
-			return g_szEncoder;
+        case IRC_STR_ENCODER:
+            return g_szEncoder;
 
-		case IRC_STR_FILEEXT:
-			return g_szFileExt;
-	}
+        case IRC_STR_FILEEXT:
+            return g_szFileExt;
+    }
 
-	return NULL;
+    return NULL;
 }
 
 bool WINAPI irc_set_callback(tirc_send_message *pSendMessage)
 {
-	if (pSendMessage == NULL)
-		return false;
+    if (pSendMessage == NULL)
+        return false;
 
-	g_pSendMessage = pSendMessage;
-	return true;
+    g_pSendMessage = pSendMessage;
+    return true;
 }
 
 bool WINAPI irc_decode_init(const TCHAR *szFileName,int &iNumChannels,
-							int &iSampleRate,int &iBitRate,unsigned __int64 &uiDuration)
+                            int &iSampleRate,int &iBitRate,unsigned __int64 &uiDuration)
 {
-	// Open the file.
-	HRESULT hResult = AVIFileOpen(&g_pAVIFile,szFileName,OF_SHARE_DENY_NONE,NULL);
-	if (FAILED(hResult))
-		return false;
+    // Open the file.
+    HRESULT hResult = AVIFileOpen(&g_pAVIFile,szFileName,OF_SHARE_DENY_NONE,NULL);
+    if (FAILED(hResult))
+        return false;
 
-	// Get the first stream in the file (we assume only one audio stream).
-	hResult = AVIFileGetStream(g_pAVIFile,&g_pAVIStream,streamtypeAUDIO,0);
-	if (FAILED(hResult))
-		return false;
+    // Get the first stream in the file (we assume only one audio stream).
+    hResult = AVIFileGetStream(g_pAVIFile,&g_pAVIStream,streamtypeAUDIO,0);
+    if (FAILED(hResult))
+        return false;
 
-	// Gather stream information.
-	long lAudioInfoSize = 0;
-	hResult = AVIStreamFormatSize(g_pAVIStream,0,&lAudioInfoSize);
-	if (FAILED(hResult))
-		return false;
+    // Gather stream information.
+    long lAudioInfoSize = 0;
+    hResult = AVIStreamFormatSize(g_pAVIStream,0,&lAudioInfoSize);
+    if (FAILED(hResult))
+        return false;
 
-	if (lAudioInfoSize < sizeof(WAVEFORMATEX))
-		lAudioInfoSize = sizeof(WAVEFORMATEX);
+    if (lAudioInfoSize < sizeof(WAVEFORMATEX))
+        lAudioInfoSize = sizeof(WAVEFORMATEX);
 
-	WAVEFORMATEX *pAudioInfo = (WAVEFORMATEX *)new unsigned char[lAudioInfoSize];
-	if (pAudioInfo == NULL)
-		return false;
+    WAVEFORMATEX *pAudioInfo = (WAVEFORMATEX *)new unsigned char[lAudioInfoSize];
+    if (pAudioInfo == NULL)
+        return false;
 
-	hResult = AVIStreamReadFormat(g_pAVIStream,0,pAudioInfo,&lAudioInfoSize);
-	if (FAILED(hResult))
-	{
-		delete [] pAudioInfo;
-		return false;
-	}
+    hResult = AVIStreamReadFormat(g_pAVIStream,0,pAudioInfo,&lAudioInfoSize);
+    if (FAILED(hResult))
+    {
+        delete [] pAudioInfo;
+        return false;
+    }
 
-	if (pAudioInfo->wFormatTag == WAVE_FORMAT_PCM)
-		pAudioInfo->cbSize = 0;
+    if (pAudioInfo->wFormatTag == WAVE_FORMAT_PCM)
+        pAudioInfo->cbSize = 0;
 
     iNumChannels = pAudioInfo->nChannels;
-	iSampleRate = pAudioInfo->nSamplesPerSec;
-	iBitRate = iSampleRate * pAudioInfo->wBitsPerSample;
+    iSampleRate = pAudioInfo->nSamplesPerSec;
+    iBitRate = iSampleRate * pAudioInfo->wBitsPerSample;
 
-	// Get stream duration in milliseconds.
-	long lLength = AVIStreamLength(g_pAVIStream);
-	uiDuration = AVIStreamSampleToTime(g_pAVIStream,lLength);
+    // Get stream duration in milliseconds.
+    long lLength = AVIStreamLength(g_pAVIStream);
+    uiDuration = AVIStreamSampleToTime(g_pAVIStream,lLength);
 
-	g_lCurSample = AVIStreamStart(g_pAVIStream);
+    g_lCurSample = AVIStreamStart(g_pAVIStream);
 
-	delete [] pAudioInfo;
-	return true;
+    delete [] pAudioInfo;
+    return true;
 }
 
 __int64 WINAPI irc_decode_process(unsigned char *pBuffer,__int64 iBufferSize,
-								  unsigned __int64 &uiTime)
+                                  unsigned __int64 &uiTime)
 {
-	if (iBufferSize > 0x7FFFFFFF)
-		return -1;
+    if (iBufferSize > 0x7FFFFFFF)
+        return -1;
 
-	long lProcessed = 0;
-	long lProcessedSamples = 0;
+    long lProcessed = 0;
+    long lProcessedSamples = 0;
 
-	HRESULT hResult = AVIStreamRead(g_pAVIStream,g_lCurSample,AVISTREAMREAD_CONVENIENT,
-		pBuffer,(long)iBufferSize,&lProcessed,&lProcessedSamples);
-	if (FAILED(hResult))
-		return -1;
+    HRESULT hResult = AVIStreamRead(g_pAVIStream,g_lCurSample,AVISTREAMREAD_CONVENIENT,
+        pBuffer,(long)iBufferSize,&lProcessed,&lProcessedSamples);
+    if (FAILED(hResult))
+        return -1;
 
-	g_lCurSample += lProcessedSamples;
-	uiTime = AVIStreamSampleToTime(g_pAVIStream,g_lCurSample);
-	return lProcessed;
+    g_lCurSample += lProcessedSamples;
+    uiTime = AVIStreamSampleToTime(g_pAVIStream,g_lCurSample);
+    return lProcessed;
 }
 
 bool WINAPI irc_decode_exit()
 {
-	HRESULT hResult = AVIStreamRelease(g_pAVIStream);
-	if (FAILED(hResult))
-		return false;
-	g_pAVIStream = NULL;
+    HRESULT hResult = AVIStreamRelease(g_pAVIStream);
+    if (FAILED(hResult))
+        return false;
+    g_pAVIStream = NULL;
 
-	hResult = AVIFileRelease(g_pAVIFile);
-	if (FAILED(hResult))
-		return false;
-	g_pAVIFile = NULL;
+    hResult = AVIFileRelease(g_pAVIFile);
+    if (FAILED(hResult))
+        return false;
+    g_pAVIFile = NULL;
 
-	return true;
+    return true;
 }
 
 bool WINAPI irc_encode_init(const TCHAR *szFileName,int iNumChannels,
-							int iSampleRate,int iBitRate)
+                            int iSampleRate,int iBitRate)
 {
-	return g_WaveWriter.Open(szFileName,iNumChannels,iSampleRate,iBitRate);
+    return g_WaveWriter.Open(szFileName,iNumChannels,iSampleRate,iBitRate);
 }
 
 __int64 WINAPI irc_encode_process(unsigned char *pBuffer,__int64 iDataSize)
 {
-	return g_WaveWriter.Write(pBuffer,iDataSize);
+    return g_WaveWriter.Write(pBuffer,iDataSize);
 }
 
 __int64 WINAPI irc_encode_flush()
 {
-	return 0;
+    return 0;
 }
 
 bool WINAPI irc_encode_exit()
 {
-	return g_WaveWriter.Close();
+    return g_WaveWriter.Close();
 }
 
 bool WINAPI irc_encode_config()
 {
-	return false;
+    return false;
 }

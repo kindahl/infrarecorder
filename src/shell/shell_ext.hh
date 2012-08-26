@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,60 +23,60 @@
 #include "shell.hh"
 
 class ATL_NO_VTABLE CShellExt : 
-	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CShellExt,&CLSID_ShellExt>,
-	public IShellExtInit,
-	public IContextMenu
+    public CComObjectRootEx<CComSingleThreadModel>,
+    public CComCoClass<CShellExt,&CLSID_ShellExt>,
+    public IShellExtInit,
+    public IContextMenu
 {
 private:
-	// Is set to true if the selected file is an InfraRecorder project.
-	bool m_bIsProject;
+    // Is set to true if the selected file is an InfraRecorder project.
+    bool m_bIsProject;
 
-	// Bitmaps.
-	HBITMAP m_hBurnBitmap;
+    // Bitmaps.
+    HBITMAP m_hBurnBitmap;
 
-	bool IsSeparatorItem(HMENU hMenu,unsigned int uiPosition);
-	bool IsProjectFile(const TCHAR *szFileName);
+    bool IsSeparatorItem(HMENU hMenu,unsigned int uiPosition);
+    bool IsProjectFile(const TCHAR *szFileName);
 
-	unsigned int FillProjectMenu(HMENU hMenu,unsigned int uiMenuIndex,unsigned int uiFirstCmd);
-	unsigned int FillDiscImageMenu(HMENU hMenu,unsigned int uiMenuIndex,unsigned int uiFirstCmd);
+    unsigned int FillProjectMenu(HMENU hMenu,unsigned int uiMenuIndex,unsigned int uiFirstCmd);
+    unsigned int FillDiscImageMenu(HMENU hMenu,unsigned int uiMenuIndex,unsigned int uiFirstCmd);
 
-	HRESULT GetProjectCommandString(LPSTR pszName,UINT cchMax,bool bUnicode,UINT_PTR uiID);
-	HRESULT GetDiscImageCommandString(LPSTR pszName,UINT cchMax,bool bUnicode,UINT_PTR uiID);
+    HRESULT GetProjectCommandString(LPSTR pszName,UINT cchMax,bool bUnicode,UINT_PTR uiID);
+    HRESULT GetDiscImageCommandString(LPSTR pszName,UINT cchMax,bool bUnicode,UINT_PTR uiID);
 
-	HRESULT InvokeProjectCommand(HWND hWnd,unsigned int uiID);
-	HRESULT InvokeDiscImageCommand(HWND hWnd,unsigned int uiID);
+    HRESULT InvokeProjectCommand(HWND hWnd,unsigned int uiID);
+    HRESULT InvokeDiscImageCommand(HWND hWnd,unsigned int uiID);
 
 protected:
-	TCHAR m_szFileName[MAX_PATH];
+    TCHAR m_szFileName[MAX_PATH];
 
 public:
-	CShellExt();
-	~CShellExt();
+    CShellExt();
+    ~CShellExt();
 
-	DECLARE_REGISTRY_RESOURCEID(IDR_SHELLEXT)
+    DECLARE_REGISTRY_RESOURCEID(IDR_SHELLEXT)
 
-	DECLARE_NOT_AGGREGATABLE(CShellExt)
+    DECLARE_NOT_AGGREGATABLE(CShellExt)
 
-	BEGIN_COM_MAP(CShellExt)
-		COM_INTERFACE_ENTRY(IShellExtInit)
-		COM_INTERFACE_ENTRY(IContextMenu)
-	END_COM_MAP()
+    BEGIN_COM_MAP(CShellExt)
+        COM_INTERFACE_ENTRY(IShellExtInit)
+        COM_INTERFACE_ENTRY(IContextMenu)
+    END_COM_MAP()
 
-	DECLARE_PROTECT_FINAL_CONSTRUCT()
+    DECLARE_PROTECT_FINAL_CONSTRUCT()
 
-	HRESULT FinalConstruct();	
-	void FinalRelease();
+    HRESULT FinalConstruct();	
+    void FinalRelease();
 
-	// IShellExtInit.
-	STDMETHODIMP Initialize(LPCITEMIDLIST pidlFolder,LPDATAOBJECT pDataObj,HKEY hProgID);
+    // IShellExtInit.
+    STDMETHODIMP Initialize(LPCITEMIDLIST pidlFolder,LPDATAOBJECT pDataObj,HKEY hProgID);
 
-	// IContextMenu.
-	STDMETHODIMP QueryContextMenu(HMENU hmenu,UINT uMenuIndex,UINT uidFirstCmd,
-		UINT uidLastCmd,UINT uFlags);
-	STDMETHODIMP GetCommandString(UINT_PTR idCmd,UINT uFlags,UINT *pwReserved,
-		LPSTR pszName,UINT cchMax);
-	STDMETHODIMP InvokeCommand(LPCMINVOKECOMMANDINFO pCmdInfo);
+    // IContextMenu.
+    STDMETHODIMP QueryContextMenu(HMENU hmenu,UINT uMenuIndex,UINT uidFirstCmd,
+        UINT uidLastCmd,UINT uFlags);
+    STDMETHODIMP GetCommandString(UINT_PTR idCmd,UINT uFlags,UINT *pwReserved,
+        LPSTR pszName,UINT cchMax);
+    STDMETHODIMP InvokeCommand(LPCMINVOKECOMMANDINFO pCmdInfo);
 };
 
 OBJECT_ENTRY_AUTO(__uuidof(ShellExt),CShellExt)

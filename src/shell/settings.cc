@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,48 +25,48 @@ CGlobalSettings g_GlobalSettings;
 
 bool CLanguageSettings::Load(CXmlProcessor *pXml)
 {
-	if (pXml == NULL)
-		return false;
+    if (pXml == NULL)
+        return false;
 
-	if (!pXml->EnterElement(_T("Language")))
-		return false;
+    if (!pXml->EnterElement(_T("Language")))
+        return false;
 
-	pXml->GetSafeElementData(_T("LanguageFile"),m_szLanguageFile,MAX_PATH - 1);
+    pXml->GetSafeElementData(_T("LanguageFile"),m_szLanguageFile,MAX_PATH - 1);
 
-	// Calculate full path.
-	TCHAR szFullPath[MAX_PATH];
-	::GetModuleFileName(NULL,szFullPath,MAX_PATH - 1);
-	ExtractFilePath(szFullPath);
-	lstrcat(szFullPath,_T("Languages\\"));
-	lstrcat(szFullPath,m_szLanguageFile);
+    // Calculate full path.
+    TCHAR szFullPath[MAX_PATH];
+    ::GetModuleFileName(NULL,szFullPath,MAX_PATH - 1);
+    ExtractFilePath(szFullPath);
+    lstrcat(szFullPath,_T("Languages\\"));
+    lstrcat(szFullPath,m_szLanguageFile);
 
-	if (ckcore::File::exist(szFullPath))
-	{
-		m_pLngProcessor = new CLngProcessor(szFullPath);
-		m_pLngProcessor->Load();
-	}
+    if (ckcore::File::exist(szFullPath))
+    {
+        m_pLngProcessor = new CLngProcessor(szFullPath);
+        m_pLngProcessor->Load();
+    }
 
-	pXml->LeaveElement();
-	return true;
+    pXml->LeaveElement();
+    return true;
 }
 
 bool CGlobalSettings::Load(CXmlProcessor *pXml)
 {
-	if (pXml == NULL)
-		return false;
+    if (pXml == NULL)
+        return false;
 
-	if (!pXml->EnterElement(_T("Global")))
-		return false;
+    if (!pXml->EnterElement(_T("Global")))
+        return false;
 
-	// Shell extension.
-	if (pXml->EnterElement(_T("ShellExtension")))
-	{
-		pXml->GetSafeElementAttrValue(_T("submenu"),&m_bShellExtSubMenu);
-		pXml->GetSafeElementAttrValue(_T("icons"),&m_bShellExtIcon);
+    // Shell extension.
+    if (pXml->EnterElement(_T("ShellExtension")))
+    {
+        pXml->GetSafeElementAttrValue(_T("submenu"),&m_bShellExtSubMenu);
+        pXml->GetSafeElementAttrValue(_T("icons"),&m_bShellExtIcon);
 
-		pXml->LeaveElement();
-	}
+        pXml->LeaveElement();
+    }
 
-	pXml->LeaveElement();
-	return true;
+    pXml->LeaveElement();
+    return true;
 }

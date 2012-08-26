@@ -709,7 +709,7 @@ BEGIN
             VALUE "FileDescription", "InfraRecorder"
             VALUE "FileVersion", "0.52.0.0"
             VALUE "InternalName", "InfraRecorder"
-            VALUE "LegalCopyright", "Copyright © 2006-2011 Christian Kindahl"
+            VALUE "LegalCopyright", "Copyright © 2006-2012 Christian Kindahl"
             VALUE "OriginalFilename", "InfraRecorder.exe"
             VALUE "ProductName", "InfraRecorder"
             VALUE "ProductVersion", "0.52.0.0"

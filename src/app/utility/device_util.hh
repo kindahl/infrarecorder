@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 
 namespace NDeviceUtil
 {
-	ckcore::tstring GetDeviceAddr(const ckmmc::Device &device);
-	std::string GetDeviceAddrA(const ckmmc::Device &device);
-	ckcore::tstring GetDeviceName(const ckmmc::Device &device);
+    ckcore::tstring GetDeviceAddr(const ckmmc::Device &device);
+    std::string GetDeviceAddrA(const ckmmc::Device &device);
+    ckcore::tstring GetDeviceName(const ckmmc::Device &device);
 };

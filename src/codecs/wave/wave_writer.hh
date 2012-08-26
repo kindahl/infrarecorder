@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,23 +24,23 @@
 class CWaveWriter
 {
 private:
-	ckcore::File *m_pFile;
+    ckcore::File *m_pFile;
 
-	int m_iNumChannels;
-	int m_iSampleRate;
-	int m_iBitRate;
-	int m_iBitsPerSample;
-	unsigned long m_ulNumSamples;
+    int m_iNumChannels;
+    int m_iSampleRate;
+    int m_iBitRate;
+    int m_iBitsPerSample;
+    unsigned long m_ulNumSamples;
 
-	bool WriteHeader();
-	bool WriteExtensibleHeader();
+    bool WriteHeader();
+    bool WriteExtensibleHeader();
 
 public:
-	CWaveWriter();
-	~CWaveWriter();
+    CWaveWriter();
+    ~CWaveWriter();
 
-	bool Open(const TCHAR *szFileName,int iNumChannels,
-		int iSampleRate,int iBitRate);
-	bool Close();
-	__int64 Write(unsigned char *pBuffer,__int64 iDataSize);
+    bool Open(const TCHAR *szFileName,int iNumChannels,
+        int iSampleRate,int iBitRate);
+    bool Close();
+    __int64 Write(unsigned char *pBuffer,__int64 iDataSize);
 };

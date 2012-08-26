@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@
 #define SPACEMETER_METERTEXT_INDENT_LEFT	4
 
 /*
-	New Tango colors.
+    New Tango colors.
 */
 // Normal colors.
 #define SPACEMETER_BORDERCOLOR				RGB(32,74,135)
@@ -96,92 +96,92 @@
 class CSpaceMeter : public CWindowImpl<CSpaceMeter,CWindow>
 {
 private:
-	// These values are for rendering, they should never be altered manually.
-	int m_iMeterPosition;
-	int m_iMeterSegmentSpacing;
-	TCHAR m_uiMeterSegments[SPACEMETER_METER_COUNT][SPACEMETER_METERTEXT_SIZE];
+    // These values are for rendering, they should never be altered manually.
+    int m_iMeterPosition;
+    int m_iMeterSegmentSpacing;
+    TCHAR m_uiMeterSegments[SPACEMETER_METER_COUNT][SPACEMETER_METERTEXT_SIZE];
 
-	HBRUSH m_hBarBorderBrush;
-	HBRUSH m_hWarnBarBorderBrush;
-	HBRUSH m_hFullBarBorderBrush;
+    HBRUSH m_hBarBorderBrush;
+    HBRUSH m_hWarnBarBorderBrush;
+    HBRUSH m_hFullBarBorderBrush;
 
-	// Used for drawing a Vista meter.
-	HTHEME m_hProgressTheme;
+    // Used for drawing a Vista meter.
+    HTHEME m_hProgressTheme;
 
-	// Horizontal indentation in pixels.
-	int m_iHorIndent;
+    // Horizontal indentation in pixels.
+    int m_iHorIndent;
 
-	int m_iDisplayMode;
-	int m_iDrawState;
+    int m_iDisplayMode;
+    int m_iDrawState;
 
-	// The following values can be changed from the outside using public functions.
-	unsigned __int64 m_uiAllocatedSize;
-	unsigned __int64 m_uiDiscSize;
-	unsigned __int64 m_uiMeterSize;			// How many bytes does the meter display.
+    // The following values can be changed from the outside using public functions.
+    unsigned __int64 m_uiAllocatedSize;
+    unsigned __int64 m_uiDiscSize;
+    unsigned __int64 m_uiMeterSize;			// How many bytes does the meter display.
 
-	// Tooltip.
-	CToolTipCtrl m_ToolTip;
-	ckcore::tstring m_ToolTipText;
+    // Tooltip.
+    CToolTipCtrl m_ToolTip;
+    ckcore::tstring m_ToolTipText;
 
-	// Popup menu.
-	HMENU m_hPopupMenu;
-	void FillPopupMenu();
+    // Popup menu.
+    HMENU m_hPopupMenu;
+    void FillPopupMenu();
 
-	void DrawBar(HDC hDC,RECT *pClientRect);
-	void DrawFullBar(HDC hDC,RECT *pClientRect);
-	void DrawMeter(HDC hDC,RECT *pClientRect,RECT *pBarRect);
+    void DrawBar(HDC hDC,RECT *pClientRect);
+    void DrawFullBar(HDC hDC,RECT *pClientRect);
+    void DrawMeter(HDC hDC,RECT *pClientRect,RECT *pBarRect);
 
-	void UpdateMeter(int iClientWidth);
-	void UpdateToolTip();
+    void UpdateMeter(int iClientWidth);
+    void UpdateToolTip();
 
-	bool m_bIsUpdatePending;
+    bool m_bIsUpdatePending;
 
 public:
-	DECLARE_WND_CLASS(_T("ckSpaceMeter"));
+    DECLARE_WND_CLASS(_T("ckSpaceMeter"));
 
-	CSpaceMeter();
-	~CSpaceMeter();
+    CSpaceMeter();
+    ~CSpaceMeter();
 
-	//void SetDiskSize(unsigned __int64 uiDiskSize);
-	void SetDiscSize(unsigned int uiDiscSize);
-	void SetAllocatedSize(unsigned __int64 uiAllocatedSize);
-	void IncreaseAllocatedSize(unsigned __int64 uiSize);
-	void DecreaseAllocatedSize(unsigned __int64 uiSize);
-	unsigned __int64 GetAllocatedSize();
+    //void SetDiskSize(unsigned __int64 uiDiskSize);
+    void SetDiscSize(unsigned int uiDiscSize);
+    void SetAllocatedSize(unsigned __int64 uiAllocatedSize);
+    void IncreaseAllocatedSize(unsigned __int64 uiSize);
+    void DecreaseAllocatedSize(unsigned __int64 uiSize);
+    unsigned __int64 GetAllocatedSize();
 
-	void SetDisplayMode(int iDisplayMode);
-	
-	void Initialize();
+    void SetDisplayMode(int iDisplayMode);
+    
+    void Initialize();
 
 private:
 #if _ATL_VER <= 0x0300
-	BEGIN_MSG_MAP_EX(CSpaceMeter)
+    BEGIN_MSG_MAP_EX(CSpaceMeter)
 #else
-	BEGIN_MSG_MAP(CSpaceMeter)
+    BEGIN_MSG_MAP(CSpaceMeter)
 #endif
-		MESSAGE_HANDLER(WM_CREATE,OnCreate)
-		MESSAGE_HANDLER(WM_SIZE,OnSize)
-		MESSAGE_HANDLER(WM_PAINT,OnPaint)
-		MESSAGE_HANDLER(WM_ERASEBKGND,OnEraseBkgnd)
-		MESSAGE_HANDLER(WM_RBUTTONDOWN,OnRButtonDown)
-		//MESSAGE_HANDLER(WM_MOUSEMOVE,OnMouseMove)
-		MESSAGE_HANDLER(WMU_SPACE_METER_DELAYED_UPDATE,OnDelayedUpdate)
-		MESSAGE_RANGE_HANDLER(WM_MOUSEFIRST,WM_MOUSELAST,OnMouseMove)
-		NOTIFY_CODE_HANDLER(TTN_GETDISPINFO,OnGetDispInfo)
+        MESSAGE_HANDLER(WM_CREATE,OnCreate)
+        MESSAGE_HANDLER(WM_SIZE,OnSize)
+        MESSAGE_HANDLER(WM_PAINT,OnPaint)
+        MESSAGE_HANDLER(WM_ERASEBKGND,OnEraseBkgnd)
+        MESSAGE_HANDLER(WM_RBUTTONDOWN,OnRButtonDown)
+        //MESSAGE_HANDLER(WM_MOUSEMOVE,OnMouseMove)
+        MESSAGE_HANDLER(WMU_SPACE_METER_DELAYED_UPDATE,OnDelayedUpdate)
+        MESSAGE_RANGE_HANDLER(WM_MOUSEFIRST,WM_MOUSELAST,OnMouseMove)
+        NOTIFY_CODE_HANDLER(TTN_GETDISPINFO,OnGetDispInfo)
 
-		COMMAND_RANGE_HANDLER_EX(SPACEMETER_POPUPMENU_IDBASE,SPACEMETER_POPUPMENU_IDBASE + SPACEMETER_POPUPMENU_COUNT - 1,OnPopupMenuClick)
+        COMMAND_RANGE_HANDLER_EX(SPACEMETER_POPUPMENU_IDBASE,SPACEMETER_POPUPMENU_IDBASE + SPACEMETER_POPUPMENU_COUNT - 1,OnPopupMenuClick)
     END_MSG_MAP()
 
-	LRESULT OnCreate(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnSize(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnPaint(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnEraseBkgnd(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnRButtonDown(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnMouseMove(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnDelayedUpdate(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnGetDispInfo(int idCtrl,LPNMHDR pnmh,BOOL &bHandled);
+    LRESULT OnCreate(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnSize(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnPaint(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnEraseBkgnd(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnRButtonDown(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnMouseMove(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnDelayedUpdate(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnGetDispInfo(int idCtrl,LPNMHDR pnmh,BOOL &bHandled);
 
-	LRESULT OnPopupMenuClick(UINT uNotifyCode,int nID,CWindow wnd);
+    LRESULT OnPopupMenuClick(UINT uNotifyCode,int nID,CWindow wnd);
 
-	void RequestDelayedUpdate();
+    void RequestDelayedUpdate();
 };

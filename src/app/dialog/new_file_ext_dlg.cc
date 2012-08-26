@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,59 +32,59 @@ CNewFileExtDlg::~CNewFileExtDlg()
 
 bool CNewFileExtDlg::Translate()
 {
-	if (g_LanguageSettings.m_pLngProcessor == NULL)
-		return false;
+    if (g_LanguageSettings.m_pLngProcessor == NULL)
+        return false;
 
-	CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
-	
-	// Make sure that there is a newfileext translation section.
-	if (!pLng->EnterSection(_T("newfileext")))
-		return false;
+    CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
+    
+    // Make sure that there is a newfileext translation section.
+    if (!pLng->EnterSection(_T("newfileext")))
+        return false;
 
-	// Translate.
-	TCHAR *szStrValue;
+    // Translate.
+    TCHAR *szStrValue;
 
-	if (pLng->GetValuePtr(IDD_NEWFILEEXTDLG,szStrValue))	// Title.
-		SetWindowText(szStrValue);
-	if (pLng->GetValuePtr(IDOK,szStrValue))
-		SetDlgItemText(IDOK,szStrValue);
-	if (pLng->GetValuePtr(IDCANCEL,szStrValue))
-		SetDlgItemText(IDCANCEL,szStrValue);
-	if (pLng->GetValuePtr(IDC_DESCSTATIC,szStrValue))
-		SetDlgItemText(IDC_DESCSTATIC,szStrValue);
-	if (pLng->GetValuePtr(IDC_EXTSTATIC,szStrValue))
-		SetDlgItemText(IDC_EXTSTATIC,szStrValue);
+    if (pLng->GetValuePtr(IDD_NEWFILEEXTDLG,szStrValue))	// Title.
+        SetWindowText(szStrValue);
+    if (pLng->GetValuePtr(IDOK,szStrValue))
+        SetDlgItemText(IDOK,szStrValue);
+    if (pLng->GetValuePtr(IDCANCEL,szStrValue))
+        SetDlgItemText(IDCANCEL,szStrValue);
+    if (pLng->GetValuePtr(IDC_DESCSTATIC,szStrValue))
+        SetDlgItemText(IDC_DESCSTATIC,szStrValue);
+    if (pLng->GetValuePtr(IDC_EXTSTATIC,szStrValue))
+        SetDlgItemText(IDC_EXTSTATIC,szStrValue);
 
-	return true;
+    return true;
 }
 
 LRESULT CNewFileExtDlg::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
-	CenterWindow(GetParent());
+    CenterWindow(GetParent());
 
-	m_DescEdit.SubclassWindow(GetDlgItem(IDC_DESCEDIT));
-	m_ExtEdit.SubclassWindow(GetDlgItem(IDC_EXTEDIT));
+    m_DescEdit.SubclassWindow(GetDlgItem(IDC_DESCEDIT));
+    m_ExtEdit.SubclassWindow(GetDlgItem(IDC_EXTEDIT));
 
-	m_DescEdit.SetLimitText(63);
-	m_ExtEdit.SetLimitText(63);
+    m_DescEdit.SetLimitText(63);
+    m_ExtEdit.SetLimitText(63);
 
-	// Translate the window.
-	Translate();
+    // Translate the window.
+    Translate();
 
-	return TRUE;
+    return TRUE;
 }
 
 LRESULT CNewFileExtDlg::OnOK(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
-	GetDlgItemText(IDC_DESCEDIT,m_szDescBuffer,63);
-	GetDlgItemText(IDC_EXTEDIT,m_szExtBuffer,63);
+    GetDlgItemText(IDC_DESCEDIT,m_szDescBuffer,63);
+    GetDlgItemText(IDC_EXTEDIT,m_szExtBuffer,63);
 
-	EndDialog(wID);
-	return FALSE;
+    EndDialog(wID);
+    return FALSE;
 }
 
 LRESULT CNewFileExtDlg::OnCancel(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
-	EndDialog(wID);
-	return FALSE;
+    EndDialog(wID);
+    return FALSE;
 }

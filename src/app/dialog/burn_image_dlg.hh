@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,27 +24,27 @@
 class CBurnImageDlg : public CPropertySheetImpl<CBurnImageDlg>
 {
 private:
-	bool m_bCentered;
-	bool m_bAppMode;
-	ckmmc::Device *m_pDevice;
+    bool m_bCentered;
+    bool m_bAppMode;
+    ckmmc::Device *m_pDevice;
 
-	CBurnImageGeneralPage m_GeneralPage;
-	CBurnAdvancedPage m_AdvancedPage;
+    CBurnImageGeneralPage m_GeneralPage;
+    CBurnAdvancedPage m_AdvancedPage;
 
 public:
-	CBurnImageDlg(const TCHAR *szTitle,bool bImageHasTOC,
-		bool bEnableOnFly,bool bEnableVerify,bool bAppMode);
-	~CBurnImageDlg();
+    CBurnImageDlg(const TCHAR *szTitle,bool bImageHasTOC,
+        bool bEnableOnFly,bool bEnableVerify,bool bAppMode);
+    ~CBurnImageDlg();
 
-	BEGIN_MSG_MAP(CBurnImageDlg)
-		MESSAGE_HANDLER(WM_SHOWWINDOW,OnShowWindow)
-		MESSAGE_HANDLER(WM_SETDEVICE,OnSetDevice)
-		MESSAGE_HANDLER(WM_GETDEVICE,OnGetDevice)
+    BEGIN_MSG_MAP(CBurnImageDlg)
+        MESSAGE_HANDLER(WM_SHOWWINDOW,OnShowWindow)
+        MESSAGE_HANDLER(WM_SETDEVICE,OnSetDevice)
+        MESSAGE_HANDLER(WM_GETDEVICE,OnGetDevice)
 
-		CHAIN_MSG_MAP(CPropertySheetImpl<CBurnImageDlg>)
-	END_MSG_MAP()
+        CHAIN_MSG_MAP(CPropertySheetImpl<CBurnImageDlg>)
+    END_MSG_MAP()
 
-	LRESULT OnShowWindow(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnSetDevice(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnGetDevice(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnShowWindow(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnSetDevice(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnGetDevice(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 };

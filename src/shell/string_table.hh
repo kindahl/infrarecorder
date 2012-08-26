@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,13 +18,13 @@
 
 enum eStringTable
 {
-	MENU_BURNIMAGE = 0,
-	MENU_BURNPROJECT,
-	MENU_OPENPROJECT,
+    MENU_BURNIMAGE = 0,
+    MENU_BURNPROJECT,
+    MENU_OPENPROJECT,
 
-	HINT_BURNIMAGE,
-	HINT_BURNPROJECT,
-	HINT_OPENPROJECT
+    HINT_BURNIMAGE,
+    HINT_BURNPROJECT,
+    HINT_OPENPROJECT
 };
 
 extern TCHAR *g_szStringTable[];

@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,10 +22,10 @@
 
 CLibraryHelper::CLibraryHelper()
 {
-	m_hDllInstance = NULL;
-	irc_WMCreateProfileManager = NULL;
-	irc_WMCreateWriter = NULL;
-	irc_WMCreateSyncReader = NULL;
+    m_hDllInstance = NULL;
+    irc_WMCreateProfileManager = NULL;
+    irc_WMCreateWriter = NULL;
+    irc_WMCreateSyncReader = NULL;
 }
 
 CLibraryHelper::~CLibraryHelper()
@@ -34,41 +34,41 @@ CLibraryHelper::~CLibraryHelper()
 
 bool CLibraryHelper::Load(const TCHAR *szFileName)
 {
-	m_hDllInstance = LoadLibrary(szFileName);
-	if (m_hDllInstance == NULL)
-		return false;
+    m_hDllInstance = LoadLibrary(szFileName);
+    if (m_hDllInstance == NULL)
+        return false;
 
-	irc_WMCreateProfileManager = (tirc_WMCreateProfileManager)GetProcAddress(m_hDllInstance,"WMCreateProfileManager");
-	if (irc_WMCreateProfileManager == NULL)
-		return false;
+    irc_WMCreateProfileManager = (tirc_WMCreateProfileManager)GetProcAddress(m_hDllInstance,"WMCreateProfileManager");
+    if (irc_WMCreateProfileManager == NULL)
+        return false;
 
-	irc_WMCreateWriter = (tirc_WMCreateWriter)GetProcAddress(m_hDllInstance,"WMCreateWriter");
-	if (irc_WMCreateWriter == NULL)
-		return false;
+    irc_WMCreateWriter = (tirc_WMCreateWriter)GetProcAddress(m_hDllInstance,"WMCreateWriter");
+    if (irc_WMCreateWriter == NULL)
+        return false;
 
-	irc_WMCreateSyncReader = (tirc_WMCreateSyncReader)GetProcAddress(m_hDllInstance,"WMCreateSyncReader");
-	if (irc_WMCreateSyncReader == NULL)
-		return false;
+    irc_WMCreateSyncReader = (tirc_WMCreateSyncReader)GetProcAddress(m_hDllInstance,"WMCreateSyncReader");
+    if (irc_WMCreateSyncReader == NULL)
+        return false;
 
-	return true;
+    return true;
 }
 
 bool CLibraryHelper::Unload()
 {
-	if (m_hDllInstance != NULL)
-		return false;
+    if (m_hDllInstance != NULL)
+        return false;
 
-	FreeLibrary(m_hDllInstance);
-	m_hDllInstance = NULL;
+    FreeLibrary(m_hDllInstance);
+    m_hDllInstance = NULL;
 
-	irc_WMCreateProfileManager = NULL;
-	irc_WMCreateWriter = NULL;
-	irc_WMCreateSyncReader = NULL;
+    irc_WMCreateProfileManager = NULL;
+    irc_WMCreateWriter = NULL;
+    irc_WMCreateSyncReader = NULL;
 
-	return true;
+    return true;
 }
 
 bool CLibraryHelper::IsLoaded()
 {
-	return m_hDllInstance != NULL;
+    return m_hDllInstance != NULL;
 }

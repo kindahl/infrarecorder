@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,28 +22,28 @@
 class CProjectPropAudioPage : public CPropertyPageImpl<CProjectPropAudioPage>
 {
 private:
-	CListViewCtrl m_ListView;
+    CListViewCtrl m_ListView;
 
-	bool Translate();
+    bool Translate();
 
 public:
-	enum { IDD = IDD_PROPPAGE_PROJECTPROPAUDIO };
+    enum { IDD = IDD_PROPPAGE_PROJECTPROPAUDIO };
 
-	CProjectPropAudioPage();
-	~CProjectPropAudioPage();
+    CProjectPropAudioPage();
+    ~CProjectPropAudioPage();
 
-	bool OnApply();
-	void OnHelp();
+    bool OnApply();
+    void OnHelp();
 
-	BEGIN_MSG_MAP(CProjectPropAudioPage)
-		MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
+    BEGIN_MSG_MAP(CProjectPropAudioPage)
+        MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
 
-		NOTIFY_HANDLER(IDC_TRACKLIST,NM_DBLCLK,OnListDblClick)
+        NOTIFY_HANDLER(IDC_TRACKLIST,NM_DBLCLK,OnListDblClick)
 
-		CHAIN_MSG_MAP(CPropertyPageImpl<CProjectPropAudioPage>)
-	END_MSG_MAP()
+        CHAIN_MSG_MAP(CPropertyPageImpl<CProjectPropAudioPage>)
+    END_MSG_MAP()
 
-	LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 
-	LRESULT OnListDblClick(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled);
+    LRESULT OnListDblClick(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled);
 };

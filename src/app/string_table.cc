@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,9 +21,9 @@
 
 const TCHAR *g_szStringTable[END_OF_STRING_TABLE_GUARD] =
 {
-	#define TRSTR(a,b) b,
-	#include "translated_strings.hh"
-	#undef TRSTR
+    #define TRSTR(a,b) b,
+    #include "translated_strings.hh"
+    #undef TRSTR
 };
 
 _STATIC_ASSERT(END_OF_STRING_TABLE_GUARD == _countof(g_szStringTable));

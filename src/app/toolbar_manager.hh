@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,71 +25,71 @@
 class CToolBarManager
 {
 private:
-	class CCustomizeDlg : public CWindowImpl<CCustomizeDlg,CWindow>
-	{
-	private:
-		CStatic m_TextStatic;
-		CStatic m_IconStatic;
-		CComboBox m_TextComboBox;
-		CComboBox m_IconComboBox;
-		int m_iText;
-		int m_iIcon;
+    class CCustomizeDlg : public CWindowImpl<CCustomizeDlg,CWindow>
+    {
+    private:
+        CStatic m_TextStatic;
+        CStatic m_IconStatic;
+        CComboBox m_TextComboBox;
+        CComboBox m_IconComboBox;
+        int m_iText;
+        int m_iIcon;
 
-	public:
-		CCustomizeDlg(int iText,int iIcon);
-		~CCustomizeDlg();
+    public:
+        CCustomizeDlg(int iText,int iIcon);
+        ~CCustomizeDlg();
 
-		int GetTextOption();
-		int GetIconOption();
+        int GetTextOption();
+        int GetIconOption();
 
-		BEGIN_MSG_MAP(CCustomizeDlg)
-			COMMAND_HANDLER(IDC_TBCUSTOMIZE_TEXTCOMBO,CBN_SELCHANGE,OnTCSelChange)
-			COMMAND_HANDLER(IDC_TBCUSTOMIZE_ICONCOMBO,CBN_SELCHANGE,OnICSelChange)
-			MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
-		END_MSG_MAP()
+        BEGIN_MSG_MAP(CCustomizeDlg)
+            COMMAND_HANDLER(IDC_TBCUSTOMIZE_TEXTCOMBO,CBN_SELCHANGE,OnTCSelChange)
+            COMMAND_HANDLER(IDC_TBCUSTOMIZE_ICONCOMBO,CBN_SELCHANGE,OnICSelChange)
+            MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
+        END_MSG_MAP()
 
-		LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-		LRESULT OnTCSelChange(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
-		LRESULT OnICSelChange(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
-	};
+        LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+        LRESULT OnTCSelChange(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+        LRESULT OnICSelChange(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    };
 
-	enum
-	{
-		ID_TOOLBAR_SEPARATOR = 0
-	};
+    enum
+    {
+        ID_TOOLBAR_SEPARATOR = 0
+    };
 
-	CToolBarCtrl *m_pToolBar;
-	std::map<int,TBBUTTON> m_Buttons;
-	std::vector<int> m_SelButtons;
+    CToolBarCtrl *m_pToolBar;
+    std::map<int,TBBUTTON> m_Buttons;
+    std::vector<int> m_SelButtons;
 
-	void AddButton(int iBitmap,int iCommand,int iString);
-	void AddDropDownButton(int iBitmap,int iCommand,int iString);
-	void AddSeparator();
-	void Reset();
+    void AddButton(int iBitmap,int iCommand,int iString);
+    void AddDropDownButton(int iBitmap,int iCommand,int iString);
+    void AddSeparator();
+    void Reset();
 
-	// Customize dialog hook.
-	static CCustomizeDlg *m_pCustomizeDlg;
-	static HHOOK m_hCBTHook;
-	static LRESULT CALLBACK CBTProc(int nCode,WPARAM wParam,LPARAM lParam);
+    // Customize dialog hook.
+    static CCustomizeDlg *m_pCustomizeDlg;
+    static HHOOK m_hCBTHook;
+    static LRESULT CALLBACK CBTProc(int nCode,WPARAM wParam,LPARAM lParam);
 
 public:
-	CToolBarManager();
-	~CToolBarManager();
+    CToolBarManager();
+    ~CToolBarManager();
 
-	bool FillToolBarCtrl(CToolBarCtrl *pToolBar);
+    bool FillToolBarCtrl(CToolBarCtrl *pToolBar);
 
-	bool Save(CXmlProcessor *pXml);
-	bool Load(CXmlProcessor *pXml);
+    bool Save(CXmlProcessor *pXml);
+    bool Load(CXmlProcessor *pXml);
 
-	bool Customize();
+    bool Customize();
 
-	// Events.
-	LRESULT OnToolBarBeginAdjust(int idCtrl,LPNMHDR pNMH,BOOL &bHandled);
-	LRESULT OnToolBarInitCustomize(int idCtrl,LPNMHDR pNMH,BOOL &bHandled);
-	LRESULT OnToolBarQueryInsert(int idCtrl,LPNMHDR pNMH,BOOL &bHandled);
-	LRESULT OnToolBarQueryDelete(int idCtrl,LPNMHDR pNMH,BOOL &bHandled);
-	LRESULT OnToolBarGetButtonInfo(int idCtrl,LPNMHDR pNMH,BOOL &bHandled);
-	LRESULT OnToolBarReset(int idCtrl,LPNMHDR pNMH,BOOL &bHandled);
+    // Events.
+    LRESULT OnToolBarBeginAdjust(int idCtrl,LPNMHDR pNMH,BOOL &bHandled);
+    LRESULT OnToolBarInitCustomize(int idCtrl,LPNMHDR pNMH,BOOL &bHandled);
+    LRESULT OnToolBarQueryInsert(int idCtrl,LPNMHDR pNMH,BOOL &bHandled);
+    LRESULT OnToolBarQueryDelete(int idCtrl,LPNMHDR pNMH,BOOL &bHandled);
+    LRESULT OnToolBarGetButtonInfo(int idCtrl,LPNMHDR pNMH,BOOL &bHandled);
+    LRESULT OnToolBarReset(int idCtrl,LPNMHDR pNMH,BOOL &bHandled);
 };
 
 extern CToolBarManager g_ToolBarManager;

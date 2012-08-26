@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,29 +21,29 @@
 class CEnumFmtEtc : public IEnumFORMATETC
 {
 private:
-	long m_lRefCount;
+    long m_lRefCount;
 
-	unsigned int m_uiNumFormats;
-	unsigned int m_uiFormatIndex;
-	FORMATETC *m_pFormats;
+    unsigned int m_uiNumFormats;
+    unsigned int m_uiFormatIndex;
+    FORMATETC *m_pFormats;
 
 public:
-	CEnumFmtEtc(FORMATETC *pFormats,unsigned int uiNumFormats);
-	~CEnumFmtEtc();
+    CEnumFmtEtc(FORMATETC *pFormats,unsigned int uiNumFormats);
+    ~CEnumFmtEtc();
 
-	void SetIndex(unsigned int uiFormatIndex);
+    void SetIndex(unsigned int uiFormatIndex);
 
-	// IUnknown members.
-	HRESULT __stdcall QueryInterface(REFIID iid,void **ppvObject);
-	ULONG __stdcall AddRef();
-	ULONG __stdcall Release();
+    // IUnknown members.
+    HRESULT __stdcall QueryInterface(REFIID iid,void **ppvObject);
+    ULONG __stdcall AddRef();
+    ULONG __stdcall Release();
 
-	// IEnumFormatEtc members.
-	HRESULT __stdcall Next(ULONG celt,FORMATETC *rgelt,ULONG *pceltFetched);
-	HRESULT __stdcall Skip(ULONG celt); 
-	HRESULT __stdcall Reset();
-	HRESULT __stdcall Clone(IEnumFORMATETC **ppEnumFormatEtc);
+    // IEnumFormatEtc members.
+    HRESULT __stdcall Next(ULONG celt,FORMATETC *rgelt,ULONG *pceltFetched);
+    HRESULT __stdcall Skip(ULONG celt); 
+    HRESULT __stdcall Reset();
+    HRESULT __stdcall Clone(IEnumFORMATETC **ppEnumFormatEtc);
 };
 
 HRESULT CreateEnumFmtEtc(unsigned int uiNumFormats,FORMATETC *pFormats,
-	IEnumFORMATETC **ppEnumFormatEtc);
+    IEnumFORMATETC **ppEnumFormatEtc);

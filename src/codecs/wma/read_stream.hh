@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,21 +22,21 @@
 class CReadStream : public IStream
 {
 private:
-	HANDLE m_hFile;
-	LONG m_cRefs;
+    HANDLE m_hFile;
+    LONG m_cRefs;
 
 public:
-	CReadStream();
-	~CReadStream();
+    CReadStream();
+    ~CReadStream();
 
-	HRESULT Open(const TCHAR *szFileName);
+    HRESULT Open(const TCHAR *szFileName);
 
-	// IStream methods.
-	HRESULT STDMETHODCALLTYPE Read(void *pv,ULONG cb,ULONG *pcbRead);
+    // IStream methods.
+    HRESULT STDMETHODCALLTYPE Read(void *pv,ULONG cb,ULONG *pcbRead);
     HRESULT STDMETHODCALLTYPE Seek(LARGE_INTEGER dlibMove,DWORD dwOrigin,ULARGE_INTEGER *plibNewPosition);
     HRESULT STDMETHODCALLTYPE Stat(STATSTG *pstatstg,DWORD grfStatFlag);
 
-	HRESULT STDMETHODCALLTYPE Write(void const *pv,ULONG cb,ULONG *pcbWritten);
+    HRESULT STDMETHODCALLTYPE Write(void const *pv,ULONG cb,ULONG *pcbWritten);
     HRESULT STDMETHODCALLTYPE SetSize(ULARGE_INTEGER libNewSize);
     HRESULT STDMETHODCALLTYPE CopyTo(IStream *pstm,ULARGE_INTEGER cb,ULARGE_INTEGER *pcbRead,ULARGE_INTEGER *pcbWritten);
     HRESULT STDMETHODCALLTYPE Commit(DWORD grfCommitFlags);
@@ -45,8 +45,8 @@ public:
     HRESULT STDMETHODCALLTYPE UnlockRegion(ULARGE_INTEGER libOffset,ULARGE_INTEGER cb,DWORD dwLockType);
     HRESULT STDMETHODCALLTYPE Clone(IStream **ppstm);
 
-	// IUnknown methods.
-	HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid,void **ppv);
+    // IUnknown methods.
+    HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid,void **ppv);
     ULONG STDMETHODCALLTYPE AddRef();
     ULONG STDMETHODCALLTYPE Release();
 };

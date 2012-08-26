@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,47 +23,47 @@
 class CConfigShellExtPage : public CPropertyPageImpl<CConfigShellExtPage>
 {
 private:
-	HIMAGELIST m_hToolBarImageList;
+    HIMAGELIST m_hToolBarImageList;
 
-	CListViewCtrl m_ListView;
-	CToolBarCtrl m_ToolBar;
+    CListViewCtrl m_ListView;
+    CToolBarCtrl m_ToolBar;
 
-	bool Translate();
+    bool Translate();
 
-	void InitToolBarImageList();
-	void AddToolBarButton(int iCommand,int iBitmap);
-	void CreateToolBarCtrl();
+    void InitToolBarImageList();
+    void AddToolBarButton(int iCommand,int iBitmap);
+    void CreateToolBarCtrl();
 
-	void CheckListView();
-	void RegisterListItem(CRegistry *pReg,int iItemIndex);
-	void RegisterListView();
+    void CheckListView();
+    void RegisterListItem(CRegistry *pReg,int iItemIndex);
+    void RegisterListView();
 
 public:
-	enum { IDD = IDD_PROPPAGE_CONFIGSHELLEXT };
+    enum { IDD = IDD_PROPPAGE_CONFIGSHELLEXT };
 
-	CConfigShellExtPage();
-	~CConfigShellExtPage();
+    CConfigShellExtPage();
+    ~CConfigShellExtPage();
 
-	bool OnApply();
-	void OnHelp();
+    bool OnApply();
+    void OnHelp();
 
-	BEGIN_MSG_MAP(CConfigShellExtPage)
-		MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
-		COMMAND_ID_HANDLER(ID_SHELLEXT_ADD,OnListAdd)
-		COMMAND_ID_HANDLER(ID_SHELLEXT_REMOVE,OnListRemove)
-		NOTIFY_CODE_HANDLER(TTN_GETDISPINFO,OnToolBarGetInfo)
+    BEGIN_MSG_MAP(CConfigShellExtPage)
+        MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
+        COMMAND_ID_HANDLER(ID_SHELLEXT_ADD,OnListAdd)
+        COMMAND_ID_HANDLER(ID_SHELLEXT_REMOVE,OnListRemove)
+        NOTIFY_CODE_HANDLER(TTN_GETDISPINFO,OnToolBarGetInfo)
 
-		NOTIFY_HANDLER(IDC_SHELLEXTLIST,LVN_ITEMCHANGED,OnListItemChanged)
-		NOTIFY_HANDLER(IDC_SHELLEXTLIST,LVN_GETDISPINFO,OnListGetDispInfo)
+        NOTIFY_HANDLER(IDC_SHELLEXTLIST,LVN_ITEMCHANGED,OnListItemChanged)
+        NOTIFY_HANDLER(IDC_SHELLEXTLIST,LVN_GETDISPINFO,OnListGetDispInfo)
 
-		CHAIN_MSG_MAP(CPropertyPageImpl<CConfigShellExtPage>)
-	END_MSG_MAP()
+        CHAIN_MSG_MAP(CPropertyPageImpl<CConfigShellExtPage>)
+    END_MSG_MAP()
 
-	LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnListAdd(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
-	LRESULT OnListRemove(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
-	LRESULT OnToolBarGetInfo(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled);
+    LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnListAdd(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnListRemove(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnToolBarGetInfo(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled);
 
-	LRESULT OnListItemChanged(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled);
-	LRESULT OnListGetDispInfo(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled);
+    LRESULT OnListItemChanged(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled);
+    LRESULT OnListGetDispInfo(int iCtrlID,LPNMHDR pNMH,BOOL &bHandled);
 };

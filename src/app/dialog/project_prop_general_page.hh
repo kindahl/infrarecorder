@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,28 +22,28 @@
 class CProjectPropGeneralPage : public CPropertyPageImpl<CProjectPropGeneralPage>
 {
 private:
-	HICON m_hIcon;
+    HICON m_hIcon;
 
-	void SetupDataProject();
-	void SetupAudioProject();
-	void SetupMixedProject();
+    void SetupDataProject();
+    void SetupAudioProject();
+    void SetupMixedProject();
 
-	bool Translate();
+    bool Translate();
 
 public:
-	enum { IDD = IDD_PROPPAGE_PROJECTPROPGENERAL };
+    enum { IDD = IDD_PROPPAGE_PROJECTPROPGENERAL };
 
-	CProjectPropGeneralPage();
-	~CProjectPropGeneralPage();
+    CProjectPropGeneralPage();
+    ~CProjectPropGeneralPage();
 
-	bool OnApply();
-	void OnHelp();
+    bool OnApply();
+    void OnHelp();
 
-	BEGIN_MSG_MAP(CProjectPropGeneralPage)
-		MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
+    BEGIN_MSG_MAP(CProjectPropGeneralPage)
+        MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
 
-		CHAIN_MSG_MAP(CPropertyPageImpl<CProjectPropGeneralPage>)
-	END_MSG_MAP()
+        CHAIN_MSG_MAP(CPropertyPageImpl<CProjectPropGeneralPage>)
+    END_MSG_MAP()
 
-	LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 };

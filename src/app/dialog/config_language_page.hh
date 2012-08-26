@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,34 +22,34 @@
 
 typedef struct
 {
-	TCHAR szFileName[MAX_PATH];
+    TCHAR szFileName[MAX_PATH];
 } tLangFileData;
 
 class CConfigLanguagePage : public CPropertyPageImpl<CConfigLanguagePage>
 {
 private:
-	CComboBox m_LangCombo;
+    CComboBox m_LangCombo;
 
-	std::vector<tLangFileData> m_LangFileList;
+    std::vector<tLangFileData> m_LangFileList;
 
-	bool Translate();
-	ckcore::tstring GetTranslationDisplayName(TCHAR *szFileName);
-	void FillLangCombo();
+    bool Translate();
+    ckcore::tstring GetTranslationDisplayName(TCHAR *szFileName);
+    void FillLangCombo();
 
 public:
-	enum { IDD = IDD_PROPPAGE_CONFIGLANGUAGE };
+    enum { IDD = IDD_PROPPAGE_CONFIGLANGUAGE };
 
-	CConfigLanguagePage();
-	~CConfigLanguagePage();
+    CConfigLanguagePage();
+    ~CConfigLanguagePage();
 
-	bool OnApply();
-	void OnHelp();
+    bool OnApply();
+    void OnHelp();
 
-	BEGIN_MSG_MAP(CConfigAdvancedPage)
-		MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
+    BEGIN_MSG_MAP(CConfigAdvancedPage)
+        MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
 
-		CHAIN_MSG_MAP(CPropertyPageImpl<CConfigLanguagePage>)
-	END_MSG_MAP()
+        CHAIN_MSG_MAP(CPropertyPageImpl<CConfigLanguagePage>)
+    END_MSG_MAP()
 
-	LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 };

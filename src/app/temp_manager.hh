@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,21 +23,21 @@ class CTempManager
 {
 private:
 #ifdef UNICODE
-	std::vector<std::wstring> m_szFileNames;
+    std::vector<std::wstring> m_szFileNames;
 #else
-	std::vector<std::string> m_szFileNames;
+    std::vector<std::string> m_szFileNames;
 #endif
-	// Temporary empty directory.
-	TCHAR m_szEmptyDir[MAX_PATH];
+    // Temporary empty directory.
+    TCHAR m_szEmptyDir[MAX_PATH];
 
 public:
-	CTempManager();
-	~CTempManager();
+    CTempManager();
+    ~CTempManager();
 
-	void AddObject(const TCHAR *szFileName);
-	void CleanUp();
+    void AddObject(const TCHAR *szFileName);
+    void CleanUp();
 
-	const TCHAR *GetEmtpyDirectory();
+    const TCHAR *GetEmtpyDirectory();
 };
 
 extern CTempManager g_TempManager;

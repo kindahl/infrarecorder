@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,18 +21,18 @@
 #ifdef VERSION_COMPATIBILITY_CHECK
 
 /*
-	Major
-	-----
-	 4 = Windows NT 4.0, Windows Me, Windows 98, or Windows 95.
-	 5 = Windows Server 2003, Windows XP, or Windows 2000
+    Major
+    -----
+     4 = Windows NT 4.0, Windows Me, Windows 98, or Windows 95.
+     5 = Windows Server 2003, Windows XP, or Windows 2000
 
-	Minor
-	-----
-	 0 = Windows 2000, Windows NT 4.0, or Windows 95
-	 1 = Windows XP
-	 2 = Windows Server 2003
-	10 = Windows 98
-	90 = Windows Me
+    Minor
+    -----
+     0 = Windows 2000, Windows NT 4.0, or Windows 95
+     1 = Windows XP
+     2 = Windows Server 2003
+    10 = Windows 98
+    90 = Windows Me
 */
 
 #define MAJOR_WINNT			4
@@ -56,20 +56,20 @@
 class CWinVer
 {
 public:
-	// Windows.
-	unsigned long m_ulMajorVersion;
-	unsigned long m_ulMinorVersion;
+    // Windows.
+    unsigned long m_ulMajorVersion;
+    unsigned long m_ulMinorVersion;
 
-	// Internet Explorer.
-	unsigned long m_ulMajorIEVersion;
-	unsigned long m_ulMinorIEVersion;
+    // Internet Explorer.
+    unsigned long m_ulMajorIEVersion;
+    unsigned long m_ulMinorIEVersion;
 
-	// Common Controls.
-	unsigned long m_ulMajorCCVersion;
-	unsigned long m_ulMinorCCVersion;
+    // Common Controls.
+    unsigned long m_ulMajorCCVersion;
+    unsigned long m_ulMinorCCVersion;
 
-	CWinVer();
-	~CWinVer();
+    CWinVer();
+    ~CWinVer();
 };
 
 extern CWinVer g_WinVer;

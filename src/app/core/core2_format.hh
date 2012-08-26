@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,11 +23,11 @@
 class CCore2Format
 {
 private:
-	bool WaitBkgndFormat(ckmmc::Device &Device,CAdvancedProgress *pProgress);
+    bool WaitBkgndFormat(ckmmc::Device &Device,CAdvancedProgress *pProgress);
 
 public:
-	CCore2Format();
-	~CCore2Format();
+    CCore2Format();
+    ~CCore2Format();
 
-	bool FormatUnit(ckmmc::Device &Device,CAdvancedProgress *pProgress,bool bFull);
+    bool FormatUnit(ckmmc::Device &Device,CAdvancedProgress *pProgress,bool bFull);
 };

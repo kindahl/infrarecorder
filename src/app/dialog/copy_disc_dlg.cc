@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,17 +22,17 @@
 #include "copy_disc_dlg.hh"
 
 CCopyDiscDlg::CCopyDiscDlg(bool bAppMode) :
-	m_bCentered(false),m_bAppMode(bAppMode),
-	m_pSrcDevice(NULL),m_pDstDevice(NULL),
-	CPropertySheetImpl<CCopyDiscDlg>(lngGetString(COPYDISC_TITLE),0,NULL),
-	m_GeneralPage(),
-	m_ReadPage(false,false)
+    m_bCentered(false),m_bAppMode(bAppMode),
+    m_pSrcDevice(NULL),m_pDstDevice(NULL),
+    CPropertySheetImpl<CCopyDiscDlg>(lngGetString(COPYDISC_TITLE),0,NULL),
+    m_GeneralPage(),
+    m_ReadPage(false,false)
 {
-	m_psh.dwFlags |= PSH_NOAPPLYNOW | PSH_HASHELP | PSH_NOCONTEXTHELP;
+    m_psh.dwFlags |= PSH_NOAPPLYNOW | PSH_HASHELP | PSH_NOCONTEXTHELP;
 
-	AddPage(m_GeneralPage);
-	AddPage(m_AdvancedPage);
-	AddPage(m_ReadPage);
+    AddPage(m_GeneralPage);
+    AddPage(m_AdvancedPage);
+    AddPage(m_ReadPage);
 }
 
 CCopyDiscDlg::~CCopyDiscDlg()
@@ -41,50 +41,50 @@ CCopyDiscDlg::~CCopyDiscDlg()
 
 LRESULT CCopyDiscDlg::OnShowWindow(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
-	// Center the window, once.
-	if (wParam == TRUE && !m_bCentered)
-	{
-		CenterWindow();
-		m_bCentered = true;
-	}
+    // Center the window, once.
+    if (wParam == TRUE && !m_bCentered)
+    {
+        CenterWindow();
+        m_bCentered = true;
+    }
 
-	// Add the dialog to the task bar and enable it to be minimized.
-	if (m_bAppMode)
-	{
-		ModifyStyle(0,WS_MINIMIZEBOX | WS_SYSMENU);
-		ModifyStyleEx(0,WS_EX_APPWINDOW);
+    // Add the dialog to the task bar and enable it to be minimized.
+    if (m_bAppMode)
+    {
+        ModifyStyle(0,WS_MINIMIZEBOX | WS_SYSMENU);
+        ModifyStyleEx(0,WS_EX_APPWINDOW);
 
-		HMENU hSysMenu = GetSystemMenu(FALSE);
-		::InsertMenu(hSysMenu,0,MF_BYPOSITION,SC_RESTORE,_T("&Restore"));
-		::InsertMenu(hSysMenu,2,MF_BYPOSITION,SC_MINIMIZE,_T("Mi&nimize"));
-		::InsertMenu(hSysMenu,3,MF_BYPOSITION | MF_SEPARATOR,0,_T(""));
-	}
+        HMENU hSysMenu = GetSystemMenu(FALSE);
+        ::InsertMenu(hSysMenu,0,MF_BYPOSITION,SC_RESTORE,_T("&Restore"));
+        ::InsertMenu(hSysMenu,2,MF_BYPOSITION,SC_MINIMIZE,_T("Mi&nimize"));
+        ::InsertMenu(hSysMenu,3,MF_BYPOSITION | MF_SEPARATOR,0,_T(""));
+    }
 
-	bHandled = FALSE;
-	return 0;
+    bHandled = FALSE;
+    return 0;
 }
 
 LRESULT CCopyDiscDlg::OnSetDevice(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
-	if (wParam == 1)
-		m_pSrcDevice = reinterpret_cast<ckmmc::Device *>(lParam);
-	else
-		m_pDstDevice = reinterpret_cast<ckmmc::Device *>(lParam);
+    if (wParam == 1)
+        m_pSrcDevice = reinterpret_cast<ckmmc::Device *>(lParam);
+    else
+        m_pDstDevice = reinterpret_cast<ckmmc::Device *>(lParam);
 
-	bHandled = TRUE;
-	return 0;
+    bHandled = TRUE;
+    return 0;
 }
 
 LRESULT CCopyDiscDlg::OnGetDevice(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
-	bHandled = TRUE;
-	return reinterpret_cast<LRESULT>(wParam == 1 ? m_pSrcDevice : m_pDstDevice);
+    bHandled = TRUE;
+    return reinterpret_cast<LRESULT>(wParam == 1 ? m_pSrcDevice : m_pDstDevice);
 }
 
 LRESULT CCopyDiscDlg::OnSetCloneMode(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
-	m_ReadPage.SetCloneMode(wParam == TRUE);
+    m_ReadPage.SetCloneMode(wParam == TRUE);
 
-	bHandled = TRUE;
-	return 0;
+    bHandled = TRUE;
+    return 0;
 }

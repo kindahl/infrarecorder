@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,28 +22,28 @@
 class CProjectPropIsoPage : public CPropertyPageImpl<CProjectPropIsoPage>
 {
 private:
-	CComboBox m_LevelCombo;
-	CComboBox m_FormatCombo;
+    CComboBox m_LevelCombo;
+    CComboBox m_FormatCombo;
     CComboBox m_CharSetCombo;
 
-	bool Translate();
+    bool Translate();
 
 public:
-	enum { IDD = IDD_PROPPAGE_PROJECTPROPISO };
+    enum { IDD = IDD_PROPPAGE_PROJECTPROPISO };
 
-	CProjectPropIsoPage();
-	~CProjectPropIsoPage();
+    CProjectPropIsoPage();
+    ~CProjectPropIsoPage();
 
-	bool OnApply();
-	void OnHelp();
+    bool OnApply();
+    void OnHelp();
 
-	BEGIN_MSG_MAP(CProjectPropIsoPage)
-		MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
-		MESSAGE_HANDLER(WM_COMMAND,OnCommand)
+    BEGIN_MSG_MAP(CProjectPropIsoPage)
+        MESSAGE_HANDLER(WM_INITDIALOG,OnInitDialog)
+        MESSAGE_HANDLER(WM_COMMAND,OnCommand)
 
-		CHAIN_MSG_MAP(CPropertyPageImpl<CProjectPropIsoPage>)
-	END_MSG_MAP()
+        CHAIN_MSG_MAP(CPropertyPageImpl<CProjectPropIsoPage>)
+    END_MSG_MAP()
 
-	LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnCommand(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnCommand(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 };

@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,17 +23,17 @@
 class CSettingsManager
 {
 private:
-	std::vector<ISettings *> m_Settings;
+    std::vector<ISettings *> m_Settings;
 
-	void RegisterObject(ISettings *pSettings);
+    void RegisterObject(ISettings *pSettings);
 
-	bool GetConfigPath(TCHAR *szConfigPath);
+    bool GetConfigPath(TCHAR *szConfigPath);
 
 public:
-	CSettingsManager();
-	~CSettingsManager();
+    CSettingsManager();
+    ~CSettingsManager();
 
-	bool Load();
+    bool Load();
 };
 
 extern CSettingsManager g_SettingsManager;

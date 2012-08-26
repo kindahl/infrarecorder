@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,32 +25,32 @@
 class CProjectDropData
 {
 public:
-	CProjectNode *m_pParent;
-	CItemData **m_ppData;
+    CProjectNode *m_pParent;
+    CItemData **m_ppData;
 };
 
 class CProjectDataObject : public IDataObject
 {
 private:
-	bool m_bOperationPerformed;
-	long m_lRefCount;
-	FORMATETC m_FormatEtc;
-	STGMEDIUM m_StgMedium;
+    bool m_bOperationPerformed;
+    long m_lRefCount;
+    FORMATETC m_FormatEtc;
+    STGMEDIUM m_StgMedium;
 
-	std::vector<CItemData *> m_FileItems;
-	CProjectNode *m_pParent;
+    std::vector<CItemData *> m_FileItems;
+    CProjectNode *m_pParent;
 
-	bool IsFormatSupported(FORMATETC *pFormatEtc);
+    bool IsFormatSupported(FORMATETC *pFormatEtc);
 
 public:
-	CProjectDataObject();
-	~CProjectDataObject();
+    CProjectDataObject();
+    ~CProjectDataObject();
 
-	void Reset();
-	void AddFile(CItemData *pFileItem);
-	void SetParent(CProjectNode *pParent);
+    void Reset();
+    void AddFile(CItemData *pFileItem);
+    void SetParent(CProjectNode *pParent);
 
-	// IUnknown members.
+    // IUnknown members.
     HRESULT __stdcall QueryInterface(REFIID iid,void **ppvObject);
     ULONG __stdcall AddRef();
     ULONG __stdcall Release();

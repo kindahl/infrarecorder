@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,12 +21,12 @@
 class CCustomEditCtrl : public CWindowImpl<CCustomEditCtrl,CEdit>
 {
 public:
-	CCustomEditCtrl();
-	~CCustomEditCtrl();
+    CCustomEditCtrl();
+    ~CCustomEditCtrl();
 
-	BEGIN_MSG_MAP(CCustomEditCtrl)
-		MESSAGE_HANDLER(WM_CHAR,OnChar)
-	END_MSG_MAP()
+    BEGIN_MSG_MAP(CCustomEditCtrl)
+        MESSAGE_HANDLER(WM_CHAR,OnChar)
+    END_MSG_MAP()
 
-	LRESULT OnChar(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnChar(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 };

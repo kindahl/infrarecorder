@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,56 +22,56 @@
 
 CProjectDataObject::CProjectDataObject()
 {
-	// Reference count must ALWAYS start at 1.
-	m_lRefCount = 1;
+    // Reference count must ALWAYS start at 1.
+    m_lRefCount = 1;
 
-	memset(&m_FormatEtc,0,sizeof(m_FormatEtc));
-	m_FormatEtc.cfFormat = static_cast<CLIPFORMAT>(::RegisterClipboardFormat(_T(PROJECT_CF_NAME)));
-	m_FormatEtc.dwAspect = DVASPECT_CONTENT;
-	m_FormatEtc.lindex = 0;
-	m_FormatEtc.ptd = NULL;
-	m_FormatEtc.tymed = TYMED_HGLOBAL;
+    memset(&m_FormatEtc,0,sizeof(m_FormatEtc));
+    m_FormatEtc.cfFormat = static_cast<CLIPFORMAT>(::RegisterClipboardFormat(_T(PROJECT_CF_NAME)));
+    m_FormatEtc.dwAspect = DVASPECT_CONTENT;
+    m_FormatEtc.lindex = 0;
+    m_FormatEtc.ptd = NULL;
+    m_FormatEtc.tymed = TYMED_HGLOBAL;
 
-	memset(&m_StgMedium,0,sizeof(m_StgMedium));
-	m_StgMedium.tymed = TYMED_HGLOBAL;
+    memset(&m_StgMedium,0,sizeof(m_StgMedium));
+    m_StgMedium.tymed = TYMED_HGLOBAL;
 
-	// No files have yet been extracted.
-	m_bOperationPerformed = false;
+    // No files have yet been extracted.
+    m_bOperationPerformed = false;
 
-	m_pParent = NULL;
+    m_pParent = NULL;
 }
 
 CProjectDataObject::~CProjectDataObject()
 {
-	ReleaseStgMedium(&m_StgMedium);
+    ReleaseStgMedium(&m_StgMedium);
 }
 
 void CProjectDataObject::Reset()
 {
-	m_bOperationPerformed = false;
-	m_FileItems.clear();
+    m_bOperationPerformed = false;
+    m_FileItems.clear();
 }
 
 void CProjectDataObject::AddFile(CItemData *pFileItem)
 {
-	m_FileItems.push_back(pFileItem);
+    m_FileItems.push_back(pFileItem);
 }
 
 void CProjectDataObject::SetParent(CProjectNode *pParent)
 {
-	m_pParent = pParent;
+    m_pParent = pParent;
 }
 
 bool CProjectDataObject::IsFormatSupported(FORMATETC *pFormatEtc)
 {
-	if (m_FormatEtc.cfFormat == pFormatEtc->cfFormat &&
-		m_FormatEtc.dwAspect == pFormatEtc->dwAspect &&
-		m_FormatEtc.tymed & pFormatEtc->tymed)
-	{
-		return true;
-	}
+    if (m_FormatEtc.cfFormat == pFormatEtc->cfFormat &&
+        m_FormatEtc.dwAspect == pFormatEtc->dwAspect &&
+        m_FormatEtc.tymed & pFormatEtc->tymed)
+    {
+        return true;
+    }
 
-	return false;
+    return false;
 }
 
 HRESULT __stdcall CProjectDataObject::QueryInterface(REFIID iid,void **ppvObject)
@@ -99,41 +99,41 @@ ULONG __stdcall CProjectDataObject::AddRef()
 ULONG __stdcall CProjectDataObject::Release()
 {
     // Decrement object reference count.
-	LONG lCount = InterlockedDecrement(&m_lRefCount);
-		
-	if (lCount == 0)
-	{
-		delete this;
-		return 0;
-	}
-	else
-	{
-		return lCount;
-	}
+    LONG lCount = InterlockedDecrement(&m_lRefCount);
+        
+    if (lCount == 0)
+    {
+        delete this;
+        return 0;
+    }
+    else
+    {
+        return lCount;
+    }
 }
 
 HRESULT __stdcall CProjectDataObject::GetData(FORMATETC *pFormatEtc,STGMEDIUM *pStgMedium)
 {
-	if (!IsFormatSupported(pFormatEtc))
-		return DV_E_FORMATETC;
+    if (!IsFormatSupported(pFormatEtc))
+        return DV_E_FORMATETC;
 
-	// Copy the storage medium data.
-	pStgMedium->tymed = m_StgMedium.tymed;
-	pStgMedium->pUnkForRelease = 0;
-	pStgMedium->hGlobal = GlobalAlloc(GMEM_SHARE,sizeof(CProjectDropData) + sizeof(CItemData *) * m_FileItems.size());
+    // Copy the storage medium data.
+    pStgMedium->tymed = m_StgMedium.tymed;
+    pStgMedium->pUnkForRelease = 0;
+    pStgMedium->hGlobal = GlobalAlloc(GMEM_SHARE,sizeof(CProjectDropData) + sizeof(CItemData *) * m_FileItems.size());
 
-	CProjectDropData *pDropData = (CProjectDropData *)GlobalLock(pStgMedium->hGlobal);
-	pDropData->m_pParent = m_pParent;
-	pDropData->m_ppData = (CItemData **)(pDropData + sizeof(CProjectDropData));
+    CProjectDropData *pDropData = (CProjectDropData *)GlobalLock(pStgMedium->hGlobal);
+    pDropData->m_pParent = m_pParent;
+    pDropData->m_ppData = (CItemData **)(pDropData + sizeof(CProjectDropData));
 
-	// Copy the file names into the global memory.
-	unsigned int uiPos = 0;
-	std::vector<CItemData *>::const_iterator it;
-	for (it = m_FileItems.begin(); it != m_FileItems.end(); it++)
-		pDropData->m_ppData[uiPos++] = (CItemData *)*it;
+    // Copy the file names into the global memory.
+    unsigned int uiPos = 0;
+    std::vector<CItemData *>::const_iterator it;
+    for (it = m_FileItems.begin(); it != m_FileItems.end(); it++)
+        pDropData->m_ppData[uiPos++] = (CItemData *)*it;
 
-	GlobalUnlock(pDropData);
-	return S_OK;
+    GlobalUnlock(pDropData);
+    return S_OK;
 }
 
 HRESULT CProjectDataObject::GetDataHere(FORMATETC *pFormatEtc,STGMEDIUM *pMedium)
@@ -143,12 +143,12 @@ HRESULT CProjectDataObject::GetDataHere(FORMATETC *pFormatEtc,STGMEDIUM *pMedium
 
 HRESULT __stdcall CProjectDataObject::QueryGetData(FORMATETC *pFormatEtc)
 {
-	return IsFormatSupported(pFormatEtc) ? S_OK : DV_E_FORMATETC;
+    return IsFormatSupported(pFormatEtc) ? S_OK : DV_E_FORMATETC;
 }
 
 HRESULT CProjectDataObject::GetCanonicalFormatEtc(FORMATETC *pFormatEct,FORMATETC *pFormatEtcOut)
 {
-	// MUST be set to NULL.
+    // MUST be set to NULL.
     pFormatEtcOut->ptd = NULL;
 
     return E_NOTIMPL;
@@ -156,25 +156,25 @@ HRESULT CProjectDataObject::GetCanonicalFormatEtc(FORMATETC *pFormatEct,FORMATET
 
 HRESULT __stdcall CProjectDataObject::SetData(FORMATETC *pFormatEtc,STGMEDIUM *pMedium,BOOL fRelease)
 {
-	return E_NOTIMPL;
+    return E_NOTIMPL;
 }
 
 HRESULT __stdcall CProjectDataObject::EnumFormatEtc(DWORD dwDirection,IEnumFORMATETC **ppEnumFormatEtc)
 {
-	if (dwDirection == DATADIR_GET)
-	{
-		// Windows 2000 and newer only.
-		//return SHCreateStdEnumFmtEtc(1,&m_FormatEtc,ppEnumFormatEtc);
-		return CreateEnumFmtEtc(1,&m_FormatEtc,ppEnumFormatEtc);
-	}
-	else
-	{
-		return E_NOTIMPL;
-	}
+    if (dwDirection == DATADIR_GET)
+    {
+        // Windows 2000 and newer only.
+        //return SHCreateStdEnumFmtEtc(1,&m_FormatEtc,ppEnumFormatEtc);
+        return CreateEnumFmtEtc(1,&m_FormatEtc,ppEnumFormatEtc);
+    }
+    else
+    {
+        return E_NOTIMPL;
+    }
 }
 
 HRESULT CProjectDataObject::DAdvise(FORMATETC *pFormatEtc,DWORD advf,IAdviseSink *pAdvSink, 
-	DWORD *pdwConnection)
+    DWORD *pdwConnection)
 {
     return OLE_E_ADVISENOTSUPPORTED;
 }

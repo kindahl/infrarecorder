@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,58 +30,58 @@ class CProjectListViewCtrl;
 class CProjectListViewDropTarget : public CProjectDropTargetBase
 {
 private:
-	CProjectListViewCtrl *m_pHost;
+    CProjectListViewCtrl *m_pHost;
 
-	bool HandleDropData(IDataObject *pDataObject,CProjectNode *pTargetNode,POINTL ptCursor);
+    bool HandleDropData(IDataObject *pDataObject,CProjectNode *pTargetNode,POINTL ptCursor);
 
 public:
-	CProjectListViewDropTarget(CProjectListViewCtrl *pHost);
+    CProjectListViewDropTarget(CProjectListViewCtrl *pHost);
 
-	bool OnDragOver(POINTL ptCursor);
-	bool OnDrop(POINTL ptCursor,IDataObject *pDataObject);
-	void OnDragLeave();
+    bool OnDragOver(POINTL ptCursor);
+    bool OnDrop(POINTL ptCursor,IDataObject *pDataObject);
+    void OnDragLeave();
 };
 
 class CProjectListViewCtrl : public CWindowImpl<CProjectListViewCtrl,CListViewCtrl>
 {
 private:
-	HIMAGELIST m_hDragImageList;
+    HIMAGELIST m_hDragImageList;
 
 public:
-	CProjectListViewDropTarget *m_pDropTarget;
+    CProjectListViewDropTarget *m_pDropTarget;
 
-	DECLARE_WND_CLASS(_T("ckProjectListViewCtrl"));
+    DECLARE_WND_CLASS(_T("ckProjectListViewCtrl"));
 
-	CProjectListViewCtrl();
-	~CProjectListViewCtrl();
+    CProjectListViewCtrl();
+    ~CProjectListViewCtrl();
 
-	void SetViewStyle(int iViewStyle);
-	void BeginDrag(LPNMLISTVIEW pNMListView);
-	
-	BEGIN_MSG_MAP(CProjectListViewCtrl)
-		COMMAND_ID_HANDLER(ID_VIEW_LARGEICONS,OnViewLargeIcons)
-		COMMAND_ID_HANDLER(ID_VIEW_SMALLICONS,OnViewSmallIcons)
-		COMMAND_ID_HANDLER(ID_VIEW_LIST,OnViewList)
-		COMMAND_ID_HANDLER(ID_VIEW_DETAILS,OnViewDetails)
-		COMMAND_ID_HANDLER(ID_EDIT_NEWFOLDER,OnNewFolder)
+    void SetViewStyle(int iViewStyle);
+    void BeginDrag(LPNMLISTVIEW pNMListView);
+    
+    BEGIN_MSG_MAP(CProjectListViewCtrl)
+        COMMAND_ID_HANDLER(ID_VIEW_LARGEICONS,OnViewLargeIcons)
+        COMMAND_ID_HANDLER(ID_VIEW_SMALLICONS,OnViewSmallIcons)
+        COMMAND_ID_HANDLER(ID_VIEW_LIST,OnViewList)
+        COMMAND_ID_HANDLER(ID_VIEW_DETAILS,OnViewDetails)
+        COMMAND_ID_HANDLER(ID_EDIT_NEWFOLDER,OnNewFolder)
 
-		MESSAGE_HANDLER(WM_KEYDOWN,OnKeyDown)
-		MESSAGE_HANDLER(WM_DROPFILES,OnDropFiles)
-		MESSAGE_HANDLER(WM_SETFOCUS,OnSetFocus)
-		MESSAGE_HANDLER(WM_CONTROLCUSTOMDRAW,OnCustomDraw)
-	END_MSG_MAP()
+        MESSAGE_HANDLER(WM_KEYDOWN,OnKeyDown)
+        MESSAGE_HANDLER(WM_DROPFILES,OnDropFiles)
+        MESSAGE_HANDLER(WM_SETFOCUS,OnSetFocus)
+        MESSAGE_HANDLER(WM_CONTROLCUSTOMDRAW,OnCustomDraw)
+    END_MSG_MAP()
 
-	LRESULT OnKeyDown(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnDropFiles(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnSetFocus(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnCustomDraw(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnKeyDown(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnDropFiles(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnSetFocus(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnCustomDraw(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 
-	LRESULT OnViewLargeIcons(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
-	LRESULT OnViewSmallIcons(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
-	LRESULT OnViewList(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
-	LRESULT OnViewDetails(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
-	LRESULT OnNewFolder(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnViewLargeIcons(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnViewSmallIcons(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnViewList(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnViewDetails(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
+    LRESULT OnNewFolder(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled);
 
-	void ForceRedraw();
-	void SelectDropTarget(int iDropItemIndex);
+    void ForceRedraw();
+    void SelectDropTarget(int iDropItemIndex);
 };

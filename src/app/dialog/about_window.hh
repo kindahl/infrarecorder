@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,55 +36,55 @@
 #endif
 
 typedef BOOL (WINAPI *tUpdateLayeredWindow)(HWND hWnd,HDC hdcDst,POINT *pptDst,
-											SIZE *psize,HDC hdcSrc,POINT *pptSrc,
-											COLORREF crKey,BLENDFUNCTION *pblend,
-											DWORD dwFlags);
+                                            SIZE *psize,HDC hdcSrc,POINT *pptSrc,
+                                            COLORREF crKey,BLENDFUNCTION *pblend,
+                                            DWORD dwFlags);
 
 class CAboutWindow : public CWindowImpl<CAboutWindow,CWindow,CWinTraits<WS_POPUP | WS_VISIBLE,WS_EX_TOOLWINDOW> >
 {
 private:
-	CBitmap m_SplashTmpBitmap;
-	CBitmap m_SplashRefBitmap;
+    CBitmap m_SplashTmpBitmap;
+    CBitmap m_SplashRefBitmap;
 
-	HFONT m_VerFont;
-	HFONT m_UrlFont;
-	bool m_bUrlHover;
+    HFONT m_VerFont;
+    HFONT m_UrlFont;
+    bool m_bUrlHover;
 
-	// Updated by the UpdateVersionInfo function.
-	TCHAR m_szVersion[128];
-	ckcore::tstring m_szCdrtoolsVersion;
+    // Updated by the UpdateVersionInfo function.
+    TCHAR m_szVersion[128];
+    ckcore::tstring m_szCdrtoolsVersion;
 
-	HWND m_hWndParent;
+    HWND m_hWndParent;
 
-	void UpdateVersionInfo();
-	void RollbackBitmap();
-	void Render();
+    void UpdateVersionInfo();
+    void RollbackBitmap();
+    void Render();
 
-	tUpdateLayeredWindow m_pUpdateLayeredWindow;
-	void DrawBitmap(HDC hScreenDC,HDC hMemDC);
-	void DrawText(HDC hDC,HFONT hFont,RECT *pRect,COLORREF Color,
-				  const TCHAR *szText,int iTextLen);
+    tUpdateLayeredWindow m_pUpdateLayeredWindow;
+    void DrawBitmap(HDC hScreenDC,HDC hMemDC);
+    void DrawText(HDC hDC,HFONT hFont,RECT *pRect,COLORREF Color,
+                  const TCHAR *szText,int iTextLen);
 
-	void LoadBitmap(CBitmap &Bitmap);
-	void LoadBitmaps();
+    void LoadBitmap(CBitmap &Bitmap);
+    void LoadBitmaps();
 
 public:
-	CAboutWindow();
-	~CAboutWindow();
+    CAboutWindow();
+    ~CAboutWindow();
 
-	BEGIN_MSG_MAP(CAboutWindow)
-		MESSAGE_HANDLER(WM_CREATE,OnCreate)
-		MESSAGE_HANDLER(WM_PAINT,OnPaint)
-		MESSAGE_HANDLER(WM_MOUSEMOVE,OnMouseMove);
-		MESSAGE_HANDLER(WM_LBUTTONDOWN,OnLButtonDown)
-	END_MSG_MAP()
+    BEGIN_MSG_MAP(CAboutWindow)
+        MESSAGE_HANDLER(WM_CREATE,OnCreate)
+        MESSAGE_HANDLER(WM_PAINT,OnPaint)
+        MESSAGE_HANDLER(WM_MOUSEMOVE,OnMouseMove);
+        MESSAGE_HANDLER(WM_LBUTTONDOWN,OnLButtonDown)
+    END_MSG_MAP()
 
-	LRESULT OnCreate(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnPaint(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnMouseMove(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnLButtonDown(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnCreate(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnPaint(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnMouseMove(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnLButtonDown(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 
-	void CreateAndShow(HWND hWndParent);
+    void CreateAndShow(HWND hWndParent);
 };
 
 extern CAboutWindow *g_pAboutWnd;

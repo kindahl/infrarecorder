@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ typedef bool(__stdcall *PFNISAPPTHEMED)();
 typedef HTHEME(__stdcall *PFNOPENTHEMEDATA)(HWND hwnd,LPCWSTR pszClassList);
 typedef HRESULT(__stdcall *PFNCLOSETHEMEDATA)(HTHEME hTheme);
 typedef HRESULT(__stdcall *PFNDRAWTHEMEBACKGROUND)(HTHEME hTheme,HDC hdc, 
-	int iPartId,int iStateId,const RECT *pRect,const RECT *pClipRect);
+    int iPartId,int iStateId,const RECT *pRect,const RECT *pClipRect);
 typedef HRESULT(__stdcall *PFNGETTHEMECOLOR)(HTHEME hTheme,int iPartId, 
     int iStateId,int iPropId,COLORREF *pColor);
 
@@ -38,18 +38,18 @@ private:
     bool Supported();
 
 public:
-	CVisualStyles();
-	~CVisualStyles();
+    CVisualStyles();
+    ~CVisualStyles();
 
-	bool IsThemeActive();
-	bool IsAppThemed();
+    bool IsThemeActive();
+    bool IsAppThemed();
 
-	HTHEME OpenThemeData(HWND hwnd,LPCWSTR pszClassList);
-	HRESULT CloseThemeData(HTHEME hTheme);
-	HRESULT DrawThemeBackground(HTHEME hTheme,HDC hdc,int iPartId,int iStateId,
-		const RECT *pRect,const RECT *pClipRect);
-	HRESULT GetThemeColor(HTHEME hTheme,int iPartId,int iStateId,int iPropId,
-		COLORREF *pColor);
+    HTHEME OpenThemeData(HWND hwnd,LPCWSTR pszClassList);
+    HRESULT CloseThemeData(HTHEME hTheme);
+    HRESULT DrawThemeBackground(HTHEME hTheme,HDC hdc,int iPartId,int iStateId,
+        const RECT *pRect,const RECT *pClipRect);
+    HRESULT GetThemeColor(HTHEME hTheme,int iPartId,int iStateId,int iPropId,
+        COLORREF *pColor);
 };
 
 extern CVisualStyles g_VisualStyles;

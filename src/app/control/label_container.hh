@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,81 +38,81 @@
 class CLabelContainer : public CWindowImpl<CLabelContainer,CWindow,CControlWinTraits>
 {
 private:
-	CWindow m_ClientWindow;
-	int m_iHeaderHeight;
+    CWindow m_ClientWindow;
+    int m_iHeaderHeight;
 
-	HBRUSH m_hBorderBrush;
-	TCHAR m_szLabelText[LABELCONTAINER_MAXTEXT];
+    HBRUSH m_hBorderBrush;
+    TCHAR m_szLabelText[LABELCONTAINER_MAXTEXT];
 
-	// Button related.
-	HIMAGELIST m_hCloseImageList;
-	int m_iButtonState;
-	bool m_bButtonDown;
+    // Button related.
+    HIMAGELIST m_hCloseImageList;
+    int m_iButtonState;
+    bool m_bButtonDown;
 
-	// Handle to the control that should receivce custom draw messages.
-	HWND m_hWndCustomDraw;
-	int m_iControlID;
+    // Handle to the control that should receivce custom draw messages.
+    HWND m_hWndCustomDraw;
+    int m_iControlID;
 
-	// The host window that should receive the close message.
-	HWND m_hWndCloseHost;
+    // The host window that should receive the close message.
+    HWND m_hWndCloseHost;
 
-	void InitializeImageList();
+    void InitializeImageList();
 
-	void DrawText(CDCHandle dc,RECT *pHeaderRect);
-	void DrawBackground(CDCHandle dc,RECT *pHeaderRect);
-	void DrawButton(CDCHandle dc,RECT *pHeaderRect);
+    void DrawText(CDCHandle dc,RECT *pHeaderRect);
+    void DrawBackground(CDCHandle dc,RECT *pHeaderRect);
+    void DrawButton(CDCHandle dc,RECT *pHeaderRect);
 
 public:
-	static CWndClassInfo &GetWndClassInfo()
-	{
-		static CWndClassInfo wc =
-		{
-			{
-				sizeof(WNDCLASSEX),CS_DBLCLKS,
-				StartWindowProc,0,0,NULL,NULL,NULL,
-				GetSysColorBrush(COLOR_BTNFACE),NULL,
-				_T("ckLabelContainer"),NULL
-			},
-			NULL,NULL,IDC_ARROW,TRUE,0,_T("")
-		};
+    static CWndClassInfo &GetWndClassInfo()
+    {
+        static CWndClassInfo wc =
+        {
+            {
+                sizeof(WNDCLASSEX),CS_DBLCLKS,
+                StartWindowProc,0,0,NULL,NULL,NULL,
+                GetSysColorBrush(COLOR_BTNFACE),NULL,
+                _T("ckLabelContainer"),NULL
+            },
+            NULL,NULL,IDC_ARROW,TRUE,0,_T("")
+        };
 
-		return wc;
-	}
+        return wc;
+    }
 
-	CLabelContainer(bool bClosable = false);
-	~CLabelContainer();
+    CLabelContainer(bool bClosable = false);
+    ~CLabelContainer();
 
-	BEGIN_MSG_MAP(CLabelContainer)
-		MESSAGE_HANDLER(WM_SIZE,OnSize)
-		MESSAGE_HANDLER(WM_SETFOCUS,OnSetFocus)
-		MESSAGE_HANDLER(WM_ERASEBKGND,OnEraseBkgnd)
-		MESSAGE_HANDLER(WM_PAINT,OnPaint)
-		MESSAGE_HANDLER(WM_MOUSEMOVE,OnMouseMove)
-		MESSAGE_HANDLER(WM_LBUTTONDOWN,OnMouseDown)
-		MESSAGE_HANDLER(WM_LBUTTONUP,OnMouseUp)
+    BEGIN_MSG_MAP(CLabelContainer)
+        MESSAGE_HANDLER(WM_SIZE,OnSize)
+        MESSAGE_HANDLER(WM_SETFOCUS,OnSetFocus)
+        MESSAGE_HANDLER(WM_ERASEBKGND,OnEraseBkgnd)
+        MESSAGE_HANDLER(WM_PAINT,OnPaint)
+        MESSAGE_HANDLER(WM_MOUSEMOVE,OnMouseMove)
+        MESSAGE_HANDLER(WM_LBUTTONDOWN,OnMouseDown)
+        MESSAGE_HANDLER(WM_LBUTTONUP,OnMouseUp)
 
-		NOTIFY_CODE_HANDLER(NM_CUSTOMDRAW,OnCustomDraw)
+        NOTIFY_CODE_HANDLER(NM_CUSTOMDRAW,OnCustomDraw)
 
-		FORWARD_NOTIFICATIONS()
-	END_MSG_MAP()
+        FORWARD_NOTIFICATIONS()
+    END_MSG_MAP()
 
-	LRESULT OnSize(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnSetFocus(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnEraseBkgnd(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnPaint(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnMouseMove(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnMouseDown(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
-	LRESULT OnMouseUp(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnSize(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnSetFocus(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnEraseBkgnd(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnPaint(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnMouseMove(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnMouseDown(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnMouseUp(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 
-	LRESULT OnCustomDraw(int idCtrl,LPNMHDR pnmh,BOOL &bHandled);
+    LRESULT OnCustomDraw(int idCtrl,LPNMHDR pnmh,BOOL &bHandled);
 
-	void SetCustomDrawHandler(HWND hWndCustomDraw,int iID);
-	void SetClient(HWND hWndClient);
-	void SetCloseHost(HWND hWndCloseHost);
+    void SetCustomDrawHandler(HWND hWndCustomDraw,int iID);
+    void SetClient(HWND hWndClient);
+    void SetCloseHost(HWND hWndCloseHost);
 
-	void UpdateLayout();
-	void UpdateLayout(int iWidth,int iHeight);
+    void UpdateLayout();
+    void UpdateLayout(int iWidth,int iHeight);
 
-	void SetHeaderHeight(int iHeight);
-	void SetLabelText(const TCHAR *szText);
+    void SetHeaderHeight(int iHeight);
+    void SetLabelText(const TCHAR *szText);
 };

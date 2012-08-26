@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ int capabilities = IRC_HAS_ENCODER | IRC_HAS_CONFIG;
 
 // Version and about strings.
 TCHAR *str_version = _T("0.53.0.0");
-TCHAR *str_about = _T("InfraRecorder MP3 Encoder\n\nCopyright © 2006-2011 Christian Kindahl.\n\nThis codec is using the libmp3lame (LAME) library.\nVisit: http://lame.sourceforge.net/ for more information.\n\nPlease note that personal and/or commercial use of\ncompiled versions of this codec requires a patent license\nin some countries. Please check before using this codec.");
+TCHAR *str_about = _T("InfraRecorder MP3 Encoder\n\nCopyright © 2006-2012 Christian Kindahl.\n\nThis codec is using the libmp3lame (LAME) library.\nVisit: http://lame.sourceforge.net/ for more information.\n\nPlease note that personal and/or commercial use of\ncompiled versions of this codec requires a patent license\nin some countries. Please check before using this codec.");
 TCHAR *str_encoder = _T("MP3");
 TCHAR *str_file_ext = _T(".mp3");
 
@@ -47,58 +47,58 @@ BOOL APIENTRY DllMain(HANDLE hModule,DWORD ul_reason_for_call,LPVOID lpReserved)
  */
 int WINAPI irc_capabilities()
 {
-	return capabilities;
+    return capabilities;
 }
 
 TCHAR *WINAPI irc_string(unsigned int uiID)
 {
-	switch (uiID)
-	{
-		case IRC_STR_VERSION:
-			return str_version;
+    switch (uiID)
+    {
+        case IRC_STR_VERSION:
+            return str_version;
 
-		case IRC_STR_ABOUT:
-			return str_about;
+        case IRC_STR_ABOUT:
+            return str_about;
 
-		case IRC_STR_ENCODER:
-			return str_encoder;
+        case IRC_STR_ENCODER:
+            return str_encoder;
 
-		case IRC_STR_FILEEXT:
-			return str_file_ext;
-	}
+        case IRC_STR_FILEEXT:
+            return str_file_ext;
+    }
 
-	return NULL;
+    return NULL;
 }
 
 bool WINAPI irc_set_callback(tirc_send_message *pSendMessage)
 {
-	if (pSendMessage == NULL)
-		return false;
+    if (pSendMessage == NULL)
+        return false;
 
     LameBase::set_callback(pSendMessage);
-	return true;
+    return true;
 }
 
 bool WINAPI irc_decode_init(const TCHAR *szFileName,int &iNumChannels,
-							int &iSampleRate,int &iBitRate,
+                            int &iSampleRate,int &iBitRate,
                             unsigned __int64 &uiDuration)
 {
-	return false;
+    return false;
 }
 
 __int64 WINAPI irc_decode_process(unsigned char *pBuffer,__int64 iBufferSize,
-								  unsigned __int64 &uiTime)
+                                  unsigned __int64 &uiTime)
 {
-	return -1;
+    return -1;
 }
 
 bool WINAPI irc_decode_exit()
 {
-	return false;
+    return false;
 }
 
 bool WINAPI irc_encode_init(const TCHAR *szFileName,int iNumChannels,
-							int iSampleRate,int iBitRate)
+                            int iSampleRate,int iBitRate)
 {
     if (lame_encoder != NULL)
         return false;
@@ -112,7 +112,7 @@ bool WINAPI irc_encode_init(const TCHAR *szFileName,int iNumChannels,
         return false;
     }
 
-	return true;
+    return true;
 }
 
 __int64 WINAPI irc_encode_process(unsigned char *pBuffer,__int64 iDataSize)
@@ -133,19 +133,19 @@ __int64 WINAPI irc_encode_flush()
 
 bool WINAPI irc_encode_exit()
 {
-	if (lame_encoder == NULL)
+    if (lame_encoder == NULL)
         return false;
 
     delete lame_encoder;
     lame_encoder = NULL;
 
-	return true;
+    return true;
 }
 
 bool WINAPI irc_encode_config()
 {
-	CConfigDlg ConfigDlg(&encoder_cfg);
-	ConfigDlg.DoModal();
+    CConfigDlg ConfigDlg(&encoder_cfg);
+    ConfigDlg.DoModal();
 
-	return true;
+    return true;
 }

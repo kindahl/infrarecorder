@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,12 +45,12 @@ public:
 
     static void ComparePlaceholderAnalyses(const CFmtStrPlaceholderAnalysis *pAnalysis1,
                                            const CFmtStrPlaceholderAnalysis *pAnalysis2);
-	void ClearForReuse(void);
+    void ClearForReuse(void);
 
 protected:
     
     unsigned m_uPlaceholderCount;	// Always <= m_placeholders.size(). Note that, when reusing an object,
-									// m_placeholders.size() could be bigger.
+                                    // m_placeholders.size() could be bigger.
 
     CVectorOfFmtStrPlaceholder m_Placeholders;
 
@@ -62,10 +62,10 @@ protected:
         m_bPositionalPlaceholders = false;
     }
 
-	void InsertPlaceholder(unsigned uPlaceholderPos,
+    void InsertPlaceholder(unsigned uPlaceholderPos,
                            bool bIsPositionalPlaceholder,
                            const ckcore::tchar *szPlaceholderStr,
-						   unsigned uPlaceholderStrLen);
+                           unsigned uPlaceholderStrLen);
 };
 
 void ComparePlaceholdersInTranslatedStr(const ckcore::tchar *szSectionName,

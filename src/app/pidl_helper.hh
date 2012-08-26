@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,24 +21,24 @@
 class CPidlHelper 
 {
 protected:
-	CComPtr<IMalloc> m_spMalloc;
+    CComPtr<IMalloc> m_spMalloc;
 
 private:
-	LPITEMIDLIST CreatePidl(unsigned int uiSize);
-	ITEMIDLIST *GetNextPidlItem(LPCITEMIDLIST pidl);
-	unsigned int GetPidlSize(LPCITEMIDLIST pidl);
+    LPITEMIDLIST CreatePidl(unsigned int uiSize);
+    ITEMIDLIST *GetNextPidlItem(LPCITEMIDLIST pidl);
+    unsigned int GetPidlSize(LPCITEMIDLIST pidl);
 
 public:
-	CPidlHelper();
-	virtual ~CPidlHelper();
+    CPidlHelper();
+    virtual ~CPidlHelper();
 
-	bool GetPathName(IShellFolder *pParent,LPCITEMIDLIST pidl,TCHAR *szPathName,int iMaxLength = MAX_PATH);
-	bool GetDisplayPathName(IShellFolder *pParent,LPCITEMIDLIST pidl,TCHAR *szPathName,int iMaxLength = MAX_PATH);
-	bool GetPathName(LPCITEMIDLIST pidl,TCHAR *szPathName);
-	bool GetPidl(TCHAR *szPathName,LPITEMIDLIST *ppidl);
-	bool Split(LPCITEMIDLIST pidl,LPITEMIDLIST *pParent,LPITEMIDLIST *pChild);
-	bool STRRET2TCHAR(LPCITEMIDLIST pidl,STRRET *psr,TCHAR *szTarget,int iMaxChars = MAX_PATH,bool bFreeOleStr = true);
-	void FreePidl(LPITEMIDLIST &pidl);
+    bool GetPathName(IShellFolder *pParent,LPCITEMIDLIST pidl,TCHAR *szPathName,int iMaxLength = MAX_PATH);
+    bool GetDisplayPathName(IShellFolder *pParent,LPCITEMIDLIST pidl,TCHAR *szPathName,int iMaxLength = MAX_PATH);
+    bool GetPathName(LPCITEMIDLIST pidl,TCHAR *szPathName);
+    bool GetPidl(TCHAR *szPathName,LPITEMIDLIST *ppidl);
+    bool Split(LPCITEMIDLIST pidl,LPITEMIDLIST *pParent,LPITEMIDLIST *pChild);
+    bool STRRET2TCHAR(LPCITEMIDLIST pidl,STRRET *psr,TCHAR *szTarget,int iMaxChars = MAX_PATH,bool bFreeOleStr = true);
+    void FreePidl(LPITEMIDLIST &pidl);
 
-	LPITEMIDLIST ConcatenatePidl(LPCITEMIDLIST pidl1,LPCITEMIDLIST pidl2);
+    LPITEMIDLIST ConcatenatePidl(LPCITEMIDLIST pidl1,LPCITEMIDLIST pidl2);
 };

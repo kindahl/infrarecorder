@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,23 +23,23 @@
 class CFilesDataObject : public IDataObject
 {
 private:
-	long m_lRefCount;
+    long m_lRefCount;
 
-	FORMATETC m_FormatEtc;
-	STGMEDIUM m_StgMedium;
+    FORMATETC m_FormatEtc;
+    STGMEDIUM m_StgMedium;
 
-	std::vector<tstring> m_Files;
+    std::vector<tstring> m_Files;
 
-	bool IsFormatSupported(FORMATETC *pFormatEtc);
+    bool IsFormatSupported(FORMATETC *pFormatEtc);
 
 public:
-	CFilesDataObject();
-	~CFilesDataObject();
+    CFilesDataObject();
+    ~CFilesDataObject();
 
-	void Reset();
-	void AddFile(const TCHAR *szFileName);
+    void Reset();
+    void AddFile(const TCHAR *szFileName);
 
-	// IUnknown members.
+    // IUnknown members.
     HRESULT __stdcall QueryInterface(REFIID iid,void **ppvObject);
     ULONG __stdcall AddRef();
     ULONG __stdcall Release();

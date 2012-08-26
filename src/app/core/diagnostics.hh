@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,15 +22,15 @@
 class CDiagnostics : public ckcore::Process
 {
 private:
-	// Events.
-	void event_output(const std::string &block);
-	void event_finished();
+    // Events.
+    void event_output(const std::string &block);
+    void event_finished();
 
 public:
-	CDiagnostics();
-	~CDiagnostics();
+    CDiagnostics();
+    ~CDiagnostics();
 
-	bool DeviceScan();
+    bool DeviceScan();
 };
 
 extern CDiagnostics g_Diagnostics;

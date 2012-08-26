@@ -1,6 +1,6 @@
 /*
  * InfraRecorder - CD/DVD burning software
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@
 
 CProjectPropUdfPage::CProjectPropUdfPage()
 {
-	m_psp.dwFlags |= PSP_HASHELP;
+    m_psp.dwFlags |= PSP_HASHELP;
 }
 
 CProjectPropUdfPage::~CProjectPropUdfPage()
@@ -34,49 +34,49 @@ CProjectPropUdfPage::~CProjectPropUdfPage()
 
 bool CProjectPropUdfPage::Translate()
 {
-	if (g_LanguageSettings.m_pLngProcessor == NULL)
-		return false;
+    if (g_LanguageSettings.m_pLngProcessor == NULL)
+        return false;
 
-	CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
-	
-	// Make sure that there is a projectprop translation section.
-	if (!pLng->EnterSection(_T("projectprop")))
-		return false;
+    CLngProcessor *pLng = g_LanguageSettings.m_pLngProcessor;
+    
+    // Make sure that there is a projectprop translation section.
+    if (!pLng->EnterSection(_T("projectprop")))
+        return false;
 
-	// Translate.
-	TCHAR *szStrValue;
-	if (pLng->GetValuePtr(IDC_VERSIONSTATIC,szStrValue))
-		SetDlgItemText(IDC_VERSIONSTATIC,szStrValue);
+    // Translate.
+    TCHAR *szStrValue;
+    if (pLng->GetValuePtr(IDC_VERSIONSTATIC,szStrValue))
+        SetDlgItemText(IDC_VERSIONSTATIC,szStrValue);
 
-	return true;
+    return true;
 }
 
 bool CProjectPropUdfPage::OnApply()
 {
-	return true;
+    return true;
 }
 
 void CProjectPropUdfPage::OnHelp()
 {
-	TCHAR szFileName[MAX_PATH];
-	GetModuleFileName(NULL,szFileName,MAX_PATH - 1);
+    TCHAR szFileName[MAX_PATH];
+    GetModuleFileName(NULL,szFileName,MAX_PATH - 1);
 
-	ExtractFilePath(szFileName);
-	lstrcat(szFileName,lngGetManual());
-	lstrcat(szFileName,_T("::/how_to_use/working_with_projects/project_settings.html"));
+    ExtractFilePath(szFileName);
+    lstrcat(szFileName,lngGetManual());
+    lstrcat(szFileName,_T("::/how_to_use/working_with_projects/project_settings.html"));
 
-	HtmlHelp(m_hWnd,szFileName,HH_DISPLAY_TOC,NULL);
+    HtmlHelp(m_hWnd,szFileName,HH_DISPLAY_TOC,NULL);
 }
 
 LRESULT CProjectPropUdfPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled)
 {
-	// Setup the version combo box.
-	CComboBox VersionCombo = GetDlgItem(IDC_VERSIONCOMBO);
-	VersionCombo.AddString(_T("1.02"));
-	VersionCombo.SetCurSel(0);
+    // Setup the version combo box.
+    CComboBox VersionCombo = GetDlgItem(IDC_VERSIONCOMBO);
+    VersionCombo.AddString(_T("1.02"));
+    VersionCombo.SetCurSel(0);
 
-	// Translate the window.
-	Translate();
+    // Translate the window.
+    Translate();
 
-	return TRUE;
+    return TRUE;
 }
