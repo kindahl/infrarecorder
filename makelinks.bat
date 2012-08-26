@@ -37,12 +37,12 @@ if not exist %path_x64r%cdrtools mklink /D %path_x64r%cdrtools %path_cdrtools%
 if not exist %path_x64p%cdrtools mklink /D %path_x64p%cdrtools %path_cdrtools%
 
 rem make symbolic links to libsndfile libraries.
-if not exist %path_w32d%codecs\libsndfile.dll mklink %path_w32d%codecs\libsndfile.dll %path_sndfile%win32\libsndfile.dll
-if not exist %path_w32r%codecs\libsndfile.dll mklink %path_w32r%codecs\libsndfile.dll %path_sndfile%win32\libsndfile.dll
-if not exist %path_w32p%codecs\libsndfile.dll mklink %path_w32p%codecs\libsndfile.dll %path_sndfile%win32\libsndfile.dll
-if not exist %path_x64d%codecs\libsndfile.dll mklink %path_x64d%codecs\libsndfile.dll %path_sndfile%x64\libsndfile.dll
-if not exist %path_x64r%codecs\libsndfile.dll mklink %path_x64r%codecs\libsndfile.dll %path_sndfile%x64\libsndfile.dll
-if not exist %path_x64p%codecs\libsndfile.dll mklink %path_x64p%codecs\libsndfile.dll %path_sndfile%x64\libsndfile.dll
+if not exist %path_w32d%codecs\libsndfile-1.dll mklink %path_w32d%codecs\libsndfile-1.dll %path_sndfile%win32\libsndfile-1.dll
+if not exist %path_w32r%codecs\libsndfile-1.dll mklink %path_w32r%codecs\libsndfile-1.dll %path_sndfile%win32\libsndfile-1.dll
+if not exist %path_w32p%codecs\libsndfile-1.dll mklink %path_w32p%codecs\libsndfile-1.dll %path_sndfile%win32\libsndfile-1.dll
+if not exist %path_x64d%codecs\libsndfile-1.dll mklink %path_x64d%codecs\libsndfile-1.dll %path_sndfile%x64\libsndfile-1.dll
+if not exist %path_x64r%codecs\libsndfile-1.dll mklink %path_x64r%codecs\libsndfile-1.dll %path_sndfile%x64\libsndfile-1.dll
+if not exist %path_x64p%codecs\libsndfile-1.dll mklink %path_x64p%codecs\libsndfile-1.dll %path_sndfile%x64\libsndfile-1.dll
 
 rem make symbolic links to smoke program.
 if not exist %path_w32d%smoke.exe mklink %path_w32d%smoke.exe %path_smoke%smoke.exe
