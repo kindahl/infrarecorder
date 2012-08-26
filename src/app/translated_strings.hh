@@ -393,3 +393,4 @@
 	TRSTR(STITLE_PREPOPERATION /* 0x0144 */, _T("Preparing Operation"))
 	TRSTR(STATUS_GATHER_FILE_INFO /* 0x0145 */, _T("Gathering project file information."))
     TRSTR(PROJECTPROP_ISO_CHARSET_ISO /* 0x0146 */, _T("ISO9660 (standard)"))
+    TRSTR(WARNING_BAD_DVDVIDEO /* 0x00147 */, _T("InfraRecorder video projects requires the content to be in DVD-Video format. This does not appear to be the case. InfraRecorder could not find the required file: VIDEO_TS/VIDEO_TS.IFO.\n\nPlease convert any video files into DVD-Video format before burning them as video projects in InfraRecorder.\n\nDo you want to continue anyways?"))

@@ -3039,11 +3039,20 @@ LRESULT CMainFrame::OnBurncompilationCompactdisc(WORD wNotifyCode,WORD wID,HWND 
 
 LRESULT CMainFrame::OnBurncompilationDiscimage(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
 {
+    // Mixed mode projects can only produce disc images of the data section.
 	if (g_ProjectManager.GetProjectType() == PROJECTTYPE_MIXED)
 	{
 		if (lngMessageBox(m_hWnd,CONFIRM_CREATEMIXIMAGE,GENERAL_QUESTION,MB_YESNO | MB_ICONQUESTION) == IDNO)
 			return 0;
 	}
+
+    // Check the validity of projects using the DVD-Video file system.
+    if (g_ProjectSettings.m_iFileSystem == FILESYSTEM_DVDVIDEO &&
+        !g_TreeManager.GetNodeFromPath(_T("/VIDEO_TS/VIDEO_TS.IFO")))
+    {
+        if (lngMessageBox(m_hWnd,WARNING_BAD_DVDVIDEO,GENERAL_WARNING,MB_YESNO | MB_ICONWARNING) == IDNO)
+			return 0;
+    }
 
 	g_ActionManager.CreateImage(m_hWnd,false);
 	return 0;

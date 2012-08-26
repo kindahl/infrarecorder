@@ -206,7 +206,35 @@ int CLngProcessor::Load()
 
 			while (uc != '\n' && uc != '\r')
 			{
-				pNewValue->m_szValue.Append(uc);
+                // Look for esacpe.
+                if (uc == '\\')
+                {
+                    TCHAR uc0 = '\0';
+                    if (!ReadNext(uc0))
+                    {
+                        szNameBuffer.Append(uc);
+					    break;
+                    }
+
+                    if (uc0 == '\n' || uc0 == '\r')
+                        break;
+
+                    switch (uc0)
+                    {
+                        case 'n':
+                            pNewValue->m_szValue.Append('\n');
+                            break;
+                        default:
+                            pNewValue->m_szValue.Append(uc);
+                            pNewValue->m_szValue.Append(uc0);
+                            break;
+                    }
+                }
+                else
+                {
+				    pNewValue->m_szValue.Append(uc);
+                }
+
 				if (!ReadNext(uc))
 					break;
 			}
