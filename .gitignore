@@ -12,6 +12,7 @@
 /src/_ReSharper.infrarecorder_vc10/*
 /src/ipch/*
 /src/shell/dlldata.c
+/src/shell/shell.hh
 /src/shell/shell_i.c
 /src/shell/shell_p.c
 /src/Win32/
