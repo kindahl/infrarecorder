@@ -17,9 +17,6 @@
  */
 
 #include "stdafx.hh"
-#ifndef UNICODE
-#include <stdio.h>
-#endif
 #include "config_general_page.hh"
 #include <base/string_util.hh>
 
@@ -46,11 +43,7 @@ bool CConfigGeneralPage::ValidateBitrateValue(int iControl,int &iValue)
     TCHAR szBuffer[4];
 
     GetDlgItemText(iControl,szBuffer,4);
-#ifdef UNICODE
     iValue = _wtoi(szBuffer);
-#else
-    iValue = atoi(szBuffer);
-#endif
 
     return iValue > 47 && iValue < 501;
 }
@@ -256,11 +249,7 @@ LRESULT CConfigGeneralPage::OnBitrateSpin(int idCtrl,LPNMHDR pNMH,BOOL &bHandled
             break;
     }
 
-#ifdef UNICODE
     int iValue = _wtoi(szBuffer);
-#else
-    int iValue = atoi(szBuffer);
-#endif
 
     // Calculate the new value.
     if (lpnmud->iDelta < 0)

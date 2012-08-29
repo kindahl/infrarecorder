@@ -21,36 +21,20 @@
 
 int StringToInt(const TCHAR *szString)
 {
-#ifdef UNICODE
     return _wtoi(szString);
-#else
-    return atoi(szString);
-#endif
 }
 
 __int64 StringToInt64(const TCHAR *szString)
 {
-#ifdef UNICODE
     return _wtoi64(szString);
-#else
-    return _atoi64(szString);
-#endif
 }
 
 double StringToDouble(const TCHAR *szString)
 {
-#ifdef UNICODE
     return _wtof(szString);
-#else
-    return atof(szString);
-#endif
 }
 
 long StringToLong(const TCHAR *szString)
 {
-#ifdef UNICODE
     return _wtol(szString);
-#else
-    return atol(szString);
-#endif
 }

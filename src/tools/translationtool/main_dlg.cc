@@ -252,11 +252,7 @@ LRESULT CMainDlg::OnOK(WORD wNotifyCode,WORD wID,HWND hWndCtl,BOOL &bHandled)
         ExtractFileName(szTransFileName);
         ChangeFileExt(szTransFileName,_T(".xml"));
 
-#ifdef UNICODE
         szTransFileName[0] = towlower(szTransFileName[0]);
-#else
-        szTransFileName[0] = tolower(szTransFileName[0]);
-#endif
 
         TCHAR szFileName[MAX_PATH];
         ::GetModuleFileName(NULL,szFileName,MAX_PATH - 1);

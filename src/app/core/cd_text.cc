@@ -390,11 +390,7 @@ bool CCdText::WriteFileEx(const TCHAR *szFileName,const TCHAR *szAlbumName,
     // Track title information.
     if (szAlbumName[0] != '\0')
     {
-#ifdef UNICODE
         UnicodeToAnsi(szBuffer,szAlbumName,sizeof(szBuffer));
-#else
-        strcpy(szBuffer,szAlbumName);
-#endif
 
         uiCharPos = WriteText(File,PTI_NAMETITLE,0,szBuffer,uiCharPos);
         m_ucPrevPID2 = 0;
@@ -402,11 +398,7 @@ bool CCdText::WriteFileEx(const TCHAR *szFileName,const TCHAR *szAlbumName,
 
     for (unsigned int i = 0; i < Tracks.size(); i++)
     {
-#ifdef UNICODE
         UnicodeToAnsi(szBuffer,Tracks[i]->GetAudioData()->szTrackTitle,sizeof(szBuffer));
-#else
-        strcpy(szBuffer,Tracks[i]->GetAudioData()->szTrackTitle);
-#endif
 
         uiCharPos = WriteText(File,PTI_NAMETITLE,(unsigned char)i + 1,szBuffer,uiCharPos);
         m_ucPrevPID2 = i + 1;
@@ -418,11 +410,7 @@ bool CCdText::WriteFileEx(const TCHAR *szFileName,const TCHAR *szAlbumName,
     // Track artist information.
     if (szArtistName[0] != '\0')
     {
-#ifdef UNICODE
         UnicodeToAnsi(szBuffer,szArtistName,sizeof(szBuffer));
-#else
-        strcpy(szBuffer,szArtistName);
-#endif
 
         uiCharPos = WriteText(File,PTI_NAMEPERFORMER,0,szBuffer,uiCharPos);
         m_ucPrevPID2 = 0;
@@ -430,11 +418,7 @@ bool CCdText::WriteFileEx(const TCHAR *szFileName,const TCHAR *szAlbumName,
 
     for (unsigned int i = 0; i < Tracks.size(); i++)
     {
-#ifdef UNICODE
         UnicodeToAnsi(szBuffer,Tracks[i]->GetAudioData()->szTrackArtist,sizeof(szBuffer));
-#else
-        strcpy(szBuffer,Tracks[i]->GetAudioData()->szTrackArtist);
-#endif
 
         uiCharPos = WriteText(File,PTI_NAMEPERFORMER,(unsigned char)i + 1,szBuffer,uiCharPos);
         m_ucPrevPID2 = i + 1;

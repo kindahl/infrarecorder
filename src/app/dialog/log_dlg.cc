@@ -51,11 +51,6 @@ ckcore::Path CLogDlg::GetLogFullPath()
     ckcore::Directory::create(DirPath);
 
     // Construct the file name.
-#ifdef UNICODE
-    lstrcat(szFileName,_T("_u"));
-#else
-    lstrcat(szFileName,_T("_a"));
-#endif
     lstrcat(szFileName,_T(".log"));
 
     // Append the file name and return.
@@ -72,12 +67,8 @@ ckcore::Path CLogDlg::GetLogDirPath()
 
     lstrcat(szDirPath,_T("logs\\"));
 #else
-#ifdef UNICODE
     if (SUCCEEDED(SHGetFolderPath(m_hWnd,CSIDL_APPDATA | CSIDL_FLAG_CREATE,NULL,
         SHGFP_TYPE_CURRENT,szDirPath)))
-#else	// Win 9x.
-    if (SUCCEEDED(SHGetSpecialFolderPath(m_hWnd,szDirPath,CSIDL_APPDATA,true)))
-#endif
     {
         IncludeTrailingBackslash(szDirPath);
         lstrcat(szDirPath,_T("InfraRecorder\\logs\\"));
@@ -106,12 +97,10 @@ void CLogDlg::InitializeLogFile()
     {
         if (m_LogFile.open(ckcore::File::ckOPEN_WRITE))
         {
-#ifdef UNICODE
             // Write byte order mark.
             unsigned short usBOM = BOM_UTF32BE;
             m_LogFile.write(&usBOM,2);
         }
-#endif
     }
 }
 
@@ -167,11 +156,7 @@ void CLogDlg::print(const TCHAR *szString,...)
         va_list args;
         va_start(args,szString);
 
-#ifdef UNICODE
         _vsnwprintf(m_szLineBuffer,LOG_LINEBUFFER_SIZE - 1,szString,args);
-#else
-        _vsnprintf(m_szLineBuffer,LOG_LINEBUFFER_SIZE - 1,szString,args);
-#endif
 
         m_LogEdit.AppendText(m_szLineBuffer);
 
@@ -188,11 +173,7 @@ void CLogDlg::print_line(const TCHAR *szLine,...)
         va_list args;
         va_start(args,szLine);
 
-#ifdef UNICODE
         _vsnwprintf(m_szLineBuffer,LOG_LINEBUFFER_SIZE - 1,szLine,args);
-#else
-        _vsnprintf(m_szLineBuffer,LOG_LINEBUFFER_SIZE - 1,szLine,args);
-#endif
 
         m_LogEdit.AppendText(m_szLineBuffer);
         m_LogEdit.AppendText(_T("\r\n"));

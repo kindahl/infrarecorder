@@ -115,11 +115,7 @@ bool WINAPI irc_decode_init(const TCHAR *szFileName,int &iNumChannels,
                             int &iSampleRate,int &iBitRate,unsigned __int64 &uiDuration)
 {
     // Get file handle.
-#ifdef UNICODE
     g_hInFile = _wfopen(szFileName,_T("rb"));
-#else
-    g_hInFile = fopen(szFileName,"rb");
-#endif
 
     if (g_hInFile == NULL)
         return false;

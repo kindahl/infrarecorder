@@ -389,16 +389,7 @@ bool WINAPI irc_encode_init(const TCHAR *szFileName,int iNumChannels,
     }
 
     // Set output file name.
-#ifdef UNICODE
     hResult = g_pWMWriter->SetOutputFilename(szFileName);
-#else
-    wchar_t *szWideFileName = new wchar_t[strlen(szFileName) + 1];
-    MultiByteToWideChar(::AreFileApisANSI() ? CP_ACP : CP_OEMCP,MB_PRECOMPOSED,
-        szFileName,(int)strlen(szFileName) + 1,szWideFileName,(int)strlen(szFileName) + 1);
-
-    hResult = g_pWMWriter->SetOutputFilename(szWideFileName);
-    delete [] szWideFileName;
-#endif
     if (FAILED(hResult))
     {
         LocalSendMessage(IRC_MESSAGE_ERROR,_T("Failed to set WMWrite output file name."));

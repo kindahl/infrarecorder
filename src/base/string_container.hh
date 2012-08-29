@@ -43,11 +43,7 @@ private:
     bool ReadNext(ckcore::File &File,TCHAR &c);
 
 public:
-#ifdef UNICODE
     std::vector<std::wstring> m_szStrings;
-#else
-    std::vector<std::string> m_szStrings;
-#endif
 
     CStringContainer();
     ~CStringContainer();

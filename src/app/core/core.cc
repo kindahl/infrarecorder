@@ -148,7 +148,7 @@ bool CCore::SafeLaunch(tstring &CommandLine,bool bWaitForProcess)
                 g_pLogDlg->print_line(_T("  Warning: The command line is %d characters long. Trying to execute through shell."),CommandLine.length());
 
             TCHAR szBatchPath[MAX_PATH];
-#ifdef UNICODE
+
             char *szCommandLine = new char[CommandLine.length() + 1];
             UnicodeToAnsi(szCommandLine,CommandLine.c_str(),(int)CommandLine.length() + 1);
 
@@ -156,9 +156,6 @@ bool CCore::SafeLaunch(tstring &CommandLine,bool bWaitForProcess)
             CreateBatchFile(NULL,szCommandLine,szBatchPath);
 
             delete [] szCommandLine;
-#else
-            CreateBatchFile(NULL,CommandLine.c_str(),szBatchPath);
-#endif
             
             TCHAR szBatchCmdLine[MAX_PATH + 2];
             lstrcpy(szBatchCmdLine,_T("\""));
@@ -293,13 +290,9 @@ void CCore::ErrorOutputCDRECORD(const char *szBuffer)
             TCHAR szMessage[MAX_PATH + 128];
             lstrcpy(szMessage,lngGetString(FAILURE_AUDIOCODING));
 
-#ifdef UNICODE
             TCHAR szFileName[MAX_PATH + 3];
             AnsiToUnicode(szFileName,szBuffer + CDRTOOLS_BADAUDIOCODING_LENGTH + 10,sizeof(szFileName) / sizeof(wchar_t));
             lstrcat(szMessage,szFileName);
-#else
-            lstrcat(szMessage,szBuffer + CDRTOOLS_BADAUDIOCODING_LENGTH + 10);
-#endif
 
             m_pProgress->notify(ckcore::Progress::ckERROR,szMessage);
         }
@@ -2084,14 +2077,10 @@ bool CCore::CopyDisc(ckmmc::Device &SrcDevice,ckmmc::Device &DstDevice,
     char szChangeDir[MAX_PATH + 3];
     strcpy(szChangeDir,"cd ");
 
-#ifdef UNICODE
     char szFolderPath[MAX_PATH];
     UnicodeToAnsi(szFolderPath,g_GlobalSettings.m_szCDRToolsPath,sizeof(szFolderPath));
 
     strcat(szChangeDir,szFolderPath);
-#else
-    strcat(szChangeDir,g_GlobalSettings.m_szCDRToolsPath);
-#endif
 
     if (CommandLine.length() > 2047)
     {

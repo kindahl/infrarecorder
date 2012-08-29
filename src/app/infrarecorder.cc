@@ -69,11 +69,10 @@ static int SaveEnglishStrings(const TCHAR * const szFileName)
         if (!File.open(ckcore::File::ckOPEN_WRITE))
             throw ckcore::Exception2(_T("Error opening file for writing."));
 
-#ifdef UNICODE
         // Write byte order mark.
         unsigned short usBOM = BOM_UTF32BE;
         File.write(&usBOM,2);
-#endif
+
         const ckcore::tchar CRLF[] = ckT("\r\n");
 
         WriteString(File,CRLF);

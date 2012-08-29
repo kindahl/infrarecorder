@@ -99,7 +99,6 @@ int CLngProcessor::Load()
 
     // If the application is in an unicode environment we need to check what
     // byte-order us used.
-#ifdef UNICODE
     unsigned short usBOM = 0;
     if (m_File.read(&usBOM,2) == -1)
         return LNGRES_FILEERROR;
@@ -122,7 +121,6 @@ int CLngProcessor::Load()
 
             break;
     };
-#endif
 
     // Clear all current sections.
     Clear();

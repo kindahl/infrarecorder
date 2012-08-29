@@ -22,11 +22,8 @@
 class CTempManager
 {
 private:
-#ifdef UNICODE
     std::vector<std::wstring> m_szFileNames;
-#else
-    std::vector<std::string> m_szFileNames;
-#endif
+
     // Temporary empty directory.
     TCHAR m_szEmptyDir[MAX_PATH];
 

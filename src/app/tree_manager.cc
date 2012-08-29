@@ -572,18 +572,6 @@ void CTreeManager::SelectPath(const TCHAR *szPath)
         }
     }
 
-    // FIXME: Update the status bar path pane.
-    /*g_MainFrame->m_StatusBar.SetPaneText(ID_PANE_PATH,szPath);
-
-    // Update the default status bar pane.
-    TCHAR szSelObjPane[32];
-#ifdef UNICODE
-    swprintf(szSelObjPane,_T(PANE_STR_SELOBJECTS),0);
-#else
-    sprintf(szSelObjPane,_T(PANE_STR_SELOBJECTS),0);
-#endif
-    g_MainFrame->m_StatusBar.SetPaneText(ID_DEFAULT_PANE,szSelObjPane);*/
-
     ListNode(pCurrentNode);
 
     // Copy the path to m_szCurrentPath.

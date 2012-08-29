@@ -104,11 +104,7 @@ bool CPngFile::Open(unsigned short usResourceId)
 
 bool CPngFile::Open(const TCHAR *szFullPath)
 {
-#ifdef _UNICODE
     FILE *pFile = _wfopen(szFullPath,_T("rb"));
-#else
-    FILE *pFile = fopen(szFullPath,"rb");
-#endif
     if (pFile == NULL)
         return false;
 

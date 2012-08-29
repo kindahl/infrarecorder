@@ -36,14 +36,10 @@ BOOL APIENTRY DllMain(HANDLE hModule,
 
 bool GetConfigPath(TCHAR *szConfigPath)
 {
-#ifdef UNICODE
     if (!SUCCEEDED(SHGetFolderPath(HWND_DESKTOP,CSIDL_APPDATA | CSIDL_FLAG_CREATE,NULL,
         SHGFP_TYPE_CURRENT,szConfigPath)))
         return false;
-#else	// Win 9x.
-    if (!SUCCEEDED(SHGetSpecialFolderPath(HWND_DESKTOP,szConfigPath,CSIDL_APPDATA,true)))
-        return false;
-#endif
+
     IncludeTrailingBackslash(szConfigPath);
     lstrcat(szConfigPath,_T("InfraRecorder\\"));
 

@@ -195,11 +195,7 @@ void CProgressDlg::set_status(const TCHAR *szStatus,...)
     va_list args;
     va_start(args,szStatus);
 
-#ifdef UNICODE
     _vsnwprintf(m_szStringBuffer,PROGRESS_STRINGBUFFER_SIZE - 1,szStatusStr,args);
-#else
-    _vsnprintf(m_szStringBuffer,PROGRESS_STRINGBUFFER_SIZE - 1,szStatusStr,args);
-#endif
 
     m_StatusStatic.SetWindowText(m_szStringBuffer);
 }
@@ -240,11 +236,8 @@ void CProgressDlg::notify(ckcore::Progress::MessageType Type,const TCHAR *szMess
     va_list args;
     va_start(args,szMessage);
 
-#ifdef UNICODE
     _vsnwprintf(m_szStringBuffer,PROGRESS_STRINGBUFFER_SIZE - 1,szMessage,args);
-#else
-    _vsnprintf(m_szStringBuffer,PROGRESS_STRINGBUFFER_SIZE - 1,szMessage,args);
-#endif
+
     m_ListView.AddItem(iItemIndex,SUBITEM_TEXT,m_szStringBuffer);
 
     m_ListView.SetColumnWidth(SUBITEM_TEXT,LVSCW_AUTOSIZE);

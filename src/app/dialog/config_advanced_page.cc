@@ -73,11 +73,7 @@ bool CConfigAdvancedPage::OnApply()
 {
     TCHAR szFIFO[4];
     GetDlgItemText(IDC_FIFOEDIT,szFIFO,4);
-#ifdef UNICODE
     int iFIFOSize = _wtoi(szFIFO);
-#else
-    int iFIFOSize = atoi(szFIFO);
-#endif
 
     if (iFIFOSize < FIFO_MIN || iFIFOSize > FIFO_MAX)
     {
@@ -115,11 +111,7 @@ LRESULT CConfigAdvancedPage::OnInitDialog(UINT uMsg,WPARAM wParam,LPARAM lParam,
 
     ::SendMessage(GetDlgItem(IDC_FIFOEDIT),EM_SETLIMITTEXT,3,0);
     TCHAR szFIFO[4];
-#ifdef UNICODE
     _itow(g_GlobalSettings.m_iFIFOSize,szFIFO,10);
-#else
-    _itoa(g_GlobalSettings.m_iFIFOSize,szFIFO,10);
-#endif
     SetDlgItemText(IDC_FIFOEDIT,szFIFO);
 
     // Translate the window.

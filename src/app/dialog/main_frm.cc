@@ -1515,11 +1515,7 @@ bool CMainFrame::OpenFolder(TCHAR *szFullPath,HTREEITEM hFrom,bool bExpandMyComp
         IncludeTrailingBackslash(szCurName);
         int iCurLength = lstrlen(szCurName);
 
-#ifdef UNICODE
         if (!_wcsnicmp(szCurName,szFullPath,iCurLength))
-#else
-        if (!_strnicmp(szCurName,szFullPath,iCurLength))
-#endif
         {
             m_ShellTreeView.SelectItem(hItem);
             m_ShellTreeView.Expand(hItem);

@@ -121,11 +121,9 @@ void CAboutWindow::UpdateVersionInfo()
 #ifdef PORTABLE
             lsprintf(m_szVersion,_T("Version %s portable (unicode, %s)"),
                 (TCHAR *)pBuffer,szArcStr);
-#elif UNICODE
+#else
             lsprintf(m_szVersion,_T("Version %s (unicode, %s)"),
                 (TCHAR *)pBuffer,szArcStr);
-#else
-            lsprintf(m_szVersion,_T("Version %s"),(TCHAR *)pBuffer);
 #endif
         }
 

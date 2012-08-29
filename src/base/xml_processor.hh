@@ -151,11 +151,7 @@ private:
 
     void SaveEntity(ckcore::File &File,unsigned int uiIndent,CXmlElement *pElement);
 
-#ifdef UNICODE
     static const wchar_t m_szXMLHeader[];
-#else
-    static const char m_szXMLHeader[];
-#endif
 
 public:
     CXmlProcessor(eMode Mode = MODE_NORMAL);

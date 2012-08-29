@@ -424,11 +424,7 @@ unsigned long CTracksDlg::GetTrackAddress(int iTrackIndex)
     lvItem.mask = LVIF_TEXT;
         m_ListView.GetItem(&lvItem);
 
-#ifdef UNICODE
     return _wtoi(szTextBuffer);
-#else
-    return atoi(szTextBuffer);
-#endif
 }
 
 bool CTracksDlg::EncodeTrack(const TCHAR *szFileName,CCodec *pEncoder)

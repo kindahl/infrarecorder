@@ -16,11 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifdef UNICODE
 #include <wchar.h>
-#else
-#include <stdio.h>
-#endif
 #include <windows.h>
 #include <atlbase.h>
 #include <ckcore/types.hh>
@@ -77,7 +73,6 @@ TCHAR *SubString(const TCHAR *szText,unsigned int uiStart,unsigned int uiLength)
 
 void FormatBytes(TCHAR *szBuffer,unsigned __int64 iBytes)
 {
-#ifdef UNICODE
     if (iBytes < 1024)
         swprintf(szBuffer,TEXT("%d %s"),(int)(iBytes & 0xFFFFFFFF),TEXT("Bytes"));
     else if (iBytes < 1024 * 1024)
@@ -88,18 +83,6 @@ void FormatBytes(TCHAR *szBuffer,unsigned __int64 iBytes)
         swprintf(szBuffer,TEXT("%.02f %s"),(double)iBytes/(1024.0 * 1024.0 * 1024.0),TEXT("GiB"));
     else
         swprintf(szBuffer,TEXT("%.02f %s"),(double)iBytes/(1024.0 * 1024.0 * 1024.0 * 1024.0),TEXT("TiB"));
-#else
-    if (iBytes < 1024)
-        sprintf(szBuffer,TEXT("%d %s"),(int)(iBytes & 0xFFFFFFFF),TEXT("Bytes"));
-    else if (iBytes < 1024 * 1024)
-        sprintf(szBuffer,TEXT("%.02f %s"),(double)iBytes/(1024.0),TEXT("KiB"));
-    else if (iBytes < 1024 * 1024 * 1024)
-        sprintf(szBuffer,TEXT("%.02f %s"),(double)iBytes/(1024.0 * 1024.0),TEXT("MiB"));
-    else if (iBytes < (signed __int64)1024 * 1024 * 1024 * 1024)
-        sprintf(szBuffer,TEXT("%.02f %s"),(double)iBytes/(1024.0 * 1024.0 * 1024.0),TEXT("GiB"));
-    else
-        sprintf(szBuffer,TEXT("%.02f %s"),(double)iBytes/(1024.0 * 1024.0 * 1024.0 * 1024.0),TEXT("TiB"));
-#endif
 }
 
 /*
@@ -107,7 +90,6 @@ void FormatBytes(TCHAR *szBuffer,unsigned __int64 iBytes)
 */
 void FormatBytesEx(TCHAR *szBuffer,unsigned __int64 iBytes)
 {
-#ifdef UNICODE
     if (iBytes < 1024)
         swprintf(szBuffer,TEXT("%d %s"),(int)(iBytes & 0xFFFFFFFF),TEXT("Bytes"));
     else if (iBytes < 1024 * 1024)
@@ -118,18 +100,6 @@ void FormatBytesEx(TCHAR *szBuffer,unsigned __int64 iBytes)
         swprintf(szBuffer,TEXT("%d %s"),(int)(iBytes/(1024.0 * 1024.0 * 1024.0)),TEXT("GiB"));
     else
         swprintf(szBuffer,TEXT("%d %s"),(int)(iBytes/(1024.0 * 1024.0 * 1024.0 * 1024.0)),TEXT("TiB"));
-#else
-    if (iBytes < 1024)
-        sprintf(szBuffer,TEXT("%d %s"),(int)(iBytes & 0xFFFFFFFF),TEXT("Bytes"));
-    else if (iBytes < 1024 * 1024)
-        sprintf(szBuffer,TEXT("%d %s"),(int)(iBytes/(1024.0)),TEXT("KiB"));
-    else if (iBytes < 1024 * 1024 * 1024)
-        sprintf(szBuffer,TEXT("%d %s"),(int)(iBytes/(1024.0 * 1024.0)),TEXT("MiB"));
-    else if (iBytes < (signed __int64)1024 * 1024 * 1024 * 1024)
-        sprintf(szBuffer,TEXT("%d %s"),(int)(iBytes/(1024.0 * 1024.0 * 1024.0)),TEXT("GiB"));
-    else
-        sprintf(szBuffer,TEXT("%d %s"),(int)(iBytes/(1024.0 * 1024.0 * 1024.0 * 1024.0)),TEXT("TiB"));
-#endif
 }
 
 class CNumberFmt
@@ -509,12 +479,7 @@ void lsnprintf_s(TCHAR *szBuffer,int iBufferLength,const TCHAR *szFormatString,.
     va_list vlArgs;
     va_start(vlArgs,szFormatString);
 
-#ifdef UNICODE
     int iCount = _vsnwprintf(szBuffer,iBufferLength - 1,szFormatString,vlArgs);
-#else
-    int iCount = _vsnprintf(szBuffer,iBufferLength - 1,szFormatString,vlArgs);
-#endif
-
     if (iCount < 0 || iCount == iBufferLength)
         szBuffer[iBufferLength - 1] = '\0';
 }

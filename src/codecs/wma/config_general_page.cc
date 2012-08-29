@@ -84,16 +84,7 @@ bool CConfigGeneralPage::FillProfileList()
                 break;
 
             unsigned long ulProfileNameLen = 255;
-#ifdef UNICODE
             hResult = pIWMProfile->GetName(szProfileName,&ulProfileNameLen);
-#else
-            wchar_t *szWideProfileName = new wchar_t[strlen(szProfileName) + 1];
-            MultiByteToWideChar(::AreFileApisANSI() ? CP_ACP : CP_OEMCP,MB_PRECOMPOSED,
-                szProfileName,(int)strlen(szProfileName) + 1,szWideProfileName,(int)strlen(szProfileName) + 1);
-
-            hResult = pIWMProfile->GetName(szWideProfileName,&ulProfileNameLen);
-            delete [] szWideProfileName;
-#endif
             if (FAILED(hResult))
                 break;
 

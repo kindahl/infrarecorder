@@ -119,11 +119,7 @@ HRESULT __stdcall CFilesDataObject::GetData(FORMATETC *pFormatEtc,STGMEDIUM *pSt
     DROPFILES *pDropFiles = (DROPFILES *)GlobalLock(pStgMedium->hGlobal);
 
     pDropFiles->pFiles = sizeof(DROPFILES);
-#ifdef UNICODE
     pDropFiles->fWide = TRUE;
-#else
-    pDropFiles->fWide = FALSE;
-#endif
 
     TCHAR *szFiles = (TCHAR *)((unsigned char *)pDropFiles + sizeof(DROPFILES));
     size_t iPos = 0;

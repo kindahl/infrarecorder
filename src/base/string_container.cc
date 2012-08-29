@@ -71,11 +71,9 @@ int CStringContainer::SaveToFile(const TCHAR *szFileName,bool bCRLF)
         return SCRES_FAIL;
 
     // Write byte order mark.
-#ifdef UNICODE
     unsigned short usBOM = BOM_UTF32BE;
     if (File.write(&usBOM,2) == -1)
         return SCRES_FAIL;
-#endif
 
     // Find the longest string.
     unsigned int uiLongestString = 0;
@@ -115,7 +113,6 @@ int CStringContainer::LoadFromFile(const TCHAR *szFileName)
         return SCRES_FAIL;
 
     // Read byte order mark.
-#ifdef UNICODE
     unsigned short usBOM = 0;
     if (File.read(&usBOM,2) == -1)
         return SCRES_FAIL;
@@ -138,7 +135,6 @@ int CStringContainer::LoadFromFile(const TCHAR *szFileName)
 
             break;
     };
-#endif
 
     // Read the file data.
     CCustomString Buffer(256);

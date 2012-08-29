@@ -17,9 +17,6 @@
  */
 
 #include "stdafx.hh"
-#ifndef UNICODE
-#include <stdio.h>
-#endif
 #include <ckcore/file.hh>
 #include <base/string_util.hh>
 #include "audio_util.hh"
@@ -69,13 +66,7 @@ int GetAudioLength(const TCHAR *szFileName)
     mciSendString(_T("status seq length"),szLength,256,NULL);
     mciSendString(_T("close seq"),szResult,255,NULL);
 
-#ifdef UNICODE
-    iLength = _wtoi(szLength);
-#else
-    iLength = atoi(szLength);
-#endif
-
-    return iLength;
+    return _wtoi(szLength);
 }
 
 /*int GetAudioInfo(const TCHAR *szFileName)

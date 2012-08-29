@@ -109,7 +109,6 @@ bool CMiniHtmlCtrl::Load(const TCHAR *szFileName)
 
     // If the application is in an unicode environment we need to check what
     // byte-order us used.
-#ifdef UNICODE
     unsigned short usBOM = 0;
     if (File.read(&usBOM,2) == -1)
         return false;
@@ -130,7 +129,6 @@ bool CMiniHtmlCtrl::Load(const TCHAR *szFileName)
             File.seek(0,ckcore::File::ckFILE_BEGIN);
             break;
     };
-#endif
 
     unsigned long ulFileSize = (unsigned long)File.size() - (unsigned long)File.tell();
     m_ulDocLength = ulFileSize / sizeof(TCHAR);

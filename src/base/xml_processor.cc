@@ -21,11 +21,7 @@
 #include "xml_processor.hh"
 #include "string_conv.hh"
 
-#ifdef UNICODE
 const wchar_t CXmlProcessor::m_szXMLHeader[] = _T("<?xml version=\"1.0\" encoding=\"utf-16\" standalone=\"yes\"?>\r\n");
-#else
-const char CXmlProcessor::m_szXMLHeader[] = "<?xml version=\"1.0\" encoding=\"windows-%i\" standalone=\"yes\"?>\r\n";
-#endif
 
 CXmlProcessor::CXmlProcessor(eMode Mode) : m_Mode(Mode)
 {
@@ -212,7 +208,6 @@ int CXmlProcessor::Load(const TCHAR *szFullPath)
 
     // If the application is in an unicode environment we need to check what
     // byte-order us used.
-#ifdef UNICODE
     unsigned short usBOM = 0;
     if (File.read(&usBOM,2) == -1)
         return XMLRES_FILEERROR;
@@ -235,7 +230,6 @@ int CXmlProcessor::Load(const TCHAR *szFullPath)
 
             break;
     };
-#endif
 
     // Clear the root.
     m_pRoot->Clear();
@@ -467,7 +461,6 @@ int CXmlProcessor::Save(const TCHAR *szFullPath)
         return XMLRES_FILEERROR;
 
     // Write byte-order mark.
-#ifdef UNICODE
 #ifdef XML_SAVE_BOM
     unsigned short usBOM = BOM_UTF32BE;
     if (File.write(&usBOM,2) == -1)
@@ -476,25 +469,13 @@ int CXmlProcessor::Save(const TCHAR *szFullPath)
         return XMLRES_FILEERROR;
     }
 #endif
-#endif
 
     // Write the header.
-#ifndef UNICODE
-    char szTemp[70];
-    sprintf(szTemp,m_szXMLHeader,GetACP());
-
-    if (File.Write((void *)szTemp,(unsigned long)strlen(szTemp)) == -1)
-    {
-        File.Remove();
-        return XMLRES_FILEERROR;
-    }
-#else
     if (File.write((void *)m_szXMLHeader,lstrlen(m_szXMLHeader) * sizeof(TCHAR)) == -1)
     {
         File.remove();
         return XMLRES_FILEERROR;
     }
-#endif
 
     for (unsigned int i = 0; i < m_pRoot->m_Children.size(); i++)
         SaveEntity(File,0,m_pRoot->m_Children[i]);
@@ -765,12 +746,7 @@ bool CXmlProcessor::AddElement(const TCHAR *szName,bool bData,bool bEnter)
 bool CXmlProcessor::AddElement(const TCHAR *szName,int iData,bool bEnter)
 {
     TCHAR szTemp[16];
-
-#ifdef UNICODE
     _itow(iData,szTemp,10);
-#else
-    _itoa(iData,szTemp,10);
-#endif
 
     return AddElement(szName,szTemp,bEnter);
 }
@@ -778,12 +754,7 @@ bool CXmlProcessor::AddElement(const TCHAR *szName,int iData,bool bEnter)
 bool CXmlProcessor::AddElement(const TCHAR *szName,__int64 iData,bool bEnter)
 {
     TCHAR szTemp[32];
-
-#ifdef UNICODE
     _i64tow(iData,szTemp,10);
-#else
-    _i64toa(iData,szTemp,10);
-#endif
 
     return AddElement(szName,szTemp,bEnter);
 }
@@ -791,12 +762,7 @@ bool CXmlProcessor::AddElement(const TCHAR *szName,__int64 iData,bool bEnter)
 bool CXmlProcessor::AddElement(const TCHAR *szName,double dData,bool bEnter)
 {
     TCHAR szTemp[32];
-
-#ifdef UNICODE
     swprintf(szTemp,_T("%f"),dData);
-#else
-    sprintf(szTemp,_T("%f"),dData);
-#endif
 
     return AddElement(szName,szTemp,bEnter);
 }
@@ -804,12 +770,7 @@ bool CXmlProcessor::AddElement(const TCHAR *szName,double dData,bool bEnter)
 bool CXmlProcessor::AddElement(const TCHAR *szName,long lData,bool bEnter)
 {
     TCHAR szTemp[16];
-
-#ifdef UNICODE
     _ltow(lData,szTemp,10);
-#else
-    _ltoa(lData,szTemp,10);
-#endif
 
     return AddElement(szName,szTemp,bEnter);
 }
@@ -840,12 +801,7 @@ bool CXmlProcessor::AddElementAttr(const TCHAR *szAttrName,bool bValue)
 bool CXmlProcessor::AddElementAttr(const TCHAR *szAttrName,int iValue)
 {
     TCHAR szTemp[16];
-
-#ifdef UNICODE
     _itow(iValue,szTemp,10);
-#else
-    _itoa(iValue,szTemp,10);
-#endif
 
     return AddElementAttr(szAttrName,szTemp);
 }
@@ -853,12 +809,7 @@ bool CXmlProcessor::AddElementAttr(const TCHAR *szAttrName,int iValue)
 bool CXmlProcessor::AddElementAttr(const TCHAR *szAttrName,__int64 iValue)
 {
     TCHAR szTemp[32];
-
-#ifdef UNICODE
     _i64tow(iValue,szTemp,10);
-#else
-    _i64toa(iValue,szTemp,10);
-#endif
 
     return AddElementAttr(szAttrName,szTemp);
 }
@@ -866,12 +817,7 @@ bool CXmlProcessor::AddElementAttr(const TCHAR *szAttrName,__int64 iValue)
 bool CXmlProcessor::AddElementAttr(const TCHAR *szAttrName,double dValue)
 {
     TCHAR szTemp[32];
-
-#ifdef UNICODE
     swprintf(szTemp,_T("%f"),dValue);
-#else
-    sprintf(szTemp,_T("%f"),dValue);
-#endif
 
     return AddElementAttr(szAttrName,szTemp);
 }
@@ -879,12 +825,7 @@ bool CXmlProcessor::AddElementAttr(const TCHAR *szAttrName,double dValue)
 bool CXmlProcessor::AddElementAttr(const TCHAR *szAttrName,long lValue)
 {
     TCHAR szTemp[16];
-
-#ifdef UNICODE
     _ltow(lValue,szTemp,10);
-#else
-    _ltoa(lValue,szTemp,10);
-#endif
 
     return AddElementAttr(szAttrName,szTemp);
 }

@@ -57,32 +57,8 @@ ckcore::tstring GetCygwinFileName(const TCHAR *szFileName);
 
 void lsnprintf_s(TCHAR *szBuffer,int iBufferLength,const TCHAR *szFormatString,...);
 
-#ifdef UNICODE
 #define lstrncmp wcsncmp
-#else
-#define lstrncmp strncmp
-#endif
-
-#ifdef UNICODE
 #define lsscanf swscanf
-#else
-#define lsscanf sscanf
-#endif
-
-#ifdef UNICODE
 #define lsprintf swprintf
-#else
-#define lsprintf sprintf
-#endif
-
-#ifdef UNICODE
 #define lstrncpy _tcsncpy
-#else
-#define lstrncpy strncpy
-#endif
-
-#ifdef UNICODE
 #define lstrncat wcsncat
-#else
-#define lstrncat strncat
-#endif
