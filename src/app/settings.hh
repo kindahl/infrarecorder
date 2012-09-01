@@ -288,7 +288,7 @@ public:
     // For internal use only, should never be saved.
     ckmmc::Device *m_pRecorder;
     int m_iWriteMethod;
-    INT_PTR m_uiWriteSpeed;	// Multiple of the audio speed. -1 = maximum speed.
+    int m_iWriteSpeed;  // Multiple of what has been defined as single speed for the current medium, -1 for maximum speed.
     long m_lNumCopies;
 
     CBurnImageSettings()
@@ -300,6 +300,10 @@ public:
         m_bBUP = true;
         m_bPadTracks = true;
         m_bFixate = true;
+
+        m_pRecorder = NULL;
+        m_iWriteMethod = 0;
+        m_iWriteSpeed = -1;
 
         // For internal use only, should never be saved.
         m_pRecorder= NULL;

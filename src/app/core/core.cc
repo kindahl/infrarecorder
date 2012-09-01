@@ -1293,9 +1293,9 @@ bool CCore::BurnImage(ckmmc::Device &Device,CAdvancedProgress *pProgress,
         CommandLine += _T(" -immed");
 
     // Speed.
-    if (g_BurnImageSettings.m_uiWriteSpeed != -1)
+    if (g_BurnImageSettings.m_iWriteSpeed != -1)
     {
-        lsprintf(szBuffer,_T(" speed=%d"),g_BurnImageSettings.m_uiWriteSpeed);
+        lsprintf(szBuffer,_T(" speed=%d"),g_BurnImageSettings.m_iWriteSpeed);
         CommandLine += szBuffer;
     }
 
@@ -1522,9 +1522,9 @@ bool CCore::BurnTracks(ckmmc::Device &Device,CAdvancedProgress *pProgress,
         CommandLine += _T(" -immed");
 
     // Speed.
-    if (g_BurnImageSettings.m_uiWriteSpeed != -1)
+    if (g_BurnImageSettings.m_iWriteSpeed != -1)
     {
-        lsprintf(szBuffer,_T(" speed=%d"),g_BurnImageSettings.m_uiWriteSpeed);
+        lsprintf(szBuffer,_T(" speed=%d"),g_BurnImageSettings.m_iWriteSpeed);
         CommandLine += szBuffer;
     }
 
@@ -1917,9 +1917,9 @@ bool CCore::CopyDisc(ckmmc::Device &SrcDevice,ckmmc::Device &DstDevice,
 
     // Speed.
     char szBuffer[64];
-    if (g_BurnImageSettings.m_uiWriteSpeed != -1)
+    if (g_BurnImageSettings.m_iWriteSpeed != -1)
     {
-        sprintf(szBuffer," speed=%d",g_BurnImageSettings.m_uiWriteSpeed);
+        sprintf(szBuffer," speed=%d",g_BurnImageSettings.m_iWriteSpeed);
         CommandLine += szBuffer;
     }
 
@@ -2064,13 +2064,6 @@ bool CCore::CopyDisc(ckmmc::Device &SrcDevice,ckmmc::Device &DstDevice,
     if (g_BurnAdvancedSettings.m_bImmed)
         CommandLine += " -immed";
 
-    // Speed.
-    if (g_BurnImageSettings.m_uiWriteSpeed != -1)
-    {
-        sprintf(szBuffer," speed=%d",g_BurnImageSettings.m_uiWriteSpeed);
-        CommandLine += szBuffer;
-    }
-
     // Redirection.
     CommandLine += " -";
 
@@ -2171,7 +2164,7 @@ bool CCore::ReadDisc(ckmmc::Device &Device,CAdvancedProgress *pProgress,const TC
     if (g_ReadSettings.m_iReadSpeed != -1)
     {
         TCHAR szBuffer[64];
-        lsprintf(szBuffer,_T(" speed=%d"),g_ReadSettings.m_iReadSpeed);
+        lsprintf(szBuffer,_T(" speed=%d"),g_ReadSettings.m_iReadSpeed); // FIXME: Is this CD or profile dependent speed?
     }
 
     // File name.
@@ -2431,9 +2424,9 @@ bool CCore::BurnCompilation(ckmmc::Device &Device,CAdvancedProgress *pProgress,
         CommandLine += _T(" -immed");
 
     // Speed.
-    if (g_BurnImageSettings.m_uiWriteSpeed != -1)
+    if (g_BurnImageSettings.m_iWriteSpeed != -1)
     {
-        lsprintf(szBuffer,_T(" speed=%d"),g_BurnImageSettings.m_uiWriteSpeed);
+        lsprintf(szBuffer,_T(" speed=%d"),g_BurnImageSettings.m_iWriteSpeed);
         CommandLine += szBuffer;
     }
 

@@ -259,7 +259,7 @@ bool CCopyDiscGeneralPage::InitRecorderMedia()
             m_WriteSpeedCombo.AddString(ckmmc::util::kb_to_disp_speed(*it,Profile).c_str());
             m_WriteSpeedCombo.SetItemData(m_WriteSpeedCombo.GetCount() - 1,
                                           static_cast<DWORD_PTR>(ckmmc::util::kb_to_human_speed(*it,
-                                                                 ckmmc::Device::ckPROFILE_CDR)));
+                                                                 /*ckmmc::Device::ckPROFILE_CDR*/Profile)));
         }
 
         // Write modes.
@@ -380,7 +380,7 @@ bool CCopyDiscGeneralPage::OnApply()
         reinterpret_cast<ckmmc::Device *>(m_TargetCombo.GetItemData(
                                           m_TargetCombo.GetCurSel()));
 
-    g_BurnImageSettings.m_uiWriteSpeed = m_WriteSpeedCombo.GetItemData(m_WriteSpeedCombo.GetCurSel());
+    g_BurnImageSettings.m_iWriteSpeed = static_cast<int>(m_WriteSpeedCombo.GetItemData(m_WriteSpeedCombo.GetCurSel()));
     
     TCHAR szBuffer[32];
     GetDlgItemText(IDC_WRITEMETHODCOMBO,szBuffer,32);
