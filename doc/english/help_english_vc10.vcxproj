@@ -45,9 +45,8 @@ set %ERRORLEVEL%=0</NMakeBuildCommandLine>
 hhc infrarecorder.hhp
 
 rem for some reason hhc exits with code 1 even on successful builds.
-goto VCEnd</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">del infrarecorder.chm
-echo foo</NMakeCleanCommandLine>
+set %ERRORLEVEL%=0</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">del infrarecorder.chm</NMakeCleanCommandLine>
     <NMakeOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">help_english.exe</NMakeOutput>
     <NMakePreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <NMakeIncludeSearchPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
@@ -64,9 +63,8 @@ set %ERRORLEVEL%=0</NMakeBuildCommandLine>
 hhc infrarecorder.hhp
 
 rem for some reason hhc exits with code 1 even on successful builds.
-goto VCEnd</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">del infrarecorder.chm
-echo foo</NMakeCleanCommandLine>
+set %ERRORLEVEL%=0</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">del infrarecorder.chm</NMakeCleanCommandLine>
     <NMakeOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">help_english.exe</NMakeOutput>
     <NMakePreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <NMakeIncludeSearchPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
