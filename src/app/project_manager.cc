@@ -2188,6 +2188,20 @@ bool CProjectManager::GetModified()
     return m_bModified;
 }
 
+bool CProjectManager::IsEmpty() const
+{
+    switch (m_iProjectType)
+    {
+        case PROJECTTYPE_DATA:
+        case PROJECTTYPE_AUDIO:
+            return g_TreeManager.GetRootNode()->m_Children.size() == 0;
+
+        case PROJECTTYPE_MIXED:
+            return m_pMixAudioNode->m_Children.size() == 0 &&
+                   m_pMixDataNode->m_Children.size() == 0;
+    };
+}
+
 /**
  * Imports a single file into the project.
  * @param [in] BasePath The base path to use in order to build full path if the

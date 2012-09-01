@@ -209,6 +209,8 @@ public:
     void SetModified(bool bModified);
     bool GetModified();
 
+    bool IsEmpty() const;
+
     bool SaveProject(const TCHAR *szFullPath);
     bool LoadProject(const TCHAR *szFullPath);
 

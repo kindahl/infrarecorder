@@ -3050,6 +3050,13 @@ LRESULT CMainFrame::OnBurncompilationDiscimage(WORD wNotifyCode,WORD wID,HWND hW
             return 0;
     }
 
+    // Check that the project is not empty.
+    if (g_ProjectManager.IsEmpty())
+    {
+        if (lngMessageBox(m_hWnd,WARNING_EMPTY_PROJECT,GENERAL_WARNING,MB_YESNO | MB_ICONWARNING) == IDNO)
+            return 0;
+    }
+
     g_ActionManager.CreateImage(m_hWnd,false);
     return 0;
 }
