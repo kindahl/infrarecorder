@@ -4,7 +4,7 @@
 <?define Arch="x64"?>
 <?define ProductName="InfraRecorder"?>
 <?define VerMajor="0"?>
-<?define VerMinor="52"?>
+<?define VerMinor="53"?>
 <?define VerRev="00"?>
 <?define VerBuild="00"?>
 

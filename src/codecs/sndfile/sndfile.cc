@@ -29,7 +29,7 @@ tirc_send_message *g_pSendMessage = NULL;
 int g_iCapabilities = IRC_HAS_DECODER | IRC_HAS_ENCODER;
 
 // Version and about strings.
-TCHAR *g_szVersion = _T("0.52.0.0");
+TCHAR *g_szVersion = _T("0.53.0.0");
 TCHAR *g_szAbout = _T("InfraRecorder Wave Codec\n\nCopyright © 2006-2012 Christian Kindahl.\n\nThis codec is based on the libsndfile library, created\nby Erik de Castro Lopo. More information can be\nfound on the libsndfile website:\nhttp://www.mega-nerd.com/libsndfile/");
 TCHAR *g_szEncoder = _T("Wave");
 TCHAR *g_szFileExt = _T(".wav");

@@ -42,7 +42,7 @@ tirc_send_message *g_pSendMessage = NULL;
 int g_iCapabilities = IRC_HAS_DECODER | IRC_HAS_ENCODER | IRC_HAS_CONFIG;
 
 // Version and about strings.
-TCHAR *g_szVersion = _T("0.52.0.0");
+TCHAR *g_szVersion = _T("0.53.0.0");
 TCHAR *g_szAbout = _T("InfraRecorder Ogg Vorbis Codec\n\nCopyright © 2006-2012 Christian Kindahl.\n\nThis codec is using the following 3rd party libraries:\n - libogg: Copyright © 2002, Xiph.org Foundation.\n - libvorbis: Copyright © 2002-2004 Xiph.org Foundation.");
 TCHAR *g_szEncoder = _T("Ogg Vorbis");
 TCHAR *g_szFileExt = _T(".ogg");
