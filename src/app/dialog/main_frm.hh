@@ -136,6 +136,8 @@ private:
 
     HWND CreateToolBarCtrl();
 
+    int GetDefaultMedia();
+
     void InitializeMainSmallImageList();
     void InitializeMiniToolBarImageList();
     void InitializeMainView();
@@ -309,6 +311,7 @@ private:
         MESSAGE_HANDLER(WM_SHELLCHANGE,OnShellChange)
         MESSAGE_HANDLER(WM_GETISHELLBROWSER,OnGetIShellBrowser)
         MESSAGE_HANDLER(WM_CONTEXTMENU,OnContextMenu)
+        MESSAGE_HANDLER(WM_DEVICECHANGE,OnDeviceChange)
 
         // Shell list view.
         MESSAGE_HANDLER(WM_SLVC_BROWSEOBJECT,OnSLVBrowseObject)
@@ -434,6 +437,7 @@ private:
     LRESULT OnShellChange(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
     LRESULT OnGetIShellBrowser(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
     LRESULT OnContextMenu(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
+    LRESULT OnDeviceChange(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);
 
     // Shell list view.
     LRESULT OnSLVBrowseObject(UINT uMsg,WPARAM wParam,LPARAM lParam,BOOL &bHandled);

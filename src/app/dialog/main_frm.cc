@@ -141,6 +141,62 @@ HWND CMainFrame::CreateToolBarCtrl()
     return hWndToolBar;
 }
 
+int CMainFrame::GetDefaultMedia()
+{
+    if (m_iDefaultMedia != -1)
+        return m_iDefaultMedia;
+
+    // Find which recorder that the media was changed for.
+    std::vector<ckmmc::Device *>::const_iterator it;
+    for (it = g_DeviceManager.devices().begin(); it !=
+        g_DeviceManager.devices().end(); it++)
+    {
+        ckmmc::Device *pDevice = *it;
+
+        // Check if the current device was affected.
+        if (pDevice->recorder())
+        {
+            CCore2Info Info;
+            CCore2DiscInfo DiscInfo;
+
+            // Fetch media information.
+            if (Info.ReadDiscInformation(*pDevice,&DiscInfo) && DiscInfo.m_ucDiscStatus == CCore2DiscInfo::DS_EMTPY)
+            {
+                switch (pDevice->profile())
+                {
+                    case ckmmc::Device::ckPROFILE_DVDRAM:
+                    case ckmmc::Device::ckPROFILE_DVDPLUSRW:
+                    case ckmmc::Device::ckPROFILE_DVDMINUSRW_RESTOV:
+                    case ckmmc::Device::ckPROFILE_DVDMINUSRW_SEQ:
+                    case ckmmc::Device::ckPROFILE_DVDMINUSR_SEQ:
+                    case ckmmc::Device::ckPROFILE_DVDPLUSR:
+                        return SPACEMETER_SIZE_DVD;
+                    case ckmmc::Device::ckPROFILE_DVDMINUSR_DL_SEQ:
+                    case ckmmc::Device::ckPROFILE_DVDMINUSR_DL_JUMP:
+                    case ckmmc::Device::ckPROFILE_DVDPLUSRW_DL:
+                    case ckmmc::Device::ckPROFILE_DVDPLUSR_DL:
+                        return SPACEMETER_SIZE_DLDVD;
+                    /*case ckmmc::Device::ckPROFILE_BDROM:
+                    case ckmmc::Device::ckPROFILE_BDR_SRM:
+                    case ckmmc::Device::ckPROFILE_BDR_RRM:
+                    case ckmmc::Device::ckPROFILE_BDRE:
+                    case ckmmc::Device::ckPROFILE_HDDVDROM:
+                    case ckmmc::Device::ckPROFILE_HDDVDR:
+                    case ckmmc::Device::ckPROFILE_HDDVDRAM:
+                        return;*/
+
+                    // FIXME: In order to switch to CD size we need to know exactly how much the blank CD can store.
+                    /*case ckmmc::Device::ckPROFILE_CDR:
+                    case ckmmc::Device::ckPROFILE_CDRW:
+                        return SPACEMETER_SIZE_703MB;*/
+                }
+            }
+        }
+    }
+
+    return -1;
+}
+
 void CMainFrame::InitializeMainSmallImageList()
 {
     // Create the image list.
@@ -478,10 +534,11 @@ void CMainFrame::InitializeProjectView(unsigned int uiSplitterPos)
     g_ProjectManager.AssignControls(&m_ProjectView,&m_ProjectListViewContainer,&m_SpaceMeter,&m_ProjectListView,&m_ProjectTreeView);
 
     // Prepare the apropriate project type.
+    int iDefaultMedia = GetDefaultMedia();
     switch (m_iDefaultProjType)
     {
         case PROJECTTYPE_DATA:
-            g_ProjectManager.NewDataProject(m_iDefaultMedia != -1 ? m_iDefaultMedia :
+            g_ProjectManager.NewDataProject(iDefaultMedia != -1 ? iDefaultMedia :
                                             SPACEMETER_SIZE_703MB);
 
             if (m_bDefaultProjDVDVideo)
@@ -489,12 +546,12 @@ void CMainFrame::InitializeProjectView(unsigned int uiSplitterPos)
             break;
 
         case PROJECTTYPE_AUDIO:
-            g_ProjectManager.NewAudioProject(m_iDefaultMedia != -1 ? m_iDefaultMedia :
+            g_ProjectManager.NewAudioProject(iDefaultMedia != -1 ? iDefaultMedia :
                                              SPACEMETER_SIZE_80MIN);
             break;
 
         case PROJECTTYPE_MIXED:
-            g_ProjectManager.NewMixedProject(m_iDefaultMedia != -1 ? m_iDefaultMedia :
+            g_ProjectManager.NewMixedProject(iDefaultMedia != -1 ? iDefaultMedia :
                                              SPACEMETER_SIZE_703MB);
             break;
     }
@@ -1351,6 +1408,83 @@ LRESULT CMainFrame::OnContextMenu(UINT uMsg,WPARAM wParam,LPARAM lParam,
         ATLVERIFY(IDOK == MessageBox(ckcore::get_except_msg(e).c_str(),
                                      lngGetString(GENERAL_ERROR),
                                      MB_OK | MB_ICONERROR));
+    }
+
+    return 0;
+}
+
+LRESULT CMainFrame::OnDeviceChange(UINT uMsg,WPARAM wParam,LPARAM lParam,
+                                   BOOL &bHandled)
+{
+    PDEV_BROADCAST_HDR lpdb = (PDEV_BROADCAST_HDR)lParam;
+
+    if (wParam == DBT_DEVICEARRIVAL &&
+        lpdb->dbch_devicetype == DBT_DEVTYP_VOLUME)
+    {
+        PDEV_BROADCAST_VOLUME lpdbv = (PDEV_BROADCAST_VOLUME)lpdb;
+        if (lpdbv->dbcv_flags & DBTF_MEDIA)
+        {
+            bHandled = TRUE;
+
+            // Find which recorder that the media was changed for.
+            std::vector<ckmmc::Device *>::const_iterator it;
+            for (it = g_DeviceManager.devices().begin(); it !=
+                g_DeviceManager.devices().end(); it++)
+            {
+                ckmmc::Device *pDevice = *it;
+
+                int iDevLetterNum = toupper(pDevice->address().device_[0]) - 'A';
+                bool bDevHadMediaChange = (lpdbv->dbcv_unitmask & (1 << iDevLetterNum)) > 0;
+
+                // Check if the current device was affected.
+                if (pDevice->recorder() && bDevHadMediaChange)
+                {
+                    CCore2Info Info;
+                    CCore2DiscInfo DiscInfo;
+
+                    // Fetch media information.
+                    if (Info.ReadDiscInformation(*pDevice,&DiscInfo) && DiscInfo.m_ucDiscStatus == CCore2DiscInfo::DS_EMTPY)
+                    {
+                        switch (pDevice->profile())
+                        {
+                            case ckmmc::Device::ckPROFILE_DVDRAM:
+                            case ckmmc::Device::ckPROFILE_DVDPLUSRW:
+                            case ckmmc::Device::ckPROFILE_DVDMINUSRW_RESTOV:
+                            case ckmmc::Device::ckPROFILE_DVDMINUSRW_SEQ:
+                            case ckmmc::Device::ckPROFILE_DVDMINUSR_SEQ:
+                            case ckmmc::Device::ckPROFILE_DVDPLUSR:
+                                m_SpaceMeter.SetDiscSize(SPACEMETER_SIZE_DVD);
+                                m_SpaceMeter.Invalidate();
+                                break;
+                            case ckmmc::Device::ckPROFILE_DVDMINUSR_DL_SEQ:
+                            case ckmmc::Device::ckPROFILE_DVDMINUSR_DL_JUMP:
+                            case ckmmc::Device::ckPROFILE_DVDPLUSRW_DL:
+                            case ckmmc::Device::ckPROFILE_DVDPLUSR_DL:
+                                m_SpaceMeter.SetDiscSize(SPACEMETER_SIZE_DLDVD);
+                                m_SpaceMeter.Invalidate();
+                                break;
+                            /*case ckmmc::Device::ckPROFILE_BDROM:
+                            case ckmmc::Device::ckPROFILE_BDR_SRM:
+                            case ckmmc::Device::ckPROFILE_BDR_RRM:
+                            case ckmmc::Device::ckPROFILE_BDRE:
+                            case ckmmc::Device::ckPROFILE_HDDVDROM:
+                            case ckmmc::Device::ckPROFILE_HDDVDR:
+                            case ckmmc::Device::ckPROFILE_HDDVDRAM:
+                                m_SpaceMeter.SetDiscSize();
+                                m_SpaceMeter.Invalidate();
+                                break;*/
+
+                            // FIXME: In order to switch to CD size we need to know exactly how much the blank CD can store.
+                            /*case ckmmc::Device::ckPROFILE_CDR:
+                            case ckmmc::Device::ckPROFILE_CDRW:
+                                m_SpaceMeter.SetDiscSize(SPACEMETER_SIZE_703MB);
+                                m_SpaceMeter.Invalidate();
+                                break;*/
+                        }
+                    }
+                }
+            }
+        }
     }
 
     return 0;

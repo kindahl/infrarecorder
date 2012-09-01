@@ -17,6 +17,7 @@
  */
 
 #include "stdafx.hh"
+#include <cassert>
 #include <ckcore/filestream.hh>
 #include <ckcore/nullstream.hh>
 #include <ckcore/exception.hh>
@@ -739,7 +740,7 @@ int CCore2::CreateImage(ckcore::OutStream &OutStream,const ckfilesystem::FileSet
             ckcore::throw_internal_error(_T(__FILE__),__LINE__);
     }
 
-    ckfilesystem::CharacterSet CharacterSet;
+    ckfilesystem::CharacterSet CharacterSet = ckfilesystem::CHARSET_ISO;
     switch (g_ProjectSettings.m_IsoCharSet)
     {
         case CProjectSettings::CHARSET_ISO:
@@ -750,6 +751,9 @@ int CCore2::CreateImage(ckcore::OutStream &OutStream,const ckfilesystem::FileSet
             break;
         case CProjectSettings::CHARSET_ASCII:
             CharacterSet = ckfilesystem::CHARSET_ASCII;
+            break;
+        default:
+            assert(false);
             break;
     }
 

@@ -17,6 +17,7 @@
  */
 
 #include "stdafx.hh"
+#include <cassert>
 #include <ckcore/filestream.hh>
 #include <ckcore/directory.hh>
 #include <ckcore/convert.hh>
@@ -2199,7 +2200,13 @@ bool CProjectManager::IsEmpty() const
         case PROJECTTYPE_MIXED:
             return m_pMixAudioNode->m_Children.size() == 0 &&
                    m_pMixDataNode->m_Children.size() == 0;
+
+        default:
+            assert(false);
+            break;
     };
+
+    return false;
 }
 
 /**

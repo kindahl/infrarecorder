@@ -42,6 +42,7 @@ extern CAppModule _Module;
 #include <atlctrlx.h>		// CWaitCursor
 #include <atlsplit.h>		// CSplitterWindowImpl
 #include <htmlhelp.h>
+#include <dbt.h>            // WM_DEVICECHANGE.
 #include "atl_compat.hh"
 
 #include <ckcore/types.hh>
