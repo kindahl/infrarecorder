@@ -13,10 +13,21 @@ rem set path_dist=%~dp0dist\
 set path_smoke_w32=%~dp0dep\smoke\win32\
 set path_smoke_x64=%~dp0dep\smoke\x64\
 
+set path_cdrtools=%~dp0dep\cdrtools\
+set path_sndfile_w32=%~dp0dep\libsndfile\win32\
+set path_sndfile_x64=%~dp0dep\libsndfile\x64\
+
 if "%~1" NEQ "" goto single_file
 
 signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_smoke_w32%smoke.exe
 signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_smoke_x64%smoke.exe
+signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_sndfile_w32%libsndfile-1.dll
+signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_sndfile_x64%libsndfile-1.dll
+
+signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_cdrtools%cdda2wav.exe
+signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_cdrtools%cdrecord.exe
+signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_cdrtools%readcd.exe
+signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_cdrtools%cygwin1.dll
 
 signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_w32r%infrarecorder.exe
 signtool sign /f %cert_file% /p %cert_pass% /t %cert_sats% %path_w32r%shell.dll
